@@ -18,7 +18,7 @@
             }
              
             function removeListener(element, eventName, handler) {
-                if (element.addEventListener) {
+                if (element.removeEventListener) {
                     element.removeEventListener(eventName, handler, false);
                 }
                 else if (element.detachEvent) {
