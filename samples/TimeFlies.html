@@ -1,0 +1,91 @@
+﻿<!DOCTYPE html>
+    <head>
+        <title>Rx for JavaScript Rocks!</title>   
+            <script src="rx.js" type="text/javascript"></script>
+            <script src="rx.time.js" type="text/javascript"></script>
+            <script type="text/javascript">
+
+            function addListener(element, eventName, handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(eventName, handler, false);
+                }
+                else if (element.attachEvent) {
+                    element.attachEvent('on' + eventName, handler);
+                }
+                else {
+                    element['on' + eventName] = handler;
+                }
+            }
+             
+            function removeListener(element, eventName, handler) {
+                if (element.addEventListener) {
+                    element.removeEventListener(eventName, handler, false);
+                }
+                else if (element.detachEvent) {
+                    element.detachEvent('on' + eventName, handler);
+                }
+                else {
+                    element['on' + eventName] = null;
+                }
+            }
+
+            function fromEvent(element, eventName) {
+                return Rx.Observable.create(function (observer) {
+                    var handler = function (ev) {
+                        observer.onNext(ev);  
+                    };
+                    addListener(element, eventName, handler);
+                    return function () {
+                        removeListener(element, eventName, handler);  
+                    };
+                });
+            }
+
+            function getOffset(element) {
+                var doc = element.ownerDocument,
+                    docElem = doc.documentElement;
+                    body = doc.body,
+                    clientTop  = docElem.clientTop  || body.clientTop  || 0,
+                    clientLeft = docElem.clientLeft || body.clientLeft || 0,
+                    scrollTop  = window.pageYOffset,
+                    scrollLeft = window.pageXOffset,
+                    top  = scrollTop  - clientTop,
+                    left = scrollLeft - clientLeft;
+
+                return { top : top, left: left };
+            }
+
+            addListener(window, 'load', function () {
+                var text = 'time flies like an arrow',
+                    container = document.getElementById('container'),
+                    mouseMove = fromEvent(document, 'mousemove'),
+
+                    mouseMoveOffset = mouseMove.select(function(value) {
+                        var offset = getOffset(container);
+                        return {
+                           offsetX : value.clientX - offset.left + document.documentElement.scrollLeft,
+                           offsetY : value.clientY - offset.top + document.documentElement.scrollTop
+                       };
+                    });
+
+                for (var i = 0; i < text.length; i++) {
+                    (function(i) {
+                        var s = document.createElement('span');
+                        s.innerHTML = text[i];
+                        s.style.position = 'absolute';
+                        container.appendChild(s);                        
+
+                        mouseMoveOffset.delay(i * 100).subscribe(function(mouseEvent) {
+                            s.style.top = mouseEvent.offsetY + 'px';
+                            s.style.left = mouseEvent.offsetX + i * 10 + 15 + 'px';
+                        });
+                    })(i);
+                }
+            });
+        </script>
+    </head>
+
+    <body style="font-family: Consolas, monospace; overflow: hidden">
+        <div id="container"></div>
+    </body>
+</html>
