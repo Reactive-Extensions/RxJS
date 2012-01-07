@@ -1,0 +1,101 @@
+﻿<!DOCTYPE html>
+    <head>
+        <title>Rx for JavaScript Rocks!</title>   
+            <script src="rx.js" type="text/javascript"></script>
+            <script src="rx.time.js" type="text/javascript"></script>
+            <script type="text/javascript">
+
+            function addListener(element, eventName, handler) {
+                if (element.addEventListener) {
+                    element.addEventListener(eventName, handler, false);
+                }
+                else if (element.attachEvent) {
+                    element.attachEvent('on' + eventName, handler);
+                }
+                else {
+                    element['on' + eventName] = handler;
+                }
+            }
+             
+            function removeListener(element, eventName, handler) {
+                if (element.removeEventListener) {
+                    element.removeEventListener(eventName, handler, false);
+                }
+                else if (element.detachEvent) {
+                    element.detachEvent('on' + eventName, handler);
+                }
+                else {
+                    element['on' + eventName] = null;
+                }
+            }
+
+            function fromEvent(element, eventName) {
+                return Rx.Observable.create(function (observer) {
+                    var handler = function (ev) {
+                        observer.onNext(ev);  
+                    };
+                    addListener(element, eventName, handler);
+                    return function () {
+                        removeListener(element, eventName, handler);  
+                    };
+                });
+            }
+
+            var handler;
+            function searchWikipedia(term) {
+                var subject = new Rx.AsyncSubject(),
+                    tag = document.createElement('script');
+
+                handler = function (data) {
+                    subject.onNext(data);
+                    subject.onCompleted();
+                };             
+                
+                tag.src = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search='
+                    + term + '&callback=handler';
+                document.getElementsByTagName('head')[0].appendChild(tag);                
+
+                return subject;
+            }
+
+            addListener(window, 'load', function () {
+                var input = document.getElementById('textInput'),
+
+                    keyup = fromEvent(input, 'keyup').select(function(ev) {
+                        return ev.target.value;
+                    }).where(function(text) {
+                        return text.length > 2;
+                    }).throttle(500)
+                    .distinctUntilChanged(),
+
+                    searcher = keyup.select(function (text) {
+                        return searchWikipedia(text);
+                    }).switchLatest()
+                    .where(function (data) {
+                        return data.length === 2; 
+                    });
+
+                searcher.subscribe(function (data) {                    
+                    var ul = document.getElementById('results'),
+                        results = data[1];
+
+                    while (ul.firstChild) {
+                        ul.removeChild(ul.firstChild);
+                    }
+
+                    for (var i = 0; i < results.length; i++) {
+                        var li = document.createElement('li');
+                        li.innerHTML = results[i];
+                        ul.appendChild(li);
+                    }
+                });
+
+            });
+        </script>
+    </head>
+
+    <body style="font-family: Consolas, monospace; overflow: hidden">
+        <input type="text" id="textInput"></input>
+        <ul id="results"></ul>
+    </body>
+</html>
