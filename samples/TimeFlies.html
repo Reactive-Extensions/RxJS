@@ -48,11 +48,9 @@
                     clientTop  = docElem.clientTop  || body.clientTop  || 0,
                     clientLeft = docElem.clientLeft || body.clientLeft || 0,
                     scrollTop  = window.pageYOffset,
-                    scrollLeft = window.pageXOffset,
-                    top  = scrollTop  - clientTop,
-                    left = scrollLeft - clientLeft;
+                    scrollLeft = window.pageXOffset;
 
-                return { top : top, left: left };
+                return { top : scrollTop  - clientTop, left: scrollLeft - clientLeft };
             }
 
             addListener(window, 'load', function () {
