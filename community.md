@@ -1,15 +1,11 @@
 ---
 title: 'Community'
 layout: 'default'
-menu: 2
+menu: community
 ---
 
-h1 Community
+# Community
 
-ul
-	li 
-		a(href='http://social.msdn.microsoft.com/Forums/en-US/rx/') Official Forums
-	li 
-		a(href='https://github.com/reactive-extensions') Github Projects
-	li 
-		a(href='#') Contrib Project
+* [Official Forums](http://social.msdn.microsoft.com/Forums/en-US/rx/)
+* [Github Projects](https://github.com/reactive-extensions)
+* [Contrib Project]()

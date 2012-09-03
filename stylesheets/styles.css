@@ -414,9 +414,40 @@ footer {
 
 /* customized! */
 
-section[role="main"] h1 {
-  background-image: url("../images/logo.png");
-  background-size: 40px;
+/*section[role="main"] h1 {
+  background-image: url("../images/logo-40.png");
+  background-size: 32px;
   background-repeat: no-repeat;
   padding-left: 42px;
+}*/
+
+header #logo {
+  border: none;
+  padding: 0;
+}
+
+header nav ul li a {
+  text-transform: capitalize;
+  -webkit-font-smoothing: antialiased;
+}
+
+header nav ul li {
+  background: #171717;
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+
+header nav ul li.selected {
+  background: #171717;
+  background: -moz-linear-gradient(top, #171717 0%, #000000 100%);
+  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%,#f8f8f8), color-stop(100%,#dddddd));
+  background: -webkit-linear-gradient(top, #171717 0%,#000000 100%);
+  background: -o-linear-gradient(top, #171717 0%,#000000 100%);
+  background: -ms-linear-gradient(top, #171717 0%,#000000 100%);
+  background: linear-gradient(top, #171717 0%,#000000 100%);
+}
+
+header nav ul li.selected a {
+  padding: 2px 2px 2px 22px;
+  background: url(../images/logo-16.png) no-repeat 1px;
 }

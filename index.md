@@ -1,6 +1,7 @@
 ---
 layout: default
 title: RxJS Reactive Extensions for JavaScript
+menu: 'index'
 ---
 
 # What is RxJS?
@@ -11,9 +12,10 @@ It's a library for composing asynchronous and event-based programs using observa
 
 RxJS provides easy-to-use conversions from existing DOM, XmlHttpRequest (AJAX), and jQuery events to Rx push-collections, allowing you to seamlessly plug Rx into your existing apps.
 
-## Show me
+# Show me
 
-<pre><code data-language="JavaScript">
+<pre><code data-language="JavaScript">// Here's an example using jQuery
+
 	var $dragTarget = $('#dragTarget'), 
 		$doc = $(document);
 
@@ -40,3 +42,15 @@ RxJS provides easy-to-use conversions from existing DOM, XmlHttpRequest (AJAX), 
 	     $dragTarget.css({top: pos.top, left: pos.left });
 	});
 </code></pre>
+
+# Bindings
+
+RxJS has lots of friends because it knows how to play nice with others.
+Here's a list of the current bindings using RxJS with your favorite libraries and stacks.
+
+* [NodeJS](https://github.com/Reactive-Extensions/rxjs-node)
+* [jQuery](https://github.com/Reactive-Extensions/rxjs-jquery)
+* [JavaScript Library for Windows 8](https://github.com/Reactive-Extensions/rxjs-winjs)
+* [MooTools](https://github.com/Reactive-Extensions/rxjs-mootools)
+* [Ext JS](https://github.com/Reactive-Extensions/rxjs-extjs)
+* [Dojo Toolkit](https://github.com/Reactive-Extensions/rxjs-dojo)

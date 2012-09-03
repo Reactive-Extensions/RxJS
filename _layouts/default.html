@@ -21,9 +21,8 @@
     <div class="wrapper">
 
       <header>
-        <h1 class="header">Rxjs</h1>
-        <p class="header">The Reactive Extensions for JavaScript</p>
-
+        <h1 class="header">RxJS</h1>
+        <a href="index.html"><img id="logo" src="images/logo-128.png" alt="Reactive Extension for JavaScript"/></a>
         <ul>
           <li class="download"><a class="buttons" href="https://github.com/Reactive-Extensions/RxJS/zipball/master">Download ZIP</a></li>
           <li class="download"><a class="buttons" href="https://github.com/Reactive-Extensions/RxJS/tarball/master">Download TAR</a></li>
@@ -31,6 +30,18 @@
         </ul>
 
         <p class="header">This project is maintained by <a class="header name" href="https://github.com/Reactive-Extensions">Reactive-Extensions</a></p>
+        
+        <nav>
+          <ul>
+            {% for link in site.links %}
+              {% assign menuClass = '' %}
+              {% if link == page.menu %}
+              {% assign menuClass = 'selected' %}
+              {% endif %}
+              <li class="{{menuClass}}"><a href="{{link}}.html">{{ link }}</a></li>
+            {% endfor %}
+          </ul>
+      </nav>
 
       </header>
 
