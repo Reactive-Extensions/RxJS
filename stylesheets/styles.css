@@ -411,3 +411,12 @@ footer {
     color:#444;
   }
 }
+
+/* customized! */
+
+section[role="main"] h1 {
+  background-image: url("../images/logo.png");
+  background-size: 40px;
+  background-repeat: no-repeat;
+  padding-left: 42px;
+}
