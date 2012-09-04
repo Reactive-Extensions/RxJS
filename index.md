@@ -8,7 +8,7 @@ menu: 'index'
 
 aka _Reactive Extensions for JavaScript_. 
 
-It's a library for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators. Using Rx, you can represent asynchronous data streams with Observables and much more.
+RxJS a library for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators. Using Rx, you can represent asynchronous data streams with Observables and much more.
 
 RxJS provides easy-to-use conversions from existing DOM, XmlHttpRequest (AJAX), and jQuery events to Rx push-collections, allowing you to seamlessly plug Rx into your existing apps.
 
@@ -54,3 +54,11 @@ Here's a list of the current bindings using RxJS with your favorite libraries an
 * [MooTools](https://github.com/Reactive-Extensions/rxjs-mootools)
 * [Ext JS](https://github.com/Reactive-Extensions/rxjs-extjs)
 * [Dojo Toolkit](https://github.com/Reactive-Extensions/rxjs-dojo)
+
+# Community
+
+Others are using RxJS. That means that if you use it you'll be cool too, just like everyone else.
+
+* [Official Forums](http://social.msdn.microsoft.com/Forums/en-US/rx/)
+* [Github Projects](https://github.com/reactive-extensions)
+* [Contrib Project]()
