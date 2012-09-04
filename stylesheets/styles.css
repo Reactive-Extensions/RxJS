@@ -451,3 +451,7 @@ header nav ul li.selected a {
   padding: 2px 2px 2px 22px;
   background: url(../images/logo-16.png) no-repeat 1px;
 }
+
+section[role="main"] .tag {
+  border: none;
+}

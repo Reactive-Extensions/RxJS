@@ -1,8 +1,9 @@
 ---
 layout: default
 title: RxJS Reactive Extensions for JavaScript
-menu: 'index'
 ---
+
+<h2 class="tag"> Clean Declarative Code</h2>
 
 # What is RxJS?
 
@@ -48,6 +49,7 @@ RxJS provides easy-to-use conversions from existing DOM, XmlHttpRequest (AJAX), 
 RxJS has lots of friends because it knows how to play nice with others.
 Here's a list of the current bindings using RxJS with your favorite libraries and stacks.
 
+* [HTML DOM](https://github.com/Reactive-Extensions/rxjs-html)
 * [NodeJS](https://github.com/Reactive-Extensions/rxjs-node)
 * [jQuery](https://github.com/Reactive-Extensions/rxjs-jquery)
 * [JavaScript Library for Windows 8](https://github.com/Reactive-Extensions/rxjs-winjs)
@@ -60,5 +62,69 @@ Here's a list of the current bindings using RxJS with your favorite libraries an
 Others are using RxJS. That means that if you use it you'll be cool too, just like everyone else.
 
 * [Official Forums](http://social.msdn.microsoft.com/Forums/en-US/rx/)
-* [Github Projects](https://github.com/reactive-extensions)
-* [Contrib Project]()
+* [Matt Podwysocki](https://twitter.com/mattpodwysocki)
+
+# More Examples
+
+Each of the binding repositories listed above has relevant samples. 
+There's also a [demo application](https://github.com/Reactive-Extensions/rxjs-winjs-sample) for Windows 8.
+
+Here's one more example though demonstrating how to implement an autocomplete search with RxJS:
+
+<pre><code data-language="JavaScript">// This uses the HTML DOM bindings
+	function searchWikipedia (term) {
+	    var url = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search='
+	        + term + '&callback=JSONPCallback';
+	    return Rx.Observable.getJSONPRequest(url);
+	}
+
+	function clearChildren (element) {
+	    while (element.firstChild) {
+	        element.removeChild(element.firstChild);
+	    }                
+	}
+
+	function initialize () {
+	    var input = document.getElementById('textInput')
+	    , ul = document.getElementById('results')
+
+	    , keyup = Rx.Observable.fromEvent(input, 'keyup').select(function(ev) {
+	            return ev.target.value;
+	        }).where(function(text) {
+	            return text.length > 2;
+	        }).throttle(500)
+	        .distinctUntilChanged(),
+
+	        searcher = keyup.select(function (text) {
+	            return searchWikipedia(text);
+	        }).switchLatest()
+	        .where(function (data) {
+	            return data.length === 2; 
+	        });
+
+	    searcher.subscribe(function (data) {                    
+	        var results = data[1];
+
+	        clearChildren(ul);
+
+	        for (var i = 0, len = results.length; i < len; i++) {
+	            var li = document.createElement('li');
+	            li.innerHTML = results[i];
+	            ul.appendChild(li);
+	        }
+	    }, function (error) {
+	        clearChildren(ul);
+	        var li = document.createElement('li');
+	        li.innerHTML = 'Error: ' + error.message;
+	        ul.appendChild(li);
+	    });
+
+	}
+</code></pre>
+
+<pre><code data-language="HTML"> <!-- here's the necessary markup -->
+	    <body style="font-family: Consolas, monospace; overflow: hidden" onload="initialize();">
+        <input type="text" id="textInput"></input>
+        <ul id="results"></ul>
+    </body>
+</code></pre>
