@@ -18,7 +18,7 @@ RxJS provides easy-to-use conversions from existing DOM, XmlHttpRequest (AJAX), 
 <pre><code data-language="JavaScript">// Here's an example using jQuery
 
 var $dragTarget = $('#dragTarget'), 
-	$doc = $(document);
+    $doc = $(document);
 
 var mouseup = $dragTarget.mouseupAsObservable(),
 var mousemove = $doc.mousemoveAsObservable(),
