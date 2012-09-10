@@ -57,13 +57,6 @@ Here's a list of the current bindings using RxJS with your favorite libraries an
 * [Ext JS](https://github.com/Reactive-Extensions/rxjs-extjs)
 * [Dojo Toolkit](https://github.com/Reactive-Extensions/rxjs-dojo)
 
-# Community
-
-Others are using RxJS. That means that if you use it you'll be cool too, just like everyone else.
-
-* [Official Forums](http://social.msdn.microsoft.com/Forums/en-US/rx/)
-* [Matt Podwysocki](https://twitter.com/mattpodwysocki)
-
 # More Examples
 
 Each of the binding repositories listed above has relevant samples. 
