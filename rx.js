@@ -97,7 +97,7 @@
     }
     if (!Array.prototype.every) {
         Array.prototype.every = function (predicate) {
-            var t = new Object(this);
+            var t = Object(this);
             for (var i = 0, len = t.length >>> 0; i < len; i++) {
                 if (i in t && !predicate.call(arguments[1], t[i], i, t)) {
                     return false;
@@ -108,7 +108,7 @@
     }
     if (!Array.prototype.map) {
         Array.prototype.map = function (selector) {
-            var results = [], t = new Object(this);
+            var results = [], t = Object(this);
             for (var i = 0, len = t.length >>> 0; i < len; i++) {
                 if (i in t) {
                     results.push(selector.call(arguments[1], t[i], i, t));
@@ -119,7 +119,7 @@
     }
     if (!Array.prototype.filter) {
         Array.prototype.filter = function (predicate) {
-            var results = [], item, t = new Object(this);
+            var results = [], item, t = Object(this);
             for (var i = 0, len = t.length >>> 0; i < len; i++) {
                 item = t[i];
                 if (i in t && predicate.call(arguments[1], item, i, t)) {
@@ -136,7 +136,7 @@
     }
     if (!Array.prototype.indexOf) {
         Array.prototype.indexOf = function indexOf(item) {
-            var self = new Object(this), length = self.length >>> 0;
+            var self = Object(this), length = self.length >>> 0;
             if (!length) {
                 return -1;
             }
@@ -431,10 +431,12 @@
         };
 
         return RefCountDisposable;
-    })();
+    }());
 
     function ScheduledDisposable(scheduler, disposable) {
-        this.scheduler = scheduler, this.disposable = disposable, this.isDisposed = false;
+        this.scheduler = scheduler;
+        this.disposable = disposable;
+        this.isDisposed = false;
     }
     ScheduledDisposable.prototype.dispose = function () {
         var parent = this;
@@ -528,78 +530,91 @@
             return disposableEmpty;
         }
 
-        addProperties(Scheduler.prototype, {
-            catchException: function (handler) {
-                return new CatchScheduler(this, handler);
-            },
-            schedulePeriodic: function (period, action) {
-                return this.schedulePeriodicWithState(null, period, function () {
-                    action();
+        var schedulerProto = Scheduler.prototype;
+        schedulerProto.catchException = function (handler) {          
+            return new CatchScheduler(this, handler);
+        };
+
+        schedulerProto.schedulePeriodic = function (period, action) {
+            return this.schedulePeriodicWithState(null, period, function () {
+                action();
+            });
+        };
+
+        schedulerProto.schedulePeriodicWithState = function (state, period, action) {
+            var s = state, id = window.setInterval(function () {
+                s = action(s);
+            }, period);
+            return disposableCreate(function () {
+                window.clearInterval(id);
+            });
+        };
+
+        schedulerProto.schedule = function (action) {
+            return this._schedule(action, invokeAction);
+        };
+
+        schedulerProto.scheduleWithState = function (state, action) {
+            return this._schedule(state, action);
+        };
+
+        schedulerProto.scheduleWithRelative = function (dueTime, action) {
+            return this._scheduleRelative(action, dueTime, invokeAction);
+        };
+
+        schedulerProto.scheduleWithRelativeAndState = function (state, dueTime, action) {
+            return this._scheduleRelative(state, dueTime, action);
+        };
+
+        schedulerProto.scheduleWithAbsolute = function (dueTime, action) {
+            return this._scheduleAbsolute(action, dueTime, invokeAction);
+        };
+
+        schedulerProto.scheduleWithAbsoluteAndState = function (state, dueTime, action) {
+            return this._scheduleAbsolute(state, dueTime, action);
+        };
+
+        schedulerProto.scheduleRecursive = function (action) {
+            return this.scheduleRecursiveWithState(action, function (_action, self) {
+                _action(function () {
+                    self(_action);
                 });
-            },
-            schedulePeriodicWithState: function (state, period, action) {
-                var s = state, id = window.setInterval(function () {
-                    s = action(s);
-                }, period);
-                return disposableCreate(function () {
-                    window.clearInterval(id);
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithState = function (state, action) {
+            return this.scheduleWithState({ first: state, second: action }, function (s, p) {
+                return invokeRecImmediate(s, p);
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithRelative = function (dueTime, action) {
+            return this.scheduleRecursiveWithRelativeAndState(action, dueTime, function (_action, self) {
+                _action(function (dt) {
+                    self(_action, dt);
                 });
-            },
-            schedule: function (action) {
-                return this._schedule(action, invokeAction);
-            },
-            scheduleWithState: function (state, action) {
-                return this._schedule(state, action);
-            },
-            scheduleWithRelative: scheduleWithRelative = function (dueTime, action) {
-                return this._scheduleRelative(action, dueTime, invokeAction);
-            },
-            scheduleWithRelativeAndState: function (state, dueTime, action) {
-                return this._scheduleRelative(state, dueTime, action);
-            },
-            scheduleWithAbsolute: scheduleWithAbsolute = function (dueTime, action) {
-                return this._scheduleAbsolute(action, dueTime, invokeAction);
-            },
-            scheduleWithAbsoluteAndState: function (state, dueTime, action) {
-                return this._scheduleAbsolute(state, dueTime, action);
-            },
-            scheduleRecursive: function (action) {
-                return this.scheduleRecursiveWithState(action, function (_action, self) {
-                    _action(function () {
-                        self(_action);
-                    });
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithRelativeAndState = function (state, dueTime, action) {
+            return this._scheduleRelative({ first: state, second: action }, dueTime, function (s, p) {
+                return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithAbsolute = function (dueTime, action) {
+            return this.scheduleRecursiveWithAbsoluteAndState(action, dueTime, function (_action, self) {
+                _action(function (dt) {
+                    self(_action, dt);
                 });
-            },
-            scheduleRecursiveWithState: function (state, action) {
-                return this.scheduleWithState({ first: state, second: action }, function (s, p) {
-                    return invokeRecImmediate(s, p);
-                });
-            },
-            scheduleRecursiveWithRelative: function (dueTime, action) {
-                return this.scheduleRecursiveWithRelativeAndState(action, dueTime, function (_action, self) {
-                    _action(function (dt) {
-                        self(_action, dt);
-                    });
-                });
-            },
-            scheduleRecursiveWithRelativeAndState: function (state, dueTime, action) {
-                return this._scheduleRelative({ first: state, second: action }, dueTime, function (s, p) {
-                    return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
-                });
-            },
-            scheduleRecursiveWithAbsolute: function (dueTime, action) {
-                return this.scheduleRecursiveWithAbsoluteAndState(action, dueTime, function (_action, self) {
-                    _action(function (dt) {
-                        self(_action, dt);
-                    });
-                });
-            },
-            scheduleRecursiveWithAbsoluteAndState: function (state, dueTime, action) {
-                return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
-                    return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
-                });
-            }
-        });
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithAbsoluteAndState = function (state, dueTime, action) {
+            return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
+                return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
+            });
+        };
 
         Scheduler.now = defaultNow;
         Scheduler.normalize = function (timeSpan) {
@@ -611,7 +626,7 @@
 
         return Scheduler;
     })();
-    
+
     // Immediate Scheduler
     var schedulerNoBlockError = 'Scheduler is not allowed to block the thread';
     var immediateScheduler = Scheduler.immediate = (function () {
@@ -621,7 +636,7 @@
         }
 
         function scheduleRelative(state, dueTime, action) {
-            if (dueTime > 0) throw new Error(schedulerNoBlockError);
+            if (dueTime > 0) { throw new Error(schedulerNoBlockError); }
             return action(this, state);
         }
 
@@ -649,7 +664,8 @@
             while (queue.length > 0) {
                 item = queue.dequeue();
                 if (!item.isCancelled()) {
-                    while (item.dueTime - Scheduler.now() > 0) {
+                    if (item.dueTime - Scheduler.now() > 0) {
+                        throw new Error(schedulerNoBlockError);
                     }
                     if (!item.isCancelled()) {
                         item.invoke();
@@ -809,7 +825,7 @@
                         } else {
                             this.isEnabled = false;
                         }
-                    } while (this.isEnabled)
+                    } while (this.isEnabled);
                     this.clock = time;
                 }
             },
@@ -967,7 +983,7 @@
         };
 
         CatchScheduler.prototype._getRecursiveWrapper = function (scheduler) {
-            if (!this._recursiveOriginal !== scheduler) {
+            if (this._recursiveOriginal !== scheduler) {
                 this._recursiveOriginal = scheduler;
                 var wrapper = this._clone(scheduler);
                 wrapper._recursiveOriginal = scheduler;
@@ -1031,10 +1047,10 @@
         });
 
         return Notification;
-    })();
+    }());
 
     var notificationCreateOnNext = Notification.createOnNext = (function () {
-        inherits(ON, Notification);
+        
         function ON(value) {
             this.value = value;
             this.hasValue = true;
@@ -1053,13 +1069,15 @@
             }
         });
 
+        inherits(ON, Notification);
+
         return function (next) {
             return new ON(next);
         };
     }());
 
     var notificationCreateOnError = Notification.createOnError = (function () {
-        inherits(OE, Notification);
+        
         function OE(exception) {
             this.exception = exception;
             this.kind = 'E';
@@ -1077,13 +1095,15 @@
             }
         });
 
+        inherits(OE, Notification);
+
         return function (error) {
             return new OE(error);
         };
     }());
 
     var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
-        inherits(OC, Notification);
+        
         function OC() {
             this.kind = 'C';
         }
@@ -1099,6 +1119,8 @@
                 return 'OnCompleted()';
             }
         });
+
+        inherits(OC, Notification);
 
         return function () {
             return new OC();
@@ -1486,7 +1508,7 @@
         };
 
         return ObserveOnObserver;
-    })();
+    }());
 
     var observableProto;
     var Observable = root.Observable = (function () {
@@ -1531,10 +1553,10 @@
                 return list.slice(0);
             }
             return this.scan([], accumulator).startWith([]).finalValue();
-        }
+        };
 
         return Observable;
-    })();
+    }());
 
     Observable.start = function (func, scheduler, context) {
         return observableToAsync(func, scheduler)();
@@ -1721,7 +1743,7 @@
 
             var choice,
                 leftSubscription = new SingleAssignmentDisposable(),
-                rightSubscription = new SingleAssignmentDisposable;
+                rightSubscription = new SingleAssignmentDisposable();
 
             function choiceL() {
                 if (!choice) {
@@ -1863,7 +1885,7 @@
                     }, observer.onError.bind(observer), function () {
                         done(i);
                     }));
-                })(idx);
+                }(idx));
             }
 
             return new CompositeDisposable(subscriptions);
@@ -2143,7 +2165,7 @@
                     }, observer.onError.bind(observer), function () {
                         done(i);
                     }));
-                })(idx);
+                }(idx));
             }
 
             return new CompositeDisposable(subscriptions);
@@ -2822,8 +2844,8 @@
         inherits(Subject, Observable);
         function Subject() {
             Subject.super_.constructor.call(this, subscribe);
-            this.isDisposed = false,
-            this.isStopped = false,
+            this.isDisposed = false;
+            this.isStopped = false;
             this.observers = [];
         }
 
@@ -2901,11 +2923,11 @@
         function AsyncSubject() {
             AsyncSubject.super_.constructor.call(this, subscribe);
 
-            this.isDisposed = false,
-            this.isStopped = false,
-            this.value = null,
-            this.hasValue = false,
-            this.observers = [],
+            this.isDisposed = false;
+            this.isStopped = false;
+            this.value = null;
+            this.hasValue = false;
+            this.observers = [];
             this.exception = null;
         }
 
