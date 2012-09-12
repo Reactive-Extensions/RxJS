@@ -1,26 +1,27 @@
 {
-    "name": "rxjs",
+    "name": "rx",
     "title": "Reactive Extensions for JavaScript (RxJS)",
     "description": "Library for composing asynchronous and event-based operations in JavaScript",
-    "version": "2",
+    "version": "2.0.0",
     "homepage": "http://msdn.microsoft.com/en-us/data/gg577609.aspx",
     "author": {
         "name": "Cloud Programmability Team",
-        "url": "https://github.com/Reactive-Extensions/Rx.JS/blob/master/AUTHORS.txt"
+        "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/authors.txt"
     },
     "repository": {
         "type": "git",
-        "url": "https://github.com/Reactive-Extensions/Rx.JS.git"
+        "url": "https://github.com/Reactive-Extensions/RxJS.git"
     },
     "licenses": [
         {
-            "type": "MIT",
-            "url": "https://github.com/Reactive-Extensions/Rx.JS/blob/master/license.txt"
+            "type": "MICROSOFT REACTIVE EXTENSIONS FOR JAVASCRIPT AND .NET LIBRARIES",
+            "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/license.txt"
         }
     ],
     "dependencies": {},
     "devDependencies": {
         "grunt": "~0.3.9"
     },
-    "keywords": []
+    "keywords": [],
+	"main": "rx.node.js"
 }

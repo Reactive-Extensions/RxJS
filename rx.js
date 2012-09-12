@@ -528,78 +528,91 @@
             return disposableEmpty;
         }
 
-        addProperties(Scheduler.prototype, {
-            catchException: function (handler) {
-                return new CatchScheduler(this, handler);
-            },
-            schedulePeriodic: function (period, action) {
-                return this.schedulePeriodicWithState(null, period, function () {
-                    action();
+        var schedulerProto = Scheduler.prototype;
+        schedulerProto.catchException = function (handler) {
+            return new CatchScheduler(this, handler);
+        };
+        
+        schedulerProto.schedulePeriodic = function (period, action) {
+            return this.schedulePeriodicWithState(null, period, function () {
+                action();
+            });
+        };
+
+        schedulerProto.schedulePeriodicWithState = function (state, period, action) {
+            var s = state, id = window.setInterval(function () {
+                s = action(s);
+            }, period);
+            return disposableCreate(function () {
+                window.clearInterval(id);
+            });
+        };
+
+        schedulerProto.schedule = function (action) {
+            return this._schedule(action, invokeAction);
+        };
+
+        schedulerProto.scheduleWithState = function (state, action) {
+            return this._schedule(state, action);
+        };
+
+        schedulerProto.scheduleWithRelative = function (dueTime, action) {
+            return this._scheduleRelative(action, dueTime, invokeAction);
+        };
+
+        schedulerProto.scheduleWithRelativeAndState = function (state, dueTime, action) {
+            return this._scheduleRelative(state, dueTime, action);
+        };
+
+        schedulerProto.scheduleWithAbsolute = function (dueTime, action) {
+            return this._scheduleAbsolute(action, dueTime, invokeAction);
+        };
+
+        schedulerProto.scheduleWithAbsoluteAndState = function (state, dueTime, action) {
+            return this._scheduleAbsolute(state, dueTime, action);
+        };
+
+        schedulerProto.scheduleRecursive = function (action) {
+            return this.scheduleRecursiveWithState(action, function (_action, self) {
+                _action(function () {
+                    self(_action);
                 });
-            },
-            schedulePeriodicWithState: function (state, period, action) {
-                var s = state, id = window.setInterval(function () {
-                    s = action(s);
-                }, period);
-                return disposableCreate(function () {
-                    window.clearInterval(id);
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithState = function (state, action) {
+            return this.scheduleWithState({ first: state, second: action }, function (s, p) {
+                return invokeRecImmediate(s, p);
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithRelative = function (dueTime, action) {
+            return this.scheduleRecursiveWithRelativeAndState(action, dueTime, function (_action, self) {
+                _action(function (dt) {
+                    self(_action, dt);
                 });
-            },
-            schedule: function (action) {
-                return this._schedule(action, invokeAction);
-            },
-            scheduleWithState: function (state, action) {
-                return this._schedule(state, action);
-            },
-            scheduleWithRelative: scheduleWithRelative = function (dueTime, action) {
-                return this._scheduleRelative(action, dueTime, invokeAction);
-            },
-            scheduleWithRelativeAndState: function (state, dueTime, action) {
-                return this._scheduleRelative(state, dueTime, action);
-            },
-            scheduleWithAbsolute: scheduleWithAbsolute = function (dueTime, action) {
-                return this._scheduleAbsolute(action, dueTime, invokeAction);
-            },
-            scheduleWithAbsoluteAndState: function (state, dueTime, action) {
-                return this._scheduleAbsolute(state, dueTime, action);
-            },
-            scheduleRecursive: function (action) {
-                return this.scheduleRecursiveWithState(action, function (_action, self) {
-                    _action(function () {
-                        self(_action);
-                    });
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithRelativeAndState = function (state, dueTime, action) {
+            return this._scheduleRelative({ first: state, second: action }, dueTime, function (s, p) {
+                return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithAbsolute = function (dueTime, action) {
+            return this.scheduleRecursiveWithAbsoluteAndState(action, dueTime, function (_action, self) {
+                _action(function (dt) {
+                    self(_action, dt);
                 });
-            },
-            scheduleRecursiveWithState: function (state, action) {
-                return this.scheduleWithState({ first: state, second: action }, function (s, p) {
-                    return invokeRecImmediate(s, p);
-                });
-            },
-            scheduleRecursiveWithRelative: function (dueTime, action) {
-                return this.scheduleRecursiveWithRelativeAndState(action, dueTime, function (_action, self) {
-                    _action(function (dt) {
-                        self(_action, dt);
-                    });
-                });
-            },
-            scheduleRecursiveWithRelativeAndState: function (state, dueTime, action) {
-                return this._scheduleRelative({ first: state, second: action }, dueTime, function (s, p) {
-                    return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
-                });
-            },
-            scheduleRecursiveWithAbsolute: function (dueTime, action) {
-                return this.scheduleRecursiveWithAbsoluteAndState(action, dueTime, function (_action, self) {
-                    _action(function (dt) {
-                        self(_action, dt);
-                    });
-                });
-            },
-            scheduleRecursiveWithAbsoluteAndState: function (state, dueTime, action) {
-                return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
-                    return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
-                });
-            }
-        });
+            });
+        };
+
+        schedulerProto.scheduleRecursiveWithAbsoluteAndState = function (state, dueTime, action) {
+            return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
+                return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
+            });
+        };
 
         Scheduler.now = defaultNow;
         Scheduler.normalize = function (timeSpan) {
@@ -610,7 +623,7 @@
         };
 
         return Scheduler;
-    })();
+    }());
     
     // Immediate Scheduler
     var schedulerNoBlockError = 'Scheduler is not allowed to block the thread';
@@ -1721,7 +1734,7 @@
 
             var choice,
                 leftSubscription = new SingleAssignmentDisposable(),
-                rightSubscription = new SingleAssignmentDisposable;
+                rightSubscription = new SingleAssignmentDisposable();
 
             function choiceL() {
                 if (!choice) {
