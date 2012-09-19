@@ -32,7 +32,7 @@
     
     // Utilities
     if (!Function.prototype.bind) {
-        Function.prototype.bind = function (thisp) {
+        Function.prototype.bind = function (that) {
             var target = this,
                 args = slice.call(arguments, 1);
             var bound = function () {
