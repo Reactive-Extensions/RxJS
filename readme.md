@@ -23,17 +23,17 @@ There are multiple ways of getting started with the Reactive Extensions includin
 
 In a Browser:
 
-    <script src="rx.js><script>
+    <script src="rx.js"></script>
 
 Along with a number of our extras for RxJS:
     
-    <script src="rx.aggregates.js><script>
-    <script src="rx.binding.js><script>
-    <script src="rx.coincidencejs><script>
-    <script src="rx.experimental.js><script>
-    <script src="rx.joinpatterns.js><script>
-    <script src="rx.testing.js><script>
-    <script src="rx.time.js><script>
+    <script src="rx.aggregates.js"></script>
+    <script src="rx.binding.js"></script>
+    <script src="rx.coincidencejs"></script>
+    <script src="rx.experimental.js"></script>
+    <script src="rx.joinpatterns.js"></script>
+    <script src="rx.testing.js"></script>
+    <script src="rx.time.js"></script>
 
 Installing via NPM:
 
