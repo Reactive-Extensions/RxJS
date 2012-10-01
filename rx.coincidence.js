@@ -504,7 +504,7 @@
         });
     };
 
-    function observableWindowWithBounaries(windowBoundaries) {
+    function observableWindowWithBoundaries(windowBoundaries) {
         var source = this;
         return new AnonymousObservable(function (observer) {
             var window = new Subject(), 
