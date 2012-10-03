@@ -3,7 +3,7 @@
 
 ## About the Reactive Extensions ##
 
-The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators in JavaScript. Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using LINQ operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, Rx = Observables + LINQ + Schedulers.
+The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators in JavaScript. Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using LINQ operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + LINQ + Schedulers.
 
 Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming as a matter of course. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
 
@@ -22,7 +22,6 @@ This set of libraries include:
 - **rx.testing.js** - used to write unit tests for complex event processing queries.
 - **rx.time.js** - time-based event processing query operations.
 
-
 ## Getting Started ##
 
 Coming Soon
@@ -32,15 +31,14 @@ Coming Soon
 Core:
 
 - Observer
-- Observable
+- [Observable](https://github.com/Reactive-Extensions/RxJS/wiki/Observable)
 
-Disposables:
+Subjects:
 
-- CompositeDisposable
-- Disposable
-- RefCountDisposable
-- SerialDisposable
-- SingleAssignmentDisposable
+ - AsyncSubject
+ - BehaviorSubject
+ - ReplaySubject
+ - Subject
 
 Schedulers:
 
@@ -50,12 +48,15 @@ Schedulers:
 - Scheduler.timeout
 - VirtualTimeScheduler
 
-Subjects:
+Disposables:
 
- - AsyncSubject
- - BehaviorSubject
- - ReplaySubject
- - Subject
+- CompositeDisposable
+- Disposable
+- RefCountDisposable
+- SerialDisposable
+- SingleAssignmentDisposable
+
+
 
 ## Installation and Usage ##
 
@@ -63,17 +64,17 @@ There are multiple ways of getting started with the Reactive Extensions includin
 
 In a Browser:
 
-    <script src="rx.js"><script>
+    <script src="rx.js"></script>
 
 Along with a number of our extras for RxJS:
     
-    <script src="rx.aggregates.js"><script>
-    <script src="rx.binding.js"><script>
-    <script src="rx.coincidencejs"><script>
-    <script src="rx.experimental.js"><script>
-    <script src="rx.joinpatterns.js"><script>
-    <script src="rx.testing.js"><script>
-    <script src="rx.time.js"><script>
+    <script src="rx.aggregates.js"></script>
+    <script src="rx.binding.js"></script>
+    <script src="rx.coincidencejs"></script>
+    <script src="rx.experimental.js"></script>
+    <script src="rx.joinpatterns.js"></script>
+    <script src="rx.testing.js"></script>
+    <script src="rx.time.js"></script>
 
 Installing via NPM:
 
@@ -111,7 +112,13 @@ Using RxJS with an AMD loader such as Require.js
         obs.subscribe(function (x) { console.log(x); });
     });
 
+## Compatibility ##
+
+RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+. 
+
 ## Examples ##
+
+
 
 ## License ##
 
