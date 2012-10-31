@@ -54,12 +54,12 @@ h1, h2, h3 {
 
 h1,h2, h3 {
 	display: block;
-	border-bottom: 1px solid #ccc;
 	padding-bottom: 5px;
 }
 
 h1 {
 	font-size: 30px;
+  border-bottom: 1px solid #ccc;
 }
 
 h2 {
@@ -111,7 +111,14 @@ blockquote {
   margin: 0;
   padding: 0 0 0 20px;
   font-style: italic;
+  font-family: Arvo, Monaco, serif;
+  font-size: 22px;
+  display: block;
+
 }
+
+blockquote > *:before { content: '\201C'; font-size: 24px; }
+blockquote > *:after  { content: '\201D'; font-size: 24px; }
 
 dl, dt, dd, dl p {
 	font-color: #444;
@@ -255,7 +262,6 @@ header ul {
 
 header li {
 	list-style-type: none;
-  width:132px;
   height:15px;
 	margin-bottom: 12px;
 	line-height: 1em;
@@ -285,6 +291,12 @@ header li:hover {
   background: -o-linear-gradient(top, #C3001D 0%,#950119 100%);
   background: -ms-linear-gradient(top, #C3001D 0%,#950119 100%);
   background: linear-gradient(top, #C3001D 0%,#950119 100%);
+}
+
+header li a {
+  width: 100%;
+  height: 100%;
+  display: block;
 }
 
 a.buttons {

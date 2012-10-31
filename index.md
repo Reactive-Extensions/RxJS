@@ -3,17 +3,89 @@ layout: default
 title: RxJS Reactive Extensions for JavaScript
 ---
 
-<h2 class="tag"> Clean Declarative Code</h2>
+<h2 class="tag"> Clean Composable Code</h2>
 
 # What is RxJS?
 
-aka _Reactive Extensions for JavaScript_. 
+RxJS or _Reactive Extensions for JavaScript_ is a library for transforming, composing, and querying streams of data. We mean all kinds of data too, from simple arrays of values, to series of events (unfortunate or otherwise), to complex flows of data.
 
-RxJS a library for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators. Using Rx, you can represent asynchronous data streams with Observables and much more.
+RxJS makes it easy to:
 
-RxJS provides easy-to-use conversions from existing DOM, XmlHttpRequest (AJAX), and jQuery events to Rx push-collections, allowing you to seamlessly plug Rx into your existing apps.
+* _transform_ data using methods like [aggregation](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-aggregate) and [projection](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-select).
+* _compose_ data using methods like [zip](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-zip) and [selectMany](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-selectMany).
+* _query_ data using methods like [where](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-where) and [any](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-any).
 
-# Show me
+## Why use it?
+
+Here's a few reasons for choosing RxJS:
+
+* Our emphasis is on _queryability_ and _composibility_. Consolidating disparate streams into a meaningful whole is a first class story.
+* We take a general approach to data. We're not tied to any specific domain. This gives you a common vocabulary for dealing with streams of arbitrary data.
+* The dust has settled on our API. RxJS has a history and our API has gone through some hardening. 
+
+
+# Install
+
+There are multiple ways of getting started with the Reactive Extensions. 
+
+## Browser
+
+Download [the latest](https://raw.github.com/Reactive-Extensions/RxJS/master/rx.js) from our repository. Or if you prefer, grab the [minified version](https://raw.github.com/Reactive-Extensions/RxJS/master/rx.min.js);
+
+    <script src="rx.js"></script>
+
+Along with a number of our extras for RxJS:
+    
+    <script src="rx.aggregates.js"></script>
+    <script src="rx.binding.js"></script>
+    <script src="rx.coincidencejs"></script>
+    <script src="rx.experimental.js"></script>
+    <script src="rx.joinpatterns.js"></script>
+    <script src="rx.testing.js"></script>
+    <script src="rx.time.js"></script>
+
+## NPM:
+
+    npm install rxjs
+    npm install -g rxjs
+
+Using in Node.js:
+
+    var Rx = require('rx');
+
+## NuGet:
+
+    Install-Package RxJS-All
+
+Or install via NuGet individual packages:
+
+    Install-Package RxJS-Main
+    Install-Package RxJS-Aggregates
+    Install-Package RxJS-Binding
+    Install-Package RxJS-Coincidence
+    Install-Package RxJS-Experimental
+    Install-Package RxJS-JoinPatterns
+    Install-Package RxJS-Testing
+    Install-Package RxJS-Time
+
+## AMD
+Using RxJS with an AMD loader such as Require.js
+
+    require({
+        'paths': {
+            'rx': 'path/to/rx.js'
+        }
+    },
+    ['rx'], function(Rx) {
+        var obs = Rx.Observable.returnValue(42);
+        obs.subscribe(function (x) { console.log(x); });
+    });
+
+# A Brief Example
+
+Let's see how RxJS can help to compose UI events.
+
+ > RxJS is to events as promises are to async.
 
 <pre><code data-language="JavaScript">// Here's an example using jQuery
 
@@ -44,7 +116,7 @@ mousedrag.subscribe(function(pos) {
 });
 </code></pre>
 
-# Bindings
+# Compatible Libraries
 
 RxJS has lots of friends because it knows how to play nice with others.
 Here's a list of the current bindings using RxJS with your favorite libraries and stacks.
@@ -123,4 +195,35 @@ function initialize () {
 
 # Documentation
 
-It's on its way. :-)
+Get a deeper overview from the project's [readme](https://github.com/Reactive-Extensions/RxJS/blob/master/readme.md).
+
+##  API Documentation ##
+_More is on the way!_
+
+Core:
+
+- Observer
+- [Observable](https://github.com/Reactive-Extensions/RxJS/wiki/Observable)
+
+Subjects:
+
+ - AsyncSubject
+ - BehaviorSubject
+ - ReplaySubject
+ - Subject
+
+Schedulers:
+
+- Scheduler object
+- Scheduler.currentThread
+- Scheduler.immediate
+- Scheduler.timeout
+- VirtualTimeScheduler
+
+Disposables:
+
+- CompositeDisposable
+- Disposable
+- RefCountDisposable
+- SerialDisposable
+- SingleAssignmentDisposable
