@@ -1,6 +1,8 @@
 # The Reactive Extensions for JavaScript... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and LINQ-style query operators in JavaScript*
 
+This project has moved to [CodePlex](http://rx.codeplex.com/) and only serves as a mirror.
+
 ## About the Reactive Extensions ##
 
 The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators in JavaScript. Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using LINQ operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + LINQ + Schedulers.
@@ -116,13 +118,21 @@ Using RxJS with an AMD loader such as Require.js
 
 RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+. 
 
-## Examples ##
-
-
-
 ## License ##
 
 
-Source files are licensed under the [Microsoft Reference Source License (MS-RSL)](http://referencesource.microsoft.com/referencesourcelicense.aspx)
+Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+Microsoft Open Technologies would like to thank its contributors, a list
+of whom are at http://rx.codeplex.com/wikipage?title=Contributors.
 
-Minimized files are licensed under the [Reactive Extensions for .NET and JavaScript License](https://github.com/Reactive-Extensions/RxJS/blob/master/license.txt).
+Licensed under the Apache License, Version 2.0 (the "License"); you
+may not use this file except in compliance with the License. You may
+obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing permissions
+and limitations under the License.
