@@ -3,53 +3,54 @@
         return new AnonymousObservable(function (observer) {
 
             var choice,
+                leftChoice = 'L', rightChoice = 'R',
                 leftSubscription = new SingleAssignmentDisposable(),
                 rightSubscription = new SingleAssignmentDisposable();
 
             function choiceL() {
                 if (!choice) {
-                    choice = 'L';
+                    choice = leftChoice;
                     rightSubscription.dispose();
                 }
             }
 
             function choiceR() {
                 if (!choice) {
-                    choice = 'R';
+                    choice = rightChoice;
                     leftSubscription.dispose();
                 }
             }
 
             leftSubscription.setDisposable(leftSource.subscribe(function (left) {
                 choiceL();
-                if (choice === 'L') {
+                if (choice === leftChoice) {
                     observer.onNext(left);
                 }
             }, function (err) {
                 choiceL();
-                if (choice === 'L') {
+                if (choice === leftChoice) {
                     observer.onError(err);
                 }
             }, function () {
                 choiceL();
-                if (choice === 'L') {
+                if (choice === leftChoice) {
                     observer.onCompleted();
                 }
             }));
 
             rightSubscription.setDisposable(rightSource.subscribe(function (right) {
                 choiceR();
-                if (choice === 'R') {
+                if (choice === rightChoice) {
                     observer.onNext(right);
                 }
             }, function (err) {
                 choiceR();
-                if (choice === 'R') {
+                if (choice === rightChoice {
                     observer.onError(err);
                 }
             }, function () {
                 choiceR();
-                if (choice === 'R') {
+                if (choice === rightChoice) {
                     observer.onCompleted();
                 }
             }));
@@ -164,7 +165,7 @@
         return enumerableFor(sources).concat();
     };    
 
-    observableProto.concatObservable = function () {
+    observableProto.concatObservable = observableProto.concatAll =function () {
         return this.merge(1);
     };
 
@@ -230,7 +231,7 @@
         return observableFromArray(sources, scheduler).mergeObservable();
     };    
 
-    observableProto.mergeObservable = function () {
+    observableProto.mergeObservable = observableProto.mergeAll =function () {
         var sources = this;
         return new AnonymousObservable(function (observer) {
             var group = new CompositeDisposable(),

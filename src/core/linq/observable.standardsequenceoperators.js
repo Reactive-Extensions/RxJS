@@ -143,7 +143,7 @@
         });
     };
 
-    observableProto.select = function (selector) {
+    observableProto.select = observableProto.map = function (selector) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
@@ -164,7 +164,7 @@
         return this.select(selector).mergeObservable();
     }
 
-    observableProto.selectMany = function (selector, resultSelector) {
+    observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector) {
         if (resultSelector) {
             return this.selectMany(function (x) {
                 return selector(x).select(function (y) {
@@ -261,7 +261,7 @@
         });
     };
 
-    observableProto.where = function (predicate) {
+    observableProto.where = observableProto.filter = function (predicate) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
