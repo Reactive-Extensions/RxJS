@@ -193,23 +193,60 @@
         });
     };
 
+    /**
+     * Returns the minimum element in an observable sequence according to the optional comparer else a default greater than less than check.
+     * 
+     * 1 - source.min();
+     * 2 - source.min(function (x, y) { return x.value - y.value; });
+     * 
+     * @param {Function} [comparer] Comparer used to compare elements.
+     * @return An observable sequence containing a single element with the minimum element in the source sequence.
+     */
     observableProto.min = function (comparer) {
         return this.minBy(identity, comparer).select(function (x) {
             return firstOnly(x);
         });
     };
 
+    /**
+     * Returns the elements in an observable sequence with the maximum  key value according to the specified comparer.
+     * 
+     * 1 - source.maxBy(function (x) { return x.value; });
+     * 2 - source.maxBy(function (x) { return x.value; }, function (x, y) { return x - y;; });
+     * 
+     * @param {Function} keySelector Key selector function.
+     * @param {Function} [comparer]  Comparer used to compare key values.
+     * @return An observable sequence containing a list of zero or more elements that have a maximum key value.
+     */
     observableProto.maxBy = function (keySelector, comparer) {
         comparer || (comparer = subComparer);
         return extremaBy(this, keySelector, comparer);
     };
 
+        /**
+         * Returns the maximum value in an observable sequence according to the specified comparer.
+         * 
+         * 1 - source.max();
+         * 2 - source.max(function (x, y) { return x.value - y.value; });
+         * 
+         * @param {Function} [comparer] Comparer used to compare elements.
+         * @return An observable sequence containing a single element with the maximum element in the source sequence.
+         */
     observableProto.max = function (comparer) {
         return this.maxBy(identity, comparer).select(function (x) {
             return firstOnly(x);
         });
     };
 
+    /**
+     * Computes the average of an observable sequence of values that are in the sequence or obtained by invoking a transform function on each element of the input sequence if present.
+     * 
+     * 1 - res = source.average();
+     * 2 - res = source.average(function (x) { return x.value; });
+     * 
+     * @param {Function} [selector] A transform function to apply to each element.
+     * @return An observable sequence containing a single element with the average of the sequence of values.
+     */
     observableProto.average = function (keySelector) {
         return keySelector ?
             this.select(keySelector).average() :
@@ -250,6 +287,18 @@
         });
     }
 
+    /**
+     *  Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
+     * 
+     * 1 - res = source.sequenceEqual([1,2,3]);
+     * 2 - res = source.sequenceEqual([{ value: 42 }], function (x, y) { return x.value === y.value; });
+     * 3 - res = source.sequenceEqual(Rx.Observable.returnValue(42));
+     * 4 - res = source.sequenceEqual(Rx.Observable.returnValue({ value: 42 }), function (x, y) { return x.value === y.value; });
+     * 
+     * @param second Second observable sequence or array to compare.
+     * @param {Function} [comparer] Comparer used to compare elements of both sequences.
+     * @return An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.
+     */
     observableProto.sequenceEqual = function (second, comparer) {
         var first = this;
         comparer || (comparer = defaultComparer);
