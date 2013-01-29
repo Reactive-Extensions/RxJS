@@ -398,10 +398,28 @@
         });
     }
 
+    /**
+     * Returns the element at a specified index in a sequence.
+     * 
+     * source.elementAt(5);
+     * 
+     * @param {Number} index The zero-based index of the element to retrieve.
+     * @return An observable sequence that produces the element at the specified position in the source sequence.
+     */
     observableProto.elementAt =  function (index) {
         return elementAtOrDefault(this, index, false);
     };
 
+    /**
+     * Returns the element at a specified index in a sequence or a default value if the index is out of range.
+     * 
+     * source.elementAtOrDefault(5);
+     * source.elementAtOrDefault(5, 0);
+     * 
+     * @param {Number} index The zero-based index of the element to retrieve.
+     * @param [defaultValue] The default value if the index is outside the bounds of the source sequence.
+     * @return An observable sequence that produces the element at the specified position in the source sequence, or a default value if the index is outside the bounds of the source sequence.
+     */    
     observableProto.elementAtOrDefault = function (index, defaultValue) {
         return elementAtOrDefault(this, index, true, defaultValue);
     };
@@ -427,6 +445,15 @@
         });
     }
 
+    /**
+     * Returns the only element of an observable sequence that satisfies the condition in the optional predicate, and reports an exception if there is not exactly one element in the observable sequence.
+     * 
+     * 1 - res = source.single();
+     * 2 - res = source.single(function (x) { return x === 42; });
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @return Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
+     */
     observableProto.single = function (predicate) {
         if (predicate) {
             return this.where(predicate).single();
@@ -434,6 +461,18 @@
         return singleOrDefaultAsync(this, false);
     };
 
+    /**
+     * Returns the only element of an observable sequence that matches the predicate, or a default value if no such element exists; this method reports an exception if there is more than one element in the observable sequence.
+     * 
+     * 1 - res = source.singleOrDefault();
+     * 2 - res = source.singleOrDefault(function (x) { return x === 42; });
+     * 3 - res = source.singleOrDefault(function (x) { return x === 42; }, 0);
+     * 4 - res = source.singleOrDefault(null, 0);
+     * 
+     * @param {Function} predicate A predicate function to evaluate for elements in the source sequence.
+     * @param [defaultValue] The default value if the index is outside the bounds of the source sequence.
+     * @return Sequence containing the single element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     */
     observableProto.singleOrDefault = function (predicate, defaultValue) {
         if (predicate) {
             return this.where(predicate).singleOrDefault(null, defaultValue);
@@ -457,6 +496,15 @@
         });
     }
 
+    /**
+     * Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
+     * 
+     * 1 - res = source.first();
+     * 2 - res = source.first(function (x) { return x > 3; });
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @return Sequence containing the first element in the observable sequence that satisfies the condition in the predicate if provided, else the first item in the sequence.
+     */    
     observableProto.first = function (predicate) {
         if (predicate) {
             return this.where(predicate).first();
@@ -464,6 +512,17 @@
         return firstOrDefaultAsync(this, false);
     };
 
+    /**
+     * Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     * 1 - res = source.firstOrDefault();
+     * 2 - res = source.firstOrDefault(function (x) { return x > 3; });
+     * 3 - res = source.firstOrDefault(function (x) { return x > 3; }, 0);
+     * 4 - res = source.firstOrDefault(null, 0);
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence. 
+     * @param [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+     * @return Sequence containing the first element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     */
     observableProto.firstOrDefault = function (predicate, defaultValue) {
         if (predicate) {
             return this.where(predicate).firstOrDefault(null, defaultValue);
@@ -488,6 +547,15 @@
         });
     }
 
+    /**
+     * Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
+     * 
+     * 1 - res = source.last();
+     * 2 - res = source.last(function (x) { return x > 3; });
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @return Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
+     */
     observableProto.last = function (predicate) {
         if (predicate) {
             return this.where(predicate).last();
@@ -495,6 +563,18 @@
         return lastOrDefaultAsync(this, false);
     };
 
+    /**
+     * Returns the last element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     * 
+     * 1 - res = source.lastOrDefault();
+     * 2 - res = source.lastOrDefault(function (x) { return x > 3; });
+     * 3 - res = source.lastOrDefault(function (x) { return x > 3; }, 0);
+     * 4 - res = source.lastOrDefault(null, 0);
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @param [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+     * @return Sequence containing the last element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     */
     observableProto.lastOrDefault = function (predicate, defaultValue) {
         if (predicate) {
             return this.where(predicate).lastOrDefault(null, defaultValue);

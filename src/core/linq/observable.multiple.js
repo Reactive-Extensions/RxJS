@@ -104,8 +104,14 @@
     };
 
     observableProto.combineLatest = function () {
-        var parent = this, args = slice.call(arguments), resultSelector = args.pop();
+        var args = slice.call(arguments);
         args.unshift(this);
+        combineLatest.apply(this, args);
+    };
+
+    var combineLatest = Observable.combineLatest = function () {
+        var args = slice.call(arguments), resultSelector = args.pop();
+        
         return new AnonymousObservable(function (observer) {
             var falseFactory = function () { return false; },
                 n = args.length,
@@ -119,7 +125,7 @@
                 hasValue[i] = true;
                 if (hasValueAll || (hasValueAll = hasValue.every(function (x) { return x; }))) {
                     try {
-                        res = resultSelector.apply(parent, values);
+                        res = resultSelector.apply(null, values);
                     } catch (ex) {
                         observer.onError(ex);
                         return;
