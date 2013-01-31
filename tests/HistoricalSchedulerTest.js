@@ -1,94 +1,93 @@
 (function(window) {
 
-    // Check if browser vs node
     var root = window.Rx,
-    	HistoricalScheduler = root.HistoricalScheduler;
+        HistoricalScheduler = root.HistoricalScheduler;
 
     QUnit.module('HistoricalSchedulerTest');
 
     function arrayEquals(first, second) {
-    	if (first.length !== second.length) {
-    		ok(false);
-    	}
-    	for (var i = 0, len = first.length; i < len; i++) {
-    		var f = first[i], s = second[i];
-    		if (f.equals && s.equals) {
-    			ok(f.equals(s));
-    		} else {
-    			ok(f === s);
-    		}
-    	}
+        if (first.length !== second.length) {
+            ok(false);
+        }
+        for (var i = 0, len = first.length; i < len; i++) {
+            var f = first[i], s = second[i];
+            if (f.equals && s.equals) {
+                ok(f.equals(s));
+            } else {
+                ok(f === s);
+            }
+        }
     }
 
     function time(days) {
-		var d = new Date(1979,10,31,4,30,15);
-		d.setDate(d.getDate() + days);
-		return d.getTime();
+        var d = new Date(1979,10,31,4,30,15);
+        d.setDate(d.getDate() + days);
+        return d.getTime();
     }
 
     function fromDays(days) {
-    	return 86400000 * days;
+        return 86400000 * days;
     }
 
     function Timestamped (value, timestamp) {
-    	this.value = value;
-    	this.timestamp = timestamp;
+        this.value = value;
+        this.timestamp = timestamp;
     }
     Timestamped.prototype.equals = function (other) {
-    	if (other == null) {
-    		return false;
-    	}
-    	return other.value === this.value && other.timestamp === this.timestamp;
+        if (other == null) {
+            return false;
+        }
+        return other.value === this.value && other.timestamp === this.timestamp;
     };
 
     test('Ctor', function () {
-    	var s = new HistoricalScheduler();
-    	equal(0, s.clock);
-    	equal(false, s.isEnabled);
+        var s = new HistoricalScheduler();
+        equal(0, s.clock);
+        equal(false, s.isEnabled);
     });
 
     test('StartStop', function () {
-		var s = new HistoricalScheduler();
+        var s = new HistoricalScheduler();
 
-		var list = [];
+        var list = [];
 
-		s.scheduleAbsolute(time(0), function () { list.push(new Timestamped(1, s.now())); });
-		s.scheduleAbsolute(time(1), function () { list.push(new Timestamped(2, s.now())); });
-		s.scheduleAbsolute(time(2), function () { s.stop(); });
-		s.scheduleAbsolute(time(3), function () { list.push(new Timestamped(3, s.now())); });
-		s.scheduleAbsolute(time(4), function () { s.stop(); });
-		s.scheduleAbsolute(time(5), function () { s.start(); });
-		s.scheduleAbsolute(time(6), function () { list.push(new Timestamped(4, s.now())); });
+        s.scheduleAbsolute(time(0), function () { list.push(new Timestamped(1, s.now())); });
+        s.scheduleAbsolute(time(1), function () { list.push(new Timestamped(2, s.now())); });
+        s.scheduleAbsolute(time(2), function () { s.stop(); });
+        s.scheduleAbsolute(time(3), function () { list.push(new Timestamped(3, s.now())); });
+        s.scheduleAbsolute(time(4), function () { s.stop(); });
+        s.scheduleAbsolute(time(5), function () { s.start(); });
+        s.scheduleAbsolute(time(6), function () { list.push(new Timestamped(4, s.now())); });
 
-		s.start();
+        s.start();
 
-		equal(time(2), s.now());
-		equal(time(2), s.clock);
+        equal(time(2), s.now());
+        equal(time(2), s.clock);
 
-		s.start();
+        s.start();
 
-		equal(time(4), s.now());
-		equal(time(4), s.clock);
+        equal(time(4), s.now());
+        equal(time(4), s.clock);
 
-		s.start();
+        s.start();
 
-		equal(time(6), s.now());
-		equal(time(6), s.clock);
+        equal(time(6), s.now());
+        equal(time(6), s.clock);
 
-		s.start();
+        s.start();
 
-		equal(time(6), s.now());
-		equal(time(6), s.clock);
+        equal(time(6), s.now());
+        equal(time(6), s.clock);
 
-		arrayEquals(list, [
-		    new Timestamped(1, time(0)),
-		    new Timestamped(2, time(1)),
-		    new Timestamped(3, time(3)),
-		    new Timestamped(4, time(6))
-		]);
+        arrayEquals(list, [
+            new Timestamped(1, time(0)),
+            new Timestamped(2, time(1)),
+            new Timestamped(3, time(3)),
+            new Timestamped(4, time(6))
+        ]);
     });
 
-	test('Order', function () {
+    test('Order', function () {
         var s = new HistoricalScheduler();
 
         var list = [];
@@ -108,9 +107,9 @@
             new Timestamped(2, time(2)),
             new Timestamped(3, time(3))
         ]);
-	});
+    });
 
-	test('Cancellation', function () {
+    test('Cancellation', function () {
         var s = new HistoricalScheduler();
 
         var list = [];
@@ -127,9 +126,9 @@
         arrayEquals(list, [
             new Timestamped(0, time(1))
         ]);
-	});
+    });
 
-	test('AdvanceTo', function () {
+    test('AdvanceTo', function () {
         var s = new HistoricalScheduler();
 
         var list = [];
@@ -202,9 +201,9 @@
             new Timestamped(10, time(10)),
             new Timestamped(11, time(11))
         ]);
-	});
+    });
 
-	test('AdvanceBy', function () {
+    test('AdvanceBy', function () {
         var s = new HistoricalScheduler();
 
         var list = [];
@@ -277,9 +276,9 @@
             new Timestamped(10, time(10)),
             new Timestamped(11, time(11))
         ]);
-	});
+    });
 
-	test('IsEnabled', function () {
+    test('IsEnabled', function () {
         var s = new HistoricalScheduler();
 
         equal(false, s.isEnabled);
@@ -295,9 +294,9 @@
         s.start();
 
         equal(false, s.isEnabled);
-	});
+    });
 
-	test('Sleep1', function () {
+    test('Sleep1', function () {
         var now = new Date(1983, 2, 11, 12, 0, 0).getTime();
 
         var s = new HistoricalScheduler(now);
@@ -305,9 +304,9 @@
         s.sleep(fromDays(1));
 
         equal(now + fromDays(1), s.clock);
-	});
+    });
 
-	test('Sleep2', function () {
+    test('Sleep2', function () {
         var s = new HistoricalScheduler();
 
         var n = 0;
@@ -322,13 +321,13 @@
         s.advanceTo(s.now() + (5 * 6000));
 
         equal(2, n);
-	});
+    });
 
-	function reverseComparer (x, y) {
-		return y - x;
-	}
+    function reverseComparer (x, y) {
+        return y - x;
+    }
 
-	test('WithComparer', function () {
+    test('WithComparer', function () {
         var now = new Date();
 
         var s = new HistoricalScheduler(now, reverseComparer);
@@ -341,6 +340,6 @@
         s.start();
 
         arrayEquals(res, [1,2]);
-	});
+    });
 
 }(typeof global == 'object' && global || this));        
