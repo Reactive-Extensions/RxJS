@@ -100,8 +100,12 @@
              */
             advanceTo: function (time) {
                 var next;
-                if (this.comparer(this.clock, time) >= 0) {
+                var dueToClock = this.comparer(this.clock, time);
+                if (this.comparer(this.clock, time) > 0) {
                     throw new Error(argumentOutOfRange);
+                }
+                if (dueToClock === 0) {
+                    return;
                 }
                 if (!this.isEnabled) {
                     this.isEnabled = true;
@@ -125,8 +129,12 @@
              */
             advanceBy: function (time) {
                 var dt = this.add(this.clock, time);
-                if (this.comparer(this.clock, dt) >= 0) {
+                var dueToClock = this.comparer(this.clock, dt);
+                if (dueToClock > 0) {
                     throw new Error(argumentOutOfRange);
+                }
+                if (dueToClock === 0) {
+                    return;
                 }
                 return this.advanceTo(dt);
             },

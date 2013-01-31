@@ -1,12 +1,4 @@
-﻿/// <reference path="../reactiveassert.js" />
-/// <reference path="../rx.js" />
-/// <reference path="../rx.testing.js" />
-
-/// <reference path="../reactiveassert.js" />
-/// <reference path="../rx.js" />
-/// <reference path="../rx.testing.js" />
-
-(function(window) {
+﻿(function(window) {
 
     // Check if browser vs node
     var root = window.Rx;

@@ -38,6 +38,7 @@ module.exports = function (grunt) {
                     'src/core/concurrency/currentthreadscheduler.js',
                     'src/core/concurrency/scheduleperiodicrecursive.js',
                     'src/core/concurrency/virtualtimescheduler.js',
+                    'src/core/concurrency/historicalscheduler.js',
                     'src/core/concurrency/timeoutscheduler.js',
                     'src/core/concurrency/catchscheduler.js',
                     'src/core/notification.js',
