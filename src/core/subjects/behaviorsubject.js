@@ -1,3 +1,7 @@
+    /**
+     *  Represents a value that changes over time.
+     *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
+     */
     var BehaviorSubject = root.BehaviorSubject = (function () {
         function subscribe(observer) {
             var ex;
@@ -17,6 +21,12 @@
         }
 
         inherits(BehaviorSubject, Observable);
+
+        /**
+         *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
+         *  
+         *  @param value Initial value sent to observers when no other value has been received by the subject yet.
+         */       
         function BehaviorSubject(value) {
             BehaviorSubject.super_.constructor.call(this, subscribe);
 

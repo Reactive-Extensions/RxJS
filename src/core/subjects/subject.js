@@ -1,3 +1,7 @@
+    /**
+     *  Represents an object that is both an observable sequence as well as an observer.
+     *  Each notification is broadcasted to all subscribed observers.
+     */
     var Subject = root.Subject = (function () {
         function subscribe(observer) {
             checkDisposed.call(this);
@@ -14,6 +18,11 @@
         }
 
         inherits(Subject, Observable);
+
+        /**
+         * @constructor
+         * Creates a subject.
+         */      
         function Subject() {
             Subject.super_.constructor.call(this, subscribe);
             this.isDisposed = false,

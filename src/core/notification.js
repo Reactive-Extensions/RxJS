@@ -1,5 +1,6 @@
-    // Notifications
-
+    /**
+     *  Represents a notification to an observer.
+     */
     var Notification = root.Notification = (function () {
         function Notification() { }
 
@@ -33,6 +34,12 @@
         return Notification;
     })();
 
+    /**
+     *  Creates an object that represents an OnNext notification to an observer.
+     *  
+     *  @param value The value contained in the notification.
+     *  @return The OnNext notification containing the value.
+     */
     var notificationCreateOnNext = Notification.createOnNext = (function () {
         inherits(ON, Notification);
         function ON(value) {
@@ -58,6 +65,12 @@
         };
     }());
 
+    /**
+     *  Creates an object that represents an OnError notification to an observer.
+     *  
+     *  @param error The exception contained in the notification.
+     *  @return The OnError notification containing the exception.
+     */
     var notificationCreateOnError = Notification.createOnError = (function () {
         inherits(OE, Notification);
         function OE(exception) {
@@ -82,6 +95,10 @@
         };
     }());
 
+    /**
+     *  Creates an object that represents an OnCompleted notification to an observer.
+     *  @return The OnCompleted notification.
+     */
     var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
         inherits(OC, Notification);
         function OC() {

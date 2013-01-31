@@ -1,21 +1,4 @@
-/*
-
-Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
-Microsoft Open Technologies would like to thank its contributors, a list
-of whom are at http://aspnetwebstack.codeplex.com/wikipage?title=Contributors.
-
-Licensed under the Apache License, Version 2.0 (the "License"); you
-may not use this file except in compliance with the License. You may
-obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-implied. See the License for the specific language governing permissions
-and limitations under the License.
-*/
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 (function (root, factory) {
     var freeExports = typeof exports == 'object' && exports &&
@@ -56,6 +39,22 @@ and limitations under the License.
         }
     }
 
+    /**
+     * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
+     * subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
+     * invocation. For specializations with fixed subject types, see Publish, PublishLast, and Replay.
+     * 
+     * 1 - res = source.multicast(observable);
+     * 2 - res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
+     * 
+     * @param subjectOrSubjectSelector 
+     * Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
+     * Or:
+     * Subject to push source elements into.
+     * 
+     * @param selector [Optional] Selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if <paramref name="subjectOrSubjectSelector" is a factory function.
+     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     */
     observableProto.multicast = function (subjectOrSubjectSelector, selector) {
         var source = this;
         return typeof subjectOrSubjectSelector === 'function' ?
@@ -66,6 +65,16 @@ and limitations under the License.
             new ConnectableObservable(source, subjectOrSubjectSelector);
     };
 
+    /**
+     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
+     * This operator is a specialization of Multicast using a regular Subject.
+     * 
+     * 1 - res = source.publish();
+     * 2 - res = source.publish(function (x) { return x; });
+     * 
+     * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
+     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     */
     observableProto.publish = function (selector) {
         return !selector ?
             this.multicast(new Subject()) :
@@ -74,6 +83,16 @@ and limitations under the License.
             }, selector);
     };
 
+    /**
+     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
+     * This operator is a specialization of Multicast using a AsyncSubject.
+     * 
+     * 1 - res = source.publishLast();
+     * 2 - res = source.publishLast(function (x) { return x; });
+     * 
+     * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
+     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     */
     observableProto.publishLast = function (selector) {
         return !selector ?
             this.multicast(new AsyncSubject()) :
@@ -82,6 +101,17 @@ and limitations under the License.
             }, selector);
     };
 
+    /**
+     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
+     * This operator is a specialization of Multicast using a BehaviorSubject.
+     * 
+     * 1 - res = source.publishValue(42);
+     * 2 - res = source.publishLast(function (x) { return x.select(function (y) { return y * y; }) }, 42);
+     * 
+     * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
+     * @param initialValue Initial value received by observers upon subscription.
+     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     */
     observableProto.publishValue = function (initialValueOrSelector, initialValue) {
         return arguments.length === 2 ?
             this.multicast(function () {
@@ -90,6 +120,21 @@ and limitations under the License.
             this.multicast(new BehaviorSubject(initialValueOrSelector));
     };
 
+    /**
+     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
+     * This operator is a specialization of Multicast using a ReplaySubject.
+     * 
+     * 1 - res = source.replay(null, 3);
+     * 2 - res = source.replay(null, 3, 500);
+     * 3 - res = source.replay(null, 3, 500, scheduler);
+     * 4 - res = source.replay(function (x) { return x.take(6).repeat(); }, 3, 500, scheduler);
+     * 
+     * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
+     * @param bufferSize [Optional] Maximum element count of the replay buffer.
+     * @param window [Optional] Maximum time length of the replay buffer.
+     * @param scheduler [Optional] Scheduler where connected observers within the selector function will be invoked on.
+     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     */
     observableProto.replay = function (selector, bufferSize, window, scheduler) {
         return !selector ?
             this.multicast(new ReplaySubject(bufferSize, window, scheduler)) :
@@ -110,6 +155,10 @@ and limitations under the License.
         }
     };
 
+    /**
+     *  Represents a value that changes over time.
+     *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
+     */
     var BehaviorSubject = root.BehaviorSubject = (function () {
         function subscribe(observer) {
             var ex;
@@ -129,6 +178,12 @@ and limitations under the License.
         }
 
         inherits(BehaviorSubject, Observable);
+
+        /**
+         *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
+         *  
+         *  @param value Initial value sent to observers when no other value has been received by the subject yet.
+         */       
         function BehaviorSubject(value) {
             BehaviorSubject.super_.constructor.call(this, subscribe);
 
@@ -188,6 +243,10 @@ and limitations under the License.
     }());
 
     // Replay Subject
+    /**
+     * Represents an object that is both an observable sequence as well as an observer.
+     * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
+     */  
     var ReplaySubject = root.ReplaySubject = (function (base) {
         var RemovableDisposable = function (subject, observer) {
             this.subject = subject;
@@ -229,6 +288,13 @@ and limitations under the License.
 
         inherits(ReplaySubject, Observable);
 
+        /**
+         *  Initializes a new instance of the ReplaySubject class with the specified buffer size, window and scheduler.
+         * 
+         *  @param {Number} [bufferSize] Maximum element count of the replay buffer.
+         *  @param {Number} [window] Maximum time length of the replay buffer.
+         *  @param [scheduler] Scheduler the observers are invoked on.
+         */
         function ReplaySubject(bufferSize, window, scheduler) {
             this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
             this.window = window == null ? Number.MAX_VALUE : window;

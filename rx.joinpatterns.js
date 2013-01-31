@@ -1,21 +1,4 @@
-/*
-
-Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
-Microsoft Open Technologies would like to thank its contributors, a list
-of whom are at http://aspnetwebstack.codeplex.com/wikipage?title=Contributors.
-
-Licensed under the Apache License, Version 2.0 (the "License"); you
-may not use this file except in compliance with the License. You may
-obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-implied. See the License for the specific language governing permissions
-and limitations under the License.
-*/
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 (function (root, factory) {
     var freeExports = typeof exports == 'object' && exports &&
@@ -96,15 +79,32 @@ and limitations under the License.
         return Map;
     }());
 
-    // Pattern
+    /**
+     * @constructor
+     * Represents a join pattern over observable sequences.
+     */
     function Pattern(patterns) {
         this.patterns = patterns;
     }
+
+    /**
+     *  Creates a pattern that matches the current plan matches and when the specified observable sequences has an available value.
+     *  
+     *  @param other Observable sequence to match in addition to the current pattern.
+     *  @return Pattern object that matches when all observable sequences in the pattern have an available value.   
+     */ 
     Pattern.prototype.and = function (other) {
         var patterns = this.patterns.slice(0);
         patterns.push(other);
         return new Pattern(patterns);
     };
+
+    /**
+     *  Matches when all observable sequences in the pattern (specified using a chain of and operators) have an available value and projects the values.
+     *  
+     *  @param selector Selector that will be invoked with available values from the source sequences, in the same order of the sequences in the pattern.
+     *  @return Plan that produces the projected values, to be fed (with other plans) to the when operator.
+     */
     Pattern.prototype.then = function (selector) {
         return new Plan(this, selector);
     };
@@ -255,12 +255,33 @@ and limitations under the License.
     } ());
 
     // Observable extensions
+    
+    /**
+     *  Creates a pattern that matches when both observable sequences have an available value.
+     *  
+     *  @param right Observable sequence to match with the current sequence.</param>
+     *  @return Pattern object that matches when both observable sequences have an available value.     
+     */
     observableProto.and = function (right) {
         return new Pattern([this, right]);
     };
+
+    /**
+     *  Matches when the observable sequence has an available value and projects the value.
+     *  
+     *  @param selector Selector that will be invoked for values in the source sequence.</param>
+     *  @return Plan that produces the projected values, to be fed (with other plans) to the when operator. 
+     */    
     observableProto.then = function (selector) {
         return new Pattern([this]).then(selector);
     };
+
+    /**
+     *  Joins together the results from several patterns.
+     *  
+     *  @param plans A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.</param>
+     *  @return Observable sequence with the results form matching several patterns. 
+     */
     Observable.when = function () {
         var plans = argsOrArray(arguments, 0);
         return new AnonymousObservable(function (observer) {

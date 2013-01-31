@@ -1,4 +1,13 @@
     // Joins
+    /**
+     *  Correlates the elements of two sequences based on overlapping durations.
+     *  
+     *  @param right The right observable sequence to join elements for.
+     *  @param leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+     *  @param rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+     *  @param resultSelector A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters passed to the function correspond with the elements from the left and right source sequences for which overlap occurs.
+     *  @return An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+     */    
     observableProto.join = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
         var left = this;
         return new AnonymousObservable(function (observer) {
@@ -90,6 +99,15 @@
     };
 
     // Group Join
+    /**
+     *  Correlates the elements of two sequences based on overlapping durations, and groups the results.
+     *  
+     *  @param right The right observable sequence to join elements for.
+     *  @param leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+     *  @param rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+     *  @param resultSelector A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. The first parameter passed to the function is an element of the left sequence. The second parameter passed to the function is an observable sequence with elements from the right sequence that overlap with the left sequence's element.
+     *  @return An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+     */    
     observableProto.groupJoin = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
         var left = this;
         return new AnonymousObservable(function (observer) {
@@ -204,6 +222,13 @@
         });
     };
     
+    /**
+     *  Projects each element of an observable sequence into zero or more buffers.
+     *  
+     *  @param bufferOpeningsOrClosingSelector Observable sequence whose elements denote the creation of new windows, or, a function invoked to define the boundaries of the produced windows (a new window is started when the previous one is closed, resulting in non-overlapping windows).
+     *  @param [bufferClosingSelector] A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
+     *  @return An observable sequence of windows.    
+     */
     observableProto.buffer = function (bufferOpeningsOrClosingSelector, bufferClosingSelector) {
         if (arguments.length === 1 && typeof arguments[0] !== 'function') {
             return observableWindowWithBounaries.call(this, bufferOpeningsOrClosingSelector).selectMany(function (item) {
@@ -219,6 +244,13 @@
             });
     };
     
+    /**
+     *  Projects each element of an observable sequence into zero or more windows.
+     *  
+     *  @param windowOpeningsOrClosingSelector Observable sequence whose elements denote the creation of new windows, or, a function invoked to define the boundaries of the produced windows (a new window is started when the previous one is closed, resulting in non-overlapping windows).
+     *  @param [windowClosingSelector] A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
+     *  @return An observable sequence of windows.
+     */    
     observableProto.window = function (windowOpeningsOrClosingSelector, windowClosingSelector) {
         if (arguments.length === 1 && typeof arguments[0] !== 'function') {
             return observableWindowWithBounaries.call(this, windowOpeningsOrClosingSelector);

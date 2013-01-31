@@ -1,4 +1,4 @@
-    // Virtual Scheduler
+    /** Provides a set of extension methods for virtual time scheduling. */
     root.VirtualTimeScheduler = (function () {
 
         function localNow() {
@@ -24,6 +24,11 @@
 
         inherits(VirtualTimeScheduler, Scheduler);
 
+        /**
+         * Creates a new virtual time scheduler with the specified initial clock value and absolute time comparer.
+         * @param initialClock Initial value for the clock.
+         * @param comparer Comparer to determine causality of events based on absolute time.
+         */
         function VirtualTimeScheduler(initialClock, comparer) {
             this.clock = initialClock;
             this.comparer = comparer;
@@ -33,17 +38,41 @@
         }
 
         addProperties(VirtualTimeScheduler.prototype, {
+            /**
+             * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be emulated using recursive scheduling.
+             * 
+             * @param state Initial state passed to the action upon the first iteration.
+             * @param period Period for running the work periodically.
+             * @param action Action to be executed, potentially updating the state.
+             * @return The disposable object used to cancel the scheduled recurring action (best effort).
+             */      
             schedulePeriodicWithState: function (state, period, action) {
                 var s = new SchedulePeriodicRecursive(this, state, period, action);
                 return s.start();
             },
+            /**
+             * Schedules an action to be executed after dueTime.
+             * 
+             * @param state State passed to the action to be executed.
+             * @param dueTime Relative time after which to execute the action.
+             * @param action Action to be executed.
+             * @return The disposable object used to cancel the scheduled action (best effort).
+             */            
             scheduleRelativeWithState: function (state, dueTime, action) {
                 var runAt = this.add(this.clock, dueTime);
                 return this.scheduleAbsoluteWithState(state, runAt, action);
             },
+            /**
+             * Schedules an action to be executed at dueTime.
+             * 
+             * @param dueTime Relative time after which to execute the action.
+             * @param action Action to be executed.
+             * @return The disposable object used to cancel the scheduled action (best effort).
+             */          
             scheduleRelative: function (dueTime, action) {
                 return this.scheduleRelativeWithState(action, dueTime, invokeAction);
             },
+            /** Starts the virtual time scheduler. */
             start: function () {
                 var next;
                 if (!this.isEnabled) {
@@ -61,9 +90,14 @@
                     } while (this.isEnabled);
                 }
             },
+            /** Stops the virtual time scheduler. */
             stop: function () {
                 this.isEnabled = false;
             },
+            /**
+             * Advances the scheduler's clock to the specified time, running all work till that point.
+             * @param time Absolute time to advance the scheduler's clock to.
+             */
             advanceTo: function (time) {
                 var next;
                 if (this.comparer(this.clock, time) >= 0) {
@@ -85,6 +119,10 @@
                     this.clock = time;
                 }
             },
+            /**
+             * Advances the scheduler's clock by the specified relative time, running all work scheduled for that timespan.
+             * @param time Relative time to advance the scheduler's clock by.
+             */
             advanceBy: function (time) {
                 var dt = this.add(this.clock, time);
                 if (this.comparer(this.clock, dt) >= 0) {
@@ -92,6 +130,10 @@
                 }
                 return this.advanceTo(dt);
             },
+            /**
+             * Advances the scheduler's clock by the specified relative time.
+             * @param time Relative time to advance the scheduler's clock by.
+             */
             sleep: function (time) {
                 var dt = this.add(this.clock, time);
 
@@ -101,6 +143,10 @@
 
                 this.clock = dt;
             },
+            /**
+             * Gets the next scheduled item to be executed.
+             * @return The next scheduled item.
+             */          
             getNext: function () {
                 var next;
                 while (this.queue.length > 0) {
@@ -113,9 +159,23 @@
                 }
                 return null;
             },
+            /**
+             * Schedules an action to be executed at dueTime.
+             * @param scheduler Scheduler to execute the action on.
+             * @param dueTime Absolute time at which to execute the action.
+             * @param action Action to be executed.
+             * @return The disposable object used to cancel the scheduled action (best effort).
+             */           
             scheduleAbsolute: function (dueTime, action) {
                 return this.scheduleAbsoluteWithState(action, dueTime, invokeAction);
             },
+            /**
+             * Schedules an action to be executed at dueTime.
+             * @param state State passed to the action to be executed.
+             * @param dueTime Absolute time at which to execute the action.
+             * @param action Action to be executed.
+             * @return The disposable object used to cancel the scheduled action (best effort).
+             */
             scheduleAbsoluteWithState: function (state, dueTime, action) {
                 var self = this,
                     run = function (scheduler, state1) {

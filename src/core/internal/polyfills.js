@@ -29,7 +29,7 @@
     }
     var hasProp = {}.hasOwnProperty;
     var inherits = root.Internals.inherits = function (child, parent) {
-        for (var key in parent) {
+        for (var key in parent) { // Enumerable bug in WebKit Mobile 4.0
             if (key !== 'prototype' && hasProp.call(parent, key)) child[key] = parent[key];
         }
         function ctor() { this.constructor = child; }
@@ -65,7 +65,7 @@
     }
     if (!Array.prototype.every) {
         Array.prototype.every = function (predicate) {
-            var t = new Object(this);
+            var t = Object(this);
             for (var i = 0, len = t.length >>> 0; i < len; i++) {
                 if (i in t && !predicate.call(arguments[1], t[i], i, t)) {
                     return false;
@@ -76,8 +76,8 @@
     }
     if (!Array.prototype.map) {
         Array.prototype.map = function (selector) {
-            var results = [], t = new Object(this);
-            for (var i = 0, len = t.length >>> 0; i < len; i++) {
+            var len = t.length >>> 0, results = new Array(len), t = Object(this);
+            for (var i = 0; i < len; i++) {
                 if (i in t) {
                     results.push(selector.call(arguments[1], t[i], i, t));
                 }
@@ -104,18 +104,27 @@
     }
     if (!Array.prototype.indexOf) {
         Array.prototype.indexOf = function indexOf(item) {
-            var self = new Object(this), length = self.length >>> 0;
-            if (!length) {
+            var t = Object(this);
+            var len = t.length >>> 0;
+            if (len === 0) {
                 return -1;
             }
-            var i = 0;
+            var n = 0;
             if (arguments.length > 1) {
-                i = arguments[1];
+                n = Number(arguments[1]);
+                if (n != n) {
+                    n = 0;
+                } else if (n != 0 && n != Infinity && n != -Infinity) {
+                    n = (n > 0 || -1) * Math.floor(Math.abs(n));
+                }
             }
-            i = i >= 0 ? i : Math.max(0, length + i);
-            for (; i < length; i++) {
-                if (i in self && self[i] === item) {
-                    return i;
+            if (n >= len) {
+                return -1;
+            }
+            var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+            for (; k < len; k++) {
+                if (k in t && t[k] === searchElement) {
+                    return k;
                 }
             }
             return -1;

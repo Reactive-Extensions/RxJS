@@ -1,27 +1,29 @@
 {
-    "name": "rx",
-    "title": "Reactive Extensions for JavaScript (RxJS)",
-    "description": "Library for composing asynchronous and event-based operations in JavaScript",
-    "version": "2.0.0",
-    "homepage": "http://go.microsoft.com/fwlink/?LinkID=179929",
-    "author": {
-        "name": "Cloud Programmability Team",
-        "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/authors.txt"
-    },
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Reactive-Extensions/RxJS.git"
-    },
-    "licenses": [
-        {
-            "type": "MICROSOFT REACTIVE EXTENSIONS FOR JAVASCRIPT AND .NET LIBRARIES",
-            "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/license.txt"
-        }
-    ],
-    "dependencies": {},
-    "devDependencies": {
-        "grunt": "~0.3.9"
-    },
-    "keywords": [],
-	"main": "rx.node.js"
+  "name": "rx",
+  "title": "Reactive Extensions for JavaScript (RxJS)",
+  "description": "Library for composing asynchronous and event-based operations in JavaScript",
+  "version": "2.0.0",
+  "homepage": "http://go.microsoft.com/fwlink/?LinkID=179929",
+  "author": {
+    "name": "Cloud Programmability Team",
+    "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/authors.txt"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Reactive-Extensions/RxJS.git"
+  },
+  "licenses": [
+    {
+      "type": "MICROSOFT REACTIVE EXTENSIONS FOR JAVASCRIPT AND .NET LIBRARIES",
+      "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/license.txt"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "grunt": "~0.3.17",
+    "grunt-contrib-jshint": "~0.1.0",
+    "grunt-contrib-nodeunit": "~0.1.0"
+  },
+  "keywords": [],
+  "main": "rx.node.js"
 }

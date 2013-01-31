@@ -1,47 +1,49 @@
-﻿/// <reference path="../rx.js" />
+﻿(function (window) {
+    module('TimeoutSchedulerTest');
 
-module('TimeoutSchedulerTest');
+    var root = window.Rx, TimeoutScheduler = root.Scheduler.timeout;
 
-var root = Rx, TimeoutScheduler = root.Scheduler.timeout;
+    test('Timeout_Now', function () {
+        var res;
+        res = TimeoutScheduler.now() - new Date().getTime();
+        ok(res < 1000);
+    });
+    asyncTest('Timeout_ScheduleAction', function () {
+        var ran = false;
+        TimeoutScheduler.schedule(function () {
+            ran = true;
+        });
 
-test('Timeout_Now', function () {
-    var res;
-    res = TimeoutScheduler.now() - new Date().getTime();
-    ok(res < 1000);
-});
-asyncTest('Timeout_ScheduleAction', function () {
-    var ran = false;
-    TimeoutScheduler.schedule(function () {
-        ran = true;
+        setTimeout(function () {
+            ok(ran);
+            start();
+        }, 5);
+
     });
 
-    setTimeout(function () {
-        ok(ran);
-        start();
-    }, 5);
+    asyncTest('ThreadPool_ScheduleActionDue', function () {
+        var startTime = new Date().getTime(), endTime;
+        TimeoutScheduler.scheduleWithRelative(200, function () {
+            endTime = new Date().getTime();
+        });
 
-});
-
-asyncTest('ThreadPool_ScheduleActionDue', function () {
-    var startTime = new Date().getTime(), endTime;
-    TimeoutScheduler.scheduleWithRelative(200, function () {
-        endTime = new Date().getTime();
+        setTimeout(function () {
+            ok(endTime - startTime > 180, endTime - startTime);
+            start();
+        }, 400);
     });
 
-    setTimeout(function () {
-        ok(endTime - startTime > 180, endTime - startTime);
-        start();
-    }, 400);
-});
+    asyncTest('Timeout_ScheduleActionCancel', function () {
+        var set = false
+                        , d = TimeoutScheduler.scheduleWithRelative(200, function () {
+                            set = true;
+                        });
+        d.dispose();
+        setTimeout(function () {
+            ok(!set);
+            start();
+        }, 400);
+    });
 
-asyncTest('Timeout_ScheduleActionCancel', function () {
-    var set = false
-		            , d = TimeoutScheduler.scheduleWithRelative(200, function () {
-		                set = true;
-		            });
-    d.dispose();
-    setTimeout(function () {
-        ok(!set);
-        start();
-    }, 400);
-});
+    
+}(this));

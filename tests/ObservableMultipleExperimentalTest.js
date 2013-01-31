@@ -5,27 +5,7 @@
 (function(window) {
 
     // Check if browser vs node
-    var root;
-    if (!window.document) {
-        root = require('../rx.js');
-        require('../rx.testing');
-        require('./ReactiveAssert');
-    } else {
-        root = window.Rx;
-    }
-
-    // use a single load function
-    var load = typeof require == 'function' ? require : window.load;
-
-    // load QUnit and CLIB if needed
-    var QUnit =
-      window.QUnit || (
-        window.setTimeout || (window.addEventListener = window.setTimeout = / /),
-        window.QUnit = load('./vendor/qunit-1.9.0.js') || window.QUnit,
-        load('./vendor/qunit-clib.js'),
-        (window.addEventListener || 0).test && delete window.addEventListener,
-        window.QUnit
-      );
+    var root = window.Rx;
 
     QUnit.module('ObservableMultipleExperimentalTest');
 
@@ -36,7 +16,7 @@
         onCompleted = root.ReactiveTest.onCompleted,
         subscribe = root.ReactiveTest.subscribe;
 
-    var sequenceEqual = function (a1, a2) {
+    function sequenceEqual(a1, a2) {
         if (a1.length !== a2.length) {
             return false;
         }
@@ -46,7 +26,7 @@
             }
         }
         return true;
-    };
+    }
 
     test('ForkJoin_EmptyEmpty', function () {
         var e, o, results, scheduler;
@@ -221,7 +201,5 @@
 
     // must call `QUnit.start()` if using QUnit < 1.3.0 with Node.js or any
     // version of QUnit with Narwhal, Rhino, or RingoJS
-    if (!window.document) {
-        QUnit.start();
-    }
+    
 }(typeof global == 'object' && global || this));

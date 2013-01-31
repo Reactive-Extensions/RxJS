@@ -1,21 +1,4 @@
-/*
-
-Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
-Microsoft Open Technologies would like to thank its contributors, a list
-of whom are at http://aspnetwebstack.codeplex.com/wikipage?title=Contributors.
-
-Licensed under the Apache License, Version 2.0 (the "License"); you
-may not use this file except in compliance with the License. You may
-obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-implied. See the License for the specific language governing permissions
-and limitations under the License.
-*/
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 (function (root, factory) {
     var freeExports = typeof exports == 'object' && exports &&
@@ -100,6 +83,18 @@ and limitations under the License.
     }
 
     // Aggregation methods
+
+    /**
+     * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
+     * For aggregation behavior with incremental intermediate results, see Observable.scan.
+     * 
+     * 1 - res = source.aggregate(function (acc, x) { return acc + x; });
+     * 2 - res = source.aggregate(0, function (acc, x) { return acc + x; });
+
+     * @param [seed] The initial accumulator value.
+     * @param accumulator An accumulator function to be invoked on each element.
+     * @return An observable sequence containing a single element with the final accumulator value.
+     */
     observableProto.aggregate = function () {
         var seed, hasSeed, accumulator;
         if (arguments.length === 2) {
@@ -112,7 +107,25 @@ and limitations under the License.
         return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
     };
 
-    observableProto.any = function (predicate) {
+    observableProto.reduce = function () {
+        var seed, hasSeed, accumulator = arguments[0];
+        if (arguments.length === 2) {
+            hasSeed = true;
+            seed = arguments[1];
+        } 
+        return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
+    };    
+
+    /**
+     * Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence.
+     * 
+     * 1 - source.any();
+     * 2 - source.any(function (x) { return x > 3; });
+     * 
+     * @param {Function} [predicate] A function to test each element for a condition.
+     * @return An observable sequence containing a single element determining whether any elements in the source sequence pass the test in the specified predicate if given, else if any items are in the sequence.
+     */
+    observableProto.any = observableProto.some = function (predicate) {
         var source = this;
         return predicate 
             ? source.where(predicate).any() 
@@ -127,11 +140,24 @@ and limitations under the License.
             });
     };
 
+    /**
+     * Determines whether an observable sequence is empty.
+     * 
+     * @return An observable sequence containing a single element determining whether the source sequence is empty.
+     */
     observableProto.isEmpty = function () {
         return this.any().select(function (b) { return !b; });
     };
 
-    observableProto.all = function (predicate) {
+    /**
+     * Determines whether all elements of an observable sequence satisfy a condition.
+     * 
+     * 1 - res = source.all(function (value) { return value.length > 3; });
+     * 
+     * @param {Function} [predicate] A function to test each element for a condition.
+     * @return An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
+     */
+    observableProto.all = observableProto.every = function (predicate) {
         return this.where(function (v) {
             return !predicate(v);
         }).any().select(function (b) {
@@ -139,6 +165,16 @@ and limitations under the License.
         });
     };
 
+    /**
+     * Determines whether an observable sequence contains a specified element with an optional equality comparer.
+     * 
+     * 1 - res = source.contains(42);
+     * 2 - res = source.contains({ value: 42 }, function (x, y) { return x.value === y.value; });
+     * 
+     * @param value The value to locate in the source sequence.</param>
+     * @param {Function} [comparer] An equality comparer to compare elements.
+     * @return An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value.
+     */
     observableProto.contains = function (value, comparer) {
         comparer || (comparer = defaultComparer);
         return this.where(function (v) {
@@ -146,6 +182,15 @@ and limitations under the License.
         }).any();
     };
 
+    /**
+     * Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
+     * 
+     * 1 - res = source.count();
+     * 2 - res = source.count(function (x) { return x > 3; });
+     * 
+     * @param {Function} [predicate]A function to test each element for a condition.
+     * @return An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
+     */
     observableProto.count = function (predicate) {
         return predicate ?
             this.where(predicate).count() :
@@ -154,6 +199,15 @@ and limitations under the License.
             });
     };
 
+    /**
+     * Computes the sum of a sequence of values that are obtained by invoking an optional transform function on each element of the input sequence, else if not specified computes the sum on each item in the sequence.
+     * 
+     * 1 - res = source.sum();
+     * 2 - res = source.sum(function (x) { return x.value; });
+     * 
+     * @param {Function} [selector]A transform function to apply to each element.
+     * @return An observable sequence containing a single element with the sum of the values in the source sequence.
+     */    
     observableProto.sum = function (keySelector) {
         return keySelector ? 
             this.select(keySelector).sum() :
@@ -162,6 +216,16 @@ and limitations under the License.
             });
     };
 
+    /**
+     * Returns the elements in an observable sequence with the minimum key value according to the specified comparer.
+     * 
+     * 1 - source.minBy(function (x) { return x.value; });
+     * 2 - source.minBy(function (x) { return x.value; }, function (x, y) { return x - y; });
+     * 
+     * @param {Function} keySelector Key selector function.</param>
+     * @param {Function} [comparer] Comparer used to compare key values.</param>
+     * @return An observable sequence containing a list of zero or more elements that have a minimum key value.
+     */  
     observableProto.minBy = function (keySelector, comparer) {
         comparer || (comparer = subComparer);
         return extremaBy(this, keySelector, function (x, y) {
@@ -169,23 +233,60 @@ and limitations under the License.
         });
     };
 
+    /**
+     * Returns the minimum element in an observable sequence according to the optional comparer else a default greater than less than check.
+     * 
+     * 1 - source.min();
+     * 2 - source.min(function (x, y) { return x.value - y.value; });
+     * 
+     * @param {Function} [comparer] Comparer used to compare elements.
+     * @return An observable sequence containing a single element with the minimum element in the source sequence.
+     */
     observableProto.min = function (comparer) {
         return this.minBy(identity, comparer).select(function (x) {
             return firstOnly(x);
         });
     };
 
+    /**
+     * Returns the elements in an observable sequence with the maximum  key value according to the specified comparer.
+     * 
+     * 1 - source.maxBy(function (x) { return x.value; });
+     * 2 - source.maxBy(function (x) { return x.value; }, function (x, y) { return x - y;; });
+     * 
+     * @param {Function} keySelector Key selector function.
+     * @param {Function} [comparer]  Comparer used to compare key values.
+     * @return An observable sequence containing a list of zero or more elements that have a maximum key value.
+     */
     observableProto.maxBy = function (keySelector, comparer) {
         comparer || (comparer = subComparer);
         return extremaBy(this, keySelector, comparer);
     };
 
+        /**
+         * Returns the maximum value in an observable sequence according to the specified comparer.
+         * 
+         * 1 - source.max();
+         * 2 - source.max(function (x, y) { return x.value - y.value; });
+         * 
+         * @param {Function} [comparer] Comparer used to compare elements.
+         * @return An observable sequence containing a single element with the maximum element in the source sequence.
+         */
     observableProto.max = function (comparer) {
         return this.maxBy(identity, comparer).select(function (x) {
             return firstOnly(x);
         });
     };
 
+    /**
+     * Computes the average of an observable sequence of values that are in the sequence or obtained by invoking a transform function on each element of the input sequence if present.
+     * 
+     * 1 - res = source.average();
+     * 2 - res = source.average(function (x) { return x.value; });
+     * 
+     * @param {Function} [selector] A transform function to apply to each element.
+     * @return An observable sequence containing a single element with the average of the sequence of values.
+     */
     observableProto.average = function (keySelector) {
         return keySelector ?
             this.select(keySelector).average() :
@@ -226,6 +327,18 @@ and limitations under the License.
         });
     }
 
+    /**
+     *  Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
+     * 
+     * 1 - res = source.sequenceEqual([1,2,3]);
+     * 2 - res = source.sequenceEqual([{ value: 42 }], function (x, y) { return x.value === y.value; });
+     * 3 - res = source.sequenceEqual(Rx.Observable.returnValue(42));
+     * 4 - res = source.sequenceEqual(Rx.Observable.returnValue({ value: 42 }), function (x, y) { return x.value === y.value; });
+     * 
+     * @param second Second observable sequence or array to compare.
+     * @param {Function} [comparer] Comparer used to compare elements of both sequences.
+     * @return An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.
+     */
     observableProto.sequenceEqual = function (second, comparer) {
         var first = this;
         comparer || (comparer = defaultComparer);
@@ -325,10 +438,28 @@ and limitations under the License.
         });
     }
 
+    /**
+     * Returns the element at a specified index in a sequence.
+     * 
+     * source.elementAt(5);
+     * 
+     * @param {Number} index The zero-based index of the element to retrieve.
+     * @return An observable sequence that produces the element at the specified position in the source sequence.
+     */
     observableProto.elementAt =  function (index) {
         return elementAtOrDefault(this, index, false);
     };
 
+    /**
+     * Returns the element at a specified index in a sequence or a default value if the index is out of range.
+     * 
+     * source.elementAtOrDefault(5);
+     * source.elementAtOrDefault(5, 0);
+     * 
+     * @param {Number} index The zero-based index of the element to retrieve.
+     * @param [defaultValue] The default value if the index is outside the bounds of the source sequence.
+     * @return An observable sequence that produces the element at the specified position in the source sequence, or a default value if the index is outside the bounds of the source sequence.
+     */    
     observableProto.elementAtOrDefault = function (index, defaultValue) {
         return elementAtOrDefault(this, index, true, defaultValue);
     };
@@ -354,6 +485,15 @@ and limitations under the License.
         });
     }
 
+    /**
+     * Returns the only element of an observable sequence that satisfies the condition in the optional predicate, and reports an exception if there is not exactly one element in the observable sequence.
+     * 
+     * 1 - res = source.single();
+     * 2 - res = source.single(function (x) { return x === 42; });
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @return Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
+     */
     observableProto.single = function (predicate) {
         if (predicate) {
             return this.where(predicate).single();
@@ -361,6 +501,18 @@ and limitations under the License.
         return singleOrDefaultAsync(this, false);
     };
 
+    /**
+     * Returns the only element of an observable sequence that matches the predicate, or a default value if no such element exists; this method reports an exception if there is more than one element in the observable sequence.
+     * 
+     * 1 - res = source.singleOrDefault();
+     * 2 - res = source.singleOrDefault(function (x) { return x === 42; });
+     * 3 - res = source.singleOrDefault(function (x) { return x === 42; }, 0);
+     * 4 - res = source.singleOrDefault(null, 0);
+     * 
+     * @param {Function} predicate A predicate function to evaluate for elements in the source sequence.
+     * @param [defaultValue] The default value if the index is outside the bounds of the source sequence.
+     * @return Sequence containing the single element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     */
     observableProto.singleOrDefault = function (predicate, defaultValue) {
         if (predicate) {
             return this.where(predicate).singleOrDefault(null, defaultValue);
@@ -384,6 +536,15 @@ and limitations under the License.
         });
     }
 
+    /**
+     * Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
+     * 
+     * 1 - res = source.first();
+     * 2 - res = source.first(function (x) { return x > 3; });
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @return Sequence containing the first element in the observable sequence that satisfies the condition in the predicate if provided, else the first item in the sequence.
+     */    
     observableProto.first = function (predicate) {
         if (predicate) {
             return this.where(predicate).first();
@@ -391,6 +552,17 @@ and limitations under the License.
         return firstOrDefaultAsync(this, false);
     };
 
+    /**
+     * Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     * 1 - res = source.firstOrDefault();
+     * 2 - res = source.firstOrDefault(function (x) { return x > 3; });
+     * 3 - res = source.firstOrDefault(function (x) { return x > 3; }, 0);
+     * 4 - res = source.firstOrDefault(null, 0);
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence. 
+     * @param [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+     * @return Sequence containing the first element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     */
     observableProto.firstOrDefault = function (predicate, defaultValue) {
         if (predicate) {
             return this.where(predicate).firstOrDefault(null, defaultValue);
@@ -415,6 +587,15 @@ and limitations under the License.
         });
     }
 
+    /**
+     * Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
+     * 
+     * 1 - res = source.last();
+     * 2 - res = source.last(function (x) { return x > 3; });
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @return Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
+     */
     observableProto.last = function (predicate) {
         if (predicate) {
             return this.where(predicate).last();
@@ -422,6 +603,18 @@ and limitations under the License.
         return lastOrDefaultAsync(this, false);
     };
 
+    /**
+     * Returns the last element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     * 
+     * 1 - res = source.lastOrDefault();
+     * 2 - res = source.lastOrDefault(function (x) { return x > 3; });
+     * 3 - res = source.lastOrDefault(function (x) { return x > 3; }, 0);
+     * 4 - res = source.lastOrDefault(null, 0);
+     * 
+     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @param [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+     * @return Sequence containing the last element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+     */
     observableProto.lastOrDefault = function (predicate, defaultValue) {
         if (predicate) {
             return this.where(predicate).lastOrDefault(null, defaultValue);

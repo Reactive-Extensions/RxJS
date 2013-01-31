@@ -1,4 +1,8 @@
     // Replay Subject
+    /**
+     * Represents an object that is both an observable sequence as well as an observer.
+     * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
+     */  
     var ReplaySubject = root.ReplaySubject = (function (base) {
         var RemovableDisposable = function (subject, observer) {
             this.subject = subject;
@@ -40,6 +44,13 @@
 
         inherits(ReplaySubject, Observable);
 
+        /**
+         *  Initializes a new instance of the ReplaySubject class with the specified buffer size, window and scheduler.
+         * 
+         *  @param {Number} [bufferSize] Maximum element count of the replay buffer.
+         *  @param {Number} [window] Maximum time length of the replay buffer.
+         *  @param [scheduler] Scheduler the observers are invoked on.
+         */
         function ReplaySubject(bufferSize, window, scheduler) {
             this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
             this.window = window == null ? Number.MAX_VALUE : window;

@@ -1,21 +1,4 @@
-/*
-
-Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
-Microsoft Open Technologies would like to thank its contributors, a list
-of whom are at http://aspnetwebstack.codeplex.com/wikipage?title=Contributors.
-
-Licensed under the Apache License, Version 2.0 (the "License"); you
-may not use this file except in compliance with the License. You may
-obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
-implied. See the License for the specific language governing permissions
-and limitations under the License.
-*/
+// Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 (function (root, factory) {
     var freeExports = typeof exports == 'object' && exports &&
@@ -72,10 +55,32 @@ and limitations under the License.
         });
     }
 
+     /**
+     *  Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
+     *  This operator allows for a fluent style of writing queries that use the same sequence multiple times.
+     *  
+     *  @param source Source sequence that will be shared in the selector function.
+     *  @param selector Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.
+     *  @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     */
     observableProto.letBind = function (func) {
         return func(this);
     };
 
+     /**
+     *  Determines whether an observable collection contains values.
+     *  
+     *  1 - res = Rx.Observable.ifThen(condition, obs1);
+     *  2 - res = Rx.Observable.ifThen(condition, obs1, obs2);
+     *  3 - res = Rx.Observable.ifThen(condition, obs1, scheduler);    
+     *  
+     *  @param condition The condition which determines if the thenSource or elseSource will be run.
+     *  @param thenSource The observable sequence that will be run if the condition function returns true.
+     *  @param elseSource 
+     *      [Optional] The observable sequence that will be run if the condition function returns false. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.
+     *       
+     *  @return An observable sequence which is either the thenSource or elseSource.
+     */
     Observable.ifThen = function (condition, thenSource, elseSourceOrScheduler) {
         return observableDefer(function () {
             elseSourceOrScheduler || (elseSourceOrScheduler = observableEmpty());
@@ -87,18 +92,53 @@ and limitations under the License.
         });
     };
 
+     /**
+     *  Concatenates the observable sequences obtained by running the specified result selector for each element in source.
+     *  
+     *  @param sources An array of values to turn into an observable sequence.
+     *  @param resultSelector A function to apply to each item in the sources array to turn it into an observable sequence.
+     *  @return An observable sequence from the concatenated observable sequences.  
+     */ 
     Observable.forIn = function (sources, resultSelector) {
         return enumerableForEach(sources, resultSelector).concat();
     };
 
+     /**
+     *  Repeats source as long as condition holds emulating a while loop.
+     *  
+     *  @param condition The condition which determines if the source will be repeated.
+     *  @param source The observable sequence that will be run if the condition function returns true.
+     *  @return An observable sequence which is repeated as long as the condition holds.  
+     */
     var observableWhileDo = Observable.whileDo = function (condition, source) {
         return enumerableWhile(condition, source).concat();
     };
 
+     /**
+     *  Repeats source as long as condition holds emulating a do while loop.
+     *  
+     *  @param condition The condition which determines if the source will be repeated.
+     *  @param source The observable sequence that will be run if the condition function returns true.
+     *  @return An observable sequence which is repeated as long as the condition holds. 
+     */ 
     observableProto.doWhile = function (condition) {
         return observableConcat([this, observableWhileDo(condition, this)]);
     };
 
+     /**
+     *  Uses selector to determine which source in sources to use.
+     *  
+     *  1 - res = Rx.Observable.switchCase(selector, { '1': obs1, '2': obs2 });
+     *  1 - res = Rx.Observable.switchCase(selector, { '1': obs1, '2': obs2 }, obs0);
+     *  1 - res = Rx.Observable.switchCase(selector, { '1': obs1, '2': obs2 }, scheduler);  
+     *  
+     *  @param selector The function which extracts the value for to test in a case statement.
+     *  @param sources A object which has keys which correspond to the case statement labels.
+     *  @param elseSource 
+     *      [Optional] The observable sequence that will be run if the sources are not matched. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.
+     *       
+     *  @return An observable sequence which is determined by a case statement.  
+     */
     Observable.switchCase = function (selector, sources, defaultSourceOrScheduler) {
         return observableDefer(function () {
             defaultSourceOrScheduler || (defaultSourceOrScheduler = observableEmpty());
@@ -111,6 +151,13 @@ and limitations under the License.
         });
     };
 
+     /**
+     *  Expands an observable sequence by recursively invoking selector.
+     *  
+     *  @param selector Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
+     *  @param scheduler [Optional] Scheduler on which to perform the expansion. If not provided, this defaults to the current thread scheduler.
+     *  @return An observable sequence containing all the elements produced by the recursive expansion.
+     */
     observableProto.expand = function (selector, scheduler) {
         scheduler || (scheduler = immediateScheduler);
         var source = this;
@@ -168,6 +215,14 @@ and limitations under the License.
         });
     };
 
+     /**
+     *  Runs all observable sequences in parallel and collect their last elements.
+     *  
+     *  1 - res = Rx.Observable.forkJoin([obs1, obs2]);
+     *  1 - res = Rx.Observable.forkJoin(obs1, obs2, ...);  
+     *  
+     *  @return An observable sequence with an array collecting the last elements of all the input sequences.
+     */
     Observable.forkJoin = function () {
         var allSources = argsOrArray(arguments, 0);
         return observableCreateWithDisposable(function (subscriber) {
@@ -218,6 +273,13 @@ and limitations under the License.
         });
     };
 
+     /**
+     *  Runs two observable sequences in parallel and combines their last elemenets.
+     *  
+     *  @param second Second observable sequence.
+     *  @param resultSelector Result selector function to invoke with the last elements of both sequences.
+     *  @return An observable sequence with the result of calling the selector function with the last elements of both input sequences.
+     */
     observableProto.forkJoin = function (second, resultSelector) {
         var first = this;
 
