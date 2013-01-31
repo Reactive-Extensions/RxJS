@@ -46,7 +46,7 @@
          *  @param {Function} [onCompleted] Action to invoke upon graceful termination of the observable sequence.
          *  @return The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler. 
          */
-        observableProto.subscribe = function (observerOrOnNext, onError, onCompleted) {
+        observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted) {
             var subscriber;
             if (arguments.length === 0 || arguments.length > 1 || typeof observerOrOnNext === 'function') {
                 subscriber = observerCreate(observerOrOnNext, onError, onCompleted);
