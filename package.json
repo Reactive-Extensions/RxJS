@@ -2,8 +2,8 @@
   "name": "rx",
   "title": "Reactive Extensions for JavaScript (RxJS)",
   "description": "Library for composing asynchronous and event-based operations in JavaScript",
-  "version": "2.0.0",
-  "homepage": "http://go.microsoft.com/fwlink/?LinkID=179929",
+  "version": "2.1.0",
+  "homepage": "http://rx.codeplex.com",
   "author": {
     "name": "Cloud Programmability Team",
     "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/authors.txt"
@@ -14,15 +14,15 @@
   },
   "licenses": [
     {
-      "type": "MICROSOFT REACTIVE EXTENSIONS FOR JAVASCRIPT AND .NET LIBRARIES",
-      "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/license.txt"
+      "type": "Apache License, Version 2.0",
+      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   ],
   "dependencies": {},
   "devDependencies": {
-    "grunt": "~0.3.17",
-    "grunt-contrib-jshint": "~0.1.0",
-    "grunt-contrib-nodeunit": "~0.1.0"
+    "grunt": "~0.4.0",
+    "grunt-contrib-jshint": "~0.1.1",
+    "grunt-contrib-nodeunit": "~0.1.2"
   },
   "keywords": [],
   "main": "rx.node.js"
