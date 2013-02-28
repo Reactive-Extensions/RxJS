@@ -156,7 +156,7 @@ module.exports = function (grunt) {
                 dest: 'rx.time.js'
             }
         },
-        min: {
+        uglify: {
             basic: {
                 src: ['<banner>', 'rx.js'],
                 dest: 'rx.min.js'
@@ -196,7 +196,12 @@ module.exports = function (grunt) {
         }
     });
 
-    var defaultTasks = [
+    grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-contrib-qunit');
+
+    // Default task(s).
+    grunt.registerTask('default', [
         'concat:basic',
         'concat:aggregates',
         'concat:binding',
@@ -206,24 +211,16 @@ module.exports = function (grunt) {
         'concat:time',
         'concat:testing',
 
-        'min:basic',
-        'min:aggregates',
-        'min:binding',
-        'min:coincidence',
-        'min:experimental',
-        'min:joinpatterns',
-        'min:testing',
-        'min:time',
+        'uglify:basic',
+        'uglify:aggregates',
+        'uglify:binding',
+        'uglify:coincidence',
+        'uglify:experimental',
+        'uglify:joinpatterns',
+        'uglify:testing',
+        'uglify:time'//,
 
-        'qunit'
-    ].join(' ');
-
-    // Load the plugin that provides the "uglify" task.
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-
-    // Default task(s).
-    grunt.registerTask('default', ['uglify']);
-
-    grunt.registerTask('default', defaultTasks);
+        //'qunit'
+    ]);    
 
 };

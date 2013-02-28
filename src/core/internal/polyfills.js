@@ -63,11 +63,24 @@
         }
         return a;
     }
+
+    var boxedString = Object("a"),
+        splitString = boxedString[0] != "a" || !(0 in boxedString);
     if (!Array.prototype.every) {
-        Array.prototype.every = function (predicate) {
-            var t = Object(this);
-            for (var i = 0, len = t.length >>> 0; i < len; i++) {
-                if (i in t && !predicate.call(arguments[1], t[i], i, t)) {
+        Array.prototype.every = function every(fun /*, thisp */) {
+            var object = Object(this),
+                self = splitString && {}.toString.call(this) == "[object String]" ?
+                    this.split("") :
+                    object,
+                length = self.length >>> 0,
+                thisp = arguments[1];
+
+            if ({}.toString.call(fun) != "[object Function]") {
+                throw new TypeError(fun + " is not a function");
+            }
+
+            for (var i = 0; i < length; i++) {
+                if (i in self && !fun.call(thisp, self[i], i, object)) {
                     return false;
                 }
             }
@@ -75,14 +88,24 @@
         };
     }
     if (!Array.prototype.map) {
-        Array.prototype.map = function (selector) {
-            var len = t.length >>> 0, results = new Array(len), t = Object(this);
-            for (var i = 0; i < len; i++) {
-                if (i in t) {
-                    results.push(selector.call(arguments[1], t[i], i, t));
-                }
+        Array.prototype.map = function map(fun /*, thisp*/) {
+            var object = Object(this),
+                self = splitString && {}.toString.call(this) == "[object String]" ?
+                    this.split("") :
+                    object,
+                length = self.length >>> 0,
+                result = Array(length),
+                thisp = arguments[1];
+
+            if ({}.toString.call(fun) != "[object Function]") {
+                throw new TypeError(fun + " is not a function");
             }
-            return results;
+
+            for (var i = 0; i < length; i++) {
+                if (i in self)
+                    result[i] = fun.call(thisp, self[i], i, object);
+            }
+            return result;
         };
     }
     if (!Array.prototype.filter) {
@@ -103,7 +126,7 @@
         };
     }
     if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function indexOf(item) {
+        Array.prototype.indexOf = function indexOf(searchElement) {
             var t = Object(this);
             var len = t.length >>> 0;
             if (len === 0) {

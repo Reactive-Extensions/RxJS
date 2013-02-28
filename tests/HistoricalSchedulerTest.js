@@ -21,7 +21,7 @@
 
     function time(days) {
         var d = new Date(1979,10,31,4,30,15);
-        d.setDate(d.getDate() + days);
+        d.setUTCDate(d.getDate() + days);
         return d.getTime();
     }
 

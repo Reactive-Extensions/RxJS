@@ -90,11 +90,25 @@
         }
         return a;
     }
+
+    var boxedString = Object("a"),
+        splitString = boxedString[0] != "a" || !(0 in boxedString);
     if (!Array.prototype.every) {
-        Array.prototype.every = function (predicate) {
-            var t = Object(this);
-            for (var i = 0, len = t.length >>> 0; i < len; i++) {
-                if (i in t && !predicate.call(arguments[1], t[i], i, t)) {
+        Array.prototype.every = function every(fun /*, thisp */) {
+            var object = Object(this),
+                self = splitString && {}.toString.call(this) == "[object String]" ?
+                    this.split("") :
+                    object,
+                length = self.length >>> 0,
+                thisp = arguments[1];
+
+            // If no callback function or if callback is not a callable function
+            if ({}.toString.call(fun) != "[object Function]") {
+                throw new TypeError(fun + " is not a function");
+            }
+
+            for (var i = 0; i < length; i++) {
+                if (i in self && !fun.call(thisp, self[i], i, object)) {
                     return false;
                 }
             }
@@ -102,14 +116,25 @@
         };
     }
     if (!Array.prototype.map) {
-        Array.prototype.map = function (selector) {
-            var len = t.length >>> 0, results = new Array(len), t = Object(this);
-            for (var i = 0; i < len; i++) {
-                if (i in t) {
-                    results.push(selector.call(arguments[1], t[i], i, t));
-                }
+        Array.prototype.map = function map(fun /*, thisp*/) {
+            var object = Object(this),
+                self = splitString && {}.toString.call(this) == "[object String]" ?
+                    this.split("") :
+                    object,
+                length = self.length >>> 0,
+                result = Array(length),
+                thisp = arguments[1];
+
+            // If no callback function or if callback is not a callable function
+            if ({}.toString.call(fun) != "[object Function]") {
+                throw new TypeError(fun + " is not a function");
             }
-            return results;
+
+            for (var i = 0; i < length; i++) {
+                if (i in self)
+                    result[i] = fun.call(thisp, self[i], i, object);
+            }
+            return result;
         };
     }
     if (!Array.prototype.filter) {
@@ -130,7 +155,7 @@
         };
     }
     if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function indexOf(item) {
+        Array.prototype.indexOf = function indexOf(searchElement) {
             var t = Object(this);
             var len = t.length >>> 0;
             if (len === 0) {
@@ -916,6 +941,8 @@
                 try {
                     queue.enqueue(si);
                     t.run();
+                } catch (e) { 
+                    throw e;
                 } finally {
                     t.dispose();
                 }
@@ -1361,34 +1388,38 @@
      *  Represents a notification to an observer.
      */
     var Notification = root.Notification = (function () {
-        function Notification() { }
+        function Notification(kind, hasValue) { 
+            this.hasValue = hasValue == null ? false : hasValue;
+            this.kind = kind;
+        }
 
-        addProperties(Notification.prototype, {
-            accept: function (observerOrOnNext, onError, onCompleted) {
-                if (arguments.length > 1 || typeof observerOrOnNext === 'function') {
-                    return this._accept(observerOrOnNext, onError, onCompleted);
-                } else {
-                    return this._acceptObservable(observerOrOnNext);
-                }
-            },
-            toObservable: function (scheduler) {
-                var notification = this;
-                scheduler = scheduler || immediateScheduler;
-                return new AnonymousObservable(function (observer) {
-                    return scheduler.schedule(function () {
-                        notification._acceptObservable(observer);
-                        if (notification.kind === 'N') {
-                            observer.onCompleted();
-                        }
-                    });
-                });
-            },
-            hasValue: false,
-            equals: function (other) {
-                var otherString = other == null ? '' : other.toString();
-                return this.toString() === otherString;
+        var NotificationPrototype = Notification.prototype;
+
+        NotificationPrototype.accept = function (observerOrOnNext, onError, onCompleted) {
+            if (arguments.length > 1 || typeof observerOrOnNext === 'function') {
+                return this._accept(observerOrOnNext, onError, onCompleted);
+            } else {
+                return this._acceptObservable(observerOrOnNext);
             }
-        });
+        };
+
+        NotificationPrototype.toObservable = function (scheduler) {
+            var notification = this;
+            scheduler = scheduler || immediateScheduler;
+            return new AnonymousObservable(function (observer) {
+                return scheduler.schedule(function () {
+                    notification._acceptObservable(observer);
+                    if (notification.kind === 'N') {
+                        observer.onCompleted();
+                    }
+                });
+            });
+        };
+
+        NotificationPrototype.equals = function (other) {
+            var otherString = other == null ? '' : other.toString();
+            return this.toString() === otherString;
+        };
 
         return Notification;
     })();
@@ -1400,27 +1431,26 @@
      *  @return The OnNext notification containing the value.
      */
     var notificationCreateOnNext = Notification.createOnNext = (function () {
-        inherits(ON, Notification);
-        function ON(value) {
-            this.value = value;
-            this.hasValue = true;
-            this.kind = 'N';
+
+        function _accept (onNext) {
+            return onNext(this.value);
         }
 
-        addProperties(ON.prototype, {
-            _accept: function (onNext) {
-                return onNext(this.value);
-            },
-            _acceptObservable: function (observer) {
-                return observer.onNext(this.value);
-            },
-            toString: function () {
-                return 'OnNext(' + this.value + ')';
-            }
-        });
+        function _acceptObservable(observer) {
+            return observer.onNext(this.value);
+        }
 
-        return function (next) {
-            return new ON(next);
+        function toString () {
+            return 'OnNext(' + this.value + ')';
+        }
+
+        return function (value) {
+            var notification = new Notification('N', true);
+            notification.value = value;
+            notification._accept = _accept.bind(notification);
+            notification._acceptObservable = _acceptObservable.bind(notification);
+            notification.toString = toString.bind(notification);
+            return notification;
         };
     }());
 
@@ -1431,26 +1461,26 @@
      *  @return The OnError notification containing the exception.
      */
     var notificationCreateOnError = Notification.createOnError = (function () {
-        inherits(OE, Notification);
-        function OE(exception) {
-            this.exception = exception;
-            this.kind = 'E';
+
+        function _accept (onNext, onError) {
+            return onError(this.exception);
         }
 
-        addProperties(OE.prototype, {
-            _accept: function (onNext, onError) {
-                return onError(this.exception);
-            },
-            _acceptObservable: function (observer) {
-                return observer.onError(this.exception);
-            },
-            toString: function () {
-                return 'OnError(' + this.exception + ')';
-            }
-        });
+        function _acceptObservable(observer) {
+            return observer.onError(this.exception);
+        }
 
-        return function (error) {
-            return new OE(error);
+        function toString () {
+            return 'OnError(' + this.exception + ')';
+        }
+
+        return function (exception) {
+            var notification = new Notification('E');
+            notification.exception = exception;
+            notification._accept = _accept.bind(notification);
+            notification._acceptObservable = _acceptObservable.bind(notification);
+            notification.toString = toString.bind(notification);
+            return notification;
         };
     }());
 
@@ -1459,25 +1489,25 @@
      *  @return The OnCompleted notification.
      */
     var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
-        inherits(OC, Notification);
-        function OC() {
-            this.kind = 'C';
+
+        function _accept (onNext, onError, onCompleted) {
+            return onCompleted();
         }
 
-        addProperties(OC.prototype, {
-            _accept: function (onNext, onError, onCompleted) {
-                return onCompleted();
-            },
-            _acceptObservable: function (observer) {
-                return observer.onCompleted();
-            },
-            toString: function () {
-                return 'OnCompleted()';
-            }
-        });
+        function _acceptObservable(observer) {
+            return observer.onCompleted();
+        }
+
+        function toString () {
+            return 'OnCompleted()';
+        }
 
         return function () {
-            return new OC();
+            var notification = new Notification('C');
+            notification._accept = _accept.bind(notification);
+            notification._acceptObservable = _acceptObservable.bind(notification);
+            notification.toString = toString.bind(notification);
+            return notification;
         };
     }());
 
@@ -1843,6 +1873,8 @@
             this.checkAccess();
             try {
                 this._observer.onNext(value);
+            } catch (e) { 
+                throw e;                
             } finally {
                 this._state = 0;
             }
@@ -1852,6 +1884,8 @@
             this.checkAccess();
             try {
                 this._observer.onError(err);
+            } catch (e) { 
+                throw e;                
             } finally {
                 this._state = 2;
             }
@@ -1861,6 +1895,8 @@
             this.checkAccess();
             try {
                 this._observer.onCompleted();
+            } catch (e) { 
+                throw e;                
             } finally {
                 this._state = 2;
             }
@@ -2008,7 +2044,7 @@
          *  @param {Function} [onCompleted] Action to invoke upon graceful termination of the observable sequence.
          *  @return The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler. 
          */
-        observableProto.subscribe = function (observerOrOnNext, onError, onCompleted) {
+        observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted) {
             var subscriber;
             if (arguments.length === 0 || arguments.length > 1 || typeof observerOrOnNext === 'function') {
                 subscriber = observerCreate(observerOrOnNext, onError, onCompleted);
@@ -3120,6 +3156,8 @@
             return disposableCreate(function () {
                 try {
                     subscription.dispose();
+                } catch (e) { 
+                    throw e;                    
                 } finally {
                     action();
                 }
@@ -3819,6 +3857,8 @@
             try {
                 this.observer.onNext(value);
                 noError = true;
+            } catch (e) { 
+                throw e;                
             } finally {
                 if (!noError) {
                     this.dispose();
@@ -3828,6 +3868,8 @@
         AutoDetachObserver.prototype.error = function (exn) {
             try {
                 this.observer.onError(exn);
+            } catch (e) { 
+                throw e;                
             } finally {
                 this.dispose();
             }
@@ -3835,6 +3877,8 @@
         AutoDetachObserver.prototype.completed = function () {
             try {
                 this.observer.onCompleted();
+            } catch (e) { 
+                throw e;                
             } finally {
                 this.dispose();
             }

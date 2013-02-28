@@ -159,6 +159,8 @@
             return disposableCreate(function () {
                 try {
                     subscription.dispose();
+                } catch (e) { 
+                    throw e;                    
                 } finally {
                     action();
                 }

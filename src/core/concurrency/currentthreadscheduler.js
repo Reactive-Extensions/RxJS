@@ -37,6 +37,8 @@
                 try {
                     queue.enqueue(si);
                     t.run();
+                } catch (e) { 
+                    throw e;
                 } finally {
                     t.dispose();
                 }

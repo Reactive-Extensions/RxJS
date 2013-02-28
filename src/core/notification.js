@@ -2,34 +2,38 @@
      *  Represents a notification to an observer.
      */
     var Notification = root.Notification = (function () {
-        function Notification() { }
+        function Notification(kind, hasValue) { 
+            this.hasValue = hasValue == null ? false : hasValue;
+            this.kind = kind;
+        }
 
-        addProperties(Notification.prototype, {
-            accept: function (observerOrOnNext, onError, onCompleted) {
-                if (arguments.length > 1 || typeof observerOrOnNext === 'function') {
-                    return this._accept(observerOrOnNext, onError, onCompleted);
-                } else {
-                    return this._acceptObservable(observerOrOnNext);
-                }
-            },
-            toObservable: function (scheduler) {
-                var notification = this;
-                scheduler = scheduler || immediateScheduler;
-                return new AnonymousObservable(function (observer) {
-                    return scheduler.schedule(function () {
-                        notification._acceptObservable(observer);
-                        if (notification.kind === 'N') {
-                            observer.onCompleted();
-                        }
-                    });
-                });
-            },
-            hasValue: false,
-            equals: function (other) {
-                var otherString = other == null ? '' : other.toString();
-                return this.toString() === otherString;
+        var NotificationPrototype = Notification.prototype;
+
+        NotificationPrototype.accept = function (observerOrOnNext, onError, onCompleted) {
+            if (arguments.length > 1 || typeof observerOrOnNext === 'function') {
+                return this._accept(observerOrOnNext, onError, onCompleted);
+            } else {
+                return this._acceptObservable(observerOrOnNext);
             }
-        });
+        };
+
+        NotificationPrototype.toObservable = function (scheduler) {
+            var notification = this;
+            scheduler = scheduler || immediateScheduler;
+            return new AnonymousObservable(function (observer) {
+                return scheduler.schedule(function () {
+                    notification._acceptObservable(observer);
+                    if (notification.kind === 'N') {
+                        observer.onCompleted();
+                    }
+                });
+            });
+        };
+
+        NotificationPrototype.equals = function (other) {
+            var otherString = other == null ? '' : other.toString();
+            return this.toString() === otherString;
+        };
 
         return Notification;
     })();
@@ -41,27 +45,26 @@
      *  @return The OnNext notification containing the value.
      */
     var notificationCreateOnNext = Notification.createOnNext = (function () {
-        inherits(ON, Notification);
-        function ON(value) {
-            this.value = value;
-            this.hasValue = true;
-            this.kind = 'N';
+
+        function _accept (onNext) {
+            return onNext(this.value);
         }
 
-        addProperties(ON.prototype, {
-            _accept: function (onNext) {
-                return onNext(this.value);
-            },
-            _acceptObservable: function (observer) {
-                return observer.onNext(this.value);
-            },
-            toString: function () {
-                return 'OnNext(' + this.value + ')';
-            }
-        });
+        function _acceptObservable(observer) {
+            return observer.onNext(this.value);
+        }
 
-        return function (next) {
-            return new ON(next);
+        function toString () {
+            return 'OnNext(' + this.value + ')';
+        }
+
+        return function (value) {
+            var notification = new Notification('N', true);
+            notification.value = value;
+            notification._accept = _accept.bind(notification);
+            notification._acceptObservable = _acceptObservable.bind(notification);
+            notification.toString = toString.bind(notification);
+            return notification;
         };
     }());
 
@@ -72,26 +75,26 @@
      *  @return The OnError notification containing the exception.
      */
     var notificationCreateOnError = Notification.createOnError = (function () {
-        inherits(OE, Notification);
-        function OE(exception) {
-            this.exception = exception;
-            this.kind = 'E';
+
+        function _accept (onNext, onError) {
+            return onError(this.exception);
         }
 
-        addProperties(OE.prototype, {
-            _accept: function (onNext, onError) {
-                return onError(this.exception);
-            },
-            _acceptObservable: function (observer) {
-                return observer.onError(this.exception);
-            },
-            toString: function () {
-                return 'OnError(' + this.exception + ')';
-            }
-        });
+        function _acceptObservable(observer) {
+            return observer.onError(this.exception);
+        }
 
-        return function (error) {
-            return new OE(error);
+        function toString () {
+            return 'OnError(' + this.exception + ')';
+        }
+
+        return function (exception) {
+            var notification = new Notification('E');
+            notification.exception = exception;
+            notification._accept = _accept.bind(notification);
+            notification._acceptObservable = _acceptObservable.bind(notification);
+            notification.toString = toString.bind(notification);
+            return notification;
         };
     }());
 
@@ -100,24 +103,24 @@
      *  @return The OnCompleted notification.
      */
     var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
-        inherits(OC, Notification);
-        function OC() {
-            this.kind = 'C';
+
+        function _accept (onNext, onError, onCompleted) {
+            return onCompleted();
         }
 
-        addProperties(OC.prototype, {
-            _accept: function (onNext, onError, onCompleted) {
-                return onCompleted();
-            },
-            _acceptObservable: function (observer) {
-                return observer.onCompleted();
-            },
-            toString: function () {
-                return 'OnCompleted()';
-            }
-        });
+        function _acceptObservable(observer) {
+            return observer.onCompleted();
+        }
+
+        function toString () {
+            return 'OnCompleted()';
+        }
 
         return function () {
-            return new OC();
+            var notification = new Notification('C');
+            notification._accept = _accept.bind(notification);
+            notification._acceptObservable = _acceptObservable.bind(notification);
+            notification.toString = toString.bind(notification);
+            return notification;
         };
     }());
