@@ -1,8 +1,9 @@
-    var AnonymousObservable = root.Internals.AnonymousObservable = (function () {
-        inherits(AnonymousObservable, Observable);
+    var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
+        inherits(AnonymousObservable, _super);
+        
         function AnonymousObservable(subscribe) {
 
-            var s = function (observer) {
+            function s(observer) {
                 var autoDetachObserver = new AutoDetachObserver(observer);
                 if (currentThreadScheduler.scheduleRequired()) {
                     currentThreadScheduler.schedule(function () {
@@ -25,9 +26,11 @@
                 }
 
                 return autoDetachObserver;
-            };
-            AnonymousObservable.super_.constructor.call(this, s);
+            }
+
+            super_.call(this, s);
         }
 
         return AnonymousObservable;
-    }());
+
+    }(Observable));

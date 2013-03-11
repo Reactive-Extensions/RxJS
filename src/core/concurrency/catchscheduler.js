@@ -1,5 +1,5 @@
-    // CatchScheduler
-    var CatchScheduler = (function () {
+    /** @private */
+    var CatchScheduler = (function (_super) {
 
         function localNow() {
             return this._scheduler.now();
@@ -17,19 +17,23 @@
             return this._scheduler.scheduleWithAbsoluteAndState(state, dueTime, this._wrap(action));
         }
 
-        inherits(CatchScheduler, Scheduler);
+        inherits(CatchScheduler, _super);
+
+        /** @private */
         function CatchScheduler(scheduler, handler) {
             this._scheduler = scheduler;
             this._handler = handler;
             this._recursiveOriginal = null;
             this._recursiveWrapper = null;
-            CatchScheduler.super_.constructor.call(this, localNow, scheduleNow, scheduleRelative, scheduleAbsolute);
+            _super.call(this, localNow, scheduleNow, scheduleRelative, scheduleAbsolute);
         }
 
+        /** @private */
         CatchScheduler.prototype._clone = function (scheduler) {
             return new CatchScheduler(scheduler, this._handler);
         };
 
+        /** @private */
         CatchScheduler.prototype._wrap = function (action) {
             var parent = this;
             return function (self, state) {
@@ -42,6 +46,7 @@
             };
         };
 
+        /** @private */
         CatchScheduler.prototype._getRecursiveWrapper = function (scheduler) {
             if (!this._recursiveOriginal !== scheduler) {
                 this._recursiveOriginal = scheduler;
@@ -53,6 +58,7 @@
             return this._recursiveWrapper;
         };
 
+        /** @private */
         CatchScheduler.prototype.schedulePeriodicWithState = function (state, period, action) {
             var self = this, failed = false, d = new SingleAssignmentDisposable();
 
@@ -72,4 +78,4 @@
         };
 
         return CatchScheduler;
-    }());
+    }(Scheduler));

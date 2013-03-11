@@ -1,7 +1,9 @@
-    var ScheduledObserver = root.Internals.ScheduledObserver = (function () {
-        inherits(ScheduledObserver, AbstractObserver);
+    /** @private */
+    var ScheduledObserver = Rx.Internals.ScheduledObserver = (function (_super) {
+        inherits(ScheduledObserver, _super);
+
         function ScheduledObserver(scheduler, observer) {
-            ScheduledObserver.super_.constructor.call(this);
+            _super.call(this);
             this.scheduler = scheduler;
             this.observer = observer;
             this.isAcquired = false;
@@ -10,24 +12,31 @@
             this.disposable = new SerialDisposable();
         }
 
+        /** @private */
         ScheduledObserver.prototype.next = function (value) {
             var self = this;
             this.queue.push(function () {
                 self.observer.onNext(value);
             });
         };
+
+        /** @private */
         ScheduledObserver.prototype.error = function (exception) {
             var self = this;
             this.queue.push(function () {
                 self.observer.onError(exception);
             });
         };
+
+        /** @private */
         ScheduledObserver.prototype.completed = function () {
             var self = this;
             this.queue.push(function () {
                 self.observer.onCompleted();
             });
         };
+
+        /** @private */
         ScheduledObserver.prototype.ensureActive = function () {
             var isOwner = false, parent = this;
             if (!this.hasFaulted && this.queue.length > 0) {
@@ -54,10 +63,12 @@
                 }));
             }
         };
+
+        /** @private */
         ScheduledObserver.prototype.dispose = function () {
-            ScheduledObserver.super_.dispose.call(this);
+            _super.prototype.dispose.call(this);
             this.disposable.dispose();
         };
 
         return ScheduledObserver;
-    }());
+    }(AbstractObserver));

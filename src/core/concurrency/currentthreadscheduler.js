@@ -1,15 +1,18 @@
-    // Current Thread Scheduler
+    /** @private */
     var currentThreadScheduler = Scheduler.currentThread = (function () {
         var queue;
 
+        /** @private */
         function Trampoline() {
             queue = new PriorityQueue(4);
         }
 
+        /** @private */
         Trampoline.prototype.dispose = function () {
             queue = null;
         };
 
+        /** @private */
         Trampoline.prototype.run = function () {
             var item;
             while (queue.length > 0) {

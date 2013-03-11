@@ -1,13 +1,15 @@
-    var AutoDetachObserver = (function () {
+    var AutoDetachObserver = (function (_super) {
+        inherits(AutoDetachObserver, _super);
 
-        inherits(AutoDetachObserver, AbstractObserver);
         function AutoDetachObserver(observer) {
             AutoDetachObserver.super_.constructor.call(this);
             this.observer = observer;
             this.m = new SingleAssignmentDisposable();
         }
 
-        AutoDetachObserver.prototype.next = function (value) {
+        var AutoDetachObserverPrototype = AutoDetachObserver.prototype
+
+        AutoDetachObserverPrototype.next = function (value) {
             var noError = false;
             try {
                 this.observer.onNext(value);
@@ -20,7 +22,8 @@
                 }
             }
         };
-        AutoDetachObserver.prototype.error = function (exn) {
+
+        AutoDetachObserverPrototype.error = function (exn) {
             try {
                 this.observer.onError(exn);
             } catch (e) { 
@@ -29,7 +32,8 @@
                 this.dispose();
             }
         };
-        AutoDetachObserver.prototype.completed = function () {
+
+        AutoDetachObserverPrototype.completed = function () {
             try {
                 this.observer.onCompleted();
             } catch (e) { 
@@ -38,13 +42,15 @@
                 this.dispose();
             }
         };
-        AutoDetachObserver.prototype.disposable = function (value) {
+
+        AutoDetachObserverPrototype.disposable = function (value) {
             return this.m.disposable(value);
         };
-        AutoDetachObserver.prototype.dispose = function () {
-            AutoDetachObserver.super_.dispose.call(this);
+
+        AutoDetachObserverPrototype.dispose = function () {
+            _super.prototype.dispose.call(this);
             this.m.dispose();
         };
 
         return AutoDetachObserver;
-    }());
+    }(AbstractObserver));

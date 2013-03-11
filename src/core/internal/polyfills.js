@@ -21,48 +21,6 @@
             return bound;
         };
     }
-    var slice = Array.prototype.slice;
-    function argsOrArray(args, idx) {
-        return args.length === 1 && Array.isArray(args[idx]) ?
-            args[idx] :
-            slice.call(args);
-    }
-    var hasProp = {}.hasOwnProperty;
-    var inherits = root.Internals.inherits = function (child, parent) {
-        for (var key in parent) { // Enumerable bug in WebKit Mobile 4.0
-            if (key !== 'prototype' && hasProp.call(parent, key)) child[key] = parent[key];
-        }
-        function ctor() { this.constructor = child; }
-        ctor.prototype = parent.prototype;
-        child.prototype = new ctor();
-        child.super_ = parent.prototype;
-        return child;
-    };
-    var addProperties = root.Internals.addProperties = function (obj) {
-        var sources = slice.call(arguments, 1);
-        for (var i = 0, len = sources.length; i < len; i++) {
-            var source = sources[i];
-            for (var prop in source) {
-                obj[prop] = source[prop];
-            }
-        }
-    };
-
-    // Rx Utils
-    var addRef = root.Internals.addRef = function (xs, r) {
-        return new AnonymousObservable(function (observer) {
-            return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
-        });
-    };
-
-    // Collection polyfills
-    function arrayInitialize(count, factory) {
-        var a = new Array(count);
-        for (var i = 0; i < count; i++) {
-            a[i] = factory();
-        }
-        return a;
-    }
 
     var boxedString = Object("a"),
         splitString = boxedString[0] != "a" || !(0 in boxedString);
@@ -87,6 +45,7 @@
             return true;
         };
     }
+
     if (!Array.prototype.map) {
         Array.prototype.map = function map(fun /*, thisp*/) {
             var object = Object(this),
@@ -108,6 +67,7 @@
             return result;
         };
     }
+
     if (!Array.prototype.filter) {
         Array.prototype.filter = function (predicate) {
             var results = [], item, t = new Object(this);
@@ -120,11 +80,13 @@
             return results;
         };
     }
+
     if (!Array.isArray) {
         Array.isArray = function (arg) {
             return Object.prototype.toString.call(arg) == '[object Array]';
         };
     }
+    
     if (!Array.prototype.indexOf) {
         Array.prototype.indexOf = function indexOf(searchElement) {
             var t = Object(this);

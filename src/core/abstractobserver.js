@@ -1,23 +1,25 @@
     /**
-     *  Abstract base class for implementations of the IObserver&lt;T&gt; interface.
-     *  
-     *   This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages. 
+     * Abstract base class for implementations of the Observer class.
+     * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages. 
      */
-    var AbstractObserver = root.Internals.AbstractObserver = (function () {
-        inherits(AbstractObserver, Observer);
+    var AbstractObserver = Rx.Internals.AbstractObserver = (function (_super) {
+        inherits(AbstractObserver, _super);
 
         /**
-         * @constructor
          * Creates a new observer in a non-stopped state.
+         *
+         * @constructor
          */
         function AbstractObserver() {
             this.isStopped = false;
+            _super.call(this);
         }
 
         /**
-         *  Notifies the observer of a new element in the sequence.
+         * Notifies the observer of a new element in the sequence.
          *  
-         *  @param value Next element in the sequence. 
+         * @memberOf AbstractObserver
+         * @param {Any} value Next element in the sequence. 
          */
         AbstractObserver.prototype.onNext = function (value) {
             if (!this.isStopped) {
@@ -26,9 +28,10 @@
         };
 
         /**
-         *  Notifies the observer that an exception has occurred.
-         *  
-         *  @param error The error that has occurred.     
+         * Notifies the observer that an exception has occurred.
+         * 
+         * @memberOf AbstractObserver
+         * @param {Any} error The error that has occurred.     
          */    
         AbstractObserver.prototype.onError = function (error) {
             if (!this.isStopped) {
@@ -38,7 +41,7 @@
         };
 
         /**
-         *  Notifies the observer of the end of the sequence.
+         * Notifies the observer of the end of the sequence.
          */    
         AbstractObserver.prototype.onCompleted = function () {
             if (!this.isStopped) {
@@ -48,7 +51,7 @@
         };
 
         /**
-         *  Disposes the observer, causing it to transition to the stopped state.
+         * Disposes the observer, causing it to transition to the stopped state.
          */
         AbstractObserver.prototype.dispose = function () {
             this.isStopped = true;
@@ -65,4 +68,4 @@
         };
 
         return AbstractObserver;
-    }());
+    }(Observer));

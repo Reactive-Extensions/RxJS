@@ -2,5 +2,9 @@
     var freeExports = typeof exports == 'object' && exports &&
         (typeof global == 'object' && global && global == global.global && (window = global), exports);
 
-    var root = { Internals: {} };
+     /** 
+     * @name Rx
+     * @type Object
+     */
+    var Rx = { Internals: {} };s
     

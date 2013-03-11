@@ -24,6 +24,7 @@ module.exports = function (grunt) {
                     'src/core/license.js',
                     'src/core/intro.js',
                     'src/core/basicheader.js',
+                    'src/core/util.js',                    
                     'src/core/internal/polyfills.js',
                     'src/core/internal/priorityqueue.js',
                     'src/core/disposables/compositedisposable.js',
@@ -69,6 +70,56 @@ module.exports = function (grunt) {
                 ],
                 dest: 'rx.js'
             },
+            modern: {
+                src: [
+                    'src/core/license.js',
+                    'src/core/intro.js',
+                    'src/core/basicheader.js',
+                    'src/core/util.js',
+                    'src/core/internal/priorityqueue.js',
+                    'src/core/disposables/compositedisposable.js',
+                    'src/core/disposables/disposable.js',
+                    'src/core/disposables/singleassignmentdisposable.js',
+                    'src/core/disposables/serialdisposable.js',
+                    'src/core/disposables/refcountdisposable.js',
+                    'src/core/disposables/scheduleddisposable.js',
+                    'src/core/concurrency/scheduleditem.js',
+                    'src/core/concurrency/scheduler.js',
+                    'src/core/concurrency/immediatescheduler.js',
+                    'src/core/concurrency/currentthreadscheduler.js',
+                    'src/core/concurrency/scheduleperiodicrecursive.js',
+                    'src/core/concurrency/virtualtimescheduler.js',
+                    'src/core/concurrency/historicalscheduler.js',
+                    'src/core/concurrency/timeoutscheduler.js',
+                    'src/core/concurrency/catchscheduler.js',
+                    'src/core/notification.js',
+                    'src/core/internal/enumerator.js',
+                    'src/core/internal/enumerable.js',
+                    'src/core/observer.js',
+                    'src/core/abstractobserver.js',
+                    'src/core/anonymousobserver.js',
+                    'src/core/checkedobserver.js',
+                    'src/core/scheduledobserver.js',
+                    'src/core/observeonobserver.js',
+                    'src/core/observable.js',
+                    'src/core/linq/observable.async.js',
+                    'src/core/linq/observable.concurrency.js',
+                    'src/core/linq/observable.creation.js',
+                    'src/core/linq/observable.multiple.js',
+                    'src/core/linq/observable.single.js',
+                    'src/core/linq/observable.standardsequenceoperators.js',
+                    'src/core/anonymousobservable.js',
+                    'src/core/autodetachobserver.js',
+                    'src/core/linq/groupedobservable.js',
+                    'src/core/subjects/innersubscription.js',
+                    'src/core/subjects/subject.js',
+                    'src/core/subjects/asyncsubject.js',
+                    'src/core/subjects/anonymoussubject.js',
+                    'src/core/exports.js',
+                    'src/core/outro.js'
+                ],
+                dest: 'rx.js'
+            },            
             aggregates: {
                 src: [
                     'src/core/license.js',
@@ -161,6 +212,10 @@ module.exports = function (grunt) {
                 src: ['<banner>', 'rx.js'],
                 dest: 'rx.min.js'
             },
+            modern: {
+                src: ['<banner>', 'rx.modern.js'],
+                dest: 'rx.modern.min.js'
+            },           
             aggregates: {
                 src: ['<banner>', 'rx.aggregates.js'],
                 dest: 'rx.aggregates.min.js'
@@ -203,6 +258,7 @@ module.exports = function (grunt) {
     // Default task(s).
     grunt.registerTask('default', [
         'concat:basic',
+        'concat:modern',
         'concat:aggregates',
         'concat:binding',
         'concat:coincidence',
@@ -212,6 +268,7 @@ module.exports = function (grunt) {
         'concat:testing',
 
         'uglify:basic',
+        'uglify:modern',
         'uglify:aggregates',
         'uglify:binding',
         'uglify:coincidence',

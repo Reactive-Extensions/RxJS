@@ -1,11 +1,15 @@
-    var CheckedObserver = (function () {
-        inherits(CheckedObserver, Observer);
+    var CheckedObserver = (function (_super) {
+        inherits(CheckedObserver, _super);
+
         function CheckedObserver(observer) {
+            _super.call(this);
             this._observer = observer;
             this._state = 0; // 0 - idle, 1 - busy, 2 - done
         }
 
-        CheckedObserver.prototype.onNext = function (value) {
+        var CheckedObserverPrototype = CheckedObserver.prototype;
+
+        CheckedObserverPrototype.onNext = function (value) {
             this.checkAccess();
             try {
                 this._observer.onNext(value);
@@ -16,7 +20,7 @@
             }
         };
 
-        CheckedObserver.prototype.onError = function (err) {
+        CheckedObserverPrototype.onError = function (err) {
             this.checkAccess();
             try {
                 this._observer.onError(err);
@@ -27,7 +31,7 @@
             }
         };
 
-        CheckedObserver.prototype.onCompleted = function () {
+        CheckedObserverPrototype.onCompleted = function () {
             this.checkAccess();
             try {
                 this._observer.onCompleted();
@@ -38,11 +42,11 @@
             }
         };
 
-        CheckedObserver.prototype.checkAccess = function () {
+        CheckedObserverPrototype.checkAccess = function () {
             if (this._state === 1) { throw new Error('Re-entrancy detected'); }
             if (this._state === 2) { throw new Error('Observer completed'); }
             if (this._state === 0) { this._state = 1; }
         };
 
         return CheckedObserver;
-    }());
+    }(Observer));
