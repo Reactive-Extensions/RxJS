@@ -1,8 +1,9 @@
     /**
-     * @constructor
      * Represents a disposable resource whose underlying disposable resource can be replaced by another disposable resource, causing automatic disposal of the previous underlying disposable resource.
+     *
+     * @constructor 
      */
-    var SerialDisposable = root.SerialDisposable = function () {
+    var SerialDisposable = Rx.SerialDisposable = function () {
         this.isDisposed = false;
         this.current = null;
     };
@@ -17,7 +18,9 @@
 
     /**
      * Sets the underlying disposable.
-     * @param value The new underlying disposable.
+     *
+     * @memberOf SerialDisposable#
+     * @param {Disposable} value The new underlying disposable.
      */  
     SerialDisposable.prototype.setDisposable = function (value) {
         var shouldDispose = this.isDisposed, old;
@@ -36,6 +39,10 @@
     /**
      * Gets or sets the underlying disposable.
      * If the SerialDisposable has already been disposed, assignment to this property causes immediate disposal of the given disposable object. Assigning this property disposes the previous disposable object.
+     * 
+     * @memberOf SerialDisposable#
+     * @param {Disposable} [value] The new underlying disposable.
+     * @returns {Disposable} The underlying disposable.
      */    
     SerialDisposable.prototype.disposable = function (value) {
         if (!value) {
@@ -45,7 +52,11 @@
         }
     };
 
-    /** Disposes the underlying disposable as well as all future replacements. */   
+    /** 
+     * Disposes the underlying disposable as well as all future replacements.
+     * 
+     * @memberOf SerialDisposable#
+     */
     SerialDisposable.prototype.dispose = function () {
         var old;
         if (!this.isDisposed) {

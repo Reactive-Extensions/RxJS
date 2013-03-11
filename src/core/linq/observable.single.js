@@ -1,7 +1,7 @@
     /**
      *  Hides the identity of an observable sequence.
      *  
-     *  @return An observable sequence that hides the identity of the source sequence.    
+     * @returns {Observable} An observable sequence that hides the identity of the source sequence.    
      */
     observableProto.asObservable = function () {
         var source = this;
@@ -13,12 +13,14 @@
     /**
      *  Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
      *  
+     * @example
      *  1 - xs.bufferWithCount(10);
      *  2 - xs.bufferWithCount(10, 1);
      *  
-     *  @param count Length of each buffer.
-     *  @param [skip] Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
-     *  @return An observable sequence of buffers.    
+     * @memberOf Observable#
+     * @param {Number} count Length of each buffer.
+     * @param {Number} [skip] Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
+     * @returns {Observable} An observable sequence of buffers.    
      */
     observableProto.bufferWithCount = function (count, skip) {
         if (skip === undefined) {
@@ -34,7 +36,8 @@
     /**
      *  Dematerializes the explicit notification values of an observable sequence as implicit notifications.
      *  
-     *  @return An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
+     * @memberOf Observable# 
+     * @returns {Observable} An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
      */ 
     observableProto.dematerialize = function () {
         var source = this;
@@ -52,9 +55,10 @@
      *  2 - var obs = observable.distinctUntilChanged(function (x) { return x.id; });
      *  3 - var obs = observable.distinctUntilChanged(function (x) { return x.id; }, function (x, y) { return x === y; });
      *  
-     *  @param {Function} [keySelector] A function to compute the comparison key for each element. If not provided, it projects the value.
-     *  @param {Function} [comparer] Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
-     *  @return An observable sequence only containing the distinct contiguous elements, based on a computed key value, from the source sequence.   
+     * @memberOf Observable#
+     * @param {Function} [keySelector] A function to compute the comparison key for each element. If not provided, it projects the value.
+     * @param {Function} [comparer] Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
+     * @returns {Observable} An observable sequence only containing the distinct contiguous elements, based on a computed key value, from the source sequence.   
      */
     observableProto.distinctUntilChanged = function (keySelector, comparer) {
         var source = this;
@@ -91,15 +95,17 @@
      *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
      *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
      *  
+     * @example
      *  1 - observable.doAction(observer);
      *  2 - observable.doAction(onNext);
      *  3 - observable.doAction(onNext, onError);
      *  4 - observable.doAction(onNext, onError, onCompleted);
      *  
-     *  @param observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
-     *  @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-     *  @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-     *  @return The source sequence with the side-effecting behavior applied.   
+     * @memberOf Observable#
+     * @param {Mixed} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
+     * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+     * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+     * @returns {Observable} The source sequence with the side-effecting behavior applied.   
      */
     observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
         var source = this, onNextFunc;
@@ -147,10 +153,12 @@
     /**
      *  Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.
      *  
+     * @example
      *  1 - obs = observable.finallyAction(function () { console.log('sequence ended'; });
      *  
-     *  @param finallyAction Action to invoke after the source observable sequence terminates.
-     *  @return Source sequence with the action-invoking termination behavior applied. 
+     * @memberOf Observable#
+     * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
+     * @returns {Observable} Source sequence with the action-invoking termination behavior applied. 
      */  
     observableProto.finallyAction = function (action) {
         var source = this;
@@ -171,7 +179,8 @@
     /**
      *  Ignores all elements in an observable sequence leaving only the termination messages.
      *  
-     *  @return An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
+     * @memberOf Observable#
+     * @returns {Observable} An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
      */
     observableProto.ignoreElements = function () {
         var source = this;
@@ -183,7 +192,8 @@
     /**
      *  Materializes the implicit notifications of an observable sequence as explicit notification values.
      *  
-     *  @return An observable sequence containing the materialized notification values from the source sequence.
+     * @memberOf Observable#
+     * @returns {Observable} An observable sequence containing the materialized notification values from the source sequence.
      */    
     observableProto.materialize = function () {
         var source = this;
@@ -203,11 +213,13 @@
     /**
      *  Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
      *  
+     * @example
      *  1 - repeated = source.repeat();
      *  2 - repeated = source.repeat(42);
      *  
-     *  @param {Number} [repeatCount]  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
-     *  @return The observable sequence producing the elements of the given sequence repeatedly.   
+     * @memberOf Observable#
+     * @param {Number} [repeatCount]  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
+     * @returns {Observable} The observable sequence producing the elements of the given sequence repeatedly.   
      */
     observableProto.repeat = function (repeatCount) {
         return enumerableRepeat(this, repeatCount).concat();
@@ -216,11 +228,13 @@
     /**
      *  Repeats the source observable sequence the specified number of times or until it successfully terminates. If the retry count is not specified, it retries indefinitely.
      *  
+     * @example
      *  1 - retried = retry.repeat();
      *  2 - retried = retry.repeat(42);
      *  
-     *  @param {Number} [retryCount]  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
-     *  @return An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully. 
+     * @memberOf Observable#
+     * @param {Number} [retryCount]  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
+     * @returns {Observable} An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully. 
      */
     observableProto.retry = function (retryCount) {
         return enumerableRepeat(this, retryCount).catchException();
@@ -233,9 +247,10 @@
      *  1 - scanned = source.scan(function (acc, x) { return acc + x; });
      *  2 - scanned = source.scan(0, function (acc, x) { return acc + x; });
      *  
-     *  @param [seed] The initial accumulator value.
-     *  @param accumulator An accumulator function to be invoked on each element.
-     *  @return An observable sequence containing the accumulated values.
+     * @memberOf Observable#
+     * @param {Mixed} [seed] The initial accumulator value.
+     * @param {Function} accumulator An accumulator function to be invoked on each element.
+     * @returns {Observable} An observable sequence containing the accumulated values.
      */
     observableProto.scan = function () {
         var seed, hasSeed = false, accumulator;
@@ -264,12 +279,12 @@
     /**
      *  Bypasses a specified number of elements at the end of an observable sequence.
      *  
-     *  @param count Number of elements to bypass at the end of the source sequence.
-     *  @return An observable sequence containing the source sequence elements except for the bypassed ones at the end.
-     *  
+     * @memberOf Observable#
+     * @description
      *  This operator accumulates a queue with a length enough to store the first <paramref name="count"/> elements. As more elements are
-     *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.
-     *        
+     *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.     
+     * @param count Number of elements to bypass at the end of the source sequence.
+     * @returns {Observable} An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
      */
     observableProto.skipLast = function (count) {
         var source = this;
@@ -290,7 +305,8 @@
      *  1 - source.startWith(1, 2, 3);
      *  2 - source.startWith(Rx.Scheduler.timeout, 1, 2, 3);
      *  
-     *  @return The source sequence prepended with the specified values.  
+     * @memberOf Observable#
+     * @returns {Observable} The source sequence prepended with the specified values.  
      */
     observableProto.startWith = function () {
         var values, scheduler, start = 0;
@@ -307,16 +323,18 @@
     /**
      *  Returns a specified number of contiguous elements from the end of an observable sequence, using an optional scheduler to drain the queue.
      *  
+     * @example
      *  1 - obs = source.takeLast(5);
      *  2 - obs = source.takeLast(5, Rx.Scheduler.timeout);
      *  
-     *  @param count Number of elements to take from the end of the source sequence.
-     *  @param [scheduler] Scheduler used to drain the queue upon completion of the source sequence.
-     *  @return An observable sequence containing the specified number of elements from the end of the source sequence.
-     *  
-     *  This operator accumulates a buffer with a length enough to store elements <paramref name="count"/> elements. Upon completion of
+     * @description
+     *  This operator accumulates a buffer with a length enough to store elements count elements. Upon completion of
      *  the source sequence, this buffer is drained on the result sequence. This causes the elements to be delayed.
-     * 
+     *      
+     * @memberOf Observable#
+     * @param {Number} count Number of elements to take from the end of the source sequence.
+     * @param {Scheduler} [scheduler] Scheduler used to drain the queue upon completion of the source sequence.
+     * @returns {Observable} An observable sequence containing the specified number of elements from the end of the source sequence.
      */   
     observableProto.takeLast = function (count, scheduler) {
         return this.takeLastBuffer(count).selectMany(function (xs) { return observableFromArray(xs, scheduler); });
@@ -325,12 +343,13 @@
     /**
      *  Returns an array with the specified number of contiguous elements from the end of an observable sequence.
      *  
-     *  @param count Number of elements to take from the end of the source sequence.
-     *  @return An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
-     *  
-     *  This operator accumulates a buffer with a length enough to store <paramref name="count"/> elements. Upon completion of the
-     *  source sequence, this buffer is produced on the result sequence.
-     *   
+     * @description
+     *  This operator accumulates a buffer with a length enough to store count elements. Upon completion of the
+     *  source sequence, this buffer is produced on the result sequence. 
+     *      
+     * @memberOf Observable#         
+     * @param {Number} count Number of elements to take from the end of the source sequence.
+     * @returns {Observable} An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
      */
     observableProto.takeLastBuffer = function (count) {
         var source = this;
@@ -353,10 +372,11 @@
      *  
      *  1 - xs.windowWithCount(10);
      *  2 - xs.windowWithCount(10, 1);
-     *  
-     *  @param count Length of each window.
-     *  @param [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
-     *  @return An observable sequence of windows.  
+     *      
+     * @memberOf Observable#
+     * @param {Number} count Length of each window.
+     * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
+     * @returns {Observable} An observable sequence of windows.  
      */
     observableProto.windowWithCount = function (count, skip) {
         var source = this;

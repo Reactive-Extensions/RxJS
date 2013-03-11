@@ -1,17 +1,24 @@
-    // Timeout Scheduler
+    /** 
+     * Gets a scheduler that schedules work via a timed callback based upon platform.
+     *
+     * @memberOf Scheduler
+     */
     var timeoutScheduler = Scheduler.timeout = (function () {
 
+        var REQ_NAME = 'equestAnimationFrame',
+            CANCEL_NAME = 'ancelAnimationFrame';
+
         // Optimize for speed
-        var reqAnimFrame = window.requestAnimationFrame ||
-            window.webkitRequestAnimationFrame ||
-            window.mozRequestAnimationFrame ||
-            window.oRequestAnimationFrame ||
-            window.msRequestAnimationFrame,
-        clearAnimFrame = window.cancelAnimationFrame ||
-            window.webkitCancelAnimationFrame ||
-            window.mozCancelAnimationFrame ||
-            window.oCancelAnimationFrame ||
-            window.msCancelAnimationFrame;
+        var reqAnimFrame = window['r' + REQ_NAME] ||
+            window['webkitR' + REQ_NAME] ||
+            window['mozR' + REQ_NAME] ||
+            window['oR' + REQ_NAME] ||
+            window['msR' + REQ_NAME],
+        clearAnimFrame = window['c' + CANCEL_NAME] ||
+            window['webkitC' + CANCEL_NAME] ||
+            window['mozC' + CANCEL_NAME] ||
+            window['oC' + CANCEL_NAME] ||
+            window['msC' + CANCEL_NAME];
 
         var scheduleMethod, clearMethod;
         if (typeof window.process !== 'undefined' && typeof window.process.nextTick === 'function') {

@@ -1,19 +1,22 @@
     /**
-     * @constructor
      * Represents a group of disposable resources that are disposed together.
+     * 
+     * @constructor
      */
-    var CompositeDisposable = root.CompositeDisposable = function () {
+    var CompositeDisposable = Rx.CompositeDisposable = function () {
         this.disposables = argsOrArray(arguments, 0);
         this.isDisposed = false;
         this.length = this.disposables.length;
     };
 
+    var CompositeDisposablePrototype = CompositeDisposable.prototype;
+
     /**
      *  Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
      *  
-     *  @param item Disposable to add.
+     * @param {Mixed} item Disposable to add.
      */    
-    CompositeDisposable.prototype.add = function (item) {
+    CompositeDisposablePrototypeadd = function (item) {
         if (this.isDisposed) {
             item.dispose();
         } else {
@@ -25,10 +28,11 @@
     /**
      *  Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
      *  
-     *  @param item Disposable to remove.
-     *  @return true if found; false otherwise.
+     * @memberOf CompositeDisposable#
+     * @param {Mixed} item Disposable to remove.
+     * @returns {Boolean} true if found; false otherwise.
      */
-    CompositeDisposable.prototype.remove = function (item) {
+    CompositeDisposablePrototype.remove = function (item) {
         var shouldDispose = false;
         if (!this.isDisposed) {
             var idx = this.disposables.indexOf(item);
@@ -45,8 +49,10 @@
 
     /**
      *  Disposes all disposables in the group and removes them from the group.
+     *
+     * @memberOf CompositeDisposable#     
      */
-    CompositeDisposable.prototype.dispose = function () {
+    CompositeDisposablePrototype.dispose = function () {
         if (!this.isDisposed) {
             this.isDisposed = true;
             var currentDisposables = this.disposables.slice(0);
@@ -61,8 +67,10 @@
 
     /**
      *  Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
+     *
+     * @memberOf CompositeDisposable#
      */   
-    CompositeDisposable.prototype.clear = function () {
+    CompositeDisposablePrototype.clear = function () {
         var currentDisposables = this.disposables.slice(0);
         this.disposables = [];
         this.length = 0;
@@ -74,19 +82,21 @@
     /**
      *  Determines whether the CompositeDisposable contains a specific disposable.
      *  
-     *  @param item Disposable to search for.
-     *  @return true if the disposable was found; otherwise, false.
+     * @memberOf CompositeDisposable#     
+     * @param {Mixed} item Disposable to search for.
+     * @returns {Boolean} true if the disposable was found; otherwise, false.
      */    
-    CompositeDisposable.prototype.contains = function (item) {
+    CompositeDisposablePrototype.contains = function (item) {
         return this.disposables.indexOf(item) !== -1;
     };
 
     /**
      *  Converts the existing CompositeDisposable to an array of disposables
      *  
-     *  @return An array of disposable objects.
+     * @memberOf CompositeDisposable#
+     * @returns {Array} An array of disposable objects.
      */  
-    CompositeDisposable.prototype.toArray = function () {
+    CompositeDisposablePrototype.toArray = function () {
         return this.disposables.slice(0);
     };
     

@@ -1,14 +1,21 @@
-    // Replay Subject
     /**
      * Represents an object that is both an observable sequence as well as an observer.
      * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
      */  
-    var ReplaySubject = root.ReplaySubject = (function (base) {
+    var ReplaySubject = Rx.ReplaySubject = (function (base) {
+        /** 
+         * @private
+         * @constructor
+         */
         var RemovableDisposable = function (subject, observer) {
             this.subject = subject;
             this.observer = observer;
         };
 
+        /* 
+         * @private
+         * @memberOf RemovableDisposable#
+         */
         RemovableDisposable.prototype.dispose = function () {
             this.observer.dispose();
             if (!this.subject.isDisposed) {
@@ -42,14 +49,14 @@
             return subscription;
         }
 
-        inherits(ReplaySubject, Observable);
+        inherits(ReplaySubject, _super);
 
         /**
          *  Initializes a new instance of the ReplaySubject class with the specified buffer size, window and scheduler.
          * 
          *  @param {Number} [bufferSize] Maximum element count of the replay buffer.
          *  @param {Number} [window] Maximum time length of the replay buffer.
-         *  @param [scheduler] Scheduler the observers are invoked on.
+         *  @param {Scheduler} [scheduler] Scheduler the observers are invoked on.
          */
         function ReplaySubject(bufferSize, window, scheduler) {
             this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
@@ -61,10 +68,23 @@
             this.isDisposed = false;
             this.hasError = false;
             this.error = null;
-            ReplaySubject.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
         }
 
         addProperties(ReplaySubject.prototype, Observer, {
+            /**
+             * Indicates whether the subject has observers subscribed to it.
+             * 
+             * @memberOf ReplaySubject# 
+             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+             */         
+            hasObservers: function () {
+                return this.observers.length > 0;
+            },            
+            /*
+             * @private
+             * @memberOf ReplaySubject#
+             */
             _trim: function (now) {
                 while (this.q.length > this.bufferSize) {
                     this.q.shift();
@@ -73,6 +93,12 @@
                     this.q.shift();
                 }
             },
+            /**
+             * Notifies all subscribed observers about the arrival of the specified element in the sequence.
+             * 
+             * @memberOf ReplaySubject#
+             * @param {Mixed} value The value to send to all observers.
+             */              
             onNext: function (value) {
                 var observer;
                 checkDisposed.call(this);
@@ -89,6 +115,12 @@
                     }
                 }
             },
+            /**
+             * Notifies all subscribed observers about the exception.
+             * 
+             * @memberOf ReplaySubject#
+             * @param {Mixed} error The exception to send to all observers.
+             */                 
             onError: function (error) {
                 var observer;
                 checkDisposed.call(this);
@@ -107,6 +139,11 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Notifies all subscribed observers about the end of the sequence.
+             * 
+             * @memberOf ReplaySubject#
+             */             
             onCompleted: function () {
                 var observer;
                 checkDisposed.call(this);
@@ -123,6 +160,11 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Unsubscribe all observers and release resources.
+             * 
+             * @memberOf ReplaySubject#
+             */               
             dispose: function () {
                 this.isDisposed = true;
                 this.observers = null;
@@ -130,4 +172,4 @@
         });
 
         return ReplaySubject;
-    }());
+    }(Observable));

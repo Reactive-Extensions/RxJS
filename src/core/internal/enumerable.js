@@ -1,9 +1,18 @@
-    // Enumerable
-    var Enumerable = root.Internals.Enumerable = (function () {
+    /** @private */
+    var Enumerable = Rx.Internals.Enumerable = (function () {
+
+        /** 
+         * @constructor
+         * @private
+         */
         function Enumerable(getEnumerator) {
             this.getEnumerator = getEnumerator;
         }
 
+        /** 
+         * @private
+         * @memberOf Enumerable#
+         */
         Enumerable.prototype.concat = function () {
             var sources = this;
             return new AnonymousObservable(function (observer) {
@@ -48,6 +57,10 @@
             });
         };
 
+        /** 
+         * @private
+         * @memberOf Enumerable#
+         */
         Enumerable.prototype.catchException = function () {
             var sources = this;
             return new AnonymousObservable(function (observer) {
@@ -99,7 +112,11 @@
         return Enumerable;
     }());
 
-    // Enumerable properties
+    /** 
+     * @static
+     * @private
+     * @memberOf Enumerable
+     */
     var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
         if (repeatCount === undefined) {
             repeatCount = -1;
@@ -118,6 +135,12 @@
             }, function () { return current; });
         });
     };
+
+    /** 
+     * @static
+     * @private
+     * @memberOf Enumerable
+     */    
     var enumerableFor = Enumerable.forEach = function (source, selector) {
         selector || (selector = identity);
         return new Enumerable(function () {

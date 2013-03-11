@@ -1,3 +1,6 @@
+    /**
+     * @private
+     */
     var SchedulePeriodicRecursive = (function () {
         function tick(command, recurse) {
             recurse(0, this._period);
@@ -9,6 +12,10 @@
             }
         }
 
+        /**
+         * @constructor
+         * @private
+         */
         function SchedulePeriodicRecursive(scheduler, state, period, action) {
             this._scheduler = scheduler;
             this._state = state;

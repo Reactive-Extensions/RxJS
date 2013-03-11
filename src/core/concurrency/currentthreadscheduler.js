@@ -1,18 +1,29 @@
-    /** @private */
+    /** 
+     * Gets a scheduler that schedules work as soon as possible on the current thread.
+     */
     var currentThreadScheduler = Scheduler.currentThread = (function () {
         var queue;
 
-        /** @private */
+        /** 
+         * @private 
+         * @constructor
+         */
         function Trampoline() {
             queue = new PriorityQueue(4);
         }
 
-        /** @private */
+        /** 
+        * @private 
+        * @memberOf Trampoline
+        */
         Trampoline.prototype.dispose = function () {
             queue = null;
         };
 
-        /** @private */
+        /** 
+        * @private 
+        * @memberOf Trampoline
+        */
         Trampoline.prototype.run = function () {
             var item;
             while (queue.length > 0) {

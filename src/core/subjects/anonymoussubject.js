@@ -1,26 +1,44 @@
-    var AnonymousSubject = (function () {
+    /** @private */
+    var AnonymousSubject = (function (_super) {
+        inherits(AnonymousSubject, _super);
+
         function subscribe(observer) {
             return this.observable.subscribe(observer);
         }
 
-        inherits(AnonymousSubject, Observable);
+        /**
+         * @private
+         * @constructor
+         */
         function AnonymousSubject(observer, observable) {
-            AnonymousSubject.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
             this.observer = observer;
             this.observable = observable;
         }
 
         addProperties(AnonymousSubject.prototype, Observer, {
+            /**
+             * @private
+             * @memberOf AnonymousSubject#
+            */
             onCompleted: function () {
                 this.observer.onCompleted();
             },
+            /**
+             * @private
+             * @memberOf AnonymousSubject#
+            */            
             onError: function (exception) {
                 this.observer.onError(exception);
             },
+            /**
+             * @private
+             * @memberOf AnonymousSubject#
+            */            
             onNext: function (value) {
                 this.observer.onNext(value);
             }
         });
 
         return AnonymousSubject;
-    }());
+    }(Observable));

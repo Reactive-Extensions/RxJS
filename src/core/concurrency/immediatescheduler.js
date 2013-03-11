@@ -1,5 +1,10 @@
-    // Immediate Scheduler
     var schedulerNoBlockError = 'Scheduler is not allowed to block the thread';
+
+    /**
+     * Gets a scheduler that schedules work immediately on the current thread.
+     * 
+     * @memberOf Scheduler
+     */    
     var immediateScheduler = Scheduler.immediate = (function () {
 
         function scheduleNow(state, action) {

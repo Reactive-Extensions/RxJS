@@ -4,7 +4,7 @@
      *  Creates a pattern that matches when both observable sequences have an available value.
      *  
      *  @param right Observable sequence to match with the current sequence.</param>
-     *  @return Pattern object that matches when both observable sequences have an available value.     
+     *  @return {Pattern} Pattern object that matches when both observable sequences have an available value.     
      */
     observableProto.and = function (right) {
         return new Pattern([this, right]);
@@ -14,7 +14,7 @@
      *  Matches when the observable sequence has an available value and projects the value.
      *  
      *  @param selector Selector that will be invoked for values in the source sequence.</param>
-     *  @return Plan that produces the projected values, to be fed (with other plans) to the when operator. 
+     *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator. 
      */    
     observableProto.then = function (selector) {
         return new Pattern([this]).then(selector);
@@ -24,7 +24,7 @@
      *  Joins together the results from several patterns.
      *  
      *  @param plans A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.</param>
-     *  @return Observable sequence with the results form matching several patterns. 
+     *  @returns {Observable} Observable sequence with the results form matching several patterns. 
      */
     Observable.when = function () {
         var plans = argsOrArray(arguments, 0);

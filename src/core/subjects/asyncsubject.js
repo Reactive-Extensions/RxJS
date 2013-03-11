@@ -2,7 +2,7 @@
      *  Represents the result of an asynchronous operation.
      *  The last value before the OnCompleted notification, or the error received through OnError, is sent to all subscribed observers.
      */   
-    var AsyncSubject = root.AsyncSubject = (function () {
+    var AsyncSubject = Rx.AsyncSubject = (function (_super) {
 
         function subscribe(observer) {
             checkDisposed.call(this);
@@ -24,14 +24,15 @@
             return disposableEmpty;
         }
 
-        inherits(AsyncSubject, Observable);
+        inherits(AsyncSubject, _super);
 
         /**
-         * @constructor
          * Creates a subject that can only receive one value and that value is cached for all future observations.
+         *
+         * @constructor
          */ 
         function AsyncSubject() {
-            AsyncSubject.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
 
             this.isDisposed = false,
             this.isStopped = false,
@@ -42,6 +43,20 @@
         }
 
         addProperties(AsyncSubject.prototype, Observer, {
+            /**
+             * Indicates whether the subject has observers subscribed to it.
+             * 
+             * @memberOf AsyncSubject# 
+             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+             */         
+            hasObservers: function () {
+                return this.observers.length > 0;
+            },
+            /**
+             * Notifies all subscribed observers about the end of the sequence, also causing the last received value to be sent out (if any).
+             * 
+             * @memberOf AsyncSubject#
+             */ 
             onCompleted: function () {
                 var o, i, len;
                 checkDisposed.call(this);
@@ -66,6 +81,12 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Notifies all subscribed observers about the exception.
+             * 
+             * @memberOf AsyncSubject#
+             * @param {Mixed} error The exception to send to all observers.
+             */ 
             onError: function (exception) {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -80,6 +101,12 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Sends a value to the subject. The last value received before successful termination will be sent to all subscribed and future observers.
+             * 
+             * @memberOf AsyncSubject#
+             * @param {Mixed} value The value to store in the subject.
+             */             
             onNext: function (value) {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -87,6 +114,11 @@
                     this.hasValue = true;
                 }
             },
+            /**
+             * Unsubscribe all observers and release resources.
+             * 
+             * @memberOf AsyncSubject#
+             */
             dispose: function () {
                 this.isDisposed = true;
                 this.observers = null;
@@ -96,4 +128,4 @@
         });
 
         return AsyncSubject;
-    }());
+    }(Observable));

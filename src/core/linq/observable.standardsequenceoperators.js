@@ -3,9 +3,10 @@
      *  
      *  1 - obs = xs.defaultIfEmpty();
      *  2 - obs = xs.defaultIfEmpty(false);
-     *  
-     *  @param defaultValue The value to return if the sequence is empty. If not provided, this defaults to null.
-     *  @return An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself. 
+     *      
+     * @memberOf Observable#
+     * @param defaultValue The value to return if the sequence is empty. If not provided, this defaults to null.
+     * @returns {Observable} An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself. 
      */
     observableProto.defaultIfEmpty = function (defaultValue) {
         var source = this;
@@ -28,15 +29,17 @@
 
     /**
      *  Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer.
-     *  
+     *  Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
+     * 
+     * @example
      *  1 - obs = xs.distinct();
      *  2 - obs = xs.distinct(function (x) { return x.id; });
      *  2 - obs = xs.distinct(function (x) { return x.id; }, function (x) { return x.toString(); });
-     *  
-     *  @param {Function} [keySelector]  A function to compute the comparison key for each element.
-     *  @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
-     *  @return An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
-     *  Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large.   
+     *      
+     * @memberOf Observable#     
+     * @param {Function} [keySelector]  A function to compute the comparison key for each element.
+     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
+     * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
      */
    observableProto.distinct = function (keySelector, keySerializer) {
         var source = this;
@@ -70,14 +73,16 @@
     /**
      *  Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
      *  
+     * @example
      *  1 - observable.groupBy(function (x) { return x.id; });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; }, function (x) { return x.toString(); });
-     *  
-     *  @param keySelector A function to extract the key for each element.
-     *  @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
-     *  @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
-     *  @return A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
+     *      
+     * @memberOf Observable#
+     * @param {Function} keySelector A function to extract the key for each element.
+     * @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
+     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
+     * @returns {Observable} A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
      */
     observableProto.groupBy = function (keySelector, elementSelector, keySerializer) {
         return this.groupByUntil(keySelector, elementSelector, function () {
@@ -90,14 +95,16 @@
      *  A duration selector function is used to control the lifetime of groups. When a group expires, it receives an OnCompleted notification. When a new element with the same
      *  key value as a reclaimed group occurs, the group will be reborn with a new lifetime request.
      *  
+     * @example
      *  1 - observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); });
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); }, function (x) { return x.toString(); });
-     *  
-     *  @param keySelector A function to extract the key for each element.
-     *  @param durationSelector A function to signal the expiration of a group.
-     *  @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
-     *  @return 
+     *      
+     * @memberOf Observable#
+     * @param {Function} keySelector A function to extract the key for each element.
+     * @param {Function} durationSelector A function to signal the expiration of a group.
+     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
+     * @returns {Observable} 
      *  A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
      *  If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
      *      
@@ -198,9 +205,10 @@
      *  
      *  1 - source.select(function (value) { return value * value; });
      *  2 - source.select(function (value, index) { return value * value + index; });
-     *  
-     *  @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
-     *  @return An observable sequence whose elements are the result of invoking the transform function on each element of source. 
+     *      
+     * @memberOf Observable#
+     * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+     * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
      */
     observableProto.select = observableProto.map = function (selector) {
         var parent = this;
@@ -227,6 +235,7 @@
      *  One of the Following:
      *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
      *  
+     * @example
      *  1 - source.selectMany(function (x) { return Rx.Observable.range(0, x); });
      *  Or:
      *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
@@ -236,10 +245,11 @@
      *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
      *  
      *  1 - source.selectMany(Rx.Observable.fromArray([1,2,3]));
-     *  
-     *  @param selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
-     *  @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
-     *  @return An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
+     *      
+     * @memberOf Observable#
+     * @param selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
+     * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+     * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
      */
     observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector) {
         if (resultSelector) {
@@ -259,9 +269,10 @@
 
     /**
      *  Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
-     *  
-     *  @param count The number of elements to skip before returning the remaining elements.
-     *  @return An observable sequence that contains the elements that occur after the specified index in the input sequence.   
+     *      
+     * @memberOf Observable#
+     * @param {Number} count The number of elements to skip before returning the remaining elements.
+     * @returns {Observable} An observable sequence that contains the elements that occur after the specified index in the input sequence.   
      */
     observableProto.skip = function (count) {
         if (count < 0) {
@@ -286,9 +297,10 @@
      *  
      *  1 - source.skipWhile(function (value) { return value < 10; });
      *  1 - source.skipWhile(function (value, index) { return value < 10 || index < 10; });
-     *  
-     *  @param predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
-     *  @return An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
+     *      
+     * @memberOf Observable#
+     * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+     * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
      */
     observableProto.skipWhile = function (predicate) {
         var source = this;
@@ -315,10 +327,11 @@
      *  
      *  1 - source.take(5);
      *  2 - source.take(0, Rx.Scheduler.timeout);
-     *  
-     *  @param {Number} count The number of elements to return.
-     *  @param [scheduler] Scheduler used to produce an OnCompleted message in case <paramref name="count count</paramref> is set to 0.
-     *  @return An observable sequence that contains the specified number of elements from the start of the input sequence.  
+     *      
+     * @memberOf Observable#
+     * @param {Number} count The number of elements to return.
+     * @param {Scheduler} [scheduler] Scheduler used to produce an OnCompleted message in case <paramref name="count count</paramref> is set to 0.
+     * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.  
      */
     observableProto.take = function (count, scheduler) {
         if (count < 0) {
@@ -346,11 +359,13 @@
      *  Returns elements from an observable sequence as long as a specified condition is true.
      *  The element's index is used in the logic of the predicate function.
      *  
+     * @example
      *  1 - source.takeWhile(function (value) { return value < 10; });
      *  1 - source.takeWhile(function (value, index) { return value < 10 || index < 10; });
-     *  
-     *  @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
-     *  @return An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
+     *      
+     * @memberOf Observable#
+     * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+     * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
      */
     observableProto.takeWhile = function (predicate) {
         var observable = this;
@@ -377,11 +392,13 @@
     /**
      *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
      *  
+     * @example
      *  1 - source.where(function (value) { return value < 10; });
      *  1 - source.where(function (value, index) { return value < 10 || index < 10; });
-     *  
-     *  @param {Function} predicate A function to test each source element for a conditio; the second parameter of the function represents the index of the source element.
-     *  @return An observable sequence that contains elements from the input sequence that satisfy the condition.   
+     *      
+     * @memberOf Observable#
+     * @param {Function} predicate A function to test each source element for a conditio; the second parameter of the function represents the index of the source element.
+     * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
      */
     observableProto.where = observableProto.filter = function (predicate) {
         var parent = this;

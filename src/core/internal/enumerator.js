@@ -1,10 +1,18 @@
-    // Enumerator
-
-    var Enumerator = root.Internals.Enumerator = function (moveNext, getCurrent, dispose) {
+    /** 
+     * @constructor
+     * @private
+     */
+    var Enumerator = Rx.Internals.Enumerator = function (moveNext, getCurrent, dispose) {
         this.moveNext = moveNext;
         this.getCurrent = getCurrent;
         this.dispose = dispose;
     };
+
+    /**
+     * @static
+     * @memberOf Enumerator
+     * @private
+     */
     var enumeratorCreate = Enumerator.create = function (moveNext, getCurrent, dispose) {
         var done = false;
         dispose || (dispose = noop);

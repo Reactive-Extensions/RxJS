@@ -5,11 +5,15 @@
             slice.call(args);
     }
     var hasProp = {}.hasOwnProperty;
+
+    /** @private */
     var inherits = this.inherits = Rx.Internals.inherits = function (child, parent) {
         function __() { this.constructor = child; }
         __.prototype = parent.prototype;
         child.prototype = new __();
     };
+
+    /** @private */    
     var addProperties = Rx.Internals.addProperties = function (obj) {
         var sources = slice.call(arguments, 1);
         for (var i = 0, len = sources.length; i < len; i++) {

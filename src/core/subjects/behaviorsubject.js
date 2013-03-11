@@ -2,7 +2,7 @@
      *  Represents a value that changes over time.
      *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
      */
-    var BehaviorSubject = root.BehaviorSubject = (function () {
+    var BehaviorSubject = Rx.BehaviorSubject = (function (_super) {
         function subscribe(observer) {
             var ex;
             checkDisposed.call(this);
@@ -20,7 +20,7 @@
             return disposableEmpty;
         }
 
-        inherits(BehaviorSubject, Observable);
+        inherits(BehaviorSubject, _super);
 
         /**
          *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
@@ -28,7 +28,7 @@
          *  @param value Initial value sent to observers when no other value has been received by the subject yet.
          */       
         function BehaviorSubject(value) {
-            BehaviorSubject.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
 
             this.value = value,
             this.observers = [],
@@ -38,6 +38,20 @@
         }
 
         addProperties(BehaviorSubject.prototype, Observer, {
+            /**
+             * Indicates whether the subject has observers subscribed to it.
+             * 
+             * @memberOf BehaviorSubject# 
+             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+             */         
+            hasObservers: function () {
+                return this.observers.length > 0;
+            },
+            /**
+             * Notifies all subscribed observers about the end of the sequence.
+             * 
+             * @memberOf BehaviorSubject#
+             */ 
             onCompleted: function () {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -50,6 +64,12 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Notifies all subscribed observers about the exception.
+             * 
+             * @memberOf BehaviorSubject#
+             * @param {Mixed} error The exception to send to all observers.
+             */             
             onError: function (error) {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -64,6 +84,12 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Notifies all subscribed observers about the arrival of the specified element in the sequence.
+             * 
+             * @memberOf BehaviorSubject#
+             * @param {Mixed} value The value to send to all observers.
+             */              
             onNext: function (value) {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -74,6 +100,11 @@
                     }
                 }
             },
+            /**
+             * Unsubscribe all observers and release resources.
+             * 
+             * @memberOf BehaviorSubject#
+             */            
             dispose: function () {
                 this.isDisposed = true;
                 this.observers = null;
@@ -83,4 +114,4 @@
         });
 
         return BehaviorSubject;
-    }());
+    }(Observable));

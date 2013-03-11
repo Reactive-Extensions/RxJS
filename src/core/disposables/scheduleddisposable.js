@@ -1,6 +1,15 @@
+    /**
+     * @constructor
+     * @private
+     */
     function ScheduledDisposable(scheduler, disposable) {
         this.scheduler = scheduler, this.disposable = disposable, this.isDisposed = false;
     }
+
+    /** 
+     * @private
+     * @memberOf ScheduledDisposable#
+     */
     ScheduledDisposable.prototype.dispose = function () {
         var parent = this;
         this.scheduler.schedule(function () {

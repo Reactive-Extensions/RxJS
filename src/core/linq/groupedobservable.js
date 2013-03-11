@@ -1,11 +1,17 @@
-    var GroupedObservable = (function () {
+    /** @private */
+    var GroupedObservable = (function (_super) {
+        inherits(GroupedObservable, _super);
+
         function subscribe(observer) {
             return this.underlyingObservable.subscribe(observer);
         }
 
-        inherits(GroupedObservable, Observable);
+        /** 
+         * @constructor
+         * @private
+         */
         function GroupedObservable(key, underlyingObservable, mergedDisposable) {
-            GroupedObservable.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
             this.key = key;
             this.underlyingObservable = !mergedDisposable ?
                 underlyingObservable :
@@ -13,5 +19,6 @@
                     return new CompositeDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
                 });
         }
+
         return GroupedObservable;
-    }());
+    }(Observable));
