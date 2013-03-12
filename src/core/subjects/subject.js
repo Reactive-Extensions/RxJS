@@ -2,7 +2,7 @@
      *  Represents an object that is both an observable sequence as well as an observer.
      *  Each notification is broadcasted to all subscribed observers.
      */
-    var Subject = root.Subject = (function (_super) {
+    var Subject = Rx.Subject = (function (_super) {
         function subscribe(observer) {
             checkDisposed.call(this);
             if (!this.isStopped) {

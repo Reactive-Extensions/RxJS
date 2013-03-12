@@ -24,7 +24,7 @@ module.exports = function (grunt) {
                     'src/core/license.js',
                     'src/core/intro.js',
                     'src/core/basicheader.js',
-                    'src/core/util.js',                    
+                    'src/core/internal/util.js',                    
                     'src/core/internal/polyfills.js',
                     'src/core/internal/priorityqueue.js',
                     'src/core/disposables/compositedisposable.js',
@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                     'src/core/license.js',
                     'src/core/intro.js',
                     'src/core/basicheader.js',
-                    'src/core/util.js',
+                    'src/core/internal/util.js',
                     'src/core/internal/priorityqueue.js',
                     'src/core/disposables/compositedisposable.js',
                     'src/core/disposables/disposable.js',
@@ -275,9 +275,9 @@ module.exports = function (grunt) {
         'uglify:experimental',
         'uglify:joinpatterns',
         'uglify:testing',
-        'uglify:time',
+        'uglify:time'//,
 
-        'qunit'
+        //'qunit'
     ]);    
 
 };

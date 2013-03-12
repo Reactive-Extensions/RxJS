@@ -1,6 +1,11 @@
+    /** @private */
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
         
+        /**
+         * @private
+         * @constructor
+         */
         function AnonymousObservable(subscribe) {
 
             function s(observer) {
@@ -28,7 +33,7 @@
                 return autoDetachObserver;
             }
 
-            super_.call(this, s);
+            _super.call(this, s);
         }
 
         return AnonymousObservable;

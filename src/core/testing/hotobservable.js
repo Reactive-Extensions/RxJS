@@ -1,4 +1,6 @@
-    var HotObservable = (function () {
+    /** @private */    
+    var HotObservable = (function (_super) {
+
         function subscribe(observer) {
             var observable = this;
             this.observers.push(observer);
@@ -11,9 +13,14 @@
             });
         }
 
-        inherits(HotObservable, Observable);
+        inherits(HotObservable, _super);
+
+        /**
+         * @private
+         * @constructor
+         */
         function HotObservable(scheduler, messages) {
-            HotObservable.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
             var message, notification, observable = this;
             this.scheduler = scheduler;
             this.messages = messages;
@@ -34,4 +41,4 @@
         }
 
         return HotObservable;
-    })();
+    })(Observable);

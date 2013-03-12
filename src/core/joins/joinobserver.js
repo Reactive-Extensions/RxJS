@@ -1,10 +1,14 @@
-    // Join Observer
-    var JoinObserver = (function () {
+    /** @private */
+    var JoinObserver = (function (_super) {
 
-        inherits(JoinObserver, AbstractObserver);
+        inherits(JoinObserver, _super);
 
+        /**
+         * @constructor
+         * @private
+         */
         function JoinObserver(source, onError) {
-            JoinObserver.super_.constructor.call(this);
+            _super.call(this);
             this.source = source;
             this.onError = onError;
             this.queue = [];
@@ -13,7 +17,13 @@
             this.isDisposed = false;
         }
 
-        JoinObserver.prototype.next = function (notification) {
+        var JoinObserverPrototype = JoinObserver.prototype;
+
+        /**
+         * @memberOf JoinObserver#
+         * @private
+         */
+        JoinObserverPrototype.next = function (notification) {
             if (!this.isDisposed) {
                 if (notification.kind === 'E') {
                     this.onError(notification.exception);
@@ -26,28 +36,58 @@
                 }
             }
         };
-        JoinObserver.prototype.error = noop;
-        JoinObserver.prototype.completed = noop;
 
-        JoinObserver.prototype.addActivePlan = function (activePlan) {
+        /**
+         * @memberOf JoinObserver#
+         * @private
+         */        
+        JoinObserverPrototype.error = noop;
+
+        /**
+         * @memberOf JoinObserver#
+         * @private
+         */        
+        JoinObserverPrototype.completed = noop;
+
+        /**
+         * @memberOf JoinObserver#
+         * @private
+         */
+        JoinObserverPrototype.addActivePlan = function (activePlan) {
             this.activePlans.push(activePlan);
         };
-        JoinObserver.prototype.subscribe = function () {
+
+        /**
+         * @memberOf JoinObserver#
+         * @private
+         */        
+        JoinObserverPrototype.subscribe = function () {
             this.subscription.disposable(this.source.materialize().subscribe(this));
         };
-        JoinObserver.prototype.removeActivePlan = function (activePlan) {
+
+        /**
+         * @memberOf JoinObserver#
+         * @private
+         */        
+        JoinObserverPrototype.removeActivePlan = function (activePlan) {
             var idx = this.activePlans.indexOf(activePlan);
             this.activePlans.splice(idx, 1);
             if (this.activePlans.length === 0) {
                 this.dispose();
             }
         };
-        JoinObserver.prototype.dispose = function () {
-            JoinObserver.super_.dispose.call(this);
+
+        /**
+         * @memberOf JoinObserver#
+         * @private
+         */        
+        JoinObserverPrototype.dispose = function () {
+            _super.prototype.dispose.call(this);
             if (!this.isDisposed) {
                 this.isDisposed = true;
                 this.subscription.dispose();
             }
         };
+        
         return JoinObserver;
-    } ());
+    } (AbstractObserver));

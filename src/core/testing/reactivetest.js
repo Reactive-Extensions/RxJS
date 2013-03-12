@@ -1,7 +1,15 @@
-    // New predicate tests
+    /** 
+     * @private 
+     * @constructor
+     */
     function OnNextPredicate(predicate) {
         this.predicate = predicate;
     };
+
+    /** 
+     * @private 
+     * @memberOf OnNextPredicate#
+     */    
     OnNextPredicate.prototype.equals = function (other) {
         if (other === this) { return true; }
         if (other == null) { return false; }
@@ -9,9 +17,18 @@
         return this.predicate(other.value);
     };
 
+    /** 
+     * @private 
+     * @constructor
+     */
     function OnErrorPredicate(predicate) {
         this.predicate = predicate;
     };
+
+    /** 
+     * @private 
+     * @memberOf OnErrorPredicate#
+     */       
     OnErrorPredicate.prototype.equals = function (other) {
         if (other === this) { return true; }
         if (other == null) { return false; }
@@ -19,6 +36,10 @@
         return this.predicate(other.exception);
     };
 
+    /** 
+     * @static
+     * type Object
+     */
     var ReactiveTest = root.ReactiveTest = {
         /** Default virtual time used for creation of observable sequences in unit tests. */
         created: 100,

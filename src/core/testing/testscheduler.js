@@ -1,10 +1,10 @@
     /** Virtual time scheduler used for testing applications and libraries built using Reactive Extensions. */
-    root.TestScheduler = (function () {
-        inherits(TestScheduler, VirtualTimeScheduler);
+    root.TestScheduler = (function (_super) {
+        inherits(TestScheduler, _super);
 
         /** @constructor */
         function TestScheduler() {
-            TestScheduler.super_.constructor.call(this, 0, function (a, b) { return a - b; });
+            _super.call(this, 0, function (a, b) { return a - b; });
         }
 
         /**
@@ -19,7 +19,7 @@
             if (dueTime <= this.clock) {
                 dueTime = this.clock + 1;
             }
-            return TestScheduler.super_.scheduleAbsoluteWithState.call(this, state, dueTime, action);
+            return _super.prototype.scheduleAbsoluteWithState.call(this, state, dueTime, action);
         };
         /**
          * Adds a relative virtual time to an absolute virtual time value.
@@ -125,4 +125,4 @@
         };
 
         return TestScheduler;
-    })();
+    })(VirtualTimeScheduler);

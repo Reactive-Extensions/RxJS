@@ -12,7 +12,7 @@
         function HistoricalScheduler(initialClock, comparer) {
             var clock = initialClock == null ? 0 : initialClock;
             var cmp = comparer || defaultSubComparer;
-            super_.call(this, clock, cmp);
+            _super.call(this, clock, cmp);
         }
 
         var HistoricalSchedulerProto = HistoricalScheduler.prototype;

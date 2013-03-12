@@ -1,15 +1,15 @@
     // Check for AMD
     if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
-        window.Rx = root;
+        window.Rx = Rx;
         return define(function () {
-            return root;
+            return Rx;
         });
     } else if (freeExports) {
         if (typeof module == 'object' && module && module.exports == freeExports) {
-            module.exports = root;
+            module.exports = Rx;
         } else {
-            freeExports = root;
+            freeExports = Rx;
         }
     } else {
-        window.Rx = root;
+        window.Rx = Rx;
     }

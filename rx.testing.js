@@ -44,10 +44,18 @@
             slice.call(args);
     }
 
-    // New predicate tests
+    /** 
+     * @private 
+     * @constructor
+     */
     function OnNextPredicate(predicate) {
         this.predicate = predicate;
     };
+
+    /** 
+     * @private 
+     * @memberOf OnNextPredicate#
+     */    
     OnNextPredicate.prototype.equals = function (other) {
         if (other === this) { return true; }
         if (other == null) { return false; }
@@ -55,9 +63,18 @@
         return this.predicate(other.value);
     };
 
+    /** 
+     * @private 
+     * @constructor
+     */
     function OnErrorPredicate(predicate) {
         this.predicate = predicate;
     };
+
+    /** 
+     * @private 
+     * @memberOf OnErrorPredicate#
+     */       
     OnErrorPredicate.prototype.equals = function (other) {
         if (other === this) { return true; }
         if (other == null) { return false; }
@@ -65,6 +82,10 @@
         return this.predicate(other.exception);
     };
 
+    /** 
+     * @static
+     * type Object
+     */
     var ReactiveTest = root.ReactiveTest = {
         /** Default virtual time used for creation of observable sequences in unit tests. */
         created: 100,
@@ -127,12 +148,12 @@
     };
 
     /**
-     * @constructor
      * Creates a new object recording the production of the specified value at the given virtual time.
-     * 
-     * @param time Virtual time the value was produced on.
-     * @param value Value that was produced.
-     * @param comparer An optional comparer.
+     *
+     * @constructor
+     * @param {Number} time Virtual time the value was produced on.
+     * @param {Mixed} value Value that was produced.
+     * @param {Function} comparer An optional comparer.
      */
     var Recorded = root.Recorded = function (time, value, comparer) {
         this.time = time;
@@ -142,8 +163,9 @@
 
     /**
      * Checks whether the given recorded object is equal to the current instance.
-     * @param other Recorded object to check for equality.
-     * @return true if both objects are equal; false otherwise.  
+     *
+     * @param {Recorded} other Recorded object to check for equality.
+     * @returns {Boolean} true if both objects are equal; false otherwise.  
      */  
     Recorded.prototype.equals = function (other) {
         return this.time === other.time && this.comparer(this.value, other.value);
@@ -151,17 +173,19 @@
 
     /**
      * Returns a string representation of the current Recorded value.
-     * @return String representation of the current Recorded value. 
+     *
+     * @returns {String} String representation of the current Recorded value. 
      */   
     Recorded.prototype.toString = function () {
         return this.value.toString() + '@' + this.time;
     };
 
     /**
-     * @constructor
      * Creates a new subscription object with the given virtual subscription and unsubscription time.
-     * @param subscribe Virtual time at which the subscription occurred.
-     * @param unsubscribe Virtual time at which the unsubscription occurred.
+     * 
+     * @constructor
+     * @param {Number} subscribe Virtual time at which the subscription occurred.
+     * @param {Number} unsubscribe Virtual time at which the unsubscription occurred.
      */
     var Subscription = root.Subscription = function (start, end) {
         this.subscribe = start;
@@ -171,7 +195,7 @@
     /**
      * Checks whether the given subscription is equal to the current instance.
      * @param other Subscription object to check for equality.
-     * @return true if both objects are equal; false otherwise.
+     * @returns {Boolean} true if both objects are equal; false otherwise.
      */
     Subscription.prototype.equals = function (other) {
         return this.subscribe === other.subscribe && this.unsubscribe === other.unsubscribe;
@@ -179,40 +203,73 @@
 
     /**
      * Returns a string representation of the current Subscription value.
-     * @return String representation of the current Subscription value.
+     * @returns {String} String representation of the current Subscription value.
      */
     Subscription.prototype.toString = function () {
         return '(' + this.subscribe + ', ' + this.unsubscribe === Number.MAX_VALUE ? 'Infinite' : this.unsubscribe + ')';
     };
 
+    /** @private */
     var MockDisposable = root.MockDisposable = function (scheduler) {
         this.scheduler = scheduler;
         this.disposes = [];
         this.disposes.push(this.scheduler.clock);
     };
+
+    /*
+     * @memberOf MockDisposable#
+     * @prviate
+     */
     MockDisposable.prototype.dispose = function () {
         this.disposes.push(this.scheduler.clock);
     };
 
-    var MockObserver = (function () {
-        inherits(MockObserver, Observer);
+    /** @private */
+    var MockObserver = (function (_super) {
+        inherits(MockObserver, _super);
+
+        /*
+         * @constructor
+         * @prviate
+         */
         function MockObserver(scheduler) {
+            _super.call(this);
             this.scheduler = scheduler;
             this.messages = [];
         }
-        MockObserver.prototype.onNext = function (value) {
+
+        var MockObserverPrototype = MockObserver.prototype;
+
+        /*
+         * @memberOf MockObserverPrototype#
+         * @prviate
+         */
+        MockObserverPrototype.onNext = function (value) {
             this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnNext(value)));
         };
-        MockObserver.prototype.onError = function (exception) {
+
+        /*
+         * @memberOf MockObserverPrototype#
+         * @prviate
+         */
+        MockObserverPrototype.onError = function (exception) {
             this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(exception)));
         };
-        MockObserver.prototype.onCompleted = function () {
+
+        /*
+         * @memberOf MockObserverPrototype#
+         * @prviate
+         */
+        MockObserverPrototype.onCompleted = function () {
             this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnCompleted()));
         };
-        return MockObserver;
-    })();
 
-    var HotObservable = (function () {
+        return MockObserver;
+    })(Observer);
+
+    /** @private */    
+    var HotObservable = (function (_super) {
+
         function subscribe(observer) {
             var observable = this;
             this.observers.push(observer);
@@ -225,9 +282,14 @@
             });
         }
 
-        inherits(HotObservable, Observable);
+        inherits(HotObservable, _super);
+
+        /**
+         * @private
+         * @constructor
+         */
         function HotObservable(scheduler, messages) {
-            HotObservable.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
             var message, notification, observable = this;
             this.scheduler = scheduler;
             this.messages = messages;
@@ -248,9 +310,11 @@
         }
 
         return HotObservable;
-    })();
+    })(Observable);
 
-    var ColdObservable = (function () {
+    /** @private */
+    var ColdObservable = (function (_super) {
+
         function subscribe(observer) {
             var message, notification, observable = this;
             this.subscriptions.push(new Subscription(this.scheduler.clock));
@@ -272,24 +336,29 @@
             });
         }
 
-        inherits(ColdObservable, Observable);
+        inherits(ColdObservable, _super);
+
+        /**
+         * @private
+         * @constructor
+         */
         function ColdObservable(scheduler, messages) {
-            ColdObservable.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
             this.scheduler = scheduler;
             this.messages = messages;
             this.subscriptions = [];
         }
 
         return ColdObservable;
-    })();
+    })(Observable);
 
     /** Virtual time scheduler used for testing applications and libraries built using Reactive Extensions. */
-    root.TestScheduler = (function () {
-        inherits(TestScheduler, VirtualTimeScheduler);
+    root.TestScheduler = (function (_super) {
+        inherits(TestScheduler, _super);
 
         /** @constructor */
         function TestScheduler() {
-            TestScheduler.super_.constructor.call(this, 0, function (a, b) { return a - b; });
+            _super.call(this, 0, function (a, b) { return a - b; });
         }
 
         /**
@@ -304,7 +373,7 @@
             if (dueTime <= this.clock) {
                 dueTime = this.clock + 1;
             }
-            return TestScheduler.super_.scheduleAbsoluteWithState.call(this, state, dueTime, action);
+            return _super.prototype.scheduleAbsoluteWithState.call(this, state, dueTime, action);
         };
         /**
          * Adds a relative virtual time to an absolute virtual time value.
@@ -410,7 +479,7 @@
         };
 
         return TestScheduler;
-    })();
+    })(VirtualTimeScheduler);
 
     return root;
 }));

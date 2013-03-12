@@ -288,7 +288,7 @@
      * Represents an object that is both an observable sequence as well as an observer.
      * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
      */  
-    var ReplaySubject = Rx.ReplaySubject = (function (base) {
+    var ReplaySubject = Rx.ReplaySubject = (function (_super) {
         /** 
          * @private
          * @constructor

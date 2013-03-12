@@ -1,5 +1,5 @@
     /** Provides a set of extension methods for virtual time scheduling. */
-    root.VirtualTimeScheduler = (function () {
+    Rx.VirtualTimeScheduler = (function (_super) {
 
         function localNow() {
             return this.toDateTimeOffset(this.clock);
@@ -22,7 +22,7 @@
             return disposableEmpty;
         }
 
-        inherits(VirtualTimeScheduler, Scheduler);
+        inherits(VirtualTimeScheduler, _super);
 
         /**
          * Creates a new virtual time scheduler with the specified initial clock value and absolute time comparer.
@@ -36,7 +36,7 @@
             this.comparer = comparer;
             this.isEnabled = false;
             this.queue = new PriorityQueue(1024);
-            VirtualTimeScheduler.super_.constructor.call(this, localNow, scheduleNow, scheduleRelative, scheduleAbsolute);
+            _super.call(this, localNow, scheduleNow, scheduleRelative, scheduleAbsolute);
         }
 
         var VirtualTimeSchedulerPrototype = VirtualTimeScheduler.prototype;
@@ -231,4 +231,4 @@
         }
 
         return VirtualTimeScheduler;
-    }());
+    }(Scheduler));

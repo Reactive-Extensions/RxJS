@@ -8,7 +8,7 @@
      * @name Rx
      * @type Object
      */
-    var Rx = { Internals: {} };s
+    var Rx = { Internals: {} };
     
     // Defaults
     function noop() { }
@@ -29,6 +29,48 @@
         }
     }
     
+    var slice = Array.prototype.slice;
+    function argsOrArray(args, idx) {
+        return args.length === 1 && Array.isArray(args[idx]) ?
+            args[idx] :
+            slice.call(args);
+    }
+    var hasProp = {}.hasOwnProperty;
+
+    /** @private */
+    var inherits = this.inherits = Rx.Internals.inherits = function (child, parent) {
+        function __() { this.constructor = child; }
+        __.prototype = parent.prototype;
+        child.prototype = new __();
+    };
+
+    /** @private */    
+    var addProperties = Rx.Internals.addProperties = function (obj) {
+        var sources = slice.call(arguments, 1);
+        for (var i = 0, len = sources.length; i < len; i++) {
+            var source = sources[i];
+            for (var prop in source) {
+                obj[prop] = source[prop];
+            }
+        }
+    };
+
+    // Rx Utils
+    var addRef = Rx.Internals.addRef = function (xs, r) {
+        return new AnonymousObservable(function (observer) {
+            return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
+        });
+    };
+
+    // Collection polyfills
+    function arrayInitialize(count, factory) {
+        var a = new Array(count);
+        for (var i = 0; i < count; i++) {
+            a[i] = factory();
+        }
+        return a;
+    }
+
     // Collections
     var IndexedItem = function (id, value) {
         this.id = id;
@@ -136,7 +178,7 @@
      *  
      * @param {Mixed} item Disposable to add.
      */    
-    CompositeDisposablePrototypeadd = function (item) {
+    CompositeDisposablePrototype.add = function (item) {
         if (this.isDisposed) {
             item.dispose();
         } else {
@@ -981,7 +1023,7 @@
     }());
 
     /** Provides a set of extension methods for virtual time scheduling. */
-    root.VirtualTimeScheduler = (function () {
+    Rx.VirtualTimeScheduler = (function (_super) {
 
         function localNow() {
             return this.toDateTimeOffset(this.clock);
@@ -1004,7 +1046,7 @@
             return disposableEmpty;
         }
 
-        inherits(VirtualTimeScheduler, Scheduler);
+        inherits(VirtualTimeScheduler, _super);
 
         /**
          * Creates a new virtual time scheduler with the specified initial clock value and absolute time comparer.
@@ -1018,7 +1060,7 @@
             this.comparer = comparer;
             this.isEnabled = false;
             this.queue = new PriorityQueue(1024);
-            VirtualTimeScheduler.super_.constructor.call(this, localNow, scheduleNow, scheduleRelative, scheduleAbsolute);
+            _super.call(this, localNow, scheduleNow, scheduleRelative, scheduleAbsolute);
         }
 
         var VirtualTimeSchedulerPrototype = VirtualTimeScheduler.prototype;
@@ -1213,7 +1255,7 @@
         }
 
         return VirtualTimeScheduler;
-    }());
+    }(Scheduler));
 
     /** Provides a virtual time scheduler that uses Date for absolute time and number for relative time. */
     Rx.HistoricalScheduler = (function (_super) {
@@ -1229,7 +1271,7 @@
         function HistoricalScheduler(initialClock, comparer) {
             var clock = initialClock == null ? 0 : initialClock;
             var cmp = comparer || defaultSubComparer;
-            super_.call(this, clock, cmp);
+            _super.call(this, clock, cmp);
         }
 
         var HistoricalSchedulerProto = HistoricalScheduler.prototype;
@@ -4036,9 +4078,14 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
+    /** @private */
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
         
+        /**
+         * @private
+         * @constructor
+         */
         function AnonymousObservable(subscribe) {
 
             function s(observer) {
@@ -4066,24 +4113,33 @@
                 return autoDetachObserver;
             }
 
-            super_.call(this, s);
+            _super.call(this, s);
         }
 
         return AnonymousObservable;
 
     }(Observable));
 
+    /** @private */
     var AutoDetachObserver = (function (_super) {
         inherits(AutoDetachObserver, _super);
 
+        /**
+         * @private
+         * @constructor
+         */
         function AutoDetachObserver(observer) {
-            AutoDetachObserver.super_.constructor.call(this);
+            _super.call(this);
             this.observer = observer;
             this.m = new SingleAssignmentDisposable();
         }
 
         var AutoDetachObserverPrototype = AutoDetachObserver.prototype
 
+        /**
+         * @private
+         * @memberOf AutoDetachObserver#
+         */
         AutoDetachObserverPrototype.next = function (value) {
             var noError = false;
             try {
@@ -4098,6 +4154,10 @@
             }
         };
 
+        /**
+         * @private
+         * @memberOf AutoDetachObserver#
+         */
         AutoDetachObserverPrototype.error = function (exn) {
             try {
                 this.observer.onError(exn);
@@ -4108,6 +4168,10 @@
             }
         };
 
+        /**
+         * @private
+         * @memberOf AutoDetachObserver#
+         */
         AutoDetachObserverPrototype.completed = function () {
             try {
                 this.observer.onCompleted();
@@ -4118,10 +4182,18 @@
             }
         };
 
+        /**
+         * @private
+         * @memberOf AutoDetachObserver#
+         */
         AutoDetachObserverPrototype.disposable = function (value) {
             return this.m.disposable(value);
         };
 
+        /**
+         * @private
+         * @memberOf AutoDetachObserver#
+         */
         AutoDetachObserverPrototype.dispose = function () {
             _super.prototype.dispose.call(this);
             this.m.dispose();
@@ -4177,7 +4249,7 @@
      *  Represents an object that is both an observable sequence as well as an observer.
      *  Each notification is broadcasted to all subscribed observers.
      */
-    var Subject = root.Subject = (function (_super) {
+    var Subject = Rx.Subject = (function (_super) {
         function subscribe(observer) {
             checkDisposed.call(this);
             if (!this.isStopped) {
@@ -4473,17 +4545,17 @@
 
     // Check for AMD
     if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
-        window.Rx = root;
+        window.Rx = Rx;
         return define(function () {
-            return root;
+            return Rx;
         });
     } else if (freeExports) {
         if (typeof module == 'object' && module && module.exports == freeExports) {
-            module.exports = root;
+            module.exports = Rx;
         } else {
-            freeExports = root;
+            freeExports = Rx;
         }
     } else {
-        window.Rx = root;
+        window.Rx = Rx;
     }
 }(this));

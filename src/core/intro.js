@@ -6,5 +6,5 @@
      * @name Rx
      * @type Object
      */
-    var Rx = { Internals: {} };s
+    var Rx = { Internals: {} };
     

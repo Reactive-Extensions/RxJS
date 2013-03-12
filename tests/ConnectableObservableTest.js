@@ -18,17 +18,17 @@
         onCompleted = root.ReactiveTest.onCompleted,
         subscribe = root.ReactiveTest.subscribe;
 
-    var ConnectableObservable = (function () {
+    var ConnectableObservable = (function (_super) {
 
         function subscribe(observer) {
             return this._o.subscribe(observer);
         }
 
-        inherits(ConnectableObservable, Observable);
+        inherits(ConnectableObservable, _super);
 
         function ConnectableObservable(o, s) {
+            _super.call(this, subscribe);
             this._o = o.multicast(s);
-            ConnectableObservable.super_.constructor.call(this, subscribe);
         }
 
         ConnectableObservable.prototype.connect = function () {
@@ -40,9 +40,9 @@
         };
 
         return ConnectableObservable;
-    }());
+    }(Observable));
 
-    var MySubject = (function () {
+    var MySubject = (function (_super) {
 
         function subscribe(observer) {
             var self = this;
@@ -55,12 +55,12 @@
             };
         }
 
-        inherits(MySubject, Observable);
+        inherits(MySubject, _super);
         function MySubject() {
+            _super.call(this, subscribe);
             this.disposeOnMap = {};
             this.subscribeCount = 0;
-            this.disposed = false;
-            MySubject.super_.constructor.call(this, subscribe);
+            this.disposed = false;       
         }
         MySubject.prototype.disposeOn = function (value, disposable) {
             this.disposeOnMap[value] = disposable;
@@ -79,7 +79,7 @@
         };
 
         return MySubject;
-    })();
+    })(Observable);
 
     test('ConnectableObservable_Creation', function () {
         var y = 0;

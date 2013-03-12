@@ -16,7 +16,7 @@
      *  
      * @param {Mixed} item Disposable to add.
      */    
-    CompositeDisposablePrototypeadd = function (item) {
+    CompositeDisposablePrototype.add = function (item) {
         if (this.isDisposed) {
             item.dispose();
         } else {

@@ -247,7 +247,7 @@
         xs.subscriptions.assertEqual(subscribe(200, 390));
     });
 
-    var MySubject = (function () {
+    var MySubject = (function (_super) {
 
         function subscribe(observer) {
             var self = this;
@@ -260,12 +260,12 @@
             };
         }
 
-        inherits(MySubject, Observable);
+        inherits(MySubject, _super);
         function MySubject() {
+            _super.call(this, subscribe);
             this.disposeOnMap = {};
             this.subscribeCount = 0;
             this.disposed = false;
-            MySubject.super_.constructor.call(this, subscribe);
         }
         MySubject.prototype.disposeOn = function (value, disposable) {
             this.disposeOnMap[value] = disposable;
@@ -284,26 +284,26 @@
         };
 
         return MySubject;
-    })();
+    })(Observable);
 
-    var ConnectableObservable = (function () {
+    var ConnectableObservable = (function (_super) {
 
         function subscribe(observer) {
             return this._o.subscribe(observer);
         }
 
-        inherits(ConnectableObservable, Observable);
+        inherits(ConnectableObservable, _super);
 
         function ConnectableObservable(o, s) {
+            _super.call(this, subscribe);
             this._o = o.multicast(s);
-            ConnectableObservable.super_.constructor.call(this, subscribe);
         }
 
         ConnectableObservable.prototype.connect = function () { return this._o.connect(); };
         ConnectableObservable.prototype.refCount = function () { return this._o.refCount(); };
 
         return ConnectableObservable;
-    }());
+    }(Observable));
 
     test('RefCount_ConnectsOnFirst', function () {
         var conn, res, scheduler, subject, xs;

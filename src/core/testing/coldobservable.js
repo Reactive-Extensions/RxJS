@@ -1,4 +1,6 @@
-    var ColdObservable = (function () {
+    /** @private */
+    var ColdObservable = (function (_super) {
+
         function subscribe(observer) {
             var message, notification, observable = this;
             this.subscriptions.push(new Subscription(this.scheduler.clock));
@@ -20,13 +22,18 @@
             });
         }
 
-        inherits(ColdObservable, Observable);
+        inherits(ColdObservable, _super);
+
+        /**
+         * @private
+         * @constructor
+         */
         function ColdObservable(scheduler, messages) {
-            ColdObservable.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
             this.scheduler = scheduler;
             this.messages = messages;
             this.subscriptions = [];
         }
 
         return ColdObservable;
-    })();
+    })(Observable);
