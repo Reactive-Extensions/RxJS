@@ -118,7 +118,7 @@ module.exports = function (grunt) {
                     'src/core/exports.js',
                     'src/core/outro.js'
                 ],
-                dest: 'rx.js'
+                dest: 'rx.modern.js'
             },            
             aggregates: {
                 src: [

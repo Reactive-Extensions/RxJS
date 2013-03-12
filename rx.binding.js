@@ -44,16 +44,17 @@
      * subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
      * invocation. For specializations with fixed subject types, see Publish, PublishLast, and Replay.
      * 
+     * @example
      * 1 - res = source.multicast(observable);
      * 2 - res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
      * 
-     * @param subjectOrSubjectSelector 
+     * @param {Mixed} subjectOrSubjectSelector 
      * Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
      * Or:
      * Subject to push source elements into.
      * 
-     * @param selector [Optional] Selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if <paramref name="subjectOrSubjectSelector" is a factory function.
-     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     * @param {Function} [selector] Optional selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if <paramref name="subjectOrSubjectSelector" is a factory function.
+     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
      */
     observableProto.multicast = function (subjectOrSubjectSelector, selector) {
         var source = this;
@@ -69,11 +70,12 @@
      * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
      * This operator is a specialization of Multicast using a regular Subject.
      * 
+     * @example
      * 1 - res = source.publish();
      * 2 - res = source.publish(function (x) { return x; });
      * 
-     * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
-     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
+     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
      */
     observableProto.publish = function (selector) {
         return !selector ?
@@ -87,11 +89,12 @@
      * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
      * This operator is a specialization of Multicast using a AsyncSubject.
      * 
+     * @example
      * 1 - res = source.publishLast();
      * 2 - res = source.publishLast(function (x) { return x; });
      * 
      * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
-     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
      */
     observableProto.publishLast = function (selector) {
         return !selector ?
@@ -105,12 +108,13 @@
      * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
      * This operator is a specialization of Multicast using a BehaviorSubject.
      * 
+     * @example
      * 1 - res = source.publishValue(42);
      * 2 - res = source.publishLast(function (x) { return x.select(function (y) { return y * y; }) }, 42);
      * 
-     * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
-     * @param initialValue Initial value received by observers upon subscription.
-     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
+     * @param {Mixed} initialValue Initial value received by observers upon subscription.
+     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
      */
     observableProto.publishValue = function (initialValueOrSelector, initialValue) {
         return arguments.length === 2 ?
@@ -124,6 +128,7 @@
      * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
      * This operator is a specialization of Multicast using a ReplaySubject.
      * 
+     * @example
      * 1 - res = source.replay(null, 3);
      * 2 - res = source.replay(null, 3, 500);
      * 3 - res = source.replay(null, 3, 500, scheduler);
@@ -133,7 +138,7 @@
      * @param bufferSize [Optional] Maximum element count of the replay buffer.
      * @param window [Optional] Maximum time length of the replay buffer.
      * @param scheduler [Optional] Scheduler where connected observers within the selector function will be invoked on.
-     * @return An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
      */
     observableProto.replay = function (selector, bufferSize, window, scheduler) {
         return !selector ?
@@ -143,10 +148,16 @@
             }, selector);
     };
 
+    /** @private */
     var InnerSubscription = function (subject, observer) {
         this.subject = subject;
         this.observer = observer;
     };
+
+    /**
+     * @private
+     * @memberOf InnerSubscription
+     */
     InnerSubscription.prototype.dispose = function () {
         if (!this.subject.isDisposed && this.observer !== null) {
             var idx = this.subject.observers.indexOf(this.observer);
@@ -159,7 +170,7 @@
      *  Represents a value that changes over time.
      *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
      */
-    var BehaviorSubject = root.BehaviorSubject = (function () {
+    var BehaviorSubject = Rx.BehaviorSubject = (function (_super) {
         function subscribe(observer) {
             var ex;
             checkDisposed.call(this);
@@ -177,7 +188,7 @@
             return disposableEmpty;
         }
 
-        inherits(BehaviorSubject, Observable);
+        inherits(BehaviorSubject, _super);
 
         /**
          *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
@@ -185,7 +196,7 @@
          *  @param value Initial value sent to observers when no other value has been received by the subject yet.
          */       
         function BehaviorSubject(value) {
-            BehaviorSubject.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
 
             this.value = value,
             this.observers = [],
@@ -195,6 +206,20 @@
         }
 
         addProperties(BehaviorSubject.prototype, Observer, {
+            /**
+             * Indicates whether the subject has observers subscribed to it.
+             * 
+             * @memberOf BehaviorSubject# 
+             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+             */         
+            hasObservers: function () {
+                return this.observers.length > 0;
+            },
+            /**
+             * Notifies all subscribed observers about the end of the sequence.
+             * 
+             * @memberOf BehaviorSubject#
+             */ 
             onCompleted: function () {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -207,6 +232,12 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Notifies all subscribed observers about the exception.
+             * 
+             * @memberOf BehaviorSubject#
+             * @param {Mixed} error The exception to send to all observers.
+             */             
             onError: function (error) {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -221,6 +252,12 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Notifies all subscribed observers about the arrival of the specified element in the sequence.
+             * 
+             * @memberOf BehaviorSubject#
+             * @param {Mixed} value The value to send to all observers.
+             */              
             onNext: function (value) {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -231,6 +268,11 @@
                     }
                 }
             },
+            /**
+             * Unsubscribe all observers and release resources.
+             * 
+             * @memberOf BehaviorSubject#
+             */            
             dispose: function () {
                 this.isDisposed = true;
                 this.observers = null;
@@ -240,19 +282,26 @@
         });
 
         return BehaviorSubject;
-    }());
+    }(Observable));
 
-    // Replay Subject
     /**
      * Represents an object that is both an observable sequence as well as an observer.
      * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
      */  
-    var ReplaySubject = root.ReplaySubject = (function (base) {
+    var ReplaySubject = Rx.ReplaySubject = (function (base) {
+        /** 
+         * @private
+         * @constructor
+         */
         var RemovableDisposable = function (subject, observer) {
             this.subject = subject;
             this.observer = observer;
         };
 
+        /* 
+         * @private
+         * @memberOf RemovableDisposable#
+         */
         RemovableDisposable.prototype.dispose = function () {
             this.observer.dispose();
             if (!this.subject.isDisposed) {
@@ -286,14 +335,14 @@
             return subscription;
         }
 
-        inherits(ReplaySubject, Observable);
+        inherits(ReplaySubject, _super);
 
         /**
          *  Initializes a new instance of the ReplaySubject class with the specified buffer size, window and scheduler.
          * 
          *  @param {Number} [bufferSize] Maximum element count of the replay buffer.
          *  @param {Number} [window] Maximum time length of the replay buffer.
-         *  @param [scheduler] Scheduler the observers are invoked on.
+         *  @param {Scheduler} [scheduler] Scheduler the observers are invoked on.
          */
         function ReplaySubject(bufferSize, window, scheduler) {
             this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
@@ -305,10 +354,23 @@
             this.isDisposed = false;
             this.hasError = false;
             this.error = null;
-            ReplaySubject.super_.constructor.call(this, subscribe);
+            _super.call(this, subscribe);
         }
 
         addProperties(ReplaySubject.prototype, Observer, {
+            /**
+             * Indicates whether the subject has observers subscribed to it.
+             * 
+             * @memberOf ReplaySubject# 
+             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+             */         
+            hasObservers: function () {
+                return this.observers.length > 0;
+            },            
+            /*
+             * @private
+             * @memberOf ReplaySubject#
+             */
             _trim: function (now) {
                 while (this.q.length > this.bufferSize) {
                     this.q.shift();
@@ -317,6 +379,12 @@
                     this.q.shift();
                 }
             },
+            /**
+             * Notifies all subscribed observers about the arrival of the specified element in the sequence.
+             * 
+             * @memberOf ReplaySubject#
+             * @param {Mixed} value The value to send to all observers.
+             */              
             onNext: function (value) {
                 var observer;
                 checkDisposed.call(this);
@@ -333,6 +401,12 @@
                     }
                 }
             },
+            /**
+             * Notifies all subscribed observers about the exception.
+             * 
+             * @memberOf ReplaySubject#
+             * @param {Mixed} error The exception to send to all observers.
+             */                 
             onError: function (error) {
                 var observer;
                 checkDisposed.call(this);
@@ -351,6 +425,11 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Notifies all subscribed observers about the end of the sequence.
+             * 
+             * @memberOf ReplaySubject#
+             */             
             onCompleted: function () {
                 var observer;
                 checkDisposed.call(this);
@@ -367,6 +446,11 @@
                     this.observers = [];
                 }
             },
+            /**
+             * Unsubscribe all observers and release resources.
+             * 
+             * @memberOf ReplaySubject#
+             */               
             dispose: function () {
                 this.isDisposed = true;
                 this.observers = null;
@@ -374,10 +458,16 @@
         });
 
         return ReplaySubject;
-    }());
+    }(Observable));
 
-    var ConnectableObservable = (function () {
-        inherits(ConnectableObservable, Observable);
+    /** @private */
+    var ConnectableObservable = (function (_super) {
+        inherits(ConnectableObservable, _super);
+
+        /**
+         * @constructor
+         * @private
+         */
         function ConnectableObservable(source, subject) {
             var state = {
                 subject: subject,
@@ -396,17 +486,25 @@
                 return state.subscription;
             };
 
-            var subscribe = function (observer) {
+            function subscribe(observer) {
                 return state.subject.subscribe(observer);
-            };
-            ConnectableObservable.super_.constructor.call(this, subscribe);
+            }
+
+            _super.call(this, subscribe);
         }
 
+        /**
+         * @private
+         * @memberOf ConnectableObservable
+         */
         ConnectableObservable.prototype.connect = function () { return this.connect(); };
+
+        /**
+         * @private
+         * @memberOf ConnectableObservable
+         */        
         ConnectableObservable.prototype.refCount = function () {
-            var connectableSubscription = null,
-            count = 0,
-            source = this;
+            var connectableSubscription = null, count = 0, source = this;
             return new AnonymousObservable(function (observer) {
                 var shouldConnect, subscription;
                 count++;
@@ -426,7 +524,7 @@
         };
 
         return ConnectableObservable;
-    }());
+    }(Observable));
 
     return root;
 }));

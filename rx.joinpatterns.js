@@ -40,13 +40,22 @@
             slice.call(args);
     }
 
-    // TODO: Replace with a real Map once finalized
+    /** @private */
     var Map = (function () {
+
+        /**
+         * @constructor
+         * @private
+         */
         function Map() {
             this.keys = [];
             this.values = [];
         }
 
+        /**
+         * @private
+         * @memberOf Map#
+         */
         Map.prototype['delete'] = function (key) {
             var i = this.keys.indexOf(key);
             if (i !== -1) {
@@ -56,11 +65,19 @@
             return i !== -1;
         };
 
+        /**
+         * @private
+         * @memberOf Map#
+         */
         Map.prototype.get = function (key, fallback) {
             var i = this.keys.indexOf(key);
             return i !== -1 ? this.values[i] : fallback;
         };
 
+        /**
+         * @private
+         * @memberOf Map#
+         */
         Map.prototype.set = function (key, value) {
             var i = this.keys.indexOf(key);
             if (i !== -1) {
@@ -69,11 +86,30 @@
             this.values[this.keys.push(key) - 1] = value;
         };
 
+        /**
+         * @private
+         * @memberOf Map#
+         */
         Map.prototype.size = function () { return this.keys.length; };
+
+        /**
+         * @private
+         * @memberOf Map#
+         */        
         Map.prototype.has = function (key) {
             return this.keys.indexOf(key) !== -1;
         };
+
+        /**
+         * @private
+         * @memberOf Map#
+         */        
         Map.prototype.getKeys = function () { return this.keys.slice(0); };
+
+        /**
+         * @private
+         * @memberOf Map#
+         */        
         Map.prototype.getValues = function () { return this.values.slice(0); };
 
         return Map;
@@ -260,7 +296,7 @@
      *  Creates a pattern that matches when both observable sequences have an available value.
      *  
      *  @param right Observable sequence to match with the current sequence.</param>
-     *  @return Pattern object that matches when both observable sequences have an available value.     
+     *  @return {Pattern} Pattern object that matches when both observable sequences have an available value.     
      */
     observableProto.and = function (right) {
         return new Pattern([this, right]);
@@ -270,7 +306,7 @@
      *  Matches when the observable sequence has an available value and projects the value.
      *  
      *  @param selector Selector that will be invoked for values in the source sequence.</param>
-     *  @return Plan that produces the projected values, to be fed (with other plans) to the when operator. 
+     *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator. 
      */    
     observableProto.then = function (selector) {
         return new Pattern([this]).then(selector);
@@ -280,7 +316,7 @@
      *  Joins together the results from several patterns.
      *  
      *  @param plans A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.</param>
-     *  @return Observable sequence with the results form matching several patterns. 
+     *  @returns {Observable} Observable sequence with the results form matching several patterns. 
      */
     Observable.when = function () {
         var plans = argsOrArray(arguments, 0);
