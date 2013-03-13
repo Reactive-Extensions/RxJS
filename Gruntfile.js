@@ -275,9 +275,9 @@ module.exports = function (grunt) {
         'uglify:experimental',
         'uglify:joinpatterns',
         'uglify:testing',
-        'uglify:time'//,
+        'uglify:time',
 
-        //'qunit'
+        'qunit'
     ]);    
 
 };
