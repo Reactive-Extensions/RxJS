@@ -5,31 +5,47 @@
      */
     var timeoutScheduler = Scheduler.timeout = (function () {
 
-        var REQ_NAME = 'equestAnimationFrame',
-            CANCEL_NAME = 'ancelAnimationFrame';
+        function OnReadyStateScheduler() {
+            this.scriptElement = null;
+        }
+        OnReadyStateScheduler.prototype.scheduleMethod = function (action) {
+            this.scriptElement = window.document.createElement('script'), self = this;
+            scriptElement.onreadystatechange = function () {
+                if (self.scriptElement) {
+                    action();
+                    self.scriptElement.onreadystatechange = null;
+                    self.scriptElement.parentNode.removeChild(self.scriptElement);
+                    self.scriptElement = null;                
+                }
+            };
+            window.document.documentElement.appendChild(this.scriptElement);            
+        };
+        OnReadyStateScheduler.prototype.clearMethod = function () {
+            if (this.scriptElement) {
+                this.scriptElement.onreadystatechange = null;
+                this.scriptElement.parentNode.removeChild(self.scriptElement);
+                this.scriptElement = null;                
+            }
+        };
 
-        // Optimize for speed
-        var reqAnimFrame = window['r' + REQ_NAME] ||
-            window['webkitR' + REQ_NAME] ||
-            window['mozR' + REQ_NAME] ||
-            window['oR' + REQ_NAME] ||
-            window['msR' + REQ_NAME],
-        clearAnimFrame = window['c' + CANCEL_NAME] ||
-            window['webkitC' + CANCEL_NAME] ||
-            window['mozC' + CANCEL_NAME] ||
-            window['oC' + CANCEL_NAME] ||
-            window['msC' + CANCEL_NAME];
-
-        var scheduleMethod, clearMethod;
+        var scheduleMethod, clearMethod = noop;
         if (typeof window.process !== 'undefined' && typeof window.process.nextTick === 'function') {
             scheduleMethod = window.process.nextTick;
-            clearMethod = noop;
         } else if (typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;
             clearMethod = window.clearImmediate;
-        } else if (typeof reqAnimFrame === 'function') {
-            scheduleMethod = reqAnimFrame;
-            clearMethod = clearAnimFrame;
+        } else if (!!window.MessageChannel) {
+            scheduleMethod = function (action) {
+                var channel = new window.MessageChannel();
+                channel.port1.onmessage = function (event) {
+                    action();
+                };
+                channel.port2.postMessage();     
+            };
+        } else if ('document' in window && 'onreadystatechange' in window.document.createElement('script');) {
+            var onReadyScheduler = new OnReadyStateScheduler();
+            scheduleMethod = onReadyScheduler.scheduleMethod.bind(onReadyScheduler);
+            clearMethod = onReadyScheduler.clearMethod.bind(onReadyScheduler);
         } else {
             scheduleMethod = function (action) { return window.setTimeout(action, 0); };
             clearMethod = window.clearTimeout;
