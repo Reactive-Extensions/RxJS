@@ -42,8 +42,6 @@
         return x[0];
     }
 
-    // Aggregation methods
-
     /**
      * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
      * For aggregation behavior with incremental intermediate results, see Observable.scan.
@@ -68,6 +66,18 @@
         return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
     };
 
+    /**
+     * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
+     * For aggregation behavior with incremental intermediate results, see Observable.scan.
+     * 
+     * @example
+     * 1 - res = source.reduce(function (acc, x) { return acc + x; });
+     * 2 - res = source.reduce(function (acc, x) { return acc + x; }, 0);
+     * @memberOf Observable#
+     * @param {Mixed} [seed] The initial accumulator value.
+     * @param {Function} accumulator An accumulator function to be invoked on each element.
+     * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
+     */
     observableProto.reduce = function () {
         var seed, hasSeed, accumulator = arguments[0];
         if (arguments.length === 2) {
@@ -86,10 +96,10 @@
      * @param {Function} [predicate] A function to test each element for a condition.
      * @returns {Observable} An observable sequence containing a single element determining whether any elements in the source sequence pass the test in the specified predicate if given, else if any items are in the sequence.
      */
-    observableProto.any = observableProto.some = function (predicate) {
+    observableProto.any = function (predicate, thisArg) {
         var source = this;
         return predicate 
-            ? source.where(predicate).any() 
+            ? source.where(predicate, thisArg).any() 
             : new AnonymousObservable(function (observer) {
                 return source.subscribe(function () {
                     observer.onNext(true);
@@ -100,6 +110,7 @@
                 });
             });
     };
+    observableProto.some = observableProto.any;
 
     /**
      * Determines whether an observable sequence is empty.
@@ -117,15 +128,17 @@
      * 1 - res = source.all(function (value) { return value.length > 3; });
      * @memberOf Observable#
      * @param {Function} [predicate] A function to test each element for a condition.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
      */
-    observableProto.all = observableProto.every = function (predicate) {
+    observableProto.all = function (predicate, thisArg) {
         return this.where(function (v) {
             return !predicate(v);
-        }).any().select(function (b) {
+        }, thisArg).any().select(function (b) {
             return !b;
         });
     };
+    observableProto.every = observableProto.all;
 
     /**
      * Determines whether an observable sequence contains a specified element with an optional equality comparer.
@@ -621,7 +634,7 @@
      * @returns {Observable} An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
      */
     observableProto.find = function (predicate) {
-        return findValue(source, predicate, arguments[1], false);
+        return findValue(this, predicate, arguments[1], false);
     };
      
     /**
@@ -633,5 +646,5 @@
      * @returns {Observable} An Observable sequence with the zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, –1.
     */
     observableProto.findIndex = function (predicate) {
-        return findValue(source, predicate, arguments[1], true);
+        return findValue(this, predicate, arguments[1], true);
     };

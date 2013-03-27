@@ -203,21 +203,22 @@
     /**
      *  Projects each element of an observable sequence into a new form by incorporating the element's index.
      *  
-     *  1 - source.select(function (value) { return value * value; });
-     *  2 - source.select(function (value, index) { return value * value + index; });
+     * @example
+     *  source.select(function (value, index) { return value * value + index; });
      *      
      * @memberOf Observable#
      * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
      */
-    observableProto.select = observableProto.map = function (selector) {
+    observableProto.select = function (selector, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
             return parent.subscribe(function (value) {
                 var result;
                 try {
-                    result = selector(value, count++);
+                    result = selector.call(thisArg, value, count++, parent);
                 } catch (exception) {
                     observer.onError(exception);
                     return;
@@ -226,6 +227,8 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
+
+    observableProto.map = observableProto.select;
 
     function selectMany(selector) {
         return this.select(selector).mergeObservable();
@@ -397,17 +400,18 @@
      *  1 - source.where(function (value, index) { return value < 10 || index < 10; });
      *      
      * @memberOf Observable#
-     * @param {Function} predicate A function to test each source element for a conditio; the second parameter of the function represents the index of the source element.
+     * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
      */
-    observableProto.where = observableProto.filter = function (predicate) {
+    observableProto.where = observableProto.filter = function (predicate, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
             return parent.subscribe(function (value) {
                 var shouldRun;
                 try {
-                    shouldRun = predicate(value, count++);
+                    shouldRun = predicate.call(thisArg, value, count++, parent);
                 } catch (exception) {
                     observer.onError(exception);
                     return;
