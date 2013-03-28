@@ -404,7 +404,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
      */
-    observableProto.where = observableProto.filter = function (predicate, thisArg) {
+    observableProto.where = function (predicate, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
@@ -422,3 +422,5 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
+
+    observableProto.filter = observableProto.where;
