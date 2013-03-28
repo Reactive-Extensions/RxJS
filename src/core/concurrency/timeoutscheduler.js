@@ -19,7 +19,7 @@
         }
 
         var scheduleMethod, clearMethod = noop;
-        if (typeof window.process !== 'undefined' && typeof window.process.nextTick === 'function') {
+        if (typeof window.process !== 'undefined' && typeof window.process === '[object process]') {
             scheduleMethod = window.process.nextTick;
         } else if (typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;
@@ -30,6 +30,7 @@
                 taskId = 0;
 
             function onGlobalPostMessage(event) {
+                // Only if we're a match to avoid any other global events
                 if (event.source === window && typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
                     var handleId = event.data.substring(MSG_PREFIX.length),
                         action = tasks[handleId];
@@ -72,8 +73,8 @@
         }
 
         function scheduleNow(state, action) {
-            var scheduler = this;
-            var disposable = new SingleAssignmentDisposable();
+            var scheduler = this,
+                disposable = new SingleAssignmentDisposable();
             var id = scheduleMethod(function () {
                 if (!disposable.isDisposed) {
                     disposable.setDisposable(action(scheduler, state));
@@ -85,8 +86,8 @@
         }
 
         function scheduleRelative(state, dueTime, action) {
-            var scheduler = this;
-            var dt = Scheduler.normalize(dueTime);
+            var scheduler = this,
+                dt = Scheduler.normalize(dueTime);
             if (dt === 0) {
                 return scheduler.scheduleWithState(state, action);
             }
