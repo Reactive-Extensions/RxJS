@@ -31,7 +31,7 @@
 
             function onGlobalPostMessage(event) {
                 // Only if we're a match to avoid any other global events
-                if (event.source === window && typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
+                if (typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
                     var handleId = event.data.substring(MSG_PREFIX.length),
                         action = tasks[handleId];
                     action();
@@ -42,7 +42,7 @@
             if (window.addEventListener) {
                 window.addEventListener('message', onGlobalPostMessage, false);
             } else {
-                window.attachEvent('message', onGlobalPostMessage, false);
+                window.attachEvent('onmessage', onGlobalPostMessage, false);
             }
 
             scheduleMethod = function (action) {
@@ -58,7 +58,7 @@
                 };
                 channel.port2.postMessage();     
             };
-        } else if ('document' in window && 'onreadystatechange' in window.document.createElement('script');) {
+        } else if ('document' in window && 'onreadystatechange' in window.document.createElement('script')) {
             var scriptElement = window.document.createElement('script');
             scriptElement.onreadystatechange = function () { 
                 action();

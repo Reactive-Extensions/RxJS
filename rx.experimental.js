@@ -15,24 +15,24 @@
     } else {
         root.Rx = factory(root, {}, root.Rx);
     }
-}(this, function (global, exp, root, undefined) {
+}(this, function (global, exp, Rx, undefined) {
     
     // Aliases
-    var Observable = root.Observable,
+    var Observable = Rx.Observable,
         observableProto = Observable.prototype,
         observableCreateWithDisposable = Observable.createWithDisposable,
         observableConcat = Observable.concat,
         observableDefer = Observable.defer,
         observableEmpty = Observable.empty,
-        disposableEmpty = root.Disposable.empty,
-        BinaryObserver = root.Internals.BinaryObserver,
-        CompositeDisposable = root.CompositeDisposable,
-        SerialDisposable = root.SerialDisposable,
-        SingleAssignmentDisposable = root.SingleAssignmentDisposable,
-        enumeratorCreate = root.Internals.Enumerator.create,
-        Enumerable = root.Internals.Enumerable,
+        disposableEmpty = Rx.Disposable.empty,
+        BinaryObserver = Rx.Internals.BinaryObserver,
+        CompositeDisposable = Rx.CompositeDisposable,
+        SerialDisposable = Rx.SerialDisposable,
+        SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
+        enumeratorCreate = Rx.Internals.Enumerator.create,
+        Enumerable = Rx.Internals.Enumerable,
         enumerableForEach = Enumerable.forEach,
-        immediateScheduler = root.Scheduler.immediate,
+        immediateScheduler = Rx.Scheduler.immediate,
         slice = Array.prototype.slice;
 
     // Utilities
@@ -360,5 +360,5 @@
         });
     };
 
-    return root;
+    return Rx;
 }));

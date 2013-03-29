@@ -40,7 +40,7 @@
      * @static
      * type Object
      */
-    var ReactiveTest = root.ReactiveTest = {
+    var ReactiveTest = Rx.ReactiveTest = {
         /** Default virtual time used for creation of observable sequences in unit tests. */
         created: 100,
         /** Default virtual time used to subscribe to observable sequences in unit tests. */

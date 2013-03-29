@@ -82,7 +82,4 @@
         }
     });
 
-    // must call `QUnit.start()` if using QUnit < 1.3.0 with Node.js or any
-    // version of QUnit with Narwhal, Rhino, or RingoJS
-    
 }(typeof global == 'object' && global || this));

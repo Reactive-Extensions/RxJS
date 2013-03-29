@@ -1,5 +1,5 @@
     /** @private */
-    var MockDisposable = root.MockDisposable = function (scheduler) {
+    var MockDisposable = Rx.MockDisposable = function (scheduler) {
         this.scheduler = scheduler;
         this.disposes = [];
         this.disposes.push(this.scheduler.clock);

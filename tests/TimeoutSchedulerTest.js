@@ -8,41 +8,38 @@
         res = TimeoutScheduler.now() - new Date().getTime();
         ok(res < 1000);
     });
-    asyncTest('Timeout_ScheduleAction', function () {
-        var ran = false;
+
+    asyncTest('Timeout_ScheduleAction', 1, function () {
+        expect(1);
         TimeoutScheduler.schedule(function () {
-            ran = true;
+            ok(true);
+            start();            
         });
-
-        setTimeout(function () {
-            ok(ran);
-            start();
-        }, 5);
-
     });
 
     asyncTest('ThreadPool_ScheduleActionDue', function () {
+        expect(1);
         var startTime = new Date().getTime(), endTime;
+
         TimeoutScheduler.scheduleWithRelative(200, function () {
             endTime = new Date().getTime();
-        });
-
-        setTimeout(function () {
             ok(endTime - startTime > 180, endTime - startTime);
             start();
-        }, 400);
+        });
     });
 
-    asyncTest('Timeout_ScheduleActionCancel', function () {
-        var set = false
-                        , d = TimeoutScheduler.scheduleWithRelative(200, function () {
-                            set = true;
-                        });
+    asyncTest('Timeout_ScheduleActionCancel', 1, function () {
+        var set = false;
+        var d = TimeoutScheduler.scheduleWithRelative(200, function () {
+            set = true;         
+        });
+
         d.dispose();
+
         setTimeout(function () {
             ok(!set);
             start();
-        }, 400);
+        }, 400);        
     });
 
     

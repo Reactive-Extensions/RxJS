@@ -1,5 +1,5 @@
     /** Virtual time scheduler used for testing applications and libraries built using Reactive Extensions. */
-    root.TestScheduler = (function (_super) {
+    Rx.TestScheduler = (function (_super) {
         inherits(TestScheduler, _super);
 
         /** @constructor */

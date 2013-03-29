@@ -1,15 +1,15 @@
     // Defaults
-    var Observer = root.Observer,
-        Observable = root.Observable,
-        Notification = root.Notification,
-        VirtualTimeScheduler = root.VirtualTimeScheduler,
-        Disposable = root.Disposable,
+    var Observer = Rx.Observer,
+        Observable = Rx.Observable,
+        Notification = Rx.Notification,
+        VirtualTimeScheduler = Rx.VirtualTimeScheduler,
+        Disposable = Rx.Disposable,
         disposableEmpty = Disposable.empty,
         disposableCreate = Disposable.create,
-        CompositeDisposable = root.CompositeDisposable,
-        SingleAssignmentDisposable = root.SingleAssignmentDisposable,
+        CompositeDisposable = Rx.CompositeDisposable,
+        SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
         slice = Array.prototype.slice,
-        inherits = root.Internals.inherits;
+        inherits = Rx.Internals.inherits;
 
     // Utilities
     function defaultComparer(x, y) {

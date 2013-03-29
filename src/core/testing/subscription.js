@@ -5,7 +5,7 @@
      * @param {Number} subscribe Virtual time at which the subscription occurred.
      * @param {Number} unsubscribe Virtual time at which the unsubscription occurred.
      */
-    var Subscription = root.Subscription = function (start, end) {
+    var Subscription = Rx.Subscription = function (start, end) {
         this.subscribe = start;
         this.unsubscribe = end || Number.MAX_VALUE;
     };

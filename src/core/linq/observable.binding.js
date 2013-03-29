@@ -1,16 +1,16 @@
-    var Observable = root.Observable,
+    var Observable = Rx.Observable,
         observableProto = Observable.prototype,
-        AnonymousObservable = root.Internals.AnonymousObservable,
-        Subject = root.Subject,
-        AsyncSubject = root.AsyncSubject,
-        Observer = root.Observer,
-        ScheduledObserver = root.Internals.ScheduledObserver,
-        disposableCreate = root.Disposable.create,
-        disposableEmpty = root.Disposable.empty,
-        CompositeDisposable = root.CompositeDisposable,
-        currentThreadScheduler = root.Scheduler.currentThread,
-        inherits = root.Internals.inherits,
-        addProperties = root.Internals.addProperties;
+        AnonymousObservable = Rx.Internals.AnonymousObservable,
+        Subject = Rx.Subject,
+        AsyncSubject = Rx.AsyncSubject,
+        Observer = Rx.Observer,
+        ScheduledObserver = Rx.Internals.ScheduledObserver,
+        disposableCreate = Rx.Disposable.create,
+        disposableEmpty = Rx.Disposable.empty,
+        CompositeDisposable = Rx.CompositeDisposable,
+        currentThreadScheduler = Rx.Scheduler.currentThread,
+        inherits = Rx.Internals.inherits,
+        addProperties = Rx.Internals.addProperties;
 
     // Utilities
     var objectDisposed = 'Object has been disposed';

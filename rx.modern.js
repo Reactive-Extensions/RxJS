@@ -1316,41 +1316,80 @@
      */
     var timeoutScheduler = Scheduler.timeout = (function () {
 
-        var REQ_NAME = 'equestAnimationFrame',
-            CANCEL_NAME = 'ancelAnimationFrame';
+        function postMessageSupported () {
+            // Ensure not in a worker
+            if (!window.postMessage || window.importScripts) { return false; }
+            var isAsync = false, 
+                oldHandler = window.onmessage;
+            // Test for async
+            window.onmessage = function () { isAsync = true; };
+            window.postMessage('','*');
+            window.onmessage = oldHandler;
 
-        // Optimize for speed
-        var reqAnimFrame = window['r' + REQ_NAME] ||
-            window['webkitR' + REQ_NAME] ||
-            window['mozR' + REQ_NAME] ||
-            window['oR' + REQ_NAME] ||
-            window['msR' + REQ_NAME],
-        clearAnimFrame = window['c' + CANCEL_NAME] ||
-            window['webkitC' + CANCEL_NAME] ||
-            window['mozC' + CANCEL_NAME] ||
-            window['oC' + CANCEL_NAME] ||
-            window['msC' + CANCEL_NAME];
+            return isAsync;
+        }
 
-        var scheduleMethod, clearMethod;
-        if (typeof window.process !== 'undefined' && typeof window.process.nextTick === 'function') {
+        var scheduleMethod, clearMethod = noop;
+        if (typeof window.process !== 'undefined' && typeof window.process === '[object process]') {
             scheduleMethod = window.process.nextTick;
-            clearMethod = noop;
         } else if (typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;
             clearMethod = window.clearImmediate;
-        } else if (typeof reqAnimFrame === 'function') {
-            scheduleMethod = reqAnimFrame;
-            clearMethod = clearAnimFrame;
+        } else if (postMessageSupported()) {
+            var MSG_PREFIX = 'ms.rx.schedule' + Math.random(),
+                tasks = {},
+                taskId = 0;
+
+            function onGlobalPostMessage(event) {
+                // Only if we're a match to avoid any other global events
+                if (typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
+                    var handleId = event.data.substring(MSG_PREFIX.length),
+                        action = tasks[handleId];
+                    action();
+                    delete tasks[handleId];
+                }
+            }
+
+            if (window.addEventListener) {
+                window.addEventListener('message', onGlobalPostMessage, false);
+            } else {
+                window.attachEvent('onmessage', onGlobalPostMessage, false);
+            }
+
+            scheduleMethod = function (action) {
+                var currentId = taskId++;
+                tasks[currentId] = action;
+                window.postMessage(MSG_PREFIX + currentId, '*');
+            };
+        } else if (!!window.MessageChannel) {
+            scheduleMethod = function (action) {
+                var channel = new window.MessageChannel();
+                channel.port1.onmessage = function (event) {
+                    action();
+                };
+                channel.port2.postMessage();     
+            };
+        } else if ('document' in window && 'onreadystatechange' in window.document.createElement('script')) {
+            var scriptElement = window.document.createElement('script');
+            scriptElement.onreadystatechange = function () { 
+                action();
+                scriptElement.onreadystatechange = null;
+                scriptElement.parentNode.removeChild(scriptElement);
+                scriptElement = null;  
+            };
+            window.document.documentElement.appendChild(scriptElement);   
         } else {
             scheduleMethod = function (action) { return window.setTimeout(action, 0); };
             clearMethod = window.clearTimeout;
         }
 
         function scheduleNow(state, action) {
-            var scheduler = this;
-            var disposable = new SingleAssignmentDisposable();
+            var scheduler = this,
+                disposable = new SingleAssignmentDisposable();
             var id = scheduleMethod(function () {
-                disposable.setDisposable(action(scheduler, state));
+                if (!disposable.isDisposed) {
+                    disposable.setDisposable(action(scheduler, state));
+                }
             });
             return new CompositeDisposable(disposable, disposableCreate(function () {
                 clearMethod(id);
@@ -1358,14 +1397,16 @@
         }
 
         function scheduleRelative(state, dueTime, action) {
-            var scheduler = this;
-            var dt = Scheduler.normalize(dueTime);
+            var scheduler = this,
+                dt = Scheduler.normalize(dueTime);
             if (dt === 0) {
                 return scheduler.scheduleWithState(state, action);
             }
             var disposable = new SingleAssignmentDisposable();
             var id = window.setTimeout(function () {
-                disposable.setDisposable(action(scheduler, state));
+                if (!disposable.isDisposed) {
+                    disposable.setDisposable(action(scheduler, state));
+                }
             }, dt);
             return new CompositeDisposable(disposable, disposableCreate(function () {
                 window.clearTimeout(id);
@@ -3863,21 +3904,22 @@
     /**
      *  Projects each element of an observable sequence into a new form by incorporating the element's index.
      *  
-     *  1 - source.select(function (value) { return value * value; });
-     *  2 - source.select(function (value, index) { return value * value + index; });
+     * @example
+     *  source.select(function (value, index) { return value * value + index; });
      *      
      * @memberOf Observable#
      * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
      */
-    observableProto.select = observableProto.map = function (selector) {
+    observableProto.select = function (selector, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
             return parent.subscribe(function (value) {
                 var result;
                 try {
-                    result = selector(value, count++);
+                    result = selector.call(thisArg, value, count++, parent);
                 } catch (exception) {
                     observer.onError(exception);
                     return;
@@ -3886,6 +3928,8 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
+
+    observableProto.map = observableProto.select;
 
     function selectMany(selector) {
         return this.select(selector).mergeObservable();
@@ -4057,17 +4101,18 @@
      *  1 - source.where(function (value, index) { return value < 10 || index < 10; });
      *      
      * @memberOf Observable#
-     * @param {Function} predicate A function to test each source element for a conditio; the second parameter of the function represents the index of the source element.
+     * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
      */
-    observableProto.where = observableProto.filter = function (predicate) {
+    observableProto.where = function (predicate, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
             return parent.subscribe(function (value) {
                 var shouldRun;
                 try {
-                    shouldRun = predicate(value, count++);
+                    shouldRun = predicate.call(thisArg, value, count++, parent);
                 } catch (exception) {
                     observer.onError(exception);
                     return;
@@ -4078,6 +4123,8 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
+
+    observableProto.filter = observableProto.where;
     /** @private */
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);

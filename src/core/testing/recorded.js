@@ -6,7 +6,7 @@
      * @param {Mixed} value Value that was produced.
      * @param {Function} comparer An optional comparer.
      */
-    var Recorded = root.Recorded = function (time, value, comparer) {
+    var Recorded = Rx.Recorded = function (time, value, comparer) {
         this.time = time;
         this.value = value;
         this.comparer = comparer || defaultComparer;

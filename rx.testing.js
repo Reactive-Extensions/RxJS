@@ -15,20 +15,20 @@
     } else {
         root.Rx = factory(root, {}, root.Rx);
     }
-}(this, function (global, exp, root, undefined) {
+}(this, function (global, exp, Rx, undefined) {
     
     // Defaults
-    var Observer = root.Observer,
-        Observable = root.Observable,
-        Notification = root.Notification,
-        VirtualTimeScheduler = root.VirtualTimeScheduler,
-        Disposable = root.Disposable,
+    var Observer = Rx.Observer,
+        Observable = Rx.Observable,
+        Notification = Rx.Notification,
+        VirtualTimeScheduler = Rx.VirtualTimeScheduler,
+        Disposable = Rx.Disposable,
         disposableEmpty = Disposable.empty,
         disposableCreate = Disposable.create,
-        CompositeDisposable = root.CompositeDisposable,
-        SingleAssignmentDisposable = root.SingleAssignmentDisposable,
+        CompositeDisposable = Rx.CompositeDisposable,
+        SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
         slice = Array.prototype.slice,
-        inherits = root.Internals.inherits;
+        inherits = Rx.Internals.inherits;
 
     // Utilities
     function defaultComparer(x, y) {
@@ -86,7 +86,7 @@
      * @static
      * type Object
      */
-    var ReactiveTest = root.ReactiveTest = {
+    var ReactiveTest = Rx.ReactiveTest = {
         /** Default virtual time used for creation of observable sequences in unit tests. */
         created: 100,
         /** Default virtual time used to subscribe to observable sequences in unit tests. */
@@ -155,7 +155,7 @@
      * @param {Mixed} value Value that was produced.
      * @param {Function} comparer An optional comparer.
      */
-    var Recorded = root.Recorded = function (time, value, comparer) {
+    var Recorded = Rx.Recorded = function (time, value, comparer) {
         this.time = time;
         this.value = value;
         this.comparer = comparer || defaultComparer;
@@ -187,7 +187,7 @@
      * @param {Number} subscribe Virtual time at which the subscription occurred.
      * @param {Number} unsubscribe Virtual time at which the unsubscription occurred.
      */
-    var Subscription = root.Subscription = function (start, end) {
+    var Subscription = Rx.Subscription = function (start, end) {
         this.subscribe = start;
         this.unsubscribe = end || Number.MAX_VALUE;
     };
@@ -210,7 +210,7 @@
     };
 
     /** @private */
-    var MockDisposable = root.MockDisposable = function (scheduler) {
+    var MockDisposable = Rx.MockDisposable = function (scheduler) {
         this.scheduler = scheduler;
         this.disposes = [];
         this.disposes.push(this.scheduler.clock);
@@ -353,7 +353,7 @@
     })(Observable);
 
     /** Virtual time scheduler used for testing applications and libraries built using Reactive Extensions. */
-    root.TestScheduler = (function (_super) {
+    Rx.TestScheduler = (function (_super) {
         inherits(TestScheduler, _super);
 
         /** @constructor */
@@ -481,5 +481,5 @@
         return TestScheduler;
     })(VirtualTimeScheduler);
 
-    return root;
+    return Rx;
 }));

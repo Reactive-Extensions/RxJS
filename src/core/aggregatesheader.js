@@ -1,8 +1,8 @@
     // References
-    var Observable = root.Observable,
+    var Observable = Rx.Observable,
         observableProto = Observable.prototype,
-        CompositeDisposable = root.CompositeDisposable,
-        AnonymousObservable = root.Internals.AnonymousObservable;
+        CompositeDisposable = Rx.CompositeDisposable,
+        AnonymousObservable = Rx.Internals.AnonymousObservable;
 
     // Defaults
     var argumentOutOfRange = 'Argument out of range';

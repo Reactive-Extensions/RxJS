@@ -1,14 +1,14 @@
-    var Observable = root.Observable,
-        CompositeDisposable = root.CompositeDisposable,
-        RefCountDisposable = root.RefCountDisposable,
-        SingleAssignmentDisposable = root.SingleAssignmentDisposable,
-        SerialDisposable = root.SerialDisposable,
-        Subject = root.Subject,
+    var Observable = Rx.Observable,
+        CompositeDisposable = Rx.CompositeDisposable,
+        RefCountDisposable = Rx.RefCountDisposable,
+        SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
+        SerialDisposable = Rx.SerialDisposable,
+        Subject = Rx.Subject,
         observableProto = Observable.prototype,
         observableEmpty = Observable.empty,
-        AnonymousObservable = root.Internals.AnonymousObservable,
-        observerCreate = root.Observer.create,
-        addRef = root.Internals.addRef;
+        AnonymousObservable = Rx.Internals.AnonymousObservable,
+        observerCreate = Rx.Observer.create,
+        addRef = Rx.Internals.addRef;
 
     // defaults
     function noop() { }
