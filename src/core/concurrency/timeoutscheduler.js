@@ -1,10 +1,6 @@
-    /** 
-     * Gets a scheduler that schedules work via a timed callback based upon platform.
-     *
-     * @memberOf Scheduler
-     */
-    var timeoutScheduler = Scheduler.timeout = (function () {
-
+    
+    var scheduleMethod, clearMethod = noop;
+    (function () {
         function postMessageSupported () {
             // Ensure not in a worker
             if (!window.postMessage || window.importScripts) { return false; }
@@ -18,8 +14,7 @@
             return isAsync;
         }
 
-        var scheduleMethod, clearMethod = noop;
-        if (typeof window.process !== 'undefined' && typeof window.process === '[object process]') {
+        if (typeof window.process !== 'undefined' && Object.prototype.toString.call(window.process) === '[object process]') {
             scheduleMethod = window.process.nextTick;
         } else if (typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;
@@ -51,26 +46,47 @@
                 window.postMessage(MSG_PREFIX + currentId, '*');
             };
         } else if (!!window.MessageChannel) {
+            var channel = new window.MessageChannel(),
+                channelTasks = {},
+                channelTaskId = 0;
+
+            channel.port1.onmessage = function (event) {
+                var id = event.data,
+                    action = channelTasks[id];
+                action();
+                delete channelTasks[id];
+            };
+
             scheduleMethod = function (action) {
-                var channel = new window.MessageChannel();
-                channel.port1.onmessage = function (event) {
-                    action();
-                };
-                channel.port2.postMessage();     
+                var id = channelTaskId++;
+                channelTasks[id] = action;
+                channel.port2.postMessage(id);     
             };
         } else if ('document' in window && 'onreadystatechange' in window.document.createElement('script')) {
-            var scriptElement = window.document.createElement('script');
-            scriptElement.onreadystatechange = function () { 
-                action();
-                scriptElement.onreadystatechange = null;
-                scriptElement.parentNode.removeChild(scriptElement);
-                scriptElement = null;  
+            
+            scheduleMethod = function (action) {
+                var scriptElement = window.document.createElement('script');
+                scriptElement.onreadystatechange = function () { 
+                    action();
+                    scriptElement.onreadystatechange = null;
+                    scriptElement.parentNode.removeChild(scriptElement);
+                    scriptElement = null;  
+                };
+                window.document.documentElement.appendChild(scriptElement);  
             };
-            window.document.documentElement.appendChild(scriptElement);   
+ 
         } else {
             scheduleMethod = function (action) { return window.setTimeout(action, 0); };
             clearMethod = window.clearTimeout;
         }
+    }());
+
+    /** 
+     * Gets a scheduler that schedules work via a timed callback based upon platform.
+     *
+     * @memberOf Scheduler
+     */
+    var timeoutScheduler = Scheduler.timeout = (function () {
 
         function scheduleNow(state, action) {
             var scheduler = this,
