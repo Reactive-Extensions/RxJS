@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 (function (window, undefined) {
-    var freeExports = typeof exports == 'object' && exports &&
-        (typeof global == 'object' && global && global == global.global && (window = global), exports);
+    var freeExports = typeof exports === 'object' && exports &&
+        (typeof global === 'object' && global && global === global.global && (window = global), exports);
 
      /** 
      * @name Rx
@@ -170,9 +170,9 @@
             var n = 0;
             if (arguments.length > 1) {
                 n = Number(arguments[1]);
-                if (n != n) {
+                if (n !== n) {
                     n = 0;
-                } else if (n != 0 && n != Infinity && n != -Infinity) {
+                } else if (n !== 0 && n != Infinity && n !== -Infinity) {
                     n = (n > 0 || -1) * Math.floor(Math.abs(n));
                 }
             }
@@ -1281,7 +1281,7 @@
                     } else {
                         this.isEnabled = false;
                     }
-                } while (this.isEnabled)
+                } while (this.isEnabled);
                 this.clock = time;
             }
         };
@@ -1370,7 +1370,7 @@
                 si = new ScheduledItem(self, state, run, dueTime, self.comparer);
             self.queue.enqueue(si);
             return si.disposable;
-        }
+        };
 
         return VirtualTimeScheduler;
     }(Scheduler));
@@ -1443,7 +1443,7 @@
             return isAsync;
         }
 
-        if (typeof window.process !== 'undefined' && Object.prototype.toString.call(window.process) === '[object process]') {
+        if (typeof window.process === 'object' && Object.prototype.toString.call(window.process) === '[object process]') {
             scheduleMethod = window.process.nextTick;
         } else if (typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;
@@ -1604,7 +1604,7 @@
 
         /** @private */
         CatchScheduler.prototype._getRecursiveWrapper = function (scheduler) {
-            if (!this._recursiveOriginal !== scheduler) {
+            if (this._recursiveOriginal !== scheduler) {
                 this._recursiveOriginal = scheduler;
                 var wrapper = this._clone(scheduler);
                 wrapper._recursiveOriginal = scheduler;
@@ -2407,7 +2407,7 @@
                 return newList;
             }
             return this.scan([], accumulator).startWith([]).finalValue();
-        }
+        };
 
         return Observable;
     })();
@@ -2701,7 +2701,7 @@
      */
     Observable.repeat = function (value, repeatCount, scheduler) {
         scheduler || (scheduler = currentThreadScheduler);
-        if (repeatCount == undefined) {
+        if (repeatCount == null) {
             repeatCount = -1;
         }
         return observableReturn(value, scheduler).repeat(repeatCount);
@@ -2995,7 +2995,7 @@
                     }, observer.onError.bind(observer), function () {
                         done(i);
                     }));
-                })(idx);
+                }(idx));
             }
 
             return new CompositeDisposable(subscriptions);
@@ -3714,7 +3714,7 @@
      */
     observableProto.startWith = function () {
         var values, scheduler, start = 0;
-        if (arguments.length > 0 && arguments[0] != null && arguments[0].now !== undefined) {
+        if (!!arguments.length && 'now' in Object(arguments[0])) {
             scheduler = arguments[0];
             start = 1;
         } else {
@@ -3953,7 +3953,7 @@
                 groupDisposable = new CompositeDisposable(),
                 refCountDisposable = new RefCountDisposable(groupDisposable);
             groupDisposable.add(source.subscribe(function (x) {
-                var duration, durationGroup, element, expire, fireNewMapEntry, group, key, serializedKey, md, writer, w;
+                var duration, durationGroup, element, fireNewMapEntry, group, key, serializedKey, md, writer, w;
                 try {
                     key = keySelector(x);
                     serializedKey = keySerializer(key);
@@ -3994,7 +3994,7 @@
                     observer.onNext(group);
                     md = new SingleAssignmentDisposable();
                     groupDisposable.add(md);
-                    expire = function () {
+                    var expire = function  () {
                         if (serializedKey in map) {
                             delete map[serializedKey];
                             writer.onCompleted();

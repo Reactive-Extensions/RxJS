@@ -14,7 +14,7 @@
             return isAsync;
         }
 
-        if (typeof window.process !== 'undefined' && Object.prototype.toString.call(window.process) === '[object process]') {
+        if (typeof window.process === 'object' && Object.prototype.toString.call(window.process) === '[object process]') {
             scheduleMethod = window.process.nextTick;
         } else if (typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;

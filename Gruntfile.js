@@ -248,14 +248,56 @@ module.exports = function (grunt) {
         },
         qunit: {
             all: ['tests/*.html']
+        },
+        jshint: {
+            all: [
+                'rx.js'//, 
+                // 'rx.modern.js', 
+                // 'rx.aggregates.js', 
+                // 'rx.binding.js', 
+                // 'rx.coincidence.js', 
+                // 'rx.experimental.js',
+                // 'rx.joinpatterns.js',
+                // 'rx.testing.js',
+                // 'rx.time.js'
+            ]
+        },
+        watch: {
+            scripts: {
+                files: 'src/**/*.js',
+                tasks: ['default'],
+                options: {
+                    interrupt: true
+                }
+            }
         }
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-qunit');
+    grunt.loadNpmTasks('grunt-contrib-jshint');
+    grunt.loadNpmTasks('grunt-contrib-watch');
 
-    // Default task(s).
+    grunt.registerTask('test', [
+        'qunit'
+    ]);
+
+    grunt.registerTask('lint', [
+        'concat:basic',
+        'concat:modern',
+        'concat:aggregates',
+        'concat:binding',
+        'concat:coincidence',
+        'concat:experimental',
+        'concat:joinpatterns',
+        'concat:time',
+        'concat:testing',
+
+        'jshint'
+    ]);
+
+    // Default task
     grunt.registerTask('default', [
         'concat:basic',
         'concat:modern',

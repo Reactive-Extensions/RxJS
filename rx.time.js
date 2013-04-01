@@ -1,8 +1,8 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 (function (root, factory) {
-    var freeExports = typeof exports == 'object' && exports &&
-    (typeof root == 'object' && root && root == root.global && (window = root), exports);
+    var freeExports = typeof exports === 'object' && exports &&
+    (typeof root == 'object' && root && root === root.global && (window = root), exports);
 
     // Because of build optimizers
     if (typeof define === 'function' && define.amd) {
@@ -10,7 +10,7 @@
             root.Rx = factory(root, exports, Rx);
             return root.Rx;
         });
-    } else if (typeof module == 'object' && module && module.exports == freeExports) {
+    } else if (typeof module === 'object' && module && module.exports === freeExports) {
         module.exports = factory(root, module.exports, require('./rx'));
     } else {
         root.Rx = factory(root, {}, root.Rx);
@@ -61,7 +61,7 @@
                 self(d);
             });
         });
-    };
+    }
 
     function observableTimerTimeSpan(dueTime, scheduler) {
         var d = normalizeTime(dueTime);
@@ -71,7 +71,7 @@
                 observer.onCompleted();
             });
         });
-    };
+    }
 
     function observableTimerTimeSpanAndPeriod(dueTime, period, scheduler) {
         if (dueTime === period) {
@@ -85,7 +85,7 @@
         return observableDefer(function () {
             return observableTimerDateAndPeriod(scheduler.now() + dueTime, period, scheduler);
         });
-    };
+    }
 
     /**
      *  Returns an observable sequence that produces a value after each period.
@@ -210,7 +210,7 @@
             });
             return new CompositeDisposable(subscription, cancelable);
         });
-    };
+    }
 
     function observableDelayDate(dueTime, scheduler) {
         var self = this;
@@ -584,9 +584,9 @@
                     atEnd = true;
                 }),
                 sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleSubscribe)
-            )
+            );
         });
-    };
+    }
 
     /**
      *  Samples the observable sequence at each interval.

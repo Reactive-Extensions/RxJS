@@ -118,7 +118,7 @@
                 groupDisposable = new CompositeDisposable(),
                 refCountDisposable = new RefCountDisposable(groupDisposable);
             groupDisposable.add(source.subscribe(function (x) {
-                var duration, durationGroup, element, expire, fireNewMapEntry, group, key, serializedKey, md, writer, w;
+                var duration, durationGroup, element, fireNewMapEntry, group, key, serializedKey, md, writer, w;
                 try {
                     key = keySelector(x);
                     serializedKey = keySerializer(key);
@@ -159,7 +159,7 @@
                     observer.onNext(group);
                     md = new SingleAssignmentDisposable();
                     groupDisposable.add(md);
-                    expire = function () {
+                    var expire = function  () {
                         if (serializedKey in map) {
                             delete map[serializedKey];
                             writer.onCompleted();

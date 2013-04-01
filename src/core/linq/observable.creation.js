@@ -197,7 +197,7 @@
      */
     Observable.repeat = function (value, repeatCount, scheduler) {
         scheduler || (scheduler = currentThreadScheduler);
-        if (repeatCount == undefined) {
+        if (repeatCount == null) {
             repeatCount = -1;
         }
         return observableReturn(value, scheduler).repeat(repeatCount);

@@ -217,7 +217,7 @@
                     }, observer.onError.bind(observer), function () {
                         done(i);
                     }));
-                })(idx);
+                }(idx));
             }
 
             return new CompositeDisposable(subscriptions);

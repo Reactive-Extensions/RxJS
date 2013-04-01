@@ -310,7 +310,7 @@
      */
     observableProto.startWith = function () {
         var values, scheduler, start = 0;
-        if (arguments.length > 0 && arguments[0] != null && arguments[0].now !== undefined) {
+        if (!!arguments.length && 'now' in Object(arguments[0])) {
             scheduler = arguments[0];
             start = 1;
         } else {

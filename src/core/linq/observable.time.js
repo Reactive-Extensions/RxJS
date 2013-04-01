@@ -24,7 +24,7 @@
                 self(d);
             });
         });
-    };
+    }
 
     function observableTimerTimeSpan(dueTime, scheduler) {
         var d = normalizeTime(dueTime);
@@ -34,7 +34,7 @@
                 observer.onCompleted();
             });
         });
-    };
+    }
 
     function observableTimerTimeSpanAndPeriod(dueTime, period, scheduler) {
         if (dueTime === period) {
@@ -48,7 +48,7 @@
         return observableDefer(function () {
             return observableTimerDateAndPeriod(scheduler.now() + dueTime, period, scheduler);
         });
-    };
+    }
 
     /**
      *  Returns an observable sequence that produces a value after each period.
@@ -173,7 +173,7 @@
             });
             return new CompositeDisposable(subscription, cancelable);
         });
-    };
+    }
 
     function observableDelayDate(dueTime, scheduler) {
         var self = this;
@@ -547,9 +547,9 @@
                     atEnd = true;
                 }),
                 sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleSubscribe)
-            )
+            );
         });
-    };
+    }
 
     /**
      *  Samples the observable sequence at each interval.

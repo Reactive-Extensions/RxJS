@@ -48,7 +48,7 @@
 
         /** @private */
         CatchScheduler.prototype._getRecursiveWrapper = function (scheduler) {
-            if (!this._recursiveOriginal !== scheduler) {
+            if (this._recursiveOriginal !== scheduler) {
                 this._recursiveOriginal = scheduler;
                 var wrapper = this._clone(scheduler);
                 wrapper._recursiveOriginal = scheduler;

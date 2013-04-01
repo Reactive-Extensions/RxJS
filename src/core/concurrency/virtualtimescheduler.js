@@ -139,7 +139,7 @@
                     } else {
                         this.isEnabled = false;
                     }
-                } while (this.isEnabled)
+                } while (this.isEnabled);
                 this.clock = time;
             }
         };
@@ -228,7 +228,7 @@
                 si = new ScheduledItem(self, state, run, dueTime, self.comparer);
             self.queue.enqueue(si);
             return si.disposable;
-        }
+        };
 
         return VirtualTimeScheduler;
     }(Scheduler));

@@ -71,7 +71,7 @@
                 return newList;
             }
             return this.scan([], accumulator).startWith([]).finalValue();
-        }
+        };
 
         return Observable;
     })();
