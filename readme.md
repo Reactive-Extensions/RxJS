@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
+
 # The Reactive Extensions for JavaScript... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and LINQ-style query operators in JavaScript*
 
@@ -16,6 +18,7 @@ Because observable sequences are data streams, you can query them using standard
 This set of libraries include:
 
 - **rx.js** - Core library
+- **rx.modern.js** - Core library for ES5 compliant browsers and runtimes
 - **rx.aggregates.js** - aggregation event processing query operations
 - **rx.binding.js** - binding operators including multicast, publish, publishLast, publishValue, and replay
 - **rx.coincidence.js** - reactive coincidence join event processing query operations
@@ -24,15 +27,75 @@ This set of libraries include:
 - **rx.testing.js** - used to write unit tests for complex event processing queries.
 - **rx.time.js** - time-based event processing query operations.
 
-## Getting Started ##
+## Why RxJS? ##
 
-Coming Soon
+One question you may ask yourself, is why RxJS?  What about Promises?  Promises are good for solving asynchronous operations such as querying a service with an XMLHttpRequest, where the expected behavior is one value and then completion.  The Reactive Extensions for JavaScript unifies both the world of Promises, callbacks as well as evented data such as DOM Input, Web Workers, Web Sockets.  Once we have unified these concepts, this enables rich composition.
+
+To give you an idea about rich composition, we can create an autocompletion service which takes the user input from a text input and then query a service, making sure not to flood the service with calls for every key stroke, but instead allow to go at a more natural pace.
+
+Let's start with getting the user input from an input, listening to the keyup event.
+
+```js
+/* Only get the value from each key up */
+var keyups = Rx.Observable.fromEvent(input, 'keyup')
+    .select(function (e) {
+        return e.target.value;
+    })
+    .where(function (text) {
+        return text.length > 2;
+    });
+
+/* Now throttle/debounce the input for 500ms */
+var throttled = keyups
+    .throttle(500 /* ms */);
+
+/* Now get only distinct values, so we eliminate the arrows */
+var distinct = keyups
+    .distinctUntilChanged();
+```
+
+Now, let's query Wikipedia!
+
+```js
+function searchWikipedia(term) {
+    var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
+        + '&format=json' 
+        + '&search=' + encodeURI(term);
+    return Rx.Observable.getJSONPRequest(url);
+}
+```
+
+Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call select to get the value, and then calling switchLatest to ensure that we're not introducing any out of order sequence calls.  We'll filter the results to make sure we get values.
+
+```js
+var suggestions = distinct
+    .select(function (text) {
+        return searchWikipedia(text);
+    })
+    .switchLatest()
+    .where(function (data) {
+        return data.length == 2 && data[1].length > 0;
+    });
+```
+
+Finally, we call the subscribe method on our observable sequence to start pulling data.
+
+```js
+suggestions.subscribe( function (data) {
+    var results = data[1];
+    /* Do something with the data like binding */
+}, function (e) {
+    /* handle any errors */
+});
+```
+
+And there you have it!
 
 ##  API Documentation ##
 
 Core:
 
-- Observer
+- [Observer](https://github.com/Reactive-Extensions/RxJS/wiki/Observer)
 - [Observable](https://github.com/Reactive-Extensions/RxJS/wiki/Observable)
 
 Subjects:
