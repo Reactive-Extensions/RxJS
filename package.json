@@ -28,5 +28,8 @@
     "grunt-contrib-watch": "*"
   },
   "keywords": [],
-  "main": "rx.node.js"
+  "main": "rx.node.js",
+  "scripts": {
+    "test": "grunt"
+  }
 }
