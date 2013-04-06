@@ -27,6 +27,97 @@ This set of libraries include:
 - **rx.testing.js** - used to write unit tests for complex event processing queries.
 - **rx.time.js** - time-based event processing query operations.
 
+## Hello RxJS ##
+Getting started with RxJS is easy. 
+
+Let's create a simple hello world example to demonstrate some of the main concepts. 
+
+We will create a simple web page containing a single button that does the following:
+
+- When the button is clicked we will ignore the first 2 clicks
+- We will display an alert for clicks 3 and 4
+- After clicks 3 and 4 an alert box saying "done" will appear
+
+Let's get started, first create a new html page called helloRx.htm. 
+
+RxJS has many different libaries (see above section) that offer rich functionality such as extensions for working with jQuery, testing & combining events but for our example we just want the core libary (rx.js) so let's import this:
+
+```html
+<script src="rx.js"></script>   
+```
+
+Now we want something that will trigger an event (an observable in RX terminology) so add a button to the page:
+
+```html
+<button id="button">Click me!</button>
+```
+
+Now we need to turn the buttons click event into something RX can work with so we will create a function that wraps the Rx.Observable.create method (note the rx.js libary has a number of methods for doing this with jQuery):
+
+```js
+function CreateObservable(element, eventType) {
+        
+    return Rx.Observable.create(function(observer) {
+            
+        function eventHandler (eventObj) {
+            observer.onNext(eventObj);              
+        }
+
+        //keep simple for example & ignore addEventListener/attachEvent browser differences
+        element.addEventListener(eventType, eventHandler);
+
+        return function() {
+            element.removeEventListener(eventType, eventHandler);
+        };
+    });
+};
+```
+
+Now we will use this function to create an observable from our buttons click event. We will also use the methods skip and take on our observable to skip the first 2 clicks and tell rx we are only interested in the next 2 clicks.
+
+```js
+var observable= CreateObservable(document.getElementById('button'), 'click')
+            .skip(2)
+            .take(2)
+            .select(function(evt){
+                    return "button was clicked";
+            });
+```
+
+Next we need to create an observer to monitor our observable:
+
+```js
+var observer = Rx.Observer.create(
+
+        //onNext
+        function(evt) {
+            alert(evt);
+        },
+        
+        //onError
+        function(err) { 
+            alert('error');
+        },
+        
+        //onComplete
+        function() {
+            alert('done');
+        }
+   );
+```
+
+Note how you can (optionally) pass 3 functions into Rx.Observer.create method. The first (onNext) handles an event occurring, the second errors and the third completion of an observable sequence.
+
+Finally we need to link (or subscribe) the observer to our observable with a call to the observables subscribe method:
+
+```js
+observable.subscribe(observer);
+```
+
+Now run this in the browser and congratulate yourself for getting started with RxJS!
+
+Whilst this wouldnt be too hard to accomplish with traditional methods you can start to get an idea of the power and readability offerred by Rx. Read on to learn about composition..
+
 ## Why RxJS? ##
 
 One question you may ask yourself, is why RxJS?  What about Promises?  Promises are good for solving asynchronous operations such as querying a service with an XMLHttpRequest, where the expected behavior is one value and then completion.  The Reactive Extensions for JavaScript unifies both the world of Promises, callbacks as well as evented data such as DOM Input, Web Workers, Web Sockets.  Once we have unified these concepts, this enables rich composition.
