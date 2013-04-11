@@ -36,7 +36,7 @@
     }
 
     function firstOnly(x) {
-        if (x.length == 0) {
+        if (x.length === 0) {
             throw new Error(sequenceContainsNoElements);
         }
         return x[0];
@@ -98,9 +98,9 @@
      */
     observableProto.any = function (predicate, thisArg) {
         var source = this;
-        return predicate 
-            ? source.where(predicate, thisArg).any() 
-            : new AnonymousObservable(function (observer) {
+        return predicate ? 
+            source.where(predicate, thisArg).any() : 
+            new AnonymousObservable(function (observer) {
                 return source.subscribe(function () {
                     observer.onNext(true);
                     observer.onCompleted();

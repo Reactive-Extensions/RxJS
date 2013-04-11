@@ -1,8 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 (function (root, factory) {
-    var freeExports = typeof exports === 'object' && exports &&
-    (typeof root == 'object' && root && root === root.global && (window = root), exports);
+    var freeExports = typeof exports == 'object' && exports,
+        freeModule = typeof module == 'object' && module && module.exports == freeExports && module,
+        freeGlobal = typeof global == 'object' && global;
+    if (freeGlobal.global === freeGlobal) {
+        window = freeGlobal;
+    }
 
     // Because of build optimizers
     if (typeof define === 'function' && define.amd) {
@@ -39,12 +43,11 @@
     var duplicatekey = "duplicate key";
 
     function isPrime(candidate) {
-        var num1, num2;
         if (candidate & 1 === 0) {
             return candidate === 2;
         }
-        num1 = Math.sqrt(candidate);
-        num2 = 3;
+        var num1 = Math.sqrt(candidate),
+            num2 = 3;
         while (num2 <= num1) {
             if (candidate % num2 === 0) {
                 return false;
@@ -77,7 +80,7 @@
 
         return function (obj) {
             var id;
-            if (obj === undefined)
+            if (obj == null)
                 throw new Error(noSuchkey);
             if (obj.getHashCode !== undefined) {
                 return obj.getHashCode();
@@ -119,9 +122,10 @@
         return this._insert(key, value, true);
     };
     Dictionary.prototype._insert = function (key, value, add) {
-        if (this.buckets === undefined) {
+        if (!this.buckets) {
             this._initialize(0);
         }
+        var index3;
         var num = getHashCode(key) & 2147483647;
         var index1 = num % this.buckets.length;
         for (var index2 = this.buckets[index1]; index2 >= 0; index2 = this.entries[index2].next) {
@@ -134,7 +138,7 @@
             }
         }
         if (this.freeCount > 0) {
-            var index3 = this.freeList;
+            index3 = this.freeList;
             this.freeList = this.entries[index3].next;
             --this.freeCount;
         } else {
@@ -172,6 +176,7 @@
         this.buckets = numArray;
         this.entries = entryArray;
     };
+
     Dictionary.prototype.remove = function (key) {
         if (this.buckets !== undefined) {
             var num = getHashCode(key) & 2147483647;
@@ -198,6 +203,7 @@
         }
         return false;
     };
+
     Dictionary.prototype.clear = function () {
         var index, len;
         if (this.size <= 0) {
@@ -212,6 +218,7 @@
         this.freeList = -1;
         this.size = 0;
     };
+
     Dictionary.prototype._findEntry = function (key) {
         if (this.buckets !== undefined) {
             var num = getHashCode(key) & 2147483647;
@@ -223,9 +230,11 @@
         }
         return -1;
     };
+
     Dictionary.prototype.count = function () {
         return this.size - this.freeCount;
     };
+
     Dictionary.prototype.tryGetEntry = function (key) {
         var entry = this._findEntry(key);
         if (entry >= 0) {
@@ -236,6 +245,7 @@
         }
         return undefined;
     };
+
     Dictionary.prototype.getValues = function () {
         var index = 0, results = [];
         if (this.entries !== undefined) {
@@ -247,6 +257,7 @@
         }
         return results;
     };
+
     Dictionary.prototype.get = function (key) {
         var entry = this._findEntry(key);
         if (entry >= 0) {
@@ -254,9 +265,11 @@
         }
         throw new Error(noSuchkey);
     };
+
     Dictionary.prototype.set = function (key, value) {
         this._insert(key, value, false);
     };
+
     Dictionary.prototype.containskey = function (key) {
         return this._findEntry(key) >= 0;
     };
@@ -527,7 +540,7 @@
         }, function (_, window) {
             return window;
         });
-    };
+    }
 
     function observableWindowWithBounaries(windowBoundaries) {
         var source = this;
@@ -605,7 +618,7 @@
             createWindowClose();
             return r;
         });
-    };
+    }
 
     return Rx;
 }));

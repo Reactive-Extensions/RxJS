@@ -251,15 +251,15 @@ module.exports = function (grunt) {
         },
         jshint: {
             all: [
-                'rx.js'//, 
-                // 'rx.modern.js', 
-                // 'rx.aggregates.js', 
-                // 'rx.binding.js', 
-                // 'rx.coincidence.js', 
-                // 'rx.experimental.js',
-                // 'rx.joinpatterns.js',
-                // 'rx.testing.js',
-                // 'rx.time.js'
+                'rx.js', 
+                'rx.modern.js', 
+                'rx.aggregates.js', 
+                'rx.binding.js', 
+                'rx.coincidence.js', 
+                'rx.experimental.js',
+                'rx.joinpatterns.js',
+                'rx.testing.js',
+                'rx.time.js'
             ]
         },
         watch: {

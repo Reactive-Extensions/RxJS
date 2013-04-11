@@ -7,6 +7,9 @@
          * @constructor
          */
         function AnonymousObservable(subscribe) {
+            if (!(this instanceof AnonymousObservable)) {
+                return new AnonymousObservable(subscribe);
+            }
 
             function s(observer) {
                 var autoDetachObserver = new AutoDetachObserver(observer);

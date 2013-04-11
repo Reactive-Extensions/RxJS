@@ -264,7 +264,7 @@
         }, function (_, window) {
             return window;
         });
-    };
+    }
 
     function observableWindowWithBounaries(windowBoundaries) {
         var source = this;
@@ -342,4 +342,4 @@
             createWindowClose();
             return r;
         });
-    };
+    }

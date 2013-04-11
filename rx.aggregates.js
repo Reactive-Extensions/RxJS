@@ -1,8 +1,12 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 (function (root, factory) {
-    var freeExports = typeof exports === 'object' && exports &&
-    (typeof root == 'object' && root && root === root.global && (window = root), exports);
+    var freeExports = typeof exports == 'object' && exports,
+        freeModule = typeof module == 'object' && module && module.exports == freeExports && module,
+        freeGlobal = typeof global == 'object' && global;
+    if (freeGlobal.global === freeGlobal) {
+        window = freeGlobal;
+    }
 
     // Because of build optimizers
     if (typeof define === 'function' && define.amd) {
@@ -76,7 +80,7 @@
     }
 
     function firstOnly(x) {
-        if (x.length == 0) {
+        if (x.length === 0) {
             throw new Error(sequenceContainsNoElements);
         }
         return x[0];
@@ -138,9 +142,9 @@
      */
     observableProto.any = function (predicate, thisArg) {
         var source = this;
-        return predicate 
-            ? source.where(predicate, thisArg).any() 
-            : new AnonymousObservable(function (observer) {
+        return predicate ? 
+            source.where(predicate, thisArg).any() : 
+            new AnonymousObservable(function (observer) {
                 return source.subscribe(function () {
                     observer.onNext(true);
                     observer.onCompleted();
