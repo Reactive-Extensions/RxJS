@@ -1,0 +1,37 @@
+#container {
+    position: relative;
+}
+
+.canvasoverlays {
+    position: absolute;
+}
+
+.handle {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    background-color: rgba(255,255,255,0.5);
+    border: 1px solid rgba(0,0,0,0.5);
+    user-select: none;
+}
+
+.handle#tr {
+    margin-left: -20px;
+}
+
+.handle#t, .handle#b {
+    margin-left: -10px;
+}
+
+.handle#r, .handle#l {
+    margin-top: -10px;
+}
+
+.handle#br {
+    margin-left: -20px;
+    margin-top: -20px;
+}
+
+.handle#bl {
+    margin-top: -20px;
+}
