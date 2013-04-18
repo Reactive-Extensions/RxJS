@@ -4323,7 +4323,7 @@
             this.m = new SingleAssignmentDisposable();
         }
 
-        var AutoDetachObserverPrototype = AutoDetachObserver.prototype
+        var AutoDetachObserverPrototype = AutoDetachObserver.prototype;
 
         /**
          * @private

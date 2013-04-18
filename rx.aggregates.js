@@ -656,8 +656,16 @@
 
     function findValue (source, predicate, thisArg, yieldIndex) {
         return new AnonymousObservable(function (observer) {
+            var i = 0;
             return source.subscribe(function (x) {
-                if (predicate.call(thisArg, x, i, source)) {
+                var shouldRun;
+                try {
+                    shouldRun = predicate.call(thisArg, x, i, source);
+                } catch(e) {
+                    observer.onError(e);
+                    return;
+                }
+                if (shouldRun) {
                     observer.onNext(yieldIndex ? i : x);
                     observer.onCompleted();
                 } else {
