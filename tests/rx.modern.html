@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reactive Extensions for JavaScript Tests</title>
+  <link rel="stylesheet" href="./vendor/qunit-1.11.0.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <script src="./vendor/qunit-1.11.0.js"></script>
+  <script src="../rx.modern.js"></script>
+  <script src="../rx.time.js"></script>  
+  <script src="../rx.testing.js"></script>  
+  <script src="ReactiveAssert.js"></script>
+
+  <script>
+    // Backfill for Phantom.js
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (context) {
+        var self = this;
+        return function () {
+          return self.apply(context, arguments);
+        };
+      };
+    }
+  </script>
+
+  <!-- Individual Tests -->
+  <script src="AsyncSubjectTest.js"></script>
+  <script src="CurrentThreadSchedulerTest.js"></script>
+  <script src="DisposableTest.js"></script>
+  <script src="HistoricalSchedulerTest.js"></script>
+  <script src="ImmediateSchedulerTest.js"></script>
+  <script src="TimeoutSchedulerTest.js"></script>  
+  <script src="NotificationTest.js"></script>  
+  <script src="ObservableAsyncTest.js"></script>
+  <script src="ObservableConcurrencyTest.js"></script>
+  <script src="ObservableCreationTest.js"></script>
+  <script src="ObservableExtensionsTest.js"></script>
+  <script src="ObservableMultipleTest.js"></script>
+  <script src="ObservableSingleTest.js"></script>
+  <script src="ObservableStandardQueryOperatorTest.js"></script>
+  <script src="ObserverTest.js"></script>  
+  <script src="SchedulerTest.js"></script>
+  <script src="SubjectTest.js"></script>  
+  <script src="VirtualSchedulerTest.js"></script>
+</body>
+</html>
