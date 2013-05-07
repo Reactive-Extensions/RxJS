@@ -42,7 +42,7 @@
                 throw 'ex';
             });
         });
-        return raises(function () {
+        raises(function () {
             return Observable.create(function (o) {
                 throw 'ex';
             }).select(function (x) {
@@ -186,7 +186,7 @@
                 throw 'ex';
             });
         });
-        return raises(function () {
+        raises(function () {
             return Observable.create(function (o) {
                 throw 'ex';
             }).select(function (x, index) {
