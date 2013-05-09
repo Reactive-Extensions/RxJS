@@ -3395,7 +3395,7 @@
      * 
      * @static
      * @memberOf Observable
-     * @param arguments sources Observable sources.
+     * @param arguments Observable sources.
      * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
      */
@@ -3414,8 +3414,7 @@
      * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
      */
     Observable.zipArray = function () {
-        var parent = this, sources = slice.call(arguments);
-        sources.unshift(parent);
+        var sources = slice.call(arguments);
         return new AnonymousObservable(function (observer) {
             var n = sources.length,
               queues = arrayInitialize(n, function () { return []; }),
@@ -3426,13 +3425,15 @@
                     observer.onNext(res);
                 } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
                     observer.onCompleted();
+                    return;
                 }
             };
 
             function done(i) {
                 isDone[i] = true;
-                if (isDone.every(function (x) { return x; })) {
+                if (isDone.every(identity)) {
                     observer.onCompleted();
+                    return;
                 }
             }
 
