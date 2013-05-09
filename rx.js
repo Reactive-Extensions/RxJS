@@ -3361,7 +3361,7 @@
                         return;
                     }
                     observer.onNext(res);
-                } else if (isDone.filter(function (x, j) { return j !== i; }).every(function (x) { return x; })) {
+                } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
                     observer.onCompleted();
                 }
             };
@@ -3395,15 +3395,62 @@
      * 
      * @static
      * @memberOf Observable
-     * @param {Array} sources Observable sources.
+     * @param arguments sources Observable sources.
      * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
      */
-    Observable.zip = function (sources, resultSelector) {
-        var first = sources[0],
-            rest = sources.slice(1);
-        rest.push(resultSelector);
-        return first.zip.apply(first, rest);
+    Observable.zip = function () {
+        var args = slice.call(arguments, 0),
+            first = args.shift();
+        return first.zip.apply(first, args);
+    };
+
+    /**
+     * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
+     * 
+     * @static
+     * @memberOf Observable     
+     * @param arguments Observable sources.
+     * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
+     */
+    Observable.zipArray = function () {
+        var parent = this, sources = slice.call(arguments);
+        sources.unshift(parent);
+        return new AnonymousObservable(function (observer) {
+            var n = sources.length,
+              queues = arrayInitialize(n, function () { return []; }),
+              isDone = arrayInitialize(n, function () { return false; });
+            var next = function (i) {
+                if (queues.every(function (x) { return x.length > 0; })) {
+                    var res = queues.map(function (x) { return x.shift(); });
+                    observer.onNext(res);
+                } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+                    observer.onCompleted();
+                }
+            };
+
+            function done(i) {
+                isDone[i] = true;
+                if (isDone.every(function (x) { return x; })) {
+                    observer.onCompleted();
+                }
+            }
+
+            var subscriptions = new Array(n);
+            for (var idx = 0; idx < n; idx++) {
+                (function (i) {
+                    subscriptions[i] = new SingleAssignmentDisposable();
+                    subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
+                        queues[i].push(x);
+                        next(i);
+                    }, observer.onError.bind(observer), function () {
+                        done(i);
+                    }));
+                })(idx);
+            }
+
+            return new CompositeDisposable(subscriptions);
+        });
     };
 
 
