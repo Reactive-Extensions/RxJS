@@ -3301,7 +3301,8 @@
             var n = sources.length,
               queues = arrayInitialize(n, function () { return []; }),
               isDone = arrayInitialize(n, function () { return false; });
-            var next = function (i) {
+
+            function next(i) {
                 if (queues.every(function (x) { return x.length > 0; })) {
                     var res = queues.map(function (x) { return x.shift(); });
                     observer.onNext(res);
@@ -3332,7 +3333,13 @@
                 })(idx);
             }
 
-            return new CompositeDisposable(subscriptions);
+            var compositeDisposable = new CompositeDisposable(subscriptions);
+            compositeDisposable.add(disposableCreate(function () {
+                for (var qIdx = 0, qLen = queues.length; qIdx < qLen; qIdx++) {
+                    queues[qIdx] = [];
+                }
+            }));
+            return compositeDisposable;
         });
     };
 

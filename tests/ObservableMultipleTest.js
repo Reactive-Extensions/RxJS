@@ -2218,5 +2218,38 @@
             subscribe(200, 400)
         );
     });
+
+    test('Zip_RightCompletesFirst', function () {
+        var scheduler = new TestScheduler();
+
+        var o = scheduler.createHotObservable(
+            onNext(150, 1),
+            onNext(215, 4),
+            onCompleted(225)
+        );
+
+        var e = scheduler.createHotObservable(
+            onNext(150, 1),
+            onNext(210, 2),
+            onCompleted(220)
+        );
+
+        var res = scheduler.startWithCreate(function () {
+            return o.zip(e, function (x, y) { return x + y; })
+        });
+
+        res.messages.assertEqual(
+            onNext(215, 6),
+            onCompleted(225)
+        );
+
+        o.subscriptions.assertEqual(
+            subscribe(200, 225)
+        );
+
+        e.subscriptions.assertEqual(
+            subscribe(200, 220)
+        );
+    });
     
 }(typeof global == 'object' && global || this))
