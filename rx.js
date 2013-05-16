@@ -3350,6 +3350,7 @@
             var n = sources.length,
               queues = arrayInitialize(n, function () { return []; }),
               isDone = arrayInitialize(n, function () { return false; });
+              
             var next = function (i) {
                 var res, queuedValues;
                 if (queues.every(function (x) { return x.length > 0; })) {

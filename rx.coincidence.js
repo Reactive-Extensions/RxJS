@@ -75,17 +75,55 @@
         return min;
     }
 
+    function stringHashFn(str) {
+        var hash = 757602046;
+        if (!str.length) {
+            return hash;
+        }
+        for (var i = 0, len = str.length; i < len; i++) {
+            var character = str.charCodeAt(i);
+            hash = ((hash<<5)-hash)+character;
+            hash = hash & hash;
+        }
+        return hash;
+    }
+
+    function numberHashFn(key) {
+        var c2 = 0x27d4eb2d; 
+        key = (key ^ 61) ^ (key >>> 16);
+        key = key + (key << 3);
+        key = key ^ (key >>> 4);
+        key = key * c2;
+        key = key ^ (key >>> 15);
+        return key;
+    }
+
     var getHashCode = (function () {
         var uniqueIdCounter = 0;
 
         return function (obj) {
-            var id;
-            if (obj == null)
+            if (obj == null) { 
                 throw new Error(noSuchkey);
-            if (obj.getHashCode !== undefined) {
+            }
+
+            // Check for built-ins before tacking on our own for any object
+            if (typeof obj === 'string') {
+                return stringHashFn(obj);
+            }
+
+            if (typeof obj === 'number') {
+                return numberHashFn(obj);
+            }
+
+            if (obj instanceof Date) {
+                return obj.getTime();
+            }
+
+            if (obj.getHashCode) {
                 return obj.getHashCode();
             }
-            id = 17 * uniqueIdCounter++;
+
+            var id = 17 * uniqueIdCounter++;
             obj.getHashCode = function () { return id; };
             return id;
         };
@@ -98,7 +136,13 @@
     // Dictionary implementation
 
     var Dictionary = function (capacity, comparer) {
-        this._initialize(capacity);
+        if (capacity < 0) {
+            throw new Error('out of range')
+        }
+        if (capacity > 0) {
+            this._initialize(capacity);
+        }
+        
         this.comparer = comparer || defaultComparer;
         this.freeCount = 0;
         this.size = 0;
@@ -131,7 +175,7 @@
         for (var index2 = this.buckets[index1]; index2 >= 0; index2 = this.entries[index2].next) {
             if (this.entries[index2].hashCode === num && this.comparer(this.entries[index2].key, key)) {
                 if (add) {
-                    throw duplicatekey;
+                    throw new Error(duplicatekey);
                 }
                 this.entries[index2].value = value;
                 return;
@@ -155,9 +199,10 @@
         this.entries[index3].value = value;
         this.buckets[index1] = index3;
     };
+
     Dictionary.prototype._resize = function () {
-        var prime = getPrime(this.size * 2);
-        var numArray = new Array(prime);
+        var prime = getPrime(this.size * 2),
+            numArray = new Array(prime);
         for (index = 0; index < numArray.length; ++index) {
             numArray[index] = -1;
         }
@@ -178,7 +223,7 @@
     };
 
     Dictionary.prototype.remove = function (key) {
-        if (this.buckets !== undefined) {
+        if (this.buckets) {
             var num = getHashCode(key) & 2147483647;
             var index1 = num % this.buckets.length;
             var index2 = -1;
@@ -220,7 +265,7 @@
     };
 
     Dictionary.prototype._findEntry = function (key) {
-        if (this.buckets !== undefined) {
+        if (this.buckets) {
             var num = getHashCode(key) & 2147483647;
             for (var index = this.buckets[num % this.buckets.length]; index >= 0; index = this.entries[index].next) {
                 if (this.entries[index].hashCode === num && this.comparer(this.entries[index].key, key)) {
@@ -235,20 +280,17 @@
         return this.size - this.freeCount;
     };
 
-    Dictionary.prototype.tryGetEntry = function (key) {
+    Dictionary.prototype.tryGetValue = function (key) {
         var entry = this._findEntry(key);
         if (entry >= 0) {
-            return {
-                key: this.entries[entry].key,
-                value: this.entries[entry].value
-            };
+            return this.entries[entry].value;
         }
         return undefined;
     };
 
     Dictionary.prototype.getValues = function () {
         var index = 0, results = [];
-        if (this.entries !== undefined) {
+        if (this.entries) {
             for (var index1 = 0; index1 < this.size; index1++) {
                 if (this.entries[index1].hashCode >= 0) {
                     results[index++] = this.entries[index1].value;
@@ -385,116 +427,136 @@
     observableProto.groupJoin = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
         var left = this;
         return new AnonymousObservable(function (observer) {
-            var group = new CompositeDisposable(),
-            r = new RefCountDisposable(group),
-            leftId = 0,
-            leftMap = new Dictionary(),
-            rightId = 0,
-            rightMap = new Dictionary();
-            group.add(left.subscribe(function (value) {
-                var duration,
-                    expire,
-                    i,
-                    id = leftId++,
-                    leftValues,
-                    result,
-                    rightValues;
-                var s = new Subject();
-                leftMap.add(id, s);
-                try {
-                    result = resultSelector(value, addRef(s, r));
-                } catch (exception) {
+            var nothing = function () {};
+            var group = new CompositeDisposable();
+            var r = new RefCountDisposable(group);
+            var leftMap = new Dictionary();
+            var rightMap = new Dictionary();
+            var leftID = 0;
+            var rightID = 0;
+
+            group.add(left.subscribe(
+                function (value) {
+                    var s = new Subject();
+                    var id = leftID++;
+                    leftMap.add(id, s);
+                    var i, len, leftValues, rightValues;
+
+                    var result;
+                    try {
+                        result = resultSelector(value, addRef(s, r));
+                    } catch (e) {
+                        leftValues = leftMap.getValues();
+                        for (i = 0, len = leftValues.length; i < len; i++) {
+                            leftValues[i].onError(e);
+                        }
+                        observer.onError(e);
+                        return;
+                    }
+                    observer.onNext(result);
+
+                    rightValues = rightMap.getValues();
+                    for (i = 0, len = rightValues.length; i < len; i++) {
+                        s.onNext(rightValues[i]);
+                    }
+
+                    var md = new SingleAssignmentDisposable();
+                    group.add(md);
+
+                    var expire = function () {
+                        if (leftMap.remove(id)) {
+                            s.onCompleted();
+                        }
+                            
+                        group.remove(md);
+                    };
+
+                    var duration;
+                    try {
+                        duration = leftDurationSelector(value);
+                    } catch (e) {
+                        leftValues = leftMap.getValues();
+                        for (i = 0, len = leftMap.length; i < len; i++) {
+                            leftValues[i].onError(e);
+                        }
+                        observer.onError(e);
+                        return;
+                    }
+
+                    md.setDisposable(duration.take(1).subscribe(
+                        nothing,
+                        function (e) {
+                            leftValues = leftMap.getValues();
+                            for (i = 0, len = leftValues.length; i < len; i++) {
+                                leftValues[i].onError(e);
+                            }
+                            observer.onError(e);
+                        },
+                        expire)
+                    );
+                },
+                function (e) {
+                    var leftValues = leftMap.getValues();
+                    for (var i = 0, len = leftValues.length; i < len; i++) {
+                        leftValues[i].onError(e);
+                    }
+                    observer.onError(e);
+                },
+                observer.onCompleted.bind(observer)));
+
+            group.add(right.subscribe(
+                function (value) {
+                    var leftValues, i, len;
+                    var id = rightID++;
+                    rightMap.add(id, value);
+
+                    var md = new SingleAssignmentDisposable();
+                    group.add(md);
+
+                    var expire = function () {
+                        rightMap.remove(id);
+                        group.remove(md);
+                    };
+
+                    var duration;
+                    try {
+                        duration = rightDurationSelector(value);
+                    } catch (e) {
+                        leftValues = leftMap.getValues();
+                        for (i = 0, len = leftMap.length; i < len; i++) {
+                            leftValues[i].onError(e);
+                        }
+                        observer.onError(e);
+                        return;
+                    }
+                    md.setDisposable(duration.take(1).subscribe(
+                        nothing,
+                        function (e) {
+                            leftValues = leftMap.getValues();
+                            for (i = 0, len = leftMap.length; i < len; i++) {
+                                leftValues[i].onError(e);
+                            }
+                            observer.onError(e);
+                        },
+                        expire)
+                    );
+
                     leftValues = leftMap.getValues();
-                    for (i = 0; i < leftValues.length; i++) {
-                        leftValues[i].onError(exception);
+                    for (i = 0, len = leftValues.length; i < len; i++) {
+                        leftValues[i].onNext(value);
                     }
-                    observer.onError(exception);
-                    return;
-                }
-                observer.onNext(result);
-                rightValues = rightMap.getValues();
-                for (i = 0; i < rightValues.length; i++) {
-                    s.onNext(rightValues[i]);
-                }
-                var md = new SingleAssignmentDisposable();
-                group.add(md);
-                expire = function () {
-                    if (leftMap.remove(id)) {
-                        s.onCompleted();
+                },
+                function (e) {
+                    var leftValues = leftMap.getValues();
+                    for (var i = 0, len = leftValues.length; i < len; i++) {
+                        leftValues[i].onError(e);
                     }
-                    group.remove(md);
-                };
-                try {
-                    duration = leftDurationSelector(value);
-                } catch (exception) {
-                    leftValues = leftMap.getValues();
-                    for (i = 0; i < leftValues.length; i++) {
-                        leftValues[i].onError(exception);
-                    }
-                    observer.onError(exception);
-                    return;
-                }
-                md.disposable(duration.take(1).subscribe(noop, function (exn) {
-                    leftValues = leftMap.getValues();
-                    for (var idx = 0, len = leftValues.length; idx < len; idx++) {
-                        leftValues[idx].onError(exn);
-                    }
-                    observer.onError(exn);
-                }, function () {
-                    expire();
+                    observer.onError(e);
                 }));
-            }, function (exception) {
-                var i, leftValues;
-                leftValues = leftMap.getValues();
-                for (i = 0; i < leftValues.length; i++) {
-                    leftValues[i].onError(exception);
-                }
-                observer.onError(exception);
-            }, observer.onCompleted.bind(observer)));
-            group.add(right.subscribe(function (value) {
-                var duration, i, leftValues;
-                var id = rightId++;
-                rightMap.add(id, value);
-                var md = new SingleAssignmentDisposable();
-                group.add(md);
-                var expire = function () {
-                    rightMap.remove(id);
-                    group.remove(md);
-                };
-                try {
-                    duration = rightDurationSelector(value);
-                } catch (exception) {
-                    leftValues = leftMap.getValues();
-                    for (i = 0; i < leftValues.length; i++) {
-                        leftValues[i].onError(exception);
-                    }
-                    observer.onError(exception);
-                    return;
-                }
-                md.disposable(duration.take(1).subscribe(noop, function (exn) {
-                    leftValues = leftMap.getValues();
-                    for (var idx = 0; idx < leftValues.length; idx++) {
-                        leftValues[idx].onError(exn);
-                    }
-                    observer.onError(exn);
-                }, function () {
-                    expire();
-                }));
-                leftValues = leftMap.getValues();
-                for (i = 0; i < leftValues.length; i++) {
-                    leftValues[i].onNext(value);
-                }
-            }, function (exception) {
-                var i, leftValues;
-                leftValues = leftMap.getValues();
-                for (i = 0; i < leftValues.length; i++) {
-                    leftValues[i].onError(exception);
-                }
-                observer.onError(exception);
-            }));
+
             return r;
         });
-    };
+    }
     
     /**
      *  Projects each element of an observable sequence into zero or more buffers.

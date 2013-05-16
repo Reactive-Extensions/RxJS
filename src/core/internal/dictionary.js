@@ -36,17 +36,55 @@
         return min;
     }
 
+    function stringHashFn(str) {
+        var hash = 757602046;
+        if (!str.length) {
+            return hash;
+        }
+        for (var i = 0, len = str.length; i < len; i++) {
+            var character = str.charCodeAt(i);
+            hash = ((hash<<5)-hash)+character;
+            hash = hash & hash;
+        }
+        return hash;
+    }
+
+    function numberHashFn(key) {
+        var c2 = 0x27d4eb2d; 
+        key = (key ^ 61) ^ (key >>> 16);
+        key = key + (key << 3);
+        key = key ^ (key >>> 4);
+        key = key * c2;
+        key = key ^ (key >>> 15);
+        return key;
+    }
+
     var getHashCode = (function () {
         var uniqueIdCounter = 0;
 
         return function (obj) {
-            var id;
-            if (obj == null)
+            if (obj == null) { 
                 throw new Error(noSuchkey);
-            if (obj.getHashCode !== undefined) {
+            }
+
+            // Check for built-ins before tacking on our own for any object
+            if (typeof obj === 'string') {
+                return stringHashFn(obj);
+            }
+
+            if (typeof obj === 'number') {
+                return numberHashFn(obj);
+            }
+
+            if (obj instanceof Date) {
+                return obj.getTime();
+            }
+
+            if (obj.getHashCode) {
                 return obj.getHashCode();
             }
-            id = 17 * uniqueIdCounter++;
+
+            var id = 17 * uniqueIdCounter++;
             obj.getHashCode = function () { return id; };
             return id;
         };
@@ -59,7 +97,13 @@
     // Dictionary implementation
 
     var Dictionary = function (capacity, comparer) {
-        this._initialize(capacity);
+        if (capacity < 0) {
+            throw new Error('out of range')
+        }
+        if (capacity > 0) {
+            this._initialize(capacity);
+        }
+        
         this.comparer = comparer || defaultComparer;
         this.freeCount = 0;
         this.size = 0;
@@ -92,7 +136,7 @@
         for (var index2 = this.buckets[index1]; index2 >= 0; index2 = this.entries[index2].next) {
             if (this.entries[index2].hashCode === num && this.comparer(this.entries[index2].key, key)) {
                 if (add) {
-                    throw duplicatekey;
+                    throw new Error(duplicatekey);
                 }
                 this.entries[index2].value = value;
                 return;
@@ -116,9 +160,10 @@
         this.entries[index3].value = value;
         this.buckets[index1] = index3;
     };
+
     Dictionary.prototype._resize = function () {
-        var prime = getPrime(this.size * 2);
-        var numArray = new Array(prime);
+        var prime = getPrime(this.size * 2),
+            numArray = new Array(prime);
         for (index = 0; index < numArray.length; ++index) {
             numArray[index] = -1;
         }
@@ -139,7 +184,7 @@
     };
 
     Dictionary.prototype.remove = function (key) {
-        if (this.buckets !== undefined) {
+        if (this.buckets) {
             var num = getHashCode(key) & 2147483647;
             var index1 = num % this.buckets.length;
             var index2 = -1;
@@ -181,7 +226,7 @@
     };
 
     Dictionary.prototype._findEntry = function (key) {
-        if (this.buckets !== undefined) {
+        if (this.buckets) {
             var num = getHashCode(key) & 2147483647;
             for (var index = this.buckets[num % this.buckets.length]; index >= 0; index = this.entries[index].next) {
                 if (this.entries[index].hashCode === num && this.comparer(this.entries[index].key, key)) {
@@ -196,20 +241,17 @@
         return this.size - this.freeCount;
     };
 
-    Dictionary.prototype.tryGetEntry = function (key) {
+    Dictionary.prototype.tryGetValue = function (key) {
         var entry = this._findEntry(key);
         if (entry >= 0) {
-            return {
-                key: this.entries[entry].key,
-                value: this.entries[entry].value
-            };
+            return this.entries[entry].value;
         }
         return undefined;
     };
 
     Dictionary.prototype.getValues = function () {
         var index = 0, results = [];
-        if (this.entries !== undefined) {
+        if (this.entries) {
             for (var index1 = 0; index1 < this.size; index1++) {
                 if (this.entries[index1].hashCode >= 0) {
                     results[index++] = this.entries[index1].value;
