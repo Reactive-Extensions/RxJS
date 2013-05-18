@@ -76,6 +76,10 @@
                 return numberHashFn(obj);
             }
 
+            if (typeof obj === 'boolean') {
+                return obj === true ? 1 : 0;
+            }
+
             if (obj instanceof Date) {
                 return obj.getTime();
             }
