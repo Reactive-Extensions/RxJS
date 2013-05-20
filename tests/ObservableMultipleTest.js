@@ -2211,11 +2211,11 @@
         );
 
         e1.subscriptions.assertEqual(
-            subscribe(200, 410)
+            subscribe(200, 420)
         );
 
         e2.subscriptions.assertEqual(
-            subscribe(200, 400)
+            subscribe(200, 420)
         );
     });
 
@@ -2248,7 +2248,7 @@
         );
 
         e.subscriptions.assertEqual(
-            subscribe(200, 220)
+            subscribe(200, 225)
         );
     });
     
