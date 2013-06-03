@@ -1,4 +1,4 @@
-var Rx = require('./rx.modern');
+var Rx = require('./rx');
 require('./rx.aggregates');
 require('./rx.binding');
 require('./rx.coincidence');

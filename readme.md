@@ -143,8 +143,8 @@ Along with a number of our extras for RxJS:
 
 Installing via NPM:
 
-    npm install rxjs
-    npm install -g rxjs
+    npm install rx
+    npm install -g rx
 
 Using in Node.js:
 
