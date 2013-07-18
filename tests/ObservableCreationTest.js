@@ -10,9 +10,9 @@
         onError = root.ReactiveTest.onError,
         onCompleted = root.ReactiveTest.onCompleted,
         subscribe = root.ReactiveTest.subscribe,
-		created = root.ReactiveTest.created,
-		subscribed = root.ReactiveTest.subscribed,
-		disposed = root.ReactiveTest.disposed;
+        created = root.ReactiveTest.created,
+        subscribed = root.ReactiveTest.subscribed,
+        disposed = root.ReactiveTest.disposed;
 
     var BooleanDisposable = (function () {
         function BooleanDisposable() {
@@ -31,8 +31,8 @@
             return Observable.returnValue(42, scheduler);
         });
         results.messages.assertEqual(
-						    onNext(201, 42),
-						    onCompleted(201));
+                            onNext(201, 42),
+                            onCompleted(201));
     });
 
     test('Return_Disposed', function () {
@@ -523,6 +523,47 @@
         });
         results.messages.assertEqual(onError(200, ex));
     });
+
+    test('Create_Noop_Next', function () {
+        var results, scheduler;
+        scheduler = new TestScheduler();
+        results = scheduler.startWithCreate(function () {
+            return Observable.create(function (o) {
+                o.onNext(1);
+                o.onNext(2);
+            });
+        });
+        results.messages.assertEqual(onNext(200, 1), onNext(200, 2));
+    });
+
+    test('Create_Noop_Completed', function () {
+        var results, scheduler;
+        scheduler = new TestScheduler();
+        results = scheduler.startWithCreate(function () {
+            return Observable.create(function (o) {
+                o.onCompleted();
+                o.onNext(100);
+                o.onError('ex');
+                o.onCompleted();
+            });
+        });
+        results.messages.assertEqual(onCompleted(200));
+    });
+
+    test('Create_Noop_Error', function () {
+        var ex, results, scheduler;
+        scheduler = new TestScheduler();
+        ex = 'ex';
+        results = scheduler.startWithCreate(function () {
+            return Observable.create(function (o) {
+                o.onError(ex);
+                o.onNext(100);
+                o.onError('foo');
+                o.onCompleted();
+            });
+        });
+        results.messages.assertEqual(onError(200, ex));
+    });    
 
     test('Create_Exception', function () {
         raises(function () {
