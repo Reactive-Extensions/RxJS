@@ -275,7 +275,7 @@
      */
     var Disposable = Rx.Disposable = function (action) {
         this.isDisposed = false;
-        this.action = action;
+        this.action = action || noop;
     };
 
     /** 
@@ -2400,7 +2400,7 @@
      */
     Observable.create = function (subscribe) {
         return new AnonymousObservable(function (o) {
-            return disposableCreate(subscribe(o) || noop);
+            return disposableCreate(subscribe(o));
         });
     };
 

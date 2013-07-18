@@ -9,7 +9,7 @@
      */
     Observable.create = function (subscribe) {
         return new AnonymousObservable(function (o) {
-            return disposableCreate(subscribe(o) || noop);
+            return disposableCreate(subscribe(o));
         });
     };
 
