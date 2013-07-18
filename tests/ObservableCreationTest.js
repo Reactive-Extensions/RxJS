@@ -524,6 +524,47 @@
         results.messages.assertEqual(onError(200, ex));
     });
 
+    test('Create_Noop_Next', function () {
+        var results, scheduler;
+        scheduler = new TestScheduler();
+        results = scheduler.startWithCreate(function () {
+            return Observable.create(function (o) {
+                o.onNext(1);
+                o.onNext(2);
+            });
+        });
+        results.messages.assertEqual(onNext(200, 1), onNext(200, 2));
+    });
+
+    test('Create_Noop_Completed', function () {
+        var results, scheduler;
+        scheduler = new TestScheduler();
+        results = scheduler.startWithCreate(function () {
+            return Observable.create(function (o) {
+                o.onCompleted();
+                o.onNext(100);
+                o.onError('ex');
+                o.onCompleted();
+            });
+        });
+        results.messages.assertEqual(onCompleted(200));
+    });
+
+    test('Create_Noop_Error', function () {
+        var ex, results, scheduler;
+        scheduler = new TestScheduler();
+        ex = 'ex';
+        results = scheduler.startWithCreate(function () {
+            return Observable.create(function (o) {
+                o.onError(ex);
+                o.onNext(100);
+                o.onError('foo');
+                o.onCompleted();
+            });
+        });
+        results.messages.assertEqual(onError(200, ex));
+    });    
+
     test('Create_Exception', function () {
         raises(function () {
             return Observable.create(function (o) {
