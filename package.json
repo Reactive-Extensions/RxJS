@@ -20,7 +20,7 @@
   ],
   "jam": {
     "main": "rx.js"
-  }
+  },
   "dependencies": {},
   "devDependencies": {
     "grunt-cli": "*",
