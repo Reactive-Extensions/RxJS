@@ -1,0 +1,28 @@
+{
+  "name": "Rx",
+  "version": "2.1.5",
+  "main": [
+    "rx.js",
+    "rx.aggregates.js",
+    "rx.binding.js",
+    "rx.coincidence.js",
+    "rx.experimental.js",
+    "rx.joinpatterns.js",
+    "rx.testing.js",
+    "rx.time.js"
+  ],
+  "ignore": [
+    ".*",
+    "*.bat",
+    "*.md",
+    "*.min.*",
+    "*.txt",
+    "*.log",
+    "package.json",
+    "node_modules",
+    "doc",
+    "examples",
+    "src",
+    "tests"
+  ]
+}
