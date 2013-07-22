@@ -187,3 +187,31 @@ obs3.subscribe( function (x) {
 ```
 
 * * *
+
+### <a id="concat1"></a>`Rx.Observable.concat`
+<a href="#concat1">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3035-L3038 "View in source") [&#x24C9;][1]
+
+Concatenates all of the specified observable sequences, as long as the previous observable sequence terminated successfully.
+
+#### Arguments
+1. `array` *(Array|arguments)*: Observable sequences to concatenate.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of each given sequence, in sequential order.
+
+#### Example
+```js
+var source1 = Rx.Observable.returnValue(42);
+var source2 = Rx.Observable.returnValue(56);
+
+var obs = Rx.Observable.concat(source1, source2);
+
+obs.subscribe( function (x) {
+	console.log(x);
+});
+
+// => 42
+// => 56
+```
+
+* * *
