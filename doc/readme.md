@@ -215,3 +215,75 @@ obs.subscribe( function (x) {
 ```
 
 * * *
+
+### <a id="create"></a>`Rx.Observable.create`
+<a href="#create">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2519-L2523 "View in source") [&#x24C9;][1]
+
+Creates an observable sequence from a specified subscribe method implementation.
+
+#### Arguments
+1. `subscribe` *(Function)*: Implementation of the resulting observable sequence's subscribe method, optionally returning a function that will be wrapped in a disposable object.
+
+#### Returns
+*(Observable)*: The observable sequence with the specified implementation for the subscribe method.
+
+#### Example
+```js
+var source = Rx.Observable.create(function (observer) {
+	observer.onNext(42);
+	observer.onCompleted();
+
+	// Note that this is optional, you do not have to return this if you require no cleanup
+	return function () {
+		console.log('disposed');
+	};
+});
+
+var subscription = source.subscribe(function (x) {
+	console.log(x);
+});
+
+// => 42
+
+subscription.dispose();
+
+// => disposed
+```
+
+* * *
+
+### <a id="createWithDisposable"></a>`Rx.Observable.createWithDisposable`
+<a href="#createWithDisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2535-L2537 "View in source") [&#x24C9;][1]
+
+Creates an observable sequence from a specified Subscribe method implementation.
+
+#### Arguments
+1. `subscribe` *(Function)*: Implementation of the resulting observable sequence's subscribe method.
+
+#### Returns
+*(Observable)*: The observable sequence with the specified implementation for the subscribe method.
+
+#### Example
+```js
+var source = Rx.Observable.createWithDisposable(function (observer) {
+	observer.onNext(42);
+	observer.onCompleted();
+
+	return Rx.Disposable.create(function () {
+		// Any cleanup that is required
+		console.log('disposed');
+	});
+});
+
+var subscription = source.subscribe(function (x) {
+	console.log(x);
+});
+
+// => 42
+
+subscription.dispose();
+
+// => disposed
+```
+
+* * *

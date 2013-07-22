@@ -93,35 +93,7 @@ And there you have it!
 
 ##  API Documentation ##
 
-Core:
-
-- [Observer](https://github.com/Reactive-Extensions/RxJS/wiki/Observer)
-- [Observable](https://github.com/Reactive-Extensions/RxJS/wiki/Observable)
-
-Subjects:
-
- - AsyncSubject
- - BehaviorSubject
- - ReplaySubject
- - Subject
-
-Schedulers:
-
-- Scheduler object
-- Scheduler.currentThread
-- Scheduler.immediate
-- Scheduler.timeout
-- VirtualTimeScheduler
-
-Disposables:
-
-- CompositeDisposable
-- Disposable
-- RefCountDisposable
-- SerialDisposable
-- SingleAssignmentDisposable
-
-
+You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples).
 
 ## Installation and Usage ##
 
