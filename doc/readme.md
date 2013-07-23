@@ -287,3 +287,29 @@ subscription.dispose();
 ```
 
 * * *
+
+### <a id="defer"></a>`Rx.Observable.defer`
+<a href="#defer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
+
+#### Arguments
+1. `observableFactory` *(Function)*: Observable factory function to invoke for each observer that subscribes to the resulting sequence.
+
+#### Returns
+*(Observable)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
+
+#### Example
+```js
+var source = Rx.Observable.defer(function () {
+	return Rx.Observable.returnValue(42);
+});
+
+var subscription = source.subscribe(function (x) {
+	console.log(x);
+});
+
+// => 42
+```
+
+* * *
