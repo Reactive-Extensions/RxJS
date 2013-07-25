@@ -393,7 +393,7 @@
      */
     var Disposable = Rx.Disposable = function (action) {
         this.isDisposed = false;
-        this.action = action;
+        this.action = action || noop;
     };
 
     /** 
