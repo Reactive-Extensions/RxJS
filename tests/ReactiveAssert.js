@@ -27,6 +27,10 @@
 		}
 		ok(isOk, message || createMessage(expected, actual));
 	}
+	
+	Array.prototype.assertEmpty = function() {
+		return areElementsEqual(this, [], defaultComparer);
+	}
 
     Array.prototype.assertEqual = function () {
         var actual = slice.call(arguments);
