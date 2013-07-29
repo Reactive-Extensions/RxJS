@@ -2,7 +2,7 @@
   "name": "rx",
   "title": "Reactive Extensions for JavaScript (RxJS)",
   "description": "Library for composing asynchronous and event-based operations in JavaScript",
-  "version": "2.1.5",
+  "version": "2.1.7",
   "homepage": "http://rx.codeplex.com",
   "author": {
     "name": "Cloud Programmability Team",
@@ -18,9 +18,6 @@
       "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
     }
   ],
-  "jam": {
-    "main": "rx.js"
-  },
   "dependencies": {},
   "devDependencies": {
     "grunt-cli": "*",

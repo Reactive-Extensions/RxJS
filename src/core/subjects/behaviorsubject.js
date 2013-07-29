@@ -3,12 +3,19 @@
      *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
      */
     var BehaviorSubject = Rx.BehaviorSubject = (function (_super) {
+        
+        var no_value = {};
+        
         function subscribe(observer) {
             var ex;
             checkDisposed.call(this);
             if (!this.isStopped) {
                 this.observers.push(observer);
-                observer.onNext(this.value);
+                
+                if(this.value !== no_value) {
+                    observer.onNext(this.value);
+                }
+                
                 return new InnerSubscription(this, observer);
             }
             ex = this.exception;
@@ -30,7 +37,7 @@
         function BehaviorSubject(value) {
             _super.call(this, subscribe);
 
-            this.value = value,
+            this.value = value === void(0) ? no_value : value,
             this.observers = [],
             this.isDisposed = false,
             this.isStopped = false,

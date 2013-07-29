@@ -10,9 +10,9 @@
         onError = root.ReactiveTest.onError,
         onCompleted = root.ReactiveTest.onCompleted,
         subscribe = root.ReactiveTest.subscribe,
-		created = root.ReactiveTest.created,
-		subscribed = root.ReactiveTest.subscribed,
-		disposed = root.ReactiveTest.disposed;
+        created = root.ReactiveTest.created,
+        subscribed = root.ReactiveTest.subscribed,
+        disposed = root.ReactiveTest.disposed;
 
     var BooleanDisposable = (function () {
         function BooleanDisposable() {
@@ -31,8 +31,8 @@
             return Observable.returnValue(42, scheduler);
         });
         results.messages.assertEqual(
-						    onNext(201, 42),
-						    onCompleted(201));
+                            onNext(201, 42),
+                            onCompleted(201));
     });
 
     test('Return_Disposed', function () {
