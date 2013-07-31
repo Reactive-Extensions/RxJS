@@ -45,11 +45,6 @@
             });
         };
 
-        NotificationPrototype.equals = function (other) {
-            var otherString = other == null ? '' : other.toString();
-            return this.toString() === otherString;
-        };
-
         return Notification;
     })();
 

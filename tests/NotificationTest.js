@@ -35,22 +35,6 @@
         ok(n.exception === undefined);
     });
 
-    test('OnNext_Equality', function () {
-        var n1, n2, n3, n4;
-        n1 = createOnNext(42);
-        n2 = createOnNext(42);
-        n3 = createOnNext(24);
-        n4 = createOnCompleted();
-        ok(n1.equals(n1));
-        ok(n1.equals(n2));
-        ok(n2.equals(n1));
-        ok(!n1.equals(null));
-        ok(!n1.equals(n3));
-        ok(!n3.equals(n1));
-        ok(!n1.equals(n4));
-        ok(!n4.equals(n1));
-    });
-
     test('OnNext_ToString', function () {
         var n1;
         n1 = createOnNext(42);
@@ -156,24 +140,6 @@
         equal(e, n.exception);
     });
 
-    test('OnError_Equality', function () {
-        var ex1, ex2, n1, n2, n3, n4;
-        ex1 = 'ex1';
-        ex2 = 'ex2';
-        n1 = createOnError(ex1);
-        n2 = createOnError(ex1);
-        n3 = createOnError(ex2);
-        n4 = createOnCompleted();
-        ok(n1.equals(n1));
-        ok(n1.equals(n2));
-        ok(n2.equals(n1));
-        ok(!n1.equals(null));
-        ok(!n1.equals(n3));
-        ok(!n3.equals(n1));
-        ok(!n1.equals(n4));
-        ok(!n4.equals(n1));
-    });
-
     test('OnError_ToString', function () {
         var ex, n1;
         ex = 'ex';
@@ -263,19 +229,6 @@
         equal('C', n.kind);
         ok(!n.hasValue);
         ok(n.exception === undefined);
-    });
-
-    test('OnCompleted_Equality', function () {
-        var n1, n2, n3;
-        n1 = createOnCompleted();
-        n2 = createOnCompleted();
-        n3 = createOnNext(2);
-        ok(n1.equals(n1));
-        ok(n1.equals(n2));
-        ok(n2.equals(n1));
-        ok(!n1.equals(null));
-        ok(!n1.equals(n3));
-        ok(!n3.equals(n1));
     });
 
     test('OnCompleted_ToString', function () {
@@ -377,8 +330,5 @@
         });
         res.messages.assertEqual(Rx.ReactiveTest.onError(201, ex));
     });
-
-    // must call `QUnit.start()` if using QUnit < 1.3.0 with Node.js or any
-    // version of QUnit with Narwhal, Rhino, or RingoJS
     
 }(typeof global == 'object' && global || this));

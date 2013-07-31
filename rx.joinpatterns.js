@@ -29,10 +29,11 @@
         observerCreate = Rx.Observer.create,
         SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
         CompositeDisposable = Rx.CompositeDisposable,
-        AbstractObserver = Rx.Internals.AbstractObserver;
+        AbstractObserver = Rx.Internals.AbstractObserver,
+        isEqual = Rx.Internals.isEqual;
 
     // Defaults
-    function defaultComparer(x, y) { return x === y; }
+    function defaultComparer(x, y) { return isEqual(x, y); }
     function noop() { }
 
     // Utilities

@@ -2,7 +2,7 @@
     function noop() { }
     function identity(x) { return x; }
     function defaultNow() { return new Date().getTime(); }
-    function defaultComparer(x, y) { return x === y; }
+    function defaultComparer(x, y) { return isEqual(x, y); }
     function defaultSubComparer(x, y) { return x - y; }
     function defaultKeySerializer(x) { return x.toString(); }
     function defaultError(err) { throw err; }
