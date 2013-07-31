@@ -205,17 +205,18 @@
 
     /**
      *  Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
+     *  There is an alias called 'returnValue' for browsers <IE9.
      *  
      * @example
-     *  1 - res = Rx.Observable.returnValue(42);
-     *  2 - res = Rx.Observable.returnValue(42, Rx.Scheduler.timeout);
+     *  1 - res = Rx.Observable.return(42);
+     *  2 - res = Rx.Observable.return(42, Rx.Scheduler.timeout);
      * @static
      * @memberOf Observable
      * @param {Mixed} value Single element in the resulting observable sequence.
      * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
      * @returns {Observable} An observable sequence containing the single specified element.
      */
-    var observableReturn = Observable.returnValue = function (value, scheduler) {
+    var observableReturn = Observable['return'] = Observable.returnValue = function (value, scheduler) {
         scheduler || (scheduler = immediateScheduler);
         return new AnonymousObservable(function (observer) {
             return scheduler.schedule(function () {
@@ -226,7 +227,8 @@
     };
 
     /**
-     *  Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single OnError message.
+     *  Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
+     *  There is an alias to this method called 'throwException' for browsers <IE9.
      *  
      * @example
      *  1 - res = Rx.Observable.throwException(new Error('Error'));
@@ -237,7 +239,7 @@
      * @param {Scheduler} scheduler Scheduler to send the exceptional termination call on. If not specified, defaults to Scheduler.immediate.
      * @returns {Observable} The observable sequence that terminates exceptionally with the specified exception object.
      */
-    var observableThrow = Observable.throwException = function (exception, scheduler) {
+    var observableThrow = Observable['throw'] = Observable.throwException = function (exception, scheduler) {
         scheduler || (scheduler = immediateScheduler);
         return new AnonymousObservable(function (observer) {
             return scheduler.schedule(function () {
@@ -271,4 +273,4 @@
             }
             return new CompositeDisposable(source.subscribe(observer), disposable);
         });
-    };                        
+    };

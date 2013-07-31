@@ -24,12 +24,12 @@
     };
 
      /**
-     *  Determines whether an observable collection contains values.
+     *  Determines whether an observable collection contains values. There is an alias for this method called 'ifThen' for browsers <IE9
      *  
      * @example
-     *  1 - res = Rx.Observable.ifThen(condition, obs1);
-     *  2 - res = Rx.Observable.ifThen(condition, obs1, obs2);
-     *  3 - res = Rx.Observable.ifThen(condition, obs1, scheduler);
+     *  1 - res = Rx.Observable.if(condition, obs1);
+     *  2 - res = Rx.Observable.if(condition, obs1, obs2);
+     *  3 - res = Rx.Observable.if(condition, obs1, scheduler);
      * @static
      * @memberOf Observable
      * @param {Function} condition The condition which determines if the thenSource or elseSource will be run.
@@ -37,7 +37,7 @@
      * @param {Observable} [elseSource] The observable sequence that will be run if the condition function returns false. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.  
      * @returns {Observable} An observable sequence which is either the thenSource or elseSource.
      */
-    Observable.ifThen = function (condition, thenSource, elseSourceOrScheduler) {
+    Observable['if'] = Observable.ifThen = function (condition, thenSource, elseSourceOrScheduler) {
         return observableDefer(function () {
             elseSourceOrScheduler || (elseSourceOrScheduler = observableEmpty());
             if (elseSourceOrScheduler.now) {
@@ -50,25 +50,27 @@
 
      /**
      *  Concatenates the observable sequences obtained by running the specified result selector for each element in source.
+     * There is an alias for this method called 'forIn' for browsers <IE9
      * @static
      * @memberOf Observable
      * @param {Array} sources An array of values to turn into an observable sequence.
      * @param {Function} resultSelector A function to apply to each item in the sources array to turn it into an observable sequence.
      * @returns {Observable} An observable sequence from the concatenated observable sequences.  
      */ 
-    Observable.forIn = function (sources, resultSelector) {
+    Observable['for'] = Observable.forIn = function (sources, resultSelector) {
         return enumerableForEach(sources, resultSelector).concat();
     };
 
      /**
      *  Repeats source as long as condition holds emulating a while loop.
+     * There is an alias for this method called 'whileDo' for browsers <IE9
      * @static
      * @memberOf Observable
      * @param {Function} condition The condition which determines if the source will be repeated.
      * @param {Observable} source The observable sequence that will be run if the condition function returns true.
      * @returns {Observable} An observable sequence which is repeated as long as the condition holds.  
      */
-    var observableWhileDo = Observable.whileDo = function (condition, source) {
+    var observableWhileDo = Observable['while'] = Observable.whileDo = function (condition, source) {
         return enumerableWhile(condition, source).concat();
     };
 
@@ -86,11 +88,12 @@
 
      /**
      *  Uses selector to determine which source in sources to use.
+     *  There is an alias 'switchCase' for browsers <IE9.
      *  
      * @example
-     *  1 - res = Rx.Observable.switchCase(selector, { '1': obs1, '2': obs2 });
-     *  1 - res = Rx.Observable.switchCase(selector, { '1': obs1, '2': obs2 }, obs0);
-     *  1 - res = Rx.Observable.switchCase(selector, { '1': obs1, '2': obs2 }, scheduler);
+     *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 });
+     *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 }, obs0);
+     *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 }, scheduler);
      * 
      * @static  
      * @memberOf Observable
@@ -100,7 +103,7 @@
      *       
      * @returns {Observable} An observable sequence which is determined by a case statement.  
      */
-    Observable.switchCase = function (selector, sources, defaultSourceOrScheduler) {
+    Observable['case'] = Observable.switchCase = function (selector, sources, defaultSourceOrScheduler) {
         return observableDefer(function () {
             defaultSourceOrScheduler || (defaultSourceOrScheduler = observableEmpty());
             if (defaultSourceOrScheduler.now) {
