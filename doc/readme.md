@@ -1,4 +1,4 @@
-# Rx.js <sup>v2.1.5</sup>
+# Rx.js <sup>v2.1.7</sup>
 
 <!-- div -->
 
