@@ -31,6 +31,6 @@
 
     Array.prototype.assertEqual = function () {
         var actual = slice.call(arguments);
-        return areElementsEqual(this, actual, Rx.Internals.isEqual);
+        return areElementsEqual(this, actual, window.Rx.Internals.isEqual);
     };
 }(this));
