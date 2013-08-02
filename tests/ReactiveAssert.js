@@ -7,8 +7,6 @@
         window = freeGlobal;
     }
 
-    var defaultComparer = Rx.Internals.isEqual;
-
     var slice = Array.prototype.slice;
 
     function createMessage(actual, expected) {
@@ -33,6 +31,6 @@
 
     Array.prototype.assertEqual = function () {
         var actual = slice.call(arguments);
-        return areElementsEqual(this, actual, defaultComparer);
+        return areElementsEqual(this, actual, Rx.Internals.isEqual);
     };
 }(this));
