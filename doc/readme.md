@@ -1,4 +1,4 @@
-# Rx.js <sup>v2.1.6</sup>
+# Rx.js <sup>v2.1.7</sup>
 
 <!-- div -->
 
@@ -85,6 +85,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [join](#join)
 - [last](#first)
 - [lastOrDefault](#lastOrDefault)
+- [manySelect](#manySelect)
 - [max](#max)
 - [maxBy](#maxBy)
 - [merge](#merge2)
