@@ -3,7 +3,9 @@
 # The Reactive Extensions for JavaScript... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and LINQ-style query operators in JavaScript*
 
-This project is a mirror of the [CodePlex](http://rx.codeplex.com/) repository.
+The project is actively developed by Microsoft Open Technologies, Inc., in collaboration with a community of open source developers.
+
+This project is a mirror of the [CodePlex](http://rxjs.codeplex.com/) repository.
 
 ## About the Reactive Extensions ##
 
