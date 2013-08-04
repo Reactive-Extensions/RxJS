@@ -14,9 +14,14 @@
         Enumerable = Rx.Internals.Enumerable,
         enumerableForEach = Enumerable.forEach,
         immediateScheduler = Rx.Scheduler.immediate,
-        slice = Array.prototype.slice;
+        slice = Array.prototype.slice,
+        AsyncSubject = Rx.AsyncSubject,
+        Observer = Rx.Observer,
+        inherits = Rx.Internals.inherits,
+        addProperties = Rx.Internals.addProperties;
 
     // Utilities
+    function nothing () { }
     function argsOrArray(args, idx) {
         return args.length === 1 && Array.isArray(args[idx]) ?
             args[idx] :
