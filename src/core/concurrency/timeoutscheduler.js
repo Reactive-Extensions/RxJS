@@ -14,11 +14,12 @@
             return isAsync;
         }
 
-        if (typeof window.process === 'object' && Object.prototype.toString.call(window.process) === '[object process]') {
-            scheduleMethod = window.process.nextTick;
-        } else if (typeof window.setImmediate === 'function') {
+        // Check for setImmediate first for Node v0.11+
+        if (typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;
             clearMethod = window.clearImmediate;
+        } else if (typeof window.process === 'object' && Object.prototype.toString.call(window.process) === '[object process]') {
+            scheduleMethod = window.process.nextTick;
         } else if (postMessageSupported()) {
             var MSG_PREFIX = 'ms.rx.schedule' + Math.random(),
                 tasks = {},
