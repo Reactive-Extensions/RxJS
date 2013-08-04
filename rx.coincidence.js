@@ -576,10 +576,10 @@
             });
         }
         return typeof bufferOpeningsOrClosingSelector === 'function' ?
-            observableWindowWithClosingSelector(bufferOpeningsOrClosingSelector).selectMany(function (item) {
+            observableWindowWithClosingSelector.call(this, bufferOpeningsOrClosingSelector).selectMany(function (item) {
                 return item.toArray();
             }) :
-            observableWindowWithOpenings(this, bufferOpeningsOrClosingSelector, bufferClosingSelector).selectMany(function (item) {
+            observableWindowWithOpenings.call(this, bufferOpeningsOrClosingSelector, bufferClosingSelector).selectMany(function (item) {
                 return item.toArray();
             });
     };
