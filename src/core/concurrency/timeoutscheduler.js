@@ -15,7 +15,7 @@
         }
 
         // Check for setImmediate first for Node v0.11+
-        if (typeof window.setImmediate === 'function') {
+        if (!!window.setImmediate && typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;
             clearMethod = window.clearImmediate;
         } else if (typeof window.process === 'object' && Object.prototype.toString.call(window.process) === '[object process]') {

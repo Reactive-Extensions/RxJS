@@ -3,7 +3,7 @@
 # The Reactive Extensions for JavaScript... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and LINQ-style query operators in JavaScript*
 
-This project has moved to [CodePlex](http://rx.codeplex.com/) and only serves as a mirror.
+This project is a mirror of the [CodePlex](http://rx.codeplex.com/) repository.
 
 ## About the Reactive Extensions ##
 
@@ -113,10 +113,19 @@ Along with a number of our extras for RxJS:
     <script src="rx.testing.js"></script>
     <script src="rx.time.js"></script>
 
-Installing via NPM:
+Installing via [NPM](https://npmjs.org/):
 
     npm install rx
     npm install -g rx
+
+
+Installing via [Bower](http://bower.io/):
+
+	bower install rx
+
+Installing via [Jam](http://jamjs.org/):
+
+	jam install rx
 
 Using in Node.js:
 
