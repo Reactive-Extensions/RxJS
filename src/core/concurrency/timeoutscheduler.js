@@ -15,11 +15,11 @@
         }
 
         // Check for setImmediate first for Node v0.11+
-        if (!!window.setImmediate && typeof window.setImmediate === 'function') {
+        if (typeof window.setImmediate === 'function') {
             scheduleMethod = window.setImmediate;
-            clearMethod = window.clearImmediate;
-        } else if (typeof window.process === 'object' && Object.prototype.toString.call(window.process) === '[object process]') {
-            scheduleMethod = window.process.nextTick;
+            clearMethod = clearImmediate;
+        } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
+            scheduleMethod = process.nextTick;
         } else if (postMessageSupported()) {
             var MSG_PREFIX = 'ms.rx.schedule' + Math.random(),
                 tasks = {},
