@@ -2,7 +2,7 @@
   "name": "rx",
   "title": "Reactive Extensions for JavaScript (RxJS)",
   "description": "Library for composing asynchronous and event-based operations in JavaScript",
-  "version": "2.1.10",
+  "version": "2.1.11",
   "homepage": "http://rx.codeplex.com",
   "author": {
     "name": "Cloud Programmability Team",
@@ -31,7 +31,12 @@
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*"
   },
-  "keywords": [],
+  "keywords": [
+    "LINQ",
+    "FRP",
+    "Reactive",
+    "Events"
+  ],
   "main": "rx.node.js",
   "scripts": {
     "test": "grunt"
