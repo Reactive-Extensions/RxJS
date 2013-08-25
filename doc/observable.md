@@ -67,7 +67,9 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [elementAt](#elementAt)
 - [elementAtOrDefault](#elementAtOrDefault)
 - [empty](#empty)
+- [every](#empty)
 - [expand](#expand)
+- [filter](#filter)
 - [finallyAction](#finallyAction)
 - [first](#first)
 - [firstOrDefault](#firstOrDefault)
@@ -81,6 +83,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [last](#first)
 - [lastOrDefault](#lastOrDefault)
 - [manySelect](#manySelect)
+- [map](#max)
 - [max](#max)
 - [maxBy](#maxBy)
 - [merge](#merge2)
@@ -94,6 +97,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [publishLast](#publishLast)
 - [publishValue](#publishValue)
 - [refCount](#refCount)
+- [reduce](#reduce)
 - [repeat](#repeat2)
 - [replay](#replay)
 - [retry](#retry)
@@ -103,10 +107,11 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [selectMany](#selectMany)
 - [single](#single)
 - [singleOrDefault](#singleOrDefault)
-- [skip](#single)
-- [skipLast](#singleOrDefault)
+- [skip](#skip)
+- [skipLast](#skipLast)
 - [skipUntil](#skipUntil)
 - [skipWhile](#skipWhile)
+- [some](#some)
 - [startWith](#startWith)
 - [subscribe](#subscribe)
 - [subscribeOn](#subscribeOn)
@@ -371,6 +376,35 @@ var subscription = source.subscribe(function (x) {
 
 // => 42
 // => 9
+// => 3
+```
+
+* * *
+
+### <a id="fromArray"></a>`Rx.Observable.fromArray`
+<a href="#for">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+
+Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
+
+#### Arguments
+1. `array` *(Array)*: An array to convert to an Observable sequence.
+2. `[scheduler=Rx.Scheduler.currentThread] *(Scheduler)*: Scheduler to run the enumeration of the input sequence on.
+
+#### Returns
+*(Observable)*: The observable sequence whose elements are pulled from the given enumerable sequence.
+
+#### Example
+```js
+var array = [1,2,3];
+
+var source = Rx.Observable.fromArray(array);
+
+var subscription = source.subscribe(function (x) {
+	console.log(x);
+});
+
+// => 1
+// => 2
 // => 3
 ```
 

@@ -1,4 +1,4 @@
-# Rx.js <sup>v2.1.10</sup>
+# Rx.js <sup>v2.1.11</sup>
 
 Reactive Extensions (Rx) is a library for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators.
 
