@@ -20,6 +20,36 @@
         subscribed = root.ReactiveTest.subscribed,
         disposed = root.ReactiveTest.disposed;
 
+    test('Pluck_Completed', function () {
+        var scheduler = new TestScheduler();
+
+        var xs = scheduler.createHotObservable(
+            onNext(180, {prop: 1}), 
+            onNext(210, {prop: 2}), 
+            onNext(240, {prop: 3}), 
+            onNext(290, {prop: 4}), 
+            onNext(350, {prop: 5}), 
+            onCompleted(400), 
+            onNext(410, {prop: -1}), 
+            onCompleted(420), 
+            onError(430, new Error('ex'))
+        );
+        
+        var results = scheduler.startWithCreate(function () {
+            return xs.pluck('prop');
+        });
+
+        results.messages.assertEqual(
+            onNext(210, 3), 
+            onNext(240, 4), 
+            onNext(290, 5), 
+            onNext(350, 6), 
+            onCompleted(400)
+        );
+        
+        xs.subscriptions.assertEqual(subscribe(200, 400));
+    });
+
     test('Select_Throws', function () {
         raises(function () {
             return Observable.returnValue(1).select(function (x) {
@@ -1973,6 +2003,7 @@
         xs.messages[5].value.value.subscriptions.assertEqual();
         xs.messages[6].value.value.subscriptions.assertEqual();
     });
+
     test('SelectMany_UseFunction', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -1987,6 +2018,7 @@
         results.messages.assertEqual(onNext(220, 4), onNext(230, 3), onNext(230, 4), onNext(240, 3), onNext(240, 4), onNext(250, 3), onNext(250, 4), onNext(260, 5), onNext(270, 5), onNext(280, 1), onNext(280, 5), onNext(290, 5), onNext(300, 5), onCompleted(300));
         xs.subscriptions.assertEqual(subscribe(200, 290));
     });
+
     test('GroupByUntil_WithKeyComparer', function () {
         var keyInvoked, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2008,6 +2040,7 @@
         xs.subscriptions.assertEqual(subscribe(200, 570));
         equal(12, keyInvoked);
     });
+
     test('GroupByUntil_Outer_Complete', function () {
         var eleInvoked, keyInvoked, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2032,6 +2065,7 @@
         equal(12, keyInvoked);
         equal(12, eleInvoked);
     });
+
     test('GroupByUntil_Outer_Error', function () {
         var eleInvoked, ex, keyInvoked, results, scheduler, xs;
         ex = 'ex';
@@ -2057,6 +2091,7 @@
         equal(12, keyInvoked);
         equal(12, eleInvoked);
     });
+
     test('GroupByUntil_Outer_Dispose', function () {
         var eleInvoked, keyInvoked, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2081,6 +2116,7 @@
         equal(5, keyInvoked);
         equal(5, eleInvoked);
     });
+
     test('GroupByUntil_Outer_KeyThrow', function () {
         var eleInvoked, ex, keyInvoked, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2109,6 +2145,7 @@
         equal(10, keyInvoked);
         equal(9, eleInvoked);
     });
+
     test('GroupByUntil_Outer_EleThrow', function () {
         var eleInvoked, ex, keyInvoked, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2137,6 +2174,7 @@
         equal(10, keyInvoked);
         equal(10, eleInvoked);
     });
+
     test('GroupByUntil_Inner_Complete', function () {
         var innerSubscriptions, inners, outer, outerSubscription, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2180,6 +2218,7 @@
         results["foo"].messages.assertEqual(onCompleted(570));
         xs.subscriptions.assertEqual(subscribe(200, 570));
     });
+
     test('GroupByUntil_Inner_Complete_All', function () {
         var innerSubscriptions, inners, outer, outerSubscription, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2223,6 +2262,7 @@
         results["foo"].messages.assertEqual(onNext(470, " OOF"), onNext(530, "    oOf    "), onCompleted(570));
         xs.subscriptions.assertEqual(subscribe(200, 570));
     });
+
     test('GroupByUntil_Inner_Error', function () {
         var ex1, innerSubscriptions, inners, outer, outerSubscription, results, scheduler, xs;
         ex1 = 'ex1';
@@ -2267,6 +2307,7 @@
         results["foo"].messages.assertEqual(onError(570, ex1));
         xs.subscriptions.assertEqual(subscribe(200, 570));
     });
+
     test('GroupByUntil_Inner_Dispose', function () {
         var innerSubscriptions, inners, outer, outerSubscription, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2310,6 +2351,7 @@
         results["foo"].messages.assertEqual(onNext(220, "oof  "), onNext(240, " OoF "), onNext(310, " Oof"), onCompleted(310));
         xs.subscriptions.assertEqual(subscribe(200, 400));
     });
+
     test('GroupByUntil_Inner_KeyThrow', function () {
         var ex, innerSubscriptions, inners, keyInvoked, outer, outerSubscription, results, scheduler, xs;
         ex = 'ex';
@@ -2358,6 +2400,7 @@
         results["foo"].messages.assertEqual(onNext(220, "oof  "), onNext(240, " OoF "), onNext(310, " Oof"), onCompleted(310));
         xs.subscriptions.assertEqual(subscribe(200, 360));
     });
+
     test('GroupByUntil_Inner_EleThrow', function () {
         var eleInvoked, ex, innerSubscriptions, inners, outer, outerSubscription, results, scheduler, xs;
         ex = 'ex';
@@ -2407,6 +2450,7 @@
         results["foo"].messages.assertEqual(onNext(220, "oof  "), onNext(240, " OoF "), onNext(310, " Oof"), onCompleted(310));
         xs.subscriptions.assertEqual(subscribe(200, 360));
     });
+
     test('GroupByUntil_Outer_Independence', function () {
         var innerSubscriptions, inners, outer, outerResults, outerSubscription, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2456,6 +2500,7 @@
         results["bar"].messages.assertEqual(onNext(270, "  Rab"), onNext(390, "rab   "), onNext(420, "  RAB "), onCompleted(420));
         xs.subscriptions.assertEqual(subscribe(200, 420));
     });
+
     test('GroupByUntil_Inner_Independence', function () {
         var innerSubscriptions, inners, outer, outerResults, outerSubscription, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2508,6 +2553,7 @@
         results["foo"].messages.assertEqual(onNext(470, " OOF"), onNext(530, "    oOf    "), onCompleted(570));
         xs.subscriptions.assertEqual(subscribe(200, 570));
     });
+
     test('GroupByUntil_Inner_Multiple_Independence', function () {
         var innerSubscriptions, inners, outer, outerResults, outerSubscription, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2569,6 +2615,7 @@
         results["foo"].messages.assertEqual(onNext(470, " OOF"), onNext(530, "    oOf    "), onCompleted(570));
         xs.subscriptions.assertEqual(subscribe(200, 570));
     });
+
     test('GroupByUntil_Inner_Escape_Complete', function () {
         var inner, innerSubscription, outer, outerSubscription, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2603,6 +2650,7 @@
         xs.subscriptions.assertEqual(subscribe(200, 570));
         results.messages.assertEqual(onCompleted(600));
     });
+
     test('GroupByUntil_Inner_Escape_Error', function () {
         var ex, inner, innerSubscription, outer, outerSubscription, results, scheduler, xs;
         ex = 'ex';
@@ -2638,6 +2686,7 @@
         xs.subscriptions.assertEqual(subscribe(200, 570));
         results.messages.assertEqual(onError(600, ex));
     });
+
     test('GroupByUntil_Inner_Escape_Dispose', function () {
         var inner, innerSubscription, outer, outerSubscription, results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -2670,6 +2719,7 @@
         xs.subscriptions.assertEqual(subscribe(200, 290));
         results.messages.assertEqual();
     });
+
     test('GroupByUntil_Default', function () {
         var eleInvoked, keyInvoked, results, scheduler, xs;
         keyInvoked = 0;
@@ -2695,6 +2745,7 @@
         equal(12, keyInvoked);
         equal(12, eleInvoked);
     });
+
     test('GroupByUntil_DurationSelector_Throws', function () {
         var ex, results, scheduler, xs;
         ex = 'ex';

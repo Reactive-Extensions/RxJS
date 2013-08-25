@@ -203,9 +203,6 @@
     /**
      *  Projects each element of an observable sequence into a new form by incorporating the element's index.
      *  
-     * @example
-     *  source.select(function (value, index) { return value * value + index; });
-     *      
      * @memberOf Observable#
      * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.
@@ -229,6 +226,17 @@
     };
 
     observableProto.map = observableProto.select;
+
+    /**
+     * Retrieves the value of a specified property from all elements in the Observable sequence.
+     *
+     * @memberOf Observable#
+     * @param {String} property The property to pluck.
+     * @returns {Observable} Returns a new Observable sequence of property values.
+     */
+    observableProto.pluck = function (property) {
+        return this.select(function (x) { return x[property]; });
+    };
 
     function selectMany(selector) {
         return this.select(selector).mergeObservable();
