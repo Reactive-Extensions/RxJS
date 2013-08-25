@@ -13,6 +13,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [create](#create)
 - [createWithDisposable](#createWithDisposable)
 - [defer](#defer)
+- [empty](#empty)
 - [for](#for)
 - [forkJoin](#forkJoin1)
 - [fromArray](#fromArray)
@@ -317,6 +318,32 @@ var subscription = source.subscribe(function (x) {
 
 * * *
 
+### <a id="empty"></a>`Rx.Observable.empty`
+<a href="#empty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+
+Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
+
+#### Arguments
+1. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to send the termination call on.
+
+#### Returns
+*(Observable)*: An observable sequence with no elements.
+
+#### Example
+```js
+var source = Rx.Observable.empty();
+
+var subscription = source.subscribe(
+	function (x) { console.log('next: ' + x),
+	function (err) { console.log('error: ' + err); },
+	function () { console.log('completed'); }
+);
+
+// => completed
+```
+
+* * *
+
 ### <a id="for"></a>`Rx.Observable.for`
 <a href="#for">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
@@ -382,7 +409,7 @@ var subscription = source.subscribe(function (x) {
 * * *
 
 ### <a id="fromArray"></a>`Rx.Observable.fromArray`
-<a href="#for">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#fromArray">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -398,6 +425,41 @@ Converts an array to an observable sequence, using an optional scheduler to enum
 var array = [1,2,3];
 
 var source = Rx.Observable.fromArray(array);
+
+var subscription = source.subscribe(function (x) {
+	console.log(x);
+});
+
+// => 1
+// => 2
+// => 3
+```
+
+* * *
+
+### <a id="generate"></a>`Rx.Observable.generate`
+<a href="#generate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+
+Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
+
+#### Arguments
+1. `initialState` *(Any)*: Initial state.
+2. `condition` *(Function)*: Condition to terminate generation (upon returning false).
+3. `iterate` *(Function)*: Iteration step function.
+4. `resultSelector` *(Function)*: Selector function for results produced in the sequence.
+5. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.currentThread.
+
+#### Returns
+*(Observable)*: The generated sequence.
+
+#### Example
+```js
+var source = Rx.Observable.generate(
+	0,
+	function (x) { return x < 3; },
+	function (x) { return x + 1; },
+	function (x) { return x; }
+);
 
 var subscription = source.subscribe(function (x) {
 	console.log(x);
