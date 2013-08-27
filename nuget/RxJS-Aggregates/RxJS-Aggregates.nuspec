@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>RxJS-Aggregates</id>
+    <title>Reactive Extensions for JavaScript - Aggregation Operations</title>
+    <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
+    <version>2.1.11.0</version>
+    <authors>Microsoft Corporation</authors>
+    <description>Reactive Extensions for JavaScript library with aggregation event processing query operations.</description>
+    <projectUrl>http://rx.codeplex.com</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkId=261274</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=265024</licenseUrl>
+    <language>en-US</language>
+    <tags>Rx RxJS Reactive Extensions Observable</tags>
+    <dependencies>
+      <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
+      <dependency id="RxJS-Main" version="2.1.11.0< />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="rx.aggregates.js" target="..\..\rx.aggregates.js" />
+    <file src="rx.aggregates.min.js" target="..\..\rx.aggregates.min.js" />
+  </files>
+</package>
