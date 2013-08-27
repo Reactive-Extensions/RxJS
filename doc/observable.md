@@ -27,7 +27,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [onErrorResumeNext](#onErrorResumeNext1)
 - [range](#range)
 - [repeat](#repeat1)
-- [returnValue](#returnValue)
+- [return](#return)
 - [start](#start)
 - [switchCase](#switchCase)
 - [timer](#timer)
@@ -433,9 +433,7 @@ var subscription = source.subscribe(function (x) {
 	console.log(x);
 });
 
-// => 42
-// => 9
-// => 3
+// => [42, 9, 3]
 ```
 
 ### Location
@@ -547,9 +545,9 @@ var subscription = source.timeInterval().subscribe(function (x) {
 	console.log(x);
 });
 
-// => {value: 1, interval: 117}
-// => {value: 2, interval: 222}
-// => {value: 3, interval: 304}
+// => {value: 1, interval: 100}
+// => {value: 2, interval: 200}
+// => {value: 3, interval: 300}
 ```
 
 ### Location
@@ -744,9 +742,9 @@ Returns a non-terminating observable sequence, which can be used to denote an in
 var source = Rx.Observable.never();
 
 var subscription = source.subscribe(
-	function (x) { console.log('next'); },
-	function (err) { console.log('err'); },
-	function () { console.log('done'); }
+	function (x) { console.log('Next:' + x); },
+	function (err) { console.log('Error: ' + err); },
+	function () { console.log('Completed'); }
 );
 ```
 
@@ -776,13 +774,131 @@ var source3 = Rx.Observable.return(42);
 var source = Rx.Observable.onErrorResumeNext(source1, source2, source3);
 
 var subscription = source.subscribe(
-	function (x) { console.log('next'); },
-	function (err) { console.log('err'); },
-	function () { console.log('done'); }
+	function (x) { console.log('Next' + x); },
+	function (err) { console.log('Error'); },
+	function () { console.log('Completed'); }
 );
 
-//=> next: 42
-//=> done 
+//=> Next: 42
+//=> Completed 
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="range"></a>`Rx.Observable.range`
+<a href="#range">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+
+Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
+
+### Arguments
+1. `start` *(Number)*: The value of the first integer in the sequence.
+2. `count` *(Number)*: The number of sequential integers to generate.
+3. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
+
+#### Returns
+*(Observable)*: An observable sequence that contains a range of sequential integral numbers. 
+
+#### Example
+```js
+var source = Rx.Observable.range(0, 3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: 0 
+//=> Next: 1
+//=> Next: 2 
+//=> Completed 
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="repeat"></a>`Rx.Observable.repeat`
+<a href="#repeat">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+
+Generates an observable sequence that repeats the given element the specified number of times, using the specified scheduler to send out observer messages.
+
+### Arguments
+1. `value` *(Any)*: Element to repeat.
+2. `[repeatCount=-1]` *(Number)*:Number of times to repeat the element. If not specified, repeats indefinitely.
+3. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to run the producer loop on. If not specified, defaults to Scheduler.immediate.
+
+#### Returns
+*(Observable)*: An observable sequence that repeats the given element the specified number of times.
+
+#### Example
+```js
+var source = Rx.Observable.repeat(42, 3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: 42 
+//=> Next: 42
+//=> Next: 42
+//=> Completed 
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="return"></a>`Rx.Observable.return`
+<a href="#return">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
+There is an alias called `returnValue` for browsers <IE9.
+
+### Arguments
+1. `value` *(Any)*: Single element in the resulting observable sequence.
+2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
+
+#### Returns
+*(Observable)*: An observable sequence that repeats the given element the specified number of times.
+
+#### Example
+```js
+var source = Rx.Observable.return(42);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: 42 
+//=> Completed 
 ```
 
 ### Location
