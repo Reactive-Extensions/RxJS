@@ -5,7 +5,7 @@
         var cleanTerm = global.encodeURIComponent(term);
         var url = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search='
             + cleanTerm + '&callback=JSONPCallback';
-        return Rx.Observable.getJSONPRequest(url);
+        return Rx.Examples.jsonpRequestCold(url);
     }
 
     function clearChildren (element) {
@@ -19,7 +19,7 @@
             results = document.querySelector('#results');
 
         // Get all distinct key up events from the input and only fire if long enough and distinct
-        var keyup = Rx.Observable.fromEvent(input, 'keyup').select(function (e) {
+        var keyup = Rx.Examples.fromEvent(input, 'keyup').select(function (e) {
             return e.target.value; // Project the text from the input
         })
         .where(function (text) {
