@@ -10,3 +10,5 @@ doc
 examples
 src
 tests
+.nuget
+nuget

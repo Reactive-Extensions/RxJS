@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+    <PropertyGroup>
+        <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">$(MSBuildProjectDirectory)\..\</SolutionDir>
+
+        <!-- Windows specific commands -->
+        <NuGetToolsPath Condition=" '$(OS)' == 'Windows_NT'">$([System.IO.Path]::Combine($(SolutionDir), ".nuget"))</NuGetToolsPath>
+        <PackagesConfig Condition=" '$(OS)' == 'Windows_NT'">$([System.IO.Path]::Combine($(ProjectDir), "packages.config"))</PackagesConfig>
+        <PackagesDir Condition=" '$(OS)' == 'Windows_NT'">$([System.IO.Path]::Combine($(SolutionDir), "packages"))</PackagesDir>
+
+        <!-- We need to launch nuget.exe with the mono command if we're not on windows -->
+        <NuGetToolsPath Condition=" '$(OS)' != 'Windows_NT'">$(SolutionDir).nuget</NuGetToolsPath>
+        <PackagesConfig Condition=" '$(OS)' != 'Windows_NT' ">packages.config</PackagesConfig>
+        <PackagesDir Condition=" '$(OS)' != 'Windows_NT'">$(SolutionDir)packages</PackagesDir>
+        
+        <!-- NuGet command -->
+        <NuGetExePath>$(NuGetToolsPath)\nuget.exe</NuGetExePath>
+        <NuGetCommand Condition=" '$(OS)' == 'Windows_NT'">"$(NuGetExePath)"</NuGetCommand>
+        <NuGetCommand Condition=" '$(OS)' != 'Windows_NT' ">mono --runtime=v4.0.30319 $(NuGetExePath)</NuGetCommand>
+
+        <PackageOutputDir Condition="$(PackageOutputDir) == ''">$(TargetDir.Trim('\\'))</PackageOutputDir>
+
+        <!-- Package sources used to restore packages. By default will used the registered sources under %APPDATA%\NuGet\NuGet.Config -->
+        <PackageSources>""</PackageSources>
+
+        <!-- Enable the restore command to run before builds -->
+        <RestorePackages Condition="$(RestorePackages) == ''">false</RestorePackages>
+
+        <!-- Property that enables building a package from a project -->
+        <BuildPackage Condition="$(BuildPackage) == ''">false</BuildPackage>
+
+        <!-- Commands -->
+        <RestoreCommand>$(NuGetCommand) install "$(PackagesConfig)" -source $(PackageSources) -o "$(PackagesDir)"</RestoreCommand>
+        <BuildCommand>$(NuGetCommand) pack "$(ProjectPath)" -p Configuration=$(Configuration) -o "$(PackageOutputDir)" -symbols</BuildCommand>
+
+        <!-- Make the build depend on restore packages -->
+        <BuildDependsOn Condition="$(RestorePackages) == 'true'">
+            RestorePackages;
+            $(BuildDependsOn);
+        </BuildDependsOn>
+
+        <!-- Make the build depend on restore packages -->
+        <BuildDependsOn Condition="$(BuildPackage) == 'true'">
+            $(BuildDependsOn);
+            BuildPackage;
+        </BuildDependsOn>
+    </PropertyGroup>
+
+    <Target Name="CheckPrerequisites">
+        <!-- Raise an error if we're unable to locate nuget.exe  -->
+        <Error Condition="!Exists('$(NuGetExePath)')" Text="Unable to locate '$(NuGetExePath)'" />
+    </Target>
+
+    <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
+        <Exec Command="$(RestoreCommand)"
+              Condition="'$(OS)' != 'Windows_NT' And Exists('$(PackagesConfig)')" />
+              
+        <Exec Command="$(RestoreCommand)"
+              LogStandardErrorAsError="true"
+              Condition="'$(OS)' == 'Windows_NT' And Exists('$(PackagesConfig)')" />
+    </Target>
+
+    <Target Name="BuildPackage" DependsOnTargets="CheckPrerequisites">
+        <Exec Command="$(BuildCommand)" 
+              Condition=" '$(OS)' != 'Windows_NT' " />
+              
+        <Exec Command="$(BuildCommand)"
+              LogStandardErrorAsError="true"
+              Condition=" '$(OS)' == 'Windows_NT' " />
+    </Target>
+</Project>
