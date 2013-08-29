@@ -1,13 +1,32 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <title>Canvas Painting Example</title>
-        <link href="canvaspaint.css" rel="stylesheet" type="text/css">
-        <script src="../lib/rx.js"></script>
-        <script src="../lib/rx.html.js"></script>
-    </head>
-    <body>
-        <canvas id="canvas" height="768" width="1024"></canvas>
-        <script src="canvaspaint.js"></script>
-    </body>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+    <title>Rx for JavaScript Rocks!</title>
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.1/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.1/css/bootstrap-responsive.min.css">
+    <link rel="stylesheet" href="canvaspaint.css">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>RxJS Canvas Paint Example</h1>
+            <p class="lead">Example to show combining mouse events to draw on an HTML5 Canvas</p>
+        </div>
+        <div class="row-fluid">    
+            <canvas id="tutorial" width="640" height="480"></canvas>
+        </div>
+    </div>
+    <script src="http://ajax.aspnetcdn.com/ajax/modernizr/modernizr-2.0.6-development-only.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.1/bootstrap.min.js"></script>
+    <script src="../../rx.js"></script>
+    <script src="../../rx.binding.js"></script>
+    <script src="../../rx.time.js"></script>
+    <script src="http://cdn.jsdelivr.net/rxjs-dom/2.0.3/rx.dom.js"></script>      
+    <script src="canvaspaint.js"></script>
 </html>

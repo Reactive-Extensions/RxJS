@@ -9,16 +9,6 @@
         // `ctx` will be the drawing context for `overlay`
         ctx;
 
-    var reqAnimationFrame = 
-        global.requestAnimationFrame       || 
-        global.webkitRequestAnimationFrame || 
-        global.mozRequestAnimationFrame    || 
-        global.oRequestAnimationFrame      || 
-        global.msRequestAnimationFrame     || 
-        function (action) {
-            global.setTimeout(action, 1000 / 60);
-        };   
-
     function loadImage () {
         var // `buffer` is a canvas element that displays the actual image to crop
             buffer = document.querySelector('#buffer'),
@@ -28,7 +18,7 @@
         img.src = 'images/leaf twirl.jpg';
 
         // Returns an observable which fires when the image is loaded
-        return Rx.Observable.fromEvent(img, 'load').select(function () {
+        return Rx.DOM.fromEvent(img, 'load').select(function () {
             overlay.width = img.width;
             overlay.height = img.height;
 
@@ -110,7 +100,7 @@
     }
 
     function respondToGestures() {
-        var fromEvent = Rx.Observable.fromEvent;
+        var fromEvent = Rx.DOM.fromEvent;
 
         var moves = fromEvent(overlay, 'mousemove'),
             up = fromEvent(document, 'mouseup');
@@ -173,7 +163,8 @@
 
                 // Update model and redraw via an async operation
                 data.element.updateModel(data.offsetX, data.offsetY);
-                reqAnimationFrame(drawOverlay);
+
+                Rx.Scheduler.requestAnimationFrameScheduler.schedule(drawOverlay);
             });
     }
 

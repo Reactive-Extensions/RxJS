@@ -8,14 +8,14 @@
     }
 
     function main() {
-        var canvas = document.querySelector('#canvas');
+        var canvas = document.querySelector('#tutorial');
 
         if (canvas.getContext) {
             var ctx = canvas.getContext('2d');
             ctx.beginPath();
 
             // Get mouse moves
-            var mouseMoves = Rx.Observable.fromEvent(canvas, 'mousemove');
+            var mouseMoves = Rx.DOM.fromEvent(canvas, 'mousemove');
 
             // Calculate difference between two mouse moves
             var mouseDiffs = mouseMoves.bufferWithCount(2, 1).select(function (x) {
@@ -23,8 +23,8 @@
             });
             
             // Get merge together both mouse up and mouse down
-            var mouseButton = Rx.Observable.fromEvent(canvas, 'mousedown').select(function (x) { return true; })
-                .merge(Rx.Observable.fromEvent(canvas, 'mouseup').select(function (x) { return false; }));
+            var mouseButton = Rx.DOM.fromEvent(canvas, 'mousedown').select(function (x) { return true; })
+                .merge(Rx.DOM.fromEvent(canvas, 'mouseup').select(function (x) { return false; }));
 
             // Paint if the mouse is down
             var paint = mouseButton.select(function (down) { return down ? mouseDiffs : mouseDiffs.take(0) }).switchLatest();

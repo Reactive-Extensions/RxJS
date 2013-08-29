@@ -4,9 +4,9 @@
         var dragTarget = document.getElementById('dragTarget');
 
         // Get the three major events
-        var mouseup = Rx.Observable.fromEvent(dragTarget, 'mouseup');
-        var mousemove = Rx.Observable.fromEvent(document, 'mousemove');
-        var mousedown = Rx.Observable.fromEvent(dragTarget, 'mousedown');
+        var mouseup = Rx.DOM.fromEvent(dragTarget, 'mouseup');
+        var mousemove = Rx.DOM.fromEvent(document, 'mousemove');
+        var mousedown = Rx.DOM.fromEvent(dragTarget, 'mousedown');
 
         var mousedrag = mousedown.selectMany(function (md) {
 
@@ -14,7 +14,7 @@
             var startX = md.offsetX, startY = md.offsetY;
 
             // Calculate delta with mousemove until mouseup
-            return mousemove.select(function (mm) {
+            return mousemove.map(function (mm) {
                 (mm.preventDefault) ? mm.preventDefault() : event.returnValue = false; 
 
                 return {
