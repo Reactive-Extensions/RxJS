@@ -33,11 +33,18 @@ One question you may ask yourself, is why RxJS?  What about Promises?  Promises 
 
 To give you an idea about rich composition, we can create an autocompletion service which takes the user input from a text input and then query a service, making sure not to flood the service with calls for every key stroke, but instead allow to go at a more natural pace.
 
-Let's start with getting the user input from an input, listening to the keyup event.
+First, we'll reference the JavaScript files...
+
+    <script src="rx.js"></script>
+    <script src="rx.binding.js"></script>
+    <script src="rx.time.js"></script>
+    <script src="rx.dom.js"></script>
+
+Next, we'll get the user input from an input, listening to the keyup event.
 
 ```js
 /* Only get the value from each key up */
-var keyups = Rx.Observable.fromEvent(input, 'keyup')
+var keyups = Rx.DOM.fromEvent(input, 'keyup')
     .select(function (e) {
         return e.target.value;
     })
@@ -131,11 +138,11 @@ Using in Node.js:
 
     var Rx = require('rx');
 
-Installing all of RxJS via NuGet:
+Installing all of RxJS via [NuGet](http://nuget.org/):
 
     Install-Package RxJS-All
 
-Or install via NuGet individual packages:
+Or install via [NuGet](http://nuget.org/) individual packages:
 
     Install-Package RxJS-Main
     Install-Package RxJS-Aggregates
@@ -147,17 +154,17 @@ Or install via NuGet individual packages:
     Install-Package RxJS-Time
 
 Using RxJS with an AMD loader such as Require.js
-
-    require({
-        'paths': {
-            'rx': 'path/to/rx.js'
-        }
-    },
-    ['rx'], function(Rx) {
-        var obs = Rx.Observable.returnValue(42);
-        obs.subscribe(function (x) { console.log(x); });
-    });
-
+```js
+require({
+    'paths': {
+        'rx': 'path/to/rx.js'
+    }
+},
+['rx'], function(Rx) {
+    var obs = Rx.Observable.returnValue(42);
+    obs.subscribe(function (x) { console.log(x); });
+});
+```
 ## Compatibility ##
 
 RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+. 
