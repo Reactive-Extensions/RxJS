@@ -11,6 +11,23 @@
         onCompleted = root.ReactiveTest.onCompleted,
         subscribe = root.ReactiveTest.subscribe;
 
+    test('ToAsync_Context', function () {
+        var context = { value: 42 };
+
+        var scheduler = new TestScheduler();
+
+        var res = scheduler.startWithCreate(function () {
+            return Observable.toAsync(function (x) {
+                return this.value + x;
+            }, scheduler, context)(42);
+        });
+        
+        res.messages.assertEqual(
+            onNext(200, 84), 
+            onCompleted(200)
+        );
+    });
+
     test('ToAsync0', function () {
         var scheduler = new TestScheduler();
 
