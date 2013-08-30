@@ -16,7 +16,7 @@
      * * Multiple subscriptions to the resulting sequence can observe the function's result.  
      */
     Observable.start = function (func, scheduler, context) {
-        return observableToAsync(func, scheduler)();
+        return observableToAsync(func, scheduler, context)();
     };
 
     /**
