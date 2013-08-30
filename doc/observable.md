@@ -42,99 +42,99 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 <!-- div -->
 
 ## `Observable Instance Methods`
-- [aggregate](#aggregate)
-- [all](#all)
-- [amb](#amb2)
-- [and](#and)
-- [any](#any)
-- [asObservable](#asObservable)
-- [average](#average)
-- [buffer](#buffer)
-- [bufferWithCount](#bufferWithCount)
-- [bufferWithTime](#bufferWithTime)
-- [bufferWithTimeOrCount](#bufferWithTimeOrCount)
-- [catchException](#catchException2)
-- [combineLatest](#combineLatest)
-- [concat](#concat2)
-- [contains](#contains)
-- [count](#count)
-- [defaultIfEmpty](#defaultIfEmpty)
-- [delay](#delay)
-- [dematerialize](#dematerialize)
-- [distinct](#distinct)
-- [distinctUntilChanged](#distinctUntilChanged)
-- [doAction](#doAction)
-- [doWhile](#doWhile)
-- [elementAt](#elementAt)
-- [elementAtOrDefault](#elementAtOrDefault)
-- [empty](#empty)
-- [every](#empty)
-- [expand](#expand)
-- [filter](#filter)
-- [finallyAction](#finallyAction)
-- [first](#first)
-- [firstOrDefault](#firstOrDefault)
-- [forkJoin](#forkJoin2)
-- [groupBy](#groupBy)
-- [groupByUntil](#groupByUntil)
-- [groupJoin](#groupJoin)
-- [ignoreElements](#ignoreElements)
-- [isEmpty](#isEmpty)
-- [join](#join)
-- [last](#first)
-- [lastOrDefault](#lastOrDefault)
-- [manySelect](#manySelect)
-- [map](#max)
-- [max](#max)
-- [maxBy](#maxBy)
-- [merge](#merge2)
-- [mergeObservable](#mergeObservable)
-- [min](#min)
-- [minBy](#minBy)
-- [multicast](#multicast)
-- [observeOn](#observeOn)
-- [onErrorResumeNext](#onErrorResumeNext2)
-- [publish](#publish)
-- [publishLast](#publishLast)
-- [publishValue](#publishValue)
-- [refCount](#refCount)
-- [reduce](#reduce)
-- [repeat](#repeat2)
-- [replay](#replay)
-- [retry](#retry)
-- [sample](#sample)
-- [scan](#scan)
-- [select](#select)
-- [selectMany](#selectMany)
-- [single](#single)
-- [singleOrDefault](#singleOrDefault)
-- [skip](#skip)
-- [skipLast](#skipLast)
-- [skipUntil](#skipUntil)
-- [skipWhile](#skipWhile)
-- [some](#some)
-- [startWith](#startWith)
-- [subscribe](#subscribe)
-- [subscribeOn](#subscribeOn)
-- [sum](#sum)
-- [switchLatest](#switchLatest)
-- [take](#take)
-- [takeLast](#takeLast)
-- [takeLastBuffer](#takeLastBuffer)
-- [takeUntil](#takeUntil)
-- [takeWhile](#takeWhile)
-- [throttle](#throttle)
-- [throwException](#throwException)
-- [timeInterval](#timeInterval)
-- [timeout](#timeout)
-- [toArray](#toArray)
-- [using](#using)
-- [where](#where)
-- [window](#window)
-- [windowWithCount](#windowWithCount)
-- [windowWithTime](#windowWithTime)
-- [windowWithTimeOrCount](#windowWithTimeOrCount)
-- [zip](#zip)
+- [`aggregate`](#aggregate)
+- [`all`](#all)
+- [`amb`](#amb2)
+- [`and`](#and)
+- [`any`](#any)
+- [`asObservable`](#asObservable)
+- [`average`](#average)
+- [`buffer`](#buffer)
+- [`bufferWithCount`](#bufferWithCount)
+- [`bufferWithTime`](#bufferWithTime)
+- [`bufferWithTimeOrCount`](#bufferWithTimeOrCount)
+- [`catchException`](#catchException2)
+- [`combineLatest`](#combineLatest)
+- [`concat`](#concat2)
+- [`contains`](#contains)
+- [`count`](#count)
+- [`defaultIfEmpty`](#defaultIfEmpty)
+- [`delay`](#delay)
+- [`dematerialize`](#dematerialize)
+- [`distinct`](#distinct)
+- [`distinctUntilChanged`](#distinctUntilChanged)
+- [`do`](#do)
+- [`doWhile`](#doWhile)
+- [`elementAt`](#elementAt)
+- [`elementAtOrDefault`](#elementAtOrDefault)
+- [`empty`](#empty)
+- [`every`](#empty)
+- [`expand`](#expand)
+- [`filter`](#filter)
+- [`finally`](#finally)
+- [`first`](#first)
+- [`firstOrDefault`](#firstOrDefault)
+- [`forkJoin`](#forkJoin2)
+- [`groupBy`](#groupBy)
+- [`groupByUntil`](#groupByUntil)
+- [`groupJoin`](#groupJoin)
+- [`ignoreElements`](#ignoreElements)
+- [`isEmpty`](#isEmpty)
+- [`join`](#join)
+- [`last`](#first)
+- [`lastOrDefault`](#lastOrDefault)
+- [`manySelect`](#manySelect)
+- [`map`](#max)
+- [`max`](#max)
+- [`maxBy`](#maxBy)
+- [`merge`](#merge2)
+- [`mergeObservable`](#mergeObservable)
+- [`min`](#min)
+- [`minBy`](#minBy)
+- [`multicast`](#multicast)
+- [`observeOn`](#observeOn)
+- [`onErrorResumeNext`](#onErrorResumeNext2)
+- [`publish`](#publish)
+- [`publishLast`](#publishLast)
+- [`publishValue`](#publishValue)
+- [`refCount`](#refCount)
+- [`reduce`](#reduce)
+- [`repeat`](#repeat2)
+- [`replay`](#replay)
+- [`retry`](#retry)
+- [`sample`](#sample)
+- [`scan`](#scan)
+- [`select`](#select)
+- [`selectMany`](#selectMany)
+- [`single`](#single)
+- [`singleOrDefault`](#singleOrDefault)
+- [`skip`](#skip)
+- [`skipLast`](#skipLast)
+- [`skipUntil`](#skipUntil)
+- [`skipWhile`](#skipWhile)
+- [`some`](#some)
+- [`startWith`](#startWith)
+- [`subscribe`](#subscribe)
+- [`subscribeOn`](#subscribeOn)
+- [`sum`](#sum)
+- [`switch`](#switch)
+- [`take`](#take)
+- [`takeLast`](#takeLast)
+- [`takeLastBuffer`](#takeLastBuffer)
+- [`takeUntil`](#takeUntil)
+- [`takeWhile`](#takeWhile)
+- [`throttle`](#throttle)
+- [`throwException`](#throwException)
+- [`timeInterval`](#timeInterval)
+- [`timeout`](#timeout)
+- [`toArray`](#toArray)
+- [`using`](#using)
+- [`where`](#where)
+- [`window`](#window)
+- [`windowWithCount`](#windowWithCount)
+- [`windowWithTime`](#windowWithTime)
+- [`windowWithTimeOrCount`](#windowWithTimeOrCount)
+- [`zip`](#zip)
 
 ## _Observable Methods_ ##
 
@@ -166,6 +166,8 @@ obs.subscribe( function (x) {
 ### Location
 
 - rx.js
+
+* * *
 
 ### <a id="case"></a>`Rx.Observable.case(selector, sources, [elseSource|scheduler])`
 <a href="#case">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L159-L169 "View in source") [&#x24C9;][1]
@@ -214,8 +216,6 @@ var subscription = source.subscribe(
 ### Location
 
 - rx.experimental.js
-
-* * *
 
 * * *
 
@@ -1176,6 +1176,344 @@ Completed
 
 ## _Observable Instance Methods_ ##
 
+### <a id="aggregate"></a>`Rx.Observable.prototype.aggregate([seed], accumulator)`
+<a href="#aggregate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L102-L112 "View in source") [&#x24C9;][1]
+
+ Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
+ For aggregation behavior with incremental intermediate results, see Observable.scan.
+
+#### Arguments
+1. `[seed]` *(Mixed)*: The initial accumulator value.
+2. `accumulator` *(Function)*: accumulator An accumulator function to be invoked on each element.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element with the final accumulator value.
+
+#### Example
+```js
+// Using a seed for the accumulate
+var source = Rx.Observable.range(1, 10).aggregate(1, function (acc, x) {
+	return acc * x;
+});
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: 3628800
+//=> Completed 
+
+// Without a seed
+var source = Rx.Observable.range(1, 10).aggregate(function (acc, x) {
+	return acc + x;
+});
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: 55
+//=> Completed     
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="all"></a>`Rx.Observable.prototype.all(predicate, [thisArg])`
+<a href="#all">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L179-L185 "View in source") [&#x24C9;][1]
+
+Determines whether all elements of an observable sequence satisfy a condition.
+
+#### Arguments
+1. `predicate` *(Function)*: A function to test each element for a condition.
+2. `[thisArg]` *(Function)*: Object to use as this when executing callback.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
+
+#### Example
+```js
+var source = Rx.Observable.fromArray([1,2,3,4,5])
+	.all(function (x) {
+		return x < 6;
+	});
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: true
+//=> Completed    
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="amb"></a>`Rx.Observable.prototype.amb(rightSource)`
+<a href="#amb">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2996-L3055 "View in source") [&#x24C9;][1]
+
+Propagates the observable sequence that reacts first.
+
+#### Arguments
+1. `rightSource` *(Observable)*: Second observable sequence.
+
+#### Returns
+*(Observable)*: An observable sequence that surfaces either of the given sequences, whichever reacted first.
+
+#### Example
+```js
+var first = Rx.Observable.timer(300).map(function () { return 'first'; });
+var second = Rx.Observable.timer(500).map(function () { return 'second'; });
+
+var source = first.amb(second);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: first
+//=> Completed    
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="and"></a>`Rx.Observable.prototype.and(rightSource)`
+<a href="#and">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js#L346-L348 "View in source") [&#x24C9;][1]
+
+Propagates the observable sequence that reacts first.
+
+#### Arguments
+1. `right` *(Observable)*: Observable sequence to match with the current sequence.
+
+#### Returns
+*(Pattern)*: Pattern object that matches when both observable sequences have an available value.  
+
+#### Example
+```js
+// Choice of either plan, the first set of timers or second set
+var source = Rx.Observable.when(
+	Rx.Observable.timer(200).and(Rx.Observable.timer(300)).then(function (x, y) { return Rx.Observable.return('first'); }),
+	Rx.Observable.timer(400).and(Rx.Observable.timer(500)).then(function (x, y) { return Rx.Observable.return('second'); }),
+);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: first
+//=> Completed 
+```
+
+#### Location
+
+- rx.joinpatterns.js
+
+* * *
+
+### <a id="any"></a>`Rx.Observable.prototype.any([predicate], [thisArg])`
+<a href="#any">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L144-L157 "View in source") [&#x24C9;][1]
+
+Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence.
+
+#### Arguments
+1. `[predicate]` *(Function)*: A function to test each element for a condition.
+2. `[thisArg]` *(Any)*: Object to use as this when executing callback.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate. 
+
+#### Example
+```js
+// Without a predicate
+var source = Rx.Observable.empty().any();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: false
+//=> Completed 
+
+// With a predicate
+var source = Rx.Observable.fromArray([1,2,3,4,5])
+	.any(function (x) { return x % 2 === 0; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: true
+//=> Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="asObservable"></a>`Rx.Observable.prototype.asObservable()`
+<a href="#asObservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3675-L3680 "View in source") [&#x24C9;][1]
+
+Hides the identity of an observable sequence.
+
+#### Returns
+*(Observable)*: An observable sequence that hides the identity of the source sequence.  
+
+#### Example
+```js
+// Create subject
+var subject = new Rx.AsyncSubject();
+
+// Send a value
+subject.onNext(42);
+subject.onCompleted();
+
+// Hide its type
+var source = subject.asObservable();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: 42
+//=> Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="average"></a>`Rx.Observable.prototype.average([selector])`
+<a href="#asObservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L313-L327 "View in source") [&#x24C9;][1]
+
+Computes the average of an observable sequence of values that are in the sequence or obtained by invoking a transform function on each element of the input sequence if present.
+
+#### Arguments
+1. `[selector]` *(Function)*: A transform function to apply to each element.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element with the average of the sequence of values.
+
+#### Example
+```js
+// Without a selector
+var source = Rx.Observable.range(0, 9).average();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: 4
+//=> Completed 
+
+// With a selector
+var arr = [
+	{ value: 1 },
+	{ value: 2 },
+	{ value: 3 }
+];
+
+var source = Rx.Observable.fromArray(arr).average(function (x) {
+	return x.value;
+});
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+//=> Next: 2
+//=> Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
 ### <a id="doWhile"></a>`Rx.Observable.prototype.doWhile(condition, source)`
 <a href="#doWhile">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
@@ -1195,12 +1533,24 @@ var i = 0;
 var source = Rx.Observable.return(42).doWhile(
 	function (x) { return ++i < 2; });
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 42
-// => 42
+//=> Next: 42
+//=> Next: 42
+//=> Completed 
 ```
+
+#### Location
+
+- rx.experimental.js
 
 * * *
