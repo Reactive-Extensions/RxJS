@@ -33,11 +33,25 @@
     }
 
     test('Window_Closings_Basic', function () {
-        var scheduler, results, window, xs;
-        scheduler = new TestScheduler();
-        xs = scheduler.createHotObservable(onNext(90, 1), onNext(180, 2), onNext(250, 3), onNext(260, 4), onNext(310, 5), onNext(340, 6), onNext(410, 7), onNext(420, 8), onNext(470, 9), onNext(550, 10), onCompleted(590));
-        window = 1;
-        results = scheduler.startWithCreate(function () {
+
+        var scheduler = new TestScheduler();
+        var xs = scheduler.createHotObservable(
+            onNext(90, 1), 
+            onNext(180, 2), 
+            onNext(250, 3), 
+            onNext(260, 4), 
+            onNext(310, 5), 
+            onNext(340, 6), 
+            onNext(410, 7), 
+            onNext(420, 8), 
+            onNext(470, 9), 
+            onNext(550, 10), 
+            onCompleted(590)
+        );
+
+        var window = 1;
+        
+        var results = scheduler.startWithCreate(function () {
             return xs.window(function () {
                 return Observable.timer(window++ * 100, undefined, scheduler);
             }).select(function (w, i) {
@@ -46,7 +60,19 @@
                 });
             }).mergeObservable();
         });
-        results.messages.assertEqual(onNext(250, "0 3"), onNext(260, "0 4"), onNext(310, "1 5"), onNext(340, "1 6"), onNext(410, "1 7"), onNext(420, "1 8"), onNext(470, "1 9"), onNext(550, "2 10"), onCompleted(590));
+
+        results.messages.assertEqual(
+            onNext(250, "0 3"), 
+            onNext(260, "0 4"), 
+            onNext(310, "1 5"), 
+            onNext(340, "1 6"), 
+            onNext(410, "1 7"), 
+            onNext(420, "1 8"), 
+            onNext(470, "1 9"), 
+            onNext(550, "2 10"), 
+            onCompleted(590)
+        );
+        
         xs.subscriptions.assertEqual(subscribe(200, 590));
     });
 

@@ -151,16 +151,24 @@ Propagates the observable sequence that reacts first.
 
 #### Example
 ```js
-var obs = Rx.Observable.amb(
+var source = Rx.Observable.amb(
 	Rx.Observable.timer(500).select(function () { return 'foo'; }),
 	Rx.Observable.timer(200).select(function () { return 'bar'; })
 );
 
-obs.subscribe( function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 'bar'
+// => Next: bar
+// => Completed
 ```
 
 ### Location
@@ -235,13 +243,21 @@ Continues an observable sequence that is terminated by an exception with the nex
 var obs1 = Rx.Observable.throwException(new Error('error'));
 var obs2 = Rx.Observable.returnValue(42);
 
-var obs3 = Rx.Observable.catchException(obs1, obs2);
+var source = Rx.Observable.catchException(obs1, obs2);
 
-obs3.subscribe( function (x) {
-    console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 42
+// => Next: 42
+// => Completed
 ```
 
 ### Location
@@ -266,14 +282,22 @@ Concatenates all of the specified observable sequences, as long as the previous 
 var source1 = Rx.Observable.returnValue(42);
 var source2 = Rx.Observable.returnValue(56);
 
-var obs = Rx.Observable.concat(source1, source2);
+var source = Rx.Observable.concat(source1, source2);
 
-obs.subscribe( function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 42
-// => 56
+// => Next: 42
+// => Next: 56
+// => Completed
 ```
 
 ### Location
@@ -305,11 +329,19 @@ var source = Rx.Observable.create(function (observer) {
 	};
 });
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 42
+// => Next: 42
+// => Completed
 
 subscription.dispose();
 
@@ -345,11 +377,19 @@ var source = Rx.Observable.createWithDisposable(function (observer) {
 	});
 });
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 42
+// => Next: 42
+// => Completed
 
 subscription.dispose();
 
@@ -379,11 +419,19 @@ var source = Rx.Observable.defer(function () {
 	return Rx.Observable.returnValue(42);
 });
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 42
+// => Next: 42
+// => Completed
 ```
 
 ### Location
@@ -408,12 +456,17 @@ Returns an empty observable sequence, using the specified scheduler to send out 
 var source = Rx.Observable.empty();
 
 var subscription = source.subscribe(
-	function (x) { console.log('next: ' + x),
-	function (err) { console.log('error: ' + err); },
-	function () { console.log('completed'); }
-);
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => completed
+// => Completed
 ```
 
 ### Location
@@ -445,13 +498,21 @@ var source = Rx.Observable.for(
 		return Rx.Observable.returnValue(x);
 	});
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 1
-// => 2
-// => 3
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Completed
 ```
 
 ### Location
@@ -479,11 +540,19 @@ var source = Rx.Observable.forkJoin(
 	Rx.Observable.fromArray([1,2,3])
 );
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => [42, 9, 3]
+// => Next: [42, 9, 3]
+// => Completed
 ```
 
 ### Location
@@ -510,13 +579,21 @@ var array = [1,2,3];
 
 var source = Rx.Observable.fromArray(array);
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 1
-// => 2
-// => 3
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Completed
 ```
 
 ### Location
@@ -549,13 +626,21 @@ var source = Rx.Observable.generate(
 	function (x) { return x; }
 );
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 0
-// => 1
-// => 2
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Completed
 ```
 
 ### Location
@@ -589,15 +674,23 @@ var source = Rx.Observable.generate(
 	function (x) { return x + 1; },
 	function (x) { return x; },
 	function (x) { return Date.now() + (100 * x); }
-);
+).timeInterval();
 
-var subscription = source.timeInterval().subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => {value: 1, interval: 100}
-// => {value: 2, interval: 200}
-// => {value: 3, interval: 300}
+// => Next: {value: 1, interval: 100}
+// => Next: {value: 2, interval: 200}
+// => Next: {value: 3, interval: 300}
+// => Completed
 ```
 
 ### Location
@@ -631,15 +724,23 @@ var source = Rx.Observable.generate(
 	function (x) { return x + 1; },
 	function (x) { return x; },
 	function (x) { return 100 * x; }
-);
+).timeInterval();
 
-var subscription = source.timeInterval().subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => {value: 1, interval: 117}
-// => {value: 2, interval: 222}
-// => {value: 3, interval: 304}
+// => Next: {value: 1, interval: 100}
+// => Next: {value: 2, interval: 200}
+// => Next: {value: 3, interval: 300}
+// => Completed
 ```
 
 ### Location
@@ -671,11 +772,19 @@ var source = Rx.Observable.if(
 	Rx.Observable.return(42)
 );
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-// => 42
+// => Next: 42
+// => Completed
 
 // The next example uses an elseSource
 var shouldRun = false;
@@ -686,11 +795,19 @@ var source = Rx.Observable.if(
 	Rx.Observable.return(56)
 );
 
-var subscription = source.subscribe(function (x) {
-	console.log(x);
-});
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-//=> 56
+// => Next: 56
+// => Completed
 ```
 
 ### Location
@@ -720,12 +837,19 @@ var source = Rx.Observable
 
 var subscription = source.subscribe(
     function (x) {
-       console.log(x); 
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
     });
 
-//=> {value: 0, interval: 501}
-//=> {value: 1, interval: 501}
-//=> {value: 2, interval: 501} 
+// => Next: {value: 0, interval: 500}
+// => Next: {value: 1, interval: 500}
+// => Next: {value: 2, interval: 500} 
+// => Completed
 ```
 
 ### Location
@@ -760,16 +884,23 @@ var source = Rx.Observable.merge(
     source2);
 
 
-var subscription = source.take(5).subscribe(
+var subscription = source.subscribe(
     function (x) {
-       console.log(x); 
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
     });
 
-//=> 100
-//=> 150
-//=> 100
-//=> 150
-//=> 100 
+// => Next: 100
+// => Next: 150
+// => Next: 100
+// => Next: 150
+// => Next: 100 
+// => Completed
 ```
 
 ### Location
@@ -792,10 +923,15 @@ Returns a non-terminating observable sequence, which can be used to denote an in
 var source = Rx.Observable.never();
 
 var subscription = source.subscribe(
-	function (x) { console.log('Next:' + x); },
-	function (err) { console.log('Error: ' + err); },
-	function () { console.log('Completed'); }
-);
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 ```
 
 ### Location
@@ -824,13 +960,18 @@ var source3 = Rx.Observable.return(42);
 var source = Rx.Observable.onErrorResumeNext(source1, source2, source3);
 
 var subscription = source.subscribe(
-	function (x) { console.log('Next' + x); },
-	function (err) { console.log('Error'); },
-	function () { console.log('Completed'); }
-);
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
 
-//=> Next: 42
-//=> Completed 
+// => Next: 42
+// => Completed 
 ```
 
 ### Location
@@ -867,10 +1008,10 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 0 
-//=> Next: 1
-//=> Next: 2 
-//=> Completed 
+// => Next: 0 
+// => Next: 1
+// => Next: 2 
+// => Completed 
 ```
 
 ### Location
@@ -908,9 +1049,9 @@ var subscription = source.subscribe(
     });
 
 //=> Next: 42 
-//=> Next: 42
-//=> Next: 42
-//=> Completed 
+// => Next: 42
+// => Next: 42
+// => Completed 
 ```
 
 ### Location
@@ -947,8 +1088,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 42 
-//=> Completed 
+// => Next: 42 
+// => Completed 
 ```
 
 ### Location
@@ -993,8 +1134,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 42 
-//=> Completed 
+// => Next: 42 
+// => Completed 
 ```
 
 ### Location
@@ -1033,10 +1174,10 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 200
-//=> Next: 100
-//=> Next: 100
-Completed 
+// => Next: 200
+// => Next: 100
+// => Next: 100
+// => Completed 
 ```
 
 ### Location
@@ -1078,8 +1219,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 7
-Completed 
+// => Next: 7
+// => Completed 
 ```
 
 ### Location
@@ -1118,8 +1259,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: first
-Completed 
+// => Next: first
+// => Completed 
 ```
 
 ### Location
@@ -1162,10 +1303,10 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 42
-//=> Next: 42
-//=> Next: 42
-Completed 
+// => Next: 42
+// => Next: 42
+// => Next: 42
+// => Completed 
 ```
 
 ### Location
@@ -1207,8 +1348,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 3628800
-//=> Completed 
+// => Next: 3628800
+// => Completed 
 
 // Without a seed
 var source = Rx.Observable.range(1, 10).aggregate(function (acc, x) {
@@ -1226,8 +1367,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 55
-//=> Completed     
+// => Next: 55
+// => Completed     
 ```
 
 #### Location
@@ -1266,8 +1407,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: true
-//=> Completed    
+// => Next: true
+// => Completed    
 ```
 
 #### Location
@@ -1305,8 +1446,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: first
-//=> Completed    
+// => Next: first
+// => Completed    
 ```
 
 #### Location
@@ -1345,8 +1486,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: first
-//=> Completed 
+// => Next: first
+// => Completed 
 ```
 
 #### Location
@@ -1383,8 +1524,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: false
-//=> Completed 
+// => Next: false
+// => Completed 
 
 // With a predicate
 var source = Rx.Observable.fromArray([1,2,3,4,5])
@@ -1401,8 +1542,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: true
-//=> Completed 
+// => Next: true
+// => Completed 
 ```
 
 #### Location
@@ -1442,8 +1583,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 42
-//=> Completed 
+// => Next: 42
+// => Completed 
 ```
 
 #### Location
@@ -1479,8 +1620,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 4
-//=> Completed 
+// => Next: 4
+// => Completed 
 
 // With a selector
 var arr = [
@@ -1504,10 +1645,163 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 2
-//=> Completed 
+// => Next: 2
+// => Completed 
 ```
 
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="buffer"></a>`Rx.Observable.prototype.buffer(bufferOpenings | closingSelector, bufferClosingSelector)`
+<a href="#buffer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L572-L585 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into zero or more buffers.
+
+#### Arguments
+1. `bufferOpenings` *(Observable)*: Observable sequence whose elements denote the creation of new windows.
+1 `closingSelector` *(Function)*: A function invoked to define the boundaries of the produced windows (a new window is started when the previous one is closed, resulting in non-overlapping windows).
+2. `[bufferClosingSelector]` *(Function)*: A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
+
+#### Returns
+*(Observable)*: An observable sequence of windows. 
+
+#### Example
+```js
+/* Using an openings */
+var openings = Rx.Observable.interval(500);
+
+var source = Rx.Observable.interval(100)
+    .buffer(openings)
+    .take(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0,1,2,3 
+// => Next: 4,5,6,7,8
+// => Next: 9,10,11,12,13
+// => Completed 
+
+/* Using a closing selector */
+var win = 0;
+
+var source = Rx.Observable.interval(50)
+    .buffer(function () { return Rx.Observable.timer((win++) * 100); })
+    .take(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1,2,3,4
+// => Next: 5,6,7,8,9,10 
+// => Completed 
+
+/* Using Openings and Closing Selector */
+var openings = Rx.Observable.interval(200);
+
+var source = Rx.Observable.interval(50)
+    .buffer(openings, function (x) { return Rx.Observable.interval(x + 100); })
+    .take(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 3,4 
+// => Next: 7,8 
+// => Next: 11,12 
+// => Completed 
+```
+#### Location
+
+- rx.coincidence.js
+
+* * *
+
+### <a id="bufferWithCount"></a>`Rx.Observable.prototype.bufferWithCount(count, [skip])`
+<a href="#bufferWithCount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3694-L3703 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
+
+#### Arguments
+1. `count` *(Function)*: Length of each buffer.
+2. `[skip]` *(Function)*: Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
+
+#### Returns
+*(Observable)*: An observable sequence of buffers. 
+
+#### Example
+```js
+/* Without a skip */
+var source = Rx.Observable.range(1, 6)
+    .bufferWithCount(2)
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1,2 
+// => Next: 3,4 
+// => Next: 5,6 
+// => Completed 
+
+/* Using a skip */
+var source = Rx.Observable.range(1, 6)
+    .bufferWithCount(2, 1)
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1,2 
+// => Next: 2,3 
+// => Next: 3,4 
+// => Next: 4,5 
+// => Next: 5,6 
+// => Next: 6 
+// => Completed 
+```
 #### Location
 
 - rx.js
@@ -1544,11 +1838,10 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-//=> Next: 42
-//=> Next: 42
-//=> Completed 
+// => Next: 42
+// => Next: 42
+// => Completed 
 ```
-
 #### Location
 
 - rx.experimental.js
