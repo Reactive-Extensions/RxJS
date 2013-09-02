@@ -208,7 +208,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
      */
-    observableProto.select = function (selector, thisArg) {
+    observableProto.select = observableProto.map = function (selector, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
@@ -224,8 +224,6 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
-
-    observableProto.map = observableProto.select;
 
     /**
      * Retrieves the value of a specified property from all elements in the Observable sequence.
@@ -412,7 +410,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
      */
-    observableProto.where = function (predicate, thisArg) {
+    observableProto.where = observableProto.filter = function (predicate, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
@@ -430,5 +428,3 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
-
-    observableProto.filter = observableProto.where;

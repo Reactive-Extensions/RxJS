@@ -2322,7 +2322,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="distinct"></a>`Rx.Observable.prototype.distinct(condition, source)`
-<a href="#doWhile">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#distinct">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Repeats source as long as condition holds emulating a do while loop.
 

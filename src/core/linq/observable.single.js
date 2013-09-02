@@ -107,7 +107,7 @@
      * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
      * @returns {Observable} The source sequence with the side-effecting behavior applied.   
      */
-    observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
+    observableProto['do'] = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
         var source = this, onNextFunc;
         if (typeof observerOrOnNext === 'function') {
             onNextFunc = observerOrOnNext;
@@ -160,7 +160,7 @@
      * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
      * @returns {Observable} Source sequence with the action-invoking termination behavior applied. 
      */  
-    observableProto.finallyAction = function (action) {
+    observableProto['finally'] = observableProto.finallyAction = function (action) {
         var source = this;
         return new AnonymousObservable(function (observer) {
             var subscription = source.subscribe(observer);
