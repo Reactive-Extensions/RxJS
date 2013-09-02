@@ -4,7 +4,7 @@
     <id>RxJS-Time</id>
     <title>Reactive Extensions for JavaScript - Time-Based Operations</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-    <version>2.1.13</version>
+    <version>2.1.14</version>
     <authors>Microsoft Corporation</authors>
     <description>Reactive Extensions for JavaScript library with time-based event processing query operations.</description>
     <projectUrl>http://go.microsoft.com/fwlink/?LinkID=179929</projectUrl>
@@ -15,7 +15,7 @@
     <tags>Rx RxJS Reactive Extensions Observable</tags>
     <dependencies>
       <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-      <dependency id="RxJS-Main" version="2.1.13" />
+      <dependency id="RxJS-Main" version="2.1.14" />
     </dependencies>
   </metadata>
   <files>

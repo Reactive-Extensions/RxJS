@@ -3658,7 +3658,7 @@
      * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
      * @returns {Observable} The source sequence with the side-effecting behavior applied.   
      */
-    observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
+    observableProto['do'] = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
         var source = this, onNextFunc;
         if (typeof observerOrOnNext === 'function') {
             onNextFunc = observerOrOnNext;
@@ -3711,7 +3711,7 @@
      * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
      * @returns {Observable} Source sequence with the action-invoking termination behavior applied. 
      */  
-    observableProto.finallyAction = function (action) {
+    observableProto['finally'] = observableProto.finallyAction = function (action) {
         var source = this;
         return new AnonymousObservable(function (observer) {
             var subscription = source.subscribe(observer);
@@ -4190,7 +4190,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
      */
-    observableProto.select = function (selector, thisArg) {
+    observableProto.select = observableProto.map = function (selector, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
@@ -4206,8 +4206,6 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
-
-    observableProto.map = observableProto.select;
 
     /**
      * Retrieves the value of a specified property from all elements in the Observable sequence.
@@ -4394,7 +4392,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
      */
-    observableProto.where = function (predicate, thisArg) {
+    observableProto.where = observableProto.filter = function (predicate, thisArg) {
         var parent = this;
         return new AnonymousObservable(function (observer) {
             var count = 0;
@@ -4412,8 +4410,6 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
-
-    observableProto.filter = observableProto.where;
     /** @private */
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
