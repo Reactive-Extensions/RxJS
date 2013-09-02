@@ -2321,28 +2321,29 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="distinct"></a>`Rx.Observable.prototype.distinct(condition, source)`
-<a href="#distinct">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="distinct"></a>`Rx.Observable.prototype.distinct([keySelector], [keySerializer])`
+<a href="#distinct">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4144-L4171 "View in source") [&#x24C9;][1]
 
-Repeats source as long as condition holds emulating a do while loop.
+Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
 
 #### Arguments
-1. `condition` *(Function)*: The condition which determines if the source will be repeated.
-2. `source` *(Function)*: The observable sequence that will be run if the condition function returns true.
+1. `[keySelector]` *(Function)*: A function to compute the comparison key for each element.
+2. `[keySerializer]` *(Function)*: Used to serialize the given object into a string for object comparison.
 
 #### Returns
-*(Observable)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
+*(Observable)*: An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
 
 #### Example
 ```js
-var i = 0;
-
-var source = Rx.Observable.return(42).doWhile(
-	function (x) { return ++i < 2; });
+/* Without key selector */
+var source = Rx.Observable.fromArray([
+		42, 24, 42, 24
+	])
+	.distinct();
 
 var subscription = source.subscribe(
     function (x) {
-        console.log('Next: ' + x);
+        console.log('Next: ' + x.toString());
     },
     function (err) {
         console.log('Error: ' + err);   
@@ -2352,7 +2353,90 @@ var subscription = source.subscribe(
     });
 
 // => Next: 42
+// => Next: 24
+// => Completed 
+
+/* With key selector */
+var source = Rx.Observable.fromArray([
+		{value: 42}, {value: 24}, {value: 42}, {value: 24}
+	])
+	.distinct(function (x) { return x.value; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: { value: 42 }
+// => Next: { value: 24 }
+// => Completed 
+```
+#### Location
+
+- rx.experimental.js
+
+* * *
+
+### <a id="distinctUntilChanged"></a>`Rx.Observable.prototype.distinctUntilChanged([keySelector], [comparer])`
+<a href="#distinct">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4144-L4171 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
+
+#### Arguments
+1. `[keySelector]` *(Function)*: A function to compute the comparison key for each element.
+2. `[keySerializer]` *(Function)*: Used to serialize the given object into a string for object comparison.
+
+#### Returns
+*(Observable)*: An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
+
+#### Example
+```js
+/* Without key selector */
+var source = Rx.Observable.fromArray([
+		42, 24, 42, 24
+	])
+	.distinct();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
 // => Next: 42
+// => Next: 24
+// => Completed 
+
+/* With key selector */
+var source = Rx.Observable.fromArray([
+		{value: 42}, {value: 24}, {value: 42}, {value: 24}
+	])
+	.distinct(function (x) { return x.value; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: { value: 42 }
+// => Next: { value: 24 }
 // => Completed 
 ```
 #### Location

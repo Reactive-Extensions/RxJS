@@ -1,12 +1,4 @@
-﻿/// <reference path="../reactiveassert.js" />
-/// <reference path="../rx.js" />
-/// <reference path="../rx.testing.js" />
-
-/// <reference path="../reactiveassert.js" />
-/// <reference path="../rx.js" />
-/// <reference path="../rx.testing.js" />
-
-(function(window) {
+﻿(function(window) {
 
     // Check if browser vs node
     var root = window.Rx;
@@ -25,63 +17,98 @@
         disposed = root.ReactiveTest.disposed;
 
     test('Then1', function () {
-        var results, scheduler, xs;
-        scheduler = new TestScheduler();
-        xs = scheduler.createHotObservable(onNext(210, 1), onCompleted(220));
-        results = scheduler.startWithCreate(function () {
+        var scheduler = new TestScheduler();
+        
+        var xs = scheduler.createHotObservable(
+            onNext(210, 1), 
+            onCompleted(220)
+        );
+        
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(xs.then(function (a) {
                 return a;
             }));
         });
-        results.messages.assertEqual(onNext(210, 1), onCompleted(220));
+
+        results.messages.assertEqual(
+            onNext(210, 1), 
+            onCompleted(220)
+        );
     });
+
     test('Then1Error', function () {
-        var ex, results, scheduler, xs;
-        ex = 'ex';
-        scheduler = new TestScheduler();
-        xs = scheduler.createHotObservable(onError(210, ex));
-        results = scheduler.startWithCreate(function () {
+        var ex = new Error();
+        
+        var scheduler = new TestScheduler();
+        
+        var xs = scheduler.createHotObservable(
+            onError(210, ex)
+        );
+        
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(xs.then(function (a) {
                 return a;
             }));
         });
-        results.messages.assertEqual(onError(210, ex));
+
+        results.messages.assertEqual(
+            onError(210, ex)
+        );
     });
+
     test('Then1Throws', function () {
-        var ex, results, scheduler, xs;
-        ex = 'ex';
-        scheduler = new TestScheduler();
-        xs = scheduler.createHotObservable(onNext(210, 1), onCompleted(220));
-        results = scheduler.startWithCreate(function () {
+        var ex = new Error();
+        
+        var scheduler = new TestScheduler();
+        
+        var xs = scheduler.createHotObservable(
+            onNext(210, 1), 
+            onCompleted(220)
+        );
+
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(xs.then(function (a) {
                 throw ex;
             }));
         });
-        results.messages.assertEqual(onError(210, ex));
+
+        results.messages.assertEqual(
+            onError(210, ex)
+        );
     });
+
     test('And2', function () {
-        var N, i, obs, results, scheduler;
-        N = 2;
-        scheduler = new TestScheduler();
-        obs = [];
-        for (i = 0; i < N; i++) {
+        var N = 2;
+
+        var scheduler = new TestScheduler();
+        
+        var obs = [];
+        for (var i = 0; i < N; i++) {
             obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
         }
-        results = scheduler.startWithCreate(function () {
+
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(obs[0].and(obs[1]).then(function (a, b) {
                 return a + b;
             }));
         });
-        results.messages.assertEqual(onNext(210, N), onCompleted(220));
+
+        results.messages.assertEqual(
+            onNext(210, N), 
+            onCompleted(220)
+        );
     });
+
     test('And2Error', function () {
-        var N, ex, i, j, obs, results, scheduler;
-        ex = 'ex';
-        N = 2;
-        for (i = 0; i < N; i++) {
-            scheduler = new TestScheduler();
-            obs = [];
-            for (j = 0; j < N; j++) {
+        var ex = new Error();
+
+        var N = 2;
+
+        for (var i = 0; i < N; i++) {
+            var scheduler = new TestScheduler();
+            
+            var obs = [];
+            for (var j = 0; j < N; j++) {
                 if (j === i) {
                     obs.push(scheduler.createHotObservable(onError(210, ex)));
                 } else {
@@ -89,53 +116,72 @@
                 }
             }
 
-            results = scheduler.startWithCreate(function () {
+            var results = scheduler.startWithCreate(function () {
                 return Observable.when(obs[0].and(obs[1]).then(function (a, b) {
                     return a + b;
                 }));
             });
-            results.messages.assertEqual(onError(210, ex));
+
+            results.messages.assertEqual(
+                onError(210, ex)
+            );
         }
     });
+
     test('Then2Throws', function () {
-        var N, ex, i, obs, results, scheduler;
-        ex = 'ex';
-        N = 2;
-        scheduler = new TestScheduler();
-        obs = [];
-        for (i = 0; i < N; i++) {
+        var ex = new Error();
+        
+        var N = 2;
+        
+        var scheduler = new TestScheduler();
+        
+        var obs = [];
+        for (var i = 0; i < N; i++) {
             obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
         }
-        results = scheduler.startWithCreate(function () {
+        
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(obs[0].and(obs[1]).then(function (a, b) {
                 throw ex;
             }));
         });
-        results.messages.assertEqual(onError(210, ex));
+
+        results.messages.assertEqual(
+            onError(210, ex)
+        );
     });
+
     test('And3', function () {
-        var N, i, obs, results, scheduler;
-        N = 3;
-        scheduler = new TestScheduler();
-        obs = [];
+        var N = 3;
+
+        var scheduler = new TestScheduler();
+        
+        var obs = [];
         for (i = 0; i < N; i++) {
             obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
         }
-        results = scheduler.startWithCreate(function () {
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(obs[0].and(obs[1]).and(obs[2]).then(function (a, b, c) {
                 return a + b + c;
             }));
         });
-        results.messages.assertEqual(onNext(210, N), onCompleted(220));
+
+        results.messages.assertEqual(
+            onNext(210, N), 
+            onCompleted(220)
+        );
     });
+
     test('And3Error', function () {
-        var N, ex, i, j, obs, results, scheduler;
-        ex = 'ex';
-        N = 3;
+        var ex = new Error();
+        
+        var N = 3;
+        
         for (i = 0; i < N; i++) {
-            scheduler = new TestScheduler();
-            obs = [];
-            for (j = 0; j < N; j++) {
+            var scheduler = new TestScheduler();
+            
+            var obs = [];
+            for (var j = 0; j < N; j++) {
                 if (j === i) {
                     obs.push(scheduler.createHotObservable(onError(210, ex)));
                 } else {
@@ -143,30 +189,41 @@
                 }
             }
 
-            results = scheduler.startWithCreate(function () {
+            var results = scheduler.startWithCreate(function () {
                 return Observable.when(obs[0].and(obs[1]).and(obs[2]).then(function (a, b, c) {
                     return a + b + c;
                 }));
             });
-            results.messages.assertEqual(onError(210, ex));
+
+            results.messages.assertEqual(
+                onError(210, ex)
+            );
         }
     });
+
     test('Then3Throws', function () {
-        var N, ex, i, obs, results, scheduler;
-        ex = 'ex';
-        N = 3;
-        scheduler = new TestScheduler();
-        obs = [];
-        for (i = 0; i < N; i++) {
+        var ex = new Error();
+        
+        var N = 3;
+        
+        var scheduler = new TestScheduler();
+        
+        var obs = [];
+        for (var i = 0; i < N; i++) {
             obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
         }
-        results = scheduler.startWithCreate(function () {
+        
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(obs[0].and(obs[1]).and(obs[2]).then(function (a, b, c) {
                 throw ex;
             }));
         });
-        results.messages.assertEqual(onError(210, ex));
+
+        results.messages.assertEqual(
+            onError(210, ex)
+        );
     });
+
     test('And4', function () {
         var N, i, obs, results, scheduler;
         N = 4;
@@ -182,6 +239,7 @@
         });
         results.messages.assertEqual(onNext(210, N), onCompleted(220));
     });
+
     test('And4Error', function () {
         var N, ex, i, j, obs, results, scheduler;
         ex = 'ex';
@@ -205,6 +263,7 @@
             results.messages.assertEqual(onError(210, ex));
         }
     });
+
     test('Then4Throws', function () {
         var N, ex, i, obs, results, scheduler;
         ex = 'ex';
@@ -221,6 +280,7 @@
         });
         results.messages.assertEqual(onError(210, ex));
     });
+
     test('And5', function () {
         var N, i, obs, results, scheduler;
         N = 5;
@@ -236,6 +296,7 @@
         });
         results.messages.assertEqual(onNext(210, N), onCompleted(220));
     });
+
     test('And5Error', function () {
         var N, ex, i, j, obs, results, scheduler;
         ex = 'ex';
@@ -259,6 +320,7 @@
             results.messages.assertEqual(onError(210, ex));
         }
     });
+
     test('Then5Throws', function () {
         var N, ex, i, obs, results, scheduler;
         ex = 'ex';
@@ -275,6 +337,7 @@
         });
         results.messages.assertEqual(onError(210, ex));
     });
+
     test('And6', function () {
         var N, i, obs, results, scheduler;
         N = 6;
@@ -290,6 +353,7 @@
         });
         results.messages.assertEqual(onNext(210, N), onCompleted(220));
     });
+
     test('And6Error', function () {
         var N, ex, i, j, obs, results, scheduler;
         ex = 'ex';
@@ -313,6 +377,7 @@
             results.messages.assertEqual(onError(210, ex));
         }
     });
+
     test('Then6Throws', function () {
         var N, ex, i, obs, results, scheduler;
         ex = 'ex';
@@ -329,6 +394,7 @@
         });
         results.messages.assertEqual(onError(210, ex));
     });
+
     test('And7', function () {
         var N, i, obs, results, scheduler;
         N = 7;
@@ -344,6 +410,7 @@
         });
         results.messages.assertEqual(onNext(210, N), onCompleted(220));
     });
+
     test('And7Error', function () {
         var N, ex, i, j, obs, results, scheduler;
         ex = 'ex';
@@ -367,6 +434,7 @@
             results.messages.assertEqual(onError(210, ex));
         }
     });
+
     test('Then7Throws', function () {
         var N, ex, i, obs, results, scheduler;
         ex = 'ex';
@@ -383,6 +451,7 @@
         });
         results.messages.assertEqual(onError(210, ex));
     });
+
     test('And8', function () {
         var N, i, obs, results, scheduler;
         N = 8;
@@ -398,6 +467,7 @@
         });
         results.messages.assertEqual(onNext(210, N), onCompleted(220));
     });
+
     test('And8Error', function () {
         var N, ex, i, j, obs, results, scheduler;
         ex = 'ex';
@@ -421,6 +491,7 @@
             results.messages.assertEqual(onError(210, ex));
         }
     });
+
     test('Then8Throws', function () {
         var N, ex, i, obs, results, scheduler;
         ex = 'ex';
@@ -437,6 +508,7 @@
         });
         results.messages.assertEqual(onError(210, ex));
     });
+
     test('And9', function () {
         var N, i, obs, results, scheduler;
         N = 9;
@@ -452,6 +524,7 @@
         });
         results.messages.assertEqual(onNext(210, N), onCompleted(220));
     });
+
     test('And9Error', function () {
         var N, ex, i, j, obs, results, scheduler;
         ex = 'ex';
@@ -475,6 +548,7 @@
             results.messages.assertEqual(onError(210, ex));
         }
     });
+
     test('Then9Throws', function () {
         var N, ex, i, obs, results, scheduler;
         ex = 'ex';
@@ -491,30 +565,67 @@
         });
         results.messages.assertEqual(onError(210, ex));
     });
+
     test('WhenMultipleDataSymmetric', function () {
-        var results, scheduler, xs, ys;
-        scheduler = new TestScheduler();
-        xs = scheduler.createHotObservable(onNext(210, 1), onNext(220, 2), onNext(230, 3), onCompleted(240));
-        ys = scheduler.createHotObservable(onNext(240, 4), onNext(250, 5), onNext(260, 6), onCompleted(270));
-        results = scheduler.startWithCreate(function () {
+        var scheduler = new TestScheduler();
+
+        var xs = scheduler.createHotObservable(
+            onNext(210, 1), 
+            onNext(220, 2), 
+            onNext(230, 3), 
+            onCompleted(240)
+        );
+        
+        var ys = scheduler.createHotObservable(
+            onNext(240, 4), 
+            onNext(250, 5), 
+            onNext(260, 6), 
+            onCompleted(270)
+        );
+        
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(xs.and(ys).then(function (x, y) {
                 return x + y;
             }));
         });
-        results.messages.assertEqual(onNext(240, 1 + 4), onNext(250, 2 + 5), onNext(260, 3 + 6), onCompleted(270));
+
+        results.messages.assertEqual(
+            onNext(240, 1 + 4), 
+            onNext(250, 2 + 5), 
+            onNext(260, 3 + 6), 
+            onCompleted(270)
+        );
     });
+
     test('WhenMultipleDataAsymmetric', function () {
-        var results, scheduler, xs, ys;
-        scheduler = new TestScheduler();
-        xs = scheduler.createHotObservable(onNext(210, 1), onNext(220, 2), onNext(230, 3), onCompleted(240));
-        ys = scheduler.createHotObservable(onNext(240, 4), onNext(250, 5), onCompleted(270));
-        results = scheduler.startWithCreate(function () {
+        var scheduler = new TestScheduler();
+        
+        var xs = scheduler.createHotObservable(
+            onNext(210, 1), 
+            onNext(220, 2), 
+            onNext(230, 3), 
+            onCompleted(240)
+        );
+        
+        var ys = scheduler.createHotObservable(
+            onNext(240, 4), 
+            onNext(250, 5), 
+            onCompleted(270)
+        );
+        
+        var results = scheduler.startWithCreate(function () {
             return Observable.when(xs.and(ys).then(function (x, y) {
                 return x + y;
             }));
         });
-        results.messages.assertEqual(onNext(240, 1 + 4), onNext(250, 2 + 5), onCompleted(270));
+
+        results.messages.assertEqual(
+            onNext(240, 1 + 4), 
+            onNext(250, 2 + 5), 
+            onCompleted(270)
+        );
     });
+
     test('WhenEmptyEmpty', function () {
         var results, scheduler, xs, ys;
         scheduler = new TestScheduler();
@@ -527,6 +638,7 @@
         });
         results.messages.assertEqual(onCompleted(270));
     });
+
     test('WhenNeverNever', function () {
         var results, scheduler, xs, ys;
         scheduler = new TestScheduler();
@@ -539,6 +651,7 @@
         });
         results.messages.assertEqual();
     });
+
     test('WhenThrowNonEmpty', function () {
         var ex, results, scheduler, xs, ys;
         ex = 'ex';
@@ -552,6 +665,7 @@
         });
         results.messages.assertEqual(onError(240, ex));
     });
+
     test('ComplicatedWhen', function () {
         var results, scheduler, xs, ys, zs;
         scheduler = new TestScheduler();
@@ -569,8 +683,5 @@
         });
         results.messages.assertEqual(onNext(220, 1 * 7), onNext(230, 2 * 8), onNext(240, 3 + 4), onNext(250, 5 - 9), onCompleted(300));
     });
-
-    // must call `QUnit.start()` if using QUnit < 1.3.0 with Node.js or any
-    // version of QUnit with Narwhal, Rhino, or RingoJS
     
 }(typeof global == 'object' && global || this));
