@@ -9,7 +9,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 ## `Observable Methods`
 - [`amb`](#amb1)
 - [`case`](#case)
-- [`catchException`](#catchException1)
+- [`catch`](#catch1)
 - [`concat`](#concat1)
 - [`create`](#create)
 - [`createWithDisposable`](#createWithDisposable)
@@ -53,7 +53,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`bufferWithCount`](#bufferWithCount)
 - [`bufferWithTime`](#bufferWithTime)
 - [`bufferWithTimeOrCount`](#bufferWithTimeOrCount)
-- [`catchException`](#catchException2)
+- [`catch`](#catch2)
 - [`combineLatest`](#combineLatest)
 - [`concat`](#concat2)
 - [`contains`](#contains)
@@ -568,7 +568,7 @@ Converts an array to an observable sequence, using an optional scheduler to enum
 
 #### Arguments
 1. `array` *(Array)*: An array to convert to an Observable sequence.
-2. `[scheduler=Rx.Scheduler.currentThread] *(Scheduler)*: Scheduler to run the enumeration of the input sequence on.
+2. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the enumeration of the input sequence on.
 
 #### Returns
 *(Observable)*: The observable sequence whose elements are pulled from the given enumerable sequence.
@@ -1913,25 +1913,23 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="catchException"></a>`Rx.Observable.prototype.catchException(timeSpan, count, [scheduler])`
-<a href="#bufferWithTimeOrCount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L513-L518 "View in source") [&#x24C9;][1]
+### <a id="catch2"></a>`Rx.Observable.prototype.catchException(second | handler)`
+<a href="#catch2">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3107-L3112 "View in source") [&#x24C9;][1]
 
-Projects each element of an observable sequence into a buffer that is completed when either it's full or a given amount of time has elapsed.
+Continues an observable sequence that is terminated by an exception with the next observable sequence.
 
 #### Arguments
-1. `timeSpan` *(Number)*: Maximum time length of a buffer.
-2. `count` *(Number)*: Maximum element count of a buffer.
-3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
+1. `second` *(Observable)*: A second observable sequence used to produce results when an error occurred in the first sequence.
+1. `handler` *(Function)*: Exception handler function that returns an observable sequence given the error that occurred in the first sequence
 
 #### Returns
-*(Observable)*: An observable sequence of buffers. 
+*(Observable)*: An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
 
 #### Example
 ```js
-/* Hitting the count buffer first */
-var source = Rx.Observable.interval(100)
-    .bufferWithTimeOrCount(500, 3)
-    .take(3);
+/* Using a second observable */
+var source = Rx.Observable.throw(new Error())
+	.catch(Rx.Observable.return(42));
 
 var subscription = source.subscribe(
     function (x) {
@@ -1944,14 +1942,422 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: 0,1,2 
-// => Next: 3,4,5 
-// => Next: 6,7,8 
+// => Next: 42
+// => Completed 
+
+/* Using a handler function */
+var source = Rx.Observable.throw(new Error())
+	.catch(function (e) {
+		return Rx.Observable.return(e instanceof Error);
+	});
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed     
+```
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="combineLatest"></a>`Rx.Observable.prototype.combineLatest(...)`
+<a href="#combineLatest">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3139-L3147 "View in source") [&#x24C9;][1]
+
+Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences produces an element.  This can be in the form of an argument list of observables or an array.
+
+#### Arguments
+1. `sources` *(arguments | Array)*: An array or arguments of Observable sequences.
+1. `resultSelector` *(Function)*: Function to invoke whenever either of the sources produces an element.
+
+#### Returns
+*(Observable)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
+
+#### Example
+```js
+/* Have staggering intervals */
+var source1 = Rx.Observable.interval(100)
+    .map(function (i) { return 'First: ' + i; });
+
+var source2 = Rx.Observable.interval(150)
+    .map(function (i) { return 'Second: ' + i; });
+
+// Combine latest of source1 and source2 whenever either gives a value
+var source = source1.combineLatest(
+    source2,
+    function (s1, s2) { return s1 + ', ' + s2; }
+    ).take(4);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: First: 0, Second: 0 
+// => Next: First: 1, Second: 0 
+// => Next: First: 1, Second: 1 
+// => Next: First: 2, Second: 1 
+// => Completed 
+```
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="concat"></a>`Rx.Observable.prototype.concat(...)`
+<a href="#concat">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3223-L3227 "View in source") [&#x24C9;][1]
+
+Concatenates all the observable sequences.  This takes in either an array or variable arguments to concatenate.
+
+#### Arguments
+1. `sources` *(arguments | Array)*: An array or arguments of Observable sequences.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of each given sequence, in sequential order. 
+
+#### Example
+```js
+var source = Rx.Observable
+	.return(42)
+	.concat(Rx.Observable.return(56), Rx.Observable.return(72));
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Next: 56
+// => Next: 72
+// => Completed 
+```
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="contains"></a>`Rx.Observable.prototype.contains(value, [comparer])`
+<a href="#contains">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L198-L203 "View in source") [&#x24C9;][1]
+
+Determines whether an observable sequence contains a specified element with an optional equality comparer.
+
+#### Arguments
+1. `value` *(Any)*: The value to locate in the source sequence.
+2. `[comparer]` *(Function)*: An equality comparer function to compare elements.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value.
+
+#### Example
+```js
+/* Without a comparer */
+var source = Rx.Observable.return(42)
+	.contains(42);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed 
+
+/* With a comparer */
+var source = Rx.Observable.return({ value: 42 })
+	.contains(
+		{ value: 42}, 
+		function (x, y) { return x.value === y.value; }
+	);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed 
+```
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="count"></a>`Rx.Observable.prototype.count([predicate])`
+<a href="#count">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L214-L220 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
+
+#### Arguments
+1. `[predicate]` *(Any)*: A function to test each element for a condition.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
+
+#### Example
+```js
+/* Without a predicate */
+var source = Rx.Observable.range(0, 10).count();
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 10
+// => Completed 
+
+/* With a predicate */
+var source = Rx.Observable.range(0, 10)
+	.count(function (x) { return x % 2 === 0; });
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 5
+// => Completed 
+```
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="defaultIfEmpty"></a>`Rx.Observable.prototype.defaultIfEmpty([defaultValue])`
+<a href="#defaultIfEmpty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4111-L4128 "View in source") [&#x24C9;][1]
+
+Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
+
+#### Arguments
+1. `[defaultValue=null]` *(Any)*: The value to return if the sequence is empty. If not provided, this defaults to null.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself. 
+  
+#### Example
+```js
+/* Without a default value */
+var source = Rx.Observable.empty().defaultValue();
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: null
+// => Completed 
+
+/* With a defaultValue */
+var source = Rx.Observable.empty().defaultValue(false);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: false
+// => Completed 
+```
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="delay"></a>`Rx.Observable.prototype.delay(dueTime, [scheduler])`
+<a href="#delay">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4111-L4128 "View in source") [&#x24C9;][1]
+
+Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
+
+#### Arguments
+1. `dueTime` *(Date | Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
+2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
+
+#### Returns
+*(Observable)*: Time-shifted sequence.
+  
+#### Example
+```js
+/* Using an absolute time to delay by a second */
+var source = Rx.Observable.range(0, 3)
+	.delay(new Date(Date.now() + 1000));
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1 
+// => Next: 2 
+// => Completed
+
+/* Using an relatove time to delay by a second */
+var source = Rx.Observable.range(0, 3)
+	.delay(1000);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: false
 // => Completed 
 ```
 #### Location
 
 - rx.time.js
+
+* * *
+
+### <a id="dematerialize"></a>`Rx.Observable.prototype.dematerialize()`
+<a href="#delay">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3711-L3718 "View in source") [&#x24C9;][1]
+
+Dematerializes the explicit notification values of an observable sequence as implicit notifications.
+
+#### Returns
+*(Observable)*: An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
+  
+#### Example
+```js
+var source = Rx.Observable
+    .fromArray([
+        Rx.Notification.createOnNext(42),
+        Rx.Notification.createOnError(new Error('woops'))
+    ])
+    .dematerialize();
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Error: Error: woops 
+```
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="distinct"></a>`Rx.Observable.prototype.distinct(condition, source)`
+<a href="#doWhile">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+
+Repeats source as long as condition holds emulating a do while loop.
+
+#### Arguments
+1. `condition` *(Function)*: The condition which determines if the source will be repeated.
+2. `source` *(Function)*: The observable sequence that will be run if the condition function returns true.
+
+#### Returns
+*(Observable)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
+
+#### Example
+```js
+var i = 0;
+
+var source = Rx.Observable.return(42).doWhile(
+	function (x) { return ++i < 2; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Next: 42
+// => Completed 
+```
+#### Location
+
+- rx.experimental.js
 
 * * *
 
