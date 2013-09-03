@@ -8,27 +8,27 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 
 ## `Observable Methods`
 - [`amb`](#amb1)
-- [`case`](#case)
-- [`catch`](#catch1)
+- [`case | switchCase`](#case)
+- [`catch | catchException`](#catch1)
 - [`concat`](#concat1)
 - [`create`](#create)
 - [`createWithDisposable`](#createWithDisposable)
 - [`defer`](#defer)
 - [`empty`](#empty)
-- [`for`](#for)
+- [`for | forIn`](#for)
 - [`forkJoin`](#forkJoin1)
 - [`fromArray`](#fromArray)
 - [`generate`](#generate)
 - [`generateWithAbsoluteTime`](#generateWithAbsoluteTime)
 - [`generateWithRelativeTime`](#generateWithRelativeTime)
-- [`if`](#if)
+- [`if | ifThen`](#if)
 - [`interval`](#interval)
 - [`merge`](#merge1)
 - [`never`](#never)
 - [`onErrorResumeNext`](#onErrorResumeNext1)
 - [`range`](#range)
 - [`repeat`](#repeat1)
-- [`return`](#return)
+- [`return | returnValue`](#return)
 - [`start`](#start)
 - [`timer`](#timer)
 - [`toAsync`](#toAsync)
@@ -53,7 +53,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`bufferWithCount`](#bufferWithCount)
 - [`bufferWithTime`](#bufferWithTime)
 - [`bufferWithTimeOrCount`](#bufferWithTimeOrCount)
-- [`catch`](#catch2)
+- [`catch | catchException`](#catch2)
 - [`combineLatest`](#combineLatest)
 - [`concat`](#concat2)
 - [`contains`](#contains)
@@ -63,15 +63,14 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`dematerialize`](#dematerialize)
 - [`distinct`](#distinct)
 - [`distinctUntilChanged`](#distinctUntilChanged)
-- [`do`](#do)
+- [`do | doAction`](#do)
 - [`doWhile`](#doWhile)
 - [`elementAt`](#elementAt)
 - [`elementAtOrDefault`](#elementAtOrDefault)
-- [`empty`](#empty)
-- [`every`](#empty)
+- [`every`](#every)
 - [`expand`](#expand)
 - [`filter`](#filter)
-- [`finally`](#finally)
+- [`finally | finallyAction`](#finally)
 - [`first`](#first)
 - [`firstOrDefault`](#firstOrDefault)
 - [`forkJoin`](#forkJoin2)
@@ -1244,8 +1243,8 @@ A series of plans (specified as an Array of as a series of arguments) created by
 ```js
 // Choice of either plan, the first set of timers or second set
 var source = Rx.Observable.when(
-	Rx.Observable.timer(200).and(Rx.Observable.timer(300)).then(function (x, y) { return Rx.Observable.return('first'); }),
-	Rx.Observable.timer(400).and(Rx.Observable.timer(500)).then(function (x, y) { return Rx.Observable.return('second'); }),
+	Rx.Observable.timer(200).and(Rx.Observable.timer(300)).then(function (x, y) { return 'first'; }),
+	Rx.Observable.timer(400).and(Rx.Observable.timer(500)).then(function (x, y) { return 'second'; }),
 );
 
 var subscription = source.subscribe(
@@ -1270,7 +1269,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="while"></a>`Rx.Observable.while(condition, source)`
-<a href="#when">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L126-L128 "View in source") [&#x24C9;][1]
+<a href="#while">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L126-L128 "View in source") [&#x24C9;][1]
 
 Repeats source as long as condition holds emulating a while loop.  There is an alias for this method called 'whileDo' for browsers <IE9.
 
@@ -1471,8 +1470,8 @@ Propagates the observable sequence that reacts first.
 ```js
 // Choice of either plan, the first set of timers or second set
 var source = Rx.Observable.when(
-	Rx.Observable.timer(200).and(Rx.Observable.timer(300)).then(function (x, y) { return Rx.Observable.return('first'); }),
-	Rx.Observable.timer(400).and(Rx.Observable.timer(500)).then(function (x, y) { return Rx.Observable.return('second'); }),
+	Rx.Observable.timer(200).and(Rx.Observable.timer(300)).then(function (x, y) { return 'first'; }),
+	Rx.Observable.timer(400).and(Rx.Observable.timer(500)).then(function (x, y) { return 'second'; }),
 );
 
 var subscription = source.subscribe(
@@ -2379,12 +2378,12 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.experimental.js
+- rx.js
 
 * * *
 
 ### <a id="distinctUntilChanged"></a>`Rx.Observable.prototype.distinctUntilChanged([keySelector], [comparer])`
-<a href="#distinct">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4144-L4171 "View in source") [&#x24C9;][1]
+<a href="#distinctUntilChanged">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4144-L4171 "View in source") [&#x24C9;][1]
 
 Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
 
@@ -2441,7 +2440,90 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.experimental.js
+- rx.js
+
+* * *
+
+### <a id="do"></a>`Rx.Observable.prototype.do(observer | [onNext], [onError], [onCompleted])`
+<a href="#do">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3779-L3820 "View in source") [&#x24C9;][1]
+
+Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
+This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
+There is an alias to this method `doAction` for browsers <IE9.
+
+#### Arguments
+1. `observer` *(Observer)*: An observer to invoke for each element in the observable sequence.
+1. `[onNext]` *(Function)*: Function to invoke for each element in the observable sequence.
+2. `[onError]` *(Function)*: Function to invoke upon exceptional termination of the observable sequence. Used if only the first parameter is also a function.
+3. `[oncompleted]` *(Function)*: Function to invoke upon graceful termination of the observable sequence. Used if only the first parameter is also a function.
+
+#### Returns
+*(Observable)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
+
+#### Example
+```js
+/* Using a function */
+var source = Rx.Observable.range(0, 3)
+    .do(
+        function (x) { console.log('Do Next: ' + x; ); },
+        function (err) { console.log('Do Error: ' + x; ); },
+        function () { console.log('Do Completed'); }
+    );
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Do Next: 0
+// => Next: 0
+// => Do Next: 1
+// => Next: 1
+// => Do Next: 2
+// => Next: 2
+// => Do Completed
+// => Completed 
+
+/* Using an observer */
+var observer = Rx.Observer.create(
+    function (x) { console.log('Do Next: ' + x; ); },
+    function (err) { console.log('Do Error: ' + x; ); },
+    function () { console.log('Do Completed'); }
+);
+
+var source = Rx.Observable.range(0, 3)
+    .do(observer);
+
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Do Next: 0
+// => Next: 0
+// => Do Next: 1
+// => Next: 1
+// => Do Next: 2
+// => Next: 2
+// => Do Completed
+// => Completed 
+```
+#### Location
+
+- rx.js
 
 * * *
 
@@ -2482,5 +2564,115 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.experimental.js
+
+* * *
+
+### <a id="elementAt"></a>`Rx.Observable.prototype.elementAt(index)`
+<a href="#elementAt">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L474-L476 "View in source") [&#x24C9;][1]
+
+Returns the element at a specified index in a sequence.
+
+#### Arguments
+1. `index` *(Function)*: The zero-based index of the element to retrieve.
+
+#### Returns
+*(Observable)*: An observable sequence that produces the element at the specified position in the source sequence.
+
+#### Example
+```js
+/* Finds an index */
+var source = Rx.Observable.fromArray([1,2,3,4])
+    .elementAt(1);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 2
+// => Completed 
+
+/* Not found */
+var source = Rx.Observable.fromArray([1,2,3,4])
+    .elementAt(4);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: Argument out of range
+```
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="elementAtOrDefault"></a>`Rx.Observable.prototype.elementAt(index, [defaultValue])`
+<a href="#elementAtOrDefault">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L489-L491 "View in source") [&#x24C9;][1]
+
+Returns the element at a specified index in a sequence.
+
+#### Arguments
+1. `index` *(Function)*: The zero-based index of the element to retrieve.
+2. `[defaultValue = null]` *(Any)*: The default value if the index is outside the bounds of the source sequence.
+
+#### Returns
+*(Observable)*: An observable sequence that produces the element at the specified position in the source sequence, or a default value if the index is outside the bounds of the source sequence.
+
+#### Example
+```js
+/* Finds an index */
+var source = Rx.Observable.fromArray([1,2,3,4])
+    .elementAt(1);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 2
+// => Completed 
+
+/* Not found */
+var source = Rx.Observable.fromArray([1,2,3,4])
+    .elementAt(4, 0);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Completed 
+```
+#### Location
+
+- rx.aggregates.js
 
 * * *
