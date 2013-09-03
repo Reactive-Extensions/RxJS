@@ -583,11 +583,12 @@
      * 2 - res = source.last(function (x) { return x > 3; });
      * @memberOf Observable#
      * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.     
      * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
      */
-    observableProto.last = function (predicate) {
+    observableProto.last = function (predicate, thisArg) {
         if (predicate) {
-            return this.where(predicate).last();
+            return this.where(predicate, thisArg).last();
         }
         return lastOrDefaultAsync(this, false);
     };
@@ -603,11 +604,12 @@
      * @memberOf Observable#
      * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
      * @param [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.     
      * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
      */
-    observableProto.lastOrDefault = function (predicate, defaultValue) {
+    observableProto.lastOrDefault = function (predicate, defaultValue, thisArg) {
         if (predicate) {
-            return this.where(predicate).lastOrDefault(null, defaultValue);
+            return this.where(predicate, thisArg).lastOrDefault(null, defaultValue);
         }
         return lastOrDefaultAsync(this, true, defaultValue);
     };
@@ -641,10 +643,11 @@
      * 
      * @memberOf Observable#
      * @param {Function} predicate The predicate that defines the conditions of the element to search for.
+     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.          
      * @returns {Observable} An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
      */
-    observableProto.find = function (predicate) {
-        return findValue(this, predicate, arguments[1], false);
+    observableProto.find = function (predicate, thisArg) {
+        return findValue(this, predicate, thisArg, false);
     };
      
     /**
@@ -653,8 +656,9 @@
      *
      * @memberOf Observable#     
      * @param {Function} predicate The predicate that defines the conditions of the element to search for.
+     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.          
      * @returns {Observable} An Observable sequence with the zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, –1.
     */
-    observableProto.findIndex = function (predicate) {
-        return findValue(this, predicate, arguments[1], true);
+    observableProto.findIndex = function (predicate, thisArg) {
+        return findValue(this, predicate, thisArg, true);
     };
