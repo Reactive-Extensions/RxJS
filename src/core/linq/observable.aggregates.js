@@ -527,11 +527,12 @@
      * 2 - res = source.first(function (x) { return x > 3; });
      * @memberOf Observable#
      * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.     
      * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate if provided, else the first item in the sequence.
      */    
-    observableProto.first = function (predicate) {
+    observableProto.first = function (predicate, thisArg) {
         if (predicate) {
-            return this.where(predicate).first();
+            return this.where(predicate, thisArg).first();
         }
         return firstOrDefaultAsync(this, false);
     };
@@ -546,10 +547,11 @@
      * 4 - res = source.firstOrDefault(null, 0);
      * @memberOf Observable#
      * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence. 
-     * @param [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+     * @param {Any} [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
      * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
      */
-    observableProto.firstOrDefault = function (predicate, defaultValue) {
+    observableProto.firstOrDefault = function (predicate, defaultValue, thisArg) {
         if (predicate) {
             return this.where(predicate).firstOrDefault(null, defaultValue);
         }
