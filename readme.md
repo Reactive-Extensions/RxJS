@@ -45,10 +45,10 @@ Next, we'll get the user input from an input, listening to the keyup event.
 ```js
 /* Only get the value from each key up */
 var keyups = Rx.DOM.fromEvent(input, 'keyup')
-    .select(function (e) {
+    .map(function (e) {
         return e.target.value;
     })
-    .where(function (text) {
+    .filter(function (text) {
         return text.length > 2;
     });
 
@@ -56,7 +56,7 @@ var keyups = Rx.DOM.fromEvent(input, 'keyup')
 var throttled = keyups
     .throttle(500 /* ms */);
 
-/* Now get only distinct values, so we eliminate the arrows */
+/* Now get only distinct values, so we eliminate the arrows and other control characters */
 var distinct = keyups
     .distinctUntilChanged();
 ```
@@ -72,16 +72,16 @@ function searchWikipedia(term) {
 }
 ```
 
-Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call select to get the value, and then calling switchLatest to ensure that we're not introducing any out of order sequence calls.  We'll filter the results to make sure we get values.
+Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call select to get the value, and then calling `switch` or its alias `switchLatest` to ensure that we're not introducing any out of order sequence calls.  We'll filter the results to make sure we get values.
 
 ```js
 var suggestions = distinct
-    .select(function (text) {
+    .map(function (text) {
         return searchWikipedia(text);
     })
     .switchLatest()
-    .where(function (data) {
-        return data.length == 2 && data[1].length > 0;
+    .filter(function (data) {
+        return data[1] && data[1].length > 0;
     });
 ```
 
@@ -102,47 +102,35 @@ And there you have it!
 
 You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples).
 
-## Installation and Usage ##
+## GETTING STARTED
 
-There are multiple ways of getting started with the Reactive Extensions including:
+There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
 
-In a Browser:
+### Download the Source
 
-    <script src="rx.js"></script>
+    git clone https://github.com/Reactive-Extensions/rxjs.git
+    cd ./rxjs
 
-Along with a number of our extras for RxJS:
-    
-    <script src="rx.aggregates.js"></script>
-    <script src="rx.binding.js"></script>
-    <script src="rx.coincidencejs"></script>
-    <script src="rx.experimental.js"></script>
-    <script src="rx.joinpatterns.js"></script>
-    <script src="rx.testing.js"></script>
-    <script src="rx.time.js"></script>
-
-Installing via [NPM](https://npmjs.org/):
+### Installing with [NPM](https://npmjs.org/)
 
     npm install rx
     npm install -g rx
 
-
-Installing via [Bower](http://bower.io/):
-
-	bower install rx
-
-Installing via [Jam](http://jamjs.org/):
-
-	jam install rx
-
-Using in Node.js:
-
     var Rx = require('rx');
 
-Installing all of RxJS via [NuGet](http://nuget.org/):
+### Installing with [Bower](http://bower.io/)
+
+    bower install rx
+
+### Installing with [Jam](http://jamjs.org/)
+    
+    jam install rx
+
+### Installing All of RxJS via [NuGet](http://nuget.org/)
 
     Install-Package RxJS-All
 
-Or install via [NuGet](http://nuget.org/) individual packages:
+### Install individual packages via [NuGet](http://nuget.org/):
 
     Install-Package RxJS-Main
     Install-Package RxJS-Aggregates
@@ -153,7 +141,22 @@ Or install via [NuGet](http://nuget.org/) individual packages:
     Install-Package RxJS-Testing
     Install-Package RxJS-Time
 
-Using RxJS with an AMD loader such as Require.js
+### In a Browser:
+
+    <script src="rx.js"></script>
+
+### Along with a number of our extras for RxJS:
+    
+    <script src="rx.aggregates.js"></script>
+    <script src="rx.binding.js"></script>
+    <script src="rx.coincidencejs"></script>
+    <script src="rx.experimental.js"></script>
+    <script src="rx.joinpatterns.js"></script>
+    <script src="rx.testing.js"></script>
+    <script src="rx.time.js"></script>
+
+### Using RxJS with an AMD loader such as Require.js
+
 ```js
 require({
     'paths': {

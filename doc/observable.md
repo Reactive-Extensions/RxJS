@@ -1379,7 +1379,7 @@ var subscription = source.subscribe(
 ### <a id="all"></a>`Rx.Observable.prototype.all(predicate, [thisArg])`
 <a href="#all">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L179-L185 "View in source") [&#x24C9;][1]
 
-Determines whether all elements of an observable sequence satisfy a condition.
+Determines whether all elements of an observable sequence satisfy a condition.  There is an alias for this method called `every`.
 
 #### Arguments
 1. `predicate` *(Function)*: A function to test each element for a condition.
@@ -2671,6 +2671,46 @@ var subscription = source.subscribe(
 // => Next: 0
 // => Completed 
 ```
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="every"></a>`Rx.Observable.prototype.every(predicate, [thisArg])`
+<a href="#every">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L179-L185 "View in source") [&#x24C9;][1]
+
+Determines whether all elements of an observable sequence satisfy a condition.  This is an alias to `all`.
+
+#### Arguments
+1. `predicate` *(Function)*: A function to test each element for a condition.
+2. `[thisArg]` *(Function)*: Object to use as this when executing callback.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
+
+#### Example
+```js
+var source = Rx.Observable.fromArray([1,2,3,4,5])
+    .all(function (x) {
+        return x < 6;
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed    
+```
+
 #### Location
 
 - rx.aggregates.js
