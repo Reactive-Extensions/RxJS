@@ -3402,6 +3402,8 @@ var subscription = source.subscribe(
 
 - rx.coincidence.js
 
+* * *
+
 ### <a id="last"></a>`Rx.Observable.prototype.last([predicate], [thisArg])`
 <a href="#last">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
 
@@ -3478,6 +3480,8 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.aggregates.js
+
+* * *
 
 ### <a id="lastOrDefault"></a>`Rx.Observable.prototype.lastOrDefault([predicate], [defaultValue], [thisArg])`
 <a href="#lastOrDefault">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
@@ -3558,6 +3562,8 @@ var subscription = source.subscribe(
 
 - rx.aggregates.js
 
+* * *
+
 ### <a id="manySelect"></a>`Rx.Observable.prototype.manySelect(selector, [scheduler])`
 <a href="#manySelect">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
 
@@ -3596,6 +3602,8 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.experimental.js
+
+* * *
 
 ### <a id="map"></a>`Rx.Observable.prototype.map(selector, [thisArg])`
 <a href="#map">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
@@ -3639,6 +3647,392 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.js
+
+* * *
+
+### <a id="max"></a>`Rx.Observable.prototype.max([comparer])`
+<a href="#max">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L297-L301 "View in source") [&#x24C9;][1]
+
+Returns the maximum value in an observable sequence according to the specified comparer.
+
+#### Arguments
+1. `[comparer]` *(Function)*:  Comparer used to compare elements.
+ 
+#### Returns
+*(Observable)*: An observable sequence containing a single element with the maximum element in the source sequence.
+
+#### Example
+```js
+/* Without comparer */
+var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8])
+    .max();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 9
+// => Completed 
+
+/* With a comparer */
+function comparer (x, y) {
+    if (x > y) {
+        return 1;
+    } else if (x < y) {
+        return -1;
+    }
+    return 0;
+}
+
+var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8])
+    .max(comparer);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 9
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="maxBy"></a>`Rx.Observable.prototype.maxBy(keySelector, [comparer])`
+<a href="#maxBy">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L282-L285 "View in source") [&#x24C9;][1]
+
+Returns the maximum value in an observable sequence according to the specified comparer.
+
+#### Arguments
+1. `keySelector` *(Function)*: Key selector function.
+2. `[comparer]` *(Function)*:  Comparer used to compare elements.
+ 
+#### Returns
+*(Observable)*: An observable sequence containing a list of zero or more elements that have a maximum key value.
+ 
+#### Example
+```js
+/* Without comparer */
+var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8,9])
+    .maxBy(function (x) { return x; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 9,9
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="merge2"></a>`Rx.Observable.prototype.merge(maxConcurrent | other)`
+<a href="#merge2">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3265-L3307 "View in source") [&#x24C9;][1]
+
+Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.
+Or merges two observable sequences into a single observable sequence.
+
+#### Arguments
+1. `maxConcurrent` *(Function)*: Maximum number of inner observable sequences being subscribed to concurrently.
+1. `other` *(Observable)*:  The second observable sequence to merge into the first.
+ 
+#### Returns
+*(Observable)*: The observable sequence that merges the elements of the inner sequences. 
+ 
+#### Example
+```js
+/* Merge two sequences */
+var source1 = Rx.Observable.interval(100)
+    .map(function (x) { return 'First: ' + x; });
+
+var source2 = Rx.Observable.interval(50)
+    .map(function (x) { return 'Second: ' + x; });
+
+var source = source1
+    .merge(source2)
+    .take(5);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: Second: 0 
+// => Next: First: 0 
+// => Next: Second: 1 
+// => Next: Second: 2 
+// => Next: First: 1 
+// => Completed 
+
+/* Use max concurrency */
+var source = Rx.Observable.range(0, 3)
+    .map(function (x) { return Rx.Observable.range(x, 3); })
+    .merge(1);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1 
+// => Next: 2 
+// => Next: 1 
+// => Next: 2 
+// => Next: 3 
+// => Next: 2 
+// => Next: 3 
+// => Next: 4 
+// => Completed     
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="mergeObservable"></a>`Rx.Observable.prototype.mergeObservable()`
+<a href="#mergeObservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3347-L3373 "View in source") [&#x24C9;][1]
+
+Merges an observable sequence of observable sequences into an observable sequence.
+
+#### Returns
+*(Observable)*: The observable sequence that merges the elements of the inner sequences. 
+ 
+#### Example
+```js
+var source = Rx.Observable.range(0, 3)
+    .map(function (x) { return Rx.Observable.range(x, 3); })
+    .mergeObservable();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1 
+// => Next: 1 
+// => Next: 2 
+// => Next: 2 
+// => Next: 2 
+// => Next: 3 
+// => Next: 3 
+// => Next: 4 
+// => Completed     
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="multicast"></a>`Rx.Observable.prototype.multicast(subject | subjectSelector, [selector])`
+<a href="#multicast">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L63-L71 "View in source") [&#x24C9;][1]
+
+Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
+subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
+invocation. For specializations with fixed subject types, see `publish`, , `publishValue`, `publishLast`, and `replay`.
+
+#### Arguments
+1. `subjectSelector` *(Function)*:  Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
+1. `subject` *(Subject)*: Subject to push source elements into.
+2. `[selector]` *(Function)*: Optional selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if `subjectSelector` is provided.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+ 
+#### Example
+```js
+var subject = new Rx.Subject();
+var source = Rx.Observable.range(0, 3)
+    .multicast(subject);
+
+var observer = Rx.Observer.create(    
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    }
+);
+
+var subscription = source.subscribe(observer);
+subject.subscribe(observer);
+
+var connected = source.connect();
+
+subscription.dispose();
+
+// => Next: 0 
+// => Next: 0 
+// => ext: 1 
+// => Next: 1 
+// => Next: 2 
+// => Next: 2 
+// => Completed   
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
+### <a id="min"></a>`Rx.Observable.prototype.min([comparer])`
+<a href="#min">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L265-L269 "View in source") [&#x24C9;][1]
+
+Returns the minimum element in an observable sequence according to the optional comparer else a default greater than less than check.
+
+#### Arguments
+1. `[comparer]` *(Function)*:  Comparer used to compare elements.
+ 
+#### Returns
+*(Observable)*: An observable sequence containing a single element with the minimum element in the source sequence.
+ 
+#### Example
+```js
+/* Without comparer */
+var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8])
+    .min();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Completed 
+
+/* With a comparer */
+function comparer (x, y) {
+    if (x > y) {
+        return 1;
+    } else if (x < y) {
+        return -1;
+    }
+    return 0;
+}
+
+var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8])
+    .min(comparer);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="minBy"></a>`Rx.Observable.prototype.minBy(keySelector, [comparer])`
+<a href="#minBy">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L249-L254 "View in source") [&#x24C9;][1]
+
+Returns the elements in an observable sequence with the minimum key value according to the specified comparer.
+
+#### Arguments
+1. `keySelector` *(Function)*: Key selector function.
+2. `[comparer]` *(Function)*:  Comparer used to compare elements.
+ 
+#### Returns
+*(Observable)*: An observable sequence containing a list of zero or more elements that have a minimum key value.
+
+#### Example
+```js
+/* Without comparer */
+var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8,1])
+    .maxBy(function (x) { return x; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1,1
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
 
 ### <a id="select"></a>`Rx.Observable.prototype.select(selector, [thisArg])`
 <a href="#select">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
