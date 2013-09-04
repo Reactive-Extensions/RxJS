@@ -4034,6 +4034,83 @@ subscription.dispose();
 
 * * *
 
+### <a id="observeOn"></a>`Rx.Observable.prototype.observeOn(scheduler)`
+<a href="#observeOn">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2683-L2688 "View in source") [&#x24C9;][1]
+
+Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
+
+This only invokes observer callbacks on a scheduler. In case the subscription and/or unsubscription actions have side-effects that require to be run on a scheduler, use subscribeOn.
+
+#### Arguments
+1. `scheduler` *(Scheduler)*:  Scheduler to notify observers on.
+
+#### Returns
+*(Observable)*: The source sequence whose observations happen on the specified scheduler. 
+ 
+#### Example
+```js
+/* Change from immediate scheduler to timeout */
+var source = Rx.Observable.return(42, Rx.Scheduler.immediate)
+    .observeOn(Rx.Scheduler.timeout);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed   
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="onErrorResumeNext2"></a>`Rx.Observable.prototype.onErrorResumeNext(second)`
+<a href="#onErrorResumeNext2">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3382-L3387 "View in source") [&#x24C9;][1]
+
+Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
+
+#### Arguments
+1. `second` *(Observable)*:  Second observable sequence used to produce results after the first sequence terminates.
+
+#### Returns
+*(Observable)*: An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
+
+#### Example
+```js
+var source = Rx.Observable.throw(new Error())
+    .onErrorResumeNext(Rx.Observable.return(42));
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed   
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
 ### <a id="select"></a>`Rx.Observable.prototype.select(selector, [thisArg])`
 <a href="#select">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
 
