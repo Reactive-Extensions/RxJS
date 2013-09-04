@@ -4111,6 +4111,64 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="publish"></a>`Rx.Observable.prototype.publish([selector])`
+<a href="#publish">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
+
+This operator is a specialization of `multicast` using a regular `Rx.Subject`.
+
+#### Arguments
+1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
+  
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   
+#### Example
+```js
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = producer.publish();
+ 
+published.subscribe(createObserver('SourceA'));
+published.subscribe(createObserver('SourceB'));
+ 
+var connection = producerAbstraction.connect();
+
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Side effect 
+// => Next: SourceA0 
+// => Next: SourceB0 
+// => Side effect 
+// => Next: SourceA1 
+// => Next: SourceB1
+// => Completed    
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
 ### <a id="select"></a>`Rx.Observable.prototype.select(selector, [thisArg])`
 <a href="#select">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
 
