@@ -226,8 +226,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="catchException1"></a>`Rx.Observable.catch(...)`
-<a href="#catchException1">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2920-L2923 "View in source") [&#x24C9;][1]
+### <a id="catch1"></a>`Rx.Observable.catch(...)`
+<a href="#catch1">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2920-L2923 "View in source") [&#x24C9;][1]
 
 Continues an observable sequence that is terminated by an exception with the next observable sequence.  There is an alias for this method `catchException` for browsers <IE9
 
@@ -2892,7 +2892,7 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="first"></a>`Rx.Observable.prototype.first(predicate, [thisArg])`
+### <a id="first"></a>`Rx.Observable.prototype.first([predicate], [thisArg])`
 <a href="#first">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") [&#x24C9;][1]
 
 Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
@@ -2909,6 +2909,23 @@ Returns the first element of an observable sequence that satisfies the condition
 
 #### Example
 ```js
+/* No Match */
+var source = Rx.Observable.empty()
+    .first();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: Sequence contains no elements.    
+
 /* Without a predicate */
 var source = Rx.Observable.range(0, 10)
     .first();
@@ -2952,7 +2969,7 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="firstOrDefault"></a>`Rx.Observable.prototype.first(predicate, [defaultValue], [thisArg])`
+### <a id="firstOrDefault"></a>`Rx.Observable.prototype.firstOrDefault(predicate, [defaultValue], [thisArg])`
 <a href="#firstOrDefault">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") [&#x24C9;][1]
 
 Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
@@ -3328,6 +3345,343 @@ var subscription = source.subscribe(
 - rx.aggregates.js
 
 * * *
+
+### <a id="join"></a>`Rx.Observable.prototype.join(right, leftDurationSelector, rightDurationSelector, resultSelector)`
+<a href="#join">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L332-L420 "View in source") [&#x24C9;][1]
+
+Correlates the elements of two sequences based on overlapping durations.
+
+#### Arguments
+1. `right` *(Observable)*: The right observable sequence to join elements for.
+2. `leftDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+3. `rightDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+4. `resultSelector` *(Any)*: A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters are as follows:
+    1. *(Any)* Element from the left source for which the overlap occurs.
+    2. *(Any)* Element from the right source for which the overlap occurs.
+
+#### Returns
+*(Observable)*: An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+ 
+#### Example
+```js
+var xs = Rx.Observable.interval(100)
+    .map(function (x) { return 'first' + x; });
+
+var ys = Rx.Observable.interval(100)
+    .map(function (x) { return 'second' + x; });
+
+var source = xs
+    .join(
+        ys,
+        function () { return Rx.Observable.timer(0); },
+        function () { return Rx.Observable.timer(0); },
+        function (x, y) { return x + y; }
+    )
+    .take(5);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: first0second0 
+// => Next: first1second1 
+// => Next: first2second2 
+// => Next: first3second3 
+// => Next: first4second4 
+// => Completed  
+```
+
+#### Location
+
+- rx.coincidence.js
+
+### <a id="last"></a>`Rx.Observable.prototype.last([predicate], [thisArg])`
+<a href="#last">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
+
+Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
+
+#### Arguments
+1. `predicate` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+
+#### Returns
+*(Observable)*: Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
+
+#### Example
+```js
+/* No Match */
+var source = Rx.Observable.empty()
+    .last();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: Sequence contains no elements.
+
+/* Without predicate */
+var source = Rx.Observable.range(0, 10)
+    .last();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 9
+// => Completed  
+
+/* Without predicate */
+var source = Rx.Observable.range(0, 10)
+    .last(function (x, idx, obs) {
+        return x % 2 === 0;
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 8
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+### <a id="lastOrDefault"></a>`Rx.Observable.prototype.lastOrDefault([predicate], [defaultValue], [thisArg])`
+<a href="#lastOrDefault">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
+
+Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
+
+#### Arguments
+1. `predicate` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[defaultValue]` *(Any)*: The default value if no such element exists.  If not specified, defaults to null.
+3. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+
+#### Returns
+*(Observable)*: Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
+
+#### Example
+```js
+/* No Match */
+var source = Rx.Observable.empty()
+    .lastOrDefault(null, 0);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Completed
+
+/* Without predicate */
+var source = Rx.Observable.range(0, 10)
+    .lastOrDefault();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 9
+// => Completed  
+
+/* Without predicate */
+var source = Rx.Observable.range(0, 10)
+    .lastOrDefault(function (x, idx, obs) {
+        return x % 2 === 0;
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 8
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+### <a id="manySelect"></a>`Rx.Observable.prototype.manySelect(selector, [scheduler])`
+<a href="#manySelect">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
+
+Comonadic bind operator.
+
+#### Arguments
+1. `selector` *(Function)*: A transform function to apply to each element.
+2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler used to execute the operation. If not specified, defaults to the `Rx.Scheduler.immediate` scheduler.
+ 
+#### Returns
+*(Observable)*: An observable sequence which results from the comonadic bind operation.
+
+#### Example
+```js
+var source = Rx.Observable.range(0, 3)
+    .manySelect(function (ys) { return ys.first(); })
+    .mergeObservable();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Completed 
+```
+
+#### Location
+
+- rx.experimental.js
+
+### <a id="map"></a>`Rx.Observable.prototype.map(selector, [thisArg])`
+<a href="#map">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+
+#### Arguments
+1. `selector` *(Function)*:  Transform function to apply to each source element.  The selector is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+ 
+#### Returns
+*(Observable)*: An observable sequence which results from the comonadic bind operation.
+
+#### Example
+```js
+var source = Rx.Observable.range(1, 3)
+    .map(function (x, idx, obs) {
+        return x * x;
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Next: 4
+// => Next: 9
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+### <a id="select"></a>`Rx.Observable.prototype.select(selector, [thisArg])`
+<a href="#select">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+
+#### Arguments
+1. `selector` *(Function)*:  Transform function to apply to each source element.  The selector is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+ 
+#### Returns
+*(Observable)*: An observable sequence which results from the comonadic bind operation.
+
+#### Example
+```js
+var source = Rx.Observable.range(1, 3)
+    .map(function (x, idx, obs) {
+        return x * x;
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Next: 4
+// => Next: 9
+// => Completed 
+```
+
+#### Location
+
+- rx.js
 
 ### <a id="where"></a>`Rx.Observable.prototype.where(predicate, [thisArg])`
 <a href="#where">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
