@@ -3051,7 +3051,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- rx.experimental.js
 
 * * *
 
@@ -3240,6 +3240,92 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.js
+
+* * *
+
+### <a id="ignoreElements"></a>`Rx.Observable.prototype.ignoreElements()`
+<a href="#ignoreElements">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3854-L3859 "View in source") [&#x24C9;][1]
+
+Ignores all elements in an observable sequence leaving only the termination messages.
+
+#### Returns
+*(Observable)*: An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
+
+#### Example
+```js
+var source = Rx.Observable.range(0, 10)
+	.ignoreElements();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Completed
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="isEmpty"></a>`Rx.Observable.prototype.isEmpty()`
+<a href="#isEmpty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L166-L168 "View in source") [&#x24C9;][1]
+
+Determines whether an observable sequence is empty.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element determining whether the source sequence is empty.
+
+#### Example
+```js
+/* Not empty */
+var source = Rx.Observable.range(0, 5)
+	.isEmpty()
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: false
+// => Completed    
+
+/* Empty */
+var source = Rx.Observable.empty()
+	.isEmpty()
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed  
+```
+
+#### Location
+
+- rx.aggregates.js
 
 * * *
 
