@@ -2398,7 +2398,7 @@ Returns an observable sequence that contains only distinct elements according to
 ```js
 /* Without key selector */
 var source = Rx.Observable.fromArray([
-		42, 24, 42, 24
+		42, 42, 24, 24
 	])
 	.distinct();
 
@@ -3020,7 +3020,7 @@ Runs two observable sequences in parallel and combines their last elements.
 
 #### Arguments
 1. `second` *(Observable)*: Second observable sequence.
-3. `resultSelector` *(Any)*: The default value if no such element exists.  If not specified, defaults to null.
+2. `resultSelector` *(Any)*: The default value if no such element exists.  If not specified, defaults to null.
 
 #### Returns
 *(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
@@ -3052,6 +3052,137 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.aggregates.js
+
+* * *
+
+### <a id="groupBy"></a>`Rx.Observable.prototype.groupBy(keySelector, [elementSelector], [keySerializer])`
+<a href="#groupBy">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4187-L4191 "View in source") [&#x24C9;][1]
+
+Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
+
+#### Arguments
+1. `keySelector` *(Function)*: A function to extract the key for each element.
+2. `[elementSelector]` *(Function)*: A function to map each source element to an element in an observable group.
+3. `[keySerializer]` *(Any)*: Used to serialize the given object into a string for object comparison.
+
+#### Returns
+*(Observable)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
+
+#### Example
+```js
+var codes = [
+    { keyCode: 38}, // up
+    { keyCode: 38}, // up
+    { keyCode: 40}, // down
+    { keyCode: 40}, // down
+    { keyCode: 37}, // left
+    { keyCode: 39}, // right
+    { keyCode: 37}, // left
+    { keyCode: 39}, // right
+    { keyCode: 66}, // b
+    { keyCode: 65}  // a
+];
+
+var source = Rx.Observable.fromArray(codes)
+	.groupBy(
+		function (x) { return x.keyCode; },
+		function (x) { return x.keyCode; });
+
+var subscription = source.subscribe(
+    function (obs) {
+        // Print the count
+        obs.count().subscribe(function (x) { 
+        	console.log('Count: ' + x); 
+    	});
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Count: 2 
+// => Count: 2 
+// => Count: 2 
+// => Count: 2 
+// => Count: 1 
+// => Count: 1 
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="groupByUntil"></a>`Rx.Observable.prototype.groupBy(keySelector, [elementSelector], durationSelector, [keySerializer])`
+<a href="#groupBy">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4212-L4301 "View in source") [&#x24C9;][1]
+
+Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
+
+#### Arguments
+1. `keySelector` *(Function)*: A function to extract the key for each element.
+2. `[elementSelector]` *(Function)*: A function to map each source element to an element in an observable group.
+3. `durationSelector` *(Function)*: A function to signal the expiration of a group.
+4. `[keySerializer]` *(Any)*: Used to serialize the given object into a string for object comparison.
+
+#### Returns
+*(Observable)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.  
+
+If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
+
+#### Example
+```js
+var codes = [
+    { keyCode: 38}, // up
+    { keyCode: 38}, // up
+    { keyCode: 40}, // down
+    { keyCode: 40}, // down
+    { keyCode: 37}, // left
+    { keyCode: 39}, // right
+    { keyCode: 37}, // left
+    { keyCode: 39}, // right
+    { keyCode: 66}, // b
+    { keyCode: 65}  // a
+];
+
+var source = Rx.Observable
+	.for(codes, function (x) { return Rx.Observable.return(x).delay(1000); })
+	.groupByUntil(
+		function (x) { return x.keyCode; },
+		function (x) { return x.keyCode; },
+        function (x) { return Rx.Observable.timer(5000); });
+
+var subscription = source.subscribe(
+    function (obs) {
+        // Print the count
+        obs.count().subscribe(function (x) { console.log('Count: ' + x); });
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Count: 1 
+// => Count: 1 
+// => Count: 1 
+// => Count: 1 
+// => Count: 1 
+// => Count: 1 
+// => Count: 1 
+// => Count: 1 
+// => Count: 1 
+// => Count: 1 
+// => Completed 
+```
+
+#### Location
+
+- rx.js
 
 * * *
 
