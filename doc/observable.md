@@ -3118,7 +3118,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="groupByUntil"></a>`Rx.Observable.prototype.groupBy(keySelector, [elementSelector], durationSelector, [keySerializer])`
-<a href="#groupBy">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4212-L4301 "View in source") [&#x24C9;][1]
+<a href="#groupByUntil">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4212-L4301 "View in source") [&#x24C9;][1]
 
 Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
 
@@ -3153,7 +3153,7 @@ var source = Rx.Observable
 	.groupByUntil(
 		function (x) { return x.keyCode; },
 		function (x) { return x.keyCode; },
-        function (x) { return Rx.Observable.timer(5000); });
+        function (x) { return Rx.Observable.timer(2000); });
 
 var subscription = source.subscribe(
     function (obs) {
@@ -3167,10 +3167,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Count: 1 
-// => Count: 1 
-// => Count: 1 
-// => Count: 1 
+// => Count: 2 
+// => Count: 2 
 // => Count: 1 
 // => Count: 1 
 // => Count: 1 
@@ -3178,6 +3176,65 @@ var subscription = source.subscribe(
 // => Count: 1 
 // => Count: 1 
 // => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="groupJoin"></a>`Rx.Observable.prototype.groupJoin(right, leftDurationSelector, rightDurationSelector, resultSelector)`
+<a href="#groupJoin">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L431-L563 "View in source") [&#x24C9;][1]
+
+Correlates the elements of two sequences based on overlapping durations, and groups the results.
+
+#### Arguments
+1. `right` *(Observable)*: The right observable sequence to join elements for.
+2. `leftDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+3. `rightDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+4. `resultSelector` *(Any)*: A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. It has the following arguments
+	1. *(Any)* An element of the left sequence. 
+	2. *(Observable)* An observable sequence with elements from the right sequence that overlap with the left sequence's element.
+
+#### Returns
+*(Observable)*: An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+
+#### Example
+```js
+var xs = Rx.Observable.interval(100)
+	.map(function (x) { return 'first' + x; });
+
+var ys = Rx.Observable.interval(100)
+	.map(function (x) { return 'second' + x; });
+
+var source = xs.groupJoin(
+    ys,
+    function () { return Rx.Observable.timer(0); },
+    function () { return Rx.Observable.timer(0); },
+    function (x, yy) { 
+        return yy.select(function (y) { 
+            return x + y; 
+        })
+    }).mergeObservable().take(5);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: first0second0 
+// => Next: first1second1 
+// => Next: first2second2 
+// => Next: first3second3 
+// => Next: first4second4 
+// => Completed  
 ```
 
 #### Location
