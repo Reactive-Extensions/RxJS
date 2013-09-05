@@ -3950,7 +3950,7 @@
      *  
      * @memberOf Observable#
      * @description
-     *  This operator accumulates a queue with a length enough to store the first <paramref name="count"/> elements. As more elements are
+     *  This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are
      *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.     
      * @param count Number of elements to bypass at the end of the source sequence.
      * @returns {Observable} An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
@@ -4411,14 +4411,14 @@
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
      * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
      */
-    observableProto.skipWhile = function (predicate) {
+    observableProto.skipWhile = function (predicate, thisArg) {
         var source = this;
         return new AnonymousObservable(function (observer) {
             var i = 0, running = false;
             return source.subscribe(function (x) {
                 if (!running) {
                     try {
-                        running = !predicate(x, i++);
+                        running = !predicate.call(thisArg, x, i++, source);
                     } catch (e) {
                         observer.onError(e);
                         return;
@@ -4476,7 +4476,7 @@
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
      * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
      */
-    observableProto.takeWhile = function (predicate) {
+    observableProto.takeWhile = function (predicate, thisArg) {
         var observable = this;
         return new AnonymousObservable(function (observer) {
             var i = 0, running = true;

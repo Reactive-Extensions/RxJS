@@ -5001,6 +5001,124 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="skip"></a>`Rx.Observable.prototype.skip(count)`
+<a href="#skip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4386-L4401 "View in source") [&#x24C9;][1]
+
+Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
+
+#### Arguments
+1. `count` *(Number)*: The number of elements to skip before returning the remaining elements.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.   
+
+#### Example
+```js
+var source = Rx.Observable.range(0, 5)
+    .skip(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 3
+// => Next: 4
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="skipLast"></a>`Rx.Observable.prototype.skipLast(count)`
+<a href="#skip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3958-L3969 "View in source") [&#x24C9;][1]
+
+Bypasses a specified number of elements at the end of an observable sequence.
+
+This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed. 
+
+#### Arguments
+1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
+
+#### Returns
+*(Observable)*: An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
+  
+#### Example
+```js
+var source = Rx.Observable.range(0, 5)
+    .skipLast(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="skipUntil"></a>`Rx.Observable.prototype.skipUntil(other)`
+<a href="#skipUntil">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3429-L3454 "View in source") [&#x24C9;][1]
+
+Returns the values from the source observable sequence only after the other observable sequence produces a value.
+
+#### Arguments
+1. `other` *(Observable)*: The observable sequence that triggers propagation of elements of the source sequence.
+
+#### Returns
+*(Observable)*: An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.    
+
+#### Example
+```js
+var source = Rx.Observable.timer(0, 1000)
+    .takeUntil(Rx.Observable.timer(5000));
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 3
+// => Next: 4
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
 ### <a id="where"></a>`Rx.Observable.prototype.where(predicate, [thisArg])`
 <a href="#where">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
 

@@ -281,7 +281,7 @@
      *  
      * @memberOf Observable#
      * @description
-     *  This operator accumulates a queue with a length enough to store the first <paramref name="count"/> elements. As more elements are
+     *  This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are
      *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.     
      * @param count Number of elements to bypass at the end of the source sequence.
      * @returns {Observable} An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
