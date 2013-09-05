@@ -56,6 +56,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`catch | catchException`](#catch2)
 - [`combineLatest`](#combineLatest)
 - [`concat`](#concat2)
+- [`connect`](#connect)
 - [`contains`](#contains)
 - [`count`](#count)
 - [`defaultIfEmpty`](#defaultIfEmpty)
@@ -93,6 +94,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`multicast`](#multicast)
 - [`observeOn`](#observeOn)
 - [`onErrorResumeNext`](#onErrorResumeNext2)
+- [`pluck`](#pluck)
 - [`publish`](#publish)
 - [`publishLast`](#publishLast)
 - [`publishValue`](#publishValue)
@@ -2118,6 +2120,61 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="connect"></a>`ConnectableObservable.prototype.connect()`
+<a href="#publishValue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L504 "View in source") [&#x24C9;][1]
+
+Connects the observable wrapper to its source. All subscribed observers will receive values from the underlying observable sequence as long as the connection is established.
+
+#### Returns
+*(Disposable)*: Disposable object used to disconnect the observable wrapper from its source, causing subscribed observer to stop receiving values from the underlying observable sequence.
+ 
+#### Example
+```js
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = source.publish();
+ 
+published.subscribe(createObserver('SourceA'));
+published.subscribe(createObserver('SourceB'));
+ 
+// Connect the source
+var connection = published.connect();
+
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+ 
+// => Side effect
+// => Next: SourceA0 
+// => Next: SourceB0 
+// => Side effect
+// => Next: SourceA1 
+// => Next: SourceB1 
+// => Completed 
+// => Completed     
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
 ### <a id="count"></a>`Rx.Observable.prototype.count([predicate])`
 <a href="#count">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L214-L220 "View in source") [&#x24C9;][1]
 
@@ -4111,6 +4168,50 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="pluck"></a>`Rx.Observable.prototype.pluck(property)`
+<a href="#pluck">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4335-L4337 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+
+#### Arguments
+1. `property` *(String)*: The property to pluck.
+ 
+#### Returns
+*(Observable)*: Returns a new Observable sequence of property values.
+
+#### Example
+```js
+var source = Rx.Observable
+	.fromArray([
+		{ value: 0 },
+		{ value: 1 },
+		{ value: 2 }
+	])
+	.pluck('value');
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
 ### <a id="publish"></a>`Rx.Observable.prototype.publish([selector])`
 <a href="#publish">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") [&#x24C9;][1]
 
@@ -4122,10 +4223,11 @@ This operator is a specialization of `multicast` using a regular `Rx.Subject`.
 1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
   
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+*(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
    
 #### Example
 ```js
+/* Without publish */
 var interval = Rx.Observable.interval(1000);
 
 var source = interval
@@ -4134,12 +4236,48 @@ var source = interval
         console.log('Side effect');
     });
  
-var published = producer.publish();
+source.subscribe(createObserver('SourceA'));
+source.subscribe(createObserver('SourceB'));
+ 
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Side effect
+// => Next: SourceA0 
+// => Side effect
+// => Next: SourceB0 
+// => Side effect
+// => Next: SourceA1 
+// => Completed
+// => Side effect
+// => Next: SourceB1 
+// => Completed  
+
+/* With publish */
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = source.publish();
  
 published.subscribe(createObserver('SourceA'));
 published.subscribe(createObserver('SourceB'));
  
-var connection = producerAbstraction.connect();
+var connection = published.connect();
 
 function createObserver(tag) {
     return Rx.Observer.create(
@@ -4166,6 +4304,438 @@ function createObserver(tag) {
 #### Location
 
 - rx.binding.js
+
+* * *
+
+### <a id="publishLatest"></a>`Rx.Observable.prototype.publishLatest([selector])`
+<a href="#publishLatest">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L103-L109 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
+
+This operator is a specialization of `multicast` using a `Rx.AsyncSubject`.
+
+#### Arguments
+1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
+
+#### Returns
+*(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+ 
+#### Example
+```js
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = source.publishLatest();
+ 
+published.subscribe(createObserver('SourceA'));
+published.subscribe(createObserver('SourceB'));
+ 
+var connection = published.connect();
+
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Side effect
+// => Side effect
+// => Next: SourceA1 
+// => Completed
+// => Next: SourceB1 
+// => Completed    
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
+### <a id="publishValue"></a>`Rx.Observable.prototype.publishValue([selector])`
+<a href="#publishValue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L123-L129 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
+   
+This operator is a specialization of `multicast` using a `Rx.BehaviorSubject`.
+
+#### Arguments
+1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
+ 
+#### Returns
+*(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+ 
+#### Example
+```js
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = source.publishValue(42);
+ 
+published.subscribe(createObserver('SourceA'));
+published.subscribe(createObserver('SourceB'));
+ 
+var connection = published.connect();
+
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Next: SourceA42 
+// => Next: SourceB42 
+// => Side effect
+// => Next: SourceA0 
+// => Next: SourceB0 
+// => Side effect
+// => Next: SourceA1 
+// => Next: SourceB1 
+// => Completed 
+// => Completed     
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
+### <a id="refCount"></a>`ConnectableObservable.prototype.refCount()`
+<a href="#refCount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L510-L528 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
+   
+#### Returns
+*(Observable)*: An observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
+ 
+#### Example
+```js
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = source.publish().refCount();
+ 
+published.subscribe(createObserver('SourceA'));
+published.subscribe(createObserver('SourceB'));
+
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Side effect
+// => Next: SourceA0 
+// => Next: SourceB0 
+// => Side effect
+// => Next: SourceA1 
+// => Next: SourceB1 
+// => Completed 
+// => Completed     
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
+### <a id="reduce"></a>`Rx.Observable.prototype.reduce(accumulator, [seed])`
+<a href="#reduce">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L126-L133 "View in source") [&#x24C9;][1]
+
+Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
+
+For aggregation behavior with incremental intermediate results, see the `scan` method.
+
+#### Arguments
+1. `accumulator` *(Function)*:  An accumulator function to be invoked on each element.
+2. `[seed]` *(Any)*: The initial accumulator value.
+ 
+#### Returns
+*(Observable)*: An observable sequence containing a single element with the final accumulator value.
+
+#### Example
+```js
+var source = Rx.Observable.range(1, 3)
+    .reduce(function (acc, x) {
+    	return acc * x;
+    }, 1)
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 6
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="repeat"></a>`Rx.Observable.prototype.repeat(accumulator, [seed])`
+<a href="#repeat">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3893-L3895 "View in source") [&#x24C9;][1]
+
+Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
+ 
+#### Arguments
+1. `accumulator` *(Function)*:  An accumulator function to be invoked on each element.
+2. `[seed]` *(Any)*: The initial accumulator value.
+ 
+#### Returns
+*(Observable)*: An observable sequence containing a single element with the final accumulator value.
+
+#### Example
+```js
+var source = Rx.Observable.range(1, 3)
+    .repeat(2);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1 
+// => Next: 2 
+// => Next: 3 
+// => Next: 1 
+// => Next: 2 
+// => Next: 3 
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="replay"></a>`Rx.Observable.prototype.replay([selector], [bufferSize], [window], [scheduler])`
+<a href="#replay">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
+
+This operator is a specialization of `multicast` using a `Rx.ReplaySubject`.
+
+#### Arguments
+1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
+2. `[bufferSize]` *(Number)*: Maximum element count of the replay buffer.
+3. `[window]` *(Number)*: Maximum time length of the replay buffer in milliseconds.
+4. `[scheduler]` *(Scheduler)*: Scheduler where connected observers within the selector function will be invoked on.
+ 
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+
+#### Example
+```js
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = source
+    .replay(function (x) {
+        return x.take(2).repeat(2);    
+    }, 3);
+ 
+published.subscribe(createObserver('SourceA'));
+published.subscribe(createObserver('SourceB'));
+
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Side effect 
+// => Next: SourceA0 
+// => Side effect 
+// => Next: SourceB0 
+// => Side effect 
+// => Next: SourceA1 
+// => Next: SourceA0 
+// => Next: SourceA1 
+// => Completed 
+// => Side effect 
+// => Next: SourceB1 
+// => Next: SourceB0 
+// => Next: SourceB1 
+// => Completed 
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
+### <a id="retry"></a>`Rx.Observable.prototype.retry([retryCount])`
+<a href="#retry">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3908-L3910 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+
+#### Arguments
+1. `[retryCount]` *(Number)*:  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
+ 
+#### Returns
+*(Observable)*: An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully. 
+
+#### Example
+```js
+var count = 0;
+
+var source = Rx.Observable.interval(1000)
+    .selectMany(function () {
+        if (++count < 2) {
+            return Rx.Observable.throw(new Error());
+        }
+        return Rx.Observable.return(42);
+    })
+    .retry(3)
+    .take(1);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="sample"></a>`Rx.Observable.prototype.sample(interval | sampleObservable)`
+<a href="#sample">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3908-L3910 "View in source") [&#x24C9;][1]
+
+Samples the observable sequence at each interval.
+
+#### Arguments
+1. `[interval]` *(Number)*: Interval at which to sample (specified as an integer denoting milliseconds)
+2. `[sampleObservable]` *(Observable)*: Sampler Observable.
+3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the sampling timer on. If not specified, the timeout scheduler is used.
+ 
+#### Returns
+*(Observable)*: Sampled observable sequence.
+
+#### Example
+```js
+/* With an interval time */
+var source = Rx.Observable.interval(1000)
+    .sample(5000)
+    .take(2);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 3
+// => Next: 8
+// => Completed 
+
+/* With a sampler */
+var source = Rx.Observable.interval(1000)
+    .sample(Rx.Observable.interval(5000))
+    .take(2);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 3
+// => Next: 8
+// => Completed
+```
+
+#### Location
+
+- rx.time.js
 
 * * *
 
@@ -4211,6 +4781,225 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.js
+
+* * *
+
+### <a id="selectMany"></a>`Rx.Observable.prototype.selectMany(selector, [resultSelector])`
+<a href="#selectMany">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+
+One of the following:
+
+Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+
+```js
+source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+```
+
+Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+
+```js
+source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+```
+
+Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+ 
+ ```js
+source.selectMany(Rx.Observable.fromArray([1,2,3]));
+ ```
+
+#### Arguments
+1. `selector` *(Function)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
+2. `[resultSelector]` *(Function)*: A transform function to apply to each element of the intermediate sequence.
+ 
+#### Returns
+*(Observable)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
+
+#### Example
+```js
+var source = Rx.Observable
+    .range(1, 2)
+    .selectMany(function (x) {
+        return Rx.Observable.range(x, 2);    
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1 
+// => Next: 2 
+// => Next: 2 
+// => Next: 3 
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="single"></a>`Rx.Observable.prototype.single([predicate], [thisArg])`
+<a href="#single">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L524-L529 "View in source") [&#x24C9;][1]
+
+Returns the only element of an observable sequence that satisfies the condition in the optional predicate, and reports an exception if there is not exactly one element in the observable sequence.
+ 
+#### Arguments
+1. `[predicate]` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+
+#### Returns
+*(Observable)*: Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
+
+#### Example
+```js
+/* No Match */
+var source = Rx.Observable.empty()
+    .single();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: Sequence contains no elements.    
+
+/* Without a predicate */
+var source = Rx.Observable.return(42)
+    .single();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed
+
+/* With a predicate */
+var source = Rx.Observable.range(0, 10)
+    .single(function (x, idx, obs) { return x === 1; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Completed  
+
+/* More than one match */
+var source = Rx.Observable.range(0, 10)
+    .single(function (x, idx, obs) { return x % 2 === 0; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: Sequence contains more than one element'
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="singleOrDefault"></a>`Rx.Observable.prototype.singleOrDefault(predicate, [defaultValue], [thisArg])`
+<a href="#singleOrDefault">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") [&#x24C9;][1]
+
+Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+
+#### Arguments
+1. `predicate` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[defaultValue]` *(Any)*: The default value if no such element exists.  If not specified, defaults to null.
+3. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+
+#### Returns
+*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+
+#### Example
+```js
+/* Without a predicate but default value */
+var source = Rx.Observable.empty()
+    .singleOrDefault(null, 42);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed
+
+/* With a predicate */
+var source = Rx.Observable.range(0, 10)
+    .single(function (x, idx, obs) { return x ===  1; }, 0);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Completed  
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
 
 ### <a id="where"></a>`Rx.Observable.prototype.where(predicate, [thisArg])`
 <a href="#where">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
