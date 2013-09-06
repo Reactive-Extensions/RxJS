@@ -7,16 +7,16 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 <!-- div -->
 
 ## `Observable Methods`
-- [`amb`](#rxobservableamb)
-- [`case | switchCase`](#case)
-- [`catch | catchException`](#catch1)
-- [`concat`](#concat1)
-- [`create`](#create)
-- [`createWithDisposable`](#createWithDisposable)
-- [`defer`](#defer)
-- [`empty`](#empty)
-- [`for | forIn`](#for)
-- [`forkJoin`](#forkJoin1)
+- [`amb`](#rxobservableambargs)
+- [`case | switchCase`](#rxobservablecaseselector-sources-elsesourcescheduler)
+- [`catch | catchException`](#rxobservablecatchargs)
+- [`concat`](#rxobservableconcatargs)
+- [`create`](#rxobservablecreatesubscribe)
+- [`createWithDisposable`](#rxobservablecreatewithdisposablesubscribe)
+- [`defer`](#rxobservabledeferobservablefactory)
+- [`empty`](#rxobservableemptyscheduler)
+- [`for | forIn`](#rxobservableforsources-resultselector)
+- [`forkJoin`](#rxobservableforkjoinargs)
 - [`fromArray`](#fromArray)
 - [`generate`](#generate)
 - [`generateWithAbsoluteTime`](#generateWithAbsoluteTime)
@@ -139,8 +139,8 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 
 ## _Observable Methods_ ##
 
-### <a id="rxobservableamb"></a>`Rx.Observable.amb(...args)`
-<a href="#rxobservableamb">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+### <a id="rxobservableambargs"></a>`Rx.Observable.amb(...args)`
+<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
 
 Propagates the observable sequence that reacts first.
 
@@ -178,8 +178,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="case"></a>`Rx.Observable.case(selector, sources, [elseSource|scheduler])`
-<a href="#case">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L159-L169 "View in source") [&#x24C9;][1]
+### <a id="rxobservablecaseselector-sources-elsesourcescheduler"></a>`Rx.Observable.case(selector, sources, [elseSource|scheduler])`
+<a href="#rxobservablecaseselector-sources-elsesourcescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L159-L169 "View in source") [&#x24C9;][1]
 
 Uses selector to determine which source in sources to use.  There is an alias 'switchCase' for browsers <IE9.
 
@@ -228,13 +228,13 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="catch1"></a>`Rx.Observable.catch(...)`
-<a href="#catch1">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2920-L2923 "View in source") [&#x24C9;][1]
+### <a id="rxobservablecatchargs"></a>`Rx.Observable.catch(...args)`
+<a href="#rxobservablecatchargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2920-L2923 "View in source") [&#x24C9;][1]
 
 Continues an observable sequence that is terminated by an exception with the next observable sequence.  There is an alias for this method `catchException` for browsers <IE9
 
 #### Arguments
-1. `array` *(Array|arguments)*: Observable sequences to catch exceptions for.
+1. `args` *(Array|arguments)*: Observable sequences to catch exceptions for.
 
 #### Returns
 *(Observable)*: An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
@@ -267,13 +267,13 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="concat1"></a>`Rx.Observable.concat(...)`
-<a href="#concat1">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3035-L3038 "View in source") [&#x24C9;][1]
+### <a id="rxobservableconcatargs"></a>`Rx.Observable.concat(...args)`
+<a href="#rxobservableconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3035-L3038 "View in source") [&#x24C9;][1]
 
 Concatenates all of the specified observable sequences, as long as the previous observable sequence terminated successfully.
 
 #### Arguments
-1. `array` *(Array|arguments)*: Observable sequences to concatenate.
+1. `args` *(Array|arguments)*: Observable sequences to concatenate.
 
 #### Returns
 *(Observable)*: An observable sequence that contains the elements of each given sequence, in sequential order.
@@ -307,8 +307,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="create"></a>`Rx.Observable.create(subscribe)`
-<a href="#create">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2519-L2523 "View in source") [&#x24C9;][1]
+### <a id="rxobservablecreatesubscribe"></a>`Rx.Observable.create(subscribe)`
+<a href="#rxobservablecreatesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2519-L2523 "View in source") [&#x24C9;][1]
 
 Creates an observable sequence from a specified subscribe method implementation.
 
@@ -355,8 +355,8 @@ subscription.dispose();
 
 * * *
 
-### <a id="createWithDisposable"></a>`Rx.Observable.createWithDisposable(subscribe)`
-<a href="#createWithDisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2535-L2537 "View in source") [&#x24C9;][1]
+### <a id="rxobservablecreatewithdisposablesubscribe"></a>`Rx.Observable.createWithDisposable(subscribe)`
+<a href="#rxobservablecreatewithdisposablesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2535-L2537 "View in source") [&#x24C9;][1]
 
 Creates an observable sequence from a specified Subscribe method implementation.
 
@@ -403,8 +403,8 @@ subscription.dispose();
 
 * * *
 
-### <a id="defer"></a>`Rx.Observable.defer(observableFactory)`
-<a href="#defer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservabledeferobservablefactory"></a>`Rx.Observable.defer(observableFactory)`
+<a href="#rxobservabledeferobservablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
 
@@ -441,8 +441,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="empty"></a>`Rx.Observable.empty([scheduler])`
-<a href="#empty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservableemptyscheduler"></a>`Rx.Observable.empty([scheduler])`
+<a href="#rxobservableemptyscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
 
@@ -476,8 +476,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="for"></a>`Rx.Observable.for(sources, resultSelector)`
-<a href="#for">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservableforsources-resultselector"></a>`Rx.Observable.for(sources, resultSelector)`
+<a href="#rxobservableforsources-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Concatenates the observable sequences obtained by running the specified result selector for each element in source.
 There is an alias for this method called `forIn` for browsers <IE9
@@ -522,13 +522,13 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="forkJoin"></a>`Rx.Observable.forkJoin(...)`
-<a href="#for">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservableforkjoinargs"></a>`Rx.Observable.forkJoin(...args)`
+<a href="#rxobservableforkjoinargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Runs all observable sequences in parallel and collect their last elements.
 
 #### Arguments
-1. `sources` *(Array)*: An array or arguments of Observable sequences to collect the last elements for.
+1. `args` *(Arguments | Array)*: An array or arguments of Observable sequences to collect the last elements for.
 
 #### Returns
 *(Observable)*: An observable sequence with an array collecting the last elements of all the input sequences.
