@@ -309,6 +309,7 @@
      *      
      * @memberOf Observable#
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+     * @param {Any} [thisArg] Object to use as this when executing callback.     
      * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
      */
     observableProto.skipWhile = function (predicate, thisArg) {
@@ -374,6 +375,7 @@
      *      
      * @memberOf Observable#
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+     * @param {Any} [thisArg] Object to use as this when executing callback.     
      * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
      */
     observableProto.takeWhile = function (predicate, thisArg) {
@@ -383,7 +385,7 @@
             return observable.subscribe(function (x) {
                 if (running) {
                     try {
-                        running = predicate(x, i++);
+                        running = predicate.call(thisArg, x, i++, observable);
                     } catch (e) {
                         observer.onError(e);
                         return;

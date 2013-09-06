@@ -118,7 +118,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`subscribe`](#subscribe)
 - [`subscribeOn`](#subscribeOn)
 - [`sum`](#sum)
-- [`switch`](#switch)
+- [`switch | switchLatest`](#switch)
 - [`take`](#take)
 - [`takeLast`](#takeLast)
 - [`takeLastBuffer`](#takeLastBuffer)
@@ -1500,7 +1500,7 @@ var subscription = source.subscribe(
 ### <a id="any"></a>`Rx.Observable.prototype.any([predicate], [thisArg])`
 <a href="#any">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L144-L157 "View in source") [&#x24C9;][1]
 
-Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence.
+Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence. There is an alias to this function called `some`.
 
 #### Arguments
 1. `[predicate]` *(Function)*: A function to test each element for a condition.
@@ -2121,7 +2121,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="connect"></a>`ConnectableObservable.prototype.connect()`
-<a href="#publishValue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L504 "View in source") [&#x24C9;][1]
+<a href="#connect">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L504 "View in source") [&#x24C9;][1]
 
 Connects the observable wrapper to its source. All subscribed observers will receive values from the underlying observable sequence as long as the connection is established.
 
@@ -2181,7 +2181,10 @@ function createObserver(tag) {
 Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
 
 #### Arguments
-1. `[predicate]` *(Any)*: A function to test each element for a condition.
+1. `[predicate]` *(Any)*: A function to test each element for a condition.  The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
 
 #### Returns
 *(Observable)*: An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
@@ -5111,6 +5114,365 @@ var subscription = source.subscribe(
 // => Next: 3
 // => Next: 4
 // => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="skipWhile"></a>`Rx.Observable.prototype.skipWhile([predicate], [thisArg])`
+<a href="#skipWhile">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4414-L4432 "View in source") [&#x24C9;][1]
+
+Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
+
+#### Arguments
+1. `predicate` *(Function)*: A function to test each source element for a condition. The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as this when executing callback.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
+ 
+#### Example
+```js
+// With a predicate
+var source = Rx.Observable.range(1, 5)
+	.skipWhile(function (x) { return x < 3; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 3
+// => Next: 4
+// => Next: 5
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="some"></a>`Rx.Observable.prototype.some([predicate], [thisArg])`
+<a href="#some">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L144-L157 "View in source") [&#x24C9;][1]
+
+Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence.  There is an alias to this method called `any`.
+
+#### Arguments
+1. `predicate` *(Function)*: A function to test each source element for a condition. The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as this when executing callback.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate. 
+
+#### Example
+```js
+// With a predicate
+var source = Rx.Observable.fromArray([1,2,3,4,5])
+	.some(function (x) { return x % 2 === 0; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="startWith"></a>`Rx.Observable.prototype.startWith([scheduler] ...args)`
+<a href="#startWith">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3980-L3990 "View in source") [&#x24C9;][1]
+
+Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
+
+#### Arguments
+1. `[scheduler]` *(Scheduler)*: Scheduler to execute the function.
+2. `args` *(arguments)*: Values to prepend to the observable sequence.
+
+#### Returns
+*(Observable)*: The source sequence prepended with the specified values.
+
+#### Example
+```js
+var source = Rx.Observable.return(4)
+	.startWith(1, 2, 3)
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Next: 4
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="subscribe"></a>`Rx.Observable.prototype.subscribe([observer] | [onNext], [onError], [onCompleted])`
+<a href="#subscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2593-L2602 "View in source") [&#x24C9;][1]
+
+Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
+
+#### Arguments
+1. `[observer]` *(Observer)*: The object that is to receive notifications.
+1. `[onNext]` *(Function)*: Function to invoke for each element in the observable sequence.
+2. `[onError]` *(Function)*: Function to invoke upon exceptional termination of the observable sequence.
+3. `[onCompleted]` *(Function)*: Function to invoke upon graceful termination of the observable sequence.
+
+#### Returns
+*(Disposable)*:  The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler. 
+
+#### Example
+```js
+/* With no arguments */
+var source = Rx.Observable.range(0, 3)
+	.do(function (x) { console.log('Do Next: ' + x); });
+
+var subscription = source.subscribe();
+
+// => Do Next: 0
+// => Do Next: 1
+// => Do Next: 2
+
+/* With an observer */
+var observer = Rx.Observer.create(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+var source = Rx.Observable.range(0, 3)
+
+var subscription = source.subscribe(observer);
+
+// => Next: 0
+// => Next: 1
+// => Next: 2
+
+/* Using functions */
+var source = Rx.Observable.range(0, 3)
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 2
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="subscribeOn"></a>`Rx.Observable.prototype.subscribeOn(scheduler)`
+<a href="#subscribeOn">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2700-L2710 "View in source") [&#x24C9;][1]
+
+Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler.
+
+This only performs the side-effects of subscription and unsubscription on the specified scheduler. In order to invoke observer callbacks on a scheduler, use `observeOn`.
+
+#### Arguments
+1. `scheduler` *(Scheduler)*:  Scheduler to notify observers on.
+
+#### Returns
+*(Observable)*: The source sequence whose observations happen on the specified scheduler. 
+ 
+#### Example
+```js
+var observable = Rx.Observable.create(function (observer) {
+	function handler () {
+		observer.onNext(42);
+		observer.onCompleted();
+	}
+
+	// Change scheduler for here
+	var id = setTimeout(handler, 1000);
+
+	return function () {
+		// And change scheduler for here
+		if (id) clearTimeout(id);
+	};
+});
+
+// Change the scheduler to timeout for subscribe/unsubscribe
+var source = observable.subscribeOn(Rx.Scheduler.timeout);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed   
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="sum"></a>`Rx.Observable.prototype.sum([keySelector], [thisArg])`
+<a href="#sum">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L231-L237 "View in source") [&#x24C9;][1]
+
+Computes the sum of a sequence of values that are obtained by invoking an optional transform function on each element of the input sequence, else if not specified computes the sum on each item in the sequence.
+
+#### Arguments
+1. `[keySelector]` *(Scheduler)*:  A transform function to apply to each element.  The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element with the sum of the values in the source sequence.
+ 
+#### Example
+```js
+/* Without a selector */
+var source = Rx.Observable.range(1, 10)
+	.sum();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 55
+// => Completed  
+
+/* With a selector */
+var array = [
+	{ value: 1 },
+	{ value: 2 },
+	{ value: 3 }
+];
+
+var source = Rx.Observable
+	.fromArray(array)
+	.sum(function (x, idx, obs) {
+		return x.value;
+	});
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 6
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
+
+* * *
+
+### <a id="switch"></a>`Rx.Observable.prototype.switch()`
+<a href="#switch">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3462-L3497 "View in source") [&#x24C9;][1]
+
+Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.  There is an alias for this method called `switchLatest` for browsers <IE9.
+  
+#### Returns
+*(Observable)*: The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
+ 
+#### Example
+```js
+var source = Rx.Observable.range(0, 3)
+    .select(function (x) { return Rx.Observable.range(x, 3); })
+    .switchLatest();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Next: 4 
+// => Completed    
 ```
 
 #### Location

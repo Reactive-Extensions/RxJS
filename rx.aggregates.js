@@ -209,11 +209,12 @@
      * 2 - res = source.count(function (x) { return x > 3; });
      * @memberOf Observable#
      * @param {Function} [predicate]A function to test each element for a condition.
+     * @param {Any} [thisArg] Object to use as this when executing callback.        
      * @returns {Observable} An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
      */
-    observableProto.count = function (predicate) {
+    observableProto.count = function (predicate, thisArg) {
         return predicate ?
-            this.where(predicate).count() :
+            this.where(predicate, thisArg).count() :
             this.aggregate(0, function (count) {
                 return count + 1;
             });
@@ -225,12 +226,13 @@
      * 1 - res = source.sum();
      * 2 - res = source.sum(function (x) { return x.value; });
      * @memberOf Observable#
-     * @param {Function} [selector]A transform function to apply to each element.
+     * @param {Function} [selector] A transform function to apply to each element.\
+     * @param {Any} [thisArg] Object to use as this when executing callback.        
      * @returns {Observable} An observable sequence containing a single element with the sum of the values in the source sequence.
      */    
-    observableProto.sum = function (keySelector) {
+    observableProto.sum = function (keySelector, thisArg) {
         return keySelector ? 
-            this.select(keySelector).sum() :
+            this.select(keySelector, thisArg).sum() :
             this.aggregate(0, function (prev, curr) {
                 return prev + curr;
             });
@@ -308,11 +310,12 @@
      * 2 - res = source.average(function (x) { return x.value; });
      * @memberOf Observable#
      * @param {Function} [selector] A transform function to apply to each element.
+     * @param {Any} [thisArg] Object to use as this when executing callback.        
      * @returns {Observable} An observable sequence containing a single element with the average of the sequence of values.
      */
-    observableProto.average = function (keySelector) {
+    observableProto.average = function (keySelector, thisArg) {
         return keySelector ?
-            this.select(keySelector).average() :
+            this.select(keySelector, thisArg).average() :
             this.scan({
                 sum: 0,
                 count: 0

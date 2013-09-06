@@ -472,7 +472,7 @@
      * @memberOf Observable#
      * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
      */
-    observableProto.switchLatest = function () {
+    observableProto['switch'] = observableProto.switchLatest = function () {
         var sources = this;
         return new AnonymousObservable(function (observer) {
             var hasLatest = false,

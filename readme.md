@@ -102,6 +102,21 @@ And there you have it!
 
 You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples).
 
+## RESOURCES
+
+- Blogs
+    - [Rx Team Blog](http://blogs.msdn.com/b/rxteam)
+
+- Videos
+    - [Hello RxJS - Channel 9](http://channel9.msdn.com/Blogs/Charles/Introducing-RxJS-Reactive-Extensions-for-JavaScript)
+    - [MIX 2011](http://channel9.msdn.com/events/MIX/MIX11/HTM07)
+    - [RxJS Today and Tomorrow - Channel 9](http://channel9.msdn.com/Blogs/Charles/Matthew-Podwysocki-and-Bart-J-F-De-Smet-RxJS-Today-and-Tomorrow)
+    - [Cascadia.js 2012](http://www.youtube.com/watch?v=FqBq4uoiG0M)
+
+- Reference Material
+    - [Intro to Rx](http://introtorx.com/)
+    - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
+
 ## GETTING STARTED
 
 There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
@@ -115,6 +130,8 @@ There are a number of ways to get started with RxJS. The files are available on 
 
     npm install rx
     npm install -g rx
+
+### Using with Node.js and Ringo.js
 
     var Rx = require('rx');
 
