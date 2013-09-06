@@ -5481,6 +5481,87 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="take"></a>`Rx.Observable.prototype.take(count, [scheduler])`
+<a href="#take">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4446-L4466 "View in source") [&#x24C9;][1]
+
+Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of `take(0)`.
+  
+#### Arguments
+1. `count` *(Number)*: The number of elements to return.
+2. `[schduler]` *(Scheduler)*: Scheduler used to produce an onCompleted message in case `count` is set to 0.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.   
+
+#### Example
+```js
+var source = Rx.Observable.range(0, 5)
+    .take(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="takeLast"></a>`Rx.Observable.prototype.takeLast(count)`
+<a href="#takeLast">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4008-L4010 "View in source") [&#x24C9;][1]
+
+Returns a specified number of contiguous elements from the end of an observable sequence, using an optional scheduler to drain the queue.
+  
+This operator accumulates a buffer with a length enough to store elements count elements. Upon completion of the source sequence, this buffer is drained on the result sequence. This causes the elements to be delayed.
+
+#### Arguments
+1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
+
+#### Returns
+*(Observable)*: An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
+  
+#### Example
+```js
+var source = Rx.Observable.range(0, 5)
+    .takeLast(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 2
+// => Next: 3
+// => Next: 4
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
 ### <a id="where"></a>`Rx.Observable.prototype.where(predicate, [thisArg])`
 <a href="#where">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
 
