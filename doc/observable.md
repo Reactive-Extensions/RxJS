@@ -7,7 +7,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 <!-- div -->
 
 ## `Observable Methods`
-- [`amb`](#amb1)
+- [`amb`](#rxobservableamb)
 - [`case | switchCase`](#case)
 - [`catch | catchException`](#catch1)
 - [`concat`](#concat1)
@@ -139,13 +139,13 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 
 ## _Observable Methods_ ##
 
-### <a id="amb1"></a>`Rx.Observable.amb(...)`
-<a href="#amb1">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+### <a id="rxobservableamb"></a>`Rx.Observable.amb(...args)`
+<a href="#rxobservableamb">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
 
 Propagates the observable sequence that reacts first.
 
 #### Arguments
-1. `array` *(Array|arguments)*: Observable sources competing to react first either as an array or arguments.
+1. `args` *(Array|arguments)*: Observable sources competing to react first either as an array or arguments.
 
 #### Returns
 *(Observable)*: An observable sequence that surfaces any of the given sequences, whichever reacted first.
