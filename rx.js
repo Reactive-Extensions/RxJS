@@ -2317,10 +2317,10 @@
             this.isStopped = true;
         };
 
-        AbstractObserver.prototype.fail = function () {
+        AbstractObserver.prototype.fail = function (e) {
             if (!this.isStopped) {
                 this.isStopped = true;
-                this.error(true);
+                this.error(e);
                 return true;
             }
 

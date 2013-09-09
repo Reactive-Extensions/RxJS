@@ -363,9 +363,9 @@
 
         function subscribe (observer) {
             var self = this, g = new CompositeDisposable();
-            g.add(Scheduler.currentThread.schedule(function () {
+            g.add(currentThreadScheduler.schedule(function () {
                 observer.onNext(self.head);
-                g.add(tail.mergeObservable().subscribe(observer));
+                g.add(self.tail.mergeObservable().subscribe(observer));
             }));
 
             return g;

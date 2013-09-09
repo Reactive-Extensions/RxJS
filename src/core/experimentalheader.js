@@ -14,6 +14,7 @@
         Enumerable = Rx.Internals.Enumerable,
         enumerableForEach = Enumerable.forEach,
         immediateScheduler = Rx.Scheduler.immediate,
+        currentThreadScheduler = Rx.Scheduler.currentThread,
         slice = Array.prototype.slice,
         AsyncSubject = Rx.AsyncSubject,
         Observer = Rx.Observer,
