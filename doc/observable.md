@@ -23,16 +23,16 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`generateWithRelativeTime`](#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
 - [`if | ifThen`](#rxobservableifcondition-thensource-elsesource)
 - [`interval`](#rxobservableintervalperiod-scheduler)
-- [`merge`](#merge1)
-- [`never`](#never)
-- [`onErrorResumeNext`](#onErrorResumeNext1)
-- [`range`](#range)
-- [`repeat`](#repeat1)
-- [`return | returnValue`](#return)
-- [`start`](#start)
-- [`throw | throwException`](#throw)
-- [`timer`](#timer)
-- [`toAsync`](#toAsync)
+- [`merge`](#rxobservablemergescheduler-args)
+- [`never`](#rxobservablenever)
+- [`onErrorResumeNext`](#rxobservableonerrorresumenextargs)
+- [`range`](#rxobservablerangestart-count-scheduler)
+- [`repeat`](#rxobservablerepeatvalue-repeatcount-scheduler)
+- [`return | returnValue`](#rxobservablereturnvalue-scheduler)
+- [`start`](#rxobservablestartfunc-scheduler-context)
+- [`throw | throwException`](#rxobservablethrowexception-scheduler)
+- [`timer`](#rxobservabletimerduetime-period-scheduler)
+- [`toAsync`](#rxobservabletoasyncfunc-scheduler-context)
 - [`using`](#using)
 - [`when`](#when)
 - [`while | whileDo`](#while)
@@ -866,14 +866,14 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="merge1"></a>`Rx.Observable.merge([scheduler], ...args)`
-<a href="#merge1">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablemergescheduler-args"></a>`Rx.Observable.merge([scheduler], ...args)`
+<a href="#rxobservablemergescheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Merges all the observable sequences into a single observable sequence.  
 
 #### Arguments
 1. `[scheduler]` *(Scheduler=Rx.Scheduler.timeout)*: Scheduler to run the timer on. If not specified, Rx.Scheduler.immediate is used.
-1. `sources` *(Array|arguments)*: Observable sequences to merge into a single sequence.
+1. `args` *(Array|arguments)*: Observable sequences to merge into a single sequence.
 
 #### Returns
 *(Observable)*: An observable sequence that produces a value after each period.
@@ -917,8 +917,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="never"></a>`Rx.Observable.never()`
-<a href="#never">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablenever"></a>`Rx.Observable.never()`
+<a href="#rxobservablenever">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins). 
 
@@ -948,13 +948,13 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="onErrorResumeNext"></a>`Rx.Observable.onErrorResumeNext(...)`
-<a href="#onErrorResumeNext">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservableonerrorresumenextargs"></a>`Rx.Observable.onErrorResumeNext(...args)`
+<a href="#rxobservableonerrorresumenextargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
 
 ### Arguments
-1. `array` *(Array|arguments)*: Observable sequences to concatenate.
+1. `args` *(Array|arguments)*: Observable sequences to concatenate.
 
 #### Returns
 *(Observable)*: An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally. 
@@ -988,8 +988,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="range"></a>`Rx.Observable.range(start, count, [scheduler])`
-<a href="#range">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablerangestart-count-scheduler"></a>`Rx.Observable.range(start, count, [scheduler])`
+<a href="#rxobservablerangestart-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
 
@@ -1028,8 +1028,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="repeat"></a>`Rx.Observable.repeat(value, [repeatCount], [scheduler])`
-<a href="#repeat">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablerepeatvalue-repeatcount-scheduler"></a>`Rx.Observable.repeat(value, [repeatCount], [scheduler])`
+<a href="#rxobservablerepeatvalue-repeatcount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Generates an observable sequence that repeats the given element the specified number of times, using the specified scheduler to send out observer messages.
 
@@ -1068,8 +1068,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="return"></a>`Rx.Observable.return(value, [scheduler])`
-<a href="#return">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablereturnvalue-scheduler"></a>`Rx.Observable.return(value, [scheduler])`
+<a href="#rxobservablereturnvalue-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
 There is an alias called `returnValue` for browsers <IE9.
@@ -1106,8 +1106,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="start"></a>`Rx.Observable.start(func, [scheduler], [context])`
-<a href="#start">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2639-L2641 "View in source") [&#x24C9;][1]
+### <a id="rxobservablestartfunc-scheduler-context"></a>`Rx.Observable.start(func, [scheduler], [context])`
+<a href="#rxobservablestartfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2639-L2641 "View in source") [&#x24C9;][1]
 
 Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
 
@@ -1152,8 +1152,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="throw"></a>`Rx.Observable.throw(exception, [scheduler])`
-<a href="#throw">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") [&#x24C9;][1]
+### <a id="rxobservablethrowexception-scheduler"></a>`Rx.Observable.throw(exception, [scheduler])`
+<a href="#rxobservablethrowexception-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") [&#x24C9;][1]
 
 Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
 There is an alias to this method called `throwException` for browsers <IE9.
@@ -1190,8 +1190,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="timer"></a>`Rx.Observable.timer(dueTime, [period], [scheduler])`
-<a href="#timer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") [&#x24C9;][1]
+### <a id="rxobservabletimerduetime-period-scheduler"></a>`Rx.Observable.timer(dueTime, [period], [scheduler])`
+<a href="#rxobservabletimerduetime-period-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") [&#x24C9;][1]
 
 Returns an observable sequence that produces a value after dueTime has elapsed and then after each period.
 
@@ -1232,8 +1232,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="toAsync"></a>`Rx.Observable.toAsync(func, [scheduler], [context])`
-<a href="#timer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2656-L2673 "View in source") [&#x24C9;][1]
+### <a id="rxobservabletoasyncfunc-scheduler-context"></a>`Rx.Observable.toAsync(func, [scheduler], [context])`
+<a href="#rxobservabletoasyncfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2656-L2673 "View in source") [&#x24C9;][1]
 
 Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
 
@@ -1275,13 +1275,83 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="when"></a>`Rx.Observable.when(...)`
+### <a id="using"></a>`Rx.Observable.using(resourceFactory, observableFactory)`
+<a href="#using">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2973-L2987 "View in source") [&#x24C9;][1]
+
+ Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
+
+### Arguments
+1. `resourceFactory` *(Function)*: Factory function to obtain a resource object.
+2. `observableFactory` *(Scheduler)*: Factory function to obtain an observable sequence that depends on the obtained resource.
+
+#### Returns
+*(Function)*: An observable sequence whose lifetime controls the lifetime of the dependent resource object.
+
+#### Example
+```js
+/* Using an AsyncSubject as a resource which supports the .dispose method */
+function DisposableResource(value) {
+	this.value = null;
+	this.disposed = false;
+}
+
+DisposableResource.prototype.getValue = function () {
+	if (this.disposed) {
+		throw new Error('Object is disposed');
+	}
+	return this.value;
+};
+
+DisposableResource.prototype.dispose = function () {
+	if (!this.disposed) {
+		this.disposed = true;
+		this.value = null;
+	}
+	console.log('Disposed');
+};
+
+var source = Rx.Observable.using(
+	function () { return new DisposableResource(42); },
+	function (resource) {
+		var subject = new AsyncSubject();
+		s.onNext(resource.getValue());
+		s.onCompleted();
+		return subject;
+	}
+);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed 
+
+subscription.dispose();
+
+// => Disposed
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="when"></a>`Rx.Observable.when(...args)`
 <a href="#when">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js#L366-L152 "View in source") [&#x24C9;][1]
 
 A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.
 
 ### Arguments
-1. `plans` *(arguments|Array)*: A series of plans (specified as an Array of as a series of arguments) created by use of the then operator on patterns.
+1. `args` *(arguments|Array)*: A series of plans (specified as an Array of as a series of arguments) created by use of the then operator on patterns.
 
 #### Returns
 *(Observable)*: Observable sequence with the results form matching several patterns. 
