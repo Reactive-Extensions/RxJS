@@ -17,12 +17,12 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`empty`](#rxobservableemptyscheduler)
 - [`for | forIn`](#rxobservableforsources-resultselector)
 - [`forkJoin`](#rxobservableforkjoinargs)
-- [`fromArray`](#fromArray)
-- [`generate`](#generate)
-- [`generateWithAbsoluteTime`](#generateWithAbsoluteTime)
-- [`generateWithRelativeTime`](#generateWithRelativeTime)
-- [`if | ifThen`](#if)
-- [`interval`](#interval)
+- [`fromArray`](#rxobservablefromarrayarray-scheduler)
+- [`generate`](#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
+- [`generateWithAbsoluteTime`](#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
+- [`generateWithRelativeTime`](#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
+- [`if | ifThen`](#rxobservableifcondition-thensource-elsesource)
+- [`interval`](#rxobservableintervalperiod-scheduler)
 - [`merge`](#merge1)
 - [`never`](#never)
 - [`onErrorResumeNext`](#onErrorResumeNext1)
@@ -569,8 +569,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="fromArray"></a>`Rx.Observable.fromArray(array, [scheduler])`
-<a href="#fromArray">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablefromarrayarray-scheduler"></a>`Rx.Observable.fromArray(array, [scheduler])`
+<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -610,8 +610,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="generate"></a>`Rx.Observable.generate(initialState, condition, iterate, resultSelector, [scheduler])`
-<a href="#generate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler"></a>`Rx.Observable.generate(initialState, condition, iterate, resultSelector, [scheduler])`
+<a href="#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -657,8 +657,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="generateWithAbsoluteTime"></a>`Rx.Observable.generateWithAbsoluteTime(initialState, condition, iterate, resultSelector, timeSelector, [scheduler])`
-<a href="#generate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-schedule"></a>`Rx.Observable.generateWithAbsoluteTime(initialState, condition, iterate, resultSelector, timeSelector, [scheduler])`
+<a href="#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-schedule">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Generates an observable sequence by iterating a state from an initial state until the condition fails.
 
@@ -707,8 +707,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="generateWithRelativeTime"></a>`Rx.Observable.generateWithRelativeTime(initialState, condition, iterate, resultSelector, timeSelector, [scheduler])`
-<a href="#generate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler"></a>`Rx.Observable.generateWithRelativeTime(initialState, condition, iterate, resultSelector, timeSelector, [scheduler])`
+<a href="#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Generates an observable sequence by iterating a state from an initial state until the condition fails.
 
@@ -757,8 +757,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="if"></a>`Rx.Observable.if(condition, thenSource, [elseSource])`
-<a href="#if">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservableifcondition-thensource-elsesource"></a>`Rx.Observable.if(condition, thenSource, [elseSource])`
+<a href="#rxobservableifcondition-thensource-elsesource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Determines whether an observable collection contains values. There is an alias for this method called `ifThen` for browsers <IE9
 
@@ -824,8 +824,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="interval"></a>`Rx.Observable.interval(period, [scheduler])`
-<a href="#interval">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+### <a id="rxobservableintervalperiod-scheduler"></a>`Rx.Observable.interval(period, [scheduler])`
+<a href="#rxobservableintervalperiod-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Returns an observable sequence that produces a value after each period.
 
@@ -866,7 +866,7 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="merge1"></a>`Rx.Observable.merge([scheduler], ...)`
+### <a id="merge1"></a>`Rx.Observable.merge([scheduler], ...args)`
 <a href="#merge1">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
 
 Merges all the observable sequences into a single observable sequence.  
