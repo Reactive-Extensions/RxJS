@@ -248,18 +248,7 @@
      *  @returns {Observable} An observable sequence of windows.    
      */
     observableProto.buffer = function (bufferOpeningsOrClosingSelector, bufferClosingSelector) {
-        if (arguments.length === 1 && typeof arguments[0] !== 'function') {
-            return observableWindowWithBounaries.call(this, bufferOpeningsOrClosingSelector).selectMany(function (item) {
-                return item.toArray();
-            });
-        }
-        return typeof bufferOpeningsOrClosingSelector === 'function' ?
-            observableWindowWithClosingSelector.call(this, bufferOpeningsOrClosingSelector).selectMany(function (item) {
-                return item.toArray();
-            }) :
-            observableWindowWithOpenings.call(this, bufferOpeningsOrClosingSelector, bufferClosingSelector).selectMany(function (item) {
-                return item.toArray();
-            });
+        return this.window.apply(this, arguments).selectMany(function (x) { return x.toArray(); });
     };
     
     /**

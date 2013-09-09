@@ -4,6 +4,7 @@
         AnonymousObservable = Rx.Internals.AnonymousObservable,
         observableDefer = Observable.defer,
         observableEmpty = Observable.empty,
+        observableNever = Observable.never,
         observableThrow = Observable.throwException,
         observableFromArray = Observable.fromArray,
         timeoutScheduler = Rx.Scheduler.timeout,

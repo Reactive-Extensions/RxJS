@@ -27,6 +27,7 @@
         AnonymousObservable = Rx.Internals.AnonymousObservable,
         observableDefer = Observable.defer,
         observableEmpty = Observable.empty,
+        observableNever = Observable.never,
         observableThrow = Observable.throwException,
         observableFromArray = Observable.fromArray,
         timeoutScheduler = Rx.Scheduler.timeout,
@@ -481,20 +482,7 @@
      * @returns {Observable} An observable sequence of buffers.
      */
     observableProto.bufferWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
-        var timeShift;
-        if (timeShiftOrScheduler === undefined) {
-            timeShift = timeSpan;
-        }
-        scheduler || (scheduler = timeoutScheduler);
-        if (typeof timeShiftOrScheduler === 'number') {
-            timeShift = timeShiftOrScheduler;
-        } else if (typeof timeShiftOrScheduler === 'object') {
-            timeShift = timeSpan;
-            scheduler = timeShiftOrScheduler;
-        }
-        return this.windowWithTime(timeSpan, timeShift, scheduler).selectMany(function (x) {
-            return x.toArray();
-        });
+        return this.windowWithTime.apply(this, arguments).selectMany(function (x) { return x.toArray(); });
     };
 
     /**
@@ -511,7 +499,6 @@
      * @returns {Observable} An observable sequence of buffers.
      */
     observableProto.bufferWithTimeOrCount = function (timeSpan, count, scheduler) {
-        scheduler || (scheduler = timeoutScheduler);
         return this.windowWithTimeOrCount(timeSpan, count, scheduler).selectMany(function (x) {
             return x.toArray();
         });
@@ -896,7 +883,10 @@
      * @returns {Observable} The source sequence switching to the other sequence in case of a timeout.
      */
     observableProto.timeoutWithSelector = function (firstTimeout, timeoutdurationSelector, other) {
-        firstTimeout || (firstTimeout = observableNever());
+        if (arguments.length === 1) {
+            timeoutdurationSelector = firstTimeout;
+            var firstTimeout = observableNever();
+        }
         other || (other = observableThrow(new Error('Timeout')));
         var source = this;
         return new AnonymousObservable(function (observer) {

@@ -401,14 +401,37 @@
     test('Throttle_Duration_DelayBehavior', function () {
         var results, scheduler, xs, ys;
         scheduler = new TestScheduler();
-        xs = scheduler.createHotObservable(onNext(150, -1), onNext(250, 0), onNext(280, 1), onNext(310, 2), onNext(350, 3), onNext(400, 4), onCompleted(550));
-        ys = [scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), scheduler.createColdObservable(onNext(20, 42), onNext(25, 99))];
+        xs = scheduler.createHotObservable(
+            onNext(150, -1), 
+            onNext(250, 0), 
+            onNext(280, 1), 
+            onNext(310, 2), 
+            onNext(350, 3), 
+            onNext(400, 4), 
+            onCompleted(550)
+        );
+        ys = [
+            scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), 
+            scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), 
+            scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), 
+            scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), 
+            scheduler.createColdObservable(onNext(20, 42), onNext(25, 99))
+        ];
+        
         results = scheduler.startWithCreate(function () {
             return xs.throttleWithSelector((function (x) {
                 return ys[x];
             }));
         });
-        results.messages.assertEqual(onNext(250 + 20, 0), onNext(280 + 20, 1), onNext(310 + 20, 2), onNext(350 + 20, 3), onNext(400 + 20, 4), onCompleted(550));
+        results.messages.assertEqual(
+            onNext(250 + 20, 0), 
+            onNext(280 + 20, 1), 
+            onNext(310 + 20, 2), 
+            onNext(350 + 20, 3), 
+            onNext(400 + 20, 4), 
+            onCompleted(550)
+        );
+
         xs.subscriptions.assertEqual(subscribe(200, 550));
         ys[0].subscriptions.assertEqual(subscribe(250, 250 + 20));
         ys[1].subscriptions.assertEqual(subscribe(280, 280 + 20));

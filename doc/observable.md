@@ -30,8 +30,10 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`repeat`](#repeat1)
 - [`return | returnValue`](#return)
 - [`start`](#start)
+- [`throw | throwException`](#throw)
 - [`timer`](#timer)
 - [`toAsync`](#toAsync)
+- [`using`](#using)
 - [`when`](#when)
 - [`while | whileDo`](#while)
 
@@ -61,6 +63,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`count`](#count)
 - [`defaultIfEmpty`](#defaultIfEmpty)
 - [`delay`](#delay)
+- [`delayWithSelector`](#delayWithSelector)
 - [`dematerialize`](#dematerialize)
 - [`distinct`](#distinct)
 - [`distinctUntilChanged`](#distinctUntilChanged)
@@ -111,6 +114,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`singleOrDefault`](#singleOrDefault)
 - [`skip`](#skip)
 - [`skipLast`](#skipLast)
+- [`skipLastWithTime`](#skipLastWithTime)
 - [`skipUntil`](#skipUntil)
 - [`skipWhile`](#skipWhile)
 - [`some`](#some)
@@ -122,14 +126,17 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`take`](#take)
 - [`takeLast`](#takeLast)
 - [`takeLastBuffer`](#takeLastBuffer)
+- [`takeLastBufferWithTime`](#takeLastBufferWithTime)
+- [`takeLastWithTime`](#takeLastWithTime)
 - [`takeUntil`](#takeUntil)
 - [`takeWhile`](#takeWhile)
 - [`throttle`](#throttle)
-- [`throwException`](#throwException)
+- [`throttleWithSelector`](#throttleWithSelector)
 - [`timeInterval`](#timeInterval)
 - [`timeout`](#timeout)
+- [`timeoutWithSelector`](#timeoutWithSelector)
+- [`timestamp`](#timestamp)
 - [`toArray`](#toArray)
-- [`using`](#using)
 - [`where`](#where)
 - [`window`](#window)
 - [`windowWithCount`](#windowWithCount)
@@ -244,7 +251,7 @@ Continues an observable sequence that is terminated by an exception with the nex
 var obs1 = Rx.Observable.throw(new Error('error'));
 var obs2 = Rx.Observable.return(42);
 
-var source = Rx.Observable.catc(obs1, obs2);
+var source = Rx.Observable.catch(obs1, obs2);
 
 var subscription = source.subscribe(
     function (x) {
@@ -1145,6 +1152,44 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="throw"></a>`Rx.Observable.throw(exception, [scheduler])`
+<a href="#throw">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") [&#x24C9;][1]
+
+Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
+There is an alias to this method called `throwException` for browsers <IE9.
+
+### Arguments
+1. `dueTime` *(Any)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
+2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to send the exceptional termination call on. If not specified, defaults to the immediate scheduler.
+
+#### Returns
+*(Observable)*: The observable sequence that terminates exceptionally with the specified exception object.
+   
+#### Example
+```js
+var source = Rx.Observable.return(42)
+	.selectMany(Rx.Observable.throw(new Error('error!')));
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: error!
+```
+
+### Location
+
+- rx.time.js
+
+* * *
+
 ### <a id="timer"></a>`Rx.Observable.timer(dueTime, [period], [scheduler])`
 <a href="#timer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") [&#x24C9;][1]
 
@@ -1656,14 +1701,25 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="buffer"></a>`Rx.Observable.prototype.buffer(bufferOpenings | closingSelector, bufferClosingSelector)`
+### <a id="buffer"></a>`Rx.Observable.prototype.buffer([bufferOpenings], [bufferBoundaries], [bufferClosingSelector])`
 <a href="#buffer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L572-L585 "View in source") [&#x24C9;][1]
 
 Projects each element of an observable sequence into zero or more buffers.
 
+```js
+// With buffer closing selector
+Rx.Observable.prototype.buffer(bufferClosingSelector);
+
+// With buffer opening and window closing selector
+Rx.Observable.prototype.buffer(bufferOpenings, bufferClosingSelector);
+
+// With buffer boundaries
+Rx.Observable.prototype.buffer(bufferBoundaries);
+```js
+
 #### Arguments
-1. `bufferOpenings` *(Observable)*: Observable sequence whose elements denote the creation of new windows.
-1 `closingSelector` *(Function)*: A function invoked to define the boundaries of the produced windows (a new window is started when the previous one is closed, resulting in non-overlapping windows).
+1. `[bufferOpenings]` *(Observable)*: Observable sequence whose elements denote the creation of new windows.
+2. `[bufferBoundaries] *(Observable)*: Sequence of buffer boundary markers. The current buffer is closed and a new buffer is opened upon receiving a boundary marker.
 2. `[bufferClosingSelector]` *(Function)*: A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
 
 #### Returns
@@ -1671,7 +1727,7 @@ Projects each element of an observable sequence into zero or more buffers.
 
 #### Example
 ```js
-/* Using an openings */
+/* Using buffer boundaries */
 var openings = Rx.Observable.interval(500);
 
 var source = Rx.Observable.interval(100)
@@ -1694,7 +1750,7 @@ var subscription = source.subscribe(
 // => Next: 9,10,11,12,13
 // => Completed 
 
-/* Using a closing selector */
+/* Using a buffer closing selector */
 var win = 0;
 
 var source = Rx.Observable.interval(50)
@@ -1721,7 +1777,7 @@ var subscription = source.subscribe(
 var openings = Rx.Observable.interval(200);
 
 var source = Rx.Observable.interval(50)
-    .buffer(openings, function (x) { return Rx.Observable.interval(x + 100); })
+    .buffer(openings, function (x) { return Rx.Observable.timer(x + 100); })
     .take(3);
 
 var subscription = source.subscribe(
@@ -2336,6 +2392,80 @@ var subscription = source.subscribe(
 
 // => Next: false
 // => Completed 
+```
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="delayWithSelector"></a>`Rx.Observable.delayWithSelector.delay([subscriptionDelay], delayDurationSelector)`
+<a href="#delay">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L832-L882 "View in source") [&#x24C9;][1]
+
+Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
+
+#### Arguments
+1. `[subscriptionDelay]` *(Observable)*: Sequence indicating the delay for the subscription to the source. 
+2. `delayDurationSelector` *(Function)*: Selector function to retrieve a sequence indicating the delay for each given element.
+
+#### Returns
+*(Observable)*: Time-shifted sequence.
+  
+#### Example
+```js
+/* With subscriptionDelay */
+var source = Rx.Observable
+	.range(0, 3)
+	.delayWithSelector(
+		Rx.Observable.timer(300), 
+		function (x) {
+			return Rx.Observable.timer(x * 400);
+		}
+	)
+	.timeInterval()
+	.map(function (x) { return x.value + ':' + x.interval; });
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0:300
+// => Next: 1:400
+// => Next: 2:400
+// => Completed
+
+/* Without subscriptionDelay */
+var source = Rx.Observable
+	.range(0, 3)
+	.delayWithSelector(
+		function (x) {
+			return Rx.Observable.timer(x * 400);
+		})
+	.timeInterval()
+	.map(function (x) { return x.value + ':' + x.interval; });
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0:0
+// => Next: 1:400
+// => Next: 2:400
+// => Completed
 ```
 #### Location
 
@@ -5082,6 +5212,50 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="skipLastWithTime"></a>`Rx.Observable.prototype.skipLastWithTime(duration)`
+<a href="#skipLastWithTime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L1035-L1054 "View in source") [&#x24C9;][1]
+
+Bypasses a specified number of elements at the end of an observable sequence.
+
+This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed. 
+
+#### Arguments
+1. `duration` *(Number)*: Duration for skipping elements from the end of the sequence.
+1. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
+
+#### Returns
+*(Observable)*: An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
+ 
+#### Example
+```js
+var source = Rx.Observable.timer(0, 1000)
+	.take(10)
+	.skipLastWithTime(5000);
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 3
+// => Next: 4
+// => Completed 
+```
+
+#### Location
+
+- rx.time.js
+
+* * *
+
 ### <a id="skipUntil"></a>`Rx.Observable.prototype.skipUntil(other)`
 <a href="#skipUntil">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3429-L3454 "View in source") [&#x24C9;][1]
 
@@ -5109,10 +5283,9 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: 0
-// => Next: 1
-// => Next: 3
-// => Next: 4
+// => Next: 6
+// => Next: 7
+// => Next: 8
 // => Completed 
 ```
 
@@ -5562,6 +5735,625 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="takeLastBuffer"></a>`Rx.Observable.prototype.takeLastBuffer(count)`
+<a href="#takeLastBuffer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4023-L4037 "View in source") [&#x24C9;][1]
+
+Returns an array with the specified number of contiguous elements from the end of an observable sequence.
+
+#### Arguments
+1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
+     
+#### Example
+```js
+var source = Rx.Observable.range(0, 5)
+    .takeLastBuffer(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: [2, 3, 4]
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="takeLastBufferWithTime"></a>`Rx.Observable.prototype.takeLastBufferWithTime(duration, [scheduler])`
+<a href="#takeLastBufferWithTime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L1089-L1114 "View in source") [&#x24C9;][1]
+
+Returns an array with the elements within the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
+
+This operator accumulates a queue with a length enough to store elements received during the initial duration window. As more elements are received, elements older than the specified duration are taken from the queue and produced on the result sequence. This causes elements to be delayed with duration.  
+ 
+#### Arguments
+1. `duration` *(Number)*: Duration for taking elements from the end of the sequence.
+2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single array with the elements taken during the specified duration from the end of the source sequence.
+ 
+#### Example
+```js
+var source = Rx.Observable
+	.timer(0, 1000)
+	.take(10)
+	.takeLastBufferWithTime(5000);
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 5,6,7,8,9]
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="takeLastWithTime"></a>`Rx.Observable.prototype.takeWhileWithTime(duration, [timeScheduler], [loopScheduler])`
+<a href="#takeLastWithTime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L1071-L1073 "View in source") [&#x24C9;][1]
+
+Returns elements within the specified duration from the end of the observable source sequence, using the specified schedulers to run timers and to drain the collected elements.
+
+#### Arguments
+1. `duration` *(Number)*: Duration for taking elements from the end of the sequence.
+2. `[timeScheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
+2. `[loopScheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to drain the collected elements. If not specified, defaults to current thread scheduler.
+
+#### Returns
+*(Observable)*: An observable sequence with the elements taken during the specified duration from the end of the source sequence.
+    
+#### Example
+```js
+var source = Rx.Observable.timer(0, 1000)
+	.take(10)
+	.takeLastWithTime(5000);
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 5
+// => Next: 6
+// => Next: 7
+// => Next: 8
+// => Next: 9
+// => Completed 
+```
+
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="takeUntil"></a>`Rx.Observable.prototype.takeUntil(other)`
+<a href="#takeUntil">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3506-L3514 "View in source") [&#x24C9;][1]
+
+Returns the values from the source observable sequence until the other observable sequence produces a value.
+
+#### Arguments
+1. `other` *(Observable)*: Observable sequence that terminates propagation of elements of the source sequence.
+
+#### Returns
+*(Observable)*: An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.    
+
+#### Example
+```js
+var source = Rx.Observable.timer(0, 1000)
+    .takeUntil(Rx.Observable.timer(5000));
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Next: 4
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="takeWhile"></a>`Rx.Observable.prototype.takeWhile(predicate, [thisArg])`
+<a href="#takeWhile">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4481-L4501 "View in source") [&#x24C9;][1]
+
+Returns elements from an observable sequence as long as a specified condition is true.
+
+#### Arguments
+1. `predicate` *(Function)*: A function to test each source element for a condition. The callback is called with the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as this when executing callback.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
+    
+#### Example
+```js
+// With a predicate
+var source = Rx.Observable.range(1, 5)
+	.takeWhile(function (x) { return x < 3; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="throttle"></a>`Rx.Observable.prototype.throttle([predicate], [thisArg])`
+<a href="#throttle">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4481-L4501 "View in source") [&#x24C9;][1]
+
+Ignores values from an observable sequence which are followed by another value before dueTime.
+
+#### Arguments
+1. `dueTime` *(Number)*: Duration of the throttle period for each value (specified as an integer denoting milliseconds).
+2. `[scheduler=Rx.Scheduler.timeout]` *(Any)*: Scheduler to run the throttle timers on. If not specified, the timeout scheduler is used.
+
+#### Returns
+*(Observable)*: The throttled sequence. 
+    
+#### Example
+```js
+var times = [
+	{ value: 0, time: 100 },
+	{ value: 1, time: 600 },
+	{ value: 2, time: 400 },
+	{ value: 3, time: 700 },
+	{ value: 4, time: 200 }
+];
+
+// Delay each item by time and project value;
+var source = Rx.Observable.for(
+	times, 
+	function (item) {
+		return Rx.Observable
+			.return(item.value)
+			.delay(item.time);
+	})
+	.throttle(500 /* ms */);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 2
+// => Next: 4
+// => Completed 
+```
+
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="throttleWithSelector"></a>`Rx.Observable.prototype.throttleWithSelector(throttleSelector)`
+<a href="#throttle">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L973-L1018 "View in source") [&#x24C9;][1]
+
+Ignores values from an observable sequence which are followed by another value before dueTime.
+
+#### Arguments
+1. `dueTime` *(Number)*: Selector function to retrieve a sequence indicating the throttle duration for each given element.
+
+#### Returns
+*(Observable)*: The throttled sequence. 
+    
+#### Example
+```js
+var array = [
+	800,
+	700,
+	600,
+	500
+];
+
+var source = Rx.Observable.for(
+	array,
+	function (x) {
+		return Rx.Observable.timer(x)
+	})
+	.map(function(x, i) { return i; })
+	.throttleWithSelector(function (x) {
+		return Rx.Observable.timer(700);
+	});
+	
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 3
+// => Completed 
+```
+
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="timeInterval"></a>`Rx.Observable.prototype.timeInterval([scheduler])`
+<a href="#timeInterval">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L531-L545 "View in source") [&#x24C9;][1]
+
+Records the time interval between consecutive values in an observable sequence.
+
+#### Arguments
+1. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler used to compute time intervals. If not specified, the timeout scheduler is used.
+
+#### Returns
+*(Observable)*: An observable sequence with time interval information on values.
+
+#### Example
+```js
+var source = Rx.Observable.timer(0, 1000)
+	.timeInterval()
+	.map(function (x) { return x.value + ':' + x.interval; })
+	.take(5);
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0:0
+// => Next: 1:1000
+// => Next: 2:1000
+// => Next: 3:1000
+// => Next: 4:1000
+// => Completed    
+```
+
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="timeout"></a>`Rx.Observable.prototype.timeout(dueTime, [other], [scheduler])`
+<a href="#timeout">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L633-L687 "View in source") [&#x24C9;][1]
+
+Returns the source observable sequence or the other observable sequence if dueTime elapses.
+
+#### Arguments
+1. `dueTime` *(Date | Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
+2. `[other]` *(Observable)*: Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
+3. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
+
+#### Returns
+*(Observable)*: An observable sequence with time interval information on values.
+
+#### Example
+```js
+/* With no other */
+var source = Rx.Observable
+	.return(42)
+	.delay(5000)
+	.timeout(200);
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: Timeout
+
+/* With another */
+var source = Rx.Observable
+	.return(42)
+	.delay(5000)
+	.timeout(200, Rx.Observable.empty());
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Completed
+```
+
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="timeoutWithSelector"></a>`Rx.Observable.prototype.timeout([firstTimeout], timeoutDurationSelector, [other])`
+<a href="#timeoutWithSelector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L633-L687 "View in source") [&#x24C9;][1]
+
+Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
+
+#### Arguments
+1. `[firstTimeout=Rx.Observable.never()]` *(Observable)*: Observable sequence that represents the timeout for the first element. If not provided, this defaults to `Rx.Observable.never()`.
+2. `timeoutDurationSelector` *(Function)*: Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
+3. `[other=Rx.Observable.throw]` *(Scheduler)*:Sequence to return in case of a timeout. If not provided, this is set to `Observable.throw`
+
+#### Returns
+*(Observable)*: The source sequence switching to the other sequence in case of a timeout.
+
+#### Example
+```js
+/* without a first timeout */
+var array = [
+	200,
+	300,
+	350,
+	400
+];
+
+var source = Rx.Observable
+	.for(array, function (x) {
+		return Rx.Observable.timer(x);
+	})
+	.map(function (x, i) { return i; })
+	.timeoutWithSelector(function (x) { 
+		return Rx.Observable.timer(400); 
+	});
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1 
+// => Next: 2 
+// => Error: Error: Timeout 
+
+/* With no other */
+var array = [
+	200,
+	300,
+	350,
+	400
+];
+
+var source = Rx.Observable
+	.for(array, function (x) {
+		return Rx.Observable.timer(x);
+	})
+	.map(function (x, i) { return i; })
+	.timeoutWithSelector(Rx.Observable.timer(250), function (x) { 
+		return Rx.Observable.timer(400); 
+	});
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1 
+// => Next: 2 
+// => Error: Error: Timeout 
+
+/* With other */
+var array = [
+	200,
+	300,
+	350,
+	400
+];
+
+var source = Rx.Observable
+	.for(array, function (x) {
+		return Rx.Observable.timer(x);
+	})
+	.map(function (x, i) { return i; })
+	.timeoutWithSelector(Rx.Observable.timer(250), function (x) { 
+		return Rx.Observable.timer(400); 
+	}, Rx.Observable.return(42));
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1 
+// => Next: 2 
+// => Next: 42
+// => Completed
+```
+
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="timestamp"></a>`Rx.Observable.prototype.timestamp([scheduler])`
+<a href="#timestamp">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L559-L567 "View in source") [&#x24C9;][1]
+
+Records the timestamp for each value in an observable sequence.
+
+#### Arguments
+1. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler used to compute timestamps. If not specified, the timeout scheduler is used.
+
+#### Returns
+*(Observable)*: An observable sequence with timestamp information on values.
+
+#### Example
+```js
+var source = Rx.Observable.timer(0, 1000)
+	.timestamp()
+	.map(function (x) { return x.value + ':' + x.timestamp; })
+	.take(5);
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0:1378690776351
+// => Next: 1:1378690777313
+// => Next: 2:1378690778316
+// => Next: 3:1378690779317
+// => Next: 4:1378690780319
+// => Completed
+```
+
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="toArray"></a>`Rx.Observable.prototype.toArray()`
+<a href="#toArray">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2610-L2617 "View in source") [&#x24C9;][1]
+
+Creates a list from an observable sequence.
+
+#### Returns
+*(Observable)*: An observable sequence containing a single element with a list containing all the elements of the source sequence.  
+
+#### Example
+```js
+var source = Rx.Observable.timer(0, 1000)
+	.take(5)
+	.toArray();
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: [0,1,2,3,4]
+// => Completed
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
 ### <a id="where"></a>`Rx.Observable.prototype.where(predicate, [thisArg])`
 <a href="#where">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
 
@@ -5599,6 +6391,357 @@ var subscription = source.subscribe(
 // => Next: 2 
 // => Next: 4 
 // => Completed    
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="window"></a>`Rx.Observable.prototype.window([windowOpenings], [windowBoundaries], windowClosingSelector)`
+<a href="#window">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L4513-L4530 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into zero or more windows.
+
+```js
+// With window closing selector
+Rx.Observable.prototype.window(windowClosingSelector);
+
+// With window opening and window closing selector
+Rx.Observable.prototype.window(windowOpenings, windowClosingSelector);
+
+// With boundaries
+Rx.Observable.prototype.window(windowBoundaries);
+```
+
+#### Arguments
+1. `[windowOpenings]` *(Observable)*: Observable sequence whose elements denote the creation of new windows 
+2.`[windowBoundaries]` *(Observable)*: Sequence of window boundary markers. The current window is closed and a new window is opened upon receiving a boundary marker. 
+3. `windowClosingSelector` *(Function)*: A function invoked to define the closing of each produced window.
+
+#### Returns
+*(Observable)*: An observable sequence of windows.
+
+#### Example
+```js
+/* With window boundaries */
+var openings = Rx.Observable.interval(500);
+
+// Convert the window to an array
+var source = Rx.Observable.timer(0, 100)
+    .window(openings)
+    .take(3)
+    .selectMany(function (x) { return x.toArray(); });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0,1,2,3,4 
+// => Next: 5,6,7,8,9,10 
+// => Next: 11,12,13,14,15 
+// => Completed  
+
+/* With window opening and window closing selector */
+var win = 0;
+
+var source = Rx.Observable.timer(0, 50)
+    .window(function () { return Rx.Observable.timer((++win) * 100); })
+    .take(3)
+    .selectMany(function (x) { return x.toArray(); });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0,1,2 
+// => Next: 3,4,5,6 
+// => Next: 7,8,9,10,11,12 
+// => Completed 
+
+/* With openings and closings */
+var openings = Rx.Observable.timer(0, 200);
+
+var source = Rx.Observable.timer(0, 50)
+    .window(openings, function (x) { return Rx.Observable.timer(x + 100); })
+    .take(3)
+    .selectMany(function (x) { return x.toArray(); });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0,1,2 
+// => Next: 4,5 
+// => Next: 8,9 
+// => Completed 
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="windowWithCount"></a>`Rx.Observable.prototype.windowWithCount(count, [skip])`
+<a href="#windowWithCount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4050-L4099 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
+
+#### Arguments
+1. `count` *(Function)*: Length of each buffer.
+2. `[skip]` *(Function)*: Number of elements to skip between creation of consecutive windows. If not provided, defaults to the count.
+
+#### Returns
+*(Observable)*: An observable sequence of windows. 
+
+#### Example
+```js
+/* Without a skip */
+var source = Rx.Observable.range(1, 6)
+    .windowWithCount(2)
+    .selectMany(function (x) { return x.toArray(); });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1,2 
+// => Next: 3,4 
+// => Next: 5,6 
+// => Completed 
+
+/* Using a skip */
+var source = Rx.Observable.range(1, 6)
+    .windowWithCount(2, 1)
+    .selectMany(function (x) { return x.toArray(); });    
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1,2 
+// => Next: 2,3 
+// => Next: 3,4 
+// => Next: 4,5 
+// => Next: 5,6 
+// => Next: 6 
+// => Completed 
+```
+#### Location
+
+- rx.js
+
+* * *
+
+### <a id="windowWithTime"></a>`Rx.Observable.prototype.windowWithTime(timeSpan, [timeShift | scheduler], [scheduler])`
+<a href="#windowWithTime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L311-L399 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into zero or more buffers which are produced based on timing information.
+
+#### Arguments
+1. `timeSpan` *(Number)*: Length of each buffer (specified as an integer denoting milliseconds).
+2. `[timeShift]` *(Number)*: Interval between creation of consecutive buffers (specified as an integer denoting milliseconds).
+3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
+
+#### Returns
+*(Observable)*: An observable sequence of buffers. 
+
+#### Example
+```js
+/* Without a skip */
+var source = Rx.Observable.interval(100)
+    .bufferWithTime(500)
+    .take(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0,1,2,3 
+// => Next: 4,5,6,7,8 
+// => Next: 9,10,11,12,13 
+// => Completed 
+
+/* Using a skip */
+var source = Rx.Observable.interval(100)
+    .bufferWithTime(500, 100)
+    .take(3);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0,1,2,3,4 
+// => Next: 0,1,2,3,4,5 
+// => Next: 2,3,4,5,6 
+// => Completed 
+```
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="windowWithTimeOrCount"></a>`Rx.Observable.prototype.windowWithTimeOrCount(timeSpan, count, [scheduler])`
+<a href="#windowWithTimeOrCount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L413-L469 "View in source") [&#x24C9;][1]
+
+Projects each element of an observable sequence into a window that is completed when either it's full or a given amount of time has elapsed.
+
+#### Arguments
+1. `timeSpan` *(Number)*: Maximum time length of a window.
+2. `count` *(Number)*: Maximum element count of a window.
+3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run windows timers on. If not specified, the timeout scheduler is used.
+
+#### Returns
+*(Observable)*: An observable sequence of windows. 
+
+#### Example
+```js
+/* Hitting the count buffer first */
+var source = Rx.Observable.interval(100)
+    .windowWithTimeOrCount(500, 3)
+    .take(3)
+    .selectMany(function (x) { return x.toArray(); });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0,1,2 
+// => Next: 3,4,5 
+// => Next: 6,7,8 
+// => Completed 
+```
+#### Location
+
+- rx.time.js
+
+* * *
+
+### <a id="zip"></a>`Rx.Observable.prototype.zip(...args, [resultSelector])`
+<a href="#zip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
+
+Filters the elements of an observable sequence based on a predicate.  This is an alias for the `filter` method.
+
+#### Arguments
+1. `args` *(Arguments | Array)*: Arguments or an array of observable sequences.
+2. `[resultSelector]` *(Any)*: Function to invoke for each series of elements at corresponding indexes in the sources, used only if the first parameter is not an array.
+
+#### Returns
+*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+
+#### Example
+```js
+/* Using arguments */
+var range = Rx.Observable.range(0, 5);
+
+var source = range.zip(
+	range.skip(1), 
+	range.skip(2), 
+	function (s1, s2, s3) {
+		return s1 + ':' + s2 + ':' + s3;
+	}
+);
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0:1:2
+// => Next: 1:2:3
+// => Next: 2:3:4
+// => Completed
+
+/* Using an array */
+var array = [3, 4, 5];
+
+var source = Rx.Observable.range(0, 3)
+	.zip(
+		array,
+		function (s1, s2) {
+			return s1 + ':' + s2;
+		});
+	
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0:3
+// => Next: 1:4
+// => Next: 2:5
+// => Completed
 ```
 
 #### Location
