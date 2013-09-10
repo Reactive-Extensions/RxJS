@@ -67,4 +67,13 @@
             return handler(notificationCreateOnCompleted());
         });
     };
+
+    /**
+     * Schedules the invocation of observer methods on the given scheduler.
+     * @param {Scheduler} scheduler Scheduler to schedule observer messages on.
+     * @returns {Observer} Observer whose messages are scheduled on the given scheduler.
+     */
+    Observer.notifyOn = function (scheduler) {
+        return new ObserveOnObserver(scheduler, this);
+    };
     
