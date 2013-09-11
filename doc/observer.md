@@ -366,11 +366,11 @@ var observer = Rx.Observer.create(
 var notifier = observer.toNotifier();
 
 // Invoke with onNext
-notifier(Notification.createOnNext(42));
+notifier(Rx.Notification.createOnNext(42));
 // => Next: 42
 
 // Invoke with onCompleted
-notifier(Notification.createOnCompleted());
+notifier(Rx.Notification.createOnCompleted());
 // => Completed
 ```
 
