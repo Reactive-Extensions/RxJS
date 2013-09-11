@@ -13,11 +13,11 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 ## `Observer Instance Methods`
 - [`asObserver`](#rxobserverprototypeasobserver)
 - [`checked`](#rxobserverprototypechecked)
-- [`notifyOn`](#notifyOn)
-- [`onCompleted`](#onCompleted)
-- [`onError`](#onError)
-- [`onNext`](#onNext)
-- [`toNotifier`](#toNotifier)
+- [`notifyOn`](#rxobserverprototypenotifyonscheduler)
+- [`onCompleted`](#rxobserverprototypeoncompleted)
+- [`onError`](#rxobserverprototypeonerrorerror)
+- [`onNext`](#rxobserverprototypeonnextvalue)
+- [`toNotifier`](#rxobserverprototypetonotifier)
 
 ## _Observer Methods_ ##
 
@@ -202,6 +202,176 @@ checked.onCompleted();
 
 // Throws Error('Observer completed')
 checked.onNext(42);
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="rxobserverprototypenotifyonscheduler"></a>`Rx.Observer.prototype.notifyOn(scheduler)`
+<a href="#rxobserverprototypenotifyonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+
+Schedules the invocation of observer methods on the given scheduler.
+
+#### Arguments
+1. `scheduler` *(Scheduler)*: Scheduler to schedule observer messages on.
+
+#### Returns
+*(Observer)*: Observer whose messages are scheduled on the given scheduler.
+ 
+#### Example
+```js
+var observer = Rx.Observer.create(
+    function (x) {
+        console.log('Next: ' + x)
+    },
+    function (err) {
+        console.log('Error: ' + err);
+    },
+    function () {
+        console.log('Completed');
+    }
+);
+
+// Notify on timeout scheduler
+var timeoutObserver = observer.notifyOn(Rx.Scheduler.timeout);
+
+timeoutObserver.onNext(42);
+// => Next: 42
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="rxobserverprototypeoncompleted"></a>`Rx.Observer.prototype.onCompleted()`
+<a href="#rxobserverprototypeoncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+
+Notifies the observer of the end of the sequence.
+
+#### Example
+```js
+var observer = Rx.Observer.create(
+    function (x) {
+        console.log('Next: ' + x)
+    },
+    function (err) {
+        console.log('Error: ' + err);
+    },
+    function () {
+        console.log('Completed');
+    }
+);
+
+observer.onCompleted();
+// => Completed
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="rxobserverprototypeonerrorerror"></a>`Rx.Observer.prototype.onError(error)`
+<a href="#rxobserverprototypeonerrorerror">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+
+Notifies the observer that an exception has occurred.
+
+#### Arguments
+1. `error` *(Any)*: The error that has occurred. 
+
+#### Example
+```js
+var observer = Rx.Observer.create(
+    function (x) {
+        console.log('Next: ' + x)
+    },
+    function (err) {
+        console.log('Error: ' + err);
+    },
+    function () {
+        console.log('Completed');
+    }
+);
+
+observer.onError(new Error('error!!'));
+// => Error: Error: error!!
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="rxobserverprototypeonnextvalue"></a>`Rx.Observer.prototype.onNext(value)`
+<a href="#rxobserverprototypeonnextvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+
+Notifies the observer of a new element in the sequence.
+
+#### Arguments
+1. `value` *(Any)*: Next element in the sequence. 
+
+#### Example
+```js
+var observer = Rx.Observer.create(
+    function (x) {
+        console.log('Next: ' + x)
+    },
+    function (err) {
+        console.log('Error: ' + err);
+    },
+    function () {
+        console.log('Completed');
+    }
+);
+
+observer.onNext(42);
+// => Next: 42
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="rxobserverprototypetonotifier"></a>`Rx.Observer.prototype.toNotifier()`
+<a href="#rxobserverprototypetonotifier">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+
+Creates a notification callback from an observer.
+
+#### Returns
+*(Function)*: The function that forwards its input notification to the underlying observer.
+
+#### Example
+```js
+var observer = Rx.Observer.create(
+    function (x) {
+        console.log('Next: ' + x)
+    },
+    function (err) {
+        console.log('Error: ' + err);
+    },
+    function () {
+        console.log('Completed');
+    }
+);
+
+var notifier = observer.toNotifier();
+
+// Invoke with onNext
+notifier(Notification.createOnNext(42));
+// => Next: 42
+
+// Invoke with onCompleted
+notifier(Notification.createOnCompleted());
+// => Completed
 ```
 
 ### Location
