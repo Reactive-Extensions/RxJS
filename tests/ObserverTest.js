@@ -368,8 +368,7 @@
 
     test('Observer_Checked_Reentrant_Completed', function () {
         var n = 0;
-        var o;
-        o = Observer.create(function () {
+        var o = Observer.create(function () {
             ok(false);
         }, function () {
             ok(false);
@@ -383,6 +382,5 @@
         o.onCompleted();
         equal(1, n);
     });
-
     
 }(typeof global == 'object' && global || this));

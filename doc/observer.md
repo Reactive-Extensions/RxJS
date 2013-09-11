@@ -11,8 +11,8 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`fromNotifier`](#rxobserverfromotifierhandler)
 
 ## `Observer Instance Methods`
-- [`asObserver`](#asObserver)
-- [`checked`](#checked)
+- [`asObserver`](#rxobserverprototypeasobserver)
+- [`checked`](#rxobserverprototypechecked)
 - [`notifyOn`](#notifyOn)
 - [`onCompleted`](#onCompleted)
 - [`onError`](#onError)
@@ -92,16 +92,13 @@ function handler(n) {
 	}
 }
 
-Observer.fromNotifier(next).onNext(42);
-
+Rx.Observer.fromNotifier(handler).onNext(42);
 // => Next: 42
 
-Observer.fromNotifier(error).onError(new Error('error!!!'));
-
+Rx.Observer.fromNotifier(handler).onError(new Error('error!!!'));
 // => Error: Error: error!!!
 
-Observer.fromNotifier(completed).onCompleted();
-
+Rx.Observer.fromNotifier(handler).onCompleted();
 // => false
 ```
 
@@ -112,3 +109,103 @@ Observer.fromNotifier(completed).onCompleted();
 * * *
 
 ## _Observer Instance Methods_ ##
+
+### <a id="rxobserverprototypeasobserver"></a>`Rx.Observer.prototype.asObserver()`
+<a href="#rxobserverprototypeasobserver">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+
+Hides the identity of an observer.
+
+#### Returns
+*(Observer)*: An observer that hides the identity of the specified observer.
+
+#### Example
+```js
+function SampleObserver () {
+    Rx.Observer.call(this);
+    this.isStopped = false;
+}
+
+SampleObserver.prototype = Object.create(Rx.Observer.prototype);
+SampleObserver.prototype.constructor = SampleObserver;
+
+Object.defineProperties(SampleObserver.prototype, {
+    onNext: {
+        value: function (x) {
+            if (!this.isStopped) {
+                console.log('Next: ' + x);
+            }
+        }
+    },
+    onError: {
+        value: function (err) {
+            if (!this.isStopped) {
+                this.isStopped = true;
+                console.log('Error: ' + err);
+            }
+        }
+    },
+    onCompleted: {
+        value: function () {
+            if (!this.isStopped) {
+                this.isStopped = true;
+                console.log('Completed');
+            }
+        }
+    } 
+});
+
+var sampleObserver = new SampleObserver();
+
+var source = sampleObserver.asObserver();
+
+console.log(source === sampleObserver);
+// => false
+```
+
+### Location
+
+- rx.js
+
+* * *
+
+### <a id="rxobserverprototypechecked"></a>`Rx.Observer.prototype.checked()`
+<a href="#rxobserverprototypechecked">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+
+Checks access to the observer for grammar violations. This includes checking for multiple `onError` or `onCompleted` calls, as well as reentrancy in any of the observer methods.
+
+If a violation is detected, an Error is thrown from the offending observer method call.
+
+#### Returns
+*(Observer)*: An observer that checks callbacks invocations against the observer grammar and, if the checks pass, forwards those to the specified observer.
+ 
+#### Example
+```js
+var observer = Rx.Observer.create(
+    function (x) {
+        console.log('Next: ' + x)
+    },
+    function (err) {
+        console.log('Error: ' + err);
+    },
+    function () {
+        console.log('Completed');
+    }
+);
+
+var checked = observer.checked();
+
+checked.onNext(42);
+// => Next: 42
+
+checked.onCompleted();
+// => Completed
+
+// Throws Error('Observer completed')
+checked.onNext(42);
+```
+
+### Location
+
+- rx.js
+
+* * *
