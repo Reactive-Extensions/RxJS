@@ -4,7 +4,7 @@
     <id>RxJS-All</id>
     <title>Reactive Extensions for JavaScript - All Libraries</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-    <version>2.1.15</version>
+    <version>2.1.16</version>
     <authors>Microsoft Corporation</authors>
     <description>Reactive Extensions for JavaScript libraries.</description>
     <projectUrl>http://rx.codeplex.com</projectUrl>
@@ -15,14 +15,14 @@
     <tags>Rx RxJS Reactive Extensions Observable</tags>
     <dependencies>
       <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-      <dependency id="RxJS-Main" version="2.1.15" />
-      <dependency id="RxJS-Aggregates" version="2.1.15" />
-      <dependency id="RxJS-Binding" version="2.1.15" />
-      <dependency id="RxJS-Coincidence" version="2.1.15" />
-      <dependency id="RxJS-JoinPatterns" version="2.1.15" />
-      <dependency id="RxJS-Time" version="2.1.15" />
-      <dependency id="RxJS-Experimental" version="2.1.15" />
-      <dependency id="RxJS-Testing" version="2.1.15" />
+      <dependency id="RxJS-Main" version="2.1.16" />
+      <dependency id="RxJS-Aggregates" version="2.1.16" />
+      <dependency id="RxJS-Binding" version="2.1.16" />
+      <dependency id="RxJS-Coincidence" version="2.1.16" />
+      <dependency id="RxJS-JoinPatterns" version="2.1.16" />
+      <dependency id="RxJS-Time" version="2.1.16" />
+      <dependency id="RxJS-Experimental" version="2.1.16" />
+      <dependency id="RxJS-Testing" version="2.1.16" />
     </dependencies>
   </metadata>
 </package>
