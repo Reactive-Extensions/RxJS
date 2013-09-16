@@ -1,6 +1,6 @@
 {
   "name": "Rx",
-  "version": "2.1.16",
+  "version": "2.1.17",
   "main": [
     "rx.js",
     "rx.aggregates.js",
