@@ -13,19 +13,32 @@ var EventEmitter = require('events').EventEmitter,
 
 Rx.Node = {
     /**
-     * Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
-     * 
-     * @example
-     * 1 - res = Rx.Node.fromCallback(function (x, y) { return x + y; })(4, 3);
-     * 2 - res = Rx.Node.fromCallback(function (x, y) { return x + y; }, Rx.Scheduler.timeout)(4, 3);
-     * 2 - res = Rx.Node.fromCallback(function (x) { this.log(x); }, Rx.Scheduler.timeout, console)('hello');
+     * Converts a callback function to an observable sequence. 
      * 
      * @param {Function} function Function to convert to an asynchronous function.
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
      * @returns {Function} Asynchronous function.
      */
-    fromCallback: Rx.Observable.toAsync,
+    fromCallback: function (func, scheduler, context) {
+        scheduler || (scheduler = Rx.Scheduler.timeout);
+        return function () {
+            var args = slice.call(arguments, 0), 
+                subject = new Rx.AsyncSubject();
+
+            scheduler.schedule(function () {
+                function handler() {
+                    subject.onNext(arguments);
+                    subject.onCompleted();
+                }
+
+                args.push(handler);
+                func.apply(context, args);
+            });
+
+            return subject.asObservable();
+        };
+    },
 
     /**
      * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
