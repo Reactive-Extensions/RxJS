@@ -13,29 +13,52 @@ var EventEmitter = require('events').EventEmitter,
 
 Rx.Node = {
     /**
-     * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
-     * @param {Function} fn The function to call
-     * @param {Arguments} var_args The arguments to the function
-     * @returns {Observable} An observable sequence with the callback parameters as an array.
+     * Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
+     * 
+     * @example
+     * 1 - res = Rx.Node.fromCallback(function (x, y) { return x + y; })(4, 3);
+     * 2 - res = Rx.Node.fromCallback(function (x, y) { return x + y; }, Rx.Scheduler.timeout)(4, 3);
+     * 2 - res = Rx.Node.fromCallback(function (x) { this.log(x); }, Rx.Scheduler.timeout, console)('hello');
+     * 
+     * @param {Function} function Function to convert to an asynchronous function.
+     * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
+     * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+     * @returns {Function} Asynchronous function.
      */
-    fromNodeCallback: function (fn) {
-        var args = slice.call(arguments, 1);
-        return Rx.Observable.create(function (observer) {
-            function handler() {
-                var handlerArgs = slice.call(arguments);
-                // Check if first is error
-                if (handlerArgs[0] instanceof Error) {
-                    observer.onError(err);
-                    return;
+    fromCallback: Rx.Observable.toAsync,
+
+    /**
+     * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
+     * @param {Function} func The function to call
+     * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
+     * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+     * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
+     */
+    fromNodeCallback: function (func, scheduler, context) {
+        scheduler || (scheduler = Rx.Scheduler.timeout);
+        return function () {
+            var args = slice.call(arguments, 0), 
+                subject = new Rx.AsyncSubject();
+
+            scheduler.schedule(function () {
+                function handler(err) {
+                    var handlerArgs = slice.call(arguments, 1);
+
+                    if (err) {
+                        subject.onError(err);
+                        return;
+                    }
+
+                    subject.onNext(handlerArgs);
+                    subject.onCompleted();
                 }
 
-                observer.onNext(handlerArgs.slice(1));
-                observer.onCompleted();
-            }
+                args.push(handler);
+                func.apply(context, args);
+            });
 
-            args.push(handler);
-            fn.apply(null, args);
-        });
+            return subject.asObservable();
+        };
     },
 
     /**
