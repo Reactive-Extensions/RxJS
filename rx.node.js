@@ -91,7 +91,7 @@ Rx.Node = {
             return function () {
                 eventEmitter.off(eventName, handler);
             }
-        });
+        }).publish().refCount();
     },
 
     /**
@@ -146,7 +146,7 @@ Rx.Node = {
                 stream.off('error', errorHandler);
                 stream.off('end', endHandler);
             };
-        });
+        }).publish().refCount();
     },
 
     /**

@@ -4270,6 +4270,33 @@
     };
 
     /**
+     *  One of the Following:
+     *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence and 
+     *  then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+     *  
+     * @example
+     *  1 - source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+     *  Or:
+     *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence
+     *  and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+     *  
+     *  1 - source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+     *  Or:
+     *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+     *  and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.  
+     *
+     *  1 - source.selectMany(Rx.Observable.fromArray([1,2,3]));
+     *
+     * @param selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
+     * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.   
+     * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then 
+     *  mapping each of those sequence elements and their corresponding source element to a result element that at any point in time produces the elements of the most recent inner observable sequence that has been received. 
+     */
+    observableProto.selectManyLatest = observableProto.flatMapLatest = function (selector, resultSelector) {
+        return this.selectMany(selector, resultSelector).switchLatest();
+    };
+
+    /**
      *  Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
      *      
      * @memberOf Observable#
