@@ -187,7 +187,7 @@
             function next(i) {
                 var res;
                 hasValue[i] = true;
-                if (hasValueAll || (hasValueAll = hasValue.every(function (x) { return x; }))) {
+                if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
                     try {
                         res = resultSelector.apply(null, values);
                     } catch (ex) {
@@ -195,14 +195,14 @@
                         return;
                     }
                     observer.onNext(res);
-                } else if (isDone.filter(function (x, j) { return j !== i; }).every(function (x) { return x; })) {
+                } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
                     observer.onCompleted();
                 }
             }
 
             function done (i) {
                 isDone[i] = true;
-                if (isDone.every(function (x) { return x; })) {
+                if (isDone.every(identity)) {
                     observer.onCompleted();
                 }
             }

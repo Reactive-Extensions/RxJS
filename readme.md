@@ -71,14 +71,13 @@ function searchWikipedia(term) {
 }
 ```
 
-Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call select to get the value, and then calling `switch` or its alias `switchLatest` to ensure that we're not introducing any out of order sequence calls.  We'll filter the results to make sure we get values.
+Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call `flatMapLatest` to get the value and ensure that we're not introducing any out of order sequence calls.  We'll call `filter` the results to make sure we get values.
 
 ```js
 var suggestions = distinct
-    .map(function (text) {
+    .flatMapLatest(function (text) {
         return searchWikipedia(text);
     })
-    .switchLatest()
     .filter(function (data) {
         return data[1] && data[1].length > 0;
     });
@@ -105,6 +104,9 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 
 - Blogs
     - [Rx Team Blog](http://blogs.msdn.com/b/rxteam)
+
+- Presentations
+    -[Don't Cross the Streams - Cascadia.js 2012](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams)
 
 - Videos
     - [Hello RxJS - Channel 9](http://channel9.msdn.com/Blogs/Charles/Introducing-RxJS-Reactive-Extensions-for-JavaScript)
