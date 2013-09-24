@@ -1609,6 +1609,7 @@ var subscription = source.subscribe(
     });
 
 // => Next: first
+// => Next: second
 // => Completed 
 ```
 
