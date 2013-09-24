@@ -18,8 +18,7 @@
     // Defaults
     function noop() { }
     function identity(x) { return x; }
-    var defaultNow = (function () { return !!Date.now ? Date.now : function () { return new Date().getTime(); }; }());
-    function defaultNow() { return new Date().getTime(); }
+    var defaultNow = (function () { return !!Date.now ? Date.now : function () { return +new Date; }; }());
     function defaultComparer(x, y) { return isEqual(x, y); }
     function defaultSubComparer(x, y) { return x - y; }
     function defaultKeySerializer(x) { return x.toString(); }
