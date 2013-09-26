@@ -67,19 +67,16 @@ function searchWikipedia(term) {
     var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
         + '&format=json' 
         + '&search=' + encodeURI(term);
-    return Rx.Observable.getJSONPRequest(url);
+    return Rx.DOM.Request.getJSONPRequestCold(url);
 }
 ```
 
-Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call `flatMapLatest` to get the value and ensure that we're not introducing any out of order sequence calls.  We'll call `filter` the results to make sure we get values.
+Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call `flatMapLatest` to get the value and ensure that we're not introducing any out of order sequence calls.  
 
 ```js
 var suggestions = distinct
     .flatMapLatest(function (text) {
         return searchWikipedia(text);
-    })
-    .filter(function (data) {
-        return data[1] && data[1].length > 0;
     });
 ```
 
@@ -106,7 +103,8 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Rx Team Blog](http://blogs.msdn.com/b/rxteam)
 
 - Presentations
-    -[Don't Cross the Streams - Cascadia.js 2012](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams)
+    - [Don't Cross the Streams - Cascadia.js 2012](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams)
+    - [Curing Your Asynchronous Blues - Strange Loop 2013](https://github.com/Reactive-Extensions/StrangeLoop2013)
 
 - Videos
     - [Hello RxJS - Channel 9](http://channel9.msdn.com/Blogs/Charles/Introducing-RxJS-Reactive-Extensions-for-JavaScript)
