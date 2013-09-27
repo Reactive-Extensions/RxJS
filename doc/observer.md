@@ -38,7 +38,7 @@ Creates an observer from the specified `onNext`, `onError`, and `onCompleted` ac
 ```js
 var source = Rx.Observable.return(42);
 
-var observer = Rx.Observable.create(
+var observer = Rx.Observer.create(
     function (x) {
         console.log('Next: ' + x);
     },
