@@ -184,6 +184,19 @@ require({
     obs.subscribe(function (x) { console.log(x); });
 });
 ```
+
+## What about my libraries? ##
+
+The Reactive Extensions for JavaScript have no external dependencies any library, so they'll work well with just about any library.  We provide bridges and support for various libraries including:
+
+- [HTML DOM](https://github.com/Reactive-Extensions/RxJS-DOM)
+- [jQuery (1.4+)](https://github.com/Reactive-Extensions/RxJS-jQuery)
+- [MooTools](https://github.com/Reactive-Extensions/RxJS-MooTools)
+- [Dojo](https://github.com/Reactive-Extensions/RxJS-Dojo)
+- [ExtJS](https://github.com/Reactive-Extensions/RxJS-ExtJS)
+
+In addition, we have support for common Node.js functions such as binding to callbacks and the `EventEmitter` class.
+
 ## Compatibility ##
 
 RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+. 
