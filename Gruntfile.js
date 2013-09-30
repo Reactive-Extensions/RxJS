@@ -75,7 +75,7 @@ module.exports = function (grunt) {
                 src: [
                     'src/core/license.js',
                     'src/core/intro.js',
-                    'src/core/basicheader.js',
+                    'src/core/basicheader-modern.js',
                     'src/core/internal/deepEquals.js',
                     'src/core/internal/util.js',
                     'src/core/internal/priorityqueue.js',
