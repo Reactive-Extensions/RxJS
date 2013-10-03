@@ -1,4 +1,4 @@
-describe("Select", function() {
+describe("Map", function() {
 
     // Aliases
     var TestScheduler = Rx.TestScheduler,
@@ -30,7 +30,7 @@ describe("Select", function() {
         );
         
         results = scheduler.startWithCreate(function () {
-            return xs.select(function (x) {
+            return xs.map(function (x) {
                 invoked++;
                 return x + 1;
             });

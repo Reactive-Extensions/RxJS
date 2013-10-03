@@ -1,11 +1,5 @@
-var assert = require('assert');
-
-function defaultComparer(x, y) {
-    if (!y.equals) {
-        return x === y;
-    }
-    return x.equals(y);
-}
+var assert = require('assert'),
+    Rx = require('../../../rx.node'); // Use require('rx') outside this project
 
 function createMessage(actual, expected) {
     return 'Expected: [' + expected.toString() + ']\r\nActual: [' + actual.toString() + ']';
@@ -14,7 +8,7 @@ function createMessage(actual, expected) {
 var collectionAssert = {
     /* Assertion for collections of notification messages */
     assertEqual: function (expected, actual, comparer, message) {
-        comparer || (comparer = defaultComparer);
+        comparer || (comparer = Rx.Internals.isEqual);
         var isOk = true, i, len;
 
         if (expected.length !== actual.length) {

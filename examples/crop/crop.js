@@ -164,7 +164,7 @@
                 // Update model and redraw via an async operation
                 data.element.updateModel(data.offsetX, data.offsetY);
 
-                Rx.Scheduler.requestAnimationFrameScheduler.schedule(drawOverlay);
+                Rx.Scheduler.requestAnimationFrame.schedule(drawOverlay);
             });
     }
 

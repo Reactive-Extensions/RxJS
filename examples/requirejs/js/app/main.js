@@ -1,11 +1,11 @@
-require(['rx', 'rx.html', 'rx.binding', 'rx.time'], function (Rx) {
+require(['rx', 'rx.binding', 'rx.time', 'rx.dom'], function (Rx) {
 
     var coords = document.querySelector('#coordinates');
     var delta = document.querySelector('#delta');
     var buffer = document.querySelector('#buffer');
 
     // One and only one subscription
-    var mousemove = Rx.Observable.fromEvent(document, 'mousemove').publish().refCount();
+    var mousemove = Rx.DOM.fromEvent(document, 'mousemove');
 
     // Simple coordinates
     var d1 = mousemove.subscribe(function (e) {

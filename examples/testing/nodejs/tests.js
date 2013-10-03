@@ -1,5 +1,5 @@
 var collectionAssert = require('./collectionassert'),
-    Rx = require('rx');
+    Rx = require('../../../rx.node'); // Use require('rx') outside this project
 
 var TestScheduler = Rx.TestScheduler,
     Observable = Rx.Observable,
@@ -12,8 +12,8 @@ var TestScheduler = Rx.TestScheduler,
 
 describe('Observable', function () {
 
-    /* Observable.returnValue tests */
-    describe('.returnValue', function () {
+    /* Observable.return tests */
+    describe('.return', function () {
 
         /* Tests returnValue basic behavior */
         it('should return single value and complete', function () {
@@ -22,7 +22,7 @@ describe('Observable', function () {
 
             // Returns 42 at one tick after subscribe (200)
             var results = scheduler.startWithCreate(function () {
-                return Observable.returnValue(42, scheduler);
+                return Observable.return(42, scheduler);
             });
 
             // Expect a single onNext with 42 and an oncompleted one tick from subscribe
@@ -35,8 +35,8 @@ describe('Observable', function () {
         });
     });
 
-    /* Observable#select tests */
-    describe('#select', function () {
+    /* Observable#map tests */
+    describe('#map', function () {
         it('should project single item and complete', function () {
             var scheduler = new TestScheduler();
 
@@ -49,7 +49,7 @@ describe('Observable', function () {
 
             // Project the hot observable via select without index
             var results = scheduler.startWithCreate(function () {
-                return xs.select(function (x) { return x + x; });
+                return xs.map(function (x) { return x + x; });
             });
 
             // Should get one onNext with 4 and a completed
@@ -81,7 +81,7 @@ describe('Observable', function () {
 
             // Project the hot observable via select without index
             var results = scheduler.startWithCreate(function () {
-                return xs.select(function (x) { return x + x; });
+                return xs.map(function (x) { return x + x; });
             });
 
             // Should get one at 210 for 4 and one at 215 for 6 until completed at 220
@@ -112,7 +112,7 @@ describe('Observable', function () {
 
             // Project the hot observable via select without index
             var results = scheduler.startWithCreate(function () {
-                return xs.select(function (x) { return x + x; });
+                return xs.map(function (x) { return x + x; });
             });
 
             var expectedMessages = [
@@ -139,7 +139,7 @@ describe('Observable', function () {
 
             // Project the hot observable via select without index
             var results = scheduler.startWithCreate(function () {
-                return xs.select(function (x) { return x + x; });
+                return xs.map(function (x) { return x + x; });
             });
 
             // Should expect no messages
@@ -167,7 +167,7 @@ describe('Observable', function () {
             );        
 
             var results = scheduler.startWithCreate(function () {
-                return xs.select(function (x) { return x + x; });
+                return xs.map(function (x) { return x + x; });
             });
 
             // Should expect only one message with an error at 210
@@ -196,7 +196,7 @@ describe('Observable', function () {
             );        
 
             var results = scheduler.startWithCreate(function () {
-                return xs.select(function (x) { throw error; });
+                return xs.map(function (x) { throw error; });
             });
 
             // Should expect only one message with an error at 210
@@ -225,7 +225,7 @@ describe('Observable', function () {
             );        
 
             var results = scheduler.startWithCreate(function () {
-                return xs.select(function (x, i) { return (x + x) * i; });
+                return xs.map(function (x, i) { return (x + x) * i; });
             });
 
             // Should expect one message with 0 and then complettion

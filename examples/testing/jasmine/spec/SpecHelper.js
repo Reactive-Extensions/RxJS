@@ -1,15 +1,8 @@
 var slice = Array.prototype.slice;
 
-function defaultComparer(x, y) {
-    if (!y.equals) {
-        return x === y;
-    }
-    return x.equals(y);
-}
-
 function areElementsEqual(expected, actual, comparer) {
     var i, isOk = true;
-    comparer || (comparer = defaultComparer);
+    comparer || (comparer = Rx.Internals.isEqual);
     if (expected.length !== actual.length) {
         return false;
     }

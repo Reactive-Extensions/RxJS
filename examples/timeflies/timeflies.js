@@ -15,7 +15,7 @@
 
         var text = 'TIME FLIES LIKE AN ARROW',
             container = document.querySelector('#container'),
-            mousemove = Rx.Observable.fromEvent(document, 'mousemove');
+            mousemove = Rx.DOM.fromEvent(document, 'mousemove');
 
         // Get the offset on mousemove from the container
         var mouseMoveOffset = mousemove.select(function (e) {
