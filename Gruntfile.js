@@ -1,6 +1,7 @@
 module.exports = function (grunt) {
 
     grunt.initConfig({
+        pkg: grunt.file.readJSON('package.json'),
         meta: {
             banner:
                 '/*'+
@@ -280,6 +281,84 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+
+    function createNuGetPackage(nuspec) {
+        var done = this.async();
+
+        //invoke nuget.exe
+        grunt.util.spawn({
+            cmd: ".nuget/nuget.exe",
+            args: [
+                //specify the .nuspec file
+                "pack",
+                nuspec,
+
+                //specify where we want the package to be created
+                "-OutputDirectory",
+                "nuget",
+     
+                //override the version with whatever is currently defined in package.json
+                "-Version",
+                grunt.config.get("pkg").version
+            ]
+        }, function (error, result) {
+            if (error) {
+                grunt.log.error(error);
+            } else {
+                grunt.log.write(result);
+            }
+
+            done();
+        });        
+    }
+
+    grunt.registerTask('nuget-aggregates', 'Register NuGet-Aggregates', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Aggregates/RxJS-Aggregates.nuspec');
+    });
+
+    grunt.registerTask('nuget-all', 'Register NuGet-All', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-All/RxJS-All.nuspec');
+    });
+
+    grunt.registerTask('nuget-binding', 'Register NuGet-Binding', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Binding/RxJS-Binding.nuspec');
+    });
+
+    grunt.registerTask('nuget-coincidence', 'Register NuGet-Coincidence', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Coincidence/RxJS-Coincidence.nuspec');
+    });
+
+    grunt.registerTask('nuget-experimental', 'Register NuGet-Experimental', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Experimental/RxJS-Experimental.nuspec');
+    });
+
+    grunt.registerTask('nuget-joinpatterns', 'Register NuGet-JoinPatterns', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-JoinPatterns/RxJS-JoinPatterns.nuspec');
+    });
+
+    grunt.registerTask('nuget-main', 'Register NuGet-Main', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Main/RxJS-Main.nuspec');
+    });
+
+    grunt.registerTask('nuget-testing', 'Register NuGet-Testing', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Testing/RxJS-Testing.nuspec');
+    });
+
+    grunt.registerTask('nuget-time', 'Register NuGet-Time', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Time/RxJS-Time.nuspec');
+    });    
+
+    grunt.registerTask('nuget', [
+        'nuget-aggregates',
+        'nuget-all',
+        'nuget-binding',
+        'nuget-coincidence',
+        'nuget-experimental',
+        'nuget-joinpatterns',
+        'nuget-main',
+        'nuget-testing',
+        'nuget-time'
+    ]);
 
     grunt.registerTask('test', [
         'qunit'

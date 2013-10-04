@@ -66,7 +66,7 @@
     /** @private
      * Used for deep comparison
      **/
-    var deepEquals = Rx.Internals.deepEquals = function (a, b, stackA, stackB) {
+    function deepEquals(a, b, stackA, stackB) {
         var result;
         // exit early for identical values
         if (a === b) {
