@@ -15,7 +15,7 @@ Rx.Node = {
     /**
      * Converts a callback function to an observable sequence. 
      * 
-     * @param {Function} function Function to convert to an asynchronous function.
+     * @param {Function} func Function to convert to an asynchronous function.
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
      * @returns {Function} Asynchronous function.
@@ -76,7 +76,7 @@ Rx.Node = {
 
     /**
      * Handles an event from the given EventEmitter as an observable sequence.
-     * @param {EventEmitter} eventEmiiter The EventEmitter to subscribe to the given event.
+     * @param {EventEmitter} eventEmitter The EventEmitter to subscribe to the given event.
      * @param {String} eventName The event name to subscribe
      * @returns {Observable} An observable sequence generated from the named event from the given EventEmitter.
      */
@@ -97,7 +97,7 @@ Rx.Node = {
     /**
      * Converts the given observable sequence to an event emitter with the given event name. 
      * The errors are handled on the 'error' event and completion on the 'end' event.
-     * @param {Observable} The observable sequence to convert to an EventEmitter.
+     * @param {Observable} observable The observable sequence to convert to an EventEmitter.
      * @param {String} eventName The event name to emit onNext calls.
      * @returns {EventEmitter} An EventEmitter which emits the given eventName for each onNext call in addition to 'error' and 'end' events.
      */
