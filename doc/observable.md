@@ -5240,7 +5240,7 @@ var subscription = source.subscribe(
 ### <a id="rxobservableprototypeselectselector-thisarg"></a>`Rx.Observable.prototype.select(selector, [thisArg])`
 <a href="#rxobservableprototypeselectselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
 
-Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `map` method.
 
 #### Arguments
 1. `selector` *(Function)*:  Transform function to apply to each source element.  The selector is called with the following information:
