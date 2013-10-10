@@ -80,7 +80,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`first`](#rxobservableprototypefirstpredicate-thisarg)
 - [`firstOrDefault`](#rxobservableprototypefirstordefaultpredicate-defaultvalue-thisarg)
 - [`flatMap`](#rxobservableprototypeflatmapselector-resultselector)
-- [`flatMapLatest`](#rxobservableprototypeflatmaplatestselector-resultselector)
+- [`flatMapLatest`](#rxobservableprototypeflatmaplatestselector-thisarg)
 - [`forkJoin`](#rxobservableprototypeforkjoinsecond-resultselector)
 - [`groupBy`](#rxobservableprototypegroupbykeyselector-elementselector-keyserializer)
 - [`groupByUntil`](#rxobservableprototypegroupbyuntilkeyselector-elementselector-durationselector-keyserializer)
@@ -114,6 +114,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`scan`](#rxobservableprototypescanseed-accumulator)
 - [`select`](#rxobservableprototypeselectselector-thisarg)
 - [`selectMany`](#rxobservableprototypeselectmanyselector-resultselector)
+- [`selectSwitch`](#rxobservableprototypeselectswitchselector-thisarg)
 - [`single`](#rxobservableprototypesinglepredicate-thisarg)
 - [`singleOrDefault`](#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg)
 - [`skip`](#rxobservableprototypeskipcount)
@@ -3497,37 +3498,22 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="rxobservableprototypeflatmplatestaselector-resultselector"></a>`Rx.Observable.prototype.flatMapLatest(selector, [resultSelector])`
-<a href="#rxobservableprototypeflatmplatestaselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+### <a id="rxobservableprototypeflatmplatestaselector-thisArg"></a>`Rx.Observable.prototype.flatMapLatest(selector, [thisArg])`
+<a href="#rxobservableprototypeflatmplatestaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
 
-This is an alias for the `selectManyLatest` method.
+This is an alias for the `selectSwitch` method.
 
-One of the following:
-
-Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence. 
-
-```js
-source.flatMapLatest(function (x) { return Rx.Observable.range(0, x); });
-```
-
-Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-
-```js
-source.flatMapLatest(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
-```
-
-Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-
- ```js
-source.flatMapLatest(Rx.Observable.fromArray([1,2,3]));
- ```
+ Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
 
 #### Arguments
-1. `selector` *(Function)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
-2. `[resultSelector]` *(Function)*: A transform function to apply to each element of the intermediate sequence.
+1. `selector` *(Function)*:  A transform function to apply to each source element.  The callback has the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
  
 #### Returns
-*(Observable)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element that at any point in time produces the elements of the most recent inner observable sequence that has been received.    
+*(Observable)*: An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences and that at any point in time produces the elements of the most recent inner observable sequence that has been received.    
 
 #### Example
 ```js
@@ -3557,7 +3543,6 @@ var subscription = source.subscribe(
 - rx.js
 
 * * *
-
 
 ### <a id="rxobservableprototypeforkjoinsecond-resultselector"></a>`Rx.Observable.prototype.forkJoin(second, resultSelector)`
 <a href="#rxobservableprototypeforkjoinsecond-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L304-L373 "View in source") [&#x24C9;][1]
@@ -5385,43 +5370,28 @@ var subscription = source.subscribe(
 
 - rx.js
 
-* * *
+* * *### <a id="rxobservableprototypeselectswitchaselector-thisArg"></a>`Rx.Observable.prototype.selectSwitch(selector, [thisArg])`
+<a href="#rxobservableprototypeselectswitchaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
 
-### <a id="rxobservableprototypeselectmanylatestaselector-resultselector"></a>`Rx.Observable.prototype.selectManyLatest(selector, [resultSelector])`
-<a href="#rxobservableprototypeselectmanylatestaselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+This is an alias for the `selectSwitch` method.
 
-One of the following:
-
-Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence. 
-
-```js
-source.selectManyLatest(function (x) { return Rx.Observable.range(0, x); });
-```
-
-Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-
-```js
-source.selectManyLatest(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
-```
-
-Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-
- ```js
-source.selectManyLatest(Rx.Observable.fromArray([1,2,3]));
- ```
+ Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
 
 #### Arguments
-1. `selector` *(Function)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
-2. `[resultSelector]` *(Function)*: A transform function to apply to each element of the intermediate sequence.
+1. `selector` *(Function)*:  A transform function to apply to each source element.  The callback has the following information:
+    1. the value of the element
+    2. the index of the element
+    3. the Observable object being subscribed
+2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
  
 #### Returns
-*(Observable)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element that at any point in time produces the elements of the most recent inner observable sequence that has been received.    
+*(Observable)*: An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences and that at any point in time produces the elements of the most recent inner observable sequence that has been received.    
 
 #### Example
 ```js
 var source = Rx.Observable
     .range(1, 2)
-    .selectManyLatest(function (x) {
+    .flatMapLatest(function (x) {
         return Rx.Observable.range(x, 2);    
     });
 
