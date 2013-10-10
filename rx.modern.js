@@ -3562,7 +3562,6 @@
 
     /**
      *  Hides the identity of an observable sequence.
-     *  
      * @returns {Observable} An observable sequence that hides the identity of the source sequence.    
      */
     observableProto.asObservable = function () {
@@ -3576,10 +3575,8 @@
      *  Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
      *  
      * @example
-     *  1 - xs.bufferWithCount(10);
-     *  2 - xs.bufferWithCount(10, 1);
-     *  
-     * @memberOf Observable#
+     *  var res = xs.bufferWithCount(10);
+     *  var res = xs.bufferWithCount(10, 1);
      * @param {Number} count Length of each buffer.
      * @param {Number} [skip] Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
      * @returns {Observable} An observable sequence of buffers.    
@@ -3596,9 +3593,7 @@
     };
 
     /**
-     *  Dematerializes the explicit notification values of an observable sequence as implicit notifications.
-     *  
-     * @memberOf Observable# 
+     * Dematerializes the explicit notification values of an observable sequence as implicit notifications.
      * @returns {Observable} An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
      */ 
     observableProto.dematerialize = function () {
@@ -3613,8 +3608,8 @@
     /**
      *  Returns an observable sequence that contains only distinct contiguous elements according to the keySelector and the comparer.
      *  
-     *  1 - var obs = observable.distinctUntilChanged();
-     *  2 - var obs = observable.distinctUntilChanged(function (x) { return x.id; });
+     *  var res = var obs = observable.distinctUntilChanged();
+     *  var res = var obs = observable.distinctUntilChanged(function (x) { return x.id; });
      *  3 - var obs = observable.distinctUntilChanged(function (x) { return x.id; }, function (x, y) { return x === y; });
      *  
      * @memberOf Observable#
@@ -3658,8 +3653,8 @@
      *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
      *  
      * @example
-     *  1 - observable.doAction(observer);
-     *  2 - observable.doAction(onNext);
+     *  var res = observable.doAction(observer);
+     *  var res = observable.doAction(onNext);
      *  3 - observable.doAction(onNext, onError);
      *  4 - observable.doAction(onNext, onError, onCompleted);
      *  
@@ -3716,7 +3711,7 @@
      *  Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.
      *  
      * @example
-     *  1 - obs = observable.finallyAction(function () { console.log('sequence ended'; });
+     *  var res = obs = observable.finallyAction(function () { console.log('sequence ended'; });
      *  
      * @memberOf Observable#
      * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
@@ -3776,8 +3771,8 @@
      *  Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
      *  
      * @example
-     *  1 - repeated = source.repeat();
-     *  2 - repeated = source.repeat(42);
+     *  var res = repeated = source.repeat();
+     *  var res = repeated = source.repeat(42);
      *  
      * @memberOf Observable#
      * @param {Number} [repeatCount]  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
@@ -3791,8 +3786,8 @@
      *  Repeats the source observable sequence the specified number of times or until it successfully terminates. If the retry count is not specified, it retries indefinitely.
      *  
      * @example
-     *  1 - retried = retry.repeat();
-     *  2 - retried = retry.repeat(42);
+     *  var res = retried = retry.repeat();
+     *  var res = retried = retry.repeat(42);
      *  
      * @memberOf Observable#
      * @param {Number} [retryCount]  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
@@ -3806,8 +3801,8 @@
      *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
      *  For aggregation behavior with no intermediate results, see Observable.aggregate.
      *  
-     *  1 - scanned = source.scan(function (acc, x) { return acc + x; });
-     *  2 - scanned = source.scan(0, function (acc, x) { return acc + x; });
+     *  var res = scanned = source.scan(function (acc, x) { return acc + x; });
+     *  var res = scanned = source.scan(0, function (acc, x) { return acc + x; });
      *  
      * @memberOf Observable#
      * @param {Mixed} [seed] The initial accumulator value.
@@ -3864,8 +3859,8 @@
     /**
      *  Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
      *  
-     *  1 - source.startWith(1, 2, 3);
-     *  2 - source.startWith(Rx.Scheduler.timeout, 1, 2, 3);
+     *  var res = source.startWith(1, 2, 3);
+     *  var res = source.startWith(Rx.Scheduler.timeout, 1, 2, 3);
      *  
      * @memberOf Observable#
      * @returns {Observable} The source sequence prepended with the specified values.  
@@ -3886,8 +3881,8 @@
      *  Returns a specified number of contiguous elements from the end of an observable sequence, using an optional scheduler to drain the queue.
      *  
      * @example
-     *  1 - obs = source.takeLast(5);
-     *  2 - obs = source.takeLast(5, Rx.Scheduler.timeout);
+     *  var res = obs = source.takeLast(5);
+     *  var res = obs = source.takeLast(5, Rx.Scheduler.timeout);
      *  
      * @description
      *  This operator accumulates a buffer with a length enough to store elements count elements. Upon completion of
@@ -3932,8 +3927,8 @@
     /**
      *  Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
      *  
-     *  1 - xs.windowWithCount(10);
-     *  2 - xs.windowWithCount(10, 1);
+     *  var res = xs.windowWithCount(10);
+     *  var res = xs.windowWithCount(10, 1);
      *      
      * @memberOf Observable#
      * @param {Number} count Length of each window.
@@ -3994,7 +3989,7 @@
     /**
      *  Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
      *  
-     *  1 - obs = xs.defaultIfEmpty();
+     *  var res = obs = xs.defaultIfEmpty();
      *  2 - obs = xs.defaultIfEmpty(false);
      *      
      * @memberOf Observable#
@@ -4025,7 +4020,7 @@
      *  Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
      * 
      * @example
-     *  1 - obs = xs.distinct();
+     *  var res = obs = xs.distinct();
      *  2 - obs = xs.distinct(function (x) { return x.id; });
      *  2 - obs = xs.distinct(function (x) { return x.id; }, function (x) { return x.toString(); });
      *      
@@ -4067,7 +4062,7 @@
      *  Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
      *  
      * @example
-     *  1 - observable.groupBy(function (x) { return x.id; });
+     *  var res = observable.groupBy(function (x) { return x.id; });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; }, function (x) { return x.toString(); });
      *      
@@ -4089,7 +4084,7 @@
      *  key value as a reclaimed group occurs, the group will be reborn with a new lifetime request.
      *  
      * @example
-     *  1 - observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
+     *  var res = observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); });
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); }, function (x) { return x.toString(); });
      *      
@@ -4238,17 +4233,15 @@
      *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
      *  
      * @example
-     *  1 - source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+     *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); });
      *  Or:
      *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
      *  
-     *  1 - source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+     *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
      *  Or:
      *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
      *  
-     *  1 - source.selectMany(Rx.Observable.fromArray([1,2,3]));
-     *      
-     * @memberOf Observable#
+     *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
      * @param selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
      * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
@@ -4270,36 +4263,19 @@
     };
 
     /**
-     *  One of the Following:
-     *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence and 
-     *  then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-     *  
-     * @example
-     *  1 - source.selectMany(function (x) { return Rx.Observable.range(0, x); });
-     *  Or:
-     *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence
-     *  and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-     *  
-     *  1 - source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
-     *  Or:
-     *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
-     *  and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.  
-     *
-     *  1 - source.selectMany(Rx.Observable.fromArray([1,2,3]));
-     *
-     * @param selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
-     * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.   
-     * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then 
-     *  mapping each of those sequence elements and their corresponding source element to a result element that at any point in time produces the elements of the most recent inner observable sequence that has been received. 
+     *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then 
+     *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+     * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
+     * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences 
+     *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
      */
-    observableProto.selectManyLatest = observableProto.flatMapLatest = function (selector, resultSelector) {
-        return this.selectMany(selector, resultSelector).switchLatest();
+    observableProto.selectSwitch = observableProto.flatMapLatest = function (selector, thisArg) {
+        return this.select(selector, thisArg).switchLatest();
     };
 
     /**
-     *  Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
-     *      
-     * @memberOf Observable#
+     * Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
      * @param {Number} count The number of elements to skip before returning the remaining elements.
      * @returns {Observable} An observable sequence that contains the elements that occur after the specified index in the input sequence.   
      */
@@ -4324,8 +4300,8 @@
      *  Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
      *  The element's index is used in the logic of the predicate function.
      *  
-     *  1 - source.skipWhile(function (value) { return value < 10; });
-     *  1 - source.skipWhile(function (value, index) { return value < 10 || index < 10; });
+     *  var res = source.skipWhile(function (value) { return value < 10; });
+     *  var res = source.skipWhile(function (value, index) { return value < 10 || index < 10; });
      *      
      * @memberOf Observable#
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
@@ -4355,7 +4331,7 @@
     /**
      *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
      *  
-     *  1 - source.take(5);
+     *  var res = source.take(5);
      *  2 - source.take(0, Rx.Scheduler.timeout);
      *      
      * @memberOf Observable#
@@ -4390,8 +4366,8 @@
      *  The element's index is used in the logic of the predicate function.
      *  
      * @example
-     *  1 - source.takeWhile(function (value) { return value < 10; });
-     *  1 - source.takeWhile(function (value, index) { return value < 10 || index < 10; });
+     *  var res = source.takeWhile(function (value) { return value < 10; });
+     *  var res = source.takeWhile(function (value, index) { return value < 10 || index < 10; });
      *      
      * @memberOf Observable#
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
@@ -4424,8 +4400,8 @@
      *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
      *  
      * @example
-     *  1 - source.where(function (value) { return value < 10; });
-     *  1 - source.where(function (value, index) { return value < 10 || index < 10; });
+     *  var res = source.where(function (value) { return value < 10; });
+     *  var res = source.where(function (value, index) { return value < 10 || index < 10; });
      *      
      * @memberOf Observable#
      * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.

@@ -4,7 +4,7 @@
     <id>RxJS-Coincidence</id>
     <title>Reactive Extensions for JavaScript - Coincidence</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-    <version>2.1.19</version>
+    <version>2.1.20</version>
     <authors>Microsoft Corporation</authors>
     <description>Reactive Extensions for JavaScript library with reactive coincidence join event processing query operations.</description>
     <projectUrl>http://rx.codeplex.com</projectUrl>
@@ -15,7 +15,8 @@
     <tags>Rx RxJS Reactive Extensions Observable</tags>
     <dependencies>
       <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-      <dependency id="RxJS-Main" version="2.1.19" />
+      <dependency id="RxJS-Main" version="2.1.20" />
+      <dependency id="RxJS-Modern" version="2.1.20" />
     </dependencies>
   </metadata>
   <files>

@@ -1,6 +1,5 @@
     /**
      *  Hides the identity of an observable sequence.
-     *  
      * @returns {Observable} An observable sequence that hides the identity of the source sequence.    
      */
     observableProto.asObservable = function () {
@@ -14,10 +13,8 @@
      *  Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
      *  
      * @example
-     *  1 - xs.bufferWithCount(10);
-     *  2 - xs.bufferWithCount(10, 1);
-     *  
-     * @memberOf Observable#
+     *  var res = xs.bufferWithCount(10);
+     *  var res = xs.bufferWithCount(10, 1);
      * @param {Number} count Length of each buffer.
      * @param {Number} [skip] Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
      * @returns {Observable} An observable sequence of buffers.    
@@ -34,9 +31,7 @@
     };
 
     /**
-     *  Dematerializes the explicit notification values of an observable sequence as implicit notifications.
-     *  
-     * @memberOf Observable# 
+     * Dematerializes the explicit notification values of an observable sequence as implicit notifications.
      * @returns {Observable} An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
      */ 
     observableProto.dematerialize = function () {
@@ -51,8 +46,8 @@
     /**
      *  Returns an observable sequence that contains only distinct contiguous elements according to the keySelector and the comparer.
      *  
-     *  1 - var obs = observable.distinctUntilChanged();
-     *  2 - var obs = observable.distinctUntilChanged(function (x) { return x.id; });
+     *  var res = var obs = observable.distinctUntilChanged();
+     *  var res = var obs = observable.distinctUntilChanged(function (x) { return x.id; });
      *  3 - var obs = observable.distinctUntilChanged(function (x) { return x.id; }, function (x, y) { return x === y; });
      *  
      * @memberOf Observable#
@@ -96,8 +91,8 @@
      *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
      *  
      * @example
-     *  1 - observable.doAction(observer);
-     *  2 - observable.doAction(onNext);
+     *  var res = observable.doAction(observer);
+     *  var res = observable.doAction(onNext);
      *  3 - observable.doAction(onNext, onError);
      *  4 - observable.doAction(onNext, onError, onCompleted);
      *  
@@ -154,7 +149,7 @@
      *  Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.
      *  
      * @example
-     *  1 - obs = observable.finallyAction(function () { console.log('sequence ended'; });
+     *  var res = obs = observable.finallyAction(function () { console.log('sequence ended'; });
      *  
      * @memberOf Observable#
      * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
@@ -214,8 +209,8 @@
      *  Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
      *  
      * @example
-     *  1 - repeated = source.repeat();
-     *  2 - repeated = source.repeat(42);
+     *  var res = repeated = source.repeat();
+     *  var res = repeated = source.repeat(42);
      *  
      * @memberOf Observable#
      * @param {Number} [repeatCount]  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
@@ -229,8 +224,8 @@
      *  Repeats the source observable sequence the specified number of times or until it successfully terminates. If the retry count is not specified, it retries indefinitely.
      *  
      * @example
-     *  1 - retried = retry.repeat();
-     *  2 - retried = retry.repeat(42);
+     *  var res = retried = retry.repeat();
+     *  var res = retried = retry.repeat(42);
      *  
      * @memberOf Observable#
      * @param {Number} [retryCount]  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
@@ -244,8 +239,8 @@
      *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
      *  For aggregation behavior with no intermediate results, see Observable.aggregate.
      *  
-     *  1 - scanned = source.scan(function (acc, x) { return acc + x; });
-     *  2 - scanned = source.scan(0, function (acc, x) { return acc + x; });
+     *  var res = scanned = source.scan(function (acc, x) { return acc + x; });
+     *  var res = scanned = source.scan(0, function (acc, x) { return acc + x; });
      *  
      * @memberOf Observable#
      * @param {Mixed} [seed] The initial accumulator value.
@@ -302,8 +297,8 @@
     /**
      *  Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
      *  
-     *  1 - source.startWith(1, 2, 3);
-     *  2 - source.startWith(Rx.Scheduler.timeout, 1, 2, 3);
+     *  var res = source.startWith(1, 2, 3);
+     *  var res = source.startWith(Rx.Scheduler.timeout, 1, 2, 3);
      *  
      * @memberOf Observable#
      * @returns {Observable} The source sequence prepended with the specified values.  
@@ -324,8 +319,8 @@
      *  Returns a specified number of contiguous elements from the end of an observable sequence, using an optional scheduler to drain the queue.
      *  
      * @example
-     *  1 - obs = source.takeLast(5);
-     *  2 - obs = source.takeLast(5, Rx.Scheduler.timeout);
+     *  var res = obs = source.takeLast(5);
+     *  var res = obs = source.takeLast(5, Rx.Scheduler.timeout);
      *  
      * @description
      *  This operator accumulates a buffer with a length enough to store elements count elements. Upon completion of
@@ -370,8 +365,8 @@
     /**
      *  Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
      *  
-     *  1 - xs.windowWithCount(10);
-     *  2 - xs.windowWithCount(10, 1);
+     *  var res = xs.windowWithCount(10);
+     *  var res = xs.windowWithCount(10, 1);
      *      
      * @memberOf Observable#
      * @param {Number} count Length of each window.
