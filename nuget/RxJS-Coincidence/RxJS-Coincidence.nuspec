@@ -16,7 +16,6 @@
     <dependencies>
       <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
       <dependency id="RxJS-Main" version="2.1.20" />
-      <dependency id="RxJS-Modern" version="2.1.20" />
     </dependencies>
   </metadata>
   <files>
