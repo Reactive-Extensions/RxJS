@@ -104,6 +104,13 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 - Blogs
     - [Rx Team Blog](http://blogs.msdn.com/b/rxteam)
 
+- Articles
+    - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
+
+- Tutorials
+    - [Learn RxJS](http://jhusain.github.io/learnrx/)
+    - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
+
 - Presentations
     - [Don't Cross the Streams - Cascadia.js 2012](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams)
     - [Curing Your Asynchronous Blues - Strange Loop 2013](https://github.com/Reactive-Extensions/StrangeLoop2013)
@@ -113,10 +120,13 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [MIX 2011](http://channel9.msdn.com/events/MIX/MIX11/HTM07)
     - [RxJS Today and Tomorrow - Channel 9](http://channel9.msdn.com/Blogs/Charles/Matthew-Podwysocki-and-Bart-J-F-De-Smet-RxJS-Today-and-Tomorrow)
     - [Cascadia.js 2012](http://www.youtube.com/watch?v=FqBq4uoiG0M)
+    - [Reactive Extensions Videos on Channel 9](http://channel9.msdn.com/Tags/reactive+extensions)
 
 - Reference Material
     - [Intro to Rx](http://introtorx.com/)
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
+    - [Rx Design Guidelines](http://go.microsoft.com/fwlink/?LinkID=205219)
+    - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
 
 ## GETTING STARTED
 
