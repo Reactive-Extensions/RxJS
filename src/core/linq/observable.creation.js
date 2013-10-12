@@ -2,7 +2,7 @@
      *  Creates an observable sequence from a specified subscribe method implementation.
      *  
      * @example
-     *  1 - res = Rx.Observable.create(function (observer) { return function () { } );
+     *  var res = Rx.Observable.create(function (observer) { return function () { } );
      *  
      * @param {Function} subscribe Implementation of the resulting observable sequence's subscribe method, returning a function that will be wrapped in a Disposable.
      * @returns {Observable} The observable sequence with the specified implementation for the Subscribe method.
@@ -17,9 +17,7 @@
      *  Creates an observable sequence from a specified subscribe method implementation.
      *  
      * @example
-     *  1 - res = Rx.Observable.create(function (observer) { return Rx.Disposable.empty; } );        
-     * @static
-     * @memberOf Observable
+     *  var res = Rx.Observable.create(function (observer) { return Rx.Disposable.empty; } );        
      * @param {Function} subscribe Implementation of the resulting observable sequence's subscribe method.
      * @returns {Observable} The observable sequence with the specified implementation for the Subscribe method.
      */
@@ -31,9 +29,7 @@
      *  Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
      *  
      * @example
-     *  1 - res = Rx.Observable.defer(function () { return Rx.Observable.fromArray([1,2,3]); });    
-     * @static
-     * @memberOf Observable
+     *  var res = Rx.Observable.defer(function () { return Rx.Observable.fromArray([1,2,3]); });    
      * @param {Function} observableFactory Observable factory function to invoke for each observer that subscribes to the resulting sequence.
      * @returns {Observable} An observable sequence whose observers trigger an invocation of the given observable factory function.
      */
@@ -53,10 +49,8 @@
      *  Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
      *  
      * @example
-     *  1 - res = Rx.Observable.empty();  
-     *  2 - res = Rx.Observable.empty(Rx.Scheduler.timeout);  
-     * @static
-     * @memberOf Observable
+     *  var res = Rx.Observable.empty();  
+     *  var res = Rx.Observable.empty(Rx.Scheduler.timeout);  
      * @param {Scheduler} [scheduler] Scheduler to send the termination call on.
      * @returns {Observable} An observable sequence with no elements.
      */
@@ -73,10 +67,8 @@
      *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
      *  
      * @example
-     *  1 - res = Rx.Observable.fromArray([1,2,3]);
-     *  2 - res = Rx.Observable.fromArray([1,2,3], Rx.Scheduler.timeout);
-     * @static
-     * @memberOf Observable
+     *  var res = Rx.Observable.fromArray([1,2,3]);
+     *  var res = Rx.Observable.fromArray([1,2,3], Rx.Scheduler.timeout);
      * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
      * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
      */
@@ -99,8 +91,8 @@
      *  Generates an observable sequence by running a state-driven loop producing the sequence's elements, using the specified scheduler to send out observer messages.
      *  
      * @example
-     *  1 - res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; });
-     *  2 - res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; }, Rx.Scheduler.timeout);
+     *  var res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; });
+     *  var res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; }, Rx.Scheduler.timeout);
      * @static
      * @memberOf Observable
      * @param {Mixed} initialState Initial state.
@@ -157,8 +149,8 @@
      *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
      *  
      * @example
-     *  1 - res = Rx.Observable.range(0, 10);
-     *  2 - res = Rx.Observable.range(0, 10, Rx.Scheduler.timeout);
+     *  var res = Rx.Observable.range(0, 10);
+     *  var res = Rx.Observable.range(0, 10, Rx.Scheduler.timeout);
      * @static
      * @memberOf Observable
      * @param {Number} start The value of the first integer in the sequence.
@@ -184,8 +176,8 @@
      *  Generates an observable sequence that repeats the given element the specified number of times, using the specified scheduler to send out observer messages.
      *  
      * @example
-     *  1 - res = Rx.Observable.repeat(42);
-     *  2 - res = Rx.Observable.repeat(42, 4);
+     *  var res = Rx.Observable.repeat(42);
+     *  var res = Rx.Observable.repeat(42, 4);
      *  3 - res = Rx.Observable.repeat(42, 4, Rx.Scheduler.timeout);
      *  4 - res = Rx.Observable.repeat(42, null, Rx.Scheduler.timeout);
      * @static
@@ -208,8 +200,8 @@
      *  There is an alias called 'returnValue' for browsers <IE9.
      *  
      * @example
-     *  1 - res = Rx.Observable.return(42);
-     *  2 - res = Rx.Observable.return(42, Rx.Scheduler.timeout);
+     *  var res = Rx.Observable.return(42);
+     *  var res = Rx.Observable.return(42, Rx.Scheduler.timeout);
      * @static
      * @memberOf Observable
      * @param {Mixed} value Single element in the resulting observable sequence.
@@ -231,8 +223,8 @@
      *  There is an alias to this method called 'throwException' for browsers <IE9.
      *  
      * @example
-     *  1 - res = Rx.Observable.throwException(new Error('Error'));
-     *  2 - res = Rx.Observable.throwException(new Error('Error'), Rx.Scheduler.timeout);
+     *  var res = Rx.Observable.throwException(new Error('Error'));
+     *  var res = Rx.Observable.throwException(new Error('Error'), Rx.Scheduler.timeout);
      * @static
      * @memberOf Observable
      * @param {Mixed} exception An object used for the sequence's termination.
@@ -252,7 +244,7 @@
      *  Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
      *  
      * @example
-     *  1 - res = Rx.Observable.using(function () { return new AsyncSubject(); }, function (s) { return s; });
+     *  var res = Rx.Observable.using(function () { return new AsyncSubject(); }, function (s) { return s; });
      * @static
      * @memberOf Observable
      * @param {Function} resourceFactory Factory function to obtain a resource object.

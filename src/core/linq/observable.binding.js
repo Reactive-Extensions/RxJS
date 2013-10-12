@@ -26,10 +26,10 @@
      * invocation. For specializations with fixed subject types, see Publish, PublishLast, and Replay.
      * 
      * @example
-     * 1 - res = source.multicast(observable);
-     * 2 - res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
+     * var res = source.multicast(observable);
+     * var res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
      * 
-     * @param {Mixed} subjectOrSubjectSelector 
+     * @param {Function|Subject} subjectOrSubjectSelector 
      * Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
      * Or:
      * Subject to push source elements into.
@@ -52,8 +52,8 @@
      * This operator is a specialization of Multicast using a regular Subject.
      * 
      * @example
-     * 1 - res = source.publish();
-     * 2 - res = source.publish(function (x) { return x; });
+     * var res = source.publish();
+     * var res = source.publish(function (x) { return x; });
      * 
      * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
      * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -71,8 +71,8 @@
      * This operator is a specialization of Multicast using a AsyncSubject.
      * 
      * @example
-     * 1 - res = source.publishLast();
-     * 2 - res = source.publishLast(function (x) { return x; });
+     * var res = source.publishLast();
+     * var res = source.publishLast(function (x) { return x; });
      * 
      * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
      * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -90,8 +90,8 @@
      * This operator is a specialization of Multicast using a BehaviorSubject.
      * 
      * @example
-     * 1 - res = source.publishValue(42);
-     * 2 - res = source.publishLast(function (x) { return x.select(function (y) { return y * y; }) }, 42);
+     * var res = source.publishValue(42);
+     * var res = source.publishLast(function (x) { return x.select(function (y) { return y * y; }) }, 42);
      * 
      * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
      * @param {Mixed} initialValue Initial value received by observers upon subscription.
@@ -110,10 +110,10 @@
      * This operator is a specialization of Multicast using a ReplaySubject.
      * 
      * @example
-     * 1 - res = source.replay(null, 3);
-     * 2 - res = source.replay(null, 3, 500);
-     * 3 - res = source.replay(null, 3, 500, scheduler);
-     * 4 - res = source.replay(function (x) { return x.take(6).repeat(); }, 3, 500, scheduler);
+     * var res = source.replay(null, 3);
+     * var res = source.replay(null, 3, 500);
+     * var res = source.replay(null, 3, 500, scheduler);
+     * var res = source.replay(function (x) { return x.take(6).repeat(); }, 3, 500, scheduler);
      * 
      * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
      * @param bufferSize [Optional] Maximum element count of the replay buffer.

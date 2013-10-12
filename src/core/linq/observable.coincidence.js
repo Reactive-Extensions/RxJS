@@ -238,7 +238,7 @@
 
             return r;
         });
-    }
+    };
     
     /**
      *  Projects each element of an observable sequence into zero or more buffers.

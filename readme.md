@@ -101,8 +101,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 
 ## RESOURCES
 
-- Blogs
-    - [Rx Team Blog](http://blogs.msdn.com/b/rxteam)
+[Tech Blog](http://blogs.msdn.com/b/rxteam) | | [@ReactiveX](https://twitter.com/ReactiveX)
 
 - Articles
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
@@ -204,7 +203,7 @@ The Reactive Extensions for JavaScript have no external dependencies any library
 - [HTML DOM](https://github.com/Reactive-Extensions/RxJS-DOM)
 - [jQuery (1.4+)](https://github.com/Reactive-Extensions/RxJS-jQuery)
 - [MooTools](https://github.com/Reactive-Extensions/RxJS-MooTools)
-- [Dojo](https://github.com/Reactive-Extensions/RxJS-Dojo)
+- [Dojo 1.7+](https://github.com/Reactive-Extensions/RxJS-Dojo)
 - [ExtJS](https://github.com/Reactive-Extensions/RxJS-ExtJS)
 
 In addition, we have support for [common Node.js functions](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js) such as binding to callbacks and the `EventEmitter` class.
