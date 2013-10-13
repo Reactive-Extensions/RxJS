@@ -162,8 +162,8 @@ emitter.emit('data', 'foo');
 
 * * *
 
-### <a id="rxnodetoeventemitterobservable-eventname-handler"></a>`Rx.Node.toEventEmitter(observable, eventName, handler)`
-<a href="#rxnodetoeventemitterobservable-eventname-handler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L105-L122 "View in source") 
+### <a id="rxnodetoeventemitterobservable-eventname"></a>`Rx.Node.toEventEmitter(observable, eventName)`
+<a href="#rxnodetoeventemitterobservable-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L105-L122 "View in source") 
 
 Converts the given observable sequence to an event emitter with the given event name. 
 The errors are handled on the 'error' event and completion on the 'end' event.
