@@ -99,21 +99,24 @@ Rx.Node = {
      * The errors are handled on the 'error' event and completion on the 'end' event.
      * @param {Observable} The observable sequence to convert to an EventEmitter.
      * @param {String} eventName The event name to emit onNext calls.
-     * @returns {EventEmitter} An EventEmitter which emits the given eventName for each onNext call in addition to 'error' and 'end' events.
+     * @returns {EventEmitter} An EventEmitter which emits the given eventName for each onNext call in addition to 'error' and 'end' events.  
+     *   You must call publish in order to invoke the subscription on the Observable sequuence.
      */
     toEventEmitter: function (observable, eventName) {
         var e = new EventEmitter();
 
-        e.subscription = observable.subscribe(
-            function (x) {
-                e.emit(eventName, x);
-            }, 
-            function (err) {
-                e.emit('error', err);
-            },
-            function () {
-                e.emit('end');
-            });
+        e.publish = function () {
+            e.subscription = observable.subscribe(
+                function (x) {
+                    e.emit(eventName, x);
+                }, 
+                function (err) {
+                    e.emit('error', err);
+                },
+                function () {
+                    e.emit('end');
+                });
+        };
 
         return e;
     },
@@ -159,12 +162,15 @@ Rx.Node = {
     writeToStream: function (observable, stream, encoding) {
         return observable.subscribe(
             function (x) {
-                stream.write(x, encoding);
+                stream.write(String(x), encoding);
             },
             function (err) {
                 stream.emit('error', err);
             }, function () {
-                stream.end();
+                // Hack check because STDIO is not closable
+                if (!stream._isStdio) {
+                    stream.end();
+                }
             });
     }
 };

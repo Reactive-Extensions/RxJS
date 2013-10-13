@@ -8,6 +8,7 @@ Reactive Extensions represents all these data sequences as observable sequences.
 
 ## Getting Started With RxJS
 
+- [What are the Reactive Extensions](what.md)
 - [Creating Observable Sequences](creating.md)
 - [Querying Observable Sequences](querying.md)
 - [Combining Observable Sequences](combining.md)
@@ -51,3 +52,7 @@ This section contains the reference documentation for the Reactive Extensions cl
 - [`Rx.Recorded`](recorded.md)
 - [`Rx.Subscription`](subscription.md)
 - [`Rx.TestScheduler`](testscheduler.md)
+
+### Node.js Interop
+
+- [`Rx.Node`](nodejs.md)

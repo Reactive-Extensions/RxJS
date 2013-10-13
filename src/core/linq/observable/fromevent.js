@@ -20,7 +20,7 @@
             event.target = event.target || event.srcElement; 
 
             if (event.type == 'mouseover') {
-                event.relatedTarget = evt.fromElement;
+                event.relatedTarget = event.fromElement;
             }
             if (event.type == 'mouseout') {
                 event.relatedTarget = event.toElement;
@@ -36,7 +36,7 @@
                     var c = ('charCode' in event ? event.charCode : event.keyCode);
                     if (c == 10) {
                         c = 0;
-                        evt.keyCode = 13;
+                        event.keyCode = 13;
                     } else if (c == 13 || c == 27) {
                         c = 0; 
                     } else if (c == 3) {
