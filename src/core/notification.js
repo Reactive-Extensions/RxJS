@@ -34,7 +34,7 @@
          */
         NotificationPrototype.toObservable = function (scheduler) {
             var notification = this;
-            scheduler = scheduler || immediateScheduler;
+            scheduler || (scheduler = immediateScheduler);
             return new AnonymousObservable(function (observer) {
                 return scheduler.schedule(function () {
                     notification._acceptObservable(observer);
@@ -50,9 +50,6 @@
 
     /**
      * Creates an object that represents an OnNext notification to an observer.
-     * 
-     * @static
-     * @memberOf Notification
      * @param {Any} value The value contained in the notification.
      * @returns {Notification} The OnNext notification containing the value.
      */
@@ -73,18 +70,15 @@
         return function (value) {
             var notification = new Notification('N', true);
             notification.value = value;
-            notification._accept = _accept.bind(notification);
-            notification._acceptObservable = _acceptObservable.bind(notification);
-            notification.toString = toString.bind(notification);
+            notification._accept = _accept;
+            notification._acceptObservable = _acceptObservable;
+            notification.toString = toString;
             return notification;
         };
     }());
 
     /**
-     *  Creates an object that represents an OnError notification to an observer.
-     *  
-     * @static     s
-     * @memberOf Notification
+     * Creates an object that represents an OnError notification to an observer.
      * @param {Any} error The exception contained in the notification.
      * @returns {Notification} The OnError notification containing the exception.
      */
@@ -105,18 +99,15 @@
         return function (exception) {
             var notification = new Notification('E');
             notification.exception = exception;
-            notification._accept = _accept.bind(notification);
-            notification._acceptObservable = _acceptObservable.bind(notification);
-            notification.toString = toString.bind(notification);
+            notification._accept = _accept;
+            notification._acceptObservable = _acceptObservable;
+            notification.toString = toString;
             return notification;
         };
     }());
 
     /**
-     *  Creates an object that represents an OnCompleted notification to an observer.
-     * 
-     * @static
-     * @memberOf Notification
+     * Creates an object that represents an OnCompleted notification to an observer.
      * @returns {Notification} The OnCompleted notification.
      */
     var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
@@ -135,9 +126,9 @@
 
         return function () {
             var notification = new Notification('C');
-            notification._accept = _accept.bind(notification);
-            notification._acceptObservable = _acceptObservable.bind(notification);
-            notification.toString = toString.bind(notification);
+            notification._accept = _accept;
+            notification._acceptObservable = _acceptObservable;
+            notification.toString = toString;
             return notification;
         };
     }());

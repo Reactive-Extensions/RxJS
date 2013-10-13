@@ -101,7 +101,10 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 
 ## RESOURCES
 
-[Tech Blog](http://blogs.msdn.com/b/rxteam) | | [@ReactiveX](https://twitter.com/ReactiveX)
+- Contact us
+    - [Tech Blog](http://blogs.msdn.com/b/rxteam) 
+    - [Twitter @ReactiveX](https://twitter.com/ReactiveX)
+    - [Twitter @OpenAtMicrosoft](http://twitter.com/OpenAtMicrosoft)
 
 - Articles
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
@@ -126,6 +129,10 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
     - [Rx Design Guidelines](http://go.microsoft.com/fwlink/?LinkID=205219)
     - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
+
+- Books
+    - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
+    - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
 
 ## GETTING STARTED
 
