@@ -38,7 +38,7 @@ var subscription = subject.subscribe(
 ## `AsyncSubject Constructor` ##
 - [`constructor`](#rxasyncsubject)
 
-## `AsyncSubject Methods` ##
+## `AsyncSubject Instance Methods` ##
 - [`dispose`](#rxasyncsubjectprototypedispose)
 - [`hasObservers`](#rxasyncsubjectprototypehasobservers)
 
@@ -81,7 +81,7 @@ var subscription = source.subscribe(
 
 * * *
 
-## _AsyncSubject Methods_ ##
+## _AsyncSubject Instance Methods_ ##
 
 ### <a id="rxasyncsubjectprototypedispose"></a>`Rx.AsyncSubject.prototype.dispose()`
 <a href="#rxasyncsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L111-L116 "View in source") 

@@ -21,7 +21,6 @@
 
         /**
          * Creates a subject.
-         *
          * @constructor
          */      
         function Subject() {
@@ -34,8 +33,6 @@
         addProperties(Subject.prototype, Observer, {
             /**
              * Indicates whether the subject has observers subscribed to it.
-             * 
-             * @memberOf ReplaySubject# 
              * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
              */         
             hasObservers: function () {
@@ -43,8 +40,6 @@
             },
             /**
              * Notifies all subscribed observers about the end of the sequence.
-             * 
-             * @memberOf ReplaySubject#
              */                          
             onCompleted: function () {
                 checkDisposed.call(this);
@@ -60,8 +55,6 @@
             },
             /**
              * Notifies all subscribed observers about the exception.
-             * 
-             * @memberOf ReplaySubject#
              * @param {Mixed} error The exception to send to all observers.
              */               
             onError: function (exception) {
@@ -79,8 +72,6 @@
             },
             /**
              * Notifies all subscribed observers about the arrival of the specified element in the sequence.
-             * 
-             * @memberOf ReplaySubject#
              * @param {Mixed} value The value to send to all observers.
              */                 
             onNext: function (value) {
@@ -94,8 +85,6 @@
             },
             /**
              * Unsubscribe all observers and release resources.
-             * 
-             * @memberOf ReplaySubject#
              */                
             dispose: function () {
                 this.isDisposed = true;
@@ -105,9 +94,6 @@
 
         /**
          * Creates a subject from the specified observer and observable.
-         * 
-         * @static
-         * @memberOf Subject
          * @param {Observer} observer The observer used to send messages to the subject.
          * @param {Observable} observable The observable used to subscribe to messages sent from the subject.
          * @returns {Subject} Subject implemented using the given observer and observable.

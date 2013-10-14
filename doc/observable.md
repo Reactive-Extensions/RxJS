@@ -152,7 +152,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 ## _Observable Methods_ ##
 
 ### <a id="rxobservableambargs"></a>`Rx.Observable.amb(...args)`
-<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") 
 
 Propagates the observable sequence that reacts first.
 
@@ -191,7 +191,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablecaseselector-sources-elsesourcescheduler"></a>`Rx.Observable.case(selector, sources, [elseSource|scheduler])`
-<a href="#rxobservablecaseselector-sources-elsesourcescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L159-L169 "View in source") [&#x24C9;][1]
+<a href="#rxobservablecaseselector-sources-elsesourcescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L159-L169 "View in source") 
 
 Uses selector to determine which source in sources to use.  There is an alias 'switchCase' for browsers <IE9.
 
@@ -241,7 +241,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablecatchargs"></a>`Rx.Observable.catch(...args)`
-<a href="#rxobservablecatchargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2920-L2923 "View in source") [&#x24C9;][1]
+<a href="#rxobservablecatchargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2920-L2923 "View in source") 
 
 Continues an observable sequence that is terminated by an exception with the next observable sequence.  There is an alias for this method `catchException` for browsers <IE9
 
@@ -280,7 +280,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableconcatargs"></a>`Rx.Observable.concat(...args)`
-<a href="#rxobservableconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3035-L3038 "View in source") [&#x24C9;][1]
+<a href="#rxobservableconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3035-L3038 "View in source") 
 
 Concatenates all of the specified observable sequences, as long as the previous observable sequence terminated successfully.
 
@@ -320,7 +320,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablecreatesubscribe"></a>`Rx.Observable.create(subscribe)`
-<a href="#rxobservablecreatesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2519-L2523 "View in source") [&#x24C9;][1]
+<a href="#rxobservablecreatesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2519-L2523 "View in source") 
 
 Creates an observable sequence from a specified subscribe method implementation.
 
@@ -368,7 +368,7 @@ subscription.dispose();
 * * *
 
 ### <a id="rxobservablecreatewithdisposablesubscribe"></a>`Rx.Observable.createWithDisposable(subscribe)`
-<a href="#rxobservablecreatewithdisposablesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2535-L2537 "View in source") [&#x24C9;][1]
+<a href="#rxobservablecreatewithdisposablesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2535-L2537 "View in source") 
 
 Creates an observable sequence from a specified Subscribe method implementation.
 
@@ -416,7 +416,7 @@ subscription.dispose();
 * * *
 
 ### <a id="rxobservabledeferobservablefactory"></a>`Rx.Observable.defer(observableFactory)`
-<a href="#rxobservabledeferobservablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservabledeferobservablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") 
 
 Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
 
@@ -454,7 +454,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableemptyscheduler"></a>`Rx.Observable.empty([scheduler])`
-<a href="#rxobservableemptyscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservableemptyscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") 
 
 Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
 
@@ -489,7 +489,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableforsources-resultselector"></a>`Rx.Observable.for(sources, resultSelector)`
-<a href="#rxobservableforsources-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservableforsources-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") 
 
 Concatenates the observable sequences obtained by running the specified result selector for each element in source.
 There is an alias for this method called `forIn` for browsers <IE9
@@ -535,7 +535,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableforkjoinargs"></a>`Rx.Observable.forkJoin(...args)`
-<a href="#rxobservableforkjoinargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservableforkjoinargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Runs all observable sequences in parallel and collect their last elements.
 
@@ -575,7 +575,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablefromarrayarray-scheduler"></a>`Rx.Observable.fromArray(array, [scheduler])`
-<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -616,7 +616,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler"></a>`Rx.Observable.generate(initialState, condition, iterate, resultSelector, [scheduler])`
-<a href="#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -663,7 +663,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-schedule"></a>`Rx.Observable.generateWithAbsoluteTime(initialState, condition, iterate, resultSelector, timeSelector, [scheduler])`
-<a href="#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-schedule">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-schedule">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Generates an observable sequence by iterating a state from an initial state until the condition fails.
 
@@ -713,7 +713,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler"></a>`Rx.Observable.generateWithRelativeTime(initialState, condition, iterate, resultSelector, timeSelector, [scheduler])`
-<a href="#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Generates an observable sequence by iterating a state from an initial state until the condition fails.
 
@@ -763,7 +763,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableifcondition-thensource-elsesource"></a>`Rx.Observable.if(condition, thenSource, [elseSource])`
-<a href="#rxobservableifcondition-thensource-elsesource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservableifcondition-thensource-elsesource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Determines whether an observable collection contains values. There is an alias for this method called `ifThen` for browsers <IE9
 
@@ -830,7 +830,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableintervalperiod-scheduler"></a>`Rx.Observable.interval(period, [scheduler])`
-<a href="#rxobservableintervalperiod-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservableintervalperiod-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Returns an observable sequence that produces a value after each period.
 
@@ -872,7 +872,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablemergescheduler-args"></a>`Rx.Observable.merge([scheduler], ...args)`
-<a href="#rxobservablemergescheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablemergescheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Merges all the observable sequences into a single observable sequence.  
 
@@ -923,7 +923,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablenever"></a>`Rx.Observable.never()`
-<a href="#rxobservablenever">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablenever">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins). 
 
@@ -954,7 +954,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableonerrorresumenextargs"></a>`Rx.Observable.onErrorResumeNext(...args)`
-<a href="#rxobservableonerrorresumenextargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservableonerrorresumenextargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
 
@@ -994,7 +994,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablerangestart-count-scheduler"></a>`Rx.Observable.range(start, count, [scheduler])`
-<a href="#rxobservablerangestart-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablerangestart-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
 
@@ -1034,7 +1034,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablerepeatvalue-repeatcount-scheduler"></a>`Rx.Observable.repeat(value, [repeatCount], [scheduler])`
-<a href="#rxobservablerepeatvalue-repeatcount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablerepeatvalue-repeatcount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Generates an observable sequence that repeats the given element the specified number of times, using the specified scheduler to send out observer messages.
 
@@ -1074,7 +1074,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablereturnvalue-scheduler"></a>`Rx.Observable.return(value, [scheduler])`
-<a href="#rxobservablereturnvalue-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservablereturnvalue-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
 
 Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
 There is an alias called `returnValue` for browsers <IE9.
@@ -1112,7 +1112,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablestartfunc-scheduler-context"></a>`Rx.Observable.start(func, [scheduler], [context])`
-<a href="#rxobservablestartfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2639-L2641 "View in source") [&#x24C9;][1]
+<a href="#rxobservablestartfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2639-L2641 "View in source") 
 
 Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
 
@@ -1158,7 +1158,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablethrowexception-scheduler"></a>`Rx.Observable.throw(exception, [scheduler])`
-<a href="#rxobservablethrowexception-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") [&#x24C9;][1]
+<a href="#rxobservablethrowexception-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") 
 
 Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
 There is an alias to this method called `throwException` for browsers <IE9.
@@ -1196,7 +1196,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservabletimerduetime-period-scheduler"></a>`Rx.Observable.timer(dueTime, [period], [scheduler])`
-<a href="#rxobservabletimerduetime-period-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") [&#x24C9;][1]
+<a href="#rxobservabletimerduetime-period-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") 
 
 Returns an observable sequence that produces a value after dueTime has elapsed and then after each period.
 
@@ -1238,7 +1238,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservabletoasyncfunc-scheduler-context"></a>`Rx.Observable.toAsync(func, [scheduler], [context])`
-<a href="#rxobservabletoasyncfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2656-L2673 "View in source") [&#x24C9;][1]
+<a href="#rxobservabletoasyncfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2656-L2673 "View in source") 
 
 Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
 
@@ -1281,7 +1281,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableusingresourcefactory-observablefactory"></a>`Rx.Observable.using(resourceFactory, observableFactory)`
-<a href="#rxobservableusingresourcefactory-observablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2973-L2987 "View in source") [&#x24C9;][1]
+<a href="#rxobservableusingresourcefactory-observablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2973-L2987 "View in source") 
 
  Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
 
@@ -1351,7 +1351,7 @@ subscription.dispose();
 * * *
 
 ### <a id="rxobservablewhenargs"></a>`Rx.Observable.when(...args)`
-<a href="#rxobservablewhenargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js#L366-L152 "View in source") [&#x24C9;][1]
+<a href="#rxobservablewhenargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js#L366-L152 "View in source") 
 
 A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.
 
@@ -1393,7 +1393,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablewhilecondition-source"></a>`Rx.Observable.while(condition, source)`
-<a href="#rxobservablewhilecondition-source">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L126-L128 "View in source") [&#x24C9;][1]
+<a href="#rxobservablewhilecondition-source">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L126-L128 "View in source") 
 
 Repeats source as long as condition holds emulating a while loop.  There is an alias for this method called 'whileDo' for browsers <IE9.
 
@@ -1441,7 +1441,7 @@ var subscription = source.subscribe(
 ## _Observable Instance Methods_ ##
 
 ### <a id="rxobservableprototypeaggregateseed-accumulator"></a>`Rx.Observable.prototype.aggregate([seed], accumulator)`
-<a href="#rxobservableprototypeaggregateseed-accumulator">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L102-L112 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeaggregateseed-accumulator">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L102-L112 "View in source") 
 
  Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
  For aggregation behavior with incremental intermediate results, see `Rx.Observable.scan`.
@@ -1501,7 +1501,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeallpredicate-thisarg"></a>`Rx.Observable.prototype.all(predicate, [thisArg])`
-<a href="#rxobservableprototypeallpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L179-L185 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeallpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L179-L185 "View in source") 
 
 Determines whether all elements of an observable sequence satisfy a condition.  There is an alias for this method called `every`.
 
@@ -1541,7 +1541,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeambrightsource"></a>`Rx.Observable.prototype.amb(rightSource)`
-<a href="#rxobservableprototypeambrightsource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2996-L3055 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeambrightsource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2996-L3055 "View in source") 
 
 Propagates the observable sequence that reacts first.
 
@@ -1580,7 +1580,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeandrightsource"></a>`Rx.Observable.prototype.and(rightSource)`
-<a href="#rxobservableprototypeandrightsource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js#L346-L348 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeandrightsource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js#L346-L348 "View in source") 
 
 Propagates the observable sequence that reacts first.
 
@@ -1621,7 +1621,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeanypredicate-thisarg"></a>`Rx.Observable.prototype.any([predicate], [thisArg])`
-<a href="#rxobservableprototypeanypredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L144-L157 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeanypredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L144-L157 "View in source") 
 
 Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence. There is an alias to this function called `some`.
 
@@ -1677,7 +1677,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeasobservable"></a>`Rx.Observable.prototype.asObservable()`
-<a href="#rxobservableprototypeasobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3675-L3680 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeasobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3675-L3680 "View in source") 
 
 Hides the identity of an observable sequence.
 
@@ -1718,7 +1718,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeaverageselector"></a>`Rx.Observable.prototype.average([selector])`
-<a href="#rxobservableprototypeaverageselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L313-L327 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeaverageselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L313-L327 "View in source") 
 
 Computes the average of an observable sequence of values that are in the sequence or obtained by invoking a transform function on each element of the input sequence if present.
 
@@ -1780,7 +1780,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypebufferbufferopenings-bufferboundaries-bufferclosingselector"></a>`Rx.Observable.prototype.buffer([bufferOpenings], [bufferBoundaries], [bufferClosingSelector])`
-<a href="#rxobservableprototypebufferbufferopenings-bufferboundaries-bufferclosingselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L572-L585 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypebufferbufferopenings-bufferboundaries-bufferclosingselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L572-L585 "View in source") 
 
 Projects each element of an observable sequence into zero or more buffers.
 
@@ -1881,7 +1881,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypebufferwithcountcount-skip"></a>`Rx.Observable.prototype.bufferWithCount(count, [skip])`
-<a href="#rxobservableprototypebufferwithcountcount-skip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3694-L3703 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypebufferwithcountcount-skip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3694-L3703 "View in source") 
 
 Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
 
@@ -1944,7 +1944,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypebufferwithtimetimespan-timeshift--scheduler-scheduler"></a>`Rx.Observable.prototype.bufferWithTime(timeSpan, [timeShift | scheduler], [scheduler])`
-<a href="#rxobservableprototypebufferwithtimetimespan-timeshift--scheduler-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L483-L498 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypebufferwithtimetimespan-timeshift--scheduler-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L483-L498 "View in source") 
 
 Projects each element of an observable sequence into zero or more buffers which are produced based on timing information.
 
@@ -2007,7 +2007,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypebufferwithtimeorcounttimespan-count-scheduler"></a>`Rx.Observable.prototype.bufferWithTimeOrCount(timeSpan, count, [scheduler])`
-<a href="#rxobservableprototypebufferwithtimeorcounttimespan-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L513-L518 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypebufferwithtimeorcounttimespan-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L513-L518 "View in source") 
 
 Projects each element of an observable sequence into a buffer that is completed when either it's full or a given amount of time has elapsed.
 
@@ -2049,7 +2049,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypecatchsecond--handler"></a>`Rx.Observable.prototype.catch(second | handler)`
-<a href="#rxobservableprototypecatchsecond--handler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3107-L3112 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypecatchsecond--handler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3107-L3112 "View in source") 
 
 Continues an observable sequence that is terminated by an exception with the next observable sequence.  There is an alias for this method `catchException` for browsers <IE9
 
@@ -2107,7 +2107,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypecombinelatestargs-resultselector"></a>`Rx.Observable.prototype.combineLatest(...args, resultSelector)`
-<a href="#rxobservableprototypecombinelatestargs-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3139-L3147 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypecombinelatestargs-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3139-L3147 "View in source") 
 
 Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences produces an element.  This can be in the form of an argument list of observables or an array.
 
@@ -2157,7 +2157,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeconcatargs"></a>`Rx.Observable.prototype.concat(...args)`
-<a href="#rxobservableprototypeconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3223-L3227 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3223-L3227 "View in source") 
 
 Concatenates all the observable sequences.  This takes in either an array or variable arguments to concatenate.
 
@@ -2196,7 +2196,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="connectableobservableprototypeconnect"></a>`ConnectableObservable.prototype.connect()`
-<a href="#connectableobservableprototypeconnect">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L504 "View in source") [&#x24C9;][1]
+<a href="#connectableobservableprototypeconnect">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L504 "View in source") 
 
 Connects the observable wrapper to its source. All subscribed observers will receive values from the underlying observable sequence as long as the connection is established.
 
@@ -2251,7 +2251,7 @@ function createObserver(tag) {
 * * *
 
 ### <a id="rxobservableprototypecontainsvalue-comparer"></a>`Rx.Observable.prototype.contains(value, [comparer])`
-<a href="#rxobservableprototypecontainsvalue-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L198-L203 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypecontainsvalue-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L198-L203 "View in source") 
 
 Determines whether an observable sequence contains a specified element with an optional equality comparer.
 
@@ -2310,7 +2310,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypecountpredicate"></a>`Rx.Observable.prototype.count([predicate])`
-<a href="#rxobservableprototypecountpredicate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L214-L220 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypecountpredicate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L214-L220 "View in source") 
 
 Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
 
@@ -2367,7 +2367,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypedefaultifemptydefaultvalue"></a>`Rx.Observable.prototype.defaultIfEmpty([defaultValue])`
-<a href="#rxobservableprototypedefaultifemptydefaultvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4111-L4128 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypedefaultifemptydefaultvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4111-L4128 "View in source") 
 
 Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
 
@@ -2420,7 +2420,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypedelayduetime-scheduler"></a>`Rx.Observable.prototype.delay(dueTime, [scheduler])`
-<a href="#rxobservableprototypedelayduetime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4111-L4128 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypedelayduetime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4111-L4128 "View in source") 
 
 Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
 
@@ -2478,7 +2478,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservabledelaywithselectordelaysubscriptiondelay-delaydurationselector"></a>`Rx.Observable.delayWithSelector.delay([subscriptionDelay], delayDurationSelector)`
-<a href="#rxobservabledelaywithselectordelaysubscriptiondelay-delaydurationselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L832-L882 "View in source") [&#x24C9;][1]
+<a href="#rxobservabledelaywithselectordelaysubscriptiondelay-delaydurationselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L832-L882 "View in source") 
 
 Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
 
@@ -2552,7 +2552,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypedematerialize"></a>`Rx.Observable.prototype.dematerialize()`
-<a href="#rxobservableprototypedematerialize">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3711-L3718 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypedematerialize">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3711-L3718 "View in source") 
 
 Dematerializes the explicit notification values of an observable sequence as implicit notifications.
 
@@ -2589,7 +2589,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypedistinctkeyselector-keyserializer"></a>`Rx.Observable.prototype.distinct([keySelector], [keySerializer])`
-<a href="#rxobservableprototypedistinctkeyselector-keyserializer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4144-L4171 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypedistinctkeyselector-keyserializer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4144-L4171 "View in source") 
 
 Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
 
@@ -2651,7 +2651,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypedistinctuntilchangedkeyselector-comparer"></a>`Rx.Observable.prototype.distinctUntilChanged([keySelector], [comparer])`
-<a href="#rxobservableprototypedistinctuntilchangedkeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4144-L4171 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypedistinctuntilchangedkeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4144-L4171 "View in source") 
 
 Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
 
@@ -2713,7 +2713,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypedoobserver--onnext-onerror-oncompleted"></a>`Rx.Observable.prototype.do(observer | [onNext], [onError], [onCompleted])`
-<a href="#rxobservableprototypedoobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3779-L3820 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypedoobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3779-L3820 "View in source") 
 
 Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
 This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
@@ -2796,7 +2796,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypedowhilecondition-source"></a>`Rx.Observable.prototype.doWhile(condition, source)`
-<a href="#rxobservableprototypedowhilecondition-source">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypedowhilecondition-source">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") 
 
 Repeats source as long as condition holds emulating a do while loop.
 
@@ -2836,7 +2836,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeelementatindex"></a>`Rx.Observable.prototype.elementAt(index)`
-<a href="#rxobservableprototypeelementatindex">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L474-L476 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeelementatindex">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L474-L476 "View in source") 
 
 Returns the element at a specified index in a sequence.
 
@@ -2890,7 +2890,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeelementatordefaultindex-defaultvalue"></a>`Rx.Observable.prototype.elementAtOrDefault(index, [defaultValue])`
-<a href="#rxobservableprototypeelementatordefaultindex-defaultvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L489-L491 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeelementatordefaultindex-defaultvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L489-L491 "View in source") 
 
 Returns the element at a specified index in a sequence.
 
@@ -2946,7 +2946,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeeverypredicate-thisarg"></a>`Rx.Observable.prototype.every(predicate, [thisArg])`
-<a href="#rxobservableprototypeeverypredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L179-L185 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeeverypredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L179-L185 "View in source") 
 
 Determines whether all elements of an observable sequence satisfy a condition.  This is an alias to `all`.
 
@@ -2986,7 +2986,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeexpandselector-scheduler"></a>`Rx.Observable.prototype.expand(selector, [scheduler])`
-<a href="#rxobservableprototypeexpandselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L179-L234 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeexpandselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L179-L234 "View in source") 
 
 Expands an observable sequence by recursively invoking selector.
 
@@ -3029,7 +3029,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="expand"></a>`Rx.Observable.prototype.expand(selector, [scheduler])`
-<a href="#expand">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L179-L234 "View in source") [&#x24C9;][1]
+<a href="#expand">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L179-L234 "View in source") 
 
 Expands an observable sequence by recursively invoking selector.
 
@@ -3072,7 +3072,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypefilterpredicate-thisarg"></a>`Rx.Observable.prototype.filter(predicate, [thisArg])`
-<a href="#rxobservableprototypefilterpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypefilterpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") 
 
 Filters the elements of an observable sequence based on a predicate.  This is an alias for the `where` method.
 
@@ -3117,7 +3117,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypefinallyaction"></a>`Rx.Observable.prototype.finally(action)`
-<a href="#rxobservableprototypefinallyaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3832-L3846 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypefinallyaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3832-L3846 "View in source") 
 
 Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.  There is an alias called `finallyAction` for browsers <IE9
 
@@ -3161,7 +3161,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypefindpredicate-thisarg"></a>`Rx.Observable.prototype.find(predicate, [thisArg])`
-<a href="#rxobservableprototypefindpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L699-L701 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypefindpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L699-L701 "View in source") 
 
 Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire Observable sequence.
  
@@ -3229,7 +3229,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypefindindexpredicate-thisarg"></a>`Rx.Observable.prototype.findIndex(predicate, [thisArg])`
-<a href="#rxobservableprototypefindindexpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L712-L714 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypefindindexpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L712-L714 "View in source") 
 
 Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire Observable sequence.
  
@@ -3297,7 +3297,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypefirstpredicate-thisarg"></a>`Rx.Observable.prototype.first([predicate], [thisArg])`
-<a href="#rxobservableprototypefirstpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypefirstpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") 
 
 Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
 
@@ -3374,7 +3374,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypefirstordefaultpredicate-defaultvalue-thisarg"></a>`Rx.Observable.prototype.firstOrDefault(predicate, [defaultValue], [thisArg])`
-<a href="#rxobservableprototypefirstordefaultpredicate-defaultvalue-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypefirstordefaultpredicate-defaultvalue-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") 
 
 Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
 
@@ -3435,7 +3435,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeflatmpaselector-resultselector"></a>`Rx.Observable.prototype.flatMap(selector, [resultSelector])`
-<a href="#rxobservableprototypeflatmapselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeflatmapselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
 
 This is an alias for the `selectMany` method.
 
@@ -3499,7 +3499,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeflatmplatestaselector-thisArg"></a>`Rx.Observable.prototype.flatMapLatest(selector, [thisArg])`
-<a href="#rxobservableprototypeflatmplatestaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeflatmplatestaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
 
 This is an alias for the `selectSwitch` method.
 
@@ -3545,7 +3545,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeforkjoinsecond-resultselector"></a>`Rx.Observable.prototype.forkJoin(second, resultSelector)`
-<a href="#rxobservableprototypeforkjoinsecond-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L304-L373 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeforkjoinsecond-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L304-L373 "View in source") 
 
 Runs two observable sequences in parallel and combines their last elements.
 
@@ -3587,7 +3587,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypegroupbykeyselector-elementselector-keyserializer"></a>`Rx.Observable.prototype.groupBy(keySelector, [elementSelector], [keySerializer])`
-<a href="#rxobservableprototypegroupbykeyselector-elementselector-keyserializer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4187-L4191 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypegroupbykeyselector-elementselector-keyserializer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4187-L4191 "View in source") 
 
 Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
 
@@ -3649,7 +3649,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypegroupbyuntilkeyselector-elementselector-durationselector-keyserializer"></a>`Rx.Observable.prototype.groupByUntil(keySelector, [elementSelector], durationSelector, [keySerializer])`
-<a href="#rxobservableprototypegroupbyuntilkeyselector-elementselector-durationselector-keyserializer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4212-L4301 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypegroupbyuntilkeyselector-elementselector-durationselector-keyserializer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4212-L4301 "View in source") 
 
 Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
 
@@ -3716,7 +3716,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypegroupjoinright-leftdurationselector-rightdurationselector-resultselector"></a>`Rx.Observable.prototype.groupJoin(right, leftDurationSelector, rightDurationSelector, resultSelector)`
-<a href="#rxobservableprototypegroupjoinright-leftdurationselector-rightdurationselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L431-L563 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypegroupjoinright-leftdurationselector-rightdurationselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L431-L563 "View in source") 
 
 Correlates the elements of two sequences based on overlapping durations, and groups the results.
 
@@ -3775,7 +3775,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeignoreelements"></a>`Rx.Observable.prototype.ignoreElements()`
-<a href="#rxobservableprototypeignoreelements">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3854-L3859 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeignoreelements">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3854-L3859 "View in source") 
 
 Ignores all elements in an observable sequence leaving only the termination messages.
 
@@ -3808,7 +3808,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeisempty"></a>`Rx.Observable.prototype.isEmpty()`
-<a href="#rxobservableprototypeisempty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L166-L168 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeisempty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L166-L168 "View in source") 
 
 Determines whether an observable sequence is empty.
 
@@ -3861,7 +3861,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypejoinright-leftdurationselector-rightdurationselector-resultselector"></a>`Rx.Observable.prototype.join(right, leftDurationSelector, rightDurationSelector, resultSelector)`
-<a href="#rxobservableprototypejoinright-leftdurationselector-rightdurationselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L332-L420 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypejoinright-leftdurationselector-rightdurationselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L332-L420 "View in source") 
 
 Correlates the elements of two sequences based on overlapping durations.
 
@@ -3919,7 +3919,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypelastpredicate-thisarg"></a>`Rx.Observable.prototype.last([predicate], [thisArg])`
-<a href="#rxobservableprototypelastpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypelastpredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") 
 
 Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
 
@@ -3998,7 +3998,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypelastordefaultpredicate-defaultvalue-thisarg"></a>`Rx.Observable.prototype.lastOrDefault([predicate], [defaultValue], [thisArg])`
-<a href="#rxobservableprototypelastordefaultpredicate-defaultvalue-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypelastordefaultpredicate-defaultvalue-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") 
 
 Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
 
@@ -4079,7 +4079,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypemanyselectselector-scheduler"></a>`Rx.Observable.prototype.manySelect(selector, [scheduler])`
-<a href="#rxobservableprototypemanyselectselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypemanyselectselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L634-L639 "View in source") 
 
 Comonadic bind operator.
 
@@ -4120,7 +4120,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypemapselector-thisarg"></a>`Rx.Observable.prototype.map(selector, [thisArg])`
-<a href="#rxobservableprototypemapselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypemapselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
 
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
@@ -4165,7 +4165,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypemaxcomparer"></a>`Rx.Observable.prototype.max([comparer])`
-<a href="#rxobservableprototypemaxcomparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L297-L301 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypemaxcomparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L297-L301 "View in source") 
 
 Returns the maximum value in an observable sequence according to the specified comparer.
 
@@ -4230,7 +4230,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypemaxbykeyselector-comparer"></a>`Rx.Observable.prototype.maxBy(keySelector, [comparer])`
-<a href="#rxobservableprototypemaxbykeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L282-L285 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypemaxbykeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L282-L285 "View in source") 
 
 Returns the maximum value in an observable sequence according to the specified comparer.
 
@@ -4269,7 +4269,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypemergemaxconcurrent--other"></a>`Rx.Observable.prototype.merge(maxConcurrent | other)`
-<a href="#rxobservableprototypemergemaxconcurrent--other">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3265-L3307 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypemergemaxconcurrent--other">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3265-L3307 "View in source") 
 
 Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.
 Or merges two observable sequences into a single observable sequence.
@@ -4347,7 +4347,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypemergeobservable"></a>`Rx.Observable.prototype.mergeObservable()`
-<a href="#rxobservableprototypemergeobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3347-L3373 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypemergeobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3347-L3373 "View in source") 
 
 Merges an observable sequence of observable sequences into an observable sequence.
 
@@ -4390,7 +4390,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypemincomparer"></a>`Rx.Observable.prototype.min([comparer])`
-<a href="#rxobservableprototypemincomparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L265-L269 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypemincomparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L265-L269 "View in source") 
 
 Returns the minimum element in an observable sequence according to the optional comparer else a default greater than less than check.
 
@@ -4455,7 +4455,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeminbykeyselector-comparer"></a>`Rx.Observable.prototype.minBy(keySelector, [comparer])`
-<a href="#rxobservableprototypeminbykeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L249-L254 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeminbykeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L249-L254 "View in source") 
 
 Returns the elements in an observable sequence with the minimum key value according to the specified comparer.
 
@@ -4494,7 +4494,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypemulticastsubject--subjectselector-selector"></a>`Rx.Observable.prototype.multicast(subject | subjectSelector, [selector])`
-<a href="#rxobservableprototypemulticastsubject--subjectselector-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L63-L71 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypemulticastsubject--subjectselector-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L63-L71 "View in source") 
 
 Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
 subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
@@ -4549,7 +4549,7 @@ subscription.dispose();
 * * *
 
 ### <a id="rxobservableprototypeobserveonscheduler"></a>`Rx.Observable.prototype.observeOn(scheduler)`
-<a href="#rxobservableprototypeobserveonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2683-L2688 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeobserveonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2683-L2688 "View in source") 
 
 Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
 
@@ -4589,7 +4589,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeonerrorresumenextsecond"></a>`Rx.Observable.prototype.onErrorResumeNext(second)`
-<a href="#rxobservableprototypeonerrorresumenextsecond">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3382-L3387 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeonerrorresumenextsecond">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3382-L3387 "View in source") 
 
 Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
 
@@ -4626,7 +4626,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypepluckproperty"></a>`Rx.Observable.prototype.pluck(property)`
-<a href="#rxobservableprototypepluckproperty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4335-L4337 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypepluckproperty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4335-L4337 "View in source") 
 
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
@@ -4670,7 +4670,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypepublishselector"></a>`Rx.Observable.prototype.publish([selector])`
-<a href="#rxobservableprototypepublishselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypepublishselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
 
@@ -4765,7 +4765,7 @@ function createObserver(tag) {
 * * *
 
 ### <a id="rxobservableprototypepublishlatestselector"></a>`Rx.Observable.prototype.publishLatest([selector])`
-<a href="#rxobservableprototypepublishlatestselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L103-L109 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypepublishlatestselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L103-L109 "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
 
@@ -4822,7 +4822,7 @@ function createObserver(tag) {
 * * *
 
 ### <a id="rxobservableprototypepublishvalueselector"></a>`Rx.Observable.prototype.publishValue([selector])`
-<a href="#rxobservableprototypepublishvalueselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L123-L129 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypepublishvalueselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L123-L129 "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
    
@@ -4883,7 +4883,7 @@ function createObserver(tag) {
 * * *
 
 ### <a id="connectableobservableprototyperefcount"></a>`ConnectableObservable.prototype.refCount()`
-<a href="#connectableobservableprototyperefcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L510-L528 "View in source") [&#x24C9;][1]
+<a href="#connectableobservableprototyperefcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L510-L528 "View in source") 
 
 Returns an observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
    
@@ -4935,7 +4935,7 @@ function createObserver(tag) {
 * * *
 
 ### <a id="rxobservableprototypereduceaccumulator-seed"></a>`Rx.Observable.prototype.reduce(accumulator, [seed])`
-<a href="#rxobservableprototypereduceaccumulator-seed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L126-L133 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypereduceaccumulator-seed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L126-L133 "View in source") 
 
 Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
 
@@ -4977,7 +4977,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototyperepeatrepeatcount"></a>`Rx.Observable.prototype.repeat(repeatCount)`
-<a href="#rxobservableprototyperepeatrepeatcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3893-L3895 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototyperepeatrepeatcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3893-L3895 "View in source") 
 
 Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
  
@@ -5019,7 +5019,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypereplayselector-buffersize-window-scheduler"></a>`Rx.Observable.prototype.replay([selector], [bufferSize], [window], [scheduler])`
-<a href="#rxobservableprototypereplayselector-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypereplayselector-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
 
@@ -5088,7 +5088,7 @@ function createObserver(tag) {
 * * *
 
 ### <a id="rxobservableprototyperetryretrycount"></a>`Rx.Observable.prototype.retry([retryCount])`
-<a href="#rxobservableprototyperetryretrycount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3908-L3910 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototyperetryretrycount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3908-L3910 "View in source") 
 
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
@@ -5134,7 +5134,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypesampleinterval--sampleobservable"></a>`Rx.Observable.prototype.sample(interval | sampleObservable)`
-<a href="#rxobservableprototypesampleinterval--sampleobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3908-L3910 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypesampleinterval--sampleobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3908-L3910 "View in source") 
 
 Samples the observable sequence at each interval.
 
@@ -5196,7 +5196,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypescanseed-accumulator"></a>`Rx.Observable.prototype.scan([seed], accumulator)`
-<a href="#rxobservableprototypescanseed-accumulator">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3294-L3946 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypescanseed-accumulator">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3294-L3946 "View in source") 
 
 Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
 
@@ -5266,7 +5266,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeselectselector-thisarg"></a>`Rx.Observable.prototype.select(selector, [thisArg])`
-<a href="#rxobservableprototypeselectselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeselectselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
 
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
@@ -5311,7 +5311,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeselectmanyselector-resultselector"></a>`Rx.Observable.prototype.selectMany(selector, [resultSelector])`
-<a href="#rxobservableprototypeselectmanyselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeselectmanyselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
 
 One of the following:
 
@@ -5371,7 +5371,7 @@ var subscription = source.subscribe(
 - rx.js
 
 * * *### <a id="rxobservableprototypeselectswitchaselector-thisArg"></a>`Rx.Observable.prototype.selectSwitch(selector, [thisArg])`
-<a href="#rxobservableprototypeselectswitchaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeselectswitchaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
 
 This is an alias for the `selectSwitch` method.
 
@@ -5417,7 +5417,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypesinglepredicate-thisarg"></a>`Rx.Observable.prototype.single([predicate], [thisArg])`
-<a href="#rxobservableprototypesinglepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L524-L529 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypesinglepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L524-L529 "View in source") 
 
 Returns the only element of an observable sequence that satisfies the condition in the optional predicate, and reports an exception if there is not exactly one element in the observable sequence.
  
@@ -5511,7 +5511,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg"></a>`Rx.Observable.prototype.singleOrDefault(predicate, [defaultValue], [thisArg])`
-<a href="#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") 
 
 Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
 
@@ -5572,7 +5572,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeskipcount"></a>`Rx.Observable.prototype.skip(count)`
-<a href="#rxobservableprototypeskipcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4386-L4401 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeskipcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4386-L4401 "View in source") 
 
 Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
 
@@ -5610,7 +5610,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeskiplastcount"></a>`Rx.Observable.prototype.skipLast(count)`
-<a href="#rxobservableprototypeskiplastcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3958-L3969 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeskiplastcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3958-L3969 "View in source") 
 
 Bypasses a specified number of elements at the end of an observable sequence.
 
@@ -5650,7 +5650,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeskiplastwithtimeduration"></a>`Rx.Observable.prototype.skipLastWithTime(duration)`
-<a href="#rxobservableprototypeskiplastwithtimeduration">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L1035-L1054 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeskiplastwithtimeduration">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L1035-L1054 "View in source") 
 
 Bypasses a specified number of elements at the end of an observable sequence.
 
@@ -5694,7 +5694,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeskipuntilother"></a>`Rx.Observable.prototype.skipUntil(other)`
-<a href="#rxobservableprototypeskipuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3429-L3454 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeskipuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3429-L3454 "View in source") 
 
 Returns the values from the source observable sequence only after the other observable sequence produces a value.
 
@@ -5733,7 +5733,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeskipwhilepredicate-thisarg"></a>`Rx.Observable.prototype.skipWhile([predicate], [thisArg])`
-<a href="#rxobservableprototypeskipwhilepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4414-L4432 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeskipwhilepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4414-L4432 "View in source") 
 
 Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
 
@@ -5777,7 +5777,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypesomepredicate-thisarg"></a>`Rx.Observable.prototype.some([predicate], [thisArg])`
-<a href="#rxobservableprototypesomepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L144-L157 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypesomepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L144-L157 "View in source") 
 
 Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence.  There is an alias to this method called `any`.
 
@@ -5819,7 +5819,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypestartwithscheduler-args"></a>`Rx.Observable.prototype.startWith([scheduler] ...args)`
-<a href="#rxobservableprototypestartwithscheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3980-L3990 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypestartwithscheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3980-L3990 "View in source") 
 
 Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
 
@@ -5860,7 +5860,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted"></a>`Rx.Observable.prototype.subscribe([observer] | [onNext], [onError], [onCompleted])`
-<a href="#rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2593-L2602 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2593-L2602 "View in source") 
 
 Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
 
@@ -5931,7 +5931,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypesubscribeonscheduler"></a>`Rx.Observable.prototype.subscribeOn(scheduler)`
-<a href="#rxobservableprototypesubscribeonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2700-L2710 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypesubscribeonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2700-L2710 "View in source") 
 
 Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler.
 
@@ -5985,7 +5985,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypesumkeyselector-thisarg"></a>`Rx.Observable.prototype.sum([keySelector], [thisArg])`
-<a href="#rxobservableprototypesumkeyselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L231-L237 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypesumkeyselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L231-L237 "View in source") 
 
 Computes the sum of a sequence of values that are obtained by invoking an optional transform function on each element of the input sequence, else if not specified computes the sum on each item in the sequence.
 
@@ -6053,7 +6053,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeswitch"></a>`Rx.Observable.prototype.switch()`
-<a href="#rxobservableprototypeswitch">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3462-L3497 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypeswitch">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3462-L3497 "View in source") 
 
 Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.  There is an alias for this method called `switchLatest` for browsers <IE9.
   
@@ -6092,7 +6092,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetakecount-scheduler"></a>`Rx.Observable.prototype.take(count, [scheduler])`
-<a href="#rxobservableprototypetakecount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4446-L4466 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetakecount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4446-L4466 "View in source") 
 
 Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of `take(0)`.
   
@@ -6132,7 +6132,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetakelastcount"></a>`Rx.Observable.prototype.takeLast(count)`
-<a href="#rxobservableprototypetakelastcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4008-L4010 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetakelastcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4008-L4010 "View in source") 
 
 Returns a specified number of contiguous elements from the end of an observable sequence, using an optional scheduler to drain the queue.
   
@@ -6173,7 +6173,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetakelastbuffercount"></a>`Rx.Observable.prototype.takeLastBuffer(count)`
-<a href="#rxobservableprototypetakelastbuffercount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4023-L4037 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetakelastbuffercount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4023-L4037 "View in source") 
 
 Returns an array with the specified number of contiguous elements from the end of an observable sequence.
 
@@ -6210,7 +6210,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetakelastbufferwithtimeduration-scheduler"></a>`Rx.Observable.prototype.takeLastBufferWithTime(duration, [scheduler])`
-<a href="#rxobservableprototypetakelastbufferwithtimeduration-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L1089-L1114 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetakelastbufferwithtimeduration-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L1089-L1114 "View in source") 
 
 Returns an array with the elements within the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
 
@@ -6252,7 +6252,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler"></a>`Rx.Observable.prototype.takeLastWithTime(duration, [timeScheduler], [loopScheduler])`
-<a href="#rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L1071-L1073 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L1071-L1073 "View in source") 
 
 Returns elements within the specified duration from the end of the observable source sequence, using the specified schedulers to run timers and to drain the collected elements.
 
@@ -6296,7 +6296,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetakeuntilother"></a>`Rx.Observable.prototype.takeUntil(other)`
-<a href="#rxobservableprototypetakeuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3506-L3514 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetakeuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3506-L3514 "View in source") 
 
 Returns the values from the source observable sequence until the other observable sequence produces a value.
 
@@ -6337,7 +6337,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetakewhilepredicate-thisarg"></a>`Rx.Observable.prototype.takeWhile(predicate, [thisArg])`
-<a href="#rxobservableprototypetakewhilepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4481-L4501 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetakewhilepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4481-L4501 "View in source") 
 
 Returns elements from an observable sequence as long as a specified condition is true.
 
@@ -6381,7 +6381,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypethrottleduetime-scheduler"></a>`Rx.Observable.prototype.throttle(dueTime, [scheduler])`
-<a href="#rxobservableprototypethrottleduetime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4481-L4501 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypethrottleduetime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4481-L4501 "View in source") 
 
 Ignores values from an observable sequence which are followed by another value before dueTime.
 
@@ -6436,7 +6436,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypethrottlewithselectorthrottleselector"></a>`Rx.Observable.prototype.throttleWithSelector(throttleSelector)`
-<a href="#rxobservableprototypethrottlewithselectorthrottleselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L973-L1018 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypethrottlewithselectorthrottleselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L973-L1018 "View in source") 
 
 Ignores values from an observable sequence which are followed by another value before dueTime.
 
@@ -6489,7 +6489,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetimeintervalscheduler"></a>`Rx.Observable.prototype.timeInterval([scheduler])`
-<a href="#rxobservableprototypetimeintervalscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L531-L545 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetimeintervalscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L531-L545 "View in source") 
 
 Records the time interval between consecutive values in an observable sequence.
 
@@ -6532,7 +6532,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetimeoutduetime-other-scheduler"></a>`Rx.Observable.prototype.timeout(dueTime, [other], [scheduler])`
-<a href="#rxobservableprototypetimeoutduetime-other-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L633-L687 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetimeoutduetime-other-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L633-L687 "View in source") 
 
 Returns the source observable sequence or the other observable sequence if dueTime elapses.
 
@@ -6592,7 +6592,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetimeoutwithselectorfirsttimeout-timeoutdurationselector-other"></a>`Rx.Observable.prototype.timeoutwithselector([firstTimeout], timeoutDurationSelector, [other])`
-<a href="#rxobservableprototypetimeoutwithselectorfirsttimeout-timeoutdurationselector-other">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L633-L687 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetimeoutwithselectorfirsttimeout-timeoutdurationselector-other">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L633-L687 "View in source") 
 
 Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
 
@@ -6714,7 +6714,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetimestampscheduler"></a>`Rx.Observable.prototype.timestamp([scheduler])`
-<a href="#rxobservableprototypetimestampscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L559-L567 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetimestampscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L559-L567 "View in source") 
 
 Records the timestamp for each value in an observable sequence.
 
@@ -6757,7 +6757,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypetoarray"></a>`Rx.Observable.prototype.toArray()`
-<a href="#rxobservableprototypetoarray">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2610-L2617 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypetoarray">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2610-L2617 "View in source") 
 
 Creates a list from an observable sequence.
 
@@ -6792,7 +6792,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypewherepredicate-thisarg"></a>`Rx.Observable.prototype.where(predicate, [thisArg])`
-<a href="#rxobservableprototypewherepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypewherepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") 
 
 Filters the elements of an observable sequence based on a predicate.  This is an alias for the `filter` method.
 
@@ -6837,7 +6837,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector"></a>`Rx.Observable.prototype.window([windowOpenings], [windowBoundaries], windowClosingSelector)`
-<a href="#rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L4513-L4530 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L4513-L4530 "View in source") 
 
 Projects each element of an observable sequence into zero or more windows.
 
@@ -6943,7 +6943,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypewindowwithcountcount-skip"></a>`Rx.Observable.prototype.windowWithCount(count, [skip])`
-<a href="#rxobservableprototypewindowwithcountcount-skip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4050-L4099 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypewindowwithcountcount-skip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4050-L4099 "View in source") 
 
 Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
 
@@ -7008,7 +7008,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypewindowwithtimetimespan-timeshift--scheduler"></a>`Rx.Observable.prototype.windowWithTime(timeSpan, [timeShift | scheduler])`
-<a href="#rxobservableprototypewindowwithtimetimespan-timeshift--scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L311-L399 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypewindowwithtimetimespan-timeshift--scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L311-L399 "View in source") 
 
 Projects each element of an observable sequence into zero or more buffers which are produced based on timing information.
 
@@ -7071,7 +7071,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler"></a>`Rx.Observable.prototype.windowWithTimeOrCount(timeSpan, count, [scheduler])`
-<a href="#rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L413-L469 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L413-L469 "View in source") 
 
 Projects each element of an observable sequence into a window that is completed when either it's full or a given amount of time has elapsed.
 
@@ -7114,7 +7114,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypezipargs-resultselector"></a>`Rx.Observable.prototype.zip(...args, [resultSelector])`
-<a href="#rxobservableprototypezipargs-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") [&#x24C9;][1]
+<a href="#rxobservableprototypezipargs-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") 
 
 Filters the elements of an observable sequence based on a predicate.  This is an alias for the `filter` method.
 
