@@ -9,11 +9,7 @@
         this.action = action || noop;
     };
 
-    /** 
-     * Performs the task of cleaning up resources.
-     *
-     * @memberOf Disposable#
-     */     
+    /** Performs the task of cleaning up resources. */     
     Disposable.prototype.dispose = function () {
         if (!this.isDisposed) {
             this.action();
@@ -22,10 +18,7 @@
     };
 
     /**
-     *  Creates a disposable object that invokes the specified action when disposed.
-     *  
-     * @static
-     * @memberOf Disposable
+     * Creates a disposable object that invokes the specified action when disposed.
      * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
      * @return {Disposable} The disposable object that runs the given action upon disposal.
      */
@@ -33,8 +26,5 @@
 
     /** 
      * Gets the disposable that does nothing when disposed. 
-     * 
-     * @static
-     * @memberOf Disposable
      */
     var disposableEmpty = Disposable.empty = { dispose: noop };
