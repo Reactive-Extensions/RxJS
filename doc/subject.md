@@ -6,7 +6,7 @@ This class inherits both from the `Rx.Observable` and `Rx.Observer` classes.
 
 ## Usage ##
 
-The follow example shows the basic usage of 
+The follow example shows the basic usage of an Rx.Subject.
 
 ```js
 var subject = new Rx.Subject();
@@ -23,11 +23,15 @@ var subscription = subject.subscribe(
     });
 
 subject.onNext(42);
-subject.onNext(56);
-subject.onCompleted();
 
 // => Next: 42
+
+subject.onNext(56);
+
 // => Next: 56
+
+subject.onCompleted();
+
 // => Completed
 ```
 
@@ -45,7 +49,7 @@ subject.onCompleted();
 - [`Rx.Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/observable.md)
 - [`Rx.Observer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/observer.md)
 
-## Subject Constructor_ ##
+## _Subject Constructor_ ##
 
 ### <a id="rxsubject"></a>`Rx.Subject()`
 <a href="#rxsubject">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L26-L31 "View in source") 
@@ -56,9 +60,6 @@ Creates a subject.
 ```js
 var subject = new Rx.Subject();
 
-subject.onNext(42);
-subject.onCompleted();
-    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -70,7 +71,10 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => 42
+subject.onNext(42);
+// => Next: 42
+
+subject.onCompleted();
 // => Completed
 ```
 
@@ -144,7 +148,6 @@ var subscription = subject.subscribe(
     });
 
 subject.onNext(42);
-
 // => Next: 42
 
 ```
@@ -178,9 +181,9 @@ var subscription = subject.subscribe(
     });
 
 subject.onNext(42);
-subject.onCompleted();
-
 // => Next: 42
+
+subject.onCompleted();
 // => Completed
 
 subject.dispose();
@@ -213,7 +216,6 @@ Indicates whether the subject has observers subscribed to it.
 var subject = new Rx.Subject();
 
 console.log(subject.hasObservers());
-
 // => false
     
 var subscription = subject.subscribe(
@@ -228,7 +230,6 @@ var subscription = subject.subscribe(
     });
 
 console.log(subject.hasObservers());
-
 // => true
 ```
 
