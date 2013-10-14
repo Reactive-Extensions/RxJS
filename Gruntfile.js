@@ -37,11 +37,9 @@ module.exports = function (grunt) {
                     'src/core/disposables/scheduleddisposable.js',
                     'src/core/concurrency/scheduleditem.js',
                     'src/core/concurrency/scheduler.js',
+                    'src/core/concurrency/scheduleperiodicrecursive.js',
                     'src/core/concurrency/immediatescheduler.js',
                     'src/core/concurrency/currentthreadscheduler.js',
-                    'src/core/concurrency/scheduleperiodicrecursive.js',
-                    'src/core/concurrency/virtualtimescheduler.js',
-                    'src/core/concurrency/historicalscheduler.js',
                     'src/core/concurrency/timeoutscheduler.js',
                     'src/core/concurrency/catchscheduler.js',
                     'src/core/notification.js',
@@ -88,11 +86,9 @@ module.exports = function (grunt) {
                     'src/core/disposables/scheduleddisposable.js',
                     'src/core/concurrency/scheduleditem.js',
                     'src/core/concurrency/scheduler.js',
+                    'src/core/concurrency/scheduleperiodicrecursive.js',
                     'src/core/concurrency/immediatescheduler.js',
                     'src/core/concurrency/currentthreadscheduler.js',
-                    'src/core/concurrency/scheduleperiodicrecursive.js',
-                    'src/core/concurrency/virtualtimescheduler.js',
-                    'src/core/concurrency/historicalscheduler.js',
                     'src/core/concurrency/timeoutscheduler.js',
                     'src/core/concurrency/catchscheduler.js',
                     'src/core/notification.js',
@@ -208,7 +204,18 @@ module.exports = function (grunt) {
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.time.js'
-            }
+            },
+            virtualtime: {
+                src: [                
+                    'src/core/license.js',
+                    'src/core/subintro.js',
+                    'src/core/virtualtimeheader.js',
+                    'src/core/concurrency/virtualtimescheduler.js',
+                    'src/core/concurrency/historicalscheduler.js',                    
+                    'src/core/suboutro.js'
+                ],
+                dest: 'rx.virtualtime.js'                    
+            }        
         },
         uglify: {
             basic: {
@@ -246,8 +253,11 @@ module.exports = function (grunt) {
             time: {
                 src: ['<banner>', 'rx.time.js'],
                 dest: 'rx.time.min.js'
+            },
+            virtualtime: {
+                src: ['<banner>', 'rx.virtualtime.js'],
+                dest: 'rx.virtualtime.min.js'
             }
-
         },
         qunit: {
             all: ['tests/*.html']
@@ -262,7 +272,8 @@ module.exports = function (grunt) {
                 'rx.experimental.js',
                 'rx.joinpatterns.js',
                 'rx.testing.js',
-                'rx.time.js'
+                'rx.time.js',
+                'rx.virtualtime.js'
             ]
         },
         watch: {
@@ -348,6 +359,10 @@ module.exports = function (grunt) {
         createNuGetPackage.call(this, 'nuget/RxJS-Time/RxJS-Time.nuspec');
     });    
 
+    grunt.registerTask('nuget-virtualtime', 'Register NuGet-VirtualTime', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-VirtualTime/RxJS-VirtualTime.nuspec');
+    });       
+
     grunt.registerTask('nuget', [
         'nuget-aggregates',
         'nuget-all',
@@ -357,7 +372,8 @@ module.exports = function (grunt) {
         'nuget-joinpatterns',
         'nuget-main',
         'nuget-testing',
-        'nuget-time'
+        'nuget-time',
+        'nuget-virtualtime',
     ]);
 
     grunt.registerTask('test', [
@@ -374,6 +390,7 @@ module.exports = function (grunt) {
         'concat:joinpatterns',
         'concat:time',
         'concat:testing',
+        'concat:virtualtime',
 
         'jshint'
     ]);
@@ -389,6 +406,7 @@ module.exports = function (grunt) {
         'concat:joinpatterns',
         'concat:time',
         'concat:testing',
+        'concat:virtualtime',
 
         'uglify:basic',
         'uglify:modern',
@@ -399,6 +417,7 @@ module.exports = function (grunt) {
         'uglify:joinpatterns',
         'uglify:testing',
         'uglify:time',
+        'uglify:virtualtime',
 
         'qunit'
     ]);    

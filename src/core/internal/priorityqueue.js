@@ -13,14 +13,16 @@
     };
 
     // Priority Queue for Scheduling
-    var PriorityQueue = function (capacity) {
+    var PriorityQueue = Rx.Internals.PriorityQueue = function (capacity) {
         this.items = new Array(capacity);
         this.length = 0;
     };
+
     var priorityProto = PriorityQueue.prototype;
     priorityProto.isHigherPriority = function (left, right) {
         return this.items[left].compareTo(this.items[right]) < 0;
     };
+
     priorityProto.percolate = function (index) {
         if (index >= this.length || index < 0) {
             return;
@@ -36,6 +38,7 @@
             this.percolate(parent);
         }
     };
+
     priorityProto.heapify = function (index) {
         if (index === undefined) {
             index = 0;
@@ -59,24 +62,27 @@
             this.heapify(first);
         }
     };
-    priorityProto.peek = function () {
-        return this.items[0].value;
-    };
+    
+    priorityProto.peek = function () {  return this.items[0].value; };
+
     priorityProto.removeAt = function (index) {
         this.items[index] = this.items[--this.length];
         delete this.items[this.length];
         this.heapify();
     };
+
     priorityProto.dequeue = function () {
         var result = this.peek();
         this.removeAt(0);
         return result;
     };
+
     priorityProto.enqueue = function (item) {
         var index = this.length++;
         this.items[index] = new IndexedItem(PriorityQueue.count++, item);
         this.percolate(index);
     };
+
     priorityProto.remove = function (item) {
         for (var i = 0; i < this.length; i++) {
             if (this.items[i].value === item) {

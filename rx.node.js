@@ -6,6 +6,7 @@ require('./rx.experimental');
 require('./rx.joinpatterns');
 require('./rx.testing');
 require('./rx.time');
+require('./rx.virtualtime');
 
 // Add specific Node functions
 var EventEmitter = require('events').EventEmitter,

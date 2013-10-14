@@ -23,6 +23,7 @@
       <dependency id="RxJS-Time" version="2.1" />
       <dependency id="RxJS-Experimental" version="2.1" />
       <dependency id="RxJS-Testing" version="2.1" />
+      <dependency id="RxJS-VirtualTime" version="2.1" />
     </dependencies>
   </metadata>
 </package>
