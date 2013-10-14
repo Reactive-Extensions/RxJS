@@ -35,6 +35,10 @@ subject.onCompleted();
 // => Completed
 ```
 
+### Location
+
+- rx.js
+
 ## `Subject Constructor` ##
 - [`constructor`](#rxsubject)
 

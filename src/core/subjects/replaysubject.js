@@ -3,19 +3,12 @@
      * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
      */  
     var ReplaySubject = Rx.ReplaySubject = (function (_super) {
-        /** 
-         * @private
-         * @constructor
-         */
-        var RemovableDisposable = function (subject, observer) {
+
+        function RemovableDisposable (subject, observer) {
             this.subject = subject;
             this.observer = observer;
         };
 
-        /* 
-         * @private
-         * @memberOf RemovableDisposable#
-         */
         RemovableDisposable.prototype.dispose = function () {
             this.observer.dispose();
             if (!this.subject.isDisposed) {
@@ -52,15 +45,14 @@
         inherits(ReplaySubject, _super);
 
         /**
-         *  Initializes a new instance of the ReplaySubject class with the specified buffer size, window and scheduler.
-         * 
+         *  Initializes a new instance of the ReplaySubject class with the specified buffer size, window size and scheduler.
          *  @param {Number} [bufferSize] Maximum element count of the replay buffer.
-         *  @param {Number} [window] Maximum time length of the replay buffer.
+         *  @param {Number} [windowSize] Maximum time length of the replay buffer.
          *  @param {Scheduler} [scheduler] Scheduler the observers are invoked on.
          */
-        function ReplaySubject(bufferSize, window, scheduler) {
+        function ReplaySubject(bufferSize, windowSize, scheduler) {
             this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
-            this.window = window == null ? Number.MAX_VALUE : window;
+            this.windowSize = windowSize == null ? Number.MAX_VALUE : windowSize;
             this.scheduler = scheduler || currentThreadScheduler;
             this.q = [];
             this.observers = [];
@@ -74,29 +66,22 @@
         addProperties(ReplaySubject.prototype, Observer, {
             /**
              * Indicates whether the subject has observers subscribed to it.
-             * 
-             * @memberOf ReplaySubject# 
              * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
              */         
             hasObservers: function () {
                 return this.observers.length > 0;
             },            
-            /*
-             * @private
-             * @memberOf ReplaySubject#
-             */
+            /* @private  */
             _trim: function (now) {
                 while (this.q.length > this.bufferSize) {
                     this.q.shift();
                 }
-                while (this.q.length > 0 && (now - this.q[0].interval) > this.window) {
+                while (this.q.length > 0 && (now - this.q[0].interval) > this.windowSize) {
                     this.q.shift();
                 }
             },
             /**
              * Notifies all subscribed observers about the arrival of the specified element in the sequence.
-             * 
-             * @memberOf ReplaySubject#
              * @param {Mixed} value The value to send to all observers.
              */              
             onNext: function (value) {
@@ -117,8 +102,6 @@
             },
             /**
              * Notifies all subscribed observers about the exception.
-             * 
-             * @memberOf ReplaySubject#
              * @param {Mixed} error The exception to send to all observers.
              */                 
             onError: function (error) {
@@ -141,8 +124,6 @@
             },
             /**
              * Notifies all subscribed observers about the end of the sequence.
-             * 
-             * @memberOf ReplaySubject#
              */             
             onCompleted: function () {
                 var observer;
@@ -162,8 +143,6 @@
             },
             /**
              * Unsubscribe all observers and release resources.
-             * 
-             * @memberOf ReplaySubject#
              */               
             dispose: function () {
                 this.isDisposed = true;

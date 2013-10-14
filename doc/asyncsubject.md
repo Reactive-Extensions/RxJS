@@ -35,6 +35,10 @@ var subscription = subject.subscribe(
 // => Completed
 ```
 
+### Location
+
+- rx.js
+
 ## `AsyncSubject Constructor` ##
 - [`constructor`](#rxasyncsubject)
 

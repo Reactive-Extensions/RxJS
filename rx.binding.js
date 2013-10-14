@@ -49,10 +49,10 @@
      * invocation. For specializations with fixed subject types, see Publish, PublishLast, and Replay.
      * 
      * @example
-     * 1 - res = source.multicast(observable);
-     * 2 - res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
+     * var res = source.multicast(observable);
+     * var res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
      * 
-     * @param {Mixed} subjectOrSubjectSelector 
+     * @param {Function|Subject} subjectOrSubjectSelector 
      * Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
      * Or:
      * Subject to push source elements into.
@@ -75,8 +75,8 @@
      * This operator is a specialization of Multicast using a regular Subject.
      * 
      * @example
-     * 1 - res = source.publish();
-     * 2 - res = source.publish(function (x) { return x; });
+     * var res = source.publish();
+     * var res = source.publish(function (x) { return x; });
      * 
      * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
      * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -94,8 +94,8 @@
      * This operator is a specialization of Multicast using a AsyncSubject.
      * 
      * @example
-     * 1 - res = source.publishLast();
-     * 2 - res = source.publishLast(function (x) { return x; });
+     * var res = source.publishLast();
+     * var res = source.publishLast(function (x) { return x; });
      * 
      * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
      * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -113,8 +113,8 @@
      * This operator is a specialization of Multicast using a BehaviorSubject.
      * 
      * @example
-     * 1 - res = source.publishValue(42);
-     * 2 - res = source.publishLast(function (x) { return x.select(function (y) { return y * y; }) }, 42);
+     * var res = source.publishValue(42);
+     * var res = source.publishLast(function (x) { return x.select(function (y) { return y * y; }) }, 42);
      * 
      * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
      * @param {Mixed} initialValue Initial value received by observers upon subscription.
@@ -133,10 +133,10 @@
      * This operator is a specialization of Multicast using a ReplaySubject.
      * 
      * @example
-     * 1 - res = source.replay(null, 3);
-     * 2 - res = source.replay(null, 3, 500);
-     * 3 - res = source.replay(null, 3, 500, scheduler);
-     * 4 - res = source.replay(function (x) { return x.take(6).repeat(); }, 3, 500, scheduler);
+     * var res = source.replay(null, 3);
+     * var res = source.replay(null, 3, 500);
+     * var res = source.replay(null, 3, 500, scheduler);
+     * var res = source.replay(function (x) { return x.take(6).repeat(); }, 3, 500, scheduler);
      * 
      * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
      * @param bufferSize [Optional] Maximum element count of the replay buffer.
@@ -176,14 +176,13 @@
      */
     var BehaviorSubject = Rx.BehaviorSubject = (function (_super) {
         function subscribe(observer) {
-            var ex;
             checkDisposed.call(this);
             if (!this.isStopped) {
                 this.observers.push(observer);
                 observer.onNext(this.value);
                 return new InnerSubscription(this, observer);
             }
-            ex = this.exception;
+            var ex = this.exception;
             if (ex) {
                 observer.onError(ex);
             } else {
@@ -195,9 +194,9 @@
         inherits(BehaviorSubject, _super);
 
         /**
+         * @constructor
          *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
-         *  
-         *  @param value Initial value sent to observers when no other value has been received by the subject yet.
+         *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
          */       
         function BehaviorSubject(value) {
             _super.call(this, subscribe);
@@ -212,8 +211,6 @@
         addProperties(BehaviorSubject.prototype, Observer, {
             /**
              * Indicates whether the subject has observers subscribed to it.
-             * 
-             * @memberOf BehaviorSubject# 
              * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
              */         
             hasObservers: function () {
@@ -221,8 +218,6 @@
             },
             /**
              * Notifies all subscribed observers about the end of the sequence.
-             * 
-             * @memberOf BehaviorSubject#
              */ 
             onCompleted: function () {
                 checkDisposed.call(this);
@@ -238,8 +233,6 @@
             },
             /**
              * Notifies all subscribed observers about the exception.
-             * 
-             * @memberOf BehaviorSubject#
              * @param {Mixed} error The exception to send to all observers.
              */             
             onError: function (error) {
@@ -258,8 +251,6 @@
             },
             /**
              * Notifies all subscribed observers about the arrival of the specified element in the sequence.
-             * 
-             * @memberOf BehaviorSubject#
              * @param {Mixed} value The value to send to all observers.
              */              
             onNext: function (value) {
@@ -274,8 +265,6 @@
             },
             /**
              * Unsubscribe all observers and release resources.
-             * 
-             * @memberOf BehaviorSubject#
              */            
             dispose: function () {
                 this.isDisposed = true;
@@ -293,19 +282,12 @@
      * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
      */  
     var ReplaySubject = Rx.ReplaySubject = (function (_super) {
-        /** 
-         * @private
-         * @constructor
-         */
-        var RemovableDisposable = function (subject, observer) {
+
+        function RemovableDisposable (subject, observer) {
             this.subject = subject;
             this.observer = observer;
         };
 
-        /* 
-         * @private
-         * @memberOf RemovableDisposable#
-         */
         RemovableDisposable.prototype.dispose = function () {
             this.observer.dispose();
             if (!this.subject.isDisposed) {
@@ -342,15 +324,14 @@
         inherits(ReplaySubject, _super);
 
         /**
-         *  Initializes a new instance of the ReplaySubject class with the specified buffer size, window and scheduler.
-         * 
+         *  Initializes a new instance of the ReplaySubject class with the specified buffer size, window size and scheduler.
          *  @param {Number} [bufferSize] Maximum element count of the replay buffer.
-         *  @param {Number} [window] Maximum time length of the replay buffer.
+         *  @param {Number} [windowSize] Maximum time length of the replay buffer.
          *  @param {Scheduler} [scheduler] Scheduler the observers are invoked on.
          */
-        function ReplaySubject(bufferSize, window, scheduler) {
+        function ReplaySubject(bufferSize, windowSize, scheduler) {
             this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
-            this.window = window == null ? Number.MAX_VALUE : window;
+            this.windowSize = windowSize == null ? Number.MAX_VALUE : windowSize;
             this.scheduler = scheduler || currentThreadScheduler;
             this.q = [];
             this.observers = [];
@@ -364,29 +345,22 @@
         addProperties(ReplaySubject.prototype, Observer, {
             /**
              * Indicates whether the subject has observers subscribed to it.
-             * 
-             * @memberOf ReplaySubject# 
              * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
              */         
             hasObservers: function () {
                 return this.observers.length > 0;
             },            
-            /*
-             * @private
-             * @memberOf ReplaySubject#
-             */
+            /* @private  */
             _trim: function (now) {
                 while (this.q.length > this.bufferSize) {
                     this.q.shift();
                 }
-                while (this.q.length > 0 && (now - this.q[0].interval) > this.window) {
+                while (this.q.length > 0 && (now - this.q[0].interval) > this.windowSize) {
                     this.q.shift();
                 }
             },
             /**
              * Notifies all subscribed observers about the arrival of the specified element in the sequence.
-             * 
-             * @memberOf ReplaySubject#
              * @param {Mixed} value The value to send to all observers.
              */              
             onNext: function (value) {
@@ -407,8 +381,6 @@
             },
             /**
              * Notifies all subscribed observers about the exception.
-             * 
-             * @memberOf ReplaySubject#
              * @param {Mixed} error The exception to send to all observers.
              */                 
             onError: function (error) {
@@ -431,8 +403,6 @@
             },
             /**
              * Notifies all subscribed observers about the end of the sequence.
-             * 
-             * @memberOf ReplaySubject#
              */             
             onCompleted: function () {
                 var observer;
@@ -452,8 +422,6 @@
             },
             /**
              * Unsubscribe all observers and release resources.
-             * 
-             * @memberOf ReplaySubject#
              */               
             dispose: function () {
                 this.isDisposed = true;

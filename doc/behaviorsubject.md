@@ -9,7 +9,7 @@ This class inherits both from the `Rx.Observable` and `Rx.Observer` classes.
 The follow example shows the basic usage of an `Rx.BehaviorSubject` class.
 
 ```js
-/* Initialize with initial value of 42
+/* Initialize with initial value of 42 */
 var subject = new Rx.BehaviorSubject(42);
 
 var subscription = subject.subscribe(
@@ -31,6 +31,10 @@ subject.onNext(56);
 subject.onCompleted();
 // => Completed
 ```
+
+### Location
+
+- rx.binding.js
 
 ## `BehaviorSubject Constructor` ##
 - [`constructor`](#rxbehaviorsubjectintialvalue)
@@ -82,7 +86,7 @@ subject.onCompleted();
 
 ### Location
 
-- rx.js
+= rx.binding.js
 
 * * *
 
@@ -127,7 +131,7 @@ try {
 
 ### Location
 
-- rx.js
+= rx.binding.js
 
 * * *
 
@@ -165,7 +169,7 @@ console.log(subject.hasObservers());
 
 ### Location
 
-- rx.js
+= rx.binding.js
 
 * * *
 
