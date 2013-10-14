@@ -28,7 +28,6 @@
 
         /**
          * Creates a subject that can only receive one value and that value is cached for all future observations.
-         *
          * @constructor
          */ 
         function AsyncSubject() {
@@ -45,8 +44,6 @@
         addProperties(AsyncSubject.prototype, Observer, {
             /**
              * Indicates whether the subject has observers subscribed to it.
-             * 
-             * @memberOf AsyncSubject# 
              * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
              */         
             hasObservers: function () {
@@ -54,8 +51,6 @@
             },
             /**
              * Notifies all subscribed observers about the end of the sequence, also causing the last received value to be sent out (if any).
-             * 
-             * @memberOf AsyncSubject#
              */ 
             onCompleted: function () {
                 var o, i, len;
@@ -83,8 +78,6 @@
             },
             /**
              * Notifies all subscribed observers about the exception.
-             * 
-             * @memberOf AsyncSubject#
              * @param {Mixed} error The exception to send to all observers.
              */ 
             onError: function (exception) {
@@ -103,8 +96,6 @@
             },
             /**
              * Sends a value to the subject. The last value received before successful termination will be sent to all subscribed and future observers.
-             * 
-             * @memberOf AsyncSubject#
              * @param {Mixed} value The value to store in the subject.
              */             
             onNext: function (value) {
@@ -116,8 +107,6 @@
             },
             /**
              * Unsubscribe all observers and release resources.
-             * 
-             * @memberOf AsyncSubject#
              */
             dispose: function () {
                 this.isDisposed = true;
