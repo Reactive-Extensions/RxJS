@@ -379,7 +379,6 @@
     PriorityQueue.count = 0;
     /**
      * Represents a group of disposable resources that are disposed together.
-     * 
      * @constructor
      */
     var CompositeDisposable = Rx.CompositeDisposable = function () {
@@ -391,8 +390,7 @@
     var CompositeDisposablePrototype = CompositeDisposable.prototype;
 
     /**
-     *  Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
-     *  
+     * Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
      * @param {Mixed} item Disposable to add.
      */    
     CompositeDisposablePrototype.add = function (item) {
@@ -405,9 +403,7 @@
     };
 
     /**
-     *  Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
-     *  
-     * @memberOf CompositeDisposable#
+     * Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
      * @param {Mixed} item Disposable to remove.
      * @returns {Boolean} true if found; false otherwise.
      */
@@ -427,9 +423,7 @@
     };
 
     /**
-     *  Disposes all disposables in the group and removes them from the group.
-     *
-     * @memberOf CompositeDisposable#     
+     *  Disposes all disposables in the group and removes them from the group.  
      */
     CompositeDisposablePrototype.dispose = function () {
         if (!this.isDisposed) {
@@ -445,9 +439,7 @@
     };
 
     /**
-     *  Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
-     *
-     * @memberOf CompositeDisposable#
+     * Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
      */   
     CompositeDisposablePrototype.clear = function () {
         var currentDisposables = this.disposables.slice(0);
@@ -459,9 +451,7 @@
     };
 
     /**
-     *  Determines whether the CompositeDisposable contains a specific disposable.
-     *  
-     * @memberOf CompositeDisposable#     
+     * Determines whether the CompositeDisposable contains a specific disposable.    
      * @param {Mixed} item Disposable to search for.
      * @returns {Boolean} true if the disposable was found; otherwise, false.
      */    
@@ -470,9 +460,7 @@
     };
 
     /**
-     *  Converts the existing CompositeDisposable to an array of disposables
-     *  
-     * @memberOf CompositeDisposable#
+     * Converts the existing CompositeDisposable to an array of disposables
      * @returns {Array} An array of disposable objects.
      */  
     CompositeDisposablePrototype.toArray = function () {
@@ -570,7 +558,6 @@
 
     /**
      * Represents a disposable resource whose underlying disposable resource can be replaced by another disposable resource, causing automatic disposal of the previous underlying disposable resource.
-     *
      * @constructor 
      */
     var SerialDisposable = Rx.SerialDisposable = function () {
@@ -582,7 +569,7 @@
 
     /**
      * Gets the underlying disposable.
-     * @return The underlying disposable</returns>
+     * @return The underlying disposable.
      */
     serialDisposablePrototype.getDisposable = function () {
         return this.current;
@@ -606,12 +593,7 @@
         }
     };
 
-    /**
-     * Gets or sets the underlying disposable.
-     * If the SerialDisposable has already been disposed, assignment to this property causes immediate disposal of the given disposable object. Assigning this property disposes the previous disposable object.
-     * @param {Disposable} [value] The new underlying disposable.
-     * @returns {Disposable} The underlying disposable.
-     */    
+    /* @private */
     serialDisposablePrototype.disposable = function (value) {
         if (!value) {
             return this.getDisposable();
@@ -640,17 +622,12 @@
      */  
     var RefCountDisposable = Rx.RefCountDisposable = (function () {
 
-        /**
-         * @constructor
-         * @private
-         */
         function InnerDisposable(disposable) {
             this.disposable = disposable;
             this.disposable.count++;
             this.isInnerDisposed = false;
         }
 
-        /** @private */
         InnerDisposable.prototype.dispose = function () {
             if (!this.disposable.isDisposed) {
                 if (!this.isInnerDisposed) {
@@ -666,7 +643,6 @@
 
         /**
          * Initializes a new instance of the RefCountDisposable with the specified disposable.
-         *
          * @constructor
          * @param {Disposable} disposable Underlying disposable.
           */
@@ -679,8 +655,6 @@
 
         /** 
          * Disposes the underlying disposable only when all dependent disposables have been disposed 
-         *
-         * @memberOf RefCountDisposable#
          */
         RefCountDisposable.prototype.dispose = function () {
             if (!this.isDisposed) {
@@ -695,9 +669,7 @@
         };
 
         /**
-         * Returns a dependent disposable that when disposed decreases the refcount on the underlying disposable.
-         *
-         * @memberOf RefCountDisposable#         
+         * Returns a dependent disposable that when disposed decreases the refcount on the underlying disposable.      
          * @returns {Disposable} A dependent disposable contributing to the reference count that manages the underlying disposable's lifetime.H
          */        
         RefCountDisposable.prototype.getDisposable = function () {

@@ -1,6 +1,5 @@
     /**
      * Represents a group of disposable resources that are disposed together.
-     * 
      * @constructor
      */
     var CompositeDisposable = Rx.CompositeDisposable = function () {
@@ -12,8 +11,7 @@
     var CompositeDisposablePrototype = CompositeDisposable.prototype;
 
     /**
-     *  Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
-     *  
+     * Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
      * @param {Mixed} item Disposable to add.
      */    
     CompositeDisposablePrototype.add = function (item) {
@@ -26,9 +24,7 @@
     };
 
     /**
-     *  Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
-     *  
-     * @memberOf CompositeDisposable#
+     * Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
      * @param {Mixed} item Disposable to remove.
      * @returns {Boolean} true if found; false otherwise.
      */
@@ -48,9 +44,7 @@
     };
 
     /**
-     *  Disposes all disposables in the group and removes them from the group.
-     *
-     * @memberOf CompositeDisposable#     
+     *  Disposes all disposables in the group and removes them from the group.  
      */
     CompositeDisposablePrototype.dispose = function () {
         if (!this.isDisposed) {
@@ -66,9 +60,7 @@
     };
 
     /**
-     *  Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
-     *
-     * @memberOf CompositeDisposable#
+     * Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
      */   
     CompositeDisposablePrototype.clear = function () {
         var currentDisposables = this.disposables.slice(0);
@@ -80,9 +72,7 @@
     };
 
     /**
-     *  Determines whether the CompositeDisposable contains a specific disposable.
-     *  
-     * @memberOf CompositeDisposable#     
+     * Determines whether the CompositeDisposable contains a specific disposable.    
      * @param {Mixed} item Disposable to search for.
      * @returns {Boolean} true if the disposable was found; otherwise, false.
      */    
@@ -91,9 +81,7 @@
     };
 
     /**
-     *  Converts the existing CompositeDisposable to an array of disposables
-     *  
-     * @memberOf CompositeDisposable#
+     * Converts the existing CompositeDisposable to an array of disposables
      * @returns {Array} An array of disposable objects.
      */  
     CompositeDisposablePrototype.toArray = function () {

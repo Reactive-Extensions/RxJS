@@ -164,7 +164,7 @@ serialDisposable.setDisposable(d2);
 
 ## _SerialDisposable Instance Properties_ ##
 
-### <a id="isdisposed"></a>`isdisposed`
+### <a id="isdisposed"></a>`isDisposed`
 <a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L6 "View in source") 
 
 Gets a value that indicates whether the object is disposed.
