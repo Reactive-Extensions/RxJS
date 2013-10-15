@@ -132,15 +132,23 @@ Sets the underlying disposable.
 ```js
 var singleDisposable = new Rx.SingleAssignmentDisposable();
 
-var disposable = Rx.Disposable.create(function () {
-     console.log('disposed');
+var d1 = Rx.Disposable.create(function () {
+     console.log('one');
 });
 
-singleDisposable.setDisposable(disposable);
+singleDisposable.setDisposable(d1);
 
-var d = singleDisposable.getDisposable();
+var d2 = Rx.Disposable.create(function () {
+     console.log('two');
+});
 
-console.log(d === disposable);
+try {
+    singleDisposable.setDisposable(d2);
+} catch (e) {
+    console.log(e.message);
+}
+
+// => Disposable has already been assigned
 ```
 
 ### Location
@@ -152,7 +160,7 @@ console.log(d === disposable);
 ## _SingleAssignmentDisposable Instance Properties_ ##
 
 ### <a id="isdisposed"></a>`isdisposed`
-<a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L8"View in source") 
+<a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L8 "View in source") 
 
 Gets a value that indicates whether the object is disposed.
 

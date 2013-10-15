@@ -11,7 +11,7 @@
 
     /**
      * Gets the underlying disposable.
-     * @return The underlying disposable</returns>
+     * @return The underlying disposable.
      */
     serialDisposablePrototype.getDisposable = function () {
         return this.current;
@@ -35,12 +35,7 @@
         }
     };
 
-    /**
-     * Gets or sets the underlying disposable.
-     * If the SerialDisposable has already been disposed, assignment to this property causes immediate disposal of the given disposable object. Assigning this property disposes the previous disposable object.
-     * @param {Disposable} [value] The new underlying disposable.
-     * @returns {Disposable} The underlying disposable.
-     */    
+    /* @private */
     serialDisposablePrototype.disposable = function (value) {
         if (!value) {
             return this.getDisposable();
