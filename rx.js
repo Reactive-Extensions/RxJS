@@ -788,7 +788,7 @@
 
         /**
          * Returns a dependent disposable that when disposed decreases the refcount on the underlying disposable.      
-         * @returns {Disposable} A dependent disposable contributing to the reference count that manages the underlying disposable's lifetime.H
+         * @returns {Disposable} A dependent disposable contributing to the reference count that manages the underlying disposable's lifetime.
          */        
         RefCountDisposable.prototype.getDisposable = function () {
             return this.isDisposed ? disposableEmpty : new InnerDisposable(this);
@@ -914,20 +914,16 @@
         var schedulerProto = Scheduler.prototype;
 
         /**
-         * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.
-         * 
-         * @memberOf Scheduler#         
+         * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.       
          * @param {Function} handler Handler that's run if an exception is caught. The exception will be rethrown if the handler returns false.
          * @returns {Scheduler} Wrapper around the original scheduler, enforcing exception handling.
          */        
-        schedulerProto.catchException = function (handler) {
+        schedulerProto.catchException = schedulerProto['catch'] = function (handler) {
             return new CatchScheduler(this, handler);
         };
         
         /**
-         * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.
-         * 
-         * @memberOf Scheduler#         
+         * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.       
          * @param {Number} period Period for running the work periodically.
          * @param {Function} action Action to be executed.
          * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
@@ -939,9 +935,7 @@
         };
 
         /**
-         * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.
-         * 
-         * @memberOf Scheduler#         
+         * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.       
          * @param {Mixed} state Initial state passed to the action upon the first iteration.
          * @param {Number} period Period for running the work periodically.
          * @param {Function} action Action to be executed, potentially updating the state.
@@ -957,9 +951,7 @@
         };
 
         /**
-         * Schedules an action to be executed.
-         * 
-         * @memberOf Scheduler#         
+         * Schedules an action to be executed.        
          * @param {Function} action Action to execute.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
          */
@@ -968,9 +960,7 @@
         };
 
         /**
-         * Schedules an action to be executed.
-         * 
-         * @memberOf Scheduler#         
+         * Schedules an action to be executed.    
          * @param state State passed to the action to be executed.
          * @param {Function} action Action to be executed.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -980,11 +970,9 @@
         };
 
         /**
-         * Schedules an action to be executed after the specified relative due time.
-         * 
-         * @memberOf Scheduler#         
+         * Schedules an action to be executed after the specified relative due time.       
          * @param {Function} action Action to execute.
-         * @param {Number}dueTime Relative time after which to execute the action.
+         * @param {Number} dueTime Relative time after which to execute the action.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
          */
         schedulerProto.scheduleWithRelative = function (dueTime, action) {
@@ -992,12 +980,10 @@
         };
 
         /**
-         * Schedules an action to be executed after dueTime.
-         * 
-         * @memberOf Scheduler#         
+         * Schedules an action to be executed after dueTime.     
          * @param state State passed to the action to be executed.
          * @param {Function} action Action to be executed.
-         * @param {Number}dueTime Relative time after which to execute the action.
+         * @param {Number} dueTime Relative time after which to execute the action.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
          */
         schedulerProto.scheduleWithRelativeAndState = function (state, dueTime, action) {
@@ -1005,11 +991,9 @@
         };
 
         /**
-         * Schedules an action to be executed at the specified absolute due time.
-         * 
-         * @memberOf Scheduler#         
+         * Schedules an action to be executed at the specified absolute due time.    
          * @param {Function} action Action to execute.
-         * @param {Number}dueTime Absolute time at which to execute the action.
+         * @param {Number} dueTime Absolute time at which to execute the action.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
           */
         schedulerProto.scheduleWithAbsolute = function (dueTime, action) {
@@ -1017,9 +1001,7 @@
         };
 
         /**
-         * Schedules an action to be executed at dueTime.
-         * 
-         * @memberOf Scheduler#         
+         * Schedules an action to be executed at dueTime.     
          * @param {Mixed} state State passed to the action to be executed.
          * @param {Function} action Action to be executed.
          * @param {Number}dueTime Absolute time at which to execute the action.
@@ -1031,8 +1013,6 @@
 
         /**
          * Schedules an action to be executed recursively.
-         * 
-         * @memberOf Scheduler#
          * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
          */
@@ -1045,9 +1025,7 @@
         };
 
         /**
-         * Schedules an action to be executed recursively.
-         * 
-         * @memberOf Scheduler#        
+         * Schedules an action to be executed recursively.     
          * @param {Mixed} state State passed to the action to be executed.
          * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in recursive invocation state.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -1059,9 +1037,7 @@
         };
 
         /**
-         * Schedules an action to be executed recursively after a specified relative due time.
-         * 
-         * @memberOf Scheduler         
+         * Schedules an action to be executed recursively after a specified relative due time.     
          * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action at the specified relative time.
          * @param {Number}dueTime Relative time after which to execute the action for the first time.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -1075,9 +1051,7 @@
         };
 
         /**
-         * Schedules an action to be executed recursively after a specified relative due time.
-         * 
-         * @memberOf Scheduler         
+         * Schedules an action to be executed recursively after a specified relative due time.  
          * @param {Mixed} state State passed to the action to be executed.
          * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in the recursive due time and invocation state.
          * @param {Number}dueTime Relative time after which to execute the action for the first time.
@@ -1090,9 +1064,7 @@
         };
 
         /**
-         * Schedules an action to be executed recursively at a specified absolute due time.
-         * 
-         * @memberOf Scheduler         
+         * Schedules an action to be executed recursively at a specified absolute due time.    
          * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action at the specified absolute time.
          * @param {Number}dueTime Absolute time at which to execute the action for the first time.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -1106,9 +1078,7 @@
         };
 
         /**
-         * Schedules an action to be executed recursively at a specified absolute due time.
-         * 
-         * @memberOf Scheduler         
+         * Schedules an action to be executed recursively at a specified absolute due time.     
          * @param {Mixed} state State passed to the action to be executed.
          * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in the recursive due time and invocation state.
          * @param {Number}dueTime Absolute time at which to execute the action for the first time.
@@ -1125,9 +1095,6 @@
 
         /**
          * Normalizes the specified TimeSpan value to a positive value.
-         * 
-         * @static
-         * @memberOf Scheduler
          * @param {Number} timeSpan The time span value to normalize.
          * @returns {Number} The specified TimeSpan value if it is zero or positive; otherwise, 0
          */   
@@ -1174,8 +1141,6 @@
 
     /**
      * Gets a scheduler that schedules work immediately on the current thread.
-     * 
-     * @memberOf Scheduler
      */    
     var immediateScheduler = Scheduler.immediate = (function () {
 
@@ -1201,26 +1166,14 @@
     var currentThreadScheduler = Scheduler.currentThread = (function () {
         var queue;
 
-        /** 
-         * @private 
-         * @constructor
-         */
         function Trampoline() {
             queue = new PriorityQueue(4);
         }
 
-        /** 
-        * @private 
-        * @memberOf Trampoline
-        */
         Trampoline.prototype.dispose = function () {
             queue = null;
         };
 
-        /** 
-        * @private 
-        * @memberOf Trampoline
-        */
         Trampoline.prototype.run = function () {
             var item;
             while (queue.length > 0) {
@@ -1362,8 +1315,6 @@
 
     /** 
      * Gets a scheduler that schedules work via a timed callback based upon platform.
-     *
-     * @memberOf Scheduler
      */
     var timeoutScheduler = Scheduler.timeout = (function () {
 

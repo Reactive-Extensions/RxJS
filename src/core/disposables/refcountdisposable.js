@@ -51,7 +51,7 @@
 
         /**
          * Returns a dependent disposable that when disposed decreases the refcount on the underlying disposable.      
-         * @returns {Disposable} A dependent disposable contributing to the reference count that manages the underlying disposable's lifetime.H
+         * @returns {Disposable} A dependent disposable contributing to the reference count that manages the underlying disposable's lifetime.
          */        
         RefCountDisposable.prototype.getDisposable = function () {
             return this.isDisposed ? disposableEmpty : new InnerDisposable(this);

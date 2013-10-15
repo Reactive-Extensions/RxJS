@@ -84,8 +84,6 @@
 
     /** 
      * Gets a scheduler that schedules work via a timed callback based upon platform.
-     *
-     * @memberOf Scheduler
      */
     var timeoutScheduler = Scheduler.timeout = (function () {
 

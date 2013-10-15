@@ -2,8 +2,6 @@
 
     /**
      * Gets a scheduler that schedules work immediately on the current thread.
-     * 
-     * @memberOf Scheduler
      */    
     var immediateScheduler = Scheduler.immediate = (function () {
 
