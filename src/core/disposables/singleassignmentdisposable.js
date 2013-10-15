@@ -12,30 +12,20 @@
     var SingleAssignmentDisposablePrototype = SingleAssignmentDisposable.prototype;
 
     /**
-     *  Gets or sets the underlying disposable. After disposal, the result of getting this method is undefined.
-     *  
-     * @memberOf SingleAssignmentDisposable#
-     * @param {Disposable} [value] The new underlying disposable.
-     * @returns {Disposable} The underlying disposable.
-     */
-    SingleAssignmentDisposablePrototype.disposable = function (value) {
-        return !value ? this.getDisposable() : this.setDisposable(value);
-    };
-
-    /**
-     *  Gets the underlying disposable. After disposal, the result of getting this method is undefined.
-     * 
-     * @memberOf SingleAssignmentDisposable#     
+     *  Gets the underlying disposable. After disposal, the result of getting this method is undefined. 
      * @returns {Disposable} The underlying disposable.
      */  
     SingleAssignmentDisposablePrototype.getDisposable = function () {
         return this.current;
     };
 
+    /* @private */
+    SingleAssignmentDisposable.disposable = function (value) {
+        return arguments.length ? this.getDisposable() : this.setDisposable(value);
+    };
+
     /**
      *  Sets the underlying disposable. 
-     *
-     * @memberOf SingleAssignmentDisposable#     
      * @param {Disposable} value The new underlying disposable.
      */
     SingleAssignmentDisposablePrototype.setDisposable = function (value) {
@@ -53,8 +43,6 @@
 
     /** 
      * Disposes the underlying disposable.
-     * 
-     * @memberOf SingleAssignmentDisposable#
      */
     SingleAssignmentDisposablePrototype.dispose = function () {
         var old;

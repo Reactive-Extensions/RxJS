@@ -136,8 +136,8 @@
                         observer.onError(exception);
                     } else {
                         d = new SingleAssignmentDisposable();
-                        cancelable.disposable(d);
-                        d.disposable(scheduler.scheduleRecursiveWithRelative(dueTime, function (self) {
+                        cancelable.setDisposable(d);
+                        d.setDisposable(scheduler.scheduleRecursiveWithRelative(dueTime, function (self) {
                             var e, recurseDueTime, result, shouldRecurse;
                             if (exception !== null) {
                                 return;
@@ -228,8 +228,8 @@
                 id++;
                 currentId = id;
                 d = new SingleAssignmentDisposable();
-                cancelable.disposable(d);
-                d.disposable(scheduler.scheduleWithRelative(dueTime, function () {
+                cancelable.setDisposable(d);
+                d.setDisposable(scheduler.scheduleWithRelative(dueTime, function () {
                     if (hasvalue && id === currentId) {
                         observer.onNext(value);
                     }
@@ -281,22 +281,21 @@
             scheduler = timeShiftOrScheduler;
         }
         return new AnonymousObservable(function (observer) {
-            var createTimer,
-                groupDisposable,
+            var groupDisposable,
                 nextShift = timeShift,
                 nextSpan = timeSpan,
                 q = [],
                 refCountDisposable,
                 timerD = new SerialDisposable(),
                 totalTime = 0;
-            groupDisposable = new CompositeDisposable(timerD);
-            refCountDisposable = new RefCountDisposable(groupDisposable);
-            createTimer = function () {
-                var isShift, isSpan, m, newTotalTime, ts;
-                m = new SingleAssignmentDisposable();
-                timerD.disposable(m);
-                isSpan = false;
-                isShift = false;
+                groupDisposable = new CompositeDisposable(timerD),
+                refCountDisposable = new RefCountDisposable(groupDisposable);
+
+             function createTimer () {
+                var m = new SingleAssignmentDisposable(),
+                    isSpan = false,
+                    isShift = false;
+                timerD.setDisposable(m);
                 if (nextSpan === nextShift) {
                     isSpan = true;
                     isShift = true;
@@ -305,8 +304,8 @@
                 } else {
                     isShift = true;
                 }
-                newTotalTime = isSpan ? nextSpan : nextShift;
-                ts = newTotalTime - totalTime;
+                var newTotalTime = isSpan ? nextSpan : nextShift,
+                    ts = newTotalTime - totalTime;
                 totalTime = newTotalTime;
                 if (isSpan) {
                     nextSpan += timeShift;
@@ -314,7 +313,7 @@
                 if (isShift) {
                     nextShift += timeShift;
                 }
-                m.disposable(scheduler.scheduleWithRelative(ts, function () {
+                m.setDisposable(scheduler.scheduleWithRelative(ts, function () {
                     var s;
                     if (isShift) {
                         s = new Subject();
@@ -383,8 +382,8 @@
             refCountDisposable = new RefCountDisposable(groupDisposable);
             createTimer = function (id) {
                 var m = new SingleAssignmentDisposable();
-                timerD.disposable(m);
-                m.disposable(scheduler.scheduleWithRelative(timeSpan, function () {
+                timerD.setDisposable(m);
+                m.setDisposable(scheduler.scheduleWithRelative(timeSpan, function () {
                     var newId;
                     if (id !== windowId) {
                         return;
@@ -595,19 +594,19 @@
                 subscription = new SerialDisposable(),
                 switched = false,
                 timer = new SerialDisposable();
-            subscription.disposable(original);
+            subscription.setDisposable(original);
             createTimer = function () {
                 var myId = id;
-                timer.disposable(schedulerMethod(dueTime, function () {
+                timer.setDisposable(schedulerMethod(dueTime, function () {
                     switched = id === myId;
                     var timerWins = switched;
                     if (timerWins) {
-                        subscription.disposable(other.subscribe(observer));
+                        subscription.setDisposable(other.subscribe(observer));
                     }
                 }));
             };
             createTimer();
-            original.disposable(source.subscribe(function (x) {
+            original.setDisposable(source.subscribe(function (x) {
                 var onNextWins = !switched;
                 if (onNextWins) {
                     id++;

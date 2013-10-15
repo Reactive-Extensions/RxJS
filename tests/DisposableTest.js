@@ -35,14 +35,15 @@
         var d = Disposable.create(function () {
             disposed = true;
         });
-        ok(disposed === false);
+
+        ok(!disposed);
         d.dispose();
         ok(disposed);
     });
 
     test('EmptyDisposable', function () {
         var d = Disposable.empty;
-        ok(d !== null);
+        ok(d);
         d.dispose();
     });
 
@@ -57,16 +58,16 @@
 
     test('FutureDisposable_SetNull', function () {
         var d = new SingleAssignmentDisposable();
-        d.disposable(null);
-        equal(null, d.disposable());
+        d.setDisposable(null);
+        equal(null, d.getDisposable());
     });
 
     test('FutureDisposable_DisposeAfterSet', function () {
         var disposed = false
             d = new SingleAssignmentDisposable()
             dd = Disposable.create(function () { disposed = true; });
-        d.disposable(dd);
-        equal(dd, d.disposable());
+        d.setDisposable(dd);
+        equal(dd, d.getDisposable());
         ok(!disposed);
         d.dispose();
         ok(disposed);
@@ -81,8 +82,8 @@
         ok(!disposed);
         d.dispose();
         ok(!disposed);
-        d.disposable(dd);
-        ok(d.disposable() === null);
+        d.setDisposable(dd);
+        ok(d.getDisposable() === null);
         ok(disposed);
         d.dispose();
         ok(disposed);
@@ -103,49 +104,62 @@
         var d1 = Disposable.create(noop),
             d2 = Disposable.create(noop),
             g = new CompositeDisposable(d1);
+
         equal(1, g.length);
         ok(g.contains(d1));
+        
         g.add(d2);
         equal(2, g.length);
         ok(g.contains(d2));
     });
 
     test('GroupDisposable_AddAfterDispose', function () {
-        var d1, d2, disp1, disp2, g;
-        disp1 = false;
-        disp2 = false;
-        d1 = Disposable.create(function () {
+        var disp1 = false;
+        var disp2 = false;
+
+        var d1 = Disposable.create(function () {
             disp1 = true;
         });
-        d2 = Disposable.create(function () {
+        
+        var d2 = Disposable.create(function () {
             disp2 = true;
         });
-        g = new CompositeDisposable(d1);
+        
+        var g = new CompositeDisposable(d1);
         equal(1, g.length);
+        
         g.dispose();
         ok(disp1);
         equal(0, g.length);
+        
         g.add(d2);
         ok(disp2);
-        return equal(0, g.length);
+        equal(0, g.length);
     });
 
     test('GroupDisposable_Remove', function () {
         var disp1 = false;
         var disp2 = false;
+
         var d1 = Disposable.create(function () {
             disp1 = true;
         });
+
         var d2 = Disposable.create(function () {
             disp2 = true;
         });
+
         var g = new CompositeDisposable(d1, d2);
 
         equal(2, g.length);
+
         ok(g.contains(d1));
         ok(g.contains(d2));
+
         ok(g.remove(d1));
+
         equal(1, g.length);
+
         ok(!g.contains(d1));
         ok(g.contains(d2));
         ok(disp1);
@@ -158,19 +172,23 @@
         var d3 = Disposable.create(function () {
             disp3 = true;
         });
+
         ok(!g.remove(d3));
-        return ok(!disp3);
+        ok(!disp3);
     });
 
     test('GroupDisposable_Clear', function () {
         var disp1 = false;
         var disp2 = false;
+
         var d1 = Disposable.create(function () {
             disp1 = true;
         });
+
         var d2 = Disposable.create(function () {
             disp2 = true;
         });
+
         var g = new CompositeDisposable(d1, d2);
         equal(2, g.length);
 
@@ -183,6 +201,7 @@
         var d3 = Disposable.create(function () {
             disp3 = true;
         });
+
         g.add(d3);
         ok(!disp3);
         equal(1, g.length);
@@ -190,27 +209,29 @@
 
     test('MutableDisposable_Ctor_Prop', function () {
         var m = new SerialDisposable();
-        ok(m.disposable() === null);
+        ok(!m.getDisposable());
     });
 
     test('MutableDisposable_ReplaceBeforeDispose', function () {
         var disp1 = false;
         var disp2 = false;
+
         var m = new SerialDisposable();
         var d1 = Disposable.create(function () {
             disp1 = true;
         });
-        m.disposable(d1);
+        
+        m.setDisposable(d1);
 
-        equal(d1, m.disposable());
+        equal(d1, m.getDisposable());
         ok(!disp1);
 
         var d2 = Disposable.create(function () {
             disp2 = true;
         });
-        m.disposable(d2);
+        m.setDisposable(d2);
 
-        equal(d2, m.disposable());
+        equal(d2, m.getDisposable());
         ok(disp1);
         ok(!disp2);
     });
@@ -224,17 +245,17 @@
         var d1 = Disposable.create(function () {
             disp1 = true;
         });
-        m.disposable(d1);
+        m.setDisposable(d1);
 
-        equal(null, m.disposable());
+        equal(null, m.getDisposable());
         ok(disp1);
 
         var d2 = Disposable.create(function () {
             disp2 = true;
         });
-        m.disposable(d2);
+        m.setDisposable(d2);
 
-        equal(null, m.disposable());
+        equal(null, m.getDisposable());
         ok(disp2);
     });
 
@@ -244,13 +265,13 @@
         var d = Disposable.create(function () {
             disp = true;
         });
-        m.disposable(d);
+        m.setDisposable(d);
 
-        equal(d, m.disposable());
+        equal(d, m.getDisposable());
         ok(!disp);
         m.dispose();
         ok(disp);
-        equal(null, m.disposable());
+        equal(null, m.getDisposable());
     });
 
     test('RefCountDisposable_SingleReference', function () {
@@ -268,35 +289,43 @@
         var d = new BooleanDisposable();
         var r = new RefCountDisposable(d);
         ok(!d.isDisposed);
+
         var d1 = r.getDisposable();
         var d2 = r.getDisposable();
         ok(!d.isDisposed);
+        
         d1.dispose();
         ok(!d.isDisposed);
+        
         d2.dispose();
         ok(!d.isDisposed);
+        
         r.dispose();
         ok(d.isDisposed);
-        d3 = r.getDisposable();
+        
+        var d3 = r.getDisposable();
         d3.dispose();
     });
 
     test('RefCountDisposable_PrimaryDisposesFirst', function () {
         var d = new BooleanDisposable();
         var r = new RefCountDisposable(d);
+
         ok(!d.isDisposed);
+        
         var d1 = r.getDisposable();
         var d2 = r.getDisposable();
+        
         ok(!d.isDisposed);
+        
         d1.dispose();
         ok(!d.isDisposed);
+        
         r.dispose();
         ok(!d.isDisposed);
+        
         d2.dispose();
         ok(d.isDisposed);
     });
-
-    // must call `QUnit.start()` if using QUnit < 1.3.0 with Node.js or any
-    // version of QUnit with Narwhal, Rhino, or RingoJS
     
 }(typeof global == 'object' && global || this));

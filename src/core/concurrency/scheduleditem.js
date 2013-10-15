@@ -8,7 +8,7 @@
     }
 
     ScheduledItem.prototype.invoke = function () {
-        this.disposable.disposable(this.invokeCore());
+        this.disposable.setDisposable(this.invokeCore());
     };
 
     ScheduledItem.prototype.compareTo = function (other) {

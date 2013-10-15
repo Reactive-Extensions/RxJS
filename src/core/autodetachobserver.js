@@ -2,10 +2,6 @@
     var AutoDetachObserver = (function (_super) {
         inherits(AutoDetachObserver, _super);
 
-        /**
-         * @private
-         * @constructor
-         */
         function AutoDetachObserver(observer) {
             _super.call(this);
             this.observer = observer;
@@ -14,10 +10,6 @@
 
         var AutoDetachObserverPrototype = AutoDetachObserver.prototype;
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
         AutoDetachObserverPrototype.next = function (value) {
             var noError = false;
             try {
@@ -32,10 +24,6 @@
             }
         };
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
         AutoDetachObserverPrototype.error = function (exn) {
             try {
                 this.observer.onError(exn);
@@ -46,10 +34,6 @@
             }
         };
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
         AutoDetachObserverPrototype.completed = function () {
             try {
                 this.observer.onCompleted();
@@ -60,18 +44,13 @@
             }
         };
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
+        AutoDetachObserverPrototype.setDisposable = function (value) { this.m.setDisposable(value); };
+        AutoDetachObserverPrototype.getDisposable = function (value) { return this.m.getDisposable(); };
+        /* @private */
         AutoDetachObserverPrototype.disposable = function (value) {
-            return this.m.disposable(value);
+            return arguments.length ? this.getDisposable() : setDisposable(value);
         };
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
         AutoDetachObserverPrototype.dispose = function () {
             _super.prototype.dispose.call(this);
             this.m.dispose();

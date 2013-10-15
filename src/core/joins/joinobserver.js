@@ -62,7 +62,7 @@
          * @private
          */        
         JoinObserverPrototype.subscribe = function () {
-            this.subscription.disposable(this.source.materialize().subscribe(this));
+            this.subscription.setDisposable(this.source.materialize().subscribe(this));
         };
 
         /**

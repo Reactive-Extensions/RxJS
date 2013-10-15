@@ -360,7 +360,7 @@
                     observer.onError(e);
                     return;
                 }
-                md.disposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
+                md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
                 values = rightMap.getValues();
                 for (var i = 0; i < values.length; i++) {
                     try {
@@ -398,7 +398,7 @@
                     observer.onError(exception);
                     return;
                 }
-                md.disposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
+                md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
                 values = leftMap.getValues();
                 for (var i = 0; i < values.length; i++) {
                     try {
@@ -659,8 +659,8 @@
                     return;
                 }
                 m1 = new SingleAssignmentDisposable();
-                m.disposable(m1);
-                m1.disposable(windowClose.take(1).subscribe(noop, function (ex) {
+                m.setDisposable(m1);
+                m1.setDisposable(windowClose.take(1).subscribe(noop, function (ex) {
                     window.onError(ex);
                     observer.onError(ex);
                 }, function () {

@@ -1,11 +1,6 @@
-    /** @private */
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
-        
-        /**
-         * @private
-         * @constructor
-         */
+
         function AnonymousObservable(subscribe) {
             if (!(this instanceof AnonymousObservable)) {
                 return new AnonymousObservable(subscribe);
@@ -16,7 +11,7 @@
                 if (currentThreadScheduler.scheduleRequired()) {
                     currentThreadScheduler.schedule(function () {
                         try {
-                            autoDetachObserver.disposable(subscribe(autoDetachObserver));
+                            autoDetachObserver.setDisposable(subscribe(autoDetachObserver));
                         } catch (e) {
                             if (!autoDetachObserver.fail(e)) {
                                 throw e;
@@ -25,7 +20,7 @@
                     });
                 } else {
                     try {
-                        autoDetachObserver.disposable(subscribe(autoDetachObserver));
+                        autoDetachObserver.setDisposable(subscribe(autoDetachObserver));
                     } catch (e) {
                         if (!autoDetachObserver.fail(e)) {
                             throw e;

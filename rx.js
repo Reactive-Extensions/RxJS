@@ -608,11 +608,7 @@
         this.action = action || noop;
     };
 
-    /** 
-     * Performs the task of cleaning up resources.
-     *
-     * @memberOf Disposable#
-     */     
+    /** Performs the task of cleaning up resources. */     
     Disposable.prototype.dispose = function () {
         if (!this.isDisposed) {
             this.action();
@@ -621,10 +617,7 @@
     };
 
     /**
-     *  Creates a disposable object that invokes the specified action when disposed.
-     *  
-     * @static
-     * @memberOf Disposable
+     * Creates a disposable object that invokes the specified action when disposed.
      * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
      * @return {Disposable} The disposable object that runs the given action upon disposal.
      */
@@ -632,9 +625,6 @@
 
     /** 
      * Gets the disposable that does nothing when disposed. 
-     * 
-     * @static
-     * @memberOf Disposable
      */
     var disposableEmpty = Disposable.empty = { dispose: noop };
 
@@ -652,30 +642,20 @@
     var SingleAssignmentDisposablePrototype = SingleAssignmentDisposable.prototype;
 
     /**
-     *  Gets or sets the underlying disposable. After disposal, the result of getting this method is undefined.
-     *  
-     * @memberOf SingleAssignmentDisposable#
-     * @param {Disposable} [value] The new underlying disposable.
-     * @returns {Disposable} The underlying disposable.
-     */
-    SingleAssignmentDisposablePrototype.disposable = function (value) {
-        return !value ? this.getDisposable() : this.setDisposable(value);
-    };
-
-    /**
-     *  Gets the underlying disposable. After disposal, the result of getting this method is undefined.
-     * 
-     * @memberOf SingleAssignmentDisposable#     
+     *  Gets the underlying disposable. After disposal, the result of getting this method is undefined. 
      * @returns {Disposable} The underlying disposable.
      */  
     SingleAssignmentDisposablePrototype.getDisposable = function () {
         return this.current;
     };
 
+    /* @private */
+    SingleAssignmentDisposable.disposable = function (value) {
+        return arguments.length ? this.getDisposable() : this.setDisposable(value);
+    };
+
     /**
      *  Sets the underlying disposable. 
-     *
-     * @memberOf SingleAssignmentDisposable#     
      * @param {Disposable} value The new underlying disposable.
      */
     SingleAssignmentDisposablePrototype.setDisposable = function (value) {
@@ -693,8 +673,6 @@
 
     /** 
      * Disposes the underlying disposable.
-     * 
-     * @memberOf SingleAssignmentDisposable#
      */
     SingleAssignmentDisposablePrototype.dispose = function () {
         var old;
@@ -718,21 +696,21 @@
         this.current = null;
     };
 
+    var serialDisposablePrototype = SerialDisposable.prototype;
+
     /**
      * Gets the underlying disposable.
      * @return The underlying disposable</returns>
      */
-    SerialDisposable.prototype.getDisposable = function () {
+    serialDisposablePrototype.getDisposable = function () {
         return this.current;
     };
 
     /**
      * Sets the underlying disposable.
-     *
-     * @memberOf SerialDisposable#
      * @param {Disposable} value The new underlying disposable.
      */  
-    SerialDisposable.prototype.setDisposable = function (value) {
+    serialDisposablePrototype.setDisposable = function (value) {
         var shouldDispose = this.isDisposed, old;
         if (!shouldDispose) {
             old = this.current;
@@ -749,12 +727,10 @@
     /**
      * Gets or sets the underlying disposable.
      * If the SerialDisposable has already been disposed, assignment to this property causes immediate disposal of the given disposable object. Assigning this property disposes the previous disposable object.
-     * 
-     * @memberOf SerialDisposable#
      * @param {Disposable} [value] The new underlying disposable.
      * @returns {Disposable} The underlying disposable.
      */    
-    SerialDisposable.prototype.disposable = function (value) {
+    serialDisposablePrototype.disposable = function (value) {
         if (!value) {
             return this.getDisposable();
         } else {
@@ -764,10 +740,8 @@
 
     /** 
      * Disposes the underlying disposable as well as all future replacements.
-     * 
-     * @memberOf SerialDisposable#
      */
-    SerialDisposable.prototype.dispose = function () {
+    serialDisposablePrototype.dispose = function () {
         var old;
         if (!this.isDisposed) {
             this.isDisposed = true;
@@ -883,7 +857,7 @@
     }
 
     ScheduledItem.prototype.invoke = function () {
-        this.disposable.disposable(this.invokeCore());
+        this.disposable.setDisposable(this.invokeCore());
     };
 
     ScheduledItem.prototype.compareTo = function (other) {
@@ -4219,14 +4193,9 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
-    /** @private */
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
-        
-        /**
-         * @private
-         * @constructor
-         */
+
         function AnonymousObservable(subscribe) {
             if (!(this instanceof AnonymousObservable)) {
                 return new AnonymousObservable(subscribe);
@@ -4237,7 +4206,7 @@
                 if (currentThreadScheduler.scheduleRequired()) {
                     currentThreadScheduler.schedule(function () {
                         try {
-                            autoDetachObserver.disposable(subscribe(autoDetachObserver));
+                            autoDetachObserver.setDisposable(subscribe(autoDetachObserver));
                         } catch (e) {
                             if (!autoDetachObserver.fail(e)) {
                                 throw e;
@@ -4246,7 +4215,7 @@
                     });
                 } else {
                     try {
-                        autoDetachObserver.disposable(subscribe(autoDetachObserver));
+                        autoDetachObserver.setDisposable(subscribe(autoDetachObserver));
                     } catch (e) {
                         if (!autoDetachObserver.fail(e)) {
                             throw e;
@@ -4268,10 +4237,6 @@
     var AutoDetachObserver = (function (_super) {
         inherits(AutoDetachObserver, _super);
 
-        /**
-         * @private
-         * @constructor
-         */
         function AutoDetachObserver(observer) {
             _super.call(this);
             this.observer = observer;
@@ -4280,10 +4245,6 @@
 
         var AutoDetachObserverPrototype = AutoDetachObserver.prototype;
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
         AutoDetachObserverPrototype.next = function (value) {
             var noError = false;
             try {
@@ -4298,10 +4259,6 @@
             }
         };
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
         AutoDetachObserverPrototype.error = function (exn) {
             try {
                 this.observer.onError(exn);
@@ -4312,10 +4269,6 @@
             }
         };
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
         AutoDetachObserverPrototype.completed = function () {
             try {
                 this.observer.onCompleted();
@@ -4326,18 +4279,13 @@
             }
         };
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
+        AutoDetachObserverPrototype.setDisposable = function (value) { this.m.setDisposable(value); };
+        AutoDetachObserverPrototype.getDisposable = function (value) { return this.m.getDisposable(); };
+        /* @private */
         AutoDetachObserverPrototype.disposable = function (value) {
-            return this.m.disposable(value);
+            return arguments.length ? this.getDisposable() : setDisposable(value);
         };
 
-        /**
-         * @private
-         * @memberOf AutoDetachObserver#
-         */
         AutoDetachObserverPrototype.dispose = function () {
             _super.prototype.dispose.call(this);
             this.m.dispose();

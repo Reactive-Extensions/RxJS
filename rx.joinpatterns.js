@@ -150,11 +150,11 @@
         return new Plan(this, selector);
     };
 
-    // Plan
     function Plan(expression, selector) {
         this.expression = expression;
         this.selector = selector;
     }
+    
     Plan.prototype.activate = function (externalSubscriptions, observer, deactivate) {
         var self = this;
         var joinObservers = [];
@@ -305,7 +305,7 @@
          * @private
          */        
         JoinObserverPrototype.subscribe = function () {
-            this.subscription.disposable(this.source.materialize().subscribe(this));
+            this.subscription.setDisposable(this.source.materialize().subscribe(this));
         };
 
         /**
