@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>RxJS-Async</id>
+    <title>Reactive Extensions for JavaScript - Async-Based Operations</title>
+    <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
+    <version>2.1.21</version>
+    <authors>Microsoft Corporation</authors>
+    <description>Reactive Extensions for JavaScript library with async-based event processing query operations.</description>
+    <projectUrl>http://go.microsoft.com/fwlink/?LinkID=179929</projectUrl>
+    <iconUrl>http://go.microsoft.com/fwlink/?LinkId=261274</iconUrl>
+    <requireLicenseAcceptance>true</requireLicenseAcceptance>
+    <licenseUrl>http://go.microsoft.com/fwlink/?LinkID=265024</licenseUrl>
+    <language>en-US</language>
+    <tags>Rx RxJS Reactive Extensions Observable</tags>
+    <dependencies>
+      <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
+      <dependency id="RxJS-Main" version="2.1" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="..\..\rx.async.js" target="content\Scripts\rx.async.js" />
+    <file src="..\..\rx.async.min.js" target="content\Scripts\rx.async.min.js" />
+    <file src="..\..\rx.async.compat.js" target="content\Scripts\rx.async.compat.js" />
+    <file src="..\..\rx.async.compat.min.js" target="content\Scripts\rx.async.compat.min.js" />    
+  </files>
+</package>

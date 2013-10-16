@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
 
-# The Reactive Extensions for JavaScript... #
+# The Reactive Extensions for JavaScript (RxJS) <sup>2.2</sup>... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and LINQ-style query operators in JavaScript*
 
 The project is actively developed by Microsoft Open Technologies, Inc., in collaboration with a community of open source developers.
@@ -18,15 +18,18 @@ Because observable sequences are data streams, you can query them using standard
 
 This set of libraries include:
 
-- **rx.js** - Core library
-- **rx.modern.js** - Core library for ES5 compliant browsers and runtimes
+- **rx.js** - Core library for ES5 compliant browsers and runtimes
+- **rx.compat.js** - Core library for ES5 compliant browsers and runtimes
 - **rx.aggregates.js** - aggregation event processing query operations
+- **rx.async.js** - async operationrs such as events, callbacks and promises
+- **rx.async.compat.js** - async operationrs such as events, callbacks and promises with support back to IE6
 - **rx.binding.js** - binding operators including multicast, publish, publishLast, publishValue, and replay
 - **rx.coincidence.js** - reactive coincidence join event processing query operations
 - **rx.experimental.js** - experimental operators including imperative operators and forkJoin
 - **rx.joinpatterns.js** - join patterns event processing query operations
 - **rx.testing.js** - used to write unit tests for complex event processing queries.
 - **rx.time.js** - time-based event processing query operations.
+- **rx.virtualtime.js** - virtual-time-based schedulers.
 
 ## Why RxJS? ##
 
@@ -37,6 +40,7 @@ To give you an idea about rich composition, we can create an autocompletion serv
 First, we'll reference the JavaScript files...
 
     <script src="rx.js"></script>
+    <script src="rx.async.js"></script>
     <script src="rx.binding.js"></script>
     <script src="rx.time.js"></script>
     <script src="rx.dom.js"></script>
@@ -45,7 +49,7 @@ Next, we'll get the user input from an input, listening to the keyup event.
 
 ```js
 /* Only get the value from each key up */
-var keyups = Rx.DOM.fromEvent(input, 'keyup')
+var keyups = Rx.Observable.fromEvent(input, 'keyup')
     .map(function (e) {
         return e.target.value;
     })

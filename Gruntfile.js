@@ -68,7 +68,7 @@ module.exports = function (grunt) {
                     'src/core/exports.js',
                     'src/core/outro.js'
                 ],
-                dest: 'rx.js'
+                dest: 'rx.compat.js'
             },
             modern: {
                 src: [
@@ -117,7 +117,7 @@ module.exports = function (grunt) {
                     'src/core/exports.js',
                     'src/core/outro.js'
                 ],
-                dest: 'rx.modern.js'
+                dest: 'rx.js'
             },            
             aggregates: {
                 src: [
@@ -129,6 +129,30 @@ module.exports = function (grunt) {
                 ],
                 dest: 'rx.aggregates.js'
             },
+            asyncCompat: {
+                src: [
+                    'src/core/license.js',
+                    'src/core/subintro.js',
+                    'src/core/asyncheader.js',
+                    'src/core/linq/observable/fromevent.js',
+                    'src/core/linq/observable/fromeventpattern.js',
+                    'src/core/linq/observable/frompromise.js',
+                    'src/core/suboutro.js'
+                ],
+                dest: 'rx.async.compat.js'
+            },
+            asyncModern: {
+                src: [
+                    'src/core/license.js',
+                    'src/core/subintro.js',
+                    'src/core/asyncheader.js',
+                    'src/core/linq/observable/fromevent-modern.js',
+                    'src/core/linq/observable/fromeventpattern.js',
+                    'src/core/linq/observable/frompromise.js',
+                    'src/core/suboutro.js'
+                ],
+                dest: 'rx.async.js'
+            },            
             binding: {
                 src: [
                     'src/core/license.js',
@@ -219,17 +243,25 @@ module.exports = function (grunt) {
         },
         uglify: {
             basic: {
-                src: ['<banner>', 'rx.js'],
-                dest: 'rx.min.js'
+                src: ['<banner>', 'rx.compat.js'],
+                dest: 'rx.compat.min.js'
             },
             modern: {
-                src: ['<banner>', 'rx.modern.js'],
-                dest: 'rx.modern.min.js'
+                src: ['<banner>', 'rx.js'],
+                dest: 'rx.min.js'
             },           
             aggregates: {
                 src: ['<banner>', 'rx.aggregates.js'],
                 dest: 'rx.aggregates.min.js'
             },
+            asyncCompat: {
+                src: ['<banner>', 'rx.async.compat.js'],
+                dest: 'rx.async.compat.min.js'
+            },
+            asyncModern: {
+                src: ['<banner>', 'rx.async.js'],
+                dest: 'rx.async.min.js'
+            },            
             binding: {
                 src: ['<banner>', 'rx.binding.js'],
                 dest: 'rx.binding.min.js'
@@ -265,8 +297,10 @@ module.exports = function (grunt) {
         jshint: {
             all: [
                 'rx.js', 
-                'rx.modern.js', 
-                'rx.aggregates.js', 
+                'rx.compat.js', 
+                'rx.aggregates.js',
+                'rx.async.js',
+                'rx.async.compat.js', 
                 'rx.binding.js', 
                 'rx.coincidence.js', 
                 'rx.experimental.js',
@@ -331,6 +365,10 @@ module.exports = function (grunt) {
         createNuGetPackage.call(this, 'nuget/RxJS-All/RxJS-All.nuspec');
     });
 
+    grunt.registerTask('nuget-async', 'Register NuGet-Async', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Async/RxJS-Async.nuspec');
+    }); 
+
     grunt.registerTask('nuget-binding', 'Register NuGet-Binding', function () {
         createNuGetPackage.call(this, 'nuget/RxJS-Binding/RxJS-Binding.nuspec');
     });
@@ -366,6 +404,7 @@ module.exports = function (grunt) {
     grunt.registerTask('nuget', [
         'nuget-aggregates',
         'nuget-all',
+        'nuget-async',
         'nuget-binding',
         'nuget-coincidence',
         'nuget-experimental',
@@ -383,6 +422,8 @@ module.exports = function (grunt) {
     grunt.registerTask('lint', [
         'concat:basic',
         'concat:modern',
+        'concat:asyncCompat',
+        'concat:asyncModern',
         'concat:aggregates',
         'concat:binding',
         'concat:coincidence',
@@ -400,6 +441,8 @@ module.exports = function (grunt) {
         'concat:basic',
         'concat:modern',
         'concat:aggregates',
+        'concat:asyncCompat',
+        'concat:asyncModern',        
         'concat:binding',
         'concat:coincidence',
         'concat:experimental',
@@ -411,6 +454,8 @@ module.exports = function (grunt) {
         'uglify:basic',
         'uglify:modern',
         'uglify:aggregates',
+        'uglify:asyncCompat',
+        'uglify:asyncModern',        
         'uglify:binding',
         'uglify:coincidence',
         'uglify:experimental',
