@@ -45,7 +45,7 @@
         created: 100,
         /** Default virtual time used to subscribe to observable sequences in unit tests. */
         subscribed: 200,
-        /** Default virtual time used to dispose subscriptions in <see cref="ReactiveTest"/>-based unit tests. */
+        /** Default virtual time used to dispose subscriptions in unit tests. */
         disposed: 1000,
 
         /**
