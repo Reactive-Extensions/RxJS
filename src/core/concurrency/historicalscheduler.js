@@ -19,8 +19,6 @@
 
         /**
          * Adds a relative time value to an absolute time value.
-         * 
-         * @memberOf HistoricalScheduler
          * @param {Number} absolute Absolute virtual time value.
          * @param {Number} relative Relative virtual time value to add.
          * @return {Number} Resulting absolute virtual time sum value.
@@ -31,7 +29,6 @@
 
         /**
          * @private
-         * @memberOf HistoricalScheduler
          */
         HistoricalSchedulerProto.toDateTimeOffset = function (absolute) {
             return new Date(absolute).getTime();
