@@ -7,7 +7,7 @@ Record of a value including the virtual time it was produced on.
 - rx.testing.js
 
 ## `Recorded Constructor` ##
-- [`constructor`](#rxrecordedtimevaluecomparer)
+- [`constructor`](#rxrecordedtime-value-comparer)
 
 ## `Recorded Instance Methods` ##
 - [`equals`](#rxrecordedprototypeequalsother)
@@ -19,8 +19,8 @@ Record of a value including the virtual time it was produced on.
 
 ## _Recorded Constructor_ ##
 
-### <a id="rxrecorded"></a>`Rx.Recorded(time, value, [comparer])`
-<a href="#rxrecorded">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L9-L13 "View in source") 
+### <a id="rxrecordedtime-value-comparer"></a>`Rx.Recorded(time, value, [comparer])`
+<a href="#rxrecordedtime-value-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L9-L13 "View in source") 
 
 Creates a new object recording the production of the specified value at the given virtual time.
 
