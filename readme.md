@@ -183,6 +183,7 @@ There are a number of ways to get started with RxJS. The files are available on 
 
     Install-Package RxJS-Main
     Install-Package RxJS-Aggregates
+    Install-Package RxJS-Async
     Install-Package RxJS-Binding
     Install-Package RxJS-Coincidence
     Install-Package RxJS-Experimental
@@ -197,12 +198,14 @@ There are a number of ways to get started with RxJS. The files are available on 
 ### Along with a number of our extras for RxJS:
     
     <script src="rx.aggregates.js"></script>
+    <script src="rx.async.js"></script>
     <script src="rx.binding.js"></script>
     <script src="rx.coincidencejs"></script>
     <script src="rx.experimental.js"></script>
     <script src="rx.joinpatterns.js"></script>
-    <script src="rx.testing.js"></script>
     <script src="rx.time.js"></script>
+    <script src="rx.virtualtime.js"></script>
+    <script src="rx.testing.js"></script>
 
 ### Using RxJS with an AMD loader such as Require.js
 
