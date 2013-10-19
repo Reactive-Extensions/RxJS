@@ -117,6 +117,9 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 - Required Reading
     - [Reactive Manifesto](http://www.reactivemanifesto.org/)
 
+- Podcasts
+    - [.NET Rocks #907](http://dotnetrocks.com/default.aspx?showNum=907)
+
 - Articles
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
 

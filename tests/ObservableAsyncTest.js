@@ -240,7 +240,101 @@
             onNext(200, 42),
             onCompleted(200)
         );
-    });    
+    });
 
+    var fs = {
+        exists: function (file, cb) {
+            cb(true, file, this);
+        },
+        rename: function (oldFile, newFile, error, cb) {
+            if (error) {
+                cb(error);
+                return;
+            }
+
+            cb(null, oldFile, newFile, this);
+        }
+    }
+
+    function arrayEquals(arr1, arr2) {
+        var comparer = Rx.Internals.equals,
+            isOk = true;
+        if (arr1.length !== arr2.length) {
+            ok(false, 'Array sizes are not equal');
+        }
+
+        for (var i = 0, len = arr1.length; i < len; i++) {
+            if (!comparer(arr1[i], arr2[i])) {
+                isOk = false;
+                break;
+            }
+        }
+        ok(isOk, 'Array elements are equal');
+    }
+
+    test('FromCallback', function () {
+        var scheduler = new TestScheduler();
+
+        var res = scheduler.startWithCreate(function () {
+            return Observable.fromCallback(fs.exists, scheduler)('file.txt');
+        });
+
+        res.messages.assertEqual(
+            onNext(200, function (arr) { arrayEquals(arr, [true, 'file.txt', undefined]); }),
+            onCompleted(200)
+        );
+    });
+
+    test('FromCallback_Context', function () {
+        var scheduler = new TestScheduler();
+
+        var res = scheduler.startWithCreate(function () {
+            return Observable.fromCallback(fs.exists, scheduler, 42)('file.txt');
+        });
+
+        res.messages.assertEqual(
+            onNext(200, function (arr) { arrayEquals(arr, [true, 'file.txt', 42]); }),
+            onCompleted(200)
+        );
+    });
+
+    test('FromNodeCallback', function () {
+        var scheduler = new TestScheduler();
+
+        var res = scheduler.startWithCreate(function () {
+            return Observable.fromNodeCallback(fs.rename, scheduler)('file1.txt', 'file2.txt', null);
+        });
+
+        res.messages.assertEqual(
+            onNext(200, function (arr) { arrayEquals(arr, [null, 'file1.txt', 'file2.txt', undefined]); }),
+            onCompleted(200)
+        );
+    });
+
+    test('FromNodeCallback_Context', function () {
+        var scheduler = new TestScheduler();
+
+        var res = scheduler.startWithCreate(function () {
+            return Observable.fromNodeCallback(fs.rename, scheduler, 42)('file1.txt', 'file2.txt', null);
+        });
+
+        res.messages.assertEqual(
+            onNext(200, function (arr) { arrayEquals(arr, [null, 'file1.txt', 'file2.txt', 42]); }),
+            onCompleted(200)
+        );
+    });
+
+    test('FromNodeCallback_Error', function () {
+        var error = new Error();
+        var scheduler = new TestScheduler();
+
+        var res = scheduler.startWithCreate(function () {
+            return Observable.fromNodeCallback(fs.rename, scheduler)('file1.txt', 'file2.txt', error);
+        });
+
+        res.messages.assertEqual(
+            onError(200, error)
+        );
+    });
     
 }(typeof global == 'object' && global || this));
