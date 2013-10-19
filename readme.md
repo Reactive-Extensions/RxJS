@@ -7,6 +7,10 @@ The project is actively developed by Microsoft Open Technologies, Inc., in colla
 
 This project is a mirror of the [CodePlex](http://rxjs.codeplex.com/) repository.
 
+## The Need to go Reactive ##
+
+Reactive Programming is a hot topic as of late, especially with such things as the [Reactive Manifesto](http://www.reactivemanifesto.org/).  Applications, especially on the web have changed over the years from being a simple static page, to DHTML with animations, to the Ajax revolution.  Each time, we're adding more complexity, more data, and asynchronous behavior to our applications.  How do we manage it all?  How do we scale it?  By moving towards "Reactive Architectures" which are event-driven, resilient and responsive.  With the Reactive Extensions, you have all the tools you need to help build these systems.
+
 ## About the Reactive Extensions ##
 
 The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators modeled after Language Integrated Queries ([LINQ](http://en.wikipedia.org/wiki/LINQ)). Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using LINQ operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + LINQ + Schedulers.
@@ -110,12 +114,16 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Twitter @ReactiveX](https://twitter.com/ReactiveX)
     - [Twitter @OpenAtMicrosoft](http://twitter.com/OpenAtMicrosoft)
 
+- Required Reading
+    - [Reactive Manifesto](http://www.reactivemanifesto.org/)
+
 - Articles
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
 
 - Tutorials
     - [Learn RxJS](http://jhusain.github.io/learnrx/)
     - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
+    - [Rx Workshop](http://rxworkshop.codeplex.com/)
 
 - Presentations
     - [Don't Cross the Streams - Cascadia.js 2012](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams)
