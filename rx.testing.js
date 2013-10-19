@@ -93,7 +93,7 @@
         created: 100,
         /** Default virtual time used to subscribe to observable sequences in unit tests. */
         subscribed: 200,
-        /** Default virtual time used to dispose subscriptions in <see cref="ReactiveTest"/>-based unit tests. */
+        /** Default virtual time used to dispose subscriptions in unit tests. */
         disposed: 1000,
 
         /**
@@ -358,9 +358,13 @@
     Rx.TestScheduler = (function (_super) {
         inherits(TestScheduler, _super);
 
+        function baseComparer(x, y) {
+            return x > y ? 1 : (x < y ? -1 : 0);
+        }
+
         /** @constructor */
         function TestScheduler() {
-            _super.call(this, 0, function (a, b) { return a - b; });
+            _super.call(this, 0, baseComparer);
         }
 
         /**
@@ -443,7 +447,7 @@
             return this.startWithTiming(create, ReactiveTest.created, ReactiveTest.subscribed, disposed);
         };
         /**
-         * Starts the test scheduler and uses default virtual times to invoke the factory function, to subscribe to the resulting sequence, and to dispose the subscription</see>.
+         * Starts the test scheduler and uses default virtual times to invoke the factory function, to subscribe to the resulting sequence, and to dispose the subscription.
          * 
          * @param create Factory method to create an observable sequence.
          * @return Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.

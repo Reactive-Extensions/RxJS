@@ -34,6 +34,10 @@
     /** Provides a set of extension methods for virtual time scheduling. */
     Rx.VirtualTimeScheduler = (function (_super) {
 
+        function notImplemented() {
+            throw new Error('Not implemented');
+        }
+
         function localNow() {
             return this.toDateTimeOffset(this.clock);
         }
@@ -75,9 +79,29 @@
         var VirtualTimeSchedulerPrototype = VirtualTimeScheduler.prototype;
 
         /**
-         * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be emulated using recursive scheduling.
-         * 
-         * @memberOf VirtualTimeScheduler#         
+         * Adds a relative time value to an absolute time value.
+         * @param {Number} absolute Absolute virtual time value.
+         * @param {Number} relative Relative virtual time value to add.
+         * @return {Number} Resulting absolute virtual time sum value.
+         */
+        VirtualTimeSchedulerPrototype.add = notImplemented;
+
+        /**
+         * Converts an absolute time to a number 
+         * @param {Any} The absolute time.
+         * @returns {Number} The absolute time in ms
+         */
+        VirtualTimeSchedulerPrototype.toDateTimeOffset = notImplemented;
+
+        /**
+         * Converts the TimeSpan value to a relative virtual time value.       
+         * @param {Number} timeSpan TimeSpan value to convert.
+         * @return {Number} Corresponding relative virtual time value.
+         */
+        VirtualTimeSchedulerPrototype.toRelative = notImplemented;
+
+        /**
+         * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be emulated using recursive scheduling.       
          * @param {Mixed} state Initial state passed to the action upon the first iteration.
          * @param {Number} period Period for running the work periodically.
          * @param {Function} action Action to be executed, potentially updating the state.
@@ -90,8 +114,6 @@
 
         /**
          * Schedules an action to be executed after dueTime.
-         * 
-         * @memberOf VirtualTimeScheduler#
          * @param {Mixed} state State passed to the action to be executed.
          * @param {Number} dueTime Relative time after which to execute the action.
          * @param {Function} action Action to be executed.
@@ -103,9 +125,7 @@
         };
 
         /**
-         * Schedules an action to be executed at dueTime.
-         * 
-         * @memberOf VirtualTimeScheduler#         
+         * Schedules an action to be executed at dueTime.      
          * @param {Number} dueTime Relative time after which to execute the action.
          * @param {Function} action Action to be executed.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -116,8 +136,6 @@
 
         /** 
          * Starts the virtual time scheduler. 
-         * 
-         * @memberOf VirtualTimeScheduler#
          */
         VirtualTimeSchedulerPrototype.start = function () {
             var next;
@@ -138,9 +156,7 @@
         };
 
         /** 
-         * Stops the virtual time scheduler. 
-         * 
-         * @memberOf VirtualTimeScheduler#   
+         * Stops the virtual time scheduler.  
          */
         VirtualTimeSchedulerPrototype.stop = function () {
             this.isEnabled = false;
@@ -148,7 +164,6 @@
 
         /**
          * Advances the scheduler's clock to the specified time, running all work till that point.
-         *
          * @param {Number} time Absolute time to advance the scheduler's clock to.
          */
         VirtualTimeSchedulerPrototype.advanceTo = function (time) {
@@ -179,8 +194,6 @@
 
         /**
          * Advances the scheduler's clock by the specified relative time, running all work scheduled for that timespan.
-         *
-         * @memberOf VirtualTimeScheduler#
          * @param {Number} time Relative time to advance the scheduler's clock by.
          */
         VirtualTimeSchedulerPrototype.advanceBy = function (time) {
@@ -192,13 +205,11 @@
             if (dueToClock === 0) {
                 return;
             }
-            return this.advanceTo(dt);
+            this.advanceTo(dt);
         };        
 
         /**
-         * Advances the scheduler's clock by the specified relative time.
-         *
-         * @memberOf VirtualTimeScheduler#         
+         * Advances the scheduler's clock by the specified relative time.      
          * @param {Number} time Relative time to advance the scheduler's clock by.
          */
         VirtualTimeSchedulerPrototype.sleep = function (time) {
@@ -212,9 +223,7 @@
         };
 
         /**
-         * Gets the next scheduled item to be executed.
-         *
-         * @memberOf VirtualTimeScheduler#             
+         * Gets the next scheduled item to be executed.          
          * @returns {ScheduledItem} The next scheduled item.
          */          
         VirtualTimeSchedulerPrototype.getNext = function () {
@@ -231,9 +240,7 @@
         };
 
         /**
-         * Schedules an action to be executed at dueTime.
-         *
-         * @memberOf VirtualTimeScheduler#         
+         * Schedules an action to be executed at dueTime.       
          * @param {Scheduler} scheduler Scheduler to execute the action on.
          * @param {Number} dueTime Absolute time at which to execute the action.
          * @param {Function} action Action to be executed.
@@ -245,8 +252,6 @@
 
         /**
          * Schedules an action to be executed at dueTime.
-         *
-         * @memberOf VirtualTimeScheduler#
          * @param {Mixed} state State passed to the action to be executed.
          * @param {Number} dueTime Absolute time at which to execute the action.
          * @param {Function} action Action to be executed.
@@ -287,8 +292,6 @@
 
         /**
          * Adds a relative time value to an absolute time value.
-         * 
-         * @memberOf HistoricalScheduler
          * @param {Number} absolute Absolute virtual time value.
          * @param {Number} relative Relative virtual time value to add.
          * @return {Number} Resulting absolute virtual time sum value.
@@ -299,7 +302,6 @@
 
         /**
          * @private
-         * @memberOf HistoricalScheduler
          */
         HistoricalSchedulerProto.toDateTimeOffset = function (absolute) {
             return new Date(absolute).getTime();

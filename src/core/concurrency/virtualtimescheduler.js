@@ -123,9 +123,7 @@
         };
 
         /** 
-         * Stops the virtual time scheduler. 
-         * 
-         * @memberOf VirtualTimeScheduler#   
+         * Stops the virtual time scheduler.  
          */
         VirtualTimeSchedulerPrototype.stop = function () {
             this.isEnabled = false;
@@ -174,13 +172,11 @@
             if (dueToClock === 0) {
                 return;
             }
-            return this.advanceTo(dt);
+            this.advanceTo(dt);
         };        
 
         /**
-         * Advances the scheduler's clock by the specified relative time.
-         *
-         * @memberOf VirtualTimeScheduler#         
+         * Advances the scheduler's clock by the specified relative time.      
          * @param {Number} time Relative time to advance the scheduler's clock by.
          */
         VirtualTimeSchedulerPrototype.sleep = function (time) {
@@ -194,9 +190,7 @@
         };
 
         /**
-         * Gets the next scheduled item to be executed.
-         *
-         * @memberOf VirtualTimeScheduler#             
+         * Gets the next scheduled item to be executed.          
          * @returns {ScheduledItem} The next scheduled item.
          */          
         VirtualTimeSchedulerPrototype.getNext = function () {
@@ -213,9 +207,7 @@
         };
 
         /**
-         * Schedules an action to be executed at dueTime.
-         *
-         * @memberOf VirtualTimeScheduler#         
+         * Schedules an action to be executed at dueTime.       
          * @param {Scheduler} scheduler Scheduler to execute the action on.
          * @param {Number} dueTime Absolute time at which to execute the action.
          * @param {Function} action Action to be executed.
@@ -227,8 +219,6 @@
 
         /**
          * Schedules an action to be executed at dueTime.
-         *
-         * @memberOf VirtualTimeScheduler#
          * @param {Mixed} state State passed to the action to be executed.
          * @param {Number} dueTime Absolute time at which to execute the action.
          * @param {Function} action Action to be executed.

@@ -3,7 +3,7 @@
         inherits(TestScheduler, _super);
 
         function baseComparer(x, y) {
-            return x > y : 1 ? (x < y ? -1 : 0);
+            return x > y ? 1 : (x < y ? -1 : 0);
         }
 
         /** @constructor */
