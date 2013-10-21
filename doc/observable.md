@@ -18,6 +18,11 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`for | forIn`](#rxobservableforsources-resultselector)
 - [`forkJoin`](#rxobservableforkjoinargs)
 - [`fromArray`](#rxobservablefromarrayarray-scheduler)
+- [`fromCallback`](#rxobservablefromcallbackfunc-scheduler-context)
+- [`fromEvent`](#rxobservablefromeventelement-eventname)
+- [`fromEventPattern`](#rxobservablefromeventpatternaddhander-removehandler)
+- [`fromNodeCallback`](#rxobservablefromnodecallbackfunc-scheduler-context)
+- [`fromPromise`](#rxobservablefrompromisepromise)
 - [`generate`](#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
 - [`generateWithAbsoluteTime`](#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
 - [`generateWithRelativeTime`](#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
@@ -575,7 +580,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablefromarrayarray-scheduler"></a>`Rx.Observable.fromArray(array, [scheduler])`
-<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js#L10-L23 "View in source") 
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -611,7 +616,382 @@ var subscription = source.subscribe(
 
 ### Location
 
+File:
+- /src/core/observable/fromarray.js
+
+Dist:
 - rx.js
+- rx.compat.js
+
+* * *
+
+### <a id="rxobservablefromcallbackfunc-scheduler-context"></a>`Rx.Observable.fromCallback(func, [scheduler], [context])`
+<a href="#rxobservablefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js#L9-L27 "View in source") 
+
+Converts a callback function to an observable sequence. 
+
+#### Arguments
+1. `func` *(Function)*: Function with a callback as the last parameter to convert to an Observable sequence.
+2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
+3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+
+#### Returns
+*(Function)*: A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
+
+#### Example
+```js
+var fs = require('fs'),
+    Rx = require('rx');
+
+// Wrap fs.exists
+var exists = Rx.Observable.fromCallback(fs.exists);
+
+// Check if file.txt exists
+var source = exists('file.txt');
+
+var subscription = source.subscribe(
+    function (x) {
+        // Extract value from arguments array
+        var result = x[0];
+
+        console.log('Next: ' + result);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed
+```
+
+### Location
+
+File:
+- /src/core/observable/fromcallback.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
+
+* * *
+
+### <a id="rxobservablefromeventelement-eventname"></a>`Rx.Observable.fromEvent(element, eventName)`
+<a href="#rxobservablefromeventelement-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js#L111-L115 "View in source") 
+
+Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
+
+#### Arguments
+1. `element` *(Any)*: The DOMElement, NodeList or EventEmitter to attach a listener.
+2. `eventName` *(String)*: The event name to attach the observable sequence.
+
+#### Returns
+*(Observable)*: An observable sequence of events from the specified element and the specified event.
+
+#### Example
+
+Wrapping an event from [jQuery](http://jquery.com)
+
+```js
+var input = $('#input');
+
+var source = Rx.Observable.fromEvent(input, 'click');
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: Clicked!');
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+input.trigger('click');
+
+// => Next: Clicked!
+```
+
+Using in Node.js with using an `EventEmitter`.
+
+```js
+var fs = require('fs'),
+    Rx = require('rx');
+
+// Wrap fs.exists
+var exists = Rx.Observable.fromCallback(fs.exists);
+
+// Check if file.txt exists
+var source = exists('file.txt');
+
+var subscription = source.subscribe(
+    function (x) {
+        // Extract value from arguments array
+        var result = x[0];
+
+        console.log('Next: ' + result);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed
+```
+
+### Location
+
+File:
+- /src/core/observable/fromevent.js
+- /src/core/observable/fromevent-modern.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
+
+* * *
+
+### <a id="rxobservablefromeventpatternaddhander-removehandler"></a>`Rx.Observable.fromEventHandler(addHandler, removeHandler)`
+<a href="#rxobservablefromeventpatternaddhander-removehandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js#L7-L20 "View in source") 
+
+Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
+
+#### Arguments
+1. `addHandler` *(Function)*: The DOMElement, NodeList or EventEmitter to attach a listener.
+2. `removeHandler` *(Function)*: The event name to attach the observable sequence.
+
+#### Returns
+*(Observable)*: An observable sequence of events from the specified element and the specified event.
+
+#### Example
+
+Wrapping an event from [jQuery](http://jquery.com)
+
+```js
+var input = $('#input');
+
+var source = Rx.Observable.fromEventPattern(
+    function add (h) {
+        input.bind('click', h);
+    },
+    function remove (h) {
+        input.unbind('click', h);
+    }
+);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: Clicked!');
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+input.trigger('click');
+
+// => Next: Clicked!
+```
+
+Wrapping an event from the [Dojo Toolkit](http://dojotoolkit.org)
+
+```js
+require(['dojo/on', 'dojo/dom', 'rx', 'rx.async', 'rx.binding'], function (on, dom, rx) {
+
+    var input = dom.byId('input');
+
+    var source = Rx.Observable.fromEventPattern(
+        function add (h) {
+            return on(input, 'click', h);
+        },
+        function remove (_, signal) {
+            signal.remove();
+        }
+    );
+
+    var subscription = source.subscribe(
+        function (x) {
+            console.log('Next: Clicked!');
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+
+    on.emit(input, 'click');
+    // => Next: Clicked!
+});
+```
+
+Using in Node.js with using an `EventEmitter`.
+
+```js
+var EventEmitter = require('events').EventEmitter,
+    Rx = require('rx');
+
+var e = new EventEmitter();
+
+// Wrap EventEmitter
+var source = Rx.Observable.fromEventPattern(
+    function add (h) {
+        e.on('data', h);
+    },
+    function remove (h) {
+        e.off('data', h);
+    }
+);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + result);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+
+e.emit('data', 'foo');
+// => Next: foo
+```
+
+### Location
+
+File:
+- /src/core/observable/fromeventpattern.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
+
+* * *
+
+### <a id="rxobservablefromnodecallbackfunc-scheduler-context"></a>`Rx.Observable.fromNodeCallback(func, [scheduler], [context])`
+<a href="#rxobservablefromnodecallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js#L8-L33 "View in source") 
+
+Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
+
+#### Arguments
+1. `func` *(Function)*: Function with a callback as the last parameter to convert to an Observable sequence.
+2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
+3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+
+#### Returns
+*(Function)*: A function which when applied, returns an observable sequence with the callback arguments as an array on success, or an error if the first parameter is not falsy.
+
+#### Example
+```js
+var fs = require('fs'),
+    Rx = require('rx');
+
+// Wrap fs.exists
+var rename = Rx.Observable.fromCallback(fs.rename);
+
+// Rename file which returns no parameters except an error
+var source = rename('file1.txt', 'file2.txt');
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: success!');
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: success!
+// => Completed
+```
+
+### Location
+
+File:
+- /src/core/observable/fromnodecallback.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
+
+* * *
+
+### <a id="rxobservablefromnodecallbackfunc-scheduler-context"></a>`Rx.Observable.fromPromise(promise)`
+<a href="#rxobservablefromnodecallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js#L6-L19 "View in source") 
+
+Converts a Promises/A+ spec compliant Promise to an Observable sequence.
+
+#### Arguments
+1. `promise` *(Promise)*: Promises/A+ spec compliant Promise to an Observable sequence.
+
+#### Returns
+*(Observable)*: An Observable sequence which wraps the existing promise success and failure.
+
+#### Example
+```js
+
+// Create a promise which resolves 42
+var promise1 = new RSVP.Promise(function (resolve, reject) {
+    resolve(42);
+});
+
+var source1 = Rx.Observable.fromPromise(promise);
+
+var subscription1 = source1.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed
+
+// Create a promise which rejects with an error
+var promise1 = new RSVP.Promise(function (resolve, reject) {
+    reject(new Error('reason'));
+});
+
+var source1 = Rx.Observable.fromPromise(promise);
+
+var subscription1 = source1.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: reject
+```
+
+### Location
+
+File:
+- /src/core/observable/frompromise.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
 
 * * *
 

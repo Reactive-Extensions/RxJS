@@ -122,7 +122,37 @@ module.exports = function (grunt) {
                     'src/core/license.js',
                     'src/core/subintro.js',
                     'src/core/aggregatesheader.js',
-                    'src/core/linq/observable.aggregates.js',
+                    'src/core/linq/observable/_extremaby.js',
+                    'src/core/linq/observable/_firstonly.js',
+                    'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
+                    'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
+                    'src/core/linq/observable/any.js',  // where
+                    'src/core/linq/observable/isempty.js', // any, select
+                    'src/core/linq/observable/all.js', // where, any
+                    'src/core/linq/observable/contains.js', // where, any
+                    'src/core/linq/observable/count.js', // where, aggregate
+                    'src/core/linq/observable/sum.js', // select, aggregate
+                    'src/core/linq/observable/minby.js', // _extremaby
+                    'src/core/linq/observable/min.js',   // minby, _firstonly
+                    'src/core/linq/observable/maxby.js', // _extremaby
+                    'src/core/linq/observable/max.js',   // max, _firstonly
+                    'src/core/linq/observable/average.js',   // select, scan, aggregate, finalvalue
+                    'src/core/linq/observable/sequenceequal.js',   // compositedisposable
+                    'src/core/linq/observable/_elementatordefault.js',
+                    'src/core/linq/observable/elementat.js', // _elementatordefault
+                    'src/core/linq/observable/elementatordefault.js', // _elementatordefault
+                    'src/core/linq/observable/_singleordefault.js',
+                    'src/core/linq/observable/single.js', // _singleordefault, where
+                    'src/core/linq/observable/singleordefault.js', // _singleordefault, where    
+                    'src/core/linq/observable/_firstordefault.js',
+                    'src/core/linq/observable/first.js', // _firstordefault, where
+                    'src/core/linq/observable/firstordefault.js', // _firstordefault, where    
+                    'src/core/linq/observable/_lastordefault.js',
+                    'src/core/linq/observable/last.js', // _firstordefault, where
+                    'src/core/linq/observable/lastordefault.js', // _firstordefault, where                                                           
+                    'src/core/linq/observable/_findvalue.js',
+                    'src/core/linq/observable/find.js', // _findvalue, where
+                    'src/core/linq/observable/findindex.js', // _findvalue, where     
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.aggregates.js'
@@ -132,13 +162,13 @@ module.exports = function (grunt) {
                     'src/core/license.js',
                     'src/core/subintro.js',
                     'src/core/asyncheader.js',
-                    'src/core/linq/observable/start.js',
-                    'src/core/linq/observable/toasync.js',
-                    'src/core/linq/observable/fromcallback.js',
-                    'src/core/linq/observable/fromnodecallback.js',
-                    'src/core/linq/observable/fromevent.js',
-                    'src/core/linq/observable/fromeventpattern.js',
-                    'src/core/linq/observable/frompromise.js',
+                    'src/core/linq/observable/start.js', // toasync
+                    'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
+                    'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/fromevent.js', // publish
+                    'src/core/linq/observable/fromeventpattern.js', // publish
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.async.compat.js'
@@ -148,13 +178,13 @@ module.exports = function (grunt) {
                     'src/core/license.js',
                     'src/core/subintro.js',
                     'src/core/asyncheader.js',
-                    'src/core/linq/observable/start.js',
-                    'src/core/linq/observable/toasync.js',   
-                    'src/core/linq/observable/fromcallback.js',
-                    'src/core/linq/observable/fromnodecallback.js',                                     
-                    'src/core/linq/observable/fromevent-modern.js',
-                    'src/core/linq/observable/fromeventpattern.js',
-                    'src/core/linq/observable/frompromise.js',
+                    'src/core/linq/observable/start.js', // toasync
+                    'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable   
+                    'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable                                      
+                    'src/core/linq/observable/fromevent-modern.js', // publish
+                    'src/core/linq/observable/fromeventpattern.js', // publish
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.async.js'

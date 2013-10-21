@@ -1,4 +1,4 @@
-(function (global, undefined) {
+(function (global, $, undefined) {
 
     // Search Wikipedia for a given term
     function searchWikipedia (term) {
@@ -15,11 +15,11 @@
     }
 
     function main() {
-        var input = $('#textInput'),
-            results = $('#results');
+        var $input = $('#textInput'),
+            $results = $('#results');
 
         // Get all distinct key up events from the input and only fire if long enough and distinct
-        var keyup = Rx.DOM.fromEvent(input, 'keyup')
+        var keyup = Rx.Observable.fromEvent($input, 'keyup')
             .map(function (e) {
                 return e.target.value; // Project the text from the input
             })
@@ -36,28 +36,23 @@
 
         var subscription = searcher.subscribe(
             function (data) {
-                // Append the results
-                clearChildren(results);
-
                 var res = data[1];
 
-                var i, len, li;
-                for(i = 0, len = res.length; i < len; i++) {
-                    li = document.createElement('li');
-                    li.innerHTML = res[i];
-                    results.appendChild(li); 
-                }
+                // Append the results
+                $results.empty();
+
+                $.each(res, function (_, value) {
+                    $('<li>' + value + '</li>').appendTo(results);
+                });
             }, 
             function (error) {
                 // Handle any errors
-                clearChildren(results);
+                $results.empty();
 
-                var li = document.createElement('li');
-                li.innerHTML = 'Error: ' + error;
-                results.appendChild(li);
+                $('<li>Error: ' + error + '</li>').appendTo(results);
             });
     }
 
     main();
 
-}(window));
+}(window, jQuery));

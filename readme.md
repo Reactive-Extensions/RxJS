@@ -41,17 +41,20 @@ One question you may ask yourself, is why RxJS?  What about Promises?  Promises 
 
 To give you an idea about rich composition, we can create an autocompletion service which takes the user input from a text input and then query a service, making sure not to flood the service with calls for every key stroke, but instead allow to go at a more natural pace.
 
-First, we'll reference the JavaScript files...
+First, we'll reference the JavaScript files, including jQuery, although RxJS has no dependencies on jQuery...
 
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="rx.js"></script>
     <script src="rx.async.js"></script>
     <script src="rx.binding.js"></script>
     <script src="rx.time.js"></script>
-    <script src="rx.dom.js"></script>
 
-Next, we'll get the user input from an input, listening to the keyup event.
+Next, we'll get the user input from an input, listening to the keyup event by using the `Rx.Observable.fromEvent` method.
 
 ```js
+var $input = $('#input'),
+    $results = $('#results');
+
 /* Only get the value from each key up */
 var keyups = Rx.Observable.fromEvent(input, 'keyup')
     .map(function (e) {
@@ -70,15 +73,20 @@ var distinct = keyups
     .distinctUntilChanged();
 ```
 
-Now, let's query Wikipedia!
+Now, let's query Wikipedia!  We'll use the new Promise bindings which will bind to any [Promises A+](https://github.com/promises-aplus/promises-spec) implementation through the `Rx.Observable.fromPromise` method.
 
 ```js
-function searchWikipedia(term) {
-    var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
-        + '&format=json' 
-        + '&search=' + encodeURI(term)
-        + '&callback=JSONPCallback';
-    return Rx.DOM.Request.getJSONPRequestCold(url);
+function searchWikipedia (term) {
+    var promise = $.ajax({
+        url: 'http://en.wikipedia.org/w/api.php',
+        dataType: 'jsonp',
+        data: {
+            action: 'opensearch',
+            format: 'json',
+            search: encodeURI(term)
+        }
+    }).promise();
+    return Rx.Observable.fromPromise(promise);
 }
 ```
 
@@ -95,10 +103,19 @@ Finally, we call the subscribe method on our observable sequence to start pullin
 
 ```js
 suggestions.subscribe( function (data) {
-    var results = data[1];
+    var res = data[1];
+
     /* Do something with the data like binding */
+    $results.empty();
+
+    $.each(res, function (_, value) {
+        $('<li>' + value + '</li>').appendTo(results);
+    });    
 }, function (e) {
     /* handle any errors */
+    $results.empty();
+
+    $('<li>Error: ' + error + '</li>').appendTo(results);    
 });
 ```
 
@@ -217,7 +234,7 @@ require({
     }
 },
 ['rx'], function(Rx) {
-    var obs = Rx.Observable.returnValue(42);
+    var obs = Rx.Observable.return(42);
     obs.subscribe(function (x) { console.log(x); });
 });
 ```
