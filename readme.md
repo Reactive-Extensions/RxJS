@@ -22,8 +22,8 @@ Because observable sequences are data streams, you can query them using standard
 
 This set of libraries include:
 
-- **rx.js** - Core library for ES5 compliant browsers and runtimes
-- **rx.compat.js** - Core library for ES5 compliant browsers and runtimes
+- **rx.js** - core library for ES5 compliant browsers and runtimes
+- **rx.compat.js** - core library for older non-ES5 compliant browsers.
 - **rx.aggregates.js** - aggregation event processing query operations
 - **rx.async.js** - async operationrs such as events, callbacks and promises
 - **rx.async.compat.js** - async operationrs such as events, callbacks and promises with support back to IE6
@@ -76,7 +76,8 @@ Now, let's query Wikipedia!
 function searchWikipedia(term) {
     var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
         + '&format=json' 
-        + '&search=' + encodeURI(term);
+        + '&search=' + encodeURI(term)
+        + '&callback=JSONPCallback';
     return Rx.DOM.Request.getJSONPRequestCold(url);
 }
 ```

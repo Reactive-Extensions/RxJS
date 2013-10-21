@@ -1,22 +1,22 @@
 (function (global, undefined) {
 
     // Search Wikipedia for a given term
-    function searchWikipedia(term) {
-        var cleanTerm = global.encodeURIComponent(term);
-        var url = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search='
-            + cleanTerm + '&callback=JSONPCallback';
-        return Rx.DOM.Request.jsonpRequestCold(url);
-    }
-
-    function clearChildren (element) {
-        while (element.firstChild) {
-            element.removeChild(element.firstChild);
-        }                
+    function searchWikipedia (term) {
+        var promise = $.ajax({
+            url: 'http://en.wikipedia.org/w/api.php',
+            dataType: 'jsonp',
+            data: {
+                action: 'opensearch',
+                format: 'json',
+                search: encodeURI(term)
+            }
+        }).promise();
+        return Rx.Observable.fromPromise(promise);
     }
 
     function main() {
-        var input = document.querySelector('#textInput'),
-            results = document.querySelector('#results');
+        var input = $('#textInput'),
+            results = $('#results');
 
         // Get all distinct key up events from the input and only fire if long enough and distinct
         var keyup = Rx.DOM.fromEvent(input, 'keyup')
@@ -29,11 +29,10 @@
             .throttle(750 /* Pause for 750ms */ )
             .distinctUntilChanged(); // Only if the value has changed
 
-        var searcher = keyup.map(
+        var searcher = keyup.flatMapLatest(
             function (text) { 
                 return searchWikipedia(text); // Search wikipedia
-            })
-            .switchLatest(); // Ensure no out of order results
+            });
 
         var subscription = searcher.subscribe(
             function (data) {
