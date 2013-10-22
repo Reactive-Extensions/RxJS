@@ -4,9 +4,9 @@ require('./rx.binding');
 require('./rx.coincidence');
 require('./rx.experimental');
 require('./rx.joinpatterns');
-require('./rx.testing');
 require('./rx.time');
 require('./rx.virtualtime');
+require('./rx.testing');
 
 // Add specific Node functions
 var EventEmitter = require('events').EventEmitter,
