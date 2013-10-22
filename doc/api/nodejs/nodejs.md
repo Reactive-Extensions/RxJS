@@ -26,7 +26,9 @@ The Reactive Extensions for JavaScript provides integration points to the core N
 ### Callback Handlers ###
 
 ### <a id="rxnodefromcallbackfunc-scheduler-context"></a>`Rx.Node.fromCallback(func, [scheduler], [context])`
-<a href="#rxnodefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L23-L41 "View in source") 
+<a href="#rxnodefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L27-L29 "View in source") 
+
+**Deprecated in favor of `Rx.Observable.fromCallback` in rx.async.js.**
 
 Converts a callback function to an observable sequence. 
 
@@ -43,7 +45,11 @@ Converts a callback function to an observable sequence.
 var fs = require('fs');
 var Rx = require('Rx');
 
-var source = Rx.Node.fromCallback(fs.exists)('/etc/passwd');
+// Wrap exists
+var exists = Rx.Node.fromCallback(fs.exists);
+
+// Call exists
+var source = exists('/etc/passwd');
 
 var observer = Rx.Observer.create(
     function (x) {
@@ -70,7 +76,9 @@ var subscription = source.subscribe(observer);
 * * *
 
 ### <a id="rxnodefromnodecallbackfunc-scheduler-context"></a>`Rx.Node.fromNodeCallback(func, [scheduler], [context])`
-<a href="#rxnodefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L50-L75 "View in source") 
+<a href="#rxnodefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L41-L43 "View in source") 
+
+**Deprecated in favor of `Rx.Observable.fromNodeCallback` in rx.async.js.**
 
 Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
 
@@ -116,10 +124,12 @@ var subscription = source.subscribe(observer);
 
 ### Event Handlers ###
 
-### <a id="rxnodefromeventeventemitter-eventname"></a>`Rx.Node.fromEventEmitter(eventEmitter, eventName)`
-<a href="#rxnodefromeventeventemitter-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L83-L95 "View in source") 
+### <a id="rxnodefromeventeventemitter-eventname"></a>`Rx.Node.fromEvent(eventEmitter, eventName)`
+<a href="#rxnodefromeventeventemitter-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L54-L56 "View in source") 
 
-Handles an event from the given EventEmitter as an observable sequence.
+**Deprecated in favor of `Rx.Observable.fromEvent` in rx.async.js.**
+
+Handles an event from the given EventEmitter as an observable sequence.  
 
 #### Arguments
 1. `eventEmitter` *(EventEmitter)*: The EventEmitter to subscribe to the given event.
@@ -163,7 +173,7 @@ emitter.emit('data', 'foo');
 * * *
 
 ### <a id="rxnodetoeventemitterobservable-eventname"></a>`Rx.Node.toEventEmitter(observable, eventName)`
-<a href="#rxnodetoeventemitterobservable-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L105-L122 "View in source") 
+<a href="#rxnodetoeventemitterobservable-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L66-L84 "View in source") 
 
 Converts the given observable sequence to an event emitter with the given event name. 
 The errors are handled on the 'error' event and completion on the 'end' event.
@@ -207,7 +217,7 @@ emitter.publish();
 ### Stream Handlers ###
 
 ### <a id="rxnodefromstreamstream"></a>`Rx.Node.fromStream(stream)`
-<a href="#rxnodefromstreamstream">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L129-L153 "View in source") 
+<a href="#rxnodefromstreamstream">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L91-L115 "View in source") 
 
 Converts a flowing stream to an Observable sequence.
 
@@ -235,7 +245,7 @@ var subscription = Rx.Node.fromStream(process.stdin)
 * * *
 
 ### <a id="rxnodewritetostreamobservable-stream-encoding"></a>`Rx.Node.writeToStream(observable, stream, [encoding])`
-<a href="#rxnodewritetostreamobservable-stream-encoding">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L162-L175 "View in source") 
+<a href="#rxnodewritetostreamobservable-stream-encoding">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L124-L138 "View in source") 
 
 Writes an observable sequence to a stream.
 

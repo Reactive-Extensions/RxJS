@@ -1,19 +1,22 @@
 var Rx = require('./rx');
 require('./rx.aggregates');
+require('./rx.async');
 require('./rx.binding');
 require('./rx.coincidence');
 require('./rx.experimental');
 require('./rx.joinpatterns');
-require('./rx.testing');
 require('./rx.time');
 require('./rx.virtualtime');
+require('./rx.testing');
 
 // Add specific Node functions
 var EventEmitter = require('events').EventEmitter,
-    slice = Array.prototype.slice;
+    Observable = Rx.Observable;
 
 Rx.Node = {
     /**
+     * @deprecated Use Rx.Observable.fromCallback from rx.async.js instead.
+     *
      * Converts a callback function to an observable sequence. 
      * 
      * @param {Function} function Function to convert to an asynchronous function.
@@ -22,77 +25,34 @@ Rx.Node = {
      * @returns {Function} Asynchronous function.
      */
     fromCallback: function (func, scheduler, context) {
-        scheduler || (scheduler = Rx.Scheduler.timeout);
-        return function () {
-            var args = slice.call(arguments, 0), 
-                subject = new Rx.AsyncSubject();
-
-            scheduler.schedule(function () {
-                function handler() {
-                    subject.onNext(arguments);
-                    subject.onCompleted();
-                }
-
-                args.push(handler);
-                func.apply(context, args);
-            });
-
-            return subject.asObservable();
-        };
+        return Observable.fromCallback(func, scheduler, context);
     },
 
     /**
+     * @deprecated Use Rx.Observable.fromNodeCallback from rx.async.js instead.
+     *
      * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
+     *
      * @param {Function} func The function to call
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
      * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
      */
     fromNodeCallback: function (func, scheduler, context) {
-        scheduler || (scheduler = Rx.Scheduler.timeout);
-        return function () {
-            var args = slice.call(arguments, 0), 
-                subject = new Rx.AsyncSubject();
-
-            scheduler.schedule(function () {
-                function handler(err) {
-                    var handlerArgs = slice.call(arguments, 1);
-
-                    if (err) {
-                        subject.onError(err);
-                        return;
-                    }
-
-                    subject.onNext(handlerArgs);
-                    subject.onCompleted();
-                }
-
-                args.push(handler);
-                func.apply(context, args);
-            });
-
-            return subject.asObservable();
-        };
+        return Observable.fromNodeCallback(func, scheduler, context);
     },
 
     /**
+     * @deprecated Use Rx.Observable.fromEvent from rx.async.js instead.
+     *
      * Handles an event from the given EventEmitter as an observable sequence.
+     *
      * @param {EventEmitter} eventEmiiter The EventEmitter to subscribe to the given event.
      * @param {String} eventName The event name to subscribe
      * @returns {Observable} An observable sequence generated from the named event from the given EventEmitter.
      */
     fromEvent: function (eventEmitter, eventName) {
-        return Rx.Observable.create(function (observer) {
-            function handler () {
-                observer.onNext(arguments);
-            }
-
-            eventEmitter.on(eventName, handler);
-
-            return function () {
-                eventEmitter.off(eventName, handler);
-            }
-        }).publish().refCount();
+        return Observable.fromEvent(eventEmitter, eventName);
     },
 
     /**
@@ -106,6 +66,7 @@ Rx.Node = {
     toEventEmitter: function (observable, eventName) {
         var e = new EventEmitter();
 
+        // Used to publish the events from the observable
         e.publish = function () {
             e.subscription = observable.subscribe(
                 function (x) {
@@ -128,7 +89,7 @@ Rx.Node = {
      * @returns {Observable} An observable sequence which fires on each 'data' event as well as handling 'error' and 'end' events.
      */
     fromStream: function (stream) {
-        return Rx.Observable.create(function (observer) {
+        return Observable.create(function (observer) {
             function dataHandler (data) {
                 observer.onNext(data);
             }
@@ -141,14 +102,14 @@ Rx.Node = {
                 observer.onCompleted();
             }
 
-            stream.on('data', dataHandler);
-            stream.on('error', errorHandler);
-            stream.on('end', endHandler);
+            stream.addListener('data', dataHandler);
+            stream.addListener('error', errorHandler);
+            stream.addListener('end', endHandler);
             
             return function () {
-                stream.off('data', dataHandler);
-                stream.off('error', errorHandler);
-                stream.off('end', endHandler);
+                stream.removeListener('data', dataHandler);
+                stream.removeListener('error', errorHandler);
+                stream.removeListener('end', endHandler);
             };
         }).publish().refCount();
     },
