@@ -90,7 +90,7 @@ Rx.Node = {
             eventEmitter.on(eventName, handler);
 
             return function () {
-                eventEmitter.off(eventName, handler);
+                eventEmitter.removeListener(eventName, handler);
             }
         }).publish().refCount();
     },
@@ -146,9 +146,9 @@ Rx.Node = {
             stream.on('end', endHandler);
             
             return function () {
-                stream.off('data', dataHandler);
-                stream.off('error', errorHandler);
-                stream.off('end', endHandler);
+                stream.removeListener('data', dataHandler);
+                stream.removeListener('error', errorHandler);
+                stream.removeListener('end', endHandler);
             };
         }).publish().refCount();
     },
