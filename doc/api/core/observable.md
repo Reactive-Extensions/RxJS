@@ -18,6 +18,11 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`for | forIn`](#rxobservableforsources-resultselector)
 - [`forkJoin`](#rxobservableforkjoinargs)
 - [`fromArray`](#rxobservablefromarrayarray-scheduler)
+- [`fromCallback`](#rxobservablefromcallbackfunc-scheduler-context)
+- [`fromEvent`](#rxobservablefromeventelement-eventname)
+- [`fromEventPattern`](#rxobservablefromeventpatternaddhander-removehandler)
+- [`fromNodeCallback`](#rxobservablefromnodecallbackfunc-scheduler-context)
+- [`fromPromise`](#rxobservablefrompromisepromise)
 - [`generate`](#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
 - [`generateWithAbsoluteTime`](#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
 - [`generateWithRelativeTime`](#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
@@ -165,8 +170,8 @@ Propagates the observable sequence that reacts first.
 #### Example
 ```js
 var source = Rx.Observable.amb(
-	Rx.Observable.timer(500).select(function () { return 'foo'; }),
-	Rx.Observable.timer(200).select(function () { return 'bar'; })
+    Rx.Observable.timer(500).select(function () { return 'foo'; }),
+    Rx.Observable.timer(200).select(function () { return 'bar'; })
 );
 
 var subscription = source.subscribe(
@@ -206,18 +211,18 @@ Uses selector to determine which source in sources to use.  There is an alias 's
 #### Example
 ```js
 var sources = {
-	'foo': Rx.Observable.return(42),
-	'bar': Rx.Observable.return(56)
+    'foo': Rx.Observable.return(42),
+    'bar': Rx.Observable.return(56)
 };
 
 var defaultSource = Rx.Observable.empty();
 
 var source = Rx.Observable.case(
-	function () {
-		return 'foo';
-	},
-	sources,
-	defaultSource);
+    function () {
+        return 'foo';
+    },
+    sources,
+    defaultSource);
 
 var subscription = source.subscribe(
     function (x) {
@@ -333,13 +338,13 @@ Creates an observable sequence from a specified subscribe method implementation.
 #### Example
 ```js
 var source = Rx.Observable.create(function (observer) {
-	observer.onNext(42);
-	observer.onCompleted();
+    observer.onNext(42);
+    observer.onCompleted();
 
-	// Note that this is optional, you do not have to return this if you require no cleanup
-	return function () {
-		console.log('disposed');
-	};
+    // Note that this is optional, you do not have to return this if you require no cleanup
+    return function () {
+        console.log('disposed');
+    };
 });
 
 var subscription = source.subscribe(
@@ -381,13 +386,13 @@ Creates an observable sequence from a specified Subscribe method implementation.
 #### Example
 ```js
 var source = Rx.Observable.createWithDisposable(function (observer) {
-	observer.onNext(42);
-	observer.onCompleted();
+    observer.onNext(42);
+    observer.onCompleted();
 
-	return Rx.Disposable.create(function () {
-		// Any cleanup that is required
-		console.log('disposed');
-	});
+    return Rx.Disposable.create(function () {
+        // Any cleanup that is required
+        console.log('disposed');
+    });
 });
 
 var subscription = source.subscribe(
@@ -429,7 +434,7 @@ Returns an observable sequence that invokes the specified factory function whene
 #### Example
 ```js
 var source = Rx.Observable.defer(function () {
-	return Rx.Observable.returnValue(42);
+    return Rx.Observable.returnValue(42);
 });
 
 var subscription = source.subscribe(
@@ -506,10 +511,10 @@ There is an alias for this method called `forIn` for browsers <IE9
 var array = [1, 2, 3];
 
 var source = Rx.Observable.for(
-	array,
-	function (x) {
-		return Rx.Observable.returnValue(x);
-	});
+    array,
+    function (x) {
+        return Rx.Observable.returnValue(x);
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -548,9 +553,9 @@ Runs all observable sequences in parallel and collect their last elements.
 #### Example
 ```js
 var source = Rx.Observable.forkJoin(
-	Rx.Observable.return(42),
-	Rx.Observable.range(0, 10),
-	Rx.Observable.fromArray([1,2,3])
+    Rx.Observable.return(42),
+    Rx.Observable.range(0, 10),
+    Rx.Observable.fromArray([1,2,3])
 );
 
 var subscription = source.subscribe(
@@ -575,7 +580,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablefromarrayarray-scheduler"></a>`Rx.Observable.fromArray(array, [scheduler])`
-<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js#L10-L23 "View in source") 
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -611,7 +616,382 @@ var subscription = source.subscribe(
 
 ### Location
 
+File:
+- /src/core/observable/fromarray.js
+
+Dist:
 - rx.js
+- rx.compat.js
+
+* * *
+
+### <a id="rxobservablefromcallbackfunc-scheduler-context"></a>`Rx.Observable.fromCallback(func, [scheduler], [context])`
+<a href="#rxobservablefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js#L9-L27 "View in source") 
+
+Converts a callback function to an observable sequence. 
+
+#### Arguments
+1. `func` *(Function)*: Function with a callback as the last parameter to convert to an Observable sequence.
+2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
+3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+
+#### Returns
+*(Function)*: A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
+
+#### Example
+```js
+var fs = require('fs'),
+    Rx = require('rx');
+
+// Wrap fs.exists
+var exists = Rx.Observable.fromCallback(fs.exists);
+
+// Check if file.txt exists
+var source = exists('file.txt');
+
+var subscription = source.subscribe(
+    function (x) {
+        // Extract value from arguments array
+        var result = x[0];
+
+        console.log('Next: ' + result);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed
+```
+
+### Location
+
+File:
+- /src/core/observable/fromcallback.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
+
+* * *
+
+### <a id="rxobservablefromeventelement-eventname"></a>`Rx.Observable.fromEvent(element, eventName)`
+<a href="#rxobservablefromeventelement-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js#L111-L115 "View in source") 
+
+Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
+
+#### Arguments
+1. `element` *(Any)*: The DOMElement, NodeList or EventEmitter to attach a listener.
+2. `eventName` *(String)*: The event name to attach the observable sequence.
+
+#### Returns
+*(Observable)*: An observable sequence of events from the specified element and the specified event.
+
+#### Example
+
+Wrapping an event from [jQuery](http://jquery.com)
+
+```js
+var input = $('#input');
+
+var source = Rx.Observable.fromEvent(input, 'click');
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: Clicked!');
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+input.trigger('click');
+
+// => Next: Clicked!
+```
+
+Using in Node.js with using an `EventEmitter`.
+
+```js
+var fs = require('fs'),
+    Rx = require('rx');
+
+// Wrap fs.exists
+var exists = Rx.Observable.fromCallback(fs.exists);
+
+// Check if file.txt exists
+var source = exists('file.txt');
+
+var subscription = source.subscribe(
+    function (x) {
+        // Extract value from arguments array
+        var result = x[0];
+
+        console.log('Next: ' + result);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed
+```
+
+### Location
+
+File:
+- /src/core/observable/fromevent.js
+- /src/core/observable/fromevent-modern.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
+
+* * *
+
+### <a id="rxobservablefromeventpatternaddhander-removehandler"></a>`Rx.Observable.fromEventHandler(addHandler, removeHandler)`
+<a href="#rxobservablefromeventpatternaddhander-removehandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js#L7-L20 "View in source") 
+
+Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
+
+#### Arguments
+1. `addHandler` *(Function)*: The DOMElement, NodeList or EventEmitter to attach a listener.
+2. `removeHandler` *(Function)*: The event name to attach the observable sequence.
+
+#### Returns
+*(Observable)*: An observable sequence of events from the specified element and the specified event.
+
+#### Example
+
+Wrapping an event from [jQuery](http://jquery.com)
+
+```js
+var input = $('#input');
+
+var source = Rx.Observable.fromEventPattern(
+    function add (h) {
+        input.bind('click', h);
+    },
+    function remove (h) {
+        input.unbind('click', h);
+    }
+);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: Clicked!');
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+input.trigger('click');
+
+// => Next: Clicked!
+```
+
+Wrapping an event from the [Dojo Toolkit](http://dojotoolkit.org)
+
+```js
+require(['dojo/on', 'dojo/dom', 'rx', 'rx.async', 'rx.binding'], function (on, dom, rx) {
+
+    var input = dom.byId('input');
+
+    var source = Rx.Observable.fromEventPattern(
+        function add (h) {
+            return on(input, 'click', h);
+        },
+        function remove (_, signal) {
+            signal.remove();
+        }
+    );
+
+    var subscription = source.subscribe(
+        function (x) {
+            console.log('Next: Clicked!');
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+
+    on.emit(input, 'click');
+    // => Next: Clicked!
+});
+```
+
+Using in Node.js with using an `EventEmitter`.
+
+```js
+var EventEmitter = require('events').EventEmitter,
+    Rx = require('rx');
+
+var e = new EventEmitter();
+
+// Wrap EventEmitter
+var source = Rx.Observable.fromEventPattern(
+    function add (h) {
+        e.on('data', h);
+    },
+    function remove (h) {
+        e.off('data', h);
+    }
+);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + result);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+
+e.emit('data', 'foo');
+// => Next: foo
+```
+
+### Location
+
+File:
+- /src/core/observable/fromeventpattern.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
+
+* * *
+
+### <a id="rxobservablefromnodecallbackfunc-scheduler-context"></a>`Rx.Observable.fromNodeCallback(func, [scheduler], [context])`
+<a href="#rxobservablefromnodecallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js#L8-L33 "View in source") 
+
+Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
+
+#### Arguments
+1. `func` *(Function)*: Function with a callback as the last parameter to convert to an Observable sequence.
+2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
+3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+
+#### Returns
+*(Function)*: A function which when applied, returns an observable sequence with the callback arguments as an array on success, or an error if the first parameter is not falsy.
+
+#### Example
+```js
+var fs = require('fs'),
+    Rx = require('rx');
+
+// Wrap fs.exists
+var rename = Rx.Observable.fromCallback(fs.rename);
+
+// Rename file which returns no parameters except an error
+var source = rename('file1.txt', 'file2.txt');
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: success!');
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: success!
+// => Completed
+```
+
+### Location
+
+File:
+- /src/core/observable/fromnodecallback.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
+
+* * *
+
+### <a id="rxobservablefromnodecallbackfunc-scheduler-context"></a>`Rx.Observable.fromPromise(promise)`
+<a href="#rxobservablefromnodecallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js#L6-L19 "View in source") 
+
+Converts a Promises/A+ spec compliant Promise to an Observable sequence.
+
+#### Arguments
+1. `promise` *(Promise)*: Promises/A+ spec compliant Promise to an Observable sequence.
+
+#### Returns
+*(Observable)*: An Observable sequence which wraps the existing promise success and failure.
+
+#### Example
+```js
+
+// Create a promise which resolves 42
+var promise1 = new RSVP.Promise(function (resolve, reject) {
+    resolve(42);
+});
+
+var source1 = Rx.Observable.fromPromise(promise);
+
+var subscription1 = source1.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed
+
+// Create a promise which rejects with an error
+var promise1 = new RSVP.Promise(function (resolve, reject) {
+    reject(new Error('reason'));
+});
+
+var source1 = Rx.Observable.fromPromise(promise);
+
+var subscription1 = source1.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Error: Error: reject
+```
+
+### Location
+
+File:
+- /src/core/observable/frompromise.js
+
+Dist:
+- rx.async.js
+- rx.async.compat.js
 
 * * *
 
@@ -633,10 +1013,10 @@ Converts an array to an observable sequence, using an optional scheduler to enum
 #### Example
 ```js
 var source = Rx.Observable.generate(
-	0,
-	function (x) { return x < 3; },
-	function (x) { return x + 1; },
-	function (x) { return x; }
+    0,
+    function (x) { return x < 3; },
+    function (x) { return x + 1; },
+    function (x) { return x; }
 );
 
 var subscription = source.subscribe(
@@ -682,11 +1062,11 @@ Generates an observable sequence by iterating a state from an initial state unti
 ```js
 // Generate a value with an absolute time with an offset of 100ms multipled by value 
 var source = Rx.Observable.generate(
-	1,
-	function (x) { return x < 4; },
-	function (x) { return x + 1; },
-	function (x) { return x; },
-	function (x) { return Date.now() + (100 * x); }
+    1,
+    function (x) { return x < 4; },
+    function (x) { return x + 1; },
+    function (x) { return x; },
+    function (x) { return Date.now() + (100 * x); }
 ).timeInterval();
 
 var subscription = source.subscribe(
@@ -732,11 +1112,11 @@ Generates an observable sequence by iterating a state from an initial state unti
 ```js
 // Generate a value with an absolute time with an offset of 100ms multipled by value 
 var source = Rx.Observable.generate(
-	1,
-	function (x) { return x < 4; },
-	function (x) { return x + 1; },
-	function (x) { return x; },
-	function (x) { return 100 * x; }
+    1,
+    function (x) { return x < 4; },
+    function (x) { return x + 1; },
+    function (x) { return x; },
+    function (x) { return 100 * x; }
 ).timeInterval();
 
 var subscription = source.subscribe(
@@ -781,8 +1161,8 @@ Determines whether an observable collection contains values. There is an alias f
 var shouldRun = true;
 
 var source = Rx.Observable.if(
-	function () { return shouldRun; },
-	Rx.Observable.return(42)
+    function () { return shouldRun; },
+    Rx.Observable.return(42)
 );
 
 var subscription = source.subscribe(
@@ -803,9 +1183,9 @@ var subscription = source.subscribe(
 var shouldRun = false;
 
 var source = Rx.Observable.if(
-	function () { return shouldRun; },
-	Rx.Observable.return(42),
-	Rx.Observable.return(56)
+    function () { return shouldRun; },
+    Rx.Observable.return(42),
+    Rx.Observable.return(56)
 );
 
 var subscription = source.subscribe(
@@ -1129,11 +1509,11 @@ Invokes the specified function asynchronously on the specified scheduler, surfac
 var context = { value: 42 };
 
 var source = Rx.Observable.start(
-	function () {
-		return this.value; 
-	}, 
-	Rx.Scheduler.timeout, 
-	context
+    function () {
+        return this.value; 
+    }, 
+    Rx.Scheduler.timeout, 
+    context
 );
 
 var subscription = source.subscribe(
@@ -1173,7 +1553,7 @@ There is an alias to this method called `throwException` for browsers <IE9.
 #### Example
 ```js
 var source = Rx.Observable.return(42)
-	.selectMany(Rx.Observable.throw(new Error('error!')));
+    .selectMany(Rx.Observable.throw(new Error('error!')));
 
 var subscription = source.subscribe(
     function (x) {
@@ -1211,8 +1591,8 @@ Returns an observable sequence that produces a value after dueTime has elapsed a
 #### Example
 ```js
 var source = Rx.Observable.timer(200, 100)
-	.pluck('interval')
-	.take(3);
+    .pluck('interval')
+    .take(3);
 
 var subscription = source.subscribe(
     function (x) {
@@ -1253,7 +1633,7 @@ Converts the function into an asynchronous function. Each invocation of the resu
 #### Example
 ```js
 var func = Rx.Observable.async(function (x, y) {
-	return x + y;
+    return x + y;
 });
 
 // Execute function with 3 and 4
@@ -1296,33 +1676,33 @@ var subscription = source.subscribe(
 ```js
 /* Using an AsyncSubject as a resource which supports the .dispose method */
 function DisposableResource(value) {
-	this.value = null;
-	this.disposed = false;
+    this.value = null;
+    this.disposed = false;
 }
 
 DisposableResource.prototype.getValue = function () {
-	if (this.disposed) {
-		throw new Error('Object is disposed');
-	}
-	return this.value;
+    if (this.disposed) {
+        throw new Error('Object is disposed');
+    }
+    return this.value;
 };
 
 DisposableResource.prototype.dispose = function () {
-	if (!this.disposed) {
-		this.disposed = true;
-		this.value = null;
-	}
-	console.log('Disposed');
+    if (!this.disposed) {
+        this.disposed = true;
+        this.value = null;
+    }
+    console.log('Disposed');
 };
 
 var source = Rx.Observable.using(
-	function () { return new DisposableResource(42); },
-	function (resource) {
-		var subject = new AsyncSubject();
-		s.onNext(resource.getValue());
-		s.onCompleted();
-		return subject;
-	}
+    function () { return new DisposableResource(42); },
+    function (resource) {
+        var subject = new AsyncSubject();
+        s.onNext(resource.getValue());
+        s.onCompleted();
+        return subject;
+    }
 );
 
 var subscription = source.subscribe(
@@ -1410,8 +1790,8 @@ var i = 0;
 
 // Repeat until condition no longer holds
 var source = Rx.Observable.while(
-	function () { ++i < 3 },
-	Rx.Observable.return(42)
+    function () { ++i < 3 },
+    Rx.Observable.return(42)
 );
 
 
@@ -1457,7 +1837,7 @@ var subscription = source.subscribe(
 ```js
 // Using a seed for the accumulate
 var source = Rx.Observable.range(1, 10).aggregate(1, function (acc, x) {
-	return acc * x;
+    return acc * x;
 });
 
 var subscription = source.subscribe(
@@ -1476,7 +1856,7 @@ var subscription = source.subscribe(
 
 // Without a seed
 var source = Rx.Observable.range(1, 10).aggregate(function (acc, x) {
-	return acc + x;
+    return acc + x;
 });
 
 var subscription = source.subscribe(
@@ -1515,9 +1895,9 @@ Determines whether all elements of an observable sequence satisfy a condition.  
 #### Example
 ```js
 var source = Rx.Observable.fromArray([1,2,3,4,5])
-	.all(function (x) {
-		return x < 6;
-	});
+    .all(function (x) {
+        return x < 6;
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -1594,8 +1974,8 @@ Propagates the observable sequence that reacts first.
 ```js
 // Choice of either plan, the first set of timers or second set
 var source = Rx.Observable.when(
-	Rx.Observable.timer(200).and(Rx.Observable.timer(300)).then(function (x, y) { return 'first'; }),
-	Rx.Observable.timer(400).and(Rx.Observable.timer(500)).then(function (x, y) { return 'second'; }),
+    Rx.Observable.timer(200).and(Rx.Observable.timer(300)).then(function (x, y) { return 'first'; }),
+    Rx.Observable.timer(400).and(Rx.Observable.timer(500)).then(function (x, y) { return 'second'; }),
 );
 
 var subscription = source.subscribe(
@@ -1653,7 +2033,7 @@ var subscription = source.subscribe(
 
 // With a predicate
 var source = Rx.Observable.fromArray([1,2,3,4,5])
-	.any(function (x) { return x % 2 === 0; });
+    .any(function (x) { return x % 2 === 0; });
 
 var subscription = source.subscribe(
     function (x) {
@@ -1749,13 +2129,13 @@ var subscription = source.subscribe(
 
 // With a selector
 var arr = [
-	{ value: 1 },
-	{ value: 2 },
-	{ value: 3 }
+    { value: 1 },
+    { value: 2 },
+    { value: 3 }
 ];
 
 var source = Rx.Observable.fromArray(arr).average(function (x) {
-	return x.value;
+    return x.value;
 });
 
 var subscription = source.subscribe(
@@ -2064,7 +2444,7 @@ Continues an observable sequence that is terminated by an exception with the nex
 ```js
 /* Using a second observable */
 var source = Rx.Observable.throw(new Error())
-	.catch(Rx.Observable.return(42));
+    .catch(Rx.Observable.return(42));
 
 var subscription = source.subscribe(
     function (x) {
@@ -2082,9 +2462,9 @@ var subscription = source.subscribe(
 
 /* Using a handler function */
 var source = Rx.Observable.throw(new Error())
-	.catch(function (e) {
-		return Rx.Observable.return(e instanceof Error);
-	});
+    .catch(function (e) {
+        return Rx.Observable.return(e instanceof Error);
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -2170,8 +2550,8 @@ Concatenates all the observable sequences.  This takes in either an array or var
 #### Example
 ```js
 var source = Rx.Observable
-	.return(42)
-	.concat(Rx.Observable.return(56), Rx.Observable.return(72));
+    .return(42)
+    .concat(Rx.Observable.return(56), Rx.Observable.return(72));
     
 var subscription = source.subscribe(
     function (x) {
@@ -2266,7 +2646,7 @@ Determines whether an observable sequence contains a specified element with an o
 ```js
 /* Without a comparer */
 var source = Rx.Observable.return(42)
-	.contains(42);
+    .contains(42);
     
 var subscription = source.subscribe(
     function (x) {
@@ -2284,10 +2664,10 @@ var subscription = source.subscribe(
 
 /* With a comparer */
 var source = Rx.Observable.return({ value: 42 })
-	.contains(
-		{ value: 42}, 
-		function (x, y) { return x.value === y.value; }
-	);
+    .contains(
+        { value: 42}, 
+        function (x, y) { return x.value === y.value; }
+    );
     
 var subscription = source.subscribe(
     function (x) {
@@ -2344,7 +2724,7 @@ var subscription = source.subscribe(
 
 /* With a predicate */
 var source = Rx.Observable.range(0, 10)
-	.count(function (x) { return x % 2 === 0; });
+    .count(function (x) { return x % 2 === 0; });
     
 var subscription = source.subscribe(
     function (x) {
@@ -2435,7 +2815,7 @@ Time shifts the observable sequence by dueTime. The relative time intervals betw
 ```js
 /* Using an absolute time to delay by a second */
 var source = Rx.Observable.range(0, 3)
-	.delay(new Date(Date.now() + 1000));
+    .delay(new Date(Date.now() + 1000));
     
 var subscription = source.subscribe(
     function (x) {
@@ -2455,7 +2835,7 @@ var subscription = source.subscribe(
 
 /* Using an relatove time to delay by a second */
 var source = Rx.Observable.range(0, 3)
-	.delay(1000);
+    .delay(1000);
     
 var subscription = source.subscribe(
     function (x) {
@@ -2493,16 +2873,16 @@ Time shifts the observable sequence by dueTime. The relative time intervals betw
 ```js
 /* With subscriptionDelay */
 var source = Rx.Observable
-	.range(0, 3)
-	.delayWithSelector(
-		Rx.Observable.timer(300), 
-		function (x) {
-			return Rx.Observable.timer(x * 400);
-		}
-	)
-	.timeInterval()
-	.map(function (x) { return x.value + ':' + x.interval; });
-	
+    .range(0, 3)
+    .delayWithSelector(
+        Rx.Observable.timer(300), 
+        function (x) {
+            return Rx.Observable.timer(x * 400);
+        }
+    )
+    .timeInterval()
+    .map(function (x) { return x.value + ':' + x.interval; });
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -2521,14 +2901,14 @@ var subscription = source.subscribe(
 
 /* Without subscriptionDelay */
 var source = Rx.Observable
-	.range(0, 3)
-	.delayWithSelector(
-		function (x) {
-			return Rx.Observable.timer(x * 400);
-		})
-	.timeInterval()
-	.map(function (x) { return x.value + ':' + x.interval; });
-	
+    .range(0, 3)
+    .delayWithSelector(
+        function (x) {
+            return Rx.Observable.timer(x * 400);
+        })
+    .timeInterval()
+    .map(function (x) { return x.value + ':' + x.interval; });
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -2604,9 +2984,9 @@ Returns an observable sequence that contains only distinct elements according to
 ```js
 /* Without key selector */
 var source = Rx.Observable.fromArray([
-		42, 24, 42, 24
-	])
-	.distinct();
+        42, 24, 42, 24
+    ])
+    .distinct();
 
 var subscription = source.subscribe(
     function (x) {
@@ -2625,9 +3005,9 @@ var subscription = source.subscribe(
 
 /* With key selector */
 var source = Rx.Observable.fromArray([
-		{value: 42}, {value: 24}, {value: 42}, {value: 24}
-	])
-	.distinct(function (x) { return x.value; });
+        {value: 42}, {value: 24}, {value: 42}, {value: 24}
+    ])
+    .distinct(function (x) { return x.value; });
 
 var subscription = source.subscribe(
     function (x) {
@@ -2666,9 +3046,9 @@ Returns an observable sequence that contains only distinct elements according to
 ```js
 /* Without key selector */
 var source = Rx.Observable.fromArray([
-		42, 42, 24, 24
-	])
-	.distinct();
+        42, 42, 24, 24
+    ])
+    .distinct();
 
 var subscription = source.subscribe(
     function (x) {
@@ -2687,9 +3067,9 @@ var subscription = source.subscribe(
 
 /* With key selector */
 var source = Rx.Observable.fromArray([
-		{value: 42}, {value: 24}, {value: 42}, {value: 24}
-	])
-	.distinct(function (x) { return x.value; });
+        {value: 42}, {value: 24}, {value: 42}, {value: 24}
+    ])
+    .distinct(function (x) { return x.value; });
 
 var subscription = source.subscribe(
     function (x) {
@@ -2812,7 +3192,7 @@ Repeats source as long as condition holds emulating a do while loop.
 var i = 0;
 
 var source = Rx.Observable.return(42).doWhile(
-	function (x) { return ++i < 2; });
+    function (x) { return ++i < 2; });
 
 var subscription = source.subscribe(
     function (x) {
@@ -3181,9 +3561,9 @@ Searches for an element that matches the conditions defined by the specified pre
 var array = [1,2,3,4];
 
 var source = Rx.Observable.fromArray(array)
-	.find(function (x, i, obs) {
-		return x === 1;
-	});
+    .find(function (x, i, obs) {
+        return x === 1;
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -3203,9 +3583,9 @@ var subscription = source.subscribe(
 var array = [1,2,3,4];
 
 var source = Rx.Observable.fromArray(array)
-	.find(function (x, i, obs) {
-		return x === 5;
-	});
+    .find(function (x, i, obs) {
+        return x === 5;
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -3249,9 +3629,9 @@ Searches for an element that matches the conditions defined by the specified pre
 var array = [1,2,3,4];
 
 var source = Rx.Observable.fromArray(array)
-	.findIndex(function (x, i, obs) {
-		return x === 1;
-	});
+    .findIndex(function (x, i, obs) {
+        return x === 1;
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -3271,9 +3651,9 @@ var subscription = source.subscribe(
 var array = [1,2,3,4];
 
 var source = Rx.Observable.fromArray(array)
-	.findIndex(function (x, i, obs) {
-		return x === 5;
-	});
+    .findIndex(function (x, i, obs) {
+        return x === 5;
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -3615,16 +3995,16 @@ var codes = [
 ];
 
 var source = Rx.Observable.fromArray(codes)
-	.groupBy(
-		function (x) { return x.keyCode; },
-		function (x) { return x.keyCode; });
+    .groupBy(
+        function (x) { return x.keyCode; },
+        function (x) { return x.keyCode; });
 
 var subscription = source.subscribe(
     function (obs) {
         // Print the count
         obs.count().subscribe(function (x) { 
-        	console.log('Count: ' + x); 
-    	});
+            console.log('Count: ' + x); 
+        });
     },
     function (err) {
         console.log('Error: ' + err);   
@@ -3680,10 +4060,10 @@ var codes = [
 ];
 
 var source = Rx.Observable
-	.for(codes, function (x) { return Rx.Observable.return(x).delay(1000); })
-	.groupByUntil(
-		function (x) { return x.keyCode; },
-		function (x) { return x.keyCode; },
+    .for(codes, function (x) { return Rx.Observable.return(x).delay(1000); })
+    .groupByUntil(
+        function (x) { return x.keyCode; },
+        function (x) { return x.keyCode; },
         function (x) { return Rx.Observable.timer(2000); });
 
 var subscription = source.subscribe(
@@ -3725,8 +4105,8 @@ Correlates the elements of two sequences based on overlapping durations, and gro
 2. `leftDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
 3. `rightDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
 4. `resultSelector` *(Any)*: A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. It has the following arguments
-	1. *(Any)* An element of the left sequence. 
-	2. *(Observable)* An observable sequence with elements from the right sequence that overlap with the left sequence's element.
+    1. *(Any)* An element of the left sequence. 
+    2. *(Observable)* An observable sequence with elements from the right sequence that overlap with the left sequence's element.
 
 #### Returns
 *(Observable)*: An observable sequence that contains result elements computed from source elements that have an overlapping duration.
@@ -3734,10 +4114,10 @@ Correlates the elements of two sequences based on overlapping durations, and gro
 #### Example
 ```js
 var xs = Rx.Observable.interval(100)
-	.map(function (x) { return 'first' + x; });
+    .map(function (x) { return 'first' + x; });
 
 var ys = Rx.Observable.interval(100)
-	.map(function (x) { return 'second' + x; });
+    .map(function (x) { return 'second' + x; });
 
 var source = xs.groupJoin(
     ys,
@@ -3785,7 +4165,7 @@ Ignores all elements in an observable sequence leaving only the termination mess
 #### Example
 ```js
 var source = Rx.Observable.range(0, 10)
-	.ignoreElements();
+    .ignoreElements();
 
 var subscription = source.subscribe(
     function (x) {
@@ -3819,7 +4199,7 @@ Determines whether an observable sequence is empty.
 ```js
 /* Not empty */
 var source = Rx.Observable.range(0, 5)
-	.isEmpty()
+    .isEmpty()
 
 var subscription = source.subscribe(
     function (x) {
@@ -3837,7 +4217,7 @@ var subscription = source.subscribe(
 
 /* Empty */
 var source = Rx.Observable.empty()
-	.isEmpty()
+    .isEmpty()
 
 var subscription = source.subscribe(
     function (x) {
@@ -4639,12 +5019,12 @@ Projects each element of an observable sequence into a new form by incorporating
 #### Example
 ```js
 var source = Rx.Observable
-	.fromArray([
-		{ value: 0 },
-		{ value: 1 },
-		{ value: 2 }
-	])
-	.pluck('value');
+    .fromArray([
+        { value: 0 },
+        { value: 1 },
+        { value: 2 }
+    ])
+    .pluck('value');
 
 var subscription = source.subscribe(
     function (x) {
@@ -4952,7 +5332,7 @@ For aggregation behavior with incremental intermediate results, see the `scan` m
 ```js
 var source = Rx.Observable.range(1, 3)
     .reduce(function (acc, x) {
-    	return acc * x;
+        return acc * x;
     }, 1)
 
 var subscription = source.subscribe(
@@ -5214,9 +5594,9 @@ For aggregation behavior with no intermediate results, see `Rx.Observable.aggreg
 /* Without a seed */
 var source = Rx.Observable.range(1, 3)
     .scan(
-    	function (acc, x) {
-    		return acc + x;
-    	});
+        function (acc, x) {
+            return acc + x;
+        });
 
 var subscription = source.subscribe(
     function (x) {
@@ -5237,10 +5617,10 @@ var subscription = source.subscribe(
 /* With a seed */
 var source = Rx.Observable.range(1, 3)
     .scan(
-    	1,
-    	function (acc, x) {
-    		return acc * x;
-    	});
+        1,
+        function (acc, x) {
+            return acc * x;
+        });
 
 var subscription = source.subscribe(
     function (x) {
@@ -5666,9 +6046,9 @@ This operator accumulates a queue with a length enough to store the first `count
 #### Example
 ```js
 var source = Rx.Observable.timer(0, 1000)
-	.take(10)
-	.skipLastWithTime(5000);
-	
+    .take(10)
+    .skipLastWithTime(5000);
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -5751,7 +6131,7 @@ Bypasses elements in an observable sequence as long as a specified condition is 
 ```js
 // With a predicate
 var source = Rx.Observable.range(1, 5)
-	.skipWhile(function (x) { return x < 3; });
+    .skipWhile(function (x) { return x < 3; });
 
 var subscription = source.subscribe(
     function (x) {
@@ -5795,7 +6175,7 @@ Determines whether any element of an observable sequence satisfies a condition i
 ```js
 // With a predicate
 var source = Rx.Observable.fromArray([1,2,3,4,5])
-	.some(function (x) { return x % 2 === 0; });
+    .some(function (x) { return x % 2 === 0; });
 
 var subscription = source.subscribe(
     function (x) {
@@ -5833,7 +6213,7 @@ Prepends a sequence of values to an observable sequence with an optional schedul
 #### Example
 ```js
 var source = Rx.Observable.return(4)
-	.startWith(1, 2, 3)
+    .startWith(1, 2, 3)
 
 var subscription = source.subscribe(
     function (x) {
@@ -5877,7 +6257,7 @@ Prepends a sequence of values to an observable sequence with an optional schedul
 ```js
 /* With no arguments */
 var source = Rx.Observable.range(0, 3)
-	.do(function (x) { console.log('Do Next: ' + x); });
+    .do(function (x) { console.log('Do Next: ' + x); });
 
 var subscription = source.subscribe();
 
@@ -5946,18 +6326,18 @@ This only performs the side-effects of subscription and unsubscription on the sp
 #### Example
 ```js
 var observable = Rx.Observable.create(function (observer) {
-	function handler () {
-		observer.onNext(42);
-		observer.onCompleted();
-	}
+    function handler () {
+        observer.onNext(42);
+        observer.onCompleted();
+    }
 
-	// Change scheduler for here
-	var id = setTimeout(handler, 1000);
+    // Change scheduler for here
+    var id = setTimeout(handler, 1000);
 
-	return function () {
-		// And change scheduler for here
-		if (id) clearTimeout(id);
-	};
+    return function () {
+        // And change scheduler for here
+        if (id) clearTimeout(id);
+    };
 });
 
 // Change the scheduler to timeout for subscribe/unsubscribe
@@ -6002,7 +6382,7 @@ Computes the sum of a sequence of values that are obtained by invoking an option
 ```js
 /* Without a selector */
 var source = Rx.Observable.range(1, 10)
-	.sum();
+    .sum();
 
 var subscription = source.subscribe(
     function (x) {
@@ -6020,16 +6400,16 @@ var subscription = source.subscribe(
 
 /* With a selector */
 var array = [
-	{ value: 1 },
-	{ value: 2 },
-	{ value: 3 }
+    { value: 1 },
+    { value: 2 },
+    { value: 3 }
 ];
 
 var source = Rx.Observable
-	.fromArray(array)
-	.sum(function (x, idx, obs) {
-		return x.value;
-	});
+    .fromArray(array)
+    .sum(function (x, idx, obs) {
+        return x.value;
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -6226,10 +6606,10 @@ This operator accumulates a queue with a length enough to store elements receive
 #### Example
 ```js
 var source = Rx.Observable
-	.timer(0, 1000)
-	.take(10)
-	.takeLastBufferWithTime(5000);
-	
+    .timer(0, 1000)
+    .take(10)
+    .takeLastBufferWithTime(5000);
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6267,9 +6647,9 @@ Returns elements within the specified duration from the end of the observable so
 #### Example
 ```js
 var source = Rx.Observable.timer(0, 1000)
-	.take(10)
-	.takeLastWithTime(5000);
-	
+    .take(10)
+    .takeLastWithTime(5000);
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6355,7 +6735,7 @@ Returns elements from an observable sequence as long as a specified condition is
 ```js
 // With a predicate
 var source = Rx.Observable.range(1, 5)
-	.takeWhile(function (x) { return x < 3; });
+    .takeWhile(function (x) { return x < 3; });
 
 var subscription = source.subscribe(
     function (x) {
@@ -6395,22 +6775,22 @@ Ignores values from an observable sequence which are followed by another value b
 #### Example
 ```js
 var times = [
-	{ value: 0, time: 100 },
-	{ value: 1, time: 600 },
-	{ value: 2, time: 400 },
-	{ value: 3, time: 700 },
-	{ value: 4, time: 200 }
+    { value: 0, time: 100 },
+    { value: 1, time: 600 },
+    { value: 2, time: 400 },
+    { value: 3, time: 700 },
+    { value: 4, time: 200 }
 ];
 
 // Delay each item by time and project value;
 var source = Rx.Observable.for(
-	times, 
-	function (item) {
-		return Rx.Observable
-			.return(item.value)
-			.delay(item.time);
-	})
-	.throttle(500 /* ms */);
+    times, 
+    function (item) {
+        return Rx.Observable
+            .return(item.value)
+            .delay(item.time);
+    })
+    .throttle(500 /* ms */);
 
 var subscription = source.subscribe(
     function (x) {
@@ -6449,22 +6829,22 @@ Ignores values from an observable sequence which are followed by another value b
 #### Example
 ```js
 var array = [
-	800,
-	700,
-	600,
-	500
+    800,
+    700,
+    600,
+    500
 ];
 
 var source = Rx.Observable.for(
-	array,
-	function (x) {
-		return Rx.Observable.timer(x)
-	})
-	.map(function(x, i) { return i; })
-	.throttleWithSelector(function (x) {
-		return Rx.Observable.timer(700);
-	});
-	
+    array,
+    function (x) {
+        return Rx.Observable.timer(x)
+    })
+    .map(function(x, i) { return i; })
+    .throttleWithSelector(function (x) {
+        return Rx.Observable.timer(700);
+    });
+    
 
 var subscription = source.subscribe(
     function (x) {
@@ -6502,10 +6882,10 @@ Records the time interval between consecutive values in an observable sequence.
 #### Example
 ```js
 var source = Rx.Observable.timer(0, 1000)
-	.timeInterval()
-	.map(function (x) { return x.value + ':' + x.interval; })
-	.take(5);
-	
+    .timeInterval()
+    .map(function (x) { return x.value + ':' + x.interval; })
+    .take(5);
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6548,10 +6928,10 @@ Returns the source observable sequence or the other observable sequence if dueTi
 ```js
 /* With no other */
 var source = Rx.Observable
-	.return(42)
-	.delay(5000)
-	.timeout(200);
-	
+    .return(42)
+    .delay(5000)
+    .timeout(200);
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6567,10 +6947,10 @@ var subscription = source.subscribe(
 
 /* With another */
 var source = Rx.Observable
-	.return(42)
-	.delay(5000)
-	.timeout(200, Rx.Observable.empty());
-	
+    .return(42)
+    .delay(5000)
+    .timeout(200, Rx.Observable.empty());
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6608,21 +6988,21 @@ Returns the source observable sequence, switching to the other observable sequen
 ```js
 /* without a first timeout */
 var array = [
-	200,
-	300,
-	350,
-	400
+    200,
+    300,
+    350,
+    400
 ];
 
 var source = Rx.Observable
-	.for(array, function (x) {
-		return Rx.Observable.timer(x);
-	})
-	.map(function (x, i) { return i; })
-	.timeoutWithSelector(function (x) { 
-		return Rx.Observable.timer(400); 
-	});
-	
+    .for(array, function (x) {
+        return Rx.Observable.timer(x);
+    })
+    .map(function (x, i) { return i; })
+    .timeoutWithSelector(function (x) { 
+        return Rx.Observable.timer(400); 
+    });
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6641,21 +7021,21 @@ var subscription = source.subscribe(
 
 /* With no other */
 var array = [
-	200,
-	300,
-	350,
-	400
+    200,
+    300,
+    350,
+    400
 ];
 
 var source = Rx.Observable
-	.for(array, function (x) {
-		return Rx.Observable.timer(x);
-	})
-	.map(function (x, i) { return i; })
-	.timeoutWithSelector(Rx.Observable.timer(250), function (x) { 
-		return Rx.Observable.timer(400); 
-	});
-	
+    .for(array, function (x) {
+        return Rx.Observable.timer(x);
+    })
+    .map(function (x, i) { return i; })
+    .timeoutWithSelector(Rx.Observable.timer(250), function (x) { 
+        return Rx.Observable.timer(400); 
+    });
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6674,21 +7054,21 @@ var subscription = source.subscribe(
 
 /* With other */
 var array = [
-	200,
-	300,
-	350,
-	400
+    200,
+    300,
+    350,
+    400
 ];
 
 var source = Rx.Observable
-	.for(array, function (x) {
-		return Rx.Observable.timer(x);
-	})
-	.map(function (x, i) { return i; })
-	.timeoutWithSelector(Rx.Observable.timer(250), function (x) { 
-		return Rx.Observable.timer(400); 
-	}, Rx.Observable.return(42));
-	
+    .for(array, function (x) {
+        return Rx.Observable.timer(x);
+    })
+    .map(function (x, i) { return i; })
+    .timeoutWithSelector(Rx.Observable.timer(250), function (x) { 
+        return Rx.Observable.timer(400); 
+    }, Rx.Observable.return(42));
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6727,10 +7107,10 @@ Records the timestamp for each value in an observable sequence.
 #### Example
 ```js
 var source = Rx.Observable.timer(0, 1000)
-	.timestamp()
-	.map(function (x) { return x.value + ':' + x.timestamp; })
-	.take(5);
-	
+    .timestamp()
+    .map(function (x) { return x.value + ':' + x.timestamp; })
+    .take(5);
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -6767,9 +7147,9 @@ Creates a list from an observable sequence.
 #### Example
 ```js
 var source = Rx.Observable.timer(0, 1000)
-	.take(5)
-	.toArray();
-	
+    .take(5)
+    .toArray();
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -7131,13 +7511,13 @@ Filters the elements of an observable sequence based on a predicate.  This is an
 var range = Rx.Observable.range(0, 5);
 
 var source = range.zip(
-	range.skip(1), 
-	range.skip(2), 
-	function (s1, s2, s3) {
-		return s1 + ':' + s2 + ':' + s3;
-	}
+    range.skip(1), 
+    range.skip(2), 
+    function (s1, s2, s3) {
+        return s1 + ':' + s2 + ':' + s3;
+    }
 );
-	
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
@@ -7158,12 +7538,12 @@ var subscription = source.subscribe(
 var array = [3, 4, 5];
 
 var source = Rx.Observable.range(0, 3)
-	.zip(
-		array,
-		function (s1, s2) {
-			return s1 + ':' + s2;
-		});
-	
+    .zip(
+        array,
+        function (s1, s2) {
+            return s1 + ':' + s2;
+        });
+    
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
