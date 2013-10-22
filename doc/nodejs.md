@@ -14,7 +14,6 @@ The Reactive Extensions for JavaScript provides integration points to the core N
 ### Event Handlers
 
 - [`fromEvent`](#rxnodefromeventeventemitter-eventname)
-- [`toEventEmitter`](#rxnodetoeventemitterobservable-eventname-handler)
 
 ### Stream Handlers
 
@@ -116,7 +115,7 @@ var subscription = source.subscribe(observer);
 
 ### Event Handlers ###
 
-### <a id="rxnodefromeventeventemitter-eventname"></a>`Rx.Node.fromEventEmitter(eventEmitter, eventName)`
+### <a id="rxnodefromeventeventemitter-eventname"></a>`Rx.Node.fromEvent(eventEmitter, eventName)`
 <a href="#rxnodefromeventeventemitter-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L83-L95 "View in source") 
 
 Handles an event from the given EventEmitter as an observable sequence.
@@ -135,7 +134,7 @@ var Rx = require('Rx');
 
 var emitter = new EventEmitter();
 
-var source = Rx.Node.fromEventEmitter(emitter, 'data');
+var source = Rx.Node.fromEvent(emitter, 'data');
 
 var observer = Rx.Observer.create(
     function (x) {
