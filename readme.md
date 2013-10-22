@@ -109,13 +109,13 @@ suggestions.subscribe( function (data) {
     $results.empty();
 
     $.each(res, function (_, value) {
-        $('<li>' + value + '</li>').appendTo(results);
+        $('<li>' + value + '</li>').appendTo($results);
     });    
 }, function (e) {
     /* handle any errors */
     $results.empty();
 
-    $('<li>Error: ' + error + '</li>').appendTo(results);    
+    $('<li>Error: ' + error + '</li>').appendTo($results);    
 });
 ```
 
