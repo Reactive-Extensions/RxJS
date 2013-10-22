@@ -15,15 +15,15 @@
     <tags>Rx RxJS Reactive Extensions Observable</tags>
     <dependencies>
       <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-      <dependency id="RxJS-Main" version="2.1" />
-      <dependency id="RxJS-Aggregates" version="2.1" />
-      <dependency id="RxJS-Binding" version="2.1" />
-      <dependency id="RxJS-Coincidence" version="2.1" />
-      <dependency id="RxJS-JoinPatterns" version="2.1" />
-      <dependency id="RxJS-Time" version="2.1" />
-      <dependency id="RxJS-Experimental" version="2.1" />
-      <dependency id="RxJS-Testing" version="2.1" />
-      <dependency id="RxJS-VirtualTime" version="2.1" />
+      <dependency id="RxJS-Main" version="2.2" />
+      <dependency id="RxJS-Aggregates" version="2.2" />
+      <dependency id="RxJS-Binding" version="2.2" />
+      <dependency id="RxJS-Coincidence" version="2.2" />
+      <dependency id="RxJS-JoinPatterns" version="2.2" />
+      <dependency id="RxJS-Time" version="2.2" />
+      <dependency id="RxJS-Experimental" version="2.2" />
+      <dependency id="RxJS-Testing" version="2.2" />
+      <dependency id="RxJS-VirtualTime" version="2.2" />
     </dependencies>
   </metadata>
 </package>

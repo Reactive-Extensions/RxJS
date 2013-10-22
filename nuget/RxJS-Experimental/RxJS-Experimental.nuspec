@@ -4,7 +4,7 @@
     <id>RxJS-Experimental</id>
     <title>Reactive Extensions for JavaScript - Experimental</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-    <version>2.1.21</version>
+    <version>2.2.0</version>
     <authors>Microsoft Corporation</authors>
     <description>Reactive Extensions for JavaScript library with experimental operators.</description>
     <projectUrl>http://rx.codeplex.com</projectUrl>
@@ -15,7 +15,7 @@
     <tags>Rx RxJS Reactive Extensions Observable</tags>
     <dependencies>
       <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-      <dependency id="RxJS-Main" version="2.1" />
+      <dependency id="RxJS-Main" version="2.2" />
     </dependencies>
   </metadata>
   <files>

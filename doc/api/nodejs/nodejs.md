@@ -145,7 +145,7 @@ var Rx = require('Rx');
 
 var emitter = new EventEmitter();
 
-var source = Rx.Node.fromEventEmitter(emitter, 'data');
+var source = Rx.Node.fromEvent(emitter, 'data');
 
 var observer = Rx.Observer.create(
     function (x) {
