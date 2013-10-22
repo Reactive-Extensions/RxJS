@@ -757,7 +757,7 @@ Dist:
 
 * * *
 
-### <a id="rxobservablefromeventpatternaddhander-removehandler"></a>`Rx.Observable.fromEventHandler(addHandler, removeHandler)`
+### <a id="rxobservablefromeventpatternaddhander-removehandler"></a>`Rx.Observable.fromEventPattern(addHandler, removeHandler)`
 <a href="#rxobservablefromeventpatternaddhander-removehandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js#L7-L20 "View in source") 
 
 Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
