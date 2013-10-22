@@ -844,10 +844,10 @@ var e = new EventEmitter();
 // Wrap EventEmitter
 var source = Rx.Observable.fromEventPattern(
     function add (h) {
-        e.on('data', h);
+        e.addListener('data', h);
     },
     function remove (h) {
-        e.off('data', h);
+        e.removeListener('data', h);
     }
 );
 
