@@ -90,7 +90,7 @@ Rx.Node = {
             eventEmitter.on(eventName, handler);
 
             return function () {
-                eventEmitter.off(eventName, handler);
+                eventEmitter.removeListener(eventName, handler);
             }
         }).publish().refCount();
     },
