@@ -31,12 +31,18 @@ There are a number of ways of getting started with RxJS including:
 
 Getting started with the Reactive Extensions for JavaScript is easy.  Let's start with the basics here:
 
-- [What are the Reactive Extensions](gettingstarted/what.md)
-- [Creating Observable Sequences](gettingstarted/creating.md)
-- [Querying Observable Sequences](gettingstarted/querying.md)
-- [Combining Observable Sequences](gettingstarted/combining.md)
-- [Error Handling](gettingstarted/errors.md)
-- [Schedulers and Testability](gettingstarted/schedulers.md)
+- [What are the Reactive Extensions?](gettingstarted/what.md)
+- [Exploring Major Concepts in RxJS](gettingstarted/exploring.md)
+- [Creating and Querying Observable Sequences](gettingstarted/creatingquerying.md)
+   1. [Creating and Subscribing to Simple Observable Sequences](creating.md)
+   2. [Bridging to Events](events.md)
+   3. [Bridging to Callbacks and Promises](callbacks.md)
+   4. [Querying Observable Sequences](querying.md)
+   5. [Operators by Category](operators.md)
+- [Subjects](gettingstarted/subjects.md)
+- [Scheduling and Concurrency](gettingstarted/schedulers.md)
+- [Testing and Debugging](gettingstarted/testing.md)
+- [Implementing Your Own Operators](gettingstarted/operators.md)
 
 ## How Do I? ##
 

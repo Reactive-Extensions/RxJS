@@ -123,7 +123,7 @@ And there you have it!
 
 ##  API Documentation ##
 
-You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples).
+You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples) and plenty of [unit tests](https://github.com/Reactive-Extensions/RxJS/tree/master/tests).
 
 ## RESOURCES
 
