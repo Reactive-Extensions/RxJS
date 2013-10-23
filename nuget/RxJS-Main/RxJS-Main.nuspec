@@ -17,7 +17,7 @@
   <files>
     <file src="..\..\rx.js" target="content\Scripts\rx.js" />
     <file src="..\..\rx.min.js" target="content\Scripts\x.min.js" />
-    <file src="..\..\rx.modern.js" target="content\Scripts\rx.modern.js" />
-    <file src="..\..\rx.modern.min.js" target="content\Scripts\x.modern.min.js" />    
+    <file src="..\..\rx.compat.js" target="content\Scripts\rx.compat.js" />
+    <file src="..\..\rx.compat.min.js" target="content\Scripts\x.compat.min.js" />    
   </files>
 </package>
