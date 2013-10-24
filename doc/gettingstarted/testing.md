@@ -80,6 +80,7 @@ collectionAssert.assertEqual(input.subscriptions, [
     subscribe(400, 500)
 ]);    
 ```
+
 ## Debugging your Rx application ##
 
 You can use the [`do`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypedoobserver--onnext-onerror-oncompleted) operator to debug your Rx application. The `do` operator allows you to specify various actions to be taken for each item of observable sequence (e.g., print or log the item, etc.). This is especially helpful when you are chaining many operators and you want to know what values are produced at each level.
@@ -100,8 +101,8 @@ var seq1 = Rx.Observable.interval(1000)
 // => 4 
 // => buffer is full 
 // => Sum of the buffer is 10
-...          
-```js
+// ...          
+```
 
 As you can see from this sample, a subscription is on the recipient end of a series of chained observable sequences. At first, we create an observable sequence of integers separate by a second using the Interval operator. Then, we put 5 items into a buffer using the Buffer operator, and send them out as another sequence only when the buffer is full. Lastly, this is handed over to the Subscribe operator. Data propagate down all these intermediate sequences until they are pushed to the observer. In the same way, subscriptions are propagated in the reverse direction to the source sequence. By inserting the `do` operator in the middle of such propagations, you can "spy" on such data flow just like you use console.log  perform debugging.
 
