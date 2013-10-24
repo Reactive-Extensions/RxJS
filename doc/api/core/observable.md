@@ -20,7 +20,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`fromArray`](#rxobservablefromarrayarray-scheduler)
 - [`fromCallback`](#rxobservablefromcallbackfunc-scheduler-context)
 - [`fromEvent`](#rxobservablefromeventelement-eventname)
-- [`fromEventPattern`](#rxobservablefromeventpatternaddhander-removehandler)
+- [`fromEventPattern`](#rxobservablefromeventpatternaddhandler-removehandler)
 - [`fromNodeCallback`](#rxobservablefromnodecallbackfunc-scheduler-context)
 - [`fromPromise`](#rxobservablefrompromisepromise)
 - [`generate`](#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
@@ -41,7 +41,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`using`](#rxobservableusingresourcefactory-observablefactory)
 - [`when`](#rxobservablewhenargs)
 - [`while | whileDo`](#rxobservablewhilecondition-source)
-
+- [`zip`](#rxobservablezipargs)
 
 <!-- div -->
 
@@ -95,6 +95,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`join`](#rxobservableprototypejoinright-leftdurationselector-rightdurationselector-resultselector)
 - [`last`](#rxobservableprototypelastpredicate-thisarg)
 - [`lastOrDefault`](#rxobservableprototypelastordefaultpredicate-defaultvalue-thisarg)
+- [`let | letBind`](#rxobservableprototypeletfunc)
 - [`manySelect`](#rxobservableprototypemanyselectselector-scheduler)
 - [`map`](#rxobservableprototypemapselector-thisarg)
 - [`max`](#rxobservableprototypemaxcomparer)
@@ -1815,6 +1816,54 @@ var subscription = source.subscribe(
 ### Location
 
 - rx.joinpatterns.js
+
+* * *
+
+### <a id="rxobservablezipargs"></a>`Rx.Observable.zip(...args)`
+<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3018-L3022 "View in source") 
+
+Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
+
+#### Arguments
+1. `args` *(Array|arguments)*: Observable sources.
+
+#### Returns
+*(Observable)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+
+#### Example
+```js
+/* Using arguments */
+var range = Rx.Observable.range(0, 5);
+
+var source = Observable.zip(
+    range,
+    range.skip(1), 
+    range.skip(2), 
+    function (s1, s2, s3) {
+        return s1 + ':' + s2 + ':' + s3;
+    }
+);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0:1:2
+// => Next: 1:2:3
+// => Next: 2:3:4
+// => Completed
+```
+
+### Location
+
+- rx.js
 
 * * *
 
@@ -4455,6 +4504,64 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.aggregates.js
+
+* * *
+
+- [`let`](#rxobservableprototypeletfunc)
+
+### <a id="rxobservableprototypeletfunc"></a>`Rx.Observable.prototype.let(func)`
+<a href="#rxobservableprototypeletfunc">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L76-L78 "View in source") 
+
+Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
+
+This operator allows for a fluent style of writing queries that use the same sequence multiple times.  There is an alias of `letBind` for browsers older than IE 9.
+
+#### Arguments
+1. `func` *(Function)*: Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+
+#### Example
+```js
+var obs = Rx.Observable.range(1, 3);
+
+var source = obs.let(function (o) { return o.concat(o); });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1 
+// => Next: 2 
+// => Next: 3 
+// => Next: 1 
+// => Next: 2 
+// => Next: 3 
+// => Completed 
+```
+
+#### Location
+
+- rx.experimental.js
 
 * * *
 
