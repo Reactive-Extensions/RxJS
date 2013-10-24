@@ -5,59 +5,151 @@ title: RxJS Reactive Extensions for JavaScript
 
 <h2 class="tag"> Clean Composable Code</h2>
 
-# What is RxJS?
+# The Reactive Extensions for JavaScript... #
+*...is a set of libraries to compose asynchronous and event-based programs using observable collections and LINQ-style query operators in JavaScript*
 
-RxJS or _Reactive Extensions for JavaScript_ is a library for transforming, composing, and querying streams of data. We mean all kinds of data too, from simple arrays of values, to series of events (unfortunate or otherwise), to complex flows of data.
+## About the Reactive Extensions ##
 
-RxJS makes it easy to:
+The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators modeled after Language Integrated Queries ([LINQ](http://en.wikipedia.org/wiki/LINQ)). Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using LINQ operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + LINQ + Schedulers.
+Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming as a matter of course. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
 
-* _transform_ data using methods like [aggregation](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-aggregate) and [projection](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-select).
-* _compose_ data using methods like [zip](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-zip) and [selectMany](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-selectMany).
-* _query_ data using methods like [where](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-where) and [any](https://github.com/Reactive-Extensions/RxJS/wiki/Observable#wiki-any).
+Using RxJS, you can represent multiple asynchronous data streams (that come from diverse sources, e.g., stock quote, tweets, computer events, web service requests, etc.), and subscribe to the event stream using the Observer object. The Observable notifies the subscribed Observer instance whenever an event occurs.
 
-## Why use it?
+Because observable sequences are data streams, you can query them using standard LINQ query operators implemented by the Observable type. Thus you can filter, project, aggregate, compose and perform time-based operations on multiple events easily by using these static LINQ operators. In addition, there are a number of other reactive stream specific operators that allow powerful queries to be written. Cancellation, exceptions, and synchronization are also handled gracefully by using the methods on the Observable object.
 
-Here's a few reasons for choosing RxJS:
+This set of libraries include:
 
-* Our emphasis is on _queryability_ and _composibility_. Consolidating disparate streams into a meaningful whole is a first class story.
-* We take a general approach to data. We're not tied to any specific domain. This gives you a common vocabulary for dealing with streams of arbitrary data.
-* The dust has settled on our API. RxJS has a history and our API has gone through some hardening. 
+- **rx.js** - Core library
+- **rx.modern.js** - Core library for ES5 compliant browsers and runtimes
+- **rx.aggregates.js** - aggregation event processing query operations
+- **rx.binding.js** - binding operators including multicast, publish, publishLast, publishValue, and replay
+- **rx.coincidence.js** - reactive coincidence join event processing query operations
+- **rx.experimental.js** - experimental operators including imperative operators and forkJoin
+- **rx.joinpatterns.js** - join patterns event processing query operations
+- **rx.testing.js** - used to write unit tests for complex event processing queries.
+- **rx.time.js** - time-based event processing query operations.
 
+## Why RxJS? ##
 
-# Install
+One question you may ask yourself, is why RxJS?  What about Promises?  Promises are good for solving asynchronous operations such as querying a service with an XMLHttpRequest, where the expected behavior is one value and then completion.  The Reactive Extensions for JavaScript unifies both the world of Promises, callbacks as well as evented data such as DOM Input, Web Workers, Web Sockets.  Once we have unified these concepts, this enables rich composition.
 
-There are multiple ways of getting started with the Reactive Extensions. 
+To give you an idea about rich composition, we can create an autocompletion service which takes the user input from a text input and then query a service, making sure not to flood the service with calls for every key stroke, but instead allow to go at a more natural pace.
 
-## Browser
-
-Download [the latest](https://raw.github.com/Reactive-Extensions/RxJS/master/rx.js) from our repository. Or if you prefer, grab the [minified version](https://raw.github.com/Reactive-Extensions/RxJS/master/rx.min.js);
+First, we'll reference the JavaScript files...
 
     <script src="rx.js"></script>
-
-Along with a number of our extras for RxJS:
-    
-    <script src="rx.aggregates.js"></script>
     <script src="rx.binding.js"></script>
-    <script src="rx.coincidencejs"></script>
-    <script src="rx.experimental.js"></script>
-    <script src="rx.joinpatterns.js"></script>
-    <script src="rx.testing.js"></script>
     <script src="rx.time.js"></script>
+    <script src="rx.dom.js"></script>
 
-## NPM:
+Next, we'll get the user input from an input, listening to the keyup event.
 
-    npm install rxjs
-    npm install -g rxjs
+```js
+/* Only get the value from each key up */
+var keyups = Rx.DOM.fromEvent(input, 'keyup')
+    .map(function (e) {
+        return e.target.value;
+    })
+    .filter(function (text) {
+        return text.length > 2;
+    });
 
-Using in Node.js:
+/* Now throttle/debounce the input for 500ms */
+var throttled = keyups
+    .throttle(500 /* ms */);
+
+/* Now get only distinct values, so we eliminate the arrows and other control characters */
+var distinct = keyups
+    .distinctUntilChanged();
+```
+
+Now, let's query Wikipedia!
+
+```js
+function searchWikipedia(term) {
+    var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
+        + '&format=json' 
+        + '&search=' + encodeURI(term);
+    return Rx.Observable.getJSONPRequest(url);
+}
+```
+
+Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call select to get the value, and then calling `switch` or its alias `switchLatest` to ensure that we're not introducing any out of order sequence calls.  We'll filter the results to make sure we get values.
+
+```js
+var suggestions = distinct
+    .map(function (text) {
+        return searchWikipedia(text);
+    })
+    .switchLatest()
+    .filter(function (data) {
+        return data[1] && data[1].length > 0;
+    });
+```
+
+Finally, we call the subscribe method on our observable sequence to start pulling data.
+
+```js
+suggestions.subscribe( function (data) {
+    var results = data[1];
+    /* Do something with the data like binding */
+}, function (e) {
+    /* handle any errors */
+});
+```
+
+And there you have it!
+
+##  API Documentation ##
+
+You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples).
+
+## RESOURCES
+
+- Blogs
+    - [Rx Team Blog](http://blogs.msdn.com/b/rxteam)
+
+- Videos
+    - [Hello RxJS - Channel 9](http://channel9.msdn.com/Blogs/Charles/Introducing-RxJS-Reactive-Extensions-for-JavaScript)
+    - [MIX 2011](http://channel9.msdn.com/events/MIX/MIX11/HTM07)
+    - [RxJS Today and Tomorrow - Channel 9](http://channel9.msdn.com/Blogs/Charles/Matthew-Podwysocki-and-Bart-J-F-De-Smet-RxJS-Today-and-Tomorrow)
+    - [Cascadia.js 2012](http://www.youtube.com/watch?v=FqBq4uoiG0M)
+
+- Reference Material
+    - [Intro to Rx](http://introtorx.com/)
+    - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
+
+## GETTING STARTED
+
+There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
+
+### Download the Source
+
+    git clone https://github.com/Reactive-Extensions/rxjs.git
+    cd ./rxjs
+
+### Installing with [NPM](https://npmjs.org/)
+
+    npm install rx
+    npm install -g rx
+
+### Using with Node.js and Ringo.js
 
     var Rx = require('rx');
 
-## NuGet:
+### Installing with [Bower](http://bower.io/)
+
+    bower install rx
+
+### Installing with [Jam](http://jamjs.org/)
+    
+    jam install rx
+
+### Installing All of RxJS via [NuGet](http://nuget.org/)
 
     Install-Package RxJS-All
 
-Or install via NuGet individual packages:
+### Install individual packages via [NuGet](http://nuget.org/):
 
     Install-Package RxJS-Main
     Install-Package RxJS-Aggregates
@@ -68,162 +160,52 @@ Or install via NuGet individual packages:
     Install-Package RxJS-Testing
     Install-Package RxJS-Time
 
-## AMD
-Using RxJS with an AMD loader such as Require.js
+### In a Browser:
 
-    require({
-        'paths': {
-            'rx': 'path/to/rx.js'
-        }
-    },
-    ['rx'], function(Rx) {
-        var obs = Rx.Observable.returnValue(42);
-        obs.subscribe(function (x) { console.log(x); });
-    });
+    <script src="rx.js"></script>
 
-# A Brief Example
+### Along with a number of our extras for RxJS:
+    
+    <script src="rx.aggregates.js"></script>
+    <script src="rx.binding.js"></script>
+    <script src="rx.coincidencejs"></script>
+    <script src="rx.experimental.js"></script>
+    <script src="rx.joinpatterns.js"></script>
+    <script src="rx.testing.js"></script>
+    <script src="rx.time.js"></script>
 
-Let's see how RxJS can help to compose UI events.
+### Using RxJS with an AMD loader such as Require.js
 
- > RxJS is to events as promises are to async.
-
-<pre><code data-language="JavaScript">// Here's an example using jQuery
-
-var $dragTarget = $('#dragTarget'), 
-    $doc = $(document);
-
-var mouseup = $dragTarget.mouseupAsObservable(),
-var mousemove = $doc.mousemoveAsObservable(),
-var mousedown = $doc.mousedownAsObservable().select(function(ev) {
-        ev.preventDefault();
-        return {
-            left: event.clientX - dragTarget.offset().left,
-            top: event.clientY - dragTarget.offset().top
-        };
-    });
-
-var mousedrag = mousedown.selectMany(function(imageOffset) {
-        return mousemove.select(function(pos) {
-            return {
-                left: pos.clientX - imageOffset.left,
-                top: pos.clientY - imageOffset.top
-            };
-        }).takeUntil(mouseup);
-    });
-
-mousedrag.subscribe(function(pos) {
-     $dragTarget.css({top: pos.top, left: pos.left });
+```js
+require({
+    'paths': {
+        'rx': 'path/to/rx.js'
+    }
+},
+['rx'], function(Rx) {
+    var obs = Rx.Observable.returnValue(42);
+    obs.subscribe(function (x) { console.log(x); });
 });
-</code></pre>
+```
+## Compatibility ##
 
-# Compatible Libraries
+RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+. 
 
-RxJS has lots of friends because it knows how to play nice with others.
-Here's a list of the current bindings using RxJS with your favorite libraries and stacks.
+## License ##
 
-* [HTML DOM](https://github.com/Reactive-Extensions/rxjs-html)
-* [NodeJS](https://github.com/Reactive-Extensions/rxjs-node)
-* [jQuery](https://github.com/Reactive-Extensions/rxjs-jquery)
-* [JavaScript Library for Windows 8](https://github.com/Reactive-Extensions/rxjs-winjs)
-* [MooTools](https://github.com/Reactive-Extensions/rxjs-mootools)
-* [Ext JS](https://github.com/Reactive-Extensions/rxjs-extjs)
-* [Dojo Toolkit](https://github.com/Reactive-Extensions/rxjs-dojo)
 
-# More Examples
+Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
+Microsoft Open Technologies would like to thank its contributors, a list
+of whom are at http://rx.codeplex.com/wikipage?title=Contributors.
 
-Each of the binding repositories listed above has relevant samples. 
-There's also a [demo application](https://github.com/Reactive-Extensions/rxjs-winjs-sample) for Windows 8.
+Licensed under the Apache License, Version 2.0 (the "License"); you
+may not use this file except in compliance with the License. You may
+obtain a copy of the License at
 
-Here's one more example though demonstrating how to implement an autocomplete search with RxJS:
+http://www.apache.org/licenses/LICENSE-2.0
 
-<pre><code data-language="JavaScript">// This uses the HTML DOM bindings
-function searchWikipedia (term) {
-    var url = 'http://en.wikipedia.org/w/api.php?action=opensearch&format=json&search='
-        + term + '&callback=JSONPCallback';
-    return Rx.Observable.getJSONPRequest(url);
-}
-
-function clearChildren (element) {
-    while (element.firstChild) {
-        element.removeChild(element.firstChild);
-    }                
-}
-
-// We'll call this once the DOM is ready.
-function initialize () {
-    var input = document.getElementById('textInput')
-    , ul = document.getElementById('results')
-
-    , keyup = Rx.Observable.fromEvent(input, 'keyup').select(function(ev) {
-            return ev.target.value;
-        }).where(function(text) {
-            return text.length > 2;
-        }).throttle(500)
-        .distinctUntilChanged(),
-
-        searcher = keyup.select(function (text) {
-            return searchWikipedia(text);
-        }).switchLatest()
-        .where(function (data) {
-            return data.length === 2; 
-        });
-
-    searcher.subscribe(function (data) {                    
-        var results = data[1];
-
-        clearChildren(ul);
-
-        for (var i = 0, len = results.length; i < len; i++) {
-            var li = document.createElement('li');
-            li.innerHTML = results[i];
-            ul.appendChild(li);
-        }
-    }, function (error) {
-        clearChildren(ul);
-        var li = document.createElement('li');
-        li.innerHTML = 'Error: ' + error.message;
-        ul.appendChild(li);
-    });
-
-}
-</code></pre>
-
-<pre><code data-language="HTML"> <!-- here's the necessary markup -->
-<input type="text" id="textInput"></input>
-<ul id="results"></ul>
-</code></pre>
-
-# Documentation
-
-Get a deeper overview from the project's [readme](https://github.com/Reactive-Extensions/RxJS/blob/master/readme.md).
-
-##  API Documentation ##
-_More is on the way!_
-
-Core:
-
-- Observer
-- [Observable](https://github.com/Reactive-Extensions/RxJS/wiki/Observable)
-
-Subjects:
-
- - AsyncSubject
- - BehaviorSubject
- - ReplaySubject
- - Subject
-
-Schedulers:
-
-- Scheduler object
-- Scheduler.currentThread
-- Scheduler.immediate
-- Scheduler.timeout
-- VirtualTimeScheduler
-
-Disposables:
-
-- CompositeDisposable
-- Disposable
-- RefCountDisposable
-- SerialDisposable
-- SingleAssignmentDisposable
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
+implied. See the License for the specific language governing permissions
+and limitations under the License.
