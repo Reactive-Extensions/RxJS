@@ -13,7 +13,7 @@ RxJS has no dependencies which complements and interoperates smoothly with both 
    <tr>
       <td>Pull/Synchronous/Interactive</td>
       <td>Object</td>
-      <td>Iterable Object (Array, Object)</td>
+      <td>Iterables (Array | Set | Map | Object)</td>
    </tr>
    <tr>
       <td>Push/Asynchronous/Reactive</td>
@@ -38,7 +38,7 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
    2. [Bridging to Events](gettingstarted/events.md)
    3. [Bridging to Callbacks and Promises](gettingstarted/callbacks.md)
    4. [Querying Observable Sequences](gettingstarted/querying.md)
-   5. [Operators by Category](gettingstarted/operators.md)
+   5. [Operators by Category](gettingstarted/categories.md)
 - [Subjects](gettingstarted/subjects.md)
 - [Scheduling and Concurrency](gettingstarted/schedulers.md)
 - [Testing and Debugging](gettingstarted/testing.md)
