@@ -49,7 +49,6 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 There is a large surface area with the Reactive Extensions for JavaScript, so it might be hard to know where to start.  This will serve as a guide to answer some of the more basic questions.
 
 1. [How do I wrap an existing API?](howdoi/wrap.md)
-2. [How do I create my own custom operators?](howdoi/createcustomoperators.md)
 
 ## Reactive Extensions Class Library
 
