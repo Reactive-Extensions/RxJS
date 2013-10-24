@@ -60,3 +60,49 @@ seq.groupBy(...)
         .select(function (x) { return x.observeOn(Rx.Scheduler.timeout); })
         .select(function (x)  { return expensive(x); })  // perform operations that are expensive on resources
 ```
+
+## When to Use Which Scheduler ##
+
+To make things a little easier when you are creating your own operators, or using the standard built-in ones, which scheduler you should use.  The following table lays out each scenario with the suggested scheduler.
+
+<table>
+	<th>
+		Scenario
+	</th>
+	<th>
+		Scheduler
+	</th>
+	<tr>
+		<td>Constant Time Operations</td>
+		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/scheduler.md#rxschedulerimmediate">Rx.Scheduler.immediate</a></td>
+	</tr>
+	<tr>
+		<td>Tail Recursive Operations</td>
+		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/scheduler.md#rxschedulerimmediate">Rx.Scheduler.immediate</a></td>
+	</tr>
+	<tr>
+		<td>Iteration Operations</td>
+		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/scheduler.md#rxschedulercurrentthread">Rx.Scheduler.currentThread</a></td>
+	</tr>
+	<tr>
+		<td>Time-based Operations</td>
+		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/scheduler.md#rxschedulertimeout">Rx.Scheduler.timeout</a></td>
+	</tr>
+	<tr>
+		<td>Asynchronous Conversions</td>
+		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/scheduler.md#rxschedulertimeout">Rx.Scheduler.timeout</a></td>
+	</tr>
+	<tr>
+		<td>Historical Data Operations</td>
+		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/historicalscheduler.md">Rx.HistoricalScheduler</a></td>
+	</tr>	
+	<tr>
+		<td>Unit Testing</td>
+		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/testing/testscheduler.md">Rx.TestScheduler</a></td>
+	</tr>			
+</table>
+
+## See Also
+
+*Reference*
+- [Testing and Debugging Observable Sequences](testing.md)
