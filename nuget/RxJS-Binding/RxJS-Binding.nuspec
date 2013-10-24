@@ -3,7 +3,7 @@
   <metadata>
     <id>RxJS-Binding</id>
     <title>Reactive Extensions for JavaScript - Binding</title>
-    <version>2.2.0</version>
+    <version>2.2.2</version>
     <authors>Microsoft Corporation</authors>
     <description>Reactive Extensions for JavaScript library with binding operationrs.</description>
     <projectUrl>http://rx.codeplex.com</projectUrl>

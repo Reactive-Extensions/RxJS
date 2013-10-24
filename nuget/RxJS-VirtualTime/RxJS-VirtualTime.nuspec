@@ -4,7 +4,7 @@
     <id>RxJS-VirtualTime</id>
     <title>Reactive Extensions for JavaScript - Virtual Time-Based Schedulers</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-    <version>2.2.0</version>
+    <version>2.2.2</version>
     <authors>Microsoft Corporation</authors>
     <description>Reactive Extensions for JavaScript library with virtual time based schedulers.</description>
     <projectUrl>http://go.microsoft.com/fwlink/?LinkID=179929</projectUrl>
