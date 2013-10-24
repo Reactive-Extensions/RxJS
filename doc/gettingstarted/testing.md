@@ -43,42 +43,45 @@ var onNext = Rx.ReactiveTest.onNext,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-var scheduler = new Rx.TestScheduler();
+test('buffer should join strings', function () {
 
-var input = scheduler.createHotObservable(
-    onNext(100, 'abc'),
-    onNext(200, 'def'),
-    onNext(250, 'ghi'),
-    onNext(300, 'pqr'),
-    onNext(450, 'xyz'),
-    onCompleted(500)
-);
+    var scheduler = new Rx.TestScheduler();
 
-var results = scheduler.startWithTiming(
-    function () {
-        return input.buffer(function () { 
-            return input.throttle(100, scheduler);
-        })
-        .map(function (b) {
-            return b.join(',');
-        });
-    }, 
-    50,  // created
-    150, // subscribed 
-    600  // disposed
-);
+    var input = scheduler.createHotObservable(
+        onNext(100, 'abc'),
+        onNext(200, 'def'),
+        onNext(250, 'ghi'),
+        onNext(300, 'pqr'),
+        onNext(450, 'xyz'),
+        onCompleted(500)
+    );
 
-collectionAssert.assertEqual(results.messages, [
-    onNext(400, 'def,ghi,pqr'),
-    onNext(500, 'xyz'),
-    onCompleted(500)
-]);
+    var results = scheduler.startWithTiming(
+        function () {
+            return input.buffer(function () { 
+                return input.throttle(100, scheduler);
+            })
+            .map(function (b) {
+                return b.join(',');
+            });
+        }, 
+        50,  // created
+        150, // subscribed 
+        600  // disposed
+    );
 
-collectionAssert.assertEqual(input.subscriptions, [
-    subscribe(150, 500),
-    subscribe(150, 400),
-    subscribe(400, 500)
-]);    
+    collectionAssert.assertEqual(results.messages, [
+        onNext(400, 'def,ghi,pqr'),
+        onNext(500, 'xyz'),
+        onCompleted(500)
+    ]);
+
+    collectionAssert.assertEqual(input.subscriptions, [
+        subscribe(150, 500),
+        subscribe(150, 400),
+        subscribe(400, 500)
+    ]);       
+}); 
 ```
 
 ## Debugging your Rx application ##
