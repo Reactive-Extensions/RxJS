@@ -898,7 +898,7 @@ var fs = require('fs'),
     Rx = require('rx');
 
 // Wrap fs.exists
-var rename = Rx.Observable.fromCallback(fs.rename);
+var rename = Rx.Observable.fromNodeCallback(fs.rename);
 
 // Rename file which returns no parameters except an error
 var source = rename('file1.txt', 'file2.txt');
