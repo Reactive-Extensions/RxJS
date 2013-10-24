@@ -5,10 +5,7 @@ title: RxJS Reactive Extensions for JavaScript
 
 <h2 class="tag"> Clean Composable Code</h2>
 
-# The Reactive Extensions for JavaScript... #
-*...is a set of libraries to compose asynchronous and event-based programs using observable collections and LINQ-style query operators in JavaScript*
-
-## About the Reactive Extensions ##
+# About #
 
 The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators modeled after Language Integrated Queries ([LINQ](http://en.wikipedia.org/wiki/LINQ)). Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using LINQ operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + LINQ + Schedulers.
 Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming as a matter of course. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
@@ -29,7 +26,7 @@ This set of libraries include:
 - **rx.testing.js** - used to write unit tests for complex event processing queries.
 - **rx.time.js** - time-based event processing query operations.
 
-## Why RxJS? ##
+# Why RxJS? #
 
 One question you may ask yourself, is why RxJS?  What about Promises?  Promises are good for solving asynchronous operations such as querying a service with an XMLHttpRequest, where the expected behavior is one value and then completion.  The Reactive Extensions for JavaScript unifies both the world of Promises, callbacks as well as evented data such as DOM Input, Web Workers, Web Sockets.  Once we have unified these concepts, this enables rich composition.
 
@@ -100,11 +97,11 @@ suggestions.subscribe( function (data) {
 
 And there you have it!
 
-##  API Documentation ##
+#  API Documentation #
 
 You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples).
 
-## RESOURCES
+# Resources
 
 - Blogs
     - [Rx Team Blog](http://blogs.msdn.com/b/rxteam)
@@ -119,7 +116,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Intro to Rx](http://introtorx.com/)
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
 
-## GETTING STARTED
+# Getting Started
 
 There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
 
@@ -187,12 +184,11 @@ require({
     obs.subscribe(function (x) { console.log(x); });
 });
 ```
-## Compatibility ##
+# Compatibility #
 
 RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+. 
 
-## License ##
-
+# License #
 
 Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 Microsoft Open Technologies would like to thank its contributors, a list
