@@ -43,16 +43,25 @@ Rx.Node = {
     },
 
     /**
-     * @deprecated Use Rx.Observable.fromEvent from rx.async.js instead.
-     *
      * Handles an event from the given EventEmitter as an observable sequence.
      *
      * @param {EventEmitter} eventEmiiter The EventEmitter to subscribe to the given event.
      * @param {String} eventName The event name to subscribe
-     * @returns {Observable} An observable sequence generated from the named event from the given EventEmitter.
+     * @returns {Observable} An observable sequence generated from the named event from the given EventEmitter.  The data will be returned as an array of arguments to the handler.
      */
     fromEvent: function (eventEmitter, eventName) {
-        return Observable.fromEvent(eventEmitter, eventName);
+        return Observable.create(function (observer) {
+
+            function handler () {
+                observer.onNext(arguments);
+            }
+
+            eventEmitter.addListener(eventName, handler);
+
+            return function () {
+                eventEmitter.removeListener(eventName, handler);
+            };
+        });
     },
 
     /**
