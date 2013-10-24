@@ -9,12 +9,14 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <tr>
       <td>Creating an observable sequence</td>
       <td>
-      1. [`create`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablecreatesubscribe)
-      2. [`createWithDisposable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablecreatewithdisposablesubscribe)
-      3. [`defer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservabledeferobservablefactory)
-      4. [`generate`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
-      5. [`generateWithAbsoluteTime`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
-      6. [`generateWithRelativeTime`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
+      <ol>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablecreatesubscribe">create</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablecreatewithdisposablesubscribe">createWithDisposable</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservabledeferobservablefactory">defer</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">generate</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler">generateWithAbsoluteTime</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">generateWithRelativeTime</a></li>
+      </ol>
       </td>
    </tr>
    <tr>
