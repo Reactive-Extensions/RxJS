@@ -44,8 +44,8 @@ subject.onCompleted();
 - [`hasObservers`](#rxbehaviorsubjectprototypehasobservers)
 
 ## Inherited Classes ##
-- [`Rx.Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/observable.md)
-- [`Rx.Observer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/observer.md)
+- [`Rx.Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/core/observable.md)
+- [`Rx.Observer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/core/observer.md)
 
 ## _BehaviorSubject Constructor_ ##
 

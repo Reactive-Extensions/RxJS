@@ -94,7 +94,7 @@ console.log(s.clock);
 - [`getNext`](#rxvirtualtimeschedulerprototypegetnext)
 
 ## Inherited Classes ##
-- [`Rx.Scheduler`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/scheduler.md)
+- [`Rx.Scheduler`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/scheduler.md)
 
 ## _VirtualTimeScheduler Constructor_ ##
 
