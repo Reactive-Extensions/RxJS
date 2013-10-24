@@ -5,7 +5,8 @@ This topic lists all major operators implemented by the [`Observable`](https://g
 ## Operators by Categories ##
 
 <table>
-   <th></th><th>Usage</th><th>Operators</th>
+
+   <th>Usage</th><th>Operators</th>
    <tr>
       <td>Creating an observable sequence</td>
       <td>
@@ -21,6 +22,10 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    </tr>
    <tr>
       <td>Converting events or asynchronous patterns to observable sequences, or between Arrays and observable sequences.</td>
-      <td></td>
+      <td>
+      	<ol>
+
+      	</ol>
+      </td>
    </tr>
 </table>
