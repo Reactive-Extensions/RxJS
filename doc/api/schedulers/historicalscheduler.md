@@ -48,12 +48,13 @@ quotes.forEach(function (quote) {
     });
 });
 
-scheduler.run();
-
 // Subscribe to subject and listen
 subject.subscribe(function (quote) {
     // Bind quote data to the server or do more analysis
 });
+
+// Start pumping data
+scheduler.run();
 ```
 
 ### Location
