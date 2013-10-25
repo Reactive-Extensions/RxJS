@@ -42,6 +42,7 @@ First, we'll reference the JavaScript files...
 Next, we'll get the user input from an input, listening to the keyup event.
 
 ```js
+
 /* Only get the value from each key up */
 var keyups = Rx.DOM.fromEvent(input, 'keyup')
     .map(function (e) {
@@ -63,6 +64,7 @@ var distinct = keyups
 Now, let's query Wikipedia!
 
 ```js
+
 function searchWikipedia(term) {
     var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
         + '&format=json' 
@@ -74,6 +76,7 @@ function searchWikipedia(term) {
 Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call select to get the value, and then calling `switch` or its alias `switchLatest` to ensure that we're not introducing any out of order sequence calls.  We'll filter the results to make sure we get values.
 
 ```js
+
 var suggestions = distinct
     .map(function (text) {
         return searchWikipedia(text);
@@ -87,6 +90,7 @@ var suggestions = distinct
 Finally, we call the subscribe method on our observable sequence to start pulling data.
 
 ```js
+
 suggestions.subscribe( function (data) {
     var results = data[1];
     /* Do something with the data like binding */
