@@ -41,7 +41,6 @@ First, we'll reference the JavaScript files...
 
 Next, we'll get the user input from an input, listening to the keyup event.
 
-```
     /* Only get the value from each key up */
     var keyups = Rx.DOM.fromEvent(input, 'keyup')
         .map(function (e) {
@@ -58,44 +57,38 @@ Next, we'll get the user input from an input, listening to the keyup event.
     /* Now get only distinct values, so we eliminate the arrows and other control characters */
     var distinct = keyups
         .distinctUntilChanged();
-```
+
 
 Now, let's query Wikipedia!
 
-```
-function searchWikipedia(term) {
-    var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
-        + '&format=json' 
-        + '&search=' + encodeURI(term);
-    return Rx.Observable.getJSONPRequest(url);
-}
-```
+
+    function searchWikipedia(term) {
+        var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
+            + '&format=json' 
+            + '&search=' + encodeURI(term);
+        return Rx.Observable.getJSONPRequest(url);
+    }
 
 Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call select to get the value, and then calling `switch` or its alias `switchLatest` to ensure that we're not introducing any out of order sequence calls.  We'll filter the results to make sure we get values.
 
-```js
 
-var suggestions = distinct
-    .map(function (text) {
-        return searchWikipedia(text);
-    })
-    .switchLatest()
-    .filter(function (data) {
-        return data[1] && data[1].length > 0;
-    });
-```
+    var suggestions = distinct
+        .map(function (text) {
+            return searchWikipedia(text);
+        })
+        .switchLatest()
+        .filter(function (data) {
+            return data[1] && data[1].length > 0;
+        });
 
 Finally, we call the subscribe method on our observable sequence to start pulling data.
 
-```js
-
-suggestions.subscribe( function (data) {
-    var results = data[1];
-    /* Do something with the data like binding */
-}, function (e) {
-    /* handle any errors */
-});
-```
+    suggestions.subscribe( function (data) {
+        var results = data[1];
+        /* Do something with the data like binding */
+    }, function (e) {
+        /* handle any errors */
+    });
 
 And there you have it!
 
@@ -175,17 +168,16 @@ There are a number of ways to get started with RxJS. The files are available on 
 
 ### Using RxJS with an AMD loader such as Require.js
 
-```js
-require({
-    'paths': {
-        'rx': 'path/to/rx.js'
-    }
-},
-['rx'], function(Rx) {
-    var obs = Rx.Observable.returnValue(42);
-    obs.subscribe(function (x) { console.log(x); });
-});
-```
+    require({
+        'paths': {
+            'rx': 'path/to/rx.js'
+        }
+    },
+    ['rx'], function(Rx) {
+        var obs = Rx.Observable.returnValue(42);
+        obs.subscribe(function (x) { console.log(x); });
+    });
+    
 # Compatibility #
 
 RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+. 
