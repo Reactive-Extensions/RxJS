@@ -41,30 +41,28 @@ First, we'll reference the JavaScript files...
 
 Next, we'll get the user input from an input, listening to the keyup event.
 
-```js
-
-/* Only get the value from each key up */
-var keyups = Rx.DOM.fromEvent(input, 'keyup')
-    .map(function (e) {
-        return e.target.value;
-    })
-    .filter(function (text) {
-        return text.length > 2;
-    });
-
-/* Now throttle/debounce the input for 500ms */
-var throttled = keyups
-    .throttle(500 /* ms */);
-
-/* Now get only distinct values, so we eliminate the arrows and other control characters */
-var distinct = keyups
-    .distinctUntilChanged();
+```
+    /* Only get the value from each key up */
+    var keyups = Rx.DOM.fromEvent(input, 'keyup')
+        .map(function (e) {
+            return e.target.value;
+        })
+        .filter(function (text) {
+            return text.length > 2;
+        });
+    
+    /* Now throttle/debounce the input for 500ms */
+    var throttled = keyups
+        .throttle(500 /* ms */);
+    
+    /* Now get only distinct values, so we eliminate the arrows and other control characters */
+    var distinct = keyups
+        .distinctUntilChanged();
 ```
 
 Now, let's query Wikipedia!
 
-```js
-
+```
 function searchWikipedia(term) {
     var url = 'http://en.wikipedia.org/w/api.php?action=opensearch'
         + '&format=json' 
