@@ -106,10 +106,27 @@
      * 
      * @param {Object} element The DOMElement or NodeList to attach a listener.
      * @param {String} eventName The event name to attach the observable sequence.
+     * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
      * @returns {Observable} An observable sequence of events from the specified element and the specified event.
      */
-    Observable.fromEvent = function (element, eventName) {
+    Observable.fromEvent = function (element, eventName, selector) {
         return new AnonymousObservable(function (observer) {
-            return createEventListener(element, eventName, function handler (e) { observer.onNext(e); });
+            return createEventListener(
+                element, 
+                eventName, 
+                function handler (e) { 
+                    var results = e;
+
+                    if (selector) {
+                        try {
+                            results = selector(arguments);
+                        } catch (err) {
+                            observer.onError(err);
+                            return
+                        }
+                    }
+
+                    observer.onNext(results); 
+                });
         }).publish().refCount();
     };

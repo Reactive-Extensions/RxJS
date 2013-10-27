@@ -3,9 +3,10 @@
      * @param {Function} func The function to call
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+     * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.     
      * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
      */
-    Observable.fromNodeCallback = function (func, scheduler, context) {
+    Observable.fromNodeCallback = function (func, scheduler, context, selector) {
         scheduler || (scheduler = timeoutScheduler);
         return function () {
             var args = slice.call(arguments, 0), 
@@ -13,14 +14,24 @@
 
             scheduler.schedule(function () {
                 function handler(err) {
-                    var handlerArgs = slice.call(arguments, 1);
-
                     if (err) {
                         subject.onError(err);
                         return;
                     }
 
-                    subject.onNext(handlerArgs);
+                    var handlerArgs = slice.call(arguments, 1),
+                        results;
+
+                    if (selector) {
+                        try {
+                            results = selector(handlerArgs);
+                        } catch (e) {
+                            subject.onError(e);
+                            return;
+                        }
+                    }                    
+
+                    subject.onNext(results);
                     subject.onCompleted();
                 }
 

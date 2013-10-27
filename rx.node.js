@@ -22,10 +22,11 @@ Rx.Node = {
      * @param {Function} function Function to convert to an asynchronous function.
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+     * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
      * @returns {Function} Asynchronous function.
      */
-    fromCallback: function (func, scheduler, context) {
-        return Observable.fromCallback(func, scheduler, context);
+    fromCallback: function (func, scheduler, context, selector) {
+        return Observable.fromCallback(func, scheduler, context, selector);
     },
 
     /**
@@ -36,32 +37,25 @@ Rx.Node = {
      * @param {Function} func The function to call
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+     * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
      * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
      */
     fromNodeCallback: function (func, scheduler, context) {
-        return Observable.fromNodeCallback(func, scheduler, context);
+        return Observable.fromNodeCallback(func, scheduler, context, selector);
     },
 
     /**
+     * @deprecated Use Rx.Observable.fromNodeCallback from rx.async.js instead.
+     *    
      * Handles an event from the given EventEmitter as an observable sequence.
      *
      * @param {EventEmitter} eventEmiiter The EventEmitter to subscribe to the given event.
      * @param {String} eventName The event name to subscribe
+     * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
      * @returns {Observable} An observable sequence generated from the named event from the given EventEmitter.  The data will be returned as an array of arguments to the handler.
      */
-    fromEvent: function (eventEmitter, eventName) {
-        return Observable.create(function (observer) {
-
-            function handler () {
-                observer.onNext(arguments);
-            }
-
-            eventEmitter.addListener(eventName, handler);
-
-            return function () {
-                eventEmitter.removeListener(eventName, handler);
-            };
-        });
+    fromEvent: function (eventEmitter, eventName, selector) {
+        return Observable.fromEvent(eventEmitter, eventName, selector);
     },
 
     /**

@@ -626,8 +626,8 @@ Dist:
 
 * * *
 
-### <a id="rxobservablefromcallbackfunc-scheduler-context"></a>`Rx.Observable.fromCallback(func, [scheduler], [context])`
-<a href="#rxobservablefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js#L9-L27 "View in source") 
+### <a id="rxobservablefromcallbackfunc-scheduler-context-selector"></a>`Rx.Observable.fromCallback(func, [scheduler], [context], [selector])`
+<a href="#rxobservablefromcallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js#L9-L27 "View in source") 
 
 Converts a callback function to an observable sequence. 
 
@@ -635,9 +635,10 @@ Converts a callback function to an observable sequence.
 1. `func` *(Function)*: Function with a callback as the last parameter to convert to an Observable sequence.
 2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
 3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+4. `[selector]` *(Function)*: A selector which takes the arguments from the callback to produce a single item to yield on next.
 
 #### Returns
-*(Function)*: A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
+*(Function)*: A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array if no selector given, else the object created by the selector function.
 
 #### Example
 ```js
@@ -648,7 +649,12 @@ var fs = require('fs'),
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 // Check if file.txt exists
-var source = exists('file.txt');
+var source = exists('file.txt', 
+    null, /* no scheduler */
+    null, /* no context */
+    function (arr) {
+        return arr[0]; /* return only the true/false */
+    });
 
 var subscription = source.subscribe(
     function (x) {
@@ -679,14 +685,15 @@ Dist:
 
 * * *
 
-### <a id="rxobservablefromeventelement-eventname"></a>`Rx.Observable.fromEvent(element, eventName)`
-<a href="#rxobservablefromeventelement-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js#L111-L115 "View in source") 
+### <a id="rxobservablefromeventelement-eventname-selector"></a>`Rx.Observable.fromEvent(element, eventName, [selector])`
+<a href="#rxobservablefromeventelement-eventname-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js#L111-L115 "View in source") 
 
 Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
 
 #### Arguments
 1. `element` *(Any)*: The DOMElement, NodeList or EventEmitter to attach a listener.
 2. `eventName` *(String)*: The event name to attach the observable sequence.
+3. `[selector]` *(Function)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
 
 #### Returns
 *(Observable)*: An observable sequence of events from the specified element and the specified event.
@@ -716,24 +723,24 @@ input.trigger('click');
 // => Next: Clicked!
 ```
 
-Using in Node.js with using an `EventEmitter`.
+Using in Node.js with using an `EventEmitter` with a selector function (which is not required).
 
 ```js
-var fs = require('fs'),
+var EventEmtiter = require('events').EventEmitter,
     Rx = require('rx');
 
-// Wrap fs.exists
-var exists = Rx.Observable.fromCallback(fs.exists);
+var eventEmitter = new EventEmitter();
 
-// Check if file.txt exists
-var source = exists('file.txt');
+var source = Rx.Observable.fromEvent(
+    eventEmitter,
+    'data', 
+    function (args) {
+        return { foo: args[0], bar: args[1] };
+    });
 
 var subscription = source.subscribe(
     function (x) {
-        // Extract value from arguments array
-        var result = x[0];
-
-        console.log('Next: ' + result);
+        console.log('Next: foo -' x.foo + ', bar -' + x.bar);
     },
     function (err) {
         console.log('Error: ' + err);   
@@ -742,8 +749,8 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: true
-// => Completed
+eventEmitter.emit('data', 'baz', 'quux');
+// => Next: foo - baz, bar - quux
 ```
 
 ### Location
@@ -758,14 +765,15 @@ Dist:
 
 * * *
 
-### <a id="rxobservablefromeventpatternaddhander-removehandler"></a>`Rx.Observable.fromEventPattern(addHandler, removeHandler)`
-<a href="#rxobservablefromeventpatternaddhander-removehandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js#L7-L20 "View in source") 
+### <a id="rxobservablefromeventpatternaddhander-removehandler-selector"></a>`Rx.Observable.fromEventPattern(addHandler, removeHandler, [selector])`
+<a href="#rxobservablefromeventpatternaddhander-removehandler-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js#L7-L20 "View in source") 
 
 Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
 
 #### Arguments
 1. `addHandler` *(Function)*: The DOMElement, NodeList or EventEmitter to attach a listener.
 2. `removeHandler` *(Function)*: The event name to attach the observable sequence.
+3. `[selector]` *(Function)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
 
 #### Returns
 *(Observable)*: An observable sequence of events from the specified element and the specified event.
@@ -879,8 +887,8 @@ Dist:
 
 * * *
 
-### <a id="rxobservablefromnodecallbackfunc-scheduler-context"></a>`Rx.Observable.fromNodeCallback(func, [scheduler], [context])`
-<a href="#rxobservablefromnodecallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js#L8-L33 "View in source") 
+### <a id="rxobservablefromnodecallbackfunc-scheduler-context-selector"></a>`Rx.Observable.fromNodeCallback(func, [scheduler], [context], [selector])`
+<a href="#rxobservablefromnodecallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js#L8-L33 "View in source") 
 
 Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
 
@@ -888,9 +896,10 @@ Converts a Node.js callback style function to an observable sequence.  This must
 1. `func` *(Function)*: Function with a callback as the last parameter to convert to an Observable sequence.
 2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
 3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+4. `[selector]` *(Function)*: A selector which takes the arguments from callback sans the error to produce a single item to yield on next.
 
 #### Returns
-*(Function)*: A function which when applied, returns an observable sequence with the callback arguments as an array on success, or an error if the first parameter is not falsy.
+*(Function)*: A function which when applied, returns an observable sequence with the callback arguments as an array if no selector given, else the object created by the selector function on success, or an error if the first parameter is not falsy.
 
 #### Example
 ```js

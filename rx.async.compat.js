@@ -92,17 +92,29 @@
      * @param {Function} function Function with a callback as the last parameter to convert to an Observable sequence.
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+     * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
      * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
      */
-    Observable.fromCallback = function (func, scheduler, context) {
+    Observable.fromCallback = function (func, scheduler, context, selector) {
         scheduler || (scheduler = timeoutScheduler);
         return function () {
             var args = slice.call(arguments, 0), 
                 subject = new AsyncSubject();
 
             scheduler.schedule(function () {
-                function handler() {
-                    subject.onNext(arguments);
+                function handler(e) {
+                    var results = e;
+                    
+                    if (selector) {
+                        try {
+                            results = selector(arguments);
+                        } catch (err) {
+                            subject.onError(err);
+                            return;
+                        }
+                    }
+
+                    subject.onNext(results);
                     subject.onCompleted();
                 }
 
@@ -119,9 +131,10 @@
      * @param {Function} func The function to call
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+     * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.     
      * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
      */
-    Observable.fromNodeCallback = function (func, scheduler, context) {
+    Observable.fromNodeCallback = function (func, scheduler, context, selector) {
         scheduler || (scheduler = timeoutScheduler);
         return function () {
             var args = slice.call(arguments, 0), 
@@ -129,14 +142,24 @@
 
             scheduler.schedule(function () {
                 function handler(err) {
-                    var handlerArgs = slice.call(arguments, 1);
-
                     if (err) {
                         subject.onError(err);
                         return;
                     }
 
-                    subject.onNext(handlerArgs);
+                    var handlerArgs = slice.call(arguments, 1),
+                        results;
+
+                    if (selector) {
+                        try {
+                            results = selector(handlerArgs);
+                        } catch (e) {
+                            subject.onError(e);
+                            return;
+                        }
+                    }                    
+
+                    subject.onNext(results);
                     subject.onCompleted();
                 }
 
@@ -256,11 +279,28 @@
      * 
      * @param {Object} element The DOMElement or NodeList to attach a listener.
      * @param {String} eventName The event name to attach the observable sequence.
+     * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
      * @returns {Observable} An observable sequence of events from the specified element and the specified event.
      */
-    Observable.fromEvent = function (element, eventName) {
+    Observable.fromEvent = function (element, eventName, selector) {
         return new AnonymousObservable(function (observer) {
-            return createEventListener(element, eventName, function handler (e) { observer.onNext(e); });
+            return createEventListener(
+                element, 
+                eventName, 
+                function handler (e) { 
+                    var results = e;
+
+                    if (selector) {
+                        try {
+                            results = selector(arguments);
+                        } catch (err) {
+                            observer.onError(err);
+                            return
+                        }
+                    }
+
+                    observer.onNext(results); 
+                });
         }).publish().refCount();
     };
     /**
