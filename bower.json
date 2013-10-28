@@ -1,15 +1,17 @@
 {
   "name": "rxjs",
-  "version": "2.2.2",
+  "version": "2.2.3",
   "main": [
     "rx.js",
     "rx.aggregates.js",
+    "rx.async.js",
     "rx.binding.js",
     "rx.coincidence.js",
     "rx.experimental.js",
     "rx.joinpatterns.js",
     "rx.testing.js",
-    "rx.time.js"
+    "rx.time.js",
+    "rx.virtualtime.js"
   ],
   "ignore": [
     ".*",

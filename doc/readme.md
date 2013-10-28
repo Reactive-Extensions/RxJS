@@ -25,6 +25,7 @@ RxJS has no dependencies which complements and interoperates smoothly with both 
 There are a number of ways of getting started with RxJS including:
 - [Getting Started With RxJS](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#getting-started-with-rxjs)
 - [How Do I?](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#how-do-i)
+- [Mapping RxJS from Different Libraries](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#mapping-rxjs-from-different-libraries)
 - [API Documentation](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#reactive-extensions-class-library)
 
 ## Getting Started With RxJS
@@ -49,6 +50,13 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 There is a large surface area with the Reactive Extensions for JavaScript, so it might be hard to know where to start.  This will serve as a guide to answer some of the more basic questions.
 
 1. [How do I wrap an existing API?](howdoi/wrap.md)
+
+## Mapping RxJS from Different Libraries ##
+
+Converting your existing code from other libraries can be easy.  Many of the concepts you already know from popular libraries such as Bacon.js and [Async.js](https://github.com/caolan/async)
+
+1. [For Bacon.js Users](mapping/baconjs.md)
+2. [For Async.js Users](mapping/asyncjs.md)
 
 ## Reactive Extensions Class Library
 

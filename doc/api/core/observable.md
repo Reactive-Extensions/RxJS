@@ -18,10 +18,10 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`for | forIn`](#rxobservableforsources-resultselector)
 - [`forkJoin`](#rxobservableforkjoinargs)
 - [`fromArray`](#rxobservablefromarrayarray-scheduler)
-- [`fromCallback`](#rxobservablefromcallbackfunc-scheduler-context)
-- [`fromEvent`](#rxobservablefromeventelement-eventname)
-- [`fromEventPattern`](#rxobservablefromeventpatternaddhandler-removehandler)
-- [`fromNodeCallback`](#rxobservablefromnodecallbackfunc-scheduler-context)
+- [`fromCallback`](#rxobservablefromcallbackfunc-scheduler-context-selector)
+- [`fromEvent`](#rxobservablefromeventelement-eventname-selector)
+- [`fromEventPattern`](#rxobservablefromeventpatternaddhandler-removehandler-selector)
+- [`fromNodeCallback`](#rxobservablefromnodecallbackfunc-scheduler-context-selector)
 - [`fromPromise`](#rxobservablefrompromisepromise)
 - [`generate`](#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
 - [`generateWithAbsoluteTime`](#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
@@ -627,7 +627,7 @@ Dist:
 * * *
 
 ### <a id="rxobservablefromcallbackfunc-scheduler-context-selector"></a>`Rx.Observable.fromCallback(func, [scheduler], [context], [selector])`
-<a href="#rxobservablefromcallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js#L9-L27 "View in source") 
+<a href="#rxobservablefromcallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js#L10-L39 "View in source") 
 
 Converts a callback function to an observable sequence. 
 
@@ -686,7 +686,7 @@ Dist:
 * * *
 
 ### <a id="rxobservablefromeventelement-eventname-selector"></a>`Rx.Observable.fromEvent(element, eventName, [selector])`
-<a href="#rxobservablefromeventelement-eventname-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js#L111-L115 "View in source") 
+<a href="#rxobservablefromeventelement-eventname-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js#L112-L132 "View in source") 
 
 Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
 
@@ -766,7 +766,7 @@ Dist:
 * * *
 
 ### <a id="rxobservablefromeventpatternaddhander-removehandler-selector"></a>`Rx.Observable.fromEventPattern(addHandler, removeHandler, [selector])`
-<a href="#rxobservablefromeventpatternaddhander-removehandler-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js#L7-L20 "View in source") 
+<a href="#rxobservablefromeventpatternaddhander-removehandler-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js#L8-L30 "View in source") 
 
 Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
 
@@ -857,6 +857,9 @@ var source = Rx.Observable.fromEventPattern(
     },
     function remove (h) {
         e.removeListener('data', h);
+    },
+    function (arr) {
+        return arr[0] + ',' + arr[1];
     }
 );
 
@@ -872,8 +875,8 @@ var subscription = source.subscribe(
     });
 
 
-e.emit('data', 'foo');
-// => Next: foo
+e.emit('data', 'foo', 'bar');
+// => Next: foo,bar
 ```
 
 ### Location
@@ -888,7 +891,7 @@ Dist:
 * * *
 
 ### <a id="rxobservablefromnodecallbackfunc-scheduler-context-selector"></a>`Rx.Observable.fromNodeCallback(func, [scheduler], [context], [selector])`
-<a href="#rxobservablefromnodecallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js#L8-L33 "View in source") 
+<a href="#rxobservablefromnodecallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js#L9-L43 "View in source") 
 
 Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
 
@@ -938,8 +941,8 @@ Dist:
 
 * * *
 
-### <a id="rxobservablefromnodecallbackfunc-scheduler-context"></a>`Rx.Observable.fromPromise(promise)`
-<a href="#rxobservablefromnodecallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js#L6-L19 "View in source") 
+### <a id="rxobservablefrompromisepromise"></a>`Rx.Observable.fromPromise(promise)`
+<a href="#rxobservablefrompromisepromise">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js#L6-L19 "View in source") 
 
 Converts a Promises/A+ spec compliant Promise to an Observable sequence.
 

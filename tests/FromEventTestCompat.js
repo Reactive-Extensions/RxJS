@@ -1,7 +1,8 @@
 module('FromEvent');
 
 var TestScheduler = Rx.TestScheduler,
-    Observable = Rx.Observable;
+    Observable = Rx.Observable,
+    slice = Array.prototype.slice;
 
 /** Fake DOM Element */
 function FakeDOMStandardElement(nodeName) {
@@ -21,9 +22,10 @@ FakeDOMStandardElement.prototype.removeEventListener = function (eventName, hand
     this.removeEventListenerCalled = true;
 };
 
-FakeDOMStandardElement.prototype.trigger = function (eventName, eventData) {
+FakeDOMStandardElement.prototype.trigger = function (eventName) {
+    var args = slice.call(arguments, 1);
     if (eventName in this.listeners) {
-        this.listeners[eventName](eventData);
+        this.listeners[eventName].apply(null, args);
     }
 };
 
@@ -157,4 +159,28 @@ test('Event_5', function () {
     d.dispose();
 
     equal(element.removeListenerCalled, true);
+});
+
+test('Event_6', function () {
+    var element = new FakeDOMStandardElement('foo');
+
+    var d = Observable.fromEvent(
+            element, 
+            'someEvent',
+            function (arr) {
+                return { foo: arr[0], bar: arr[1] };
+            }
+        )
+        .subscribe(function (x) {
+            equal(x.foo, 'baz');
+            equal(x.bar, 'quux');
+        });
+
+    element.trigger('someEvent', 'baz', 'quux');
+    equal(element.addEventListenerCalled, true);
+    equal(element.removeEventListenerCalled, false);
+
+    d.dispose();
+
+    equal(element.removeEventListenerCalled, true);
 });

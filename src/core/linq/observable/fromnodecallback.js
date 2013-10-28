@@ -19,12 +19,11 @@
                         return;
                     }
 
-                    var handlerArgs = slice.call(arguments, 1),
-                        results;
-
+                    var results = slice.call(arguments, 1);
+                    
                     if (selector) {
                         try {
-                            results = selector(handlerArgs);
+                            results = selector(results);
                         } catch (e) {
                             subject.onError(e);
                             return;

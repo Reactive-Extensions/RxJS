@@ -147,12 +147,11 @@
                         return;
                     }
 
-                    var handlerArgs = slice.call(arguments, 1),
-                        results;
-
+                    var results = slice.call(arguments, 1);
+                    
                     if (selector) {
                         try {
-                            results = selector(handlerArgs);
+                            results = selector(results);
                         } catch (e) {
                             subject.onError(e);
                             return;
@@ -307,12 +306,22 @@
      * Creates an observable sequence from an event emitter via an addHandler/removeHandler pair.
      * @param {Function} addHandler The function to add a handler to the emitter.
      * @param {Function} [removeHandler] The optional function to remove a handler from an emitter.
+     * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
      * @returns {Observable} An observable sequence which wraps an event from an event emitter
      */
-    Observable.fromEventPattern = function (addHandler, removeHandler) {
+    Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
         return new AnonymousObservable(function (observer) {
             function innerHandler (e) {
-                observer.onNext(e);
+                var result = e;
+                if (selector) {
+                    try {
+                        result = selector(arguments);
+                    } catch (err) {
+                        observer.onError(err);
+                        return;
+                    }
+                }
+                observer.onNext(result);
             }
 
             var returnValue = addHandler(innerHandler);
