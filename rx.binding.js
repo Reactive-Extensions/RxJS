@@ -49,8 +49,8 @@
      * invocation. For specializations with fixed subject types, see Publish, PublishLast, and Replay.
      * 
      * @example
-     * var res = source.multicast(observable);
-     * var res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
+     * 1 - res = source.multicast(observable);
+     * 2 - res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
      * 
      * @param {Function|Subject} subjectOrSubjectSelector 
      * Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
@@ -75,7 +75,7 @@
      * This operator is a specialization of Multicast using a regular Subject.
      * 
      * @example
-     * var res = source.publish();
+     * var resres = source.publish();
      * var res = source.publish(function (x) { return x; });
      * 
      * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.

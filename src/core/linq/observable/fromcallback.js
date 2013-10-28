@@ -24,6 +24,10 @@
                             subject.onError(err);
                             return;
                         }
+                    } else {
+                        if (results.length === 1) {
+                            results = results[0];
+                        }
                     }
 
                     subject.onNext(results);

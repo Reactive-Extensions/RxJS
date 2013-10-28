@@ -193,7 +193,12 @@ module.exports = function (grunt) {
                 src: [
                     'src/core/license.js',
                     'src/core/subintro.js',
-                    'src/core/linq/observable.binding.js',
+                    'src/core/bindingheader.js',
+                    'src/core/linq/observable/multicast.js', // ConnectableObservable
+                    'src/core/linq/observable/publish.js',   // mulitcast, Subject
+                    'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
+                    'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
+                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
                     'src/core/subjects/innersubscription.js',
                     'src/core/subjects/behaviorsubject.js',
                     'src/core/subjects/replaysubject.js',

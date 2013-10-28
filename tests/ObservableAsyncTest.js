@@ -285,6 +285,21 @@
         );
     });
 
+    test('FromCallback_Single', function () {
+        var scheduler = new TestScheduler();
+
+        var res = scheduler.startWithCreate(function () {
+            return Observable.fromCallback(function (file, cb) {
+                cb('foo');
+            }, scheduler)('file.txt');
+        });
+
+        res.messages.assertEqual(
+            onNext(200, 'foo'),
+            onCompleted(200)
+        );
+    });    
+
     test('FromCallback_Selector', function () {
         var scheduler = new TestScheduler();
 
@@ -325,6 +340,21 @@
             onCompleted(200)
         );
     });
+
+    test('FromNodeCallback_Single', function () {
+        var scheduler = new TestScheduler();
+
+        var res = scheduler.startWithCreate(function () {
+            return Observable.fromNodeCallback(function (file, cb) {
+                cb(null, 'foo');
+            }, scheduler)('file.txt');
+        });
+
+        res.messages.assertEqual(
+            onNext(200, 'foo'),
+            onCompleted(200)
+        );
+    });      
 
     test('FromNodeCallback_Selector', function () {
         var scheduler = new TestScheduler();
