@@ -101,6 +101,8 @@ var Rx = require('rx'),
 
 var stat = Rx.Observable.fromNodeCallback(fs.stat);
 
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
 Rx.Observable
 	.for(files, function (file) {
 		return stat(file);
@@ -120,7 +122,7 @@ Rx.Observable
 
 * * *
 
-## `async.map` ##
+## `async.filter` ##
 
 The `async.filter` method Returns a new array of all the values which pass an async truth test. The callback for each iterator call only accepts a single argument of true or false, it does not accept an error argument first! This is in-line with the way node libraries work with truth tests like fs.exists.
 
