@@ -121,7 +121,7 @@ suggestions.subscribe( function (data) {
 
 And there you have it!
 
-## Documentation ##
+## Dive In! ##
 
 You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples) and plenty of [unit tests](https://github.com/Reactive-Extensions/RxJS/tree/master/tests).
 

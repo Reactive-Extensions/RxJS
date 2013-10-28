@@ -53,7 +53,7 @@ There is a large surface area with the Reactive Extensions for JavaScript, so it
 
 ## Mapping RxJS from Different Libraries ##
 
-Converting your existing code from other libraries can be easy.  Many of the concepts you already know from popular libraries such as Bacon.js and [Async.js](https://github.com/caolan/async)
+Converting your existing code from other libraries can be easy.  Many of the concepts you already know from popular libraries such as [Bacon.js](https://github.com/baconjs/bacon.js) and [Async.js](https://github.com/caolan/async)
 
 1. [For Bacon.js Users](mapping/baconjs.md)
 2. [For Async.js Users](mapping/asyncjs.md)
