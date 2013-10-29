@@ -4,10 +4,15 @@
 
 Many of these concepts in the library map directly to RxJS concepts.  We'll go operator by operator on how each map to existing functionality in RxJS.
 
-## Async Methods
+## Collection Methods
  - ['async.each'](#asynceach)
  - [`async.map`](#asyncmap)
  - [`async.filter`](#asyncfilter)
+ - [`async.reject`](#asyncreject)
+ - [`async.reduce`](#asyncreduce)
+ - [`async.some`](#asyncsome)
+ - [`async.every`](#asyncevery)
+ - [`async.concat`](#asynconcat)
 
 ## `async.each` ##
 
@@ -30,11 +35,7 @@ function saveFile (file, cb) {
 }
 
 async.each(files, saveFile, function (err) {
-	if (err) {
-		console.log('error: ' + err);
-	} else {
-		console.log('success!');
-	}
+	// if any of the saves produced an error, err would equal that error
 });
 ```
 
@@ -104,9 +105,7 @@ var stat = Rx.Observable.fromNodeCallback(fs.stat);
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 Rx.Observable
-	.for(files, function (file) {
-		return stat(file);
-	})
+	.for(files, stat)
 	.toArray()
 	.subscribe(
 		function (results) {
@@ -124,7 +123,7 @@ Rx.Observable
 
 ## `async.filter` ##
 
-The `async.filter` method Returns a new array of all the values which pass an async truth test. The callback for each iterator call only accepts a single argument of true or false, it does not accept an error argument first! This is in-line with the way node libraries work with truth tests like fs.exists.
+The `async.filter` method returns a new array of all the values which pass an async truth test. The callback for each iterator call only accepts a single argument of true or false, it does not accept an error argument first! This is in-line with the way node libraries work with truth tests like fs.exists.
 
 #### async version ####
 
@@ -145,7 +144,7 @@ async.filter(files, fs.exists, function (err, results) {
 
 #### RxJS version ####
 
-Using RxJS, we can achieve the same results of an array of all of our values by wrapping the `fs.exists` method using our `Rx.Observable.fromCallback` as it only has one result, a `true` or `false` value instead of the usual callback with error and result.  Then we'lliterate using the `Rx.Observable.for` method, filter the existing files and finally, calling `.toArray()` to get our results as an entire array.
+Using RxJS, we can achieve the same results of an array of all of our values by wrapping the `fs.exists` method using our `Rx.Observable.fromCallback` as it only has one result, a `true` or `false` value instead of the usual callback with error and result.  Then we'll iterate using the `Rx.Observable.for` method, filter the existing files and finally, calling `.toArray()` to get our results as an entire array.
 
 ```js
 var Rx = require('rx'),
@@ -154,9 +153,7 @@ var Rx = require('rx'),
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
-	.for(files, function (file) {
-		return exists(file);
-	})
+	.for(files, exists)
 	.where(function (x) { return x; })
 	.toArray()
 	.subscribe(
@@ -164,11 +161,224 @@ Rx.Observable
 			results.forEach(function (result) {
 				console.log('exists: ' + result);
 			});
-		},
-		function (err) {
-			console.log('err ' + err);
 		}
 	);
+```
+
+* * *
+
+## `async.reject` ##
+
+The `async.reject` method is the opposite of filter. Removes values that pass an async truth test.
+ 
+#### async version ####
+
+In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
+
+```js
+var async = require('async'),
+	fs = require('fs');
+
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
+async.reject(files, fs.exists, function (err, results) {
+	results.forEach(function (result) {
+		console.log('exists: ' + result);
+	});
+});
+```
+
+#### RxJS version ####
+
+Using RxJS, we can achieve the same results of an array of all of our values by wrapping the `fs.exists` method using our `Rx.Observable.fromCallback` as it only has one result, a `true` or `false` value instead of the usual callback with error and result.  Then we'll iterate using the `Rx.Observable.for` method, filter the existing files using `filter` and finally, calling `.toArray()` to get our results as an entire array.
+
+```js
+var Rx = require('rx'),
+	fs = require('fs');
+
+var exists = Rx.Observable.fromCallback(fs.exists);
+
+Rx.Observable
+	.for(files, exists)
+	.where(function (x) { return !x; })
+	.toArray()
+	.subscribe(
+		function (results) {
+			results.forEach(function (result) {
+				console.log('exists: ' + result);
+			});
+		}
+	);
+```
+
+* * *
+
+## `async.reduce` ##
+
+The `async.reduce` method reduces a list of values into a single value using an async iterator to return each successive step. Memo is the initial state of the reduction. This function only operates in series. For performance reasons, it may make sense to split a call to this function into a parallel map, then use the normal `Array.prototype.reduce` on the results. This function is for situations where each step in the reduction needs to be async, if you can get the data before reducing it then it's probably a good idea to do so.
+ 
+#### async version ####
+
+In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
+
+```js
+var async = require('async'),
+	fs = require('fs');
+
+function reduction (acc, x, cb) {
+	process.nextTick(function () {
+		cb(null, acc + x);
+	});
+}
+
+async.reduce([1,2,3], 0, fs.reduction, function (err, results) {
+    console.log(results);
+});
+
+// => 6
+```
+
+#### RxJS version ####
+
+In RxJS, we have a number of ways of doing this including using `Rx.Observable.fromArray` to turn an array into observable sequence, then we can call `reduce` to add the numbers.  To ensure that it is indeed async, we can switch to the `Rx.Scheduler.timeout` to ensure that it is done via a callback.
+
+```js
+var Rx = require('rx'),
+	fs = require('fs');
+
+Rx.Observable
+	.fromArray([1,2,3], Rx.Scheduler.timeout)
+	.reduce(function (acc, x) { return acc + x; }, 0)
+	.subscribe(
+		function (results) {
+			console.log(results);
+		});
+// => 6
+```
+
+* * *
+
+## `async.some` ##
+
+The `async.some` method returns `true` if at least one element in the array satisfies an async test. The callback for each iterator call only accepts a single argument of true or false, it does not accept an error argument first! This is in-line with the way node libraries work with truth tests like fs.exists. Once any iterator call returns true, the main callback is immediately called.
+ 
+#### async version ####
+
+In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
+
+```js
+var async = require('async'),
+	fs = require('fs');
+
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
+async.some(files, fs.exists, function (result){
+    // if result is true then at least one of the files exists
+});
+```
+
+#### RxJS version ####
+
+Using RxJS, we can achieve the same results of an array of all of our values by wrapping the `fs.exists` method using our `Rx.Observable.fromCallback` as it only has one result, a `true` or `false` value instead of the usual callback with error and result.  Then we'll iterate using the `Rx.Observable.for` method, then call `some` to determine whether any match.
+
+```js
+var Rx = require('rx'),
+	fs = require('fs');
+
+var exists = Rx.Observable.fromCallback(fs.exists);
+
+Rx.Observable
+	.for(files, exists)
+	.some()
+	.subscribe(
+		function (results) {
+			// if result is true then at least one of the files exists
+		});
+```
+
+* * *
+
+## `async.every` ##
+
+The `async.every` method returns `true` if every element in the array satisfies an async test. The callback for each iterator call only accepts a single argument of true or false, it does not accept an error argument first! This is in-line with the way node libraries work with truth tests like fs.exists.
+ 
+#### async version ####
+
+In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
+
+```js
+var async = require('async'),
+	fs = require('fs');
+
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
+async.every(files, fs.exists, function (result) {
+    // if result is true then every file exists
+});
+```
+
+#### RxJS version ####
+
+Using RxJS, we can achieve the same results of an array of all of our values by wrapping the `fs.exists` method using our `Rx.Observable.fromCallback` as it only has one result, a `true` or `false` value instead of the usual callback with error and result.  Then we'll iterate using the `Rx.Observable.for` method, then call `every` to determine whether all match.
+
+```js
+var Rx = require('rx'),
+	fs = require('fs');
+
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
+var exists = Rx.Observable.fromCallback(fs.exists);
+
+Rx.Observable
+	.for(files, exists)
+	.every()
+	.subscribe(
+		function (results) {
+			// if result is true then every file exists
+		});
+```
+
+* * *
+
+## `async.concat` ##
+
+The `async.concat` method applies an iterator to each item in a list, concatenating the results. Returns the concatenated list. The iterators are called in parallel, and the results are concatenated as they return.
+ 
+#### async version ####
+
+In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
+
+```js
+var async = require('async'),
+	fs = require('fs');
+
+var directories = ['dir1', 'dir2', 'dir3'];
+
+async.concat(files, fs.readdir, function (err, files) {
+    // files is now a list of filenames that exist in the 3 directories
+});
+```
+
+#### RxJS version ####
+
+Using RxJS, we can achieve the same results of an array of all of our values by wrapping the `fs.readdir` method using our `Rx.Observable.fromNodeCallback`.  Then we'll iterate using the `Rx.Observable.for` method, then call `reduce` to add each item to the item to the overall list.
+
+```js
+var Rx = require('rx'),
+	fs = require('fs');
+
+var readdir = Rx.Observable.fromNodeCallback(fs.readdir);
+
+Rx.Observable
+	.for(files, readdir)
+	.reduce(function (acc, x) { acc.push(x); return acc; }, [])
+	.subscribe(
+		function (files) {
+			// files is now a list of filenames that exist in the 3 directories
+		},
+		function (err) {
+			// handle error
+		});
 ```
 
 * * *
