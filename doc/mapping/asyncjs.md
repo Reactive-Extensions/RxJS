@@ -5,14 +5,18 @@
 Many of these concepts in the library map directly to RxJS concepts.  We'll go operator by operator on how each map to existing functionality in RxJS.
 
 ## Collection Methods
- - ['async.each'](#asynceach)
+ - [`async.each`](#asynceach)
  - [`async.map`](#asyncmap)
  - [`async.filter`](#asyncfilter)
  - [`async.reject`](#asyncreject)
  - [`async.reduce`](#asyncreduce)
+ - [`async.detect`](#asyncdetect)
  - [`async.some`](#asyncsome)
  - [`async.every`](#asyncevery)
  - [`async.concat`](#asynconcat)
+
+ ## Control Flow
+ - [`async.whilst`](#asyncwhilst)
 
 ## `async.each` ##
 
@@ -258,6 +262,50 @@ Rx.Observable
 
 * * *
 
+## `async.detect` ##
+
+The `async.detect` method returns the first value in a list that passes an async truth test. The iterator is applied in parallel, meaning the first iterator to return true will fire the detect callback with that result. 
+ 
+#### async version ####
+
+In this example, we'll get the first file that matches.
+
+```js
+var async = require('async'),
+	fs = require('fs');
+
+var files = ['file1','file2','file3'];
+
+async.detect(files, fs.exists, function (result){
+    // result now equals the first file in the list that exists
+});
+```
+
+#### RxJS version ####
+
+In RxJS, we can iterate over the files as above using `Rx.Observable.for` and then calling `first` to get the first matching file project forward the file name and whether the file exists.
+
+```js
+var Rx = require('rx'),
+	fs = require('fs');
+
+var files = ['file1','file2','file3'];
+
+var exists = Rx.Observable.fromCallback(fs.exists);
+
+Rx.Observable
+	.for(files, function (file) {
+		return { file: file, exists: exists(file) };
+	})
+	.first(function (x) { return x.exists; })
+	.subscribe(
+		function (result) {
+			// result now equals the first file in the list that exists
+		});
+```
+
+* * *
+
 ## `async.some` ##
 
 The `async.some` method returns `true` if at least one element in the array satisfies an async test. The callback for each iterator call only accepts a single argument of true or false, it does not accept an error argument first! This is in-line with the way node libraries work with truth tests like fs.exists. Once any iterator call returns true, the main callback is immediately called.
@@ -379,6 +427,57 @@ Rx.Observable
 		function (err) {
 			// handle error
 		});
+```
+
+* * *
+
+## `async.whilst` ##
+
+The `async.whilst` method repeatedly call function, while test returns true. Calls the callback when stopped, or an error occurs.
+ 
+#### async version ####
+
+In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
+
+```js
+var async = require('async');
+
+var count = 0;
+
+async.whilst(
+    function () { return count < 5; },
+    function (callback) {
+        count++;
+        setTimeout(callback, 1000);
+    },
+    function (err) {
+        // 5 seconds have passed
+    }
+);
+```
+
+#### RxJS version ####
+
+We can achieve the same kind of functionality by using the `Rx.Observable.while` method which takes a condition and an observable sequence that we created by calling `Rx.Observable.create`.
+
+```js
+var Rx = require('rx');
+
+var count = 0;
+
+Rx.Observable.while(
+		function () { return count < 5; },
+		Rx.Observable.create(function (obs) {
+			setTimeout(function () {
+				observer.onNext(count++);
+			}, 1000)
+		}
+	)
+	.subscribe(
+		function (x) { /* do something with each value */ },
+		function (err) { /* handle errors */ },
+		function () { /* 5 seconds have passed }
+	);
 ```
 
 * * *
