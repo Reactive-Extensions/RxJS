@@ -7,7 +7,8 @@ Data sequences can take many forms, such as a stream of data from a file or web 
 Reactive Extensions represents all these data sequences as observable sequences. An application can subscribe to these observable sequences to receive asynchronous notifications as new data arrive. 
 
 RxJS has no dependencies which complements and interoperates smoothly with both synchronous data streams such as iterable objects in JavaScript and single-value asynchronous computations such as Promises as the following diagram shows:
-  	
+
+<center>  	
 <table>
    <th></th><th>Single return value</th><th>Mutiple return values</th>
    <tr>
@@ -21,6 +22,26 @@ RxJS has no dependencies which complements and interoperates smoothly with both 
       <td>Observable</td>
    </tr>
 </table>
+</center>
+
+To put it more concretely, if you know how to program against Arrays using the Array#extras, then you already know how to use RxJS!
+
+<center><table>
+ <thead>
+  <tr><th colspan="2">Example code showing how similar high-order functions can be applied to an Array and an Observable</th></tr>
+  <tr><th>Iterable</th><th>Observable</th></tr>
+ </thead>
+ <tbody>
+  <tr><td><pre><code>getDataFromLocalMemory()
+  .filter (function (s) { return s != null })
+  .map( function (s) { return s + 'transformed'; })
+  .forEach(function (s) { console.log("next => " + it); })</code></pre></td>
+  <td><pre><code>getDataFromNetwork()
+  .filter (function (s) { return s != null })
+  .map( function (s) { return s + 'transformed'; })
+  .subscribe(function (s) { console.log("next => " + it); })</code></pre></td></tr>
+ </tbody>
+</table></center>
 
 There are a number of ways of getting started with RxJS including:
 - [Getting Started With RxJS](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#getting-started-with-rxjs)
@@ -50,6 +71,8 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 There is a large surface area with the Reactive Extensions for JavaScript, so it might be hard to know where to start.  This will serve as a guide to answer some of the more basic questions.
 
 1. [How do I wrap an existing API?](howdoi/wrap.md)
+2. [How do I integrate jQuery with RxJS?](howdoi/jquery.md)
+3. [How do I integrate Angular.js with RxJS?](howdoi/angular.md)
 
 ## Mapping RxJS from Different Libraries ##
 
