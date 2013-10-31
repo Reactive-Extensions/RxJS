@@ -2,7 +2,32 @@
 
 The [jQuery](http://jquery.com) project and RxJS play very well together as libraries.  In fact, we supply bindings directly for RxJS to jQuery should you want to wrap animations, events, Ajax calls and more using Observables in [RxJS-jQuery](https://github.com/Reactive-Extensions/RxJS-jQuery).  The bindings library provides many handy features for bridging the world to Observables.  If you're interested in that library, go ahead and use it.  
 
-## Using RxJS wit jQuery ##
+## Using RxJS with Rx-jQuery ##
+
+Getting started with the bindings is easy.  Each method is enumerated on the main page from the jQuery method to its RxJS counterpart.
+
+	<div id="results"></div>
+	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+	<script src="rx.js"></script>
+	<script src="rx.binding.js"></script>
+	<script src="rx.jquery.js"></script>
+
+Now we can start using the bindings!  For example, we can listen to a `click` event and then by using `flatMap` or `selectMap` we can animate by calling `animateAsObservable`.  Finally, we can subscribe to cause the side effect and nothing more.
+
+```js
+$( "#go" ).clickAsObservable().flatMap(function () {
+	  
+	return $( "#block" ).animateAsObservable({
+		width: "70%",
+		opacity: 0.4,
+		marginLeft: "0.6in",
+		fontSize: "3em",
+		borderWidth: "10px"
+	}, 1500 );
+}).subscribe();
+```
+
+## Using RxJS with jQuery ##
 
 Let's start though by assuming you just have RxJS and wanted to get started with jQuery without the bridge library.  There is already plenty you can do without even needing a bridge library with the support built in for events and promises.
 
