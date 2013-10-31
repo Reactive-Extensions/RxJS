@@ -108,3 +108,40 @@ $('#input').toObservable('keyup')
 
 	});
 ```
+
+### Using RxJS with Callbacks to Handle Simple Animations ###
+
+RxJS can also be used to bind to simple callbacks, such as the [`.animate()`](http://api.jquery.com/animate/) method.  We can use `Rx.Observable.fromCallback` to supply the required arguments with the last argument is to be the callback.  In this example, we'll take the animation example from above and use nothing but core RxJS to accomplish the same thing.
+
+You'll note that we need a notion of `this` for the `block.animate` to properly work, so we have two choices, either use `Function.prototype.bind` available in most modern browsers...
+
+```js
+var animate = Rx.Observable.fromCallback(block.animate.bind(block));
+```
+
+Or we can supply an optional argument which supplies the context to the callback such as the following...
+
+```js
+var animate = Rx.Observable.fromCallback(
+	block.animate,
+	null, /* default scheduler used */
+	block /* context */);
+```
+
+When viewed in its entirety, it will look like this where we call `flatMap` or `selectMany` to compose together two observable sequences.  We then bind to the `animate` function through `Rx.Observable.fromCallback` and then return the observable which results from the function execution.  Our `subscribe` does nothing in this case as there is nothing to print or do, and is simply a side effect.
+
+```js
+var block = $('#block');
+
+$('#go').toObservable('click).flatMap(function () {
+    var animate = Rx.Observable.fromCallback(block.animate.bind(block));
+
+    return animate({
+        width: "70%",
+        opacity: 0.4,
+        marginLeft: "0.6in",
+        fontSize: "3em",
+        borderWidth: "10px"
+    }, 1500);
+}).subscribe();
+```
