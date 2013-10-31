@@ -17,6 +17,8 @@ Many of these concepts in the library map directly to RxJS concepts.  We'll go o
 
  ## Control Flow
  - [`async.whilst`](#asyncwhilst)
+ - [`async.doWhilst`](#asyncdowhilst)
+ - [`async.nextTick`](#asyncnexttick)
 
 ## `async.each` ##
 
@@ -437,7 +439,7 @@ The `async.whilst` method repeatedly call function, while test returns true. Cal
  
 #### async version ####
 
-In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
+In this example we'll just run a keep calling the callback while the count is less than 5.
 
 ```js
 var async = require('async');
@@ -476,8 +478,93 @@ Rx.Observable.while(
 	.subscribe(
 		function (x) { /* do something with each value */ },
 		function (err) { /* handle errors */ },
-		function () { /* 5 seconds have passed }
+		function () { /* 5 seconds have passed */ }
 	);
+```
+
+* * *
+
+## `async.doWhilst` ##
+
+The `async.doWhilst` method is a post check version of `whilst`. To reflect the difference in the order of operations test and fn arguments are switched. `doWhils`t is to `whilst` as `do while` is to `while` in plain JavaScript.
+ 
+#### async version ####
+
+In this example we'll just run a keep calling the callback while the count is less than 5.
+
+```js
+var async = require('async');
+
+var count = 0;
+
+async.dowWilst(
+    function () { return count < 5; },
+    function (callback) {
+        count++;
+        setTimeout(callback, 1000);
+    },
+    function (err) {
+        // 5 seconds have passed
+    }
+);
+```
+
+#### RxJS version ####
+
+We can achieve the same kind of functionality by using the `doWhile` on our observable sequence which takes a predicate to determine whether to continue running.
+
+```js
+var Rx = require('rx');
+
+var i = 0;
+
+var source = Rx.Observable.return(42).doWhile(
+    function () { return ++i < 2; })
+	.subscribe(
+		function (x) { console.log(x); },
+		function (err) { /* handle errors */ },
+		function () { console.log('done'); }
+	);
+```
+
+* * *
+
+## `async.nextTick` ##
+
+The `async.nextTick` method calls the callback on a later loop around the event loop. In node.js this just calls process.nextTick, in the browser it falls back to setImmediate(callback) if available, otherwise setTimeout(callback, 0), which means other higher priority events may precede the execution of the callback.
+ 
+#### async version ####
+
+In this example we'll just run a keep calling the callback while the count is less than 5.
+
+```js
+var async = require('async');
+
+var call_order = [];
+
+async.nextTick( function () {
+    call_order.push('two');
+    // call_order now equals ['one','two']
+});
+
+call_order.push('one');
+```
+
+#### RxJS version ####
+
+We can achieve the same thing by using the `Rx.Scheduler.timeout` scheduler to schedule an item which will optimize for the runtime, for example, using `process.nextTick` if available, or `setImmediate` if available, or other fallbacks like `MessageChannel`, `postMessage` or even an async script load.
+
+```js
+var Rx = require('rx');
+
+var call_order = [];
+
+Rx.Scheduler.timeout.schedule(function () {
+    call_order.push('two');
+    // call_order now equals ['one','two']
+});
+
+call_order.push('one');
 ```
 
 * * *
