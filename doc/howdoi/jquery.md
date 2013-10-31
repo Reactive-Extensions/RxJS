@@ -56,8 +56,15 @@ var subscription = observable.subscribe(function (e) {
 We could go a step further and create our own jQuery plugin which handles events with ease.
 
 ```js
-jQuery.fn.toObservable = function (eventName) {
-	return Rx.Observable.fromEvent(this, eventName);	
+/**
+ * Creates an observable sequence by adding an event listener to the matching jQuery element
+ *
+ * @param {String} eventName The event name to attach the observable sequence.
+ * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
+ * @returns {Observable} An observable sequence of events from the specified element and the specified event.
+ */
+jQuery.fn.toObservable = function (eventName, selector) {
+	return Rx.Observable.fromEvent(this, eventName, selector);	
 };
 ```
 
