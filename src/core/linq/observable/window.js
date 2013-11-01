@@ -84,8 +84,8 @@
                     return;
                 }
                 m1 = new SingleAssignmentDisposable();
-                m.disposable(m1);
-                m1.disposable(windowClose.take(1).subscribe(noop, function (ex) {
+                m.setDisposable(m1);
+                m1.setDisposable(windowClose.take(1).subscribe(noop, function (ex) {
                     window.onError(ex);
                     observer.onError(ex);
                 }, function () {

@@ -2127,7 +2127,7 @@
             return d;
         });
     };
-    
+
     /**
      *  Creates an observable sequence from a specified subscribe method implementation.
      *  

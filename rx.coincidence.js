@@ -561,7 +561,7 @@
             return r;
         });
     };
-    
+
     /**
      *  Projects each element of an observable sequence into zero or more buffers.
      *  
@@ -572,7 +572,7 @@
     observableProto.buffer = function (bufferOpeningsOrClosingSelector, bufferClosingSelector) {
         return this.window.apply(this, arguments).selectMany(function (x) { return x.toArray(); });
     };
-    
+
     /**
      *  Projects each element of an observable sequence into zero or more windows.
      *  

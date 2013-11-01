@@ -38,7 +38,7 @@
                     observer.onError(e);
                     return;
                 }
-                md.disposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
+                md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
                 values = rightMap.getValues();
                 for (var i = 0; i < values.length; i++) {
                     try {
@@ -76,7 +76,7 @@
                     observer.onError(exception);
                     return;
                 }
-                md.disposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
+                md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
                 values = leftMap.getValues();
                 for (var i = 0; i < values.length; i++) {
                     try {

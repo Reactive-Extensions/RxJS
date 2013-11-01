@@ -52,7 +52,8 @@ module.exports = function (grunt) {
                     'src/core/scheduledobserver.js',
                     'src/core/observeonobserver.js',
                     'src/core/observable.js',
-                    'src/core/linq/observable.concurrency.js',
+                    'src/core/linq/observable/observeon.js', // ObserveOnObserver
+                    'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
                     'src/core/linq/observable.creation.js',
                     'src/core/linq/observable.multiple.js',
                     'src/core/linq/observable.single.js',
@@ -100,7 +101,8 @@ module.exports = function (grunt) {
                     'src/core/scheduledobserver.js',
                     'src/core/observeonobserver.js',
                     'src/core/observable.js',
-                    'src/core/linq/observable.concurrency.js',
+                    'src/core/linq/observable/observeon.js', // ObserveOnObserver
+                    'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
                     'src/core/linq/observable.creation.js',
                     'src/core/linq/observable.multiple.js',
                     'src/core/linq/observable.single.js',
@@ -213,7 +215,10 @@ module.exports = function (grunt) {
                     'src/core/subintro.js',
                     'src/core/coincidenceheader.js',
                     'src/core/internal/dictionary.js',
-                    'src/core/linq/observable.coincidence.js',
+                    'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
+                    'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
+                    'src/core/linq/observable/buffer.js', // window, selectMany, toArray
+                    'src/core/linq/observable/window.js', // CompositeDisposable, RefCountDisposable, Subject, SingleAssignmentDisposable
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.coincidence.js'
