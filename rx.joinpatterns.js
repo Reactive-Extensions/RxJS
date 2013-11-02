@@ -335,8 +335,6 @@
         return JoinObserver;
     } (AbstractObserver));
 
-    // Observable extensions
-    
     /**
      *  Creates a pattern that matches when both observable sequences have an available value.
      *  

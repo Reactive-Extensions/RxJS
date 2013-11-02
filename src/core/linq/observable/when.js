@@ -1,25 +1,3 @@
-    // Observable extensions
-    
-    /**
-     *  Creates a pattern that matches when both observable sequences have an available value.
-     *  
-     *  @param right Observable sequence to match with the current sequence.
-     *  @return {Pattern} Pattern object that matches when both observable sequences have an available value.     
-     */
-    observableProto.and = function (right) {
-        return new Pattern([this, right]);
-    };
-
-    /**
-     *  Matches when the observable sequence has an available value and projects the value.
-     *  
-     *  @param selector Selector that will be invoked for values in the source sequence.
-     *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator. 
-     */    
-    observableProto.then = function (selector) {
-        return new Pattern([this]).then(selector);
-    };
-
     /**
      *  Joins together the results from several patterns.
      *  

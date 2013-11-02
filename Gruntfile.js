@@ -253,7 +253,9 @@ module.exports = function (grunt) {
                     'src/core/joins/plan.js',
                     'src/core/joins/activeplan.js',
                     'src/core/joins/joinobserver.js',
-                    'src/core/linq/observable.joins.js',
+                    'src/core/linq/observable/and.js', // Pattern
+                    'src/core/linq/observable/then.js', // Pattern
+                    'src/core/linq/observable/when.js', // CompositeDisposable
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.joinpatterns.js'
