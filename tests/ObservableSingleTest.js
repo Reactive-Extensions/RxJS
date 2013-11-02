@@ -24,6 +24,7 @@
         });
         results.messages.assertEqual();
     });
+
     test('Materialize_Empty', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -35,6 +36,7 @@
         ok(results[0].value.kind === 'N' && results[0].value.value.kind === 'C' && results[0].time === 250);
         ok(results[1].value.kind === 'C' && results[1].time === 250);
     });
+
     test('Materialize_Return', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -47,6 +49,7 @@
         ok(results[1].value.kind === 'N' && results[1].value.value.kind === 'C' && results[1].time === 250);
         ok(results[2].value.kind === 'C' && results[1].time === 250);
     });
+
     test('Materialize_Throw', function () {
         var ex, results, scheduler, xs;
         ex = 'ex';
@@ -59,6 +62,7 @@
         ok(results[0].value.kind === 'N' && results[0].value.value.kind === 'E' && results[0].value.value.exception === ex);
         ok(results[1].value.kind === 'C');
     });
+
     test('Materialize_Dematerialize_Never', function () {
         var results, scheduler;
         scheduler = new TestScheduler();
@@ -67,6 +71,7 @@
         });
         results.messages.assertEqual();
     });
+
     test('Materialize_Dematerialize_Empty', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -77,6 +82,7 @@
         equal(1, results.length);
         ok(results[0].value.kind === 'C' && results[0].time === 250);
     });
+
     test('Materialize_Dematerialize_Return', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -88,6 +94,7 @@
         ok(results[0].value.kind === 'N' && results[0].value.value === 2 && results[0].time === 210);
         ok(results[1].value.kind === 'C');
     });
+
     test('Materialize_Dematerialize_Throw', function () {
         var ex, results, scheduler, xs;
         ex = 'ex';
@@ -99,6 +106,7 @@
         equal(1, results.length);
         ok(results[0].value.kind === 'E' && results[0].value.exception === ex && results[0].time === 250);
     });
+
     test('StartWith', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -137,6 +145,7 @@
         ok(sequenceEqual(results[0].value.value, [2, 3, 4, 5]) && results[0].time === 250);
         ok(results[1].value.kind === 'C' && results[1].time === 250);
     });
+
     test('Buffer_Count_FullWindows', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -149,6 +158,7 @@
         ok(sequenceEqual(results[1].value.value, [4, 5]) && results[1].time === 240);
         ok(results[2].value.kind === 'C' && results[2].time === 250);
     });
+
     test('Buffer_Count_FullAndPartialWindows', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -161,6 +171,7 @@
         ok(sequenceEqual(results[1].value.value, [5]) && results[1].time === 250);
         ok(results[2].value.kind === 'C' && results[2].time === 250);
     });
+
     test('Buffer_Count_Error', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -171,6 +182,7 @@
         equal(1, results.length);
         ok(results[0].value.kind === 'E' && results[0].time === 250);
     });
+
     test('Buffer_Count_Skip_Less', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -185,6 +197,7 @@
         ok(sequenceEqual(results[3].value.value, [5]) && results[3].time === 250);
         ok(results[4].value.kind === 'C' && results[4].time === 250);
     });
+
     test('Buffer_Count_Skip_More', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -197,11 +210,13 @@
         ok(sequenceEqual(results[1].value.value, [5]) && results[1].time === 250);
         ok(results[2].value.kind === 'C' && results[2].time === 250);
     });
+
     test('AsObservable_Hides', function () {
         var someObservable;
         someObservable = Rx.Observable.empty();
         ok(someObservable.asObservable() !== someObservable);
     });
+
     test('AsObservable_Never', function () {
         var results, scheduler;
         scheduler = new TestScheduler();
@@ -210,6 +225,7 @@
         });
         results.messages.assertEqual();
     });
+
     test('AsObservable_Empty', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -220,6 +236,7 @@
         equal(1, results.length);
         ok(results[0].value.kind === 'C' && results[0].time === 250);
     });
+
     test('AsObservable_Throw', function () {
         var ex, results, scheduler, xs;
         ex = 'ex';
@@ -231,6 +248,7 @@
         equal(1, results.length);
         ok(results[0].value.kind === 'E' && results[0].value.exception === ex && results[0].time === 250);
     });
+
     test('AsObservable_Return', function () {
         var results, scheduler, xs;
         scheduler = new TestScheduler();
@@ -242,6 +260,7 @@
         ok(results[0].value.kind === 'N' && results[0].value.value === 2 && results[0].time === 220);
         ok(results[1].value.kind === 'C' && results[1].time === 250);
     });
+
     test('AsObservable_IsNotEager', function () {
         var scheduler, subscribed, xs;
         scheduler = new TestScheduler();
@@ -261,6 +280,7 @@
         });
         ok(subscribed);
     });
+    
     test('Scan_Seed_Never', function () {
         var results, scheduler, seed;
         scheduler = new TestScheduler();

@@ -24,7 +24,7 @@
     // Aliases
     var Observable = Rx.Observable,
         observableProto = Observable.prototype,
-        observableCreateWithDisposable = Observable.createWithDisposable,
+        AnonymousObservable = Rx.Internals.AnonymousObservable,
         observableConcat = Observable.concat,
         observableDefer = Observable.defer,
         observableEmpty = Observable.empty,
@@ -68,8 +68,7 @@
      /**
      *  Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
      *  This operator allows for a fluent style of writing queries that use the same sequence multiple times.
-     *  
-     * @memberOf Observable#
+     *
      * @param {Function} selector Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.
      * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
      */
@@ -84,8 +83,6 @@
      *  1 - res = Rx.Observable.if(condition, obs1);
      *  2 - res = Rx.Observable.if(condition, obs1, obs2);
      *  3 - res = Rx.Observable.if(condition, obs1, scheduler);
-     * @static
-     * @memberOf Observable
      * @param {Function} condition The condition which determines if the thenSource or elseSource will be run.
      * @param {Observable} thenSource The observable sequence that will be run if the condition function returns true.
      * @param {Observable} [elseSource] The observable sequence that will be run if the condition function returns false. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.  
@@ -105,8 +102,6 @@
      /**
      *  Concatenates the observable sequences obtained by running the specified result selector for each element in source.
      * There is an alias for this method called 'forIn' for browsers <IE9
-     * @static
-     * @memberOf Observable
      * @param {Array} sources An array of values to turn into an observable sequence.
      * @param {Function} resultSelector A function to apply to each item in the sources array to turn it into an observable sequence.
      * @returns {Observable} An observable sequence from the concatenated observable sequences.  
@@ -118,8 +113,7 @@
      /**
      *  Repeats source as long as condition holds emulating a while loop.
      * There is an alias for this method called 'whileDo' for browsers <IE9
-     * @static
-     * @memberOf Observable
+     *
      * @param {Function} condition The condition which determines if the source will be repeated.
      * @param {Observable} source The observable sequence that will be run if the condition function returns true.
      * @returns {Observable} An observable sequence which is repeated as long as the condition holds.  
@@ -131,7 +125,6 @@
      /**
      *  Repeats source as long as condition holds emulating a do while loop.
      *
-     * @memberOf Observable#
      * @param {Function} condition The condition which determines if the source will be repeated.
      * @param {Observable} source The observable sequence that will be run if the condition function returns true.
      * @returns {Observable} An observable sequence which is repeated as long as the condition holds. 
@@ -149,8 +142,6 @@
      *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 }, obs0);
      *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 }, scheduler);
      * 
-     * @static  
-     * @memberOf Observable
      * @param {Function} selector The function which extracts the value for to test in a case statement.
      * @param {Array} sources A object which has keys which correspond to the case statement labels.
      * @param {Observable} [elseSource] The observable sequence that will be run if the sources are not matched. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.
@@ -172,7 +163,6 @@
      /**
      *  Expands an observable sequence by recursively invoking selector.
      *  
-     * @memberOf Observable#
      * @param {Function} selector Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
      * @param {Scheduler} [scheduler] Scheduler on which to perform the expansion. If not provided, this defaults to the current thread scheduler.
      * @returns {Observable} An observable sequence containing all the elements produced by the recursive expansion.
@@ -180,7 +170,7 @@
     observableProto.expand = function (selector, scheduler) {
         scheduler || (scheduler = immediateScheduler);
         var source = this;
-        return observableCreateWithDisposable(function (observer) {
+        return new AnonymousObservable(function (observer) {
             var q = [],
                 m = new SerialDisposable(),
                 d = new CompositeDisposable(m),
@@ -239,14 +229,12 @@
      *  
      * @example
      *  1 - res = Rx.Observable.forkJoin([obs1, obs2]);
-     *  1 - res = Rx.Observable.forkJoin(obs1, obs2, ...);
-     * @static
-     * @memberOf Observable     
+     *  1 - res = Rx.Observable.forkJoin(obs1, obs2, ...);  
      * @returns {Observable} An observable sequence with an array collecting the last elements of all the input sequences.
      */
     Observable.forkJoin = function () {
         var allSources = argsOrArray(arguments, 0);
-        return observableCreateWithDisposable(function (subscriber) {
+        return new AnonymousObservable(function (subscriber) {
             var count = allSources.length;
             if (count === 0) {
                 subscriber.onCompleted();
@@ -296,8 +284,7 @@
 
      /**
      *  Runs two observable sequences in parallel and combines their last elemenets.
-     *  
-     * @memberOf Observable#
+     *
      * @param {Observable} second Second observable sequence.
      * @param {Function} resultSelector Result selector function to invoke with the last elements of both sequences.
      * @returns {Observable} An observable sequence with the result of calling the selector function with the last elements of both input sequences.
@@ -305,7 +292,7 @@
     observableProto.forkJoin = function (second, resultSelector) {
         var first = this;
 
-        return observableCreateWithDisposable(function (observer) {
+        return new AnonymousObservable(function (observer) {
             var leftStopped = false, rightStopped = false,
                 hasLeft = false, hasRight = false,
                 lastLeft, lastRight,
@@ -382,7 +369,7 @@
     observableProto.manySelect = function (selector, scheduler) {
         scheduler || (scheduler = immediateScheduler);
         var source = this;
-        return Observable.defer(function () {
+        return observableDefer(function () {
             var chain;
 
             return source

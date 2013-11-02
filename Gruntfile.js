@@ -228,7 +228,17 @@ module.exports = function (grunt) {
                     'src/core/license.js',
                     'src/core/subintro.js',
                     'src/core/experimentalheader.js',
-                    'src/core/linq/observable.experimental.js',
+                    'src/core/linq/enumerable/while.js', // Enumerable
+                    'src/core/linq/observable/let.js',
+                    'src/core/linq/observable/if.js', // defer, empty
+                    'src/core/linq/observable/for.js', // Enumerable.forEach, concatproto
+                    'src/core/linq/observable/while.js', // Enumerable.while, concatproto
+                    'src/core/linq/observable/dowhile.js', // Enumerable.while, concat
+                    'src/core/linq/observable/case.js', // defer, empty
+                    'src/core/linq/observable/expand.js', // immediateScheduler, SerialDisposable, CompositeDisposable, SingleAssignmentDisposable
+                    'src/core/linq/observable/forkjoin.js', // CompositeDisposable
+                    'src/core/linq/observable/forkjoinproto.js', // SingleAssignmentDisposable, CompositeDisposable
+                    'src/core/linq/observable/manyselect.js', // ImmediateScheduler, CurrentThreadScheduler, select, do, observeOn
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.experimental.js'

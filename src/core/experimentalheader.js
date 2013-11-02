@@ -1,7 +1,7 @@
     // Aliases
     var Observable = Rx.Observable,
         observableProto = Observable.prototype,
-        observableCreateWithDisposable = Observable.createWithDisposable,
+        AnonymousObservable = Rx.Internals.AnonymousObservable,
         observableConcat = Observable.concat,
         observableDefer = Observable.defer,
         observableEmpty = Observable.empty,
