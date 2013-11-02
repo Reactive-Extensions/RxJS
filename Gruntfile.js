@@ -282,7 +282,35 @@ module.exports = function (grunt) {
                     'src/core/license.js',
                     'src/core/subintro.js',
                     'src/core/timeheader.js',
-                    'src/core/linq/observable.time.js',
+                    'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+                    'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
+                    'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
+                    'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
+                    'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
+                    'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
+                    'src/core/linq/observable/delay.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
+                    'src/core/linq/observable/throttle.js', // AnonymousObservable, SerialDisposable, timeoutScheduler, SingleAssignmentDisposable, CompositeDisposable
+                    'src/core/linq/observable/windowwithtime.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
+                    'src/core/linq/observable/windowwithtimeorcount.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
+                    'src/core/linq/observable/bufferwithtime.js', // windowwithtime, selectMany, toArray
+                    'src/core/linq/observable/bufferwithtimeourcount.js', // windowwithtimeorcount, selectMany, toArray
+                    'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
+                    'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
+                    'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
+                    'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
+                    'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
+                    'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
+                    'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
+                    'src/core/linq/observable/delaywithselector.js',
+                    'src/core/linq/observable/timeoutwithselector.js',
+                    'src/core/linq/observable/throttlewithselector.js',
+                    'src/core/linq/observable/skiplastwithtime.js',
+                    'src/core/linq/observable/takelastwithtime.js',
+                    'src/core/linq/observable/takelastbufferwithtime.js',
+                    'src/core/linq/observable/takewithtime.js',
+                    'src/core/linq/observable/skipwithtime.js',
+                    'src/core/linq/observable/skipuntilwithtime.js',
+                    'src/core/linq/observable/takeuntilwithtime.js',
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.time.js'

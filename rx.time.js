@@ -99,8 +99,6 @@
      *  1 - res = Rx.Observable.interval(1000);
      *  2 - res = Rx.Observable.interval(1000, Rx.Scheduler.timeout);
      *      
-     * @static
-     * @memberOf Observable
      * @param {Number} period Period for producing the values in the resulting sequence (specified as an integer denoting milliseconds).
      * @param {Scheduler} [scheduler] Scheduler to run the timer on. If not specified, Rx.Scheduler.timeout is used.
      * @returns {Observable} An observable sequence that produces a value after each period.
@@ -124,8 +122,6 @@
      *  7 - res = Rx.Observable.timer(5000, Rx.Scheduler.timeout);
      *  8 - res = Rx.Observable.timer(5000, 1000, Rx.Scheduler.timeout);
      *  
-     * @static
-     * @memberOf Observable 
      * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
      * @param {Mixed} [periodOrScheduler]  Period to produce subsequent values (specified as an integer denoting milliseconds), or the scheduler to run the timer on. If not specified, the resulting timer is not recurring.
      * @param {Scheduler} [scheduler]  Scheduler to run the timer on. If not specified, the timeout scheduler is used.
@@ -253,7 +249,6 @@
      *  1 - res = source.throttle(5000); // 5 seconds
      *  2 - res = source.throttle(5000, scheduler);        
      * 
-     * @memberOf Observable
      * @param {Number} dueTime Duration of the throttle period for each value (specified as an integer denoting milliseconds).
      * @param {Scheduler} [scheduler]  Scheduler to run the throttle timers on. If not specified, the timeout scheduler is used.
      * @returns {Observable} The throttled sequence.
@@ -302,7 +297,6 @@
      *  1 - res = xs.windowWithTime(1000, scheduler); // non-overlapping segments of 1 second
      *  2 - res = xs.windowWithTime(1000, 500 , scheduler); // segments of 1 second with time shift 0.5 seconds
      *      
-     * @memberOf Observable#
      * @param {Number} timeSpan Length of each window (specified as an integer denoting milliseconds).
      * @param {Mixed} [timeShiftOrScheduler]  Interval between creation of consecutive windows (specified as an integer denoting milliseconds), or an optional scheduler parameter. If not specified, the time shift corresponds to the timeSpan parameter, resulting in non-overlapping adjacent windows.
      * @param {Scheduler} [scheduler]  Scheduler to run windowing timers on. If not specified, the timeout scheduler is used.
@@ -474,7 +468,6 @@
      *  1 - res = xs.bufferWithTime(1000, scheduler); // non-overlapping segments of 1 second
      *  2 - res = xs.bufferWithTime(1000, 500, scheduler; // segments of 1 second with time shift 0.5 seconds
      *      
-     * @memberOf Observable#
      * @param {Number} timeSpan Length of each buffer (specified as an integer denoting milliseconds).
      * @param {Mixed} [timeShiftOrScheduler]  Interval between creation of consecutive buffers (specified as an integer denoting milliseconds), or an optional scheduler parameter. If not specified, the time shift corresponds to the timeSpan parameter, resulting in non-overlapping adjacent buffers.
      * @param {Scheduler} [scheduler]  Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
@@ -491,7 +484,6 @@
      *  1 - res = source.bufferWithTimeOrCount(5000, 50); // 5s or 50 items in an array 
      *  2 - res = source.bufferWithTimeOrCount(5000, 50, scheduler); // 5s or 50 items in an array
      *      
-     * @memberOf Observable#
      * @param {Number} timeSpan Maximum time length of a buffer.
      * @param {Number} count Maximum element count of a buffer.
      * @param {Scheduler} [scheduler]  Scheduler to run bufferin timers on. If not specified, the timeout scheduler is used.
@@ -510,7 +502,6 @@
      *  1 - res = source.timeInterval();
      *  2 - res = source.timeInterval(Rx.Scheduler.timeout);
      *      
-     * @memberOf Observable#
      * @param [scheduler]  Scheduler used to compute time intervals. If not specified, the timeout scheduler is used.
      * @returns {Observable} An observable sequence with time interval information on values.
      */
@@ -537,7 +528,6 @@
      *  1 - res = source.timestamp(); // produces { value: x, timestamp: ts }
      *  2 - res = source.timestamp(Rx.Scheduler.timeout);
      *      
-     * @memberOf Observable#
      * @param {Scheduler} [scheduler]  Scheduler used to compute timestamps. If not specified, the timeout scheduler is used.
      * @returns {Observable} An observable sequence with timestamp information on values.
      */
@@ -586,7 +576,6 @@
      *  2 - res = source.sample(5000); // 5 seconds
      *  2 - res = source.sample(5000, Rx.Scheduler.timeout); // 5 seconds
      *      
-     * @memberOf Observable#
      * @param {Mixed} intervalOrSampler Interval at which to sample (specified as an integer denoting milliseconds) or Sampler Observable.
      * @param {Scheduler} [scheduler]  Scheduler to run the sampling timer on. If not specified, the timeout scheduler is used.
      * @returns {Observable} Sampled observable sequence.
@@ -610,7 +599,6 @@
      *  5 - res = source.timeout(new Date(), Rx.Observable.returnValue(42), Rx.Scheduler.timeout); // As a date and timeout observable
      *  6 - res = source.timeout(5000, Rx.Observable.returnValue(42), Rx.Scheduler.timeout); // 5 seconds and timeout observable
      *      
-     * @memberOf Observable#
      * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
      * @param {Observable} [other]  Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
      * @param {Scheduler} [scheduler]  Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
@@ -680,11 +668,9 @@
      *      function (x) { return return true; }, 
      *      function (x) { return x + 1; }, 
      *      function (x) { return x; }, 
-     *      function (x) { return new Date(); 
+     *      function (x) { return new Date(); }
      *  });
      *      
-     * @static
-     * @memberOf Observable
      * @param {Mixed} initialState Initial state.
      * @param {Function} condition Condition to terminate generation (upon returning false).
      * @param {Function} iterate Iteration step function.
@@ -740,8 +726,6 @@
      *      function (x) { return 500; }
      *  );
      *      
-     * @static
-     * @memberOf Observable
      * @param {Mixed} initialState Initial state.
      * @param {Function} condition Condition to terminate generation (upon returning false).
      * @param {Function} iterate Iteration step function.
@@ -793,7 +777,6 @@
      *  1 - res = source.delaySubscription(5000); // 5s
      *  2 - res = source.delaySubscription(5000, Rx.Scheduler.timeout); // 5 seconds
      *      
-     * @memberOf Observable#
      * @param {Number} dueTime Absolute or relative time to perform the subscription at.
      * @param {Scheduler} [scheduler]  Scheduler to run the subscription delay timer on. If not specified, the timeout scheduler is used.
      * @returns {Observable} Time-shifted sequence.
@@ -809,8 +792,7 @@
      * @example
      *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(5000); }); // with selector only
      *  1 - res = source.delayWithSelector(Rx.Observable.timer(2000), function (x) { return Rx.Observable.timer(x); }); // with delay and selector
-     *      
-     * @memberOf Observable#
+     *
      * @param {Observable} [subscriptionDelay]  Sequence indicating the delay for the subscription to the source. 
      * @param {Function} delayDurationSelector Selector function to retrieve a sequence indicating the delay for each given element.
      * @returns {Observable} Time-shifted sequence.
@@ -875,7 +857,6 @@
      *  2 - res = source.timeoutWithSelector(Rx.Observable.timer(500), function (x) { return Rx.Observable.timer(200); });
      *  3 - res = source.timeoutWithSelector(Rx.Observable.timer(500), function (x) { return Rx.Observable.timer(200); }, Rx.Observable.returnValue(42));
      *      
-     * @memberOf Observable#
      * @param {Observable} [firstTimeout]  Observable sequence that represents the timeout for the first element. If not provided, this defaults to Observable.never().
      * @param {Function} [timeoutDurationSelector] Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
      * @param {Observable} [other]  Sequence to return in case of a timeout. If not provided, this is set to Observable.throwException(). 
@@ -955,7 +936,6 @@
      * @example
      *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(x + x); }); 
      * 
-     * @memberOf Observable#
      * @param {Function} throttleDurationSelector Selector function to retrieve a sequence indicating the throttle duration for each given element.
      * @returns {Observable} The throttled sequence.
      */
@@ -1016,7 +996,6 @@
      *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
      *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
      *  result sequence. This causes elements to be delayed with duration.          
-     * @memberOf Observable#
      * @param {Number} duration Duration for skipping elements from the end of the sequence.
      * @param {Scheduler} [scheduler]  Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout
      * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
@@ -1051,7 +1030,6 @@
      *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
      *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
      *  result sequence. This causes elements to be delayed with duration.    
-     * @memberOf Observable#
      * @param {Number} duration Duration for taking elements from the end of the sequence.
      * @param {Scheduler} [timerScheduler]  Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
      * @param {Scheduler} [loopScheduler]  Scheduler to drain the collected elements. If not specified, defaults to Rx.Scheduler.immediate.
@@ -1070,7 +1048,6 @@
      *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
      *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
      *  result sequence. This causes elements to be delayed with duration.   
-     * @memberOf Observable#
      * @param {Number} duration Duration for taking elements from the end of the sequence.
      * @param {Scheduler} scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
      * @returns {Observable} An observable sequence containing a single array with the elements taken during the specified duration from the end of the source sequence.
@@ -1111,7 +1088,6 @@
      *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
      *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
      *  result sequence. This causes elements to be delayed with duration.    
-     * @memberOf Observable#
      * @param {Number} duration Duration for taking elements from the start of the sequence.
      * @param {Scheduler} scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
      * @returns {Observable} An observable sequence with the elements taken during the specified duration from the start of the source sequence.
@@ -1139,8 +1115,7 @@
      *  This is a side-effect of the asynchrony introduced by the scheduler, where the action that causes callbacks from the source sequence to be forwarded
      *  may not execute immediately, despite the zero due time.
      *  
-     *  Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the duration.     
-     * @memberOf Observable#     
+     *  Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the duration.      
      * @param {Number} duration Duration for skipping elements from the start of the sequence.
      * @param {Scheduler} scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
      * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the start of the source sequence.
@@ -1167,7 +1142,6 @@
      *  
      * @examples
      *  1 - res = source.skipUntilWithTime(new Date(), [optional scheduler]);         
-     * @memberOf Obseravble#
      * @param startTime Time to start taking elements from the source sequence. If this value is less than or equal to Date(), no elements will be skipped.
      * @param scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
      * @returns {Observable} An observable sequence with the elements skipped until the specified start time. 
@@ -1193,7 +1167,6 @@
      *  
      * @example
      *  1 - res = source.takeUntilWithTime(new Date(), [optional scheduler]);   
-     * @memberOf Observable#   
      * @param {Number} endTime Time to stop taking elements from the source sequence. If this value is less than or equal to new Date(), the result stream will complete immediately.
      * @param {Scheduler} scheduler Scheduler to run the timer on.
      * @returns {Observable} An observable sequence with the elements taken until the specified end time.
