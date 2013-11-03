@@ -2223,8 +2223,6 @@
      * @example
      *  var res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; });
      *  var res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; }, Rx.Scheduler.timeout);
-     * @static
-     * @memberOf Observable
      * @param {Mixed} initialState Initial state.
      * @param {Function} condition Condition to terminate generation (upon returning false).
      * @param {Function} iterate Iteration step function.
@@ -2264,9 +2262,6 @@
 
     /**
      *  Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins).
-     * 
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence whose observers will never get called.
      */
     var observableNever = Observable.never = function () {
@@ -2281,8 +2276,6 @@
      * @example
      *  var res = Rx.Observable.range(0, 10);
      *  var res = Rx.Observable.range(0, 10, Rx.Scheduler.timeout);
-     * @static
-     * @memberOf Observable
      * @param {Number} start The value of the first integer in the sequence.
      * @param {Number} count The number of sequential integers to generate.
      * @param {Scheduler} [scheduler] Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
@@ -2310,8 +2303,6 @@
      *  var res = Rx.Observable.repeat(42, 4);
      *  3 - res = Rx.Observable.repeat(42, 4, Rx.Scheduler.timeout);
      *  4 - res = Rx.Observable.repeat(42, null, Rx.Scheduler.timeout);
-     * @static
-     * @memberOf Observable
      * @param {Mixed} value Element to repeat.
      * @param {Number} repeatCount [Optiona] Number of times to repeat the element. If not specified, repeats indefinitely.
      * @param {Scheduler} scheduler Scheduler to run the producer loop on. If not specified, defaults to Scheduler.immediate.
@@ -2332,8 +2323,6 @@
      * @example
      *  var res = Rx.Observable.return(42);
      *  var res = Rx.Observable.return(42, Rx.Scheduler.timeout);
-     * @static
-     * @memberOf Observable
      * @param {Mixed} value Single element in the resulting observable sequence.
      * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
      * @returns {Observable} An observable sequence containing the single specified element.
@@ -2355,8 +2344,6 @@
      * @example
      *  var res = Rx.Observable.throwException(new Error('Error'));
      *  var res = Rx.Observable.throwException(new Error('Error'), Rx.Scheduler.timeout);
-     * @static
-     * @memberOf Observable
      * @param {Mixed} exception An object used for the sequence's termination.
      * @param {Scheduler} scheduler Scheduler to send the exceptional termination call on. If not specified, defaults to Scheduler.immediate.
      * @returns {Observable} The observable sequence that terminates exceptionally with the specified exception object.
@@ -2375,8 +2362,6 @@
      *  
      * @example
      *  var res = Rx.Observable.using(function () { return new AsyncSubject(); }, function (s) { return s; });
-     * @static
-     * @memberOf Observable
      * @param {Function} resourceFactory Factory function to obtain a resource object.
      * @param {Function} observableFactory Factory function to obtain an observable sequence that depends on the obtained resource.
      * @returns {Observable} An observable sequence whose lifetime controls the lifetime of the dependent resource object.
@@ -2396,6 +2381,7 @@
             return new CompositeDisposable(source.subscribe(observer), disposable);
         });
     };
+
     
     /**
      * Propagates the observable sequence that reacts first.
