@@ -69,7 +69,7 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/return.js',
                     'src/core/linq/observable/throw.js',
                     'src/core/linq/observable/using.js',
-                    
+
                     'src/core/linq/observable.multiple.js',
                     'src/core/linq/observable.single.js',
                     'src/core/linq/observable.standardsequenceoperators.js',
@@ -139,6 +139,10 @@ module.exports = function (grunt) {
 /*                    'src/core/linq/observable/ambproto.js',
                     'src/core/linq/observable/amb.js',
                     'src/core/linq/observable/catchproto.js',
+                    'src/core/linq/observable/catch.js',
+                    'src/core/linq/observable/combinelatestproto',
+                    'src/core/linq/observable/combinelatest.js',
+                    'src/core/linq/observable/concatproto.js',
 */
                     'src/core/linq/observable.multiple.js',
                     'src/core/linq/observable.single.js',
