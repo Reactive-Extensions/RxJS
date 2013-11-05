@@ -69,6 +69,7 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/throw.js',
                     'src/core/linq/observable/using.js',
 
+                    // Multiple
                     'src/core/linq/observable/ambproto.js',
                     'src/core/linq/observable/amb.js',
                     'src/core/linq/observable/catchproto.js',
@@ -90,7 +91,24 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/zip.js',
                     'src/core/linq/observable/ziparray.js',
 
-                    'src/core/linq/observable.single.js',
+                    // Single
+                    'src/core/linq/observable/asobservable.js',
+                    'src/core/linq/observable/bufferwithcount.js',
+                    'src/core/linq/observable/dematerialize.js',
+                    'src/core/linq/observable/distinctuntilchanged.js',
+                    'src/core/linq/observable/do.js',
+                    'src/core/linq/observable/finally.js',
+                    'src/core/linq/observable/ignoreelements.js',
+                    'src/core/linq/observable/materialize.js',
+                    'src/core/linq/observable/repeatproto.js',
+                    'src/core/linq/observable/retry.js',
+                    'src/core/linq/observable/scan.js',
+                    'src/core/linq/observable/skiplast.js',
+                    'src/core/linq/observable/startwith.js',
+                    'src/core/linq/observable/takelast.js',
+                    'src/core/linq/observable/takelastbuffer.js',
+                    'src/core/linq/observable/windowwithcount.js',
+
                     'src/core/linq/observable.standardsequenceoperators.js',
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
@@ -136,9 +154,11 @@ module.exports = function (grunt) {
                     'src/core/observeonobserver.js',
                     'src/core/observable.js',
 
+                    // Concurrency
                     'src/core/linq/observable/observeon.js', // ObserveOnObserver
                     'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
 
+                    // Creation
                     'src/core/linq/observable/create.js',
                     'src/core/linq/observable/createwithdisposable.js',
                     'src/core/linq/observable/defer.js',
@@ -152,6 +172,7 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/throw.js',
                     'src/core/linq/observable/using.js',
 
+                    // Multiple
                     'src/core/linq/observable/ambproto.js',
                     'src/core/linq/observable/amb.js',
                     'src/core/linq/observable/catchproto.js',
@@ -173,7 +194,24 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/zip.js',
                     'src/core/linq/observable/ziparray.js',
 
-                    'src/core/linq/observable.single.js',
+                    // Single
+                    'src/core/linq/observable/asobservable.js',
+                    'src/core/linq/observable/bufferwithcount.js',
+                    'src/core/linq/observable/dematerialize.js',
+                    'src/core/linq/observable/distinctuntilchanged.js',
+                    'src/core/linq/observable/do.js',
+                    'src/core/linq/observable/finally.js',
+                    'src/core/linq/observable/ignoreelements.js',
+                    'src/core/linq/observable/materialize.js',
+                    'src/core/linq/observable/repeatproto.js',
+                    'src/core/linq/observable/retry.js',
+                    'src/core/linq/observable/scan.js',
+                    'src/core/linq/observable/skiplast.js',
+                    'src/core/linq/observable/startwith.js',
+                    'src/core/linq/observable/takelast.js',
+                    'src/core/linq/observable/takelastbuffer.js',
+                    'src/core/linq/observable/windowwithcount.js',
+
                     'src/core/linq/observable.standardsequenceoperators.js',
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',

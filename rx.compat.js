@@ -3024,7 +3024,6 @@
      * @example
      * 1 - res = obs1.zip(obs2, fn);
      * 1 - res = x1.zip([1,2,3], fn);  
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
      */   
     observableProto.zip = function () {
@@ -3164,7 +3163,7 @@
      * @returns {Observable} An observable sequence of buffers.    
      */
     observableProto.bufferWithCount = function (count, skip) {
-        if (skip === undefined) {
+        if (arguments.length === 1) {
             skip = count;
         }
         return this.windowWithCount(count, skip).selectMany(function (x) {
@@ -3190,11 +3189,10 @@
     /**
      *  Returns an observable sequence that contains only distinct contiguous elements according to the keySelector and the comparer.
      *  
-     *  var res = var obs = observable.distinctUntilChanged();
-     *  var res = var obs = observable.distinctUntilChanged(function (x) { return x.id; });
-     *  3 - var obs = observable.distinctUntilChanged(function (x) { return x.id; }, function (x, y) { return x === y; });
-     *  
-     * @memberOf Observable#
+     *  var obs = observable.distinctUntilChanged();
+     *  var obs = observable.distinctUntilChanged(function (x) { return x.id; });
+     *  var obs = observable.distinctUntilChanged(function (x) { return x.id; }, function (x, y) { return x === y; });
+     *
      * @param {Function} [keySelector] A function to compute the comparison key for each element. If not provided, it projects the value.
      * @param {Function} [comparer] Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
      * @returns {Observable} An observable sequence only containing the distinct contiguous elements, based on a computed key value, from the source sequence.   
@@ -3237,10 +3235,8 @@
      * @example
      *  var res = observable.doAction(observer);
      *  var res = observable.doAction(onNext);
-     *  3 - observable.doAction(onNext, onError);
-     *  4 - observable.doAction(onNext, onError, onCompleted);
-     *  
-     * @memberOf Observable#
+     *  var res = observable.doAction(onNext, onError);
+     *  var res = observable.doAction(onNext, onError, onCompleted);
      * @param {Mixed} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
      * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
      * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
@@ -3293,9 +3289,7 @@
      *  Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.
      *  
      * @example
-     *  var res = obs = observable.finallyAction(function () { console.log('sequence ended'; });
-     *  
-     * @memberOf Observable#
+     *  var res = observable.finallyAction(function () { console.log('sequence ended'; });
      * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
      * @returns {Observable} Source sequence with the action-invoking termination behavior applied. 
      */  
@@ -3317,8 +3311,6 @@
 
     /**
      *  Ignores all elements in an observable sequence leaving only the termination messages.
-     *  
-     * @memberOf Observable#
      * @returns {Observable} An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
      */
     observableProto.ignoreElements = function () {
@@ -3330,8 +3322,6 @@
 
     /**
      *  Materializes the implicit notifications of an observable sequence as explicit notification values.
-     *  
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence containing the materialized notification values from the source sequence.
      */    
     observableProto.materialize = function () {
@@ -3339,8 +3329,8 @@
         return new AnonymousObservable(function (observer) {
             return source.subscribe(function (value) {
                 observer.onNext(notificationCreateOnNext(value));
-            }, function (exception) {
-                observer.onNext(notificationCreateOnError(exception));
+            }, function (e) {
+                observer.onNext(notificationCreateOnError(e));
                 observer.onCompleted();
             }, function () {
                 observer.onNext(notificationCreateOnCompleted());
@@ -3355,8 +3345,6 @@
      * @example
      *  var res = repeated = source.repeat();
      *  var res = repeated = source.repeat(42);
-     *  
-     * @memberOf Observable#
      * @param {Number} [repeatCount]  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
      * @returns {Observable} The observable sequence producing the elements of the given sequence repeatedly.   
      */
@@ -3370,8 +3358,6 @@
      * @example
      *  var res = retried = retry.repeat();
      *  var res = retried = retry.repeat(42);
-     *  
-     * @memberOf Observable#
      * @param {Number} [retryCount]  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
      * @returns {Observable} An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully. 
      */
@@ -3382,43 +3368,57 @@
     /**
      *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
      *  For aggregation behavior with no intermediate results, see Observable.aggregate.
-     *  
-     *  var res = scanned = source.scan(function (acc, x) { return acc + x; });
-     *  var res = scanned = source.scan(0, function (acc, x) { return acc + x; });
-     *  
-     * @memberOf Observable#
+     * @example
+     *  var res = source.scan(function (acc, x) { return acc + x; });
+     *  var res = source.scan(0, function (acc, x) { return acc + x; });
      * @param {Mixed} [seed] The initial accumulator value.
      * @param {Function} accumulator An accumulator function to be invoked on each element.
      * @returns {Observable} An observable sequence containing the accumulated values.
      */
     observableProto.scan = function () {
-        var seed, hasSeed = false, accumulator;
+        var hasSeed = false, seed, accumulator, source = this;
         if (arguments.length === 2) {
-            seed = arguments[0];
-            accumulator = arguments[1];
             hasSeed = true;
+            seed = arguments[0];
+            accumulator = arguments[1];        
         } else {
             accumulator = arguments[0];
         }
-        var source = this;
-        return observableDefer(function () {
-            var hasAccumulation = false, accumulation;
-            return source.select(function (x) {
-                if (hasAccumulation) {
-                    accumulation = accumulator(accumulation, x);
-                } else {
-                    accumulation = hasSeed ? accumulator(seed, x) : x;
-                    hasAccumulation = true;
+        return new AnonymousObservable(function (observer) {
+            var hasAccumulation, accumulation, hasValue;
+            return source.subscribe (
+                function (x) {
+                    try {
+                        if (!hasValue) {
+                            hasValue = true;
+                        }
+     
+                        if (hasAccumulation) {
+                            accumulation = accumulator(accumulation, x);
+                        } else {
+                            accumulation = hasSeed ? accumulator(seed, x) : x;
+                            hasAccumulation = true;
+                        }                    
+                    } catch (e) {
+                        observer.onError(e);
+                        return;
+                    }
+     
+                    observer.onNext(accumulation);
+                },
+                observer.onError.bind(observer),
+                function () {
+                    if (!hasValue && hasSeed) {
+                        observer.onNext(seed);
+                    }
+                    observer.onCompleted();
                 }
-                return accumulation;
-            });
+            );
         });
     };
 
     /**
      *  Bypasses a specified number of elements at the end of an observable sequence.
-     *  
-     * @memberOf Observable#
      * @description
      *  This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are
      *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.     
@@ -3463,14 +3463,12 @@
      *  Returns a specified number of contiguous elements from the end of an observable sequence, using an optional scheduler to drain the queue.
      *  
      * @example
-     *  var res = obs = source.takeLast(5);
-     *  var res = obs = source.takeLast(5, Rx.Scheduler.timeout);
+     *  var res = source.takeLast(5);
+     *  var res = source.takeLast(5, Rx.Scheduler.timeout);
      *  
      * @description
      *  This operator accumulates a buffer with a length enough to store elements count elements. Upon completion of
      *  the source sequence, this buffer is drained on the result sequence. This causes the elements to be delayed.
-     *      
-     * @memberOf Observable#
      * @param {Number} count Number of elements to take from the end of the source sequence.
      * @param {Scheduler} [scheduler] Scheduler used to drain the queue upon completion of the source sequence.
      * @returns {Observable} An observable sequence containing the specified number of elements from the end of the source sequence.
@@ -3484,9 +3482,7 @@
      *  
      * @description
      *  This operator accumulates a buffer with a length enough to store count elements. Upon completion of the
-     *  source sequence, this buffer is produced on the result sequence. 
-     *      
-     * @memberOf Observable#         
+     *  source sequence, this buffer is produced on the result sequence.       
      * @param {Number} count Number of elements to take from the end of the source sequence.
      * @returns {Observable} An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
      */
@@ -3511,8 +3507,6 @@
      *  
      *  var res = xs.windowWithCount(10);
      *  var res = xs.windowWithCount(10, 1);
-     *      
-     * @memberOf Observable#
      * @param {Number} count Length of each window.
      * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
      * @returns {Observable} An observable sequence of windows.  
@@ -3522,7 +3516,7 @@
         if (count <= 0) {
             throw new Error(argumentOutOfRange);
         }
-        if (skip == null) {
+        if (arguments.length === 1) {
             skip = count;
         }
         if (skip <= 0) {
