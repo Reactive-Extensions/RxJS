@@ -2382,7 +2382,6 @@
         });
     };
 
-    
     /**
      * Propagates the observable sequence that reacts first.
      * @param {Observable} rightSource Second observable sequence.
@@ -2453,7 +2452,7 @@
      * Propagates the observable sequence that reacts first.
      *
      * @example
-     * E.g. winner = Rx.Observable.amb(xs, ys, zs);
+     * var = Rx.Observable.amb(xs, ys, zs);
      * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
      */  
     Observable.amb = function () {
@@ -2509,8 +2508,6 @@
      * @example
      * 1 - res = Rx.Observable.catchException(xs, ys, zs);
      * 2 - res = Rx.Observable.catchException([xs, ys, zs]);
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
      */
     var observableCatch = Observable.catchException = Observable['catch'] = function () {
@@ -2525,7 +2522,6 @@
      * @example
      * 1 - obs = observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
      * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
      */
     observableProto.combineLatest = function () {
@@ -2544,8 +2540,6 @@
      * @example
      * 1 - obs = Rx.Observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
      * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });     
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
      */
     var combineLatest = Observable.combineLatest = function () {
@@ -2609,7 +2603,6 @@
      * @example
      * 1 - concatenated = xs.concat(ys, zs);
      * 2 - concatenated = xs.concat([ys, zs]);
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
      */ 
     observableProto.concat = function () {
@@ -2624,19 +2617,15 @@
      * @example
      * 1 - res = Rx.Observable.concat(xs, ys, zs);
      * 2 - res = Rx.Observable.concat([xs, ys, zs]);
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
      */
     var observableConcat = Observable.concat = function () {
         var sources = argsOrArray(arguments, 0);
         return enumerableFor(sources).concat();
-    };    
+    };  
 
     /**
      * Concatenates an observable sequence of observable sequences.
-     * 
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence that contains the elements of each observed inner sequence, in sequential order. 
      */ 
     observableProto.concatObservable = observableProto.concatAll =function () {
@@ -2650,7 +2639,6 @@
      * @example
      * 1 - merged = sources.merge(1);
      * 2 - merged = source.merge(otherSource);  
-     * @memberOf Observable#
      * @param {Mixed} [maxConcurrentOrOther] Maximum number of inner observable sequences being subscribed to concurrently or the second observable sequence.
      * @returns {Observable} The observable sequence that merges the elements of the inner sequences. 
      */ 
@@ -2707,9 +2695,6 @@
      * 2 - merged = Rx.Observable.merge([xs, ys, zs]);
      * 3 - merged = Rx.Observable.merge(scheduler, xs, ys, zs);
      * 4 - merged = Rx.Observable.merge(scheduler, [xs, ys, zs]);    
-     * 
-     * @static
-     * @memberOf Observable
      * @returns {Observable} The observable sequence that merges the elements of the observable sequences. 
      */  
     var observableMerge = Observable.merge = function () {
@@ -2728,12 +2713,10 @@
             sources = sources[0];
         }
         return observableFromArray(sources, scheduler).mergeObservable();
-    };    
+    };   
 
     /**
      * Merges an observable sequence of observable sequences into an observable sequence.
-     * 
-     * @memberOf Observable#
      * @returns {Observable} The observable sequence that merges the elements of the inner sequences.   
      */  
     observableProto.mergeObservable = observableProto.mergeAll =function () {
@@ -2766,8 +2749,6 @@
 
     /**
      * Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
-     * 
-     * @memberOf Observable
      * @param {Observable} second Second observable sequence used to produce results after the first sequence terminates.
      * @returns {Observable} An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
      */
@@ -2784,8 +2765,6 @@
      * @example
      * 1 - res = Rx.Observable.onErrorResumeNext(xs, ys, zs);
      * 1 - res = Rx.Observable.onErrorResumeNext([xs, ys, zs]);
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.   
      */
     var onErrorResumeNext = Observable.onErrorResumeNext = function () {
@@ -2813,8 +2792,6 @@
 
     /**
      * Returns the values from the source observable sequence only after the other observable sequence produces a value.
-     * 
-     * @memberOf Observable#
      * @param {Observable} other The observable sequence that triggers propagation of elements of the source sequence.
      * @returns {Observable} An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.    
      */
@@ -2847,8 +2824,6 @@
 
     /**
      * Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-     * 
-     * @memberOf Observable#
      * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
      */
     observableProto['switch'] = observableProto.switchLatest = function () {
@@ -2890,8 +2865,6 @@
 
     /**
      * Returns the values from the source observable sequence until the other observable sequence produces a value.
-     * 
-     * @memberOf Observable#
      * @param {Observable} other Observable sequence that terminates propagation of elements of the source sequence.
      * @returns {Observable} An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.   
      */
@@ -2986,12 +2959,8 @@
             return new CompositeDisposable(subscriptions);
         });
     };
-
     /**
      * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
-     * 
-     * @static
-     * @memberOf Observable
      * @param arguments Observable sources.
      * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
@@ -3004,9 +2973,6 @@
 
     /**
      * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-     * 
-     * @static
-     * @memberOf Observable     
      * @param arguments Observable sources.
      * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
      */
@@ -3057,7 +3023,6 @@
             return compositeDisposable;
         });
     };
-
 
     /**
      *  Hides the identity of an observable sequence.

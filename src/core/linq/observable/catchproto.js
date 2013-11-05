@@ -1,3 +1,23 @@
+    function observableCatchHandler(source, handler) {
+        return new AnonymousObservable(function (observer) {
+            var d1 = new SingleAssignmentDisposable(), subscription = new SerialDisposable();
+            subscription.setDisposable(d1);
+            d1.setDisposable(source.subscribe(observer.onNext.bind(observer), function (exception) {
+                var d, result;
+                try {
+                    result = handler(exception);
+                } catch (ex) {
+                    observer.onError(ex);
+                    return;
+                }
+                d = new SingleAssignmentDisposable();
+                subscription.setDisposable(d);
+                d.setDisposable(result.subscribe(observer));
+            }, observer.onCompleted.bind(observer)));
+            return subscription;
+        });
+    }
+
     /**
      * Continues an observable sequence that is terminated by an exception with the next observable sequence.
      * @example
