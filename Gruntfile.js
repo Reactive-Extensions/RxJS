@@ -110,7 +110,7 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/windowwithcount.js',
 
                     // Standard query operators
-/*                    'src/core/linq/observable/defaultifempty.js',
+                    'src/core/linq/observable/defaultifempty.js',
                     'src/core/linq/observable/distinct.js',
                     'src/core/linq/observable/groupby.js',
                     'src/core/linq/observable/groupbyuntil.js',
@@ -119,10 +119,11 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/selectmany.js',
                     'src/core/linq/observable/selectswitch.js',
                     'src/core/linq/observable/skip.js',
-                    'src/core/linq/observable/skipwhile.js',*/
-                    
+                    'src/core/linq/observable/skipwhile.js',
+                    'src/core/linq/observable/take.js',
+                    'src/core/linq/observable/takewhile.js',
+                    'src/core/linq/observable/where.js',
 
-                    'src/core/linq/observable.standardsequenceoperators.js',
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/linq/groupedobservable.js',
@@ -225,7 +226,21 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/takelastbuffer.js',
                     'src/core/linq/observable/windowwithcount.js',
 
-                    'src/core/linq/observable.standardsequenceoperators.js',
+                    // Standard query operators
+                    'src/core/linq/observable/defaultifempty.js',
+                    'src/core/linq/observable/distinct.js',
+                    'src/core/linq/observable/groupby.js',
+                    'src/core/linq/observable/groupbyuntil.js',
+                    'src/core/linq/observable/select.js',
+                    'src/core/linq/observable/pluck.js',
+                    'src/core/linq/observable/selectmany.js',
+                    'src/core/linq/observable/selectswitch.js',
+                    'src/core/linq/observable/skip.js',
+                    'src/core/linq/observable/skipwhile.js',
+                    'src/core/linq/observable/take.js',
+                    'src/core/linq/observable/takewhile.js',
+                    'src/core/linq/observable/where.js',
+                    
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/linq/groupedobservable.js',

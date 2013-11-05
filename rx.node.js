@@ -19,7 +19,7 @@ Rx.Node = {
      *
      * Converts a callback function to an observable sequence. 
      * 
-     * @param {Function} function Function to convert to an asynchronous function.
+     * @param {Function} func Function to convert to an asynchronous function.
      * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
      * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
      * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
@@ -49,7 +49,7 @@ Rx.Node = {
      *    
      * Handles an event from the given EventEmitter as an observable sequence.
      *
-     * @param {EventEmitter} eventEmiiter The EventEmitter to subscribe to the given event.
+     * @param {EventEmitter} eventEmitter The EventEmitter to subscribe to the given event.
      * @param {String} eventName The event name to subscribe
      * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
      * @returns {Observable} An observable sequence generated from the named event from the given EventEmitter.  The data will be returned as an array of arguments to the handler.
@@ -61,7 +61,7 @@ Rx.Node = {
     /**
      * Converts the given observable sequence to an event emitter with the given event name. 
      * The errors are handled on the 'error' event and completion on the 'end' event.
-     * @param {Observable} The observable sequence to convert to an EventEmitter.
+     * @param {Observable} observable The observable sequence to convert to an EventEmitter.
      * @param {String} eventName The event name to emit onNext calls.
      * @returns {EventEmitter} An EventEmitter which emits the given eventName for each onNext call in addition to 'error' and 'end' events.  
      *   You must call publish in order to invoke the subscription on the Observable sequuence.

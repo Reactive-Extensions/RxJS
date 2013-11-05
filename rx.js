@@ -3480,9 +3480,7 @@
      * @example
      *  var res = obs = xs.distinct();
      *  2 - obs = xs.distinct(function (x) { return x.id; });
-     *  2 - obs = xs.distinct(function (x) { return x.id; }, function (x) { return x.toString(); });
-     *      
-     * @memberOf Observable#     
+     *  2 - obs = xs.distinct(function (x) { return x.id; }, function (x) { return x.toString(); });  
      * @param {Function} [keySelector]  A function to compute the comparison key for each element.
      * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
      * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
@@ -3523,8 +3521,6 @@
      *  var res = observable.groupBy(function (x) { return x.id; });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; }, function (x) { return x.toString(); });
-     *      
-     * @memberOf Observable#
      * @param {Function} keySelector A function to extract the key for each element.
      * @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
      * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
@@ -3545,8 +3541,6 @@
      *  var res = observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); });
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); }, function (x) { return x.toString(); });
-     *      
-     * @memberOf Observable#
      * @param {Function} keySelector A function to extract the key for each element.
      * @param {Function} durationSelector A function to signal the expiration of a group.
      * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
@@ -3648,8 +3642,6 @@
 
     /**
      *  Projects each element of an observable sequence into a new form by incorporating the element's index.
-     *  
-     * @memberOf Observable#
      * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
@@ -3673,8 +3665,6 @@
 
     /**
      * Retrieves the value of a specified property from all elements in the Observable sequence.
-     *
-     * @memberOf Observable#
      * @param {String} property The property to pluck.
      * @returns {Observable} Returns a new Observable sequence of property values.
      */
@@ -3760,8 +3750,6 @@
      *  
      *  var res = source.skipWhile(function (value) { return value < 10; });
      *  var res = source.skipWhile(function (value, index) { return value < 10 || index < 10; });
-     *      
-     * @memberOf Observable#
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.     
      * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
@@ -3790,9 +3778,7 @@
      *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
      *  
      *  var res = source.take(5);
-     *  2 - source.take(0, Rx.Scheduler.timeout);
-     *      
-     * @memberOf Observable#
+     *  var res = source.take(0, Rx.Scheduler.timeout);
      * @param {Number} count The number of elements to return.
      * @param {Scheduler} [scheduler] Scheduler used to produce an OnCompleted message in case <paramref name="count count</paramref> is set to 0.
      * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.  
@@ -3826,8 +3812,6 @@
      * @example
      *  var res = source.takeWhile(function (value) { return value < 10; });
      *  var res = source.takeWhile(function (value, index) { return value < 10 || index < 10; });
-     *      
-     * @memberOf Observable#
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.     
      * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
@@ -3860,8 +3844,6 @@
      * @example
      *  var res = source.where(function (value) { return value < 10; });
      *  var res = source.where(function (value, index) { return value < 10 || index < 10; });
-     *      
-     * @memberOf Observable#
      * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
@@ -3884,6 +3866,7 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
+
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
 
