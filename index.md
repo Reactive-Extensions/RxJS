@@ -3,13 +3,15 @@ layout: default
 title: RxJS Reactive Extensions for JavaScript
 ---
 
+<a href="https://github.com/you"><img style="position: absolute; top: 0; right: 0; border: 0;" src="https://s3.amazonaws.com/github/ribbons/forkme_right_gray_6d6d6d.png" alt="Fork me on GitHub"></a>
+
 <h2 class="tag"> Clean Composable Code</h2>
 
-# The Need to go Reactive #
+<h1 data-nav="The Need">The Need to go Reactive</h1>
 
 Reactive Programming is a hot topic as of late, especially with such things as the [Reactive Manifesto](http://www.reactivemanifesto.org/).  Applications, especially on the web have changed over the years from being a simple static page, to DHTML with animations, to the Ajax revolution.  Each time, we're adding more complexity, more data, and asynchronous behavior to our applications.  How do we manage it all?  How do we scale it?  By moving towards "Reactive Architectures" which are event-driven, resilient and responsive.  With the Reactive Extensions, you have all the tools you need to help build these systems.
 
-# About the Reactive Extensions #
+<h1 data-nav="About">About the Reactive Extensions</h1>
 
 The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators modeled after Language Integrated Queries ([LINQ](http://en.wikipedia.org/wiki/LINQ)). Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using LINQ operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + LINQ + Schedulers.
 Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming as a matter of course. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
@@ -157,7 +159,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
 
-# GETTING STARTED
+# Getting Started
 
 There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
 
@@ -227,7 +229,7 @@ There are a number of ways to get started with RxJS. The files are available on 
         obs.subscribe(function (x) { console.log(x); });
     });
 
-# What about my libraries? #
+<h1 data-nav="Other Libraries"> What about my libraries?</h1>
 
 The Reactive Extensions for JavaScript have no external dependencies any library, so they'll work well with just about any library.  We provide bridges and support for various libraries including:
 
