@@ -301,9 +301,13 @@
             return xs.scan(seed, function (acc, x) {
                 return acc + x;
             });
-        }).messages;
-        equal(1, results.length);
-        ok(results[0].value.kind === 'C' && results[0].time === 250);
+        });
+
+        results.messages.assertEqual(
+            onNext(250, 0),
+            onCompleted(250)
+        );
+        
     });
     test('Scan_Seed_Return', function () {
         var results, scheduler, seed, xs;

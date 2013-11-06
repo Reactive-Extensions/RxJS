@@ -2500,7 +2500,6 @@
         });
     };
 
-    
     /**
      * Propagates the observable sequence that reacts first.
      * @param {Observable} rightSource Second observable sequence.
@@ -2571,7 +2570,7 @@
      * Propagates the observable sequence that reacts first.
      *
      * @example
-     * E.g. winner = Rx.Observable.amb(xs, ys, zs);
+     * var = Rx.Observable.amb(xs, ys, zs);
      * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
      */  
     Observable.amb = function () {
@@ -2627,8 +2626,6 @@
      * @example
      * 1 - res = Rx.Observable.catchException(xs, ys, zs);
      * 2 - res = Rx.Observable.catchException([xs, ys, zs]);
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
      */
     var observableCatch = Observable.catchException = Observable['catch'] = function () {
@@ -2643,7 +2640,6 @@
      * @example
      * 1 - obs = observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
      * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
      */
     observableProto.combineLatest = function () {
@@ -2662,8 +2658,6 @@
      * @example
      * 1 - obs = Rx.Observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
      * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });     
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
      */
     var combineLatest = Observable.combineLatest = function () {
@@ -2727,7 +2721,6 @@
      * @example
      * 1 - concatenated = xs.concat(ys, zs);
      * 2 - concatenated = xs.concat([ys, zs]);
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
      */ 
     observableProto.concat = function () {
@@ -2742,19 +2735,15 @@
      * @example
      * 1 - res = Rx.Observable.concat(xs, ys, zs);
      * 2 - res = Rx.Observable.concat([xs, ys, zs]);
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
      */
     var observableConcat = Observable.concat = function () {
         var sources = argsOrArray(arguments, 0);
         return enumerableFor(sources).concat();
-    };    
+    };  
 
     /**
      * Concatenates an observable sequence of observable sequences.
-     * 
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence that contains the elements of each observed inner sequence, in sequential order. 
      */ 
     observableProto.concatObservable = observableProto.concatAll =function () {
@@ -2768,7 +2757,6 @@
      * @example
      * 1 - merged = sources.merge(1);
      * 2 - merged = source.merge(otherSource);  
-     * @memberOf Observable#
      * @param {Mixed} [maxConcurrentOrOther] Maximum number of inner observable sequences being subscribed to concurrently or the second observable sequence.
      * @returns {Observable} The observable sequence that merges the elements of the inner sequences. 
      */ 
@@ -2825,9 +2813,6 @@
      * 2 - merged = Rx.Observable.merge([xs, ys, zs]);
      * 3 - merged = Rx.Observable.merge(scheduler, xs, ys, zs);
      * 4 - merged = Rx.Observable.merge(scheduler, [xs, ys, zs]);    
-     * 
-     * @static
-     * @memberOf Observable
      * @returns {Observable} The observable sequence that merges the elements of the observable sequences. 
      */  
     var observableMerge = Observable.merge = function () {
@@ -2846,12 +2831,10 @@
             sources = sources[0];
         }
         return observableFromArray(sources, scheduler).mergeObservable();
-    };    
+    };   
 
     /**
      * Merges an observable sequence of observable sequences into an observable sequence.
-     * 
-     * @memberOf Observable#
      * @returns {Observable} The observable sequence that merges the elements of the inner sequences.   
      */  
     observableProto.mergeObservable = observableProto.mergeAll =function () {
@@ -2884,8 +2867,6 @@
 
     /**
      * Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
-     * 
-     * @memberOf Observable
      * @param {Observable} second Second observable sequence used to produce results after the first sequence terminates.
      * @returns {Observable} An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
      */
@@ -2902,8 +2883,6 @@
      * @example
      * 1 - res = Rx.Observable.onErrorResumeNext(xs, ys, zs);
      * 1 - res = Rx.Observable.onErrorResumeNext([xs, ys, zs]);
-     * @static
-     * @memberOf Observable
      * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.   
      */
     var onErrorResumeNext = Observable.onErrorResumeNext = function () {
@@ -2931,8 +2910,6 @@
 
     /**
      * Returns the values from the source observable sequence only after the other observable sequence produces a value.
-     * 
-     * @memberOf Observable#
      * @param {Observable} other The observable sequence that triggers propagation of elements of the source sequence.
      * @returns {Observable} An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.    
      */
@@ -2965,8 +2942,6 @@
 
     /**
      * Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-     * 
-     * @memberOf Observable#
      * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
      */
     observableProto['switch'] = observableProto.switchLatest = function () {
@@ -3008,8 +2983,6 @@
 
     /**
      * Returns the values from the source observable sequence until the other observable sequence produces a value.
-     * 
-     * @memberOf Observable#
      * @param {Observable} other Observable sequence that terminates propagation of elements of the source sequence.
      * @returns {Observable} An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.   
      */
@@ -3051,7 +3024,6 @@
      * @example
      * 1 - res = obs1.zip(obs2, fn);
      * 1 - res = x1.zip([1,2,3], fn);  
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
      */   
     observableProto.zip = function () {
@@ -3104,12 +3076,8 @@
             return new CompositeDisposable(subscriptions);
         });
     };
-
     /**
      * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
-     * 
-     * @static
-     * @memberOf Observable
      * @param arguments Observable sources.
      * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
@@ -3122,9 +3090,6 @@
 
     /**
      * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-     * 
-     * @static
-     * @memberOf Observable     
      * @param arguments Observable sources.
      * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
      */
@@ -3176,7 +3141,6 @@
         });
     };
 
-
     /**
      *  Hides the identity of an observable sequence.
      * @returns {Observable} An observable sequence that hides the identity of the source sequence.    
@@ -3199,7 +3163,7 @@
      * @returns {Observable} An observable sequence of buffers.    
      */
     observableProto.bufferWithCount = function (count, skip) {
-        if (skip === undefined) {
+        if (arguments.length === 1) {
             skip = count;
         }
         return this.windowWithCount(count, skip).selectMany(function (x) {
@@ -3225,11 +3189,10 @@
     /**
      *  Returns an observable sequence that contains only distinct contiguous elements according to the keySelector and the comparer.
      *  
-     *  var res = var obs = observable.distinctUntilChanged();
-     *  var res = var obs = observable.distinctUntilChanged(function (x) { return x.id; });
-     *  3 - var obs = observable.distinctUntilChanged(function (x) { return x.id; }, function (x, y) { return x === y; });
-     *  
-     * @memberOf Observable#
+     *  var obs = observable.distinctUntilChanged();
+     *  var obs = observable.distinctUntilChanged(function (x) { return x.id; });
+     *  var obs = observable.distinctUntilChanged(function (x) { return x.id; }, function (x, y) { return x === y; });
+     *
      * @param {Function} [keySelector] A function to compute the comparison key for each element. If not provided, it projects the value.
      * @param {Function} [comparer] Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
      * @returns {Observable} An observable sequence only containing the distinct contiguous elements, based on a computed key value, from the source sequence.   
@@ -3272,10 +3235,8 @@
      * @example
      *  var res = observable.doAction(observer);
      *  var res = observable.doAction(onNext);
-     *  3 - observable.doAction(onNext, onError);
-     *  4 - observable.doAction(onNext, onError, onCompleted);
-     *  
-     * @memberOf Observable#
+     *  var res = observable.doAction(onNext, onError);
+     *  var res = observable.doAction(onNext, onError, onCompleted);
      * @param {Mixed} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
      * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
      * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
@@ -3328,9 +3289,7 @@
      *  Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.
      *  
      * @example
-     *  var res = obs = observable.finallyAction(function () { console.log('sequence ended'; });
-     *  
-     * @memberOf Observable#
+     *  var res = observable.finallyAction(function () { console.log('sequence ended'; });
      * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
      * @returns {Observable} Source sequence with the action-invoking termination behavior applied. 
      */  
@@ -3352,8 +3311,6 @@
 
     /**
      *  Ignores all elements in an observable sequence leaving only the termination messages.
-     *  
-     * @memberOf Observable#
      * @returns {Observable} An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
      */
     observableProto.ignoreElements = function () {
@@ -3365,8 +3322,6 @@
 
     /**
      *  Materializes the implicit notifications of an observable sequence as explicit notification values.
-     *  
-     * @memberOf Observable#
      * @returns {Observable} An observable sequence containing the materialized notification values from the source sequence.
      */    
     observableProto.materialize = function () {
@@ -3374,8 +3329,8 @@
         return new AnonymousObservable(function (observer) {
             return source.subscribe(function (value) {
                 observer.onNext(notificationCreateOnNext(value));
-            }, function (exception) {
-                observer.onNext(notificationCreateOnError(exception));
+            }, function (e) {
+                observer.onNext(notificationCreateOnError(e));
                 observer.onCompleted();
             }, function () {
                 observer.onNext(notificationCreateOnCompleted());
@@ -3390,8 +3345,6 @@
      * @example
      *  var res = repeated = source.repeat();
      *  var res = repeated = source.repeat(42);
-     *  
-     * @memberOf Observable#
      * @param {Number} [repeatCount]  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
      * @returns {Observable} The observable sequence producing the elements of the given sequence repeatedly.   
      */
@@ -3405,8 +3358,6 @@
      * @example
      *  var res = retried = retry.repeat();
      *  var res = retried = retry.repeat(42);
-     *  
-     * @memberOf Observable#
      * @param {Number} [retryCount]  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
      * @returns {Observable} An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully. 
      */
@@ -3417,43 +3368,57 @@
     /**
      *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
      *  For aggregation behavior with no intermediate results, see Observable.aggregate.
-     *  
-     *  var res = scanned = source.scan(function (acc, x) { return acc + x; });
-     *  var res = scanned = source.scan(0, function (acc, x) { return acc + x; });
-     *  
-     * @memberOf Observable#
+     * @example
+     *  var res = source.scan(function (acc, x) { return acc + x; });
+     *  var res = source.scan(0, function (acc, x) { return acc + x; });
      * @param {Mixed} [seed] The initial accumulator value.
      * @param {Function} accumulator An accumulator function to be invoked on each element.
      * @returns {Observable} An observable sequence containing the accumulated values.
      */
     observableProto.scan = function () {
-        var seed, hasSeed = false, accumulator;
+        var hasSeed = false, seed, accumulator, source = this;
         if (arguments.length === 2) {
-            seed = arguments[0];
-            accumulator = arguments[1];
             hasSeed = true;
+            seed = arguments[0];
+            accumulator = arguments[1];        
         } else {
             accumulator = arguments[0];
         }
-        var source = this;
-        return observableDefer(function () {
-            var hasAccumulation = false, accumulation;
-            return source.select(function (x) {
-                if (hasAccumulation) {
-                    accumulation = accumulator(accumulation, x);
-                } else {
-                    accumulation = hasSeed ? accumulator(seed, x) : x;
-                    hasAccumulation = true;
+        return new AnonymousObservable(function (observer) {
+            var hasAccumulation, accumulation, hasValue;
+            return source.subscribe (
+                function (x) {
+                    try {
+                        if (!hasValue) {
+                            hasValue = true;
+                        }
+     
+                        if (hasAccumulation) {
+                            accumulation = accumulator(accumulation, x);
+                        } else {
+                            accumulation = hasSeed ? accumulator(seed, x) : x;
+                            hasAccumulation = true;
+                        }                    
+                    } catch (e) {
+                        observer.onError(e);
+                        return;
+                    }
+     
+                    observer.onNext(accumulation);
+                },
+                observer.onError.bind(observer),
+                function () {
+                    if (!hasValue && hasSeed) {
+                        observer.onNext(seed);
+                    }
+                    observer.onCompleted();
                 }
-                return accumulation;
-            });
+            );
         });
     };
 
     /**
      *  Bypasses a specified number of elements at the end of an observable sequence.
-     *  
-     * @memberOf Observable#
      * @description
      *  This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are
      *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.     
@@ -3498,14 +3463,12 @@
      *  Returns a specified number of contiguous elements from the end of an observable sequence, using an optional scheduler to drain the queue.
      *  
      * @example
-     *  var res = obs = source.takeLast(5);
-     *  var res = obs = source.takeLast(5, Rx.Scheduler.timeout);
+     *  var res = source.takeLast(5);
+     *  var res = source.takeLast(5, Rx.Scheduler.timeout);
      *  
      * @description
      *  This operator accumulates a buffer with a length enough to store elements count elements. Upon completion of
      *  the source sequence, this buffer is drained on the result sequence. This causes the elements to be delayed.
-     *      
-     * @memberOf Observable#
      * @param {Number} count Number of elements to take from the end of the source sequence.
      * @param {Scheduler} [scheduler] Scheduler used to drain the queue upon completion of the source sequence.
      * @returns {Observable} An observable sequence containing the specified number of elements from the end of the source sequence.
@@ -3519,9 +3482,7 @@
      *  
      * @description
      *  This operator accumulates a buffer with a length enough to store count elements. Upon completion of the
-     *  source sequence, this buffer is produced on the result sequence. 
-     *      
-     * @memberOf Observable#         
+     *  source sequence, this buffer is produced on the result sequence.       
      * @param {Number} count Number of elements to take from the end of the source sequence.
      * @returns {Observable} An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
      */
@@ -3546,8 +3507,6 @@
      *  
      *  var res = xs.windowWithCount(10);
      *  var res = xs.windowWithCount(10, 1);
-     *      
-     * @memberOf Observable#
      * @param {Number} count Length of each window.
      * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
      * @returns {Observable} An observable sequence of windows.  
@@ -3557,7 +3516,7 @@
         if (count <= 0) {
             throw new Error(argumentOutOfRange);
         }
-        if (skip == null) {
+        if (arguments.length === 1) {
             skip = count;
         }
         if (skip <= 0) {
@@ -3639,9 +3598,7 @@
      * @example
      *  var res = obs = xs.distinct();
      *  2 - obs = xs.distinct(function (x) { return x.id; });
-     *  2 - obs = xs.distinct(function (x) { return x.id; }, function (x) { return x.toString(); });
-     *      
-     * @memberOf Observable#     
+     *  2 - obs = xs.distinct(function (x) { return x.id; }, function (x) { return x.toString(); });  
      * @param {Function} [keySelector]  A function to compute the comparison key for each element.
      * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
      * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
@@ -3682,8 +3639,6 @@
      *  var res = observable.groupBy(function (x) { return x.id; });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; }, function (x) { return x.toString(); });
-     *      
-     * @memberOf Observable#
      * @param {Function} keySelector A function to extract the key for each element.
      * @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
      * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
@@ -3704,8 +3659,6 @@
      *  var res = observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); });
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); }, function (x) { return x.toString(); });
-     *      
-     * @memberOf Observable#
      * @param {Function} keySelector A function to extract the key for each element.
      * @param {Function} durationSelector A function to signal the expiration of a group.
      * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
@@ -3807,8 +3760,6 @@
 
     /**
      *  Projects each element of an observable sequence into a new form by incorporating the element's index.
-     *  
-     * @memberOf Observable#
      * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
@@ -3832,8 +3783,6 @@
 
     /**
      * Retrieves the value of a specified property from all elements in the Observable sequence.
-     *
-     * @memberOf Observable#
      * @param {String} property The property to pluck.
      * @returns {Observable} Returns a new Observable sequence of property values.
      */
@@ -3919,8 +3868,6 @@
      *  
      *  var res = source.skipWhile(function (value) { return value < 10; });
      *  var res = source.skipWhile(function (value, index) { return value < 10 || index < 10; });
-     *      
-     * @memberOf Observable#
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.     
      * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
@@ -3949,9 +3896,7 @@
      *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
      *  
      *  var res = source.take(5);
-     *  2 - source.take(0, Rx.Scheduler.timeout);
-     *      
-     * @memberOf Observable#
+     *  var res = source.take(0, Rx.Scheduler.timeout);
      * @param {Number} count The number of elements to return.
      * @param {Scheduler} [scheduler] Scheduler used to produce an OnCompleted message in case <paramref name="count count</paramref> is set to 0.
      * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.  
@@ -3985,8 +3930,6 @@
      * @example
      *  var res = source.takeWhile(function (value) { return value < 10; });
      *  var res = source.takeWhile(function (value, index) { return value < 10 || index < 10; });
-     *      
-     * @memberOf Observable#
      * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.     
      * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
@@ -4019,8 +3962,6 @@
      * @example
      *  var res = source.where(function (value) { return value < 10; });
      *  var res = source.where(function (value, index) { return value < 10 || index < 10; });
-     *      
-     * @memberOf Observable#
      * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
@@ -4043,6 +3984,7 @@
             }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
         });
     };
+
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
 

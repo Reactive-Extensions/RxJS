@@ -52,11 +52,10 @@ module.exports = function (grunt) {
                     'src/core/scheduledobserver.js',
                     'src/core/observeonobserver.js',
                     'src/core/observable.js',
-                    // Concurrency
+
                     'src/core/linq/observable/observeon.js', // ObserveOnObserver
-                    'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
-                    
-                    // Create
+                    'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable                
+
                     'src/core/linq/observable/create.js',
                     'src/core/linq/observable/createwithdisposable.js',
                     'src/core/linq/observable/defer.js',
@@ -69,10 +68,62 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/return.js',
                     'src/core/linq/observable/throw.js',
                     'src/core/linq/observable/using.js',
-                    
-                    'src/core/linq/observable.multiple.js',
-                    'src/core/linq/observable.single.js',
-                    'src/core/linq/observable.standardsequenceoperators.js',
+
+                    // Multiple
+                    'src/core/linq/observable/ambproto.js',
+                    'src/core/linq/observable/amb.js',
+                    'src/core/linq/observable/catchproto.js',
+                    'src/core/linq/observable/catch.js',
+                    'src/core/linq/observable/combinelatestproto.js',
+                    'src/core/linq/observable/combinelatest.js',
+                    'src/core/linq/observable/concatproto.js',
+                    'src/core/linq/observable/concat.js',
+                    'src/core/linq/observable/concatobservable.js',
+                    'src/core/linq/observable/mergeproto.js',
+                    'src/core/linq/observable/merge.js',
+                    'src/core/linq/observable/mergeobservable.js',
+                    'src/core/linq/observable/onerrorresumenextproto.js',
+                    'src/core/linq/observable/onerrorresumenext.js',
+                    'src/core/linq/observable/skipuntil.js',
+                    'src/core/linq/observable/switch.js',
+                    'src/core/linq/observable/takeuntil.js',
+                    'src/core/linq/observable/zipproto.js',
+                    'src/core/linq/observable/zip.js',
+                    'src/core/linq/observable/ziparray.js',
+
+                    // Single
+                    'src/core/linq/observable/asobservable.js',
+                    'src/core/linq/observable/bufferwithcount.js',
+                    'src/core/linq/observable/dematerialize.js',
+                    'src/core/linq/observable/distinctuntilchanged.js',
+                    'src/core/linq/observable/do.js',
+                    'src/core/linq/observable/finally.js',
+                    'src/core/linq/observable/ignoreelements.js',
+                    'src/core/linq/observable/materialize.js',
+                    'src/core/linq/observable/repeatproto.js',
+                    'src/core/linq/observable/retry.js',
+                    'src/core/linq/observable/scan.js',
+                    'src/core/linq/observable/skiplast.js',
+                    'src/core/linq/observable/startwith.js',
+                    'src/core/linq/observable/takelast.js',
+                    'src/core/linq/observable/takelastbuffer.js',
+                    'src/core/linq/observable/windowwithcount.js',
+
+                    // Standard query operators
+                    'src/core/linq/observable/defaultifempty.js',
+                    'src/core/linq/observable/distinct.js',
+                    'src/core/linq/observable/groupby.js',
+                    'src/core/linq/observable/groupbyuntil.js',
+                    'src/core/linq/observable/select.js',
+                    'src/core/linq/observable/pluck.js',
+                    'src/core/linq/observable/selectmany.js',
+                    'src/core/linq/observable/selectswitch.js',
+                    'src/core/linq/observable/skip.js',
+                    'src/core/linq/observable/skipwhile.js',
+                    'src/core/linq/observable/take.js',
+                    'src/core/linq/observable/takewhile.js',
+                    'src/core/linq/observable/where.js',
+
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/linq/groupedobservable.js',
@@ -120,8 +171,8 @@ module.exports = function (grunt) {
                     // Concurrency
                     'src/core/linq/observable/observeon.js', // ObserveOnObserver
                     'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
-                    
-                    // Create
+
+                    // Creation
                     'src/core/linq/observable/create.js',
                     'src/core/linq/observable/createwithdisposable.js',
                     'src/core/linq/observable/defer.js',
@@ -135,14 +186,61 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/throw.js',
                     'src/core/linq/observable/using.js',
 
-                    // Mulitple
-/*                    'src/core/linq/observable/ambproto.js',
+                    // Multiple
+                    'src/core/linq/observable/ambproto.js',
                     'src/core/linq/observable/amb.js',
                     'src/core/linq/observable/catchproto.js',
-*/
-                    'src/core/linq/observable.multiple.js',
-                    'src/core/linq/observable.single.js',
-                    'src/core/linq/observable.standardsequenceoperators.js',
+                    'src/core/linq/observable/catch.js',
+                    'src/core/linq/observable/combinelatestproto.js',
+                    'src/core/linq/observable/combinelatest.js',
+                    'src/core/linq/observable/concatproto.js',
+                    'src/core/linq/observable/concat.js',
+                    'src/core/linq/observable/concatobservable.js',
+                    'src/core/linq/observable/mergeproto.js',
+                    'src/core/linq/observable/merge.js',
+                    'src/core/linq/observable/mergeobservable.js',
+                    'src/core/linq/observable/onerrorresumenextproto.js',
+                    'src/core/linq/observable/onerrorresumenext.js',
+                    'src/core/linq/observable/skipuntil.js',
+                    'src/core/linq/observable/switch.js',
+                    'src/core/linq/observable/takeuntil.js',
+                    'src/core/linq/observable/zipproto.js',
+                    'src/core/linq/observable/zip.js',
+                    'src/core/linq/observable/ziparray.js',
+
+                    // Single
+                    'src/core/linq/observable/asobservable.js',
+                    'src/core/linq/observable/bufferwithcount.js',
+                    'src/core/linq/observable/dematerialize.js',
+                    'src/core/linq/observable/distinctuntilchanged.js',
+                    'src/core/linq/observable/do.js',
+                    'src/core/linq/observable/finally.js',
+                    'src/core/linq/observable/ignoreelements.js',
+                    'src/core/linq/observable/materialize.js',
+                    'src/core/linq/observable/repeatproto.js',
+                    'src/core/linq/observable/retry.js',
+                    'src/core/linq/observable/scan.js',
+                    'src/core/linq/observable/skiplast.js',
+                    'src/core/linq/observable/startwith.js',
+                    'src/core/linq/observable/takelast.js',
+                    'src/core/linq/observable/takelastbuffer.js',
+                    'src/core/linq/observable/windowwithcount.js',
+
+                    // Standard query operators
+                    'src/core/linq/observable/defaultifempty.js',
+                    'src/core/linq/observable/distinct.js',
+                    'src/core/linq/observable/groupby.js',
+                    'src/core/linq/observable/groupbyuntil.js',
+                    'src/core/linq/observable/select.js',
+                    'src/core/linq/observable/pluck.js',
+                    'src/core/linq/observable/selectmany.js',
+                    'src/core/linq/observable/selectswitch.js',
+                    'src/core/linq/observable/skip.js',
+                    'src/core/linq/observable/skipwhile.js',
+                    'src/core/linq/observable/take.js',
+                    'src/core/linq/observable/takewhile.js',
+                    'src/core/linq/observable/where.js',
+                    
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/linq/groupedobservable.js',

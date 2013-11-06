@@ -19,6 +19,9 @@
                     count: prev.count + 1
                 };
             }).finalValue().select(function (s) {
+                if (s.count === 0) {
+                    throw new Error('The input sequence was empty');
+                }
                 return s.sum / s.count;
             });
     };

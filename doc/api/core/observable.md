@@ -42,6 +42,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`when`](#rxobservablewhenargs)
 - [`while | whileDo`](#rxobservablewhilecondition-source)
 - [`zip`](#rxobservablezipargs)
+- [`zipArray`](#rxobservableziparrayargs)
 
 <!-- div -->
 
@@ -1875,7 +1876,61 @@ var subscription = source.subscribe(
 
 ### Location
 
+File:
+- /src/core/observable/ziparray.js
+
+Dist:
 - rx.js
+- rx.compat.js
+
+
+* * *
+
+### <a id="rxobservableziparrayargs"></a>`Rx.Observable.zipArray(...args)`
+<a href="#rxobservableprototypeziparrayargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") 
+
+Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
+
+#### Arguments
+1. `args` *(Arguments | Array)*: Observable sources.
+
+#### Returns
+*(Observable)*: An observable sequence containing lists of elements at corresponding indexes.
+
+#### Example
+```js
+var range = Rx.Observable.range(0, 5);
+
+var source = Rx.Observable.zipArray(
+    range,
+    range.skip(1), 
+    range.skip(2)
+);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0,1,2 
+// => Next: 1,2,3 
+// => Next: 2,3,4 
+// => Completed 
+
+#### Location
+
+File:
+- /src/core/observable/ziparray.js
+
+Dist:
+- rx.js
+- rx.compat.js
 
 * * *
 
@@ -3423,49 +3478,6 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.aggregates.js
-
-* * *
-
-### <a id="rxobservableprototypeexpandselector-scheduler"></a>`Rx.Observable.prototype.expand(selector, [scheduler])`
-<a href="#rxobservableprototypeexpandselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L179-L234 "View in source") 
-
-Expands an observable sequence by recursively invoking selector.
-
-#### Arguments
-1. `selector` *(Function)*: Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
-2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler on which to perform the expansion. If not provided, this defaults to the immediate scheduler.
-
-#### Returns
-*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
-
-#### Example
-```js
-var source = Rx.Observable.return(42)
-    .expand(function (x) { return Rx.Observable.return(42 + x); })
-    .take(5);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42 
-// => Next: 84 
-// => Next: 126 
-// => Next: 168 
-// => Next: 210 
-// => Completed    
-```
-
-#### Location
-
-- rx.experimental.js
 
 * * *
 
@@ -5767,7 +5779,7 @@ var subscription = source.subscribe(
 ### <a id="rxobservableprototypeselectselector-thisarg"></a>`Rx.Observable.prototype.select(selector, [thisArg])`
 <a href="#rxobservableprototypeselectselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
 
-Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `map` method.
 
 #### Arguments
 1. `selector` *(Function)*:  Transform function to apply to each source element.  The selector is called with the following information:
@@ -7437,7 +7449,14 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+File:
+- /src/core/observable/window.js
+
+Requirements
+- rx.js | rx.compat.js
+
+Dist:
+- rx.coincidence.js
 
 * * *
 
@@ -7502,7 +7521,14 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+File:
+- /src/core/observable/windowwithcount.js
+
+Requirements
+- rx.js | rx.compat.js
+
+Dist:
+- rx.time.js
 
 * * *
 
@@ -7523,12 +7549,23 @@ Projects each element of an observable sequence into zero or more buffers which 
 ```js
 /* Without a skip */
 var source = Rx.Observable.interval(100)
-    .bufferWithTime(500)
+    .windowWithTime(500)
     .take(3);
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x.toString());
+    function (child) {
+
+        child.toArray().subscribe(
+            function (x) {
+                console.log('Child Next: ' + x.toString());
+            },
+            function (err) {
+                console.log('Child Error: ' + err);   
+            },
+            function () {
+                console.log('Child Completed');   
+            }
+        );
     },
     function (err) {
         console.log('Error: ' + err);   
@@ -7537,19 +7574,33 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: 0,1,2,3 
-// => Next: 4,5,6,7,8 
-// => Next: 9,10,11,12,13 
+// => Child Next: 0,1,2,3 
+// => Child Completed 
 // => Completed 
+// => Child Next: 4,5,6,7,8 
+// => Child Completed 
+// => Child Next: 9,10,11,12,13 
+// => Child Completed 
 
 /* Using a skip */
 var source = Rx.Observable.interval(100)
-    .bufferWithTime(500, 100)
+    .windowWithTime(500, 100)
     .take(3);
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x.toString());
+    function (child) {
+
+        child.toArray().subscribe(
+            function (x) {
+                console.log('Child Next: ' + x.toString());
+            },
+            function (err) {
+                console.log('Child Error: ' + err);   
+            },
+            function () {
+                console.log('Child Completed');   
+            }
+        );
     },
     function (err) {
         console.log('Error: ' + err);   
@@ -7558,14 +7609,25 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: 0,1,2,3,4 
-// => Next: 0,1,2,3,4,5 
-// => Next: 2,3,4,5,6 
 // => Completed 
+// => Child Next: 0,1,2,3,4
+// => Child Completed 
+// => Child Next: 0,1,2,3,4,5
+// => Child Completed 
+// => Child Next: 1,2,3,4,5,6
+// => Child Completed 
 ```
 #### Location
 
+File:
+- /src/core/observable/windowwithtime.js
+
+Requirements
+- rx.js | rx.compat.js
+
+Dist:
 - rx.time.js
+
 
 * * *
 
@@ -7608,6 +7670,13 @@ var subscription = source.subscribe(
 ```
 #### Location
 
+File:
+- /src/core/observable/windowwithtimeorcount.js
+
+Requirements
+- rx.js | rx.compat.js
+
+Dist:
 - rx.time.js
 
 * * *
@@ -7615,14 +7684,16 @@ var subscription = source.subscribe(
 ### <a id="rxobservableprototypezipargs-resultselector"></a>`Rx.Observable.prototype.zip(...args, [resultSelector])`
 <a href="#rxobservableprototypezipargs-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") 
 
-Filters the elements of an observable sequence based on a predicate.  This is an alias for the `filter` method.
+Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
+
+The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the sources.
 
 #### Arguments
 1. `args` *(Arguments | Array)*: Arguments or an array of observable sequences.
 2. `[resultSelector]` *(Any)*: Function to invoke for each series of elements at corresponding indexes in the sources, used only if the first parameter is not an array.
 
 #### Returns
-*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(Observable)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
 
 #### Example
 ```js
@@ -7682,6 +7753,14 @@ var subscription = source.subscribe(
 
 #### Location
 
+File:
+- /src/core/observable/zipproto.js
+
+Requirements
+- none
+
+Dist:
 - rx.js
+- rx.compat.js
 
 * * *

@@ -1,0 +1,20 @@
+    /**
+     *  Bypasses a specified number of elements at the end of an observable sequence.
+     * @description
+     *  This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are
+     *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.     
+     * @param count Number of elements to bypass at the end of the source sequence.
+     * @returns {Observable} An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
+     */
+    observableProto.skipLast = function (count) {
+        var source = this;
+        return new AnonymousObservable(function (observer) {
+            var q = [];
+            return source.subscribe(function (x) {
+                q.push(x);
+                if (q.length > count) {
+                    observer.onNext(q.shift());
+                }
+            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        });
+    };
