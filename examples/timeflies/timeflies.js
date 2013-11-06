@@ -1,7 +1,7 @@
 (function (global, undefined) {
     function getOffset(element) {
         var doc = element.ownerDocument,
-            docElem = doc.documentElement;
+            docElem = doc.documentElement,
             body = doc.body,
             clientTop  = docElem.clientTop  || body.clientTop  || 0,
             clientLeft = docElem.clientLeft || body.clientLeft || 0,
