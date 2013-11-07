@@ -287,7 +287,7 @@ module.exports = function (grunt) {
                 ],
                 dest: 'rx.lite.js'
             },
-            litecompat {
+            litecompat: {
                 src: [
                     'src/core/license.js',
                     'src/core/intro.js',
