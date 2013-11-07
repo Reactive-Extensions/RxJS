@@ -69,7 +69,7 @@ var throttled = keyups
     .throttle(500 /* ms */);
 
 /* Now get only distinct values, so we eliminate the arrows and other control characters */
-var distinct = keyups
+var distinct = throttled
     .distinctUntilChanged();
 ```
 
@@ -94,9 +94,7 @@ Once that is created, now we can tie together the distinct throttled input and t
 
 ```js
 var suggestions = distinct
-    .flatMapLatest(function (text) {
-        return searchWikipedia(text);
-    });
+    .flatMapLatest(searchWikipedia);
 ```
 
 Finally, we call the subscribe method on our observable sequence to start pulling data.
