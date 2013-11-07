@@ -252,7 +252,61 @@ module.exports = function (grunt) {
                     'src/core/outro.js'
                 ],
                 dest: 'rx.js'
-            },            
+            },
+            lite: {
+                src: [
+                    'src/core/license.js',
+                    'src/core/intro.js',
+                    'src/core/liteheader.js',
+
+                    'src/core/internal/deepEquals.js',
+                    'src/core/internal/util.js',
+                    'src/core/internal/priorityqueue.js',
+                    'src/core/disposables/compositedisposable.js',
+                    'src/core/disposables/disposable.js',
+                    'src/core/disposables/booleandisposable',
+                    'src/core/disposables/refcountdisposable.js',
+
+                    'src/core/concurrency/scheduleditem.js',
+                    'src/core/concurrency/scheduler.js',
+                    'src/core/concurrency/immediatescheduler.js',
+                    'src/core/concurrency/currentthreadscheduler.js',
+                    'src/core/concurrency/timeoutscheduler.js',
+
+                    'src/core/notification.js',
+                    'src/core/internal/enumerator.js',
+                    'src/core/internal/enumerable.js',
+                    'src/core/observer.js',
+                    'src/core/abstractobserver.js',
+                    'src/core/anonymousobserver.js',
+                    'src/core/checkedobserver.js',
+                    'src/core/observable.js',
+
+                    'src/core/exports.js',
+                    'src/core/outro.js'  
+                ],
+                dest: 'rx.lite.js'
+            },
+            litecompat {
+                src: [
+                    'src/core/license.js',
+                    'src/core/intro.js',
+                    'src/core/liteheader-compat.js',
+
+                    'src/core/internal/deepEquals.js',
+                    'src/core/internal/util.js',
+                    'src/core/internal/polyfills.js',
+                    'src/core/internal/priorityqueue.js',
+                    'src/core/disposables/compositedisposable.js',
+                    'src/core/disposables/disposable.js',
+                    'src/core/disposables/booleandisposable',
+                    'src/core/disposables/refcountdisposable.js',
+                    
+                    'src/core/exports.js',
+                    'src/core/outro.js'  
+                ],
+                dest: 'rx.lite.compat.js'                  
+            },
             aggregates: {
                 src: [
                     'src/core/license.js',
