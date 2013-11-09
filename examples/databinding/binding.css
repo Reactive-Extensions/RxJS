@@ -1,0 +1,30 @@
+.tko-example {
+  border-left: 2px solid #ace;
+  border-radius: 5px;
+  padding-left: 8px;
+  position: relative;
+  left: -10px;
+}
+
+.tko-example .tko-example-code {
+  display: none;
+}
+
+.tko-list-pills {
+  margin: 10px;
+}
+
+.tko-list-pills li {
+  border: 1px solid #999;
+  border-radius: 5px;
+  padding: 0px 7px;
+  margin: 2px;
+  display: inline-block;
+}
+
+.tko-list-pills li:hover {
+  color: white;
+  background: black;
+  border-color: white;
+  cursor: pointer;
+}

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html language4="en">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">	
+	<title>TKO knocks you out technically!</title>
+	<link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.2/css/bootstrap.css">
+	<link rel="stylesheet" href="binding.css">
+</head>
+<body>
+	<script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.2/bootstrap.js"></script>
+	<!-- TODO: Replace with rx.lite -->
+    <script src="../../rx.compat.js"></script>
+    <script src="../../rx.async.compat.js"></script>
+    <script src="../../rx.binding.js"></script>
+    <script src="../../rx.time.js"></script>   
+    <script src="binding.js"></script>    
+
+	<div class="container">
+		<h1>TKO - Technical Knockout</h1>
+		<p class="lead">Inspired by <a href="https://github.com/cwharris/rxjs-splash">RxJS-Splash</a> and <a href="http://knockoutjs.com/">Knockout.js</a></p>
+		
+		<div class="row">
+			<div class="well" id="textRow">
+				<label>First Name</label>
+				<input type="text" data-tko="value: { source: firstName, on: 'keyup' }"/>
+				<span class="help-block" data-tko="text: firstName"></span>
+				
+				<label>Last Name</label>
+				<input type="text" data-tko="value: { source: lastName, on: 'keyup' }"/>
+				<span class="help-block" data-tko="text: lastName"></span>		
+				
+				<span class="help-block" data-tko="text: fullName"></span>	
+			</div>
+		</div>
+<script>
+
+$(function () {
+	function ViewModel () {
+		this.firstName = tko.behavior('Reactive');
+		this.lastName = tko.behavior('Extensions');
+		this.fullName = tko.computed({
+			params: {
+				firstName: this.firstName,
+				lastName: this.lastName
+			},
+			read: function (params) {
+				return params.firstName + ' ' + params.lastName;
+			}
+		});
+	}
+
+	var vm = new ViewModel();
+
+	tko.applyBindings(vm, $('#textRow'));
+});
+</script>
+
+		<div class="row">
+			<h2>Button Click Example</h2>
+			<div class="well" id="buttonRow">
+
+
+		        <div class="navbar">
+		         	<div class="navbar-inner">
+		            	<div class="nav">
+              				<button class="btn btn-primary" data-tko="click: click">
+		                		Click
+	              			</button>
+		            	</div>
+		          	</div>
+		        </div>
+
+				<label>Times Clicked</label>
+				<span class="help-block" data-tko="text: value"></span>
+
+				<label>Time between clicks</label>
+				<span class="help-block" data-tko="text: interval"></span>				
+			</div>			
+		</div>
+	</div>
+
+<script>
+
+$(function () {
+	function ViewModel () {
+		var count = 0, 
+			sampledCount = 0,
+			self = this;
+		
+		this.value = tko.behavior(0);
+		this.click = function () {
+			self.value.onNext(++count);
+		};
+		this.interval = this.value.timeInterval().pluck('interval');
+	}
+
+	var vm = new ViewModel();
+
+	tko.applyBindings(vm, $('#buttonRow'));
+});
+</script>
+
+	</div>	
+
+       
+</body>
+</html>
