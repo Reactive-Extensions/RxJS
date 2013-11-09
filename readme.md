@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
 
 # The Reactive Extensions for JavaScript (RxJS) <sup>2.2</sup>... #
-*...is a set of libraries to compose asynchronous and event-based programs using observable collections and LINQ-style query operators in JavaScript*
+*...is a set of libraries to compose asynchronous and event-based programs using observable collections and Array#extras style composition in JavaScript*
 
 The project is actively developed by Microsoft Open Technologies, Inc., in collaboration with a community of open source developers.
 
@@ -13,12 +13,60 @@ Reactive Programming is a hot topic as of late, especially with such things as t
 
 ## About the Reactive Extensions ##
 
-The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators modeled after Language Integrated Queries ([LINQ](http://en.wikipedia.org/wiki/LINQ)). Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using LINQ operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + LINQ + Schedulers.
+The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators modeled after Language Integrated Queries ([LINQ](http://en.wikipedia.org/wiki/LINQ)). Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using our many operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + Operators + Schedulers.
+
 Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming as a matter of course. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
 
 Using RxJS, you can represent multiple asynchronous data streams (that come from diverse sources, e.g., stock quote, tweets, computer events, web service requests, etc.), and subscribe to the event stream using the Observer object. The Observable notifies the subscribed Observer instance whenever an event occurs.
 
-Because observable sequences are data streams, you can query them using standard LINQ query operators implemented by the Observable type. Thus you can filter, project, aggregate, compose and perform time-based operations on multiple events easily by using these static LINQ operators. In addition, there are a number of other reactive stream specific operators that allow powerful queries to be written. Cancellation, exceptions, and synchronization are also handled gracefully by using the methods on the Observable object.
+Because observable sequences are data streams, you can query them using standard query operators implemented by the Observable type. Thus you can filter, project, aggregate, compose and perform time-based operations on multiple events easily by using these our many operators. In addition, there are a number of other reactive stream specific operators that allow powerful queries to be written. Cancellation, exceptions, and synchronization are also handled gracefully by using the methods on the Observable object.
+
+But the best news of all is that you already know how to program like this.  Take for example the following JavaScript code, where we get some stock data and then manipulate and then iterate the results.
+
+```js
+/* Get stock data somehow */
+var source = getStockData();
+
+source
+    .filter(function (quote) { 
+        return quote.symbol === 'MSFT'; 
+    })
+    .map(function (quote) { 
+        return quote.price;
+    })
+    .forEach(function (price) {
+        console.log('MSFT Stock Prices: $' + price);
+    });
+```
+
+Now what if this data were to come as some sort of event, for example a stream, such as as a WebSocket, then we could pretty much write the same query to iterate our data, with very litle change.
+
+```js
+/* Get stock data somehow */
+var source = getAsyncStockData();
+
+var subscription = source
+    .filter(function (quote) { 
+        return quote.symbol === 'MSFT'; 
+    })
+    .map(function (quote) { 
+        return quote.price;
+    })
+    .subscribe(
+        function (price) {
+            console.log('MSFT Stock Prices: $' + price);
+        },
+        function (err) {
+            console.log('Something went wrong: ' + err.message);
+        });
+
+/* When we're done */
+subscription.dispose();
+```
+
+The only difference is that we can handle the errors inline with our subscription.  And when we're no longer interested in receiving the data as it comes steraming in, we call `dispose` on our subscription.
+
+## Batteries Included ##
 
 This set of libraries include:
 
@@ -135,6 +183,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 
 - Podcasts
     - [.NET Rocks #907](http://dotnetrocks.com/default.aspx?showNum=907)
+    - [JavaScript Jabber #83](http://javascriptjabber.com/083-jsj-frp-and-rxjs-with-matthew-podwysocki/)
 
 - Articles
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)

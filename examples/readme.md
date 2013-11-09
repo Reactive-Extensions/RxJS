@@ -22,6 +22,14 @@ Paint on an HTML5 Canvas by coordinating mouse move with mouse down events until
 
 * * *
 
+### Data Binding ###
+
+Do data binding just like you would with [knockout.js](http://knockoutjs.com/).
+
+- [See the code](https://github.com/Reactive-Extensions/RxJS/blob/master/examples/databinding/)
+
+* * *
+
 ### Image Cropper ###
 
 Create an image cropper which coordinates the corners of an image to crop.
