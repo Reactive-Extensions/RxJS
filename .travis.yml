@@ -3,3 +3,8 @@ node_js:
   - "0.11"
   - "0.10"
   - "0.8"
+env:
+  global:
+    - BIN="node" BUILD=false COMPAT=false MAKE=false OPTION="" SAUCE_LABS=false
+    - SAUCE_USERNAME="mattpodwysocki"
+    - secure:"BVYlZy3vIt21bhrzKPgQzRlbwGCBrdBtRPRvX/qCGi1jYAoAtrT0bYllZpNqduPLouW3LaJDwOJx9zLDmZDwKDvPgTinpVwmkhZYRFl1kNweku3ZfeHR5ejOVYvdQEqVU4rOtTBLk6emItEPTuFtC9SPSYQZQtjnZAjHTg0jqLU="  
