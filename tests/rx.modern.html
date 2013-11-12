@@ -12,10 +12,10 @@
   <script src="../rx.time.js"></script>  
   <script src="../rx.virtualtime.js"></script>  
   <script src="../rx.testing.js"></script>  
-  <script src="ReactiveAssert.js"></script>
+  <script src="helpers/reactiveassert.js"></script>
 
   <script>
-    // Backfill for Phantom.js
+    // Backfill for Phantom.js / JSCore
     if (!Function.prototype.bind) {
       Function.prototype.bind = function (context) {
         var self = this;
@@ -27,20 +27,88 @@
   </script>
 
   <!-- Individual Tests -->
-  <script src="AsyncSubjectTest.js"></script>
-  <script src="CurrentThreadSchedulerTest.js"></script>
-  <script src="DisposableTest.js"></script>
-  <script src="ImmediateSchedulerTest.js"></script>
-  <script src="TimeoutSchedulerTest.js"></script>  
-  <script src="NotificationTest.js"></script>  
-  <script src="ObservableConcurrencyTest.js"></script>
-  <script src="ObservableCreationTest.js"></script>
-  <script src="ObservableExtensionsTest.js"></script>
-  <script src="ObservableMultipleTest.js"></script>
-  <script src="ObservableSingleTest.js"></script>
-  <script src="ObservableStandardQueryOperatorTest.js"></script>
-  <script src="ObserverTest.js"></script>  
-  <script src="SchedulerTest.js"></script>
-  <script src="SubjectTest.js"></script>  
+  <script src="subjects/asyncsubject.js"></script>
+  <script src="subjects/subject.js"></script>  
+
+  <script src="concurrency/scheduler.js"></script>
+  <script src="concurrency/immediatescheduler.js"></script>
+  <script src="concurrency/currentthreadscheduler.js"></script>
+  <script src="concurrency/timeoutscheduler.js"></script>
+
+  <script src="disposables/compositedisposable.js"></script>
+  <script src="disposables/disposable.js"></script>
+  <script src="disposables/refcountdisposable.js"></script>
+  <script src="disposables/serialdisposable.js"></script>
+  <script src="disposables/singleassignmentdisposable.js"></script>
+  
+  <script src="core/notification.js"></script>
+  <script src="core/observable.js"></script>
+  <script src="core/observer.js"></script>
+
+  <!-- Concurrency -->
+
+  <script src="observable/observeon.js"></script>
+  <script src="observable/subscribeon.js"></script>
+
+  <!-- Creation -->
+
+  <script src="observable/create.js"></script>
+  <script src="observable/defer.js"></script>
+  <script src="observable/empty.js"></script>
+  <script src="observable/fromarray.js"></script>
+  <script src="observable/generate.js"></script>
+  <script src="observable/never.js"></script>
+  <script src="observable/range.js"></script>
+  <script src="observable/repeat.js"></script>
+  <script src="observable/repeatproto.js"></script>
+  <script src="observable/return.js"></script>
+  <script src="observable/throw.js"></script>
+  <script src="observable/using.js"></script>
+
+  <!-- Multiple -->
+
+  <script src="observable/ambproto.js"></script>
+  <script src="observable/catchexceptionproto.js"></script>
+  <script src="observable/combinelatestproto.js"></script>
+  <script src="observable/concatproto.js"></script>
+  <script src="observable/merge.js"></script>
+  <script src="observable/mergeproto.js"></script>
+  <script src="observable/mergeobservable.js"></script>
+  <script src="observable/onerrorresumenext.js"></script>
+  <script src="observable/onerrorresumenextproto.js"></script>
+  <script src="observable/skipuntil.js"></script>
+  <script src="observable/switch.js"></script>
+  <script src="observable/takeuntil.js"></script>
+  <script src="observable/zip.js"></script>
+  <script src="observable/zipproto.js"></script>
+
+  <!-- Single -->
+
+  <script src="observable/asobervable.js"></script>
+  <script src="observable/bufferwithcount.js"></script>
+  <script src="observable/distinct.js"></script>
+  <script src="observable/distinctuntilchanged.js"></script>
+  <script src="observable/do.js"></script>
+  <script src="observable/finally.js"></script>
+  <script src="observable/ignorevalues.js"></script>
+  <script src="observable/materialize.js"></script>
+  <script src="observable/scan.js"></script>
+  <script src="observable/skiplast.js"></script>
+  <script src="observable/startwith.js"></script>
+  <script src="observable/takelast.js"></script>
+  <script src="observable/takelastbuffer.js"></script>
+  <script src="observable/windowwithcount.js"></script>
+
+  <!-- Standard Query Operators -->
+  <script src="observable/groupby.js"></script>
+  <script src="observable/groupbyuntil.js"></script>
+  <script src="observable/pluck.js"></script>
+  <script src="observable/select.js"></script>
+  <script src="observable/selectmany.js"></script>
+  <script src="observable/skip.js"></script>
+  <script src="observable/skipwhile.js"></script>
+  <script src="observable/take.js"></script>
+  <script src="observable/takewhile.js"></script>
+  <script src="observable/toarray.js"></script>
 </body>
 </html>
