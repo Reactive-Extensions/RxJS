@@ -1883,7 +1883,6 @@ Dist:
 - rx.js
 - rx.compat.js
 
-
 * * *
 
 ### <a id="rxobservableziparrayargs"></a>`Rx.Observable.zipArray(...args)`
@@ -1922,6 +1921,7 @@ var subscription = source.subscribe(
 // => Next: 1,2,3 
 // => Next: 2,3,4 
 // => Completed 
+```
 
 #### Location
 
