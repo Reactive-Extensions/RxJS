@@ -11,6 +11,9 @@
     Rx.SingleAssignmentDisposable = Rx.SerialDisposable = BooleanDisposable;
     var booleanDisposablePrototype = BooleanDisposable.prototype;
 
+    var SingleAssignmentDisposable = BooleanDisposable,
+        SerialDisposable = BooleanDisposable;
+
     /**
      * Gets the underlying disposable.
      * @return The underlying disposable.

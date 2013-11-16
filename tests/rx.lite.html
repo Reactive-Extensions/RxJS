@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reactive Extensions for JavaScript Tests</title>
+  <link rel="stylesheet" href="./vendor/qunit-1.11.0.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <script src="./vendor/qunit-1.11.0.js"></script>
+  <script src="./vendor/rsvp.js"></script>  
+  <script src="../rx.lite.js"></script>
+  <script src="../rx.virtualtime.js"></script>  
+  <script src="../rx.testing.js"></script>  
+  <script src="helpers/reactiveassert.js"></script>
+
+  <script>
+    // Backfill for Phantom.js / JSCore
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (context) {
+        var self = this;
+        return function () {
+          return self.apply(context, arguments);
+        };
+      };
+    }
+  </script>
+
+  <!-- Individual Tests -->
+  <script src="subjects/asyncsubject.js"></script>
+  <script src="subjects/subject.js"></script>  
+
+  <script src="concurrency/scheduler-lite.js"></script>
+  <script src="concurrency/currentthreadscheduler.js"></script>
+  <script src="concurrency/timeoutscheduler.js"></script>
+
+  <script src="disposables/compositedisposable.js"></script>
+  <script src="disposables/disposable.js"></script>
+  <script src="disposables/refcountdisposable.js"></script>
+  <script src="disposables/serialdisposable.js"></script>
+  
+  <script src="core/notification.js"></script>
+  <script src="core/observable.js"></script>
+  <script src="core/observer-lite.js"></script>
+
+  <!-- Creation -->
+
+  <script src="observable/create.js"></script>
+  <script src="observable/defer.js"></script>
+  <script src="observable/empty.js"></script>
+  <script src="observable/fromarray.js"></script>
+  <script src="observable/generate.js"></script>
+  <script src="observable/never.js"></script>
+  <script src="observable/range.js"></script>
+  <script src="observable/repeat.js"></script>
+  <script src="observable/repeatproto.js"></script>
+  <script src="observable/return.js"></script>
+  <script src="observable/throw.js"></script>
+
+  <!-- Multiple -->
+  <script src="observable/catchexceptionproto.js"></script>
+  <script src="observable/combinelatestproto.js"></script>
+  <script src="observable/concatproto.js"></script>
+  <script src="observable/merge.js"></script>
+  <script src="observable/mergeproto.js"></script>
+  <script src="observable/mergeobservable.js"></script>
+  <script src="observable/skipuntil.js"></script>
+  <script src="observable/switch.js"></script>
+  <script src="observable/takeuntil.js"></script>
+  <script src="observable/zip.js"></script>
+  <script src="observable/zipproto.js"></script>
+
+  <!-- Single -->
+  <script src="observable/asobservable.js"></script>
+  <script src="observable/distinctuntilchanged.js"></script>
+  <script src="observable/do.js"></script>
+  <script src="observable/finally.js"></script>
+  <script src="observable/ignoreelements.js"></script>
+  <script src="observable/materialize.js"></script>
+  <script src="observable/scan.js"></script>
+  <script src="observable/skiplast.js"></script>
+  <script src="observable/startwith.js"></script>
+  <script src="observable/takelast.js"></script>
+  <script src="observable/takelastbuffer.js"></script>
+
+  <!-- Standard Query Operators -->
+  <script src="observable/select.js"></script>
+  <script src="observable/selectmany.js"></script>
+  <script src="observable/skip.js"></script>
+  <script src="observable/skipwhile.js"></script>
+  <script src="observable/take.js"></script>
+  <script src="observable/takewhile.js"></script>
+  <script src="observable/toarray.js"></script>
+
+  <!-- Async Operators -->
+  <script src="observable/fromcallback.js"></script>
+  <script src="observable/fromnodecallback.js"></script>
+  <script src="observable/fromevent.js"></script>
+  <script src="observable/fromeventpattern.js"></script>
+  <script src="observable/frompromise.js"></script>  
+
+  <!-- Binding -->
+  <script src="observable/multicast.js"></script>
+  <script src="observable/publish.js"></script>
+  <script src="observable/publishlast.js"></script>
+  <script src="observable/replay.js"></script>
+  <script src="observable/publishvalue.js"></script>
+  <script src="subjects/behaviorsubject.js"></script>
+  <script src="subjects/replaysubject.js"></script>
+  <script src="observable/connectableobservable.js"></script> 
+  
+  <!-- Time -->
+  <script src="observable/timer.js"></script>
+  <script src="observable/interval.js"></script>
+  <script src="observable/delay.js"></script>
+  <script src="observable/throttle.js"></script>
+  <script src="observable/timeinterval.js"></script>
+  <script src="observable/timestamp.js"></script>
+  <script src="observable/sample.js"></script>
+  <script src="observable/timeout.js"></script>
+  <script src="observable/generatewithrelativetime.js"></script>
+  <script src="observable/generatewithabsolutetime.js"></script>
+  <script src="observable/delaywithselector.js"></script>
+  <script src="observable/takelastbufferwithtime.js"></script>
+  <script src="observable/takewithtime.js"></script>
+  <script src="observable/skipwithtime.js"></script>
+  <script src="observable/takelastwithtime.js"></script>
+  <script src="observable/skiplastwithtime.js"></script>
+  <script src="observable/skipuntilwithtime.js"></script>
+  <script src="observable/takeuntilwithtime.js"></script>   
+</body>
+</html>

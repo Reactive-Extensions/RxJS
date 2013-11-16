@@ -57,7 +57,6 @@ module.exports = function (grunt) {
                     'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable                
 
                     'src/core/linq/observable/create.js',
-                    'src/core/linq/observable/createwithdisposable.js',
                     'src/core/linq/observable/defer.js',
                     'src/core/linq/observable/empty.js',
                     'src/core/linq/observable/fromarray.js',
@@ -174,7 +173,6 @@ module.exports = function (grunt) {
 
                     // Creation
                     'src/core/linq/observable/create.js',
-                    'src/core/linq/observable/createwithdisposable.js',
                     'src/core/linq/observable/defer.js',
                     'src/core/linq/observable/empty.js',
                     'src/core/linq/observable/fromarray.js',
@@ -264,23 +262,130 @@ module.exports = function (grunt) {
                     'src/core/internal/priorityqueue.js',
                     'src/core/disposables/compositedisposable.js',
                     'src/core/disposables/disposable.js',
-                    'src/core/disposables/booleandisposable',
+                    'src/core/disposables/booleandisposable.js',
                     'src/core/disposables/refcountdisposable.js',
 
                     'src/core/concurrency/scheduleditem.js',
-                    'src/core/concurrency/scheduler.js',
-                    'src/core/concurrency/immediatescheduler.js',
-                    'src/core/concurrency/currentthreadscheduler.js',
+                    'src/core/concurrency/scheduler-lite.js',
+                    'src/core/concurrency/currentthreadscheduler-lite.js',
+                    'src/core/concurrency/scheduleperiodicrecursive.js',
                     'src/core/concurrency/timeoutscheduler.js',
 
                     'src/core/notification.js',
                     'src/core/internal/enumerator.js',
                     'src/core/internal/enumerable.js',
-                    'src/core/observer.js',
+                    'src/core/observer-lite.js',
                     'src/core/abstractobserver.js',
                     'src/core/anonymousobserver.js',
-                    'src/core/checkedobserver.js',
                     'src/core/observable.js',
+                    'src/core/scheduledobserver.js',
+
+                    // Creation
+                    'src/core/linq/observable/create.js',
+                    'src/core/linq/observable/defer.js',
+                    'src/core/linq/observable/empty.js',
+                    'src/core/linq/observable/fromarray.js',
+                    'src/core/linq/observable/generate.js',
+                    'src/core/linq/observable/never.js',
+                    'src/core/linq/observable/range.js',
+                    'src/core/linq/observable/repeat.js',
+                    'src/core/linq/observable/return.js',
+                    'src/core/linq/observable/throw.js',                   
+
+                    // Multiple
+                    'src/core/linq/observable/catchproto.js',
+                    'src/core/linq/observable/catch.js',
+                    'src/core/linq/observable/combinelatestproto.js',
+                    'src/core/linq/observable/combinelatest.js',
+                    'src/core/linq/observable/concatproto.js',
+                    'src/core/linq/observable/concat.js',
+                    'src/core/linq/observable/concatobservable.js',
+                    'src/core/linq/observable/mergeproto.js',
+                    'src/core/linq/observable/merge.js',
+                    'src/core/linq/observable/mergeobservable.js',
+                    'src/core/linq/observable/skipuntil.js',
+                    'src/core/linq/observable/switch.js',
+                    'src/core/linq/observable/takeuntil.js',
+                    'src/core/linq/observable/zipproto.js',
+                    'src/core/linq/observable/zip.js',
+                    'src/core/linq/observable/ziparray.js',
+
+                    // Single
+                    'src/core/linq/observable/asobservable.js',
+                    'src/core/linq/observable/dematerialize.js',                    
+                    'src/core/linq/observable/distinctuntilchanged.js',
+                    'src/core/linq/observable/do.js',
+                    'src/core/linq/observable/finally.js',
+                    'src/core/linq/observable/ignoreelements.js',
+                    'src/core/linq/observable/materialize.js',                    
+                    'src/core/linq/observable/repeatproto.js',
+                    'src/core/linq/observable/retry.js',
+                    'src/core/linq/observable/scan.js',
+                    'src/core/linq/observable/skiplast.js',
+                    'src/core/linq/observable/startwith.js',
+                    'src/core/linq/observable/takelast.js',
+                    'src/core/linq/observable/takelastbuffer.js',
+
+                    // Standard Query Operators
+                    'src/core/linq/observable/select.js',
+                    'src/core/linq/observable/selectmany.js',
+                    'src/core/linq/observable/selectswitch.js',
+                    'src/core/linq/observable/skip.js',
+                    'src/core/linq/observable/skipwhile.js',
+                    'src/core/linq/observable/take.js',
+                    'src/core/linq/observable/takewhile.js',
+                    'src/core/linq/observable/where.js',                                       
+
+                    // Async Operators
+                    'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable                                      
+                    'src/core/linq/observable/fromevent-modern.js', // publish
+                    'src/core/linq/observable/fromeventpattern.js', // publish
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable                
+
+                    // Binding Operators
+                    'src/core/linq/observable/multicast.js', // ConnectableObservable
+                    'src/core/linq/observable/publish.js',   // mulitcast, Subject
+                    'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
+                    'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
+                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
+                    'src/core/linq/connectableobservable.js',                    
+
+                    // Time operators
+                    'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+                    'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
+                    'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
+                    'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
+                    'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
+                    'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
+                    'src/core/linq/observable/delay.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
+                    'src/core/linq/observable/throttle.js', // AnonymousObservable, SerialDisposable, timeoutScheduler, SingleAssignmentDisposable, CompositeDisposable
+                    'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
+                    'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
+                    'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
+                    'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
+                    'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
+                    'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
+                    'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
+                    'src/core/linq/observable/delaywithselector.js',
+                    'src/core/linq/observable/timeoutwithselector.js',
+                    'src/core/linq/observable/throttlewithselector.js',
+                    'src/core/linq/observable/skiplastwithtime.js',
+                    'src/core/linq/observable/takelastwithtime.js',
+                    'src/core/linq/observable/takelastbufferwithtime.js',
+                    'src/core/linq/observable/takewithtime.js',
+                    'src/core/linq/observable/skipwithtime.js',
+                    'src/core/linq/observable/skipuntilwithtime.js',
+                    'src/core/linq/observable/takeuntilwithtime.js',                    
+
+                    'src/core/anonymousobservable.js',
+                    'src/core/autodetachobserver.js',
+                    'src/core/subjects/innersubscription.js',
+                    'src/core/subjects/subject.js',
+                    'src/core/subjects/asyncsubject.js',
+                    'src/core/subjects/anonymoussubject.js',   
+                    'src/core/subjects/behaviorsubject.js',
+                    'src/core/subjects/replaysubject.js',                                     
 
                     'src/core/exports.js',
                     'src/core/outro.js'  
@@ -291,7 +396,7 @@ module.exports = function (grunt) {
                 src: [
                     'src/core/license.js',
                     'src/core/intro.js',
-                    'src/core/liteheader-compat.js',
+                    'src/core/liteheader.js',
 
                     'src/core/internal/deepEquals.js',
                     'src/core/internal/util.js',
@@ -299,9 +404,131 @@ module.exports = function (grunt) {
                     'src/core/internal/priorityqueue.js',
                     'src/core/disposables/compositedisposable.js',
                     'src/core/disposables/disposable.js',
-                    'src/core/disposables/booleandisposable',
+                    'src/core/disposables/booleandisposable.js',
                     'src/core/disposables/refcountdisposable.js',
-                    
+
+                    'src/core/concurrency/scheduleditem.js',
+                    'src/core/concurrency/scheduler-lite.js',
+                    'src/core/concurrency/currentthreadscheduler-lite.js',
+                    'src/core/concurrency/scheduleperiodicrecursive.js',
+                    'src/core/concurrency/timeoutscheduler.js',
+
+                    'src/core/notification.js',
+                    'src/core/internal/enumerator.js',
+                    'src/core/internal/enumerable.js',
+                    'src/core/observer-lite.js',
+                    'src/core/abstractobserver.js',
+                    'src/core/anonymousobserver.js',
+                    'src/core/observable.js',
+                    'src/core/scheduledobserver.js',
+
+                    // Creation
+                    'src/core/linq/observable/create.js',
+                    'src/core/linq/observable/defer.js',
+                    'src/core/linq/observable/empty.js',
+                    'src/core/linq/observable/fromarray.js',
+                    'src/core/linq/observable/generate.js',
+                    'src/core/linq/observable/never.js',
+                    'src/core/linq/observable/range.js',
+                    'src/core/linq/observable/repeat.js',
+                    'src/core/linq/observable/return.js',
+                    'src/core/linq/observable/throw.js',                   
+
+                    // Multiple
+                    'src/core/linq/observable/catchproto.js',
+                    'src/core/linq/observable/catch.js',
+                    'src/core/linq/observable/combinelatestproto.js',
+                    'src/core/linq/observable/combinelatest.js',
+                    'src/core/linq/observable/concatproto.js',
+                    'src/core/linq/observable/concat.js',
+                    'src/core/linq/observable/concatobservable.js',
+                    'src/core/linq/observable/mergeproto.js',
+                    'src/core/linq/observable/merge.js',
+                    'src/core/linq/observable/mergeobservable.js',
+                    'src/core/linq/observable/skipuntil.js',
+                    'src/core/linq/observable/switch.js',
+                    'src/core/linq/observable/takeuntil.js',
+                    'src/core/linq/observable/zipproto.js',
+                    'src/core/linq/observable/zip.js',
+                    'src/core/linq/observable/ziparray.js',
+
+                    // Single
+                    'src/core/linq/observable/asobservable.js',
+                    'src/core/linq/observable/dematerialize.js',                    
+                    'src/core/linq/observable/distinctuntilchanged.js',
+                    'src/core/linq/observable/do.js',
+                    'src/core/linq/observable/finally.js',
+                    'src/core/linq/observable/ignoreelements.js',
+                    'src/core/linq/observable/materialize.js',                    
+                    'src/core/linq/observable/repeatproto.js',
+                    'src/core/linq/observable/retry.js',
+                    'src/core/linq/observable/scan.js',
+                    'src/core/linq/observable/skiplast.js',
+                    'src/core/linq/observable/startwith.js',
+                    'src/core/linq/observable/takelast.js',
+                    'src/core/linq/observable/takelastbuffer.js',
+
+                    // Standard Query Operators
+                    'src/core/linq/observable/select.js',
+                    'src/core/linq/observable/selectmany.js',
+                    'src/core/linq/observable/selectswitch.js',
+                    'src/core/linq/observable/skip.js',
+                    'src/core/linq/observable/skipwhile.js',
+                    'src/core/linq/observable/take.js',
+                    'src/core/linq/observable/takewhile.js',
+                    'src/core/linq/observable/where.js',                                       
+
+                    // Async Operators
+                    'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable                                      
+                    'src/core/linq/observable/fromevent.js', // publish
+                    'src/core/linq/observable/fromeventpattern.js', // publish
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable                
+
+                    // Binding Operators
+                    'src/core/linq/observable/multicast.js', // ConnectableObservable
+                    'src/core/linq/observable/publish.js',   // mulitcast, Subject
+                    'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
+                    'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
+                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
+                    'src/core/linq/connectableobservable.js',                    
+
+                    // Time operators
+                    'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+                    'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
+                    'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
+                    'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
+                    'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
+                    'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
+                    'src/core/linq/observable/delay.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
+                    'src/core/linq/observable/throttle.js', // AnonymousObservable, SerialDisposable, timeoutScheduler, SingleAssignmentDisposable, CompositeDisposable
+                    'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
+                    'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
+                    'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
+                    'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
+                    'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
+                    'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
+                    'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
+                    'src/core/linq/observable/delaywithselector.js',
+                    'src/core/linq/observable/timeoutwithselector.js',
+                    'src/core/linq/observable/throttlewithselector.js',
+                    'src/core/linq/observable/skiplastwithtime.js',
+                    'src/core/linq/observable/takelastwithtime.js',
+                    'src/core/linq/observable/takelastbufferwithtime.js',
+                    'src/core/linq/observable/takewithtime.js',
+                    'src/core/linq/observable/skipwithtime.js',
+                    'src/core/linq/observable/skipuntilwithtime.js',
+                    'src/core/linq/observable/takeuntilwithtime.js',                    
+
+                    'src/core/anonymousobservable.js',
+                    'src/core/autodetachobserver.js',
+                    'src/core/subjects/innersubscription.js',
+                    'src/core/subjects/subject.js',
+                    'src/core/subjects/asyncsubject.js',
+                    'src/core/subjects/anonymoussubject.js',   
+                    'src/core/subjects/behaviorsubject.js',
+                    'src/core/subjects/replaysubject.js',                                     
+
                     'src/core/exports.js',
                     'src/core/outro.js'  
                 ],
@@ -523,7 +750,15 @@ module.exports = function (grunt) {
             modern: {
                 src: ['<banner>', 'rx.js'],
                 dest: 'rx.min.js'
-            },           
+            },
+            lite: {
+                src: ['<banner>', 'rx.lite.js'],
+                dest: 'rx.lite.min.js'
+            },
+            litecompat: {
+                src: ['<banner>', 'rx.lite.compat.js'],
+                dest: 'rx.lite.compat.min.js'
+            },                    
             aggregates: {
                 src: ['<banner>', 'rx.aggregates.js'],
                 dest: 'rx.aggregates.min.js'
@@ -592,6 +827,9 @@ module.exports = function (grunt) {
                     interrupt: true
                 }
             }
+        },
+        'sauce-labs': {
+
         }
     });
 
@@ -600,6 +838,7 @@ module.exports = function (grunt) {
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-saucelabs');
 
     function createNuGetPackage(nuspec) {
         var done = this.async();
@@ -724,6 +963,8 @@ module.exports = function (grunt) {
         'concat:time',
         'concat:testing',
         'concat:virtualtime',
+        'concat:lite',
+        'concat:litecompat',
 
         'uglify:basic',
         'uglify:modern',
@@ -737,6 +978,8 @@ module.exports = function (grunt) {
         'uglify:testing',
         'uglify:time',
         'uglify:virtualtime',
+        'uglify:lite',
+        'uglify:litecompat',
 
         'qunit'
     ]);    

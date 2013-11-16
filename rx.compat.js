@@ -2251,25 +2251,13 @@
      *  
      * @example
      *  var res = Rx.Observable.create(function (observer) { return function () { } );
+     *  var res = Rx.Observable.create(function (observer) { return Rx.Disposable.empty; } ); 
+     *  var res = Rx.Observable.create(function (observer) { } ); 
      *  
      * @param {Function} subscribe Implementation of the resulting observable sequence's subscribe method, returning a function that will be wrapped in a Disposable.
      * @returns {Observable} The observable sequence with the specified implementation for the Subscribe method.
      */
-    Observable.create = function (subscribe) {
-        return new AnonymousObservable(function (o) {
-            return disposableCreate(subscribe(o));
-        });
-    };
-
-    /**
-     *  Creates an observable sequence from a specified subscribe method implementation.
-     *  
-     * @example
-     *  var res = Rx.Observable.create(function (observer) { return Rx.Disposable.empty; } );        
-     * @param {Function} subscribe Implementation of the resulting observable sequence's subscribe method.
-     * @returns {Observable} The observable sequence with the specified implementation for the Subscribe method.
-     */
-    Observable.createWithDisposable = function (subscribe) {
+    Observable.create = Observable.createWithDisposable = function (subscribe) {
         return new AnonymousObservable(subscribe);
     };
 
@@ -3988,6 +3976,17 @@
     var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
 
+        // Fix subscriber to check for undefined or function returned to decorate as Disposable
+        function fixSubscriber(subscriber) {
+            if (typeof subscriber === 'undefined') {
+                subscriber = disposableEmpty;
+            } else if (typeof subscriber === 'function') {
+                subscriber = disposableCreate(subscriber);
+            }
+
+            return subscriber;
+        }
+
         function AnonymousObservable(subscribe) {
             if (!(this instanceof AnonymousObservable)) {
                 return new AnonymousObservable(subscribe);
@@ -3998,7 +3997,7 @@
                 if (currentThreadScheduler.scheduleRequired()) {
                     currentThreadScheduler.schedule(function () {
                         try {
-                            autoDetachObserver.setDisposable(subscribe(autoDetachObserver));
+                            autoDetachObserver.setDisposable(fixSubscriber(subscribe(autoDetachObserver)));
                         } catch (e) {
                             if (!autoDetachObserver.fail(e)) {
                                 throw e;
@@ -4007,7 +4006,7 @@
                     });
                 } else {
                     try {
-                        autoDetachObserver.setDisposable(subscribe(autoDetachObserver));
+                        autoDetachObserver.setDisposable(fixSubscriber(subscribe(autoDetachObserver)));
                     } catch (e) {
                         if (!autoDetachObserver.fail(e)) {
                             throw e;

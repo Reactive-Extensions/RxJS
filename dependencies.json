@@ -1,0 +1,11 @@
+{
+	"operators": [{
+		"operator": {
+			"name" : "selectMany",
+			"dependsOn": [
+				{ "name": "select" },
+				{ "name": "mergeObservable"}
+			]
+		}
+	}]
+}
