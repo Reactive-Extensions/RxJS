@@ -11,8 +11,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`case | switchCase`](#rxobservablecaseselector-sources-elsesourcescheduler)
 - [`catch | catchException`](#rxobservablecatchargs)
 - [`concat`](#rxobservableconcatargs)
-- [`create`](#rxobservablecreatesubscribe)
-- [`createWithDisposable`](#rxobservablecreatewithdisposablesubscribe)
+- [`create | createWithDisposable`](#rxobservablecreatesubscribe)
 - [`defer`](#rxobservabledeferobservablefactory)
 - [`empty`](#rxobservableemptyscheduler)
 - [`for | forIn`](#rxobservableforsources-resultselector)
@@ -159,7 +158,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 ## _Observable Methods_ ##
 
 ### <a id="rxobservableambargs"></a>`Rx.Observable.amb(...args)`
-<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") 
+<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/amb.js#L8-L18 "View in source") 
 
 Propagates the observable sequence that reacts first.
 
@@ -193,12 +192,29 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/amb.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/amb.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+Required Files:
+- <None>
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+
+Unit Tests:
+- [/tests/observable/ambproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/ambproto.js)
 
 * * *
 
 ### <a id="rxobservablecaseselector-sources-elsesourcescheduler"></a>`Rx.Observable.case(selector, sources, [elseSource|scheduler])`
-<a href="#rxobservablecaseselector-sources-elsesourcescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L159-L169 "View in source") 
+<a href="#rxobservablecaseselector-sources-elsesourcescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js#L16-L27 "View in source") 
 
 Uses selector to determine which source in sources to use.  There is an alias 'switchCase' for browsers <IE9.
 
@@ -243,12 +259,28 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.experimental.js
+File:
+- [/src/core/observable/case.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js)
+
+Dist:
+- [rx.experimental.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Experimental
+
+Unit Tests:
+- [/tests/observable/case.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/case.js)
 
 * * *
 
 ### <a id="rxobservablecatchargs"></a>`Rx.Observable.catch(...args)`
-<a href="#rxobservablecatchargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2920-L2923 "View in source") 
+<a href="#rxobservablecatchargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/catch.js#L9-L12 "View in source") 
 
 Continues an observable sequence that is terminated by an exception with the next observable sequence.  There is an alias for this method `catchException` for browsers <IE9
 
@@ -282,12 +314,32 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/catch.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/catch.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- <None>
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/catchexceptionproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/catchexceptionproto.js)
 
 * * *
 
 ### <a id="rxobservableconcatargs"></a>`Rx.Observable.concat(...args)`
-<a href="#rxobservableconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3035-L3038 "View in source") 
+<a href="#rxobservableconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js#L9-L12 "View in source") 
 
 Concatenates all of the specified observable sequences, as long as the previous observable sequence terminated successfully.
 
@@ -299,8 +351,8 @@ Concatenates all of the specified observable sequences, as long as the previous 
 
 #### Example
 ```js
-var source1 = Rx.Observable.returnValue(42);
-var source2 = Rx.Observable.returnValue(56);
+var source1 = Rx.Observable.return(42);
+var source2 = Rx.Observable.return(56);
 
 var source = Rx.Observable.concat(source1, source2);
 
@@ -322,23 +374,44 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/concat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- <None>
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/concatproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatproto.js)
 
 * * *
 
 ### <a id="rxobservablecreatesubscribe"></a>`Rx.Observable.create(subscribe)`
-<a href="#rxobservablecreatesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2519-L2523 "View in source") 
+<a href="#rxobservablecreatesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js#L12-L14 "View in source") 
 
-Creates an observable sequence from a specified subscribe method implementation.
+Creates an observable sequence from a specified subscribe method implementation.  This is an alias for the `createWithDisposable` method
 
 #### Arguments
-1. `subscribe` *(Function)*: Implementation of the resulting observable sequence's subscribe method, optionally returning a function that will be wrapped in a disposable object.
+1. `subscribe` *(Function)*: Implementation of the resulting observable sequence's subscribe method, optionally returning a function that will be wrapped in a disposable object.  This could also be a disposable object.
 
 #### Returns
 *(Observable)*: The observable sequence with the specified implementation for the subscribe method.
 
 #### Example
 ```js
+/* Using a function */
 var source = Rx.Observable.create(function (observer) {
     observer.onNext(42);
     observer.onCompleted();
@@ -366,35 +439,16 @@ var subscription = source.subscribe(
 subscription.dispose();
 
 // => disposed
-```
 
-### Location
-
-- rx.js
-
-* * *
-
-### <a id="rxobservablecreatewithdisposablesubscribe"></a>`Rx.Observable.createWithDisposable(subscribe)`
-<a href="#rxobservablecreatewithdisposablesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2535-L2537 "View in source") 
-
-Creates an observable sequence from a specified Subscribe method implementation.
-
-#### Arguments
-1. `subscribe` *(Function)*: Implementation of the resulting observable sequence's subscribe method.
-
-#### Returns
-*(Observable)*: The observable sequence with the specified implementation for the subscribe method.
-
-#### Example
-```js
-var source = Rx.Observable.createWithDisposable(function (observer) {
+/* Using a disposable */
+var source = Rx.Observable.create(function (observer) {
     observer.onNext(42);
     observer.onCompleted();
 
-    return Rx.Disposable.create(function () {
-        // Any cleanup that is required
+    // Note that this is optional, you do not have to return this if you require no cleanup
+    return function () {
         console.log('disposed');
-    });
+    };
 });
 
 var subscription = source.subscribe(
@@ -410,20 +464,37 @@ var subscription = source.subscribe(
 
 // => Next: 42
 // => Completed
-
-subscription.dispose();
-
-// => disposed
 ```
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/create.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- <None>
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/create.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/create.js)
+- [/tests/observable/createwithdisposable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/createwithdisposable.js)
 
 * * *
 
 ### <a id="rxobservabledeferobservablefactory"></a>`Rx.Observable.defer(observableFactory)`
-<a href="#rxobservabledeferobservablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") 
+<a href="#rxobservabledeferobservablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js#L9-L19 "View in source") 
 
 Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
 
@@ -436,7 +507,7 @@ Returns an observable sequence that invokes the specified factory function whene
 #### Example
 ```js
 var source = Rx.Observable.defer(function () {
-    return Rx.Observable.returnValue(42);
+    return Rx.Observable.return(42);
 });
 
 var subscription = source.subscribe(
@@ -456,12 +527,32 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/defer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- <None>
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/defer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/defer.js)
 
 * * *
 
 ### <a id="rxobservableemptyscheduler"></a>`Rx.Observable.empty([scheduler])`
-<a href="#rxobservableemptyscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") 
+<a href="#rxobservableemptyscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/empty.js#L10-L17 "View in source") 
 
 Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
 
@@ -491,12 +582,32 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/empty.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/empty.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- <None>
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/empty.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/empty.js)
 
 * * *
 
 ### <a id="rxobservableforsources-resultselector"></a>`Rx.Observable.for(sources, resultSelector)`
-<a href="#rxobservableforsources-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2549-L2559 "View in source") 
+<a href="#rxobservableforsources-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/for.js#L8-L10 "View in source") 
 
 Concatenates the observable sequences obtained by running the specified result selector for each element in source.
 There is an alias for this method called `forIn` for browsers <IE9
@@ -537,12 +648,28 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.experimental.js
+File:
+- [/src/core/observable/for.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/for.js)
+
+Dist:
+- [rx.experimental.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Experimental
+
+Unit Tests:
+- [/tests/observable/for.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/for.js)
 
 * * *
 
 ### <a id="rxobservableforkjoinargs"></a>`Rx.Observable.forkJoin(...args)`
-<a href="#rxobservableforkjoinargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservableforkjoinargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/forkjoin.js#L9-L57 "View in source") 
 
 Runs all observable sequences in parallel and collect their last elements.
 
@@ -577,7 +704,23 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.experimental.js
+File:
+- [/src/core/observable/forkjoin.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/forkjoin.js)
+
+Dist:
+- [rx.experimental.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Experimental
+
+Unit Tests:
+- [/tests/observable/forkjoin.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/forkjoin.js)
 
 * * *
 
@@ -619,11 +762,26 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- /src/core/observable/fromarray.js
+- [/src/core/observable/fromarray.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js)
 
 Dist:
-- rx.js
-- rx.compat.js
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- <None>
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/fromarray.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromarray.js)
 
 * * *
 
@@ -678,11 +836,28 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- /src/core/observable/fromcallback.js
+- [/src/core/observable/fromcallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js)
 
 Dist:
-- rx.async.js
-- rx.async.compat.js
+- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.async.js | rx.async.compat.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Async
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/fromcallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromcallback.js)
 
 * * *
 
@@ -757,12 +932,30 @@ eventEmitter.emit('data', 'baz', 'quux');
 ### Location
 
 File:
-- /src/core/observable/fromevent.js
-- /src/core/observable/fromevent-modern.js
+- [/src/core/observable/fromevent.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js)
+- [/src/core/observable/fromevent-modern.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent-modern.js)
 
 Dist:
-- rx.async.js
-- rx.async.compat.js
+- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.async.js | rx.async.compat.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Async
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/fromevent-compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent-compat.js)
+- [/tests/observable/fromevent.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent.js)
 
 * * *
 
