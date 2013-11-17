@@ -79,9 +79,11 @@ This set of libraries include:
 - **rx.coincidence.js** - reactive coincidence join event processing query operations
 - **rx.experimental.js** - experimental operators including imperative operators and forkJoin
 - **rx.joinpatterns.js** - join patterns event processing query operations
-- **rx.testing.js** - used to write unit tests for complex event processing queries.
-- **rx.time.js** - time-based event processing query operations.
-- **rx.virtualtime.js** - virtual-time-based schedulers.
+- **rx.lite.js** - lite version with event bindings, creation, time and standard query operators
+- **rx.lite.compat.js** - lite version with event bindings, creation, time and standard query operators with compatibility back to IE6
+- **rx.testing.js** - used to write unit tests for complex event processing queries
+- **rx.time.js** - time-based event processing query operations
+- **rx.virtualtime.js** - virtual-time-based schedulers
 
 ## Why RxJS? ##
 
@@ -92,10 +94,7 @@ To give you an idea about rich composition, we can create an autocompletion serv
 First, we'll reference the JavaScript files, including jQuery, although RxJS has no dependencies on jQuery...
 
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-    <script src="rx.js"></script>
-    <script src="rx.async.js"></script>
-    <script src="rx.binding.js"></script>
-    <script src="rx.time.js"></script>
+    <script src="rx.lite.js"></script>
 
 Next, we'll get the user input from an input, listening to the keyup event by using the `Rx.Observable.fromEvent` method.
 
@@ -189,7 +188,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
 
 - Tutorials
-    - [Learn RxJS](http://jhusain.github.io/learnrx/)
+    - [Learn RxJS](http://reactive-extensions.github.io/learnrx/)
     - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
 

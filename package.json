@@ -2,8 +2,8 @@
   "name": "rx",
   "title": "Reactive Extensions for JavaScript (RxJS)",
   "description": "Library for composing asynchronous and event-based operations in JavaScript",
-  "version": "2.2.4",
-  "homepage": "http://rx.codeplex.com",
+  "version": "2.2.5",
+  "homepage": "https://github.com/Reactive-Extensions/RxJS",
   "author": {
     "name": "Cloud Programmability Team",
     "url": "https://github.com/Reactive-Extensions/RxJS/blob/master/authors.txt"

@@ -898,6 +898,10 @@ module.exports = function (grunt) {
         createNuGetPackage.call(this, 'nuget/RxJS-JoinPatterns/RxJS-JoinPatterns.nuspec');
     });
 
+    grunt.registerTask('nuget-lite', 'Register NuGet-Lite', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-Lite/RxJS-Lite.nuspec');
+    });
+
     grunt.registerTask('nuget-main', 'Register NuGet-Main', function () {
         createNuGetPackage.call(this, 'nuget/RxJS-Main/RxJS-Main.nuspec');
     });
@@ -922,6 +926,7 @@ module.exports = function (grunt) {
         'nuget-coincidence',
         'nuget-experimental',
         'nuget-joinpatterns',
+        'nuget-lite',
         'nuget-main',
         'nuget-testing',
         'nuget-time',
