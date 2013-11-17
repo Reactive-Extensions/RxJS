@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0"?>
 <package>
   <metadata>
-    <id>RxJS-Main</id>
+    <id>RxJS-Lite</id>
     <title>Reactive Extensions for JavaScript - Lite Library</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
     <version>2.2.5</version>
