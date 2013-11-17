@@ -4,7 +4,7 @@
     <id>RxJS-Async</id>
     <title>Reactive Extensions for JavaScript - Async-Based Operations</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-    <version>2.2.5</version>
+    <version>2.2.6</version>
     <authors>Microsoft Corporation</authors>
     <description>Reactive Extensions for JavaScript library with async-based event processing query operations.</description>
     <projectUrl>http://go.microsoft.com/fwlink/?LinkID=179929</projectUrl>
