@@ -822,8 +822,10 @@ module.exports = function (grunt) {
                 }
             }
         },
-        'sauce-labs': {
-
+        'saucelabs-qunit': {
+            options: {
+                
+            }
         }
     });
 
