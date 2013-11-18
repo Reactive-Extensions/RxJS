@@ -18,7 +18,7 @@
     // Defaults
     function noop() { }
     function identity(x) { return x; }
-    var defaultNow = Date.now;
+    var defaultNow = (function () { return !!Date.now ? Date.now : function () { return +new Date; }; }());
     function defaultComparer(x, y) { return isEqual(x, y); }
     function defaultSubComparer(x, y) { return x - y; }
     function defaultKeySerializer(x) { return x.toString(); }
@@ -33,7 +33,7 @@
             throw new Error(objectDisposed);
         }
     }
-
+    
     /** Used to determine if values are of the language type Object */
     var objectTypes = {
         'boolean': false,
@@ -2801,6 +2801,17 @@
     };
 
     /**
+     *  Ignores all elements in an observable sequence leaving only the termination messages.
+     * @returns {Observable} An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
+     */
+    observableProto.ignoreElements = function () {
+        var source = this;
+        return new AnonymousObservable(function (observer) {
+            return source.subscribe(noop, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        });
+    };
+
+    /**
      *  Materializes the implicit notifications of an observable sequence as explicit notification values.
      * @returns {Observable} An observable sequence containing the materialized notification values from the source sequence.
      */    
@@ -3649,34 +3660,6 @@
         return ConnectableObservable;
     }(Observable));
 
-    function observableTimerDate(dueTime, scheduler) {
-        return new AnonymousObservable(function (observer) {
-            return scheduler.scheduleWithAbsolute(dueTime, function () {
-                observer.onNext(0);
-                observer.onCompleted();
-            });
-        });
-    }
-
-    function observableTimerDateAndPeriod(dueTime, period, scheduler) {
-        var p = normalizeTime(period);
-        return new AnonymousObservable(function (observer) {
-            var count = 0, d = dueTime;
-            return scheduler.scheduleRecursiveWithAbsolute(d, function (self) {
-                var now;
-                if (p > 0) {
-                    now = scheduler.now();
-                    d = d + p;
-                    if (d <= now) {
-                        d = now + p;
-                    }
-                }
-                observer.onNext(count++);
-                self(d);
-            });
-        });
-    }
-
     function observableTimerTimeSpan(dueTime, scheduler) {
         var d = normalizeTime(dueTime);
         return new AnonymousObservable(function (observer) {
@@ -3721,17 +3704,12 @@
      *  Returns an observable sequence that produces a value after dueTime has elapsed and then after each period.
      *  
      * @example
-     *  1 - res = Rx.Observable.timer(new Date());
-     *  2 - res = Rx.Observable.timer(new Date(), 1000);
-     *  3 - res = Rx.Observable.timer(new Date(), Rx.Scheduler.timeout);
-     *  4 - res = Rx.Observable.timer(new Date(), 1000, Rx.Scheduler.timeout);
+     *  var res = Rx.Observable.timer(5000);
+     *  var res = Rx.Observable.timer(5000, 1000);
+     *  var res = Rx.Observable.timer(5000, Rx.Scheduler.timeout);
+     *  var res = Rx.Observable.timer(5000, 1000, Rx.Scheduler.timeout);
      *  
-     *  5 - res = Rx.Observable.timer(5000);
-     *  6 - res = Rx.Observable.timer(5000, 1000);
-     *  7 - res = Rx.Observable.timer(5000, Rx.Scheduler.timeout);
-     *  8 - res = Rx.Observable.timer(5000, 1000, Rx.Scheduler.timeout);
-     *  
-     * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
+     * @param {Number} dueTime Relative time (specified as an integer denoting milliseconds) at which to produce the first value.
      * @param {Mixed} [periodOrScheduler]  Period to produce subsequent values (specified as an integer denoting milliseconds), or the scheduler to run the timer on. If not specified, the resulting timer is not recurring.
      * @param {Scheduler} [scheduler]  Scheduler to run the timer on. If not specified, the timeout scheduler is used.
      * @returns {Observable} An observable sequence that produces a value after due time has elapsed and then each period.
@@ -3739,26 +3717,30 @@
     var observableTimer = Observable.timer = function (dueTime, periodOrScheduler, scheduler) {
         var period;
         scheduler || (scheduler = timeoutScheduler);
-        if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'number') {
+        if (typeof periodOrScheduler === 'number') {
             period = periodOrScheduler;
-        } else if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'object') {
+        } else if (typeof periodOrScheduler === 'object' && 'now' in periodOrScheduler) {
             scheduler = periodOrScheduler;
         }
-        if (dueTime instanceof Date && period === undefined) {
-            return observableTimerDate(dueTime.getTime(), scheduler);
-        }
-        if (dueTime instanceof Date && period !== undefined) {
-            period = periodOrScheduler;
-            return observableTimerDateAndPeriod(dueTime.getTime(), period, scheduler);
-        }
-        if (period === undefined) {
-            return observableTimerTimeSpan(dueTime, scheduler);
-        }
-        return observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
+        return period === undefined ?
+            observableTimerTimeSpan(dueTime, scheduler) :
+            observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
     };
 
-    function observableDelayTimeSpan(dueTime, scheduler) {
-        var source = this;
+    /**
+     *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
+     *  
+     * @example
+     *  var res = Rx.Observable.delay(5000);
+     *  var res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
+     * @memberOf Observable#
+     * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
+     * @param {Scheduler} [scheduler] Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
+     * @returns {Observable} Time-shifted sequence.
+     */
+    observableProto.delay = function (dueTime, scheduler) {
+        scheduler || (scheduler = timeoutScheduler);
+        var source = this;  
         return new AnonymousObservable(function (observer) {
             var active = false,
                 cancelable = new SerialDisposable(),
@@ -3820,35 +3802,6 @@
             });
             return new CompositeDisposable(subscription, cancelable);
         });
-    }
-
-    function observableDelayDate(dueTime, scheduler) {
-        var self = this;
-        return observableDefer(function () {
-            var timeSpan = dueTime - scheduler.now();
-            return observableDelayTimeSpan.call(self, timeSpan, scheduler);
-        });
-    }
-
-    /**
-     *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
-     *  
-     * @example
-     *  1 - res = Rx.Observable.delay(new Date());
-     *  2 - res = Rx.Observable.delay(new Date(), Rx.Scheduler.timeout);
-     *  
-     *  3 - res = Rx.Observable.delay(5000);
-     *  4 - res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
-     * @memberOf Observable#
-     * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
-     * @param {Scheduler} [scheduler] Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
-     * @returns {Observable} Time-shifted sequence.
-     */
-    observableProto.delay = function (dueTime, scheduler) {
-        scheduler || (scheduler = timeoutScheduler);
-        return dueTime instanceof Date ?
-            observableDelayDate.call(this, dueTime.getTime(), scheduler) :
-            observableDelayTimeSpan.call(this, dueTime, scheduler);
     };
 
     /**
@@ -3865,38 +3818,7 @@
     observableProto.throttle = function (dueTime, scheduler) {
         scheduler || (scheduler = timeoutScheduler);
         var source = this;
-        return new AnonymousObservable(function (observer) {
-            var cancelable = new SerialDisposable(), hasvalue = false, id = 0, subscription, value = null;
-            subscription = source.subscribe(function (x) {
-                var currentId, d;
-                hasvalue = true;
-                value = x;
-                id++;
-                currentId = id;
-                d = new SingleAssignmentDisposable();
-                cancelable.setDisposable(d);
-                d.setDisposable(scheduler.scheduleWithRelative(dueTime, function () {
-                    if (hasvalue && id === currentId) {
-                        observer.onNext(value);
-                    }
-                    hasvalue = false;
-                }));
-            }, function (exception) {
-                cancelable.dispose();
-                observer.onError(exception);
-                hasvalue = false;
-                id++;
-            }, function () {
-                cancelable.dispose();
-                if (hasvalue) {
-                    observer.onNext(value);
-                }
-                observer.onCompleted();
-                hasvalue = false;
-                id++;
-            });
-            return new CompositeDisposable(subscription, cancelable);
-        });
+        return this.throttleWithSelector(function () { return observableTimer(dueTime, scheduler); })
     };
 
     /**
@@ -4066,61 +3988,6 @@
 
     /**
      *  Generates an observable sequence by iterating a state from an initial state until the condition fails.
-     *  
-     * @example
-     *  res = source.generateWithAbsoluteTime(0, 
-     *      function (x) { return return true; }, 
-     *      function (x) { return x + 1; }, 
-     *      function (x) { return x; }, 
-     *      function (x) { return new Date(); }
-     *  });
-     *      
-     * @param {Mixed} initialState Initial state.
-     * @param {Function} condition Condition to terminate generation (upon returning false).
-     * @param {Function} iterate Iteration step function.
-     * @param {Function} resultSelector Selector function for results produced in the sequence.
-     * @param {Function} timeSelector Time selector function to control the speed of values being produced each iteration, returning Date values.
-     * @param {Scheduler} [scheduler]  Scheduler on which to run the generator loop. If not specified, the timeout scheduler is used.
-     * @returns {Observable} The generated sequence.
-     */
-    Observable.generateWithAbsoluteTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-        scheduler || (scheduler = timeoutScheduler);
-        return new AnonymousObservable(function (observer) {
-            var first = true,
-                hasResult = false,
-                result,
-                state = initialState,
-                time;
-            return scheduler.scheduleRecursiveWithAbsolute(scheduler.now(), function (self) {
-                if (hasResult) {
-                    observer.onNext(result);
-                }
-                try {
-                    if (first) {
-                        first = false;
-                    } else {
-                        state = iterate(state);
-                    }
-                    hasResult = condition(state);
-                    if (hasResult) {
-                        result = resultSelector(state);
-                        time = timeSelector(state);
-                    }
-                } catch (e) {
-                    observer.onError(e);
-                    return;
-                }
-                if (hasResult) {
-                    self(time);
-                } else {
-                    observer.onCompleted();
-                }
-            });
-        });
-    };
-
-    /**
-     *  Generates an observable sequence by iterating a state from an initial state until the condition fails.
      * 
      * @example 
      *  res = source.generateWithRelativeTime(0, 
@@ -4138,7 +4005,7 @@
      * @param {Scheduler} [scheduler]  Scheduler on which to run the generator loop. If not specified, the timeout scheduler is used.
      * @returns {Observable} The generated sequence.
      */
-    Observable.generateWithRelativeTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
+    Observable.generateWithTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
         scheduler || (scheduler = timeoutScheduler);
         return new AnonymousObservable(function (observer) {
             var first = true,

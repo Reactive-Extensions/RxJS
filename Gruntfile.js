@@ -352,20 +352,17 @@ module.exports = function (grunt) {
                     'src/core/linq/connectableobservable.js',                    
 
                     // Time operators
-                    'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
-                    'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
                     'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
                     'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
                     'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
-                    'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
-                    'src/core/linq/observable/delay.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
+                    'src/core/linq/observable/timer-lite.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
+                    'src/core/linq/observable/delay-lite.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
                     'src/core/linq/observable/throttle.js', // AnonymousObservable, SerialDisposable, timeoutScheduler, SingleAssignmentDisposable, CompositeDisposable
                     'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
                     'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
                     'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
                     'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-                    'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
-                    'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
+                    'src/core/linq/observable/generatewithtime.js', 
                     'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
                     'src/core/linq/observable/delaywithselector.js',
                     'src/core/linq/observable/timeoutwithselector.js',
@@ -396,7 +393,7 @@ module.exports = function (grunt) {
                 src: [
                     'src/core/license.js',
                     'src/core/intro.js',
-                    'src/core/liteheader.js',
+                    'src/core/liteheader-compat.js',
 
                     'src/core/internal/deepEquals.js',
                     'src/core/internal/util.js',
@@ -494,20 +491,17 @@ module.exports = function (grunt) {
                     'src/core/linq/connectableobservable.js',                    
 
                     // Time operators
-                    'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
-                    'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
                     'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
                     'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
                     'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
-                    'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
-                    'src/core/linq/observable/delay.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
+                    'src/core/linq/observable/timer-lite.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
+                    'src/core/linq/observable/delay-lite.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
                     'src/core/linq/observable/throttle.js', // AnonymousObservable, SerialDisposable, timeoutScheduler, SingleAssignmentDisposable, CompositeDisposable
                     'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
                     'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
                     'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
                     'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-                    'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
-                    'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
+                    'src/core/linq/observable/generatewithtime.js', 
                     'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
                     'src/core/linq/observable/delaywithselector.js',
                     'src/core/linq/observable/timeoutwithselector.js',

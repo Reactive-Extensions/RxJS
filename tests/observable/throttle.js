@@ -8,83 +8,185 @@ var Observable = Rx.Observable,
     subscribe = Rx.ReactiveTest.subscribe;
 
 test('Throttle_TimeSpan_AllPass', function () {
-    var results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onNext(200, 2), onNext(250, 3), onNext(300, 4), onNext(350, 5), onNext(400, 6), onNext(450, 7), onNext(500, 8), onCompleted(550));
-    results = scheduler.startWithCreate(function () {
-        return xs.throttle(40, scheduler);
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+        onNext(150, 0),
+        onNext(210, 1),
+        onNext(240, 2),
+        onNext(270, 3),
+        onNext(300, 4),
+        onCompleted(400)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+        return xs.throttleWithSelector(function () { return Observable.timer(20, scheduler); });
     });
-    results.messages.assertEqual(onNext(290, 3), onNext(340, 4), onNext(390, 5), onNext(440, 6), onNext(490, 7), onNext(540, 8), onCompleted(550));
+
+    res.messages.assertEqual(
+        onNext(230, 1),
+        onNext(260, 2),
+        onNext(290, 3),
+        onNext(320, 4),
+        onCompleted(400)
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(200, 400)
+    );
 });
 
 test('Throttle_TimeSpan_AllPass_ErrorEnd', function () {
-    var ex, results, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onNext(200, 2), onNext(250, 3), onNext(300, 4), onNext(350, 5), onNext(400, 6), onNext(450, 7), onNext(500, 8), onError(550, ex));
-    results = scheduler.startWithCreate(function () {
-        return xs.throttle(40, scheduler);
+    var ex = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+        onNext(150, 0),
+        onNext(210, 1),
+        onNext(240, 2),
+        onNext(270, 3),
+        onNext(300, 4),
+        onError(400, ex)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+        return xs.throttleWithSelector(function () { return Observable.timer(20, scheduler); });
     });
-    results.messages.assertEqual(onNext(290, 3), onNext(340, 4), onNext(390, 5), onNext(440, 6), onNext(490, 7), onNext(540, 8), onError(550, ex));
+
+    res.messages.assertEqual(
+        onNext(230, 1),
+        onNext(260, 2),
+        onNext(290, 3),
+        onNext(320, 4),
+        onError(400, ex)
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(200, 400)
+    );
 });
 
 test('Throttle_TimeSpan_AllDrop', function () {
-    var results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onNext(200, 2), onNext(250, 3), onNext(300, 4), onNext(350, 5), onNext(400, 6), onNext(450, 7), onNext(500, 8), onCompleted(550));
-    results = scheduler.startWithCreate(function () {
-        return xs.throttle(60, scheduler);
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+        onNext(150, 0),
+        onNext(210, 1),
+        onNext(240, 2),
+        onNext(270, 3),
+        onNext(300, 4),
+        onNext(330, 5),
+        onNext(360, 6),
+        onNext(390, 7),
+        onCompleted(400)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+        return xs.throttleWithSelector(function () { return Observable.timer(40, scheduler); });
     });
-    results.messages.assertEqual(onNext(550, 8), onCompleted(550));
+
+    res.messages.assertEqual(
+        onNext(400, 7),
+        onCompleted(400)
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(200, 400)
+    );
 });
 
 test('Throttle_TimeSpan_AllDrop_ErrorEnd', function () {
-    var ex, results, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onNext(200, 2), onNext(250, 3), onNext(300, 4), onNext(350, 5), onNext(400, 6), onNext(450, 7), onNext(500, 8), onError(550, ex));
-    results = scheduler.startWithCreate(function () {
-        return xs.throttle(60, scheduler);
-    });
-    results.messages.assertEqual(onError(550, ex));
-});
+    var ex = new Error();
 
-test('Throttle_TimeSpan_SomeDrop', function () {
-    var results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onNext(250, 2), onNext(350, 3), onNext(370, 4), onNext(421, 5), onNext(480, 6), onNext(490, 7), onNext(500, 8), onCompleted(600));
-    results = scheduler.startWithCreate(function () {
-        return xs.throttle(50, scheduler);
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+        onNext(150, 0),
+        onNext(210, 1),
+        onNext(240, 2),
+        onNext(270, 3),
+        onNext(300, 4),
+        onNext(330, 5),
+        onNext(360, 6),
+        onNext(390, 7),
+        onError(400, ex)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+        return xs.throttle(40, scheduler)
     });
-    results.messages.assertEqual(onNext(300, 2), onNext(420, 4), onNext(471, 5), onNext(550, 8), onCompleted(600));
+
+    res.messages.assertEqual(
+        onError(400, ex)
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(200, 400)
+    );
 });
 
 test('Throttle_Empty', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Rx.Observable.empty(scheduler).throttle(10, scheduler);
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+        onNext(150, 0),
+        onCompleted(300)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+        return xs.throttle(10, scheduler);
     });
-    results.messages.assertEqual(onCompleted(201));
+
+    res.messages.assertEqual(
+        onCompleted(300)
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(200, 300)
+    );
 });
 
 test('Throttle_Error', function () {
-    var ex, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Rx.Observable.throwException(ex, scheduler).throttle(10, scheduler);
+    var scheduler = new TestScheduler();
+
+    var ex = new Error();
+
+    var xs = scheduler.createHotObservable(
+        onNext(150, 0),
+        onError(300, ex)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+        return xs.throttle(10, scheduler); 
     });
-    results.messages.assertEqual(onError(201, ex));
+
+    res.messages.assertEqual(
+        onError(300, ex)
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(200, 300)
+    );
 });
 
 test('Throttle_Never', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Rx.Observable.never().throttle(10, scheduler);
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+        onNext(150, 0)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+        return xs.throttle(10, scheduler);
     });
-    results.messages.assertEqual();
+
+    res.messages.assertEqual(
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(200, 1000)
+    );
 });
 
 test('Throttle_Duration_DelayBehavior', function () {
