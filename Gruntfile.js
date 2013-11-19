@@ -1,5 +1,29 @@
 module.exports = function (grunt) {
 
+var browsers = [{
+    browserName: 'firefox',
+    version: '19',
+    platform: 'XP'
+}, {
+    browserName: 'chrome',
+    platform: 'XP'
+}, {
+    browserName: 'chrome',
+    platform: 'linux'
+}, {
+    browserName: 'internet explorer',
+    platform: 'WIN8',
+    version: '10'
+}, {
+    browserName: 'internet explorer',
+    platform: 'VISTA',
+    version: '9'
+}, {
+    browserName: 'opera',
+    platform: 'Windows 2008',
+    version: '12'
+}];
+
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
         meta: {
@@ -823,8 +847,30 @@ module.exports = function (grunt) {
             }
         },
         'saucelabs-qunit': {
-            options: {
-                
+            all: {
+                options: {
+                    urls: [
+                        'http://127.0.0.1:9999/tests/rx.aggregates.html', 
+                        'http://127.0.0.1:9999/tests/rx.async.html', 
+                        'http://127.0.0.1:9999/tests/rx.async.compat.html', 
+                        'http://127.0.0.1:9999/tests/rx.binding.html', 
+                        'http://127.0.0.1:9999/tests/rx.coincidence.html', 
+                        'http://127.0.0.1:9999/tests/rx.experimental.html', 
+                        'http://127.0.0.1:9999/tests/rx.experimental.html', 
+                        'http://127.0.0.1:9999/tests/rx.html',
+                        'http://127.0.0.1:9999/tests/rx.modern.html', 
+                        'http://127.0.0.1:9999/tests/rx.lite.html', 
+                        'http://127.0.0.1:9999/tests/rx.lite.compat.html', 
+                        'http://127.0.0.1:9999/tests/rx.joinpatterns.html', 
+                        'http://127.0.0.1:9999/tests/rx.time.html', 
+                        'http://127.0.0.1:9999/tests/rx.virtualtime.html', 
+                    ],
+                    tunnelTimeout: 5,
+                    build: process.env.TRAVIS_JOB_ID,
+                    concurrency: 3,
+                    browsers: browsers,
+                    testname: "qunit tests"
+                }
             }
         }
     });
