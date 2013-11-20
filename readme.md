@@ -70,20 +70,17 @@ The only difference is that we can handle the errors inline with our subscriptio
 
 This set of libraries include:
 
-- **rx.js** - core library for ES5 compliant browsers and runtimes
-- **rx.compat.js** - core library for older non-ES5 compliant browsers.
-- **rx.aggregates.js** - aggregation event processing query operations
-- **rx.async.js** - async operationrs such as events, callbacks and promises
-- **rx.async.compat.js** - async operationrs such as events, callbacks and promises with support back to IE6
-- **rx.binding.js** - binding operators including multicast, publish, publishLast, publishValue, and replay
-- **rx.coincidence.js** - reactive coincidence join event processing query operations
-- **rx.experimental.js** - experimental operators including imperative operators and forkJoin
-- **rx.joinpatterns.js** - join patterns event processing query operations
-- **rx.lite.js** - lite version with event bindings, creation, time and standard query operators
-- **rx.lite.compat.js** - lite version with event bindings, creation, time and standard query operators with compatibility back to IE6
-- **rx.testing.js** - used to write unit tests for complex event processing queries
-- **rx.time.js** - time-based event processing query operations
-- **rx.virtualtime.js** - virtual-time-based schedulers
+- [rx.lite.js | rx.lite.compat.js](doc/libraries/rx.lite.md) - lite version with event bindings, creation, time and standard query operators with a compat file for older browsers.
+- [rx.js | rx.compat.js](doc/libraries/rx.md) - core library for ES5 compliant browsers and runtimes plus compatibility for older browsers.
+- [rx.aggregates.js](doc/libraries/rx.aggregates.md) - aggregation event processing query operations
+- [rx.async.js | rx.async.compat.js](doc/libraries/rx.async.md) - async operationrs such as events, callbacks and promises plus a compat file for older browsers.
+- [rx.binding.js](doc/libraries/rx.binding.md) - binding operators including multicast, publish, publishLast, publishValue, and replay
+- [rx.coincidence.js](doc/libraries/rx.coincidence.md) - reactive coincidence join event processing query operations
+- [rx.experimental.js](doc/libraries/rx.experimental.md) - experimental operators including imperative operators and forkJoin
+- [rx.joinpatterns.js](doc/libraries/rx.joinpatterns.md) - join patterns event processing query operations
+- [rx.testing.js](doc/libraries/rx.testing.md) - used to write unit tests for complex event processing queries
+- [rx.time.js](doc/libraries/rx.time.md) - time-based event processing query operations
+- [rx.virtualtime.js](doc/libraries/rx.virtualtime.md) - virtual-time-based schedulers
 
 ## Why RxJS? ##
 
