@@ -33,18 +33,19 @@ To put it more concretely, if you know how to program against Arrays using the A
  </thead>
  <tbody>
   <tr><td><pre><code>getDataFromLocalMemory()
-  .filter (function (s) { return s != null })
+  .filter (function (s) { return s != null; })
   .map( function (s) { return s + 'transformed'; })
-  .forEach(function (s) { console.log("next => " + it); })</code></pre></td>
+  .forEach(function (s) { console.log('next => '' + it); })</code></pre></td>
   <td><pre><code>getDataFromNetwork()
-  .filter (function (s) { return s != null })
+  .filter (function (s) { return s != null; })
   .map( function (s) { return s + 'transformed'; })
-  .subscribe(function (s) { console.log("next => " + it); })</code></pre></td></tr>
+  .subscribe(function (s) { console.log('next => '' + it); })</code></pre></td></tr>
  </tbody>
 </table></center>
 
 There are a number of ways of getting started with RxJS including:
 - [Getting Started With RxJS](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#getting-started-with-rxjs)
+- [Getting to Know RxJS Libraries](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#getting-to-know-rxjs-libraries)
 - [How Do I?](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#how-do-i)
 - [Mapping RxJS from Different Libraries](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#mapping-rxjs-from-different-libraries)
 - [API Documentation](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#reactive-extensions-class-library)
@@ -65,6 +66,40 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 - [Scheduling and Concurrency](gettingstarted/schedulers.md)
 - [Testing and Debugging](gettingstarted/testing.md)
 - [Implementing Your Own Operators](gettingstarted/operators.md)
+
+## Getting to Know RxJS Libraries ##
+
+There are many libraries that make up the Reactive Extensions for JavaScript, so it may be a little daunting at first to know which ones to include.  This will serve as a guide for which libraries you might need.  For most operations you'll only need the newly defined [RxJS-Lite](libraries/rx.lite.md), but you may find you need more operators, so you start with [RxJS Core](libraries/rx.md) and add additional files to mix in functionality as you need it.
+
+- [rx.lite.js | rx.lite.compat.js](libraries/rx.lite.md)
+- [rx.js | rx.compat.js](libraries/rx.md)
+- [rx.async.js | rx.async.compat.js](libraries/rx.async.md)
+- [rx.binding.js](libraries/rx.binding.md)
+- [rx.coincidence.js](libraries/rx.coincidence.md)
+- [rx.experimental.js](libraries/rx.experimental.md)
+- [rx.joinpatterns.js](libraries/rx.joinpatterns.md)
+- [rx.node.js](libraries/rx.node.md)
+- [rx.testing.js](libraries/rx.testing.md)
+- [rx.time.js](libraries/rx.time.md)
+- [rx.virtualtime.js](libraries/rx.virtualtime.md)
+
+### rx.js | rx.compat.js ###
+
+
+
+Files:
+- rx.js
+- rx.min.js
+- rx.compat.js
+- rx.compat.min.js
+
+NuGet Packages:
+- RxJS-Main
+
+Required Files:
+- <None>
+
+
 
 ## How Do I? ##
 

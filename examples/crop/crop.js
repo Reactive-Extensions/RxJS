@@ -11,14 +11,14 @@
 
     function loadImage () {
         var // `buffer` is a canvas element that displays the actual image to crop
-            buffer = document.querySelector('#buffer'),
+            buffer = document.getElementById('buffer'),
             // `img` is an img element we use to load the img, though we never add it to the DOM
             img = document.createElement('img');
 
         img.src = 'images/leaf twirl.jpg';
 
         // Returns an observable which fires when the image is loaded
-        return Rx.DOM.fromEvent(img, 'load').select(function () {
+        return Rx.Observable.fromEvent(img, 'load').map(function () {
             overlay.width = img.width;
             overlay.height = img.height;
 
@@ -100,20 +100,20 @@
     }
 
     function respondToGestures() {
-        var fromEvent = Rx.DOM.fromEvent;
+        var fromEvent = Rx.Observable.fromEvent;
 
         var moves = fromEvent(overlay, 'mousemove'),
             up = fromEvent(document, 'mouseup');
 
         // When the mouse is down on a handle, return the handle element
         return fromEvent(handles, 'mousedown')
-            .selectMany(function (handle) {
+            .flatMap(function (handle) {
 
                 handle.preventDefault();
 
                 return moves
                     // We combine the handle element with the position data from the move event
-                    .select(function (pos) {
+                    .map(function (pos) {
                         return {
                             element: handle.target,
                             offsetX: pos.offsetX,
@@ -147,11 +147,11 @@
     }    
 
     function main () {
-        overlay = document.querySelector('#overlay');
+        overlay = document.getElementById('overlay');
         ctx = overlay.getContext('2d');
 
         var subscription = loadImage()
-            .selectMany(function (size) {
+            .flatMap(function (size) {
 
                 // Initialize after load
                 initBoundingBox(size),

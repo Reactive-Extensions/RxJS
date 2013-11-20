@@ -7,18 +7,20 @@
     <meta name="description" content="">
     <meta name="author" content="">    
     <title>Rx for JavaScript Rocks!</title>
-    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.1/css/bootstrap.min.css">
-    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.1/css/bootstrap-responsive.min.css">
-    <link href="crop.css" rel="stylesheet" />
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-responsive.min.css">
+    <link href="crop.css" rel="stylesheet" >
+    <!--[if lt IE 9]>
+      <script type="text/javascript" src="excanvas_src.js"></script>
+    <![endif]-->
 </head>
 <body>
     <div id="container" style="margin-left: 120px;">
         <canvas id="buffer" class="canvasoverlays"></canvas>
         <canvas id="overlay" class="canvasoverlays"></canvas>
     </div>
-    <script src="../../rx.js"></script>
-    <script src="../../rx.binding.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/rxjs-dom/2.0.7/rx.dom.js"></script>
+    <script src="../../rx.lite.compat.js"></script>
+    <script src="requestanimationframescheduler.js"></script>
     <script src="crop.js"></script>
 </body>
 </html>

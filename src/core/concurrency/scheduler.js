@@ -261,4 +261,6 @@
 
         return Scheduler;
     }());
+
+    var normalizeTime = Scheduler.normalize;
     

@@ -1,7 +1,7 @@
     /** 
      * Gets a scheduler that schedules work as soon as possible on the current thread.
      */
-    var currentThreadScheduler = Scheduler.currentThread = Scheduler.immediate = (function () {
+    var currentThreadScheduler = Scheduler.currentThread = (function () {
         var queue;
 
         function Trampoline() {
@@ -66,5 +66,3 @@
 
         return currentScheduler;
     }());
-
-    var immediateScheduler = currentThreadScheduler;

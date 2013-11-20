@@ -12,29 +12,33 @@ var Observable = Rx.Observable,
     disposed = Rx.ReactiveTest.disposed;
 
 test('Select_Throws', function () {
+
     raises(function () {
-        return Observable.returnValue(1).select(function (x) {
+        Observable.returnValue(1).select(function (x) {
             return x;
         }).subscribe(function (x) {
             throw 'ex';
         });
     });
+
     raises(function () {
-        return Observable.throwException('ex').select(function (x) {
+        Observable.throwException('ex').select(function (x) {
             return x;
         }).subscribe(function (x) { }, function (ex) {
             throw 'ex';
         });
     });
+
     raises(function () {
-        return Observable.empty().select(function (x) {
+        Observable.empty().select(function (x) {
             return x;
         }).subscribe(function (x) { }, function (ex) { }, function () {
             throw 'ex';
         });
     });
+
     raises(function () {
-        return Observable.create(function (o) {
+        Observable.create(function (o) {
             throw 'ex';
         }).select(function (x) {
             return x;
@@ -44,25 +48,41 @@ test('Select_Throws', function () {
 });
 
 test('Select_DisposeInsideSelector', function () {
-    var d, invoked, results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(100, 1), onNext(200, 2), onNext(500, 3), onNext(600, 4));
-    invoked = 0;
-    results = scheduler.createObserver();
-    d = new SerialDisposable();
-    d.disposable(xs.select(function (x) {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+        onNext(100, 1),
+        onNext(200, 2),
+        onNext(500, 3),
+        onNext(600, 4)
+    );
+
+    var invoked = 0;
+
+    var res = scheduler.createObserver();
+
+    var d = new SerialDisposable();
+    d.setDisposable(xs.select(function (x) {
         invoked++;
         if (scheduler.clock > 400) {
             d.dispose();
         }
         return x;
-    }).subscribe(results));
-    scheduler.scheduleAbsolute(disposed, function () {
-        return d.dispose();
-    });
+    }).subscribe(res));
+
+    scheduler.scheduleAbsolute(Rx.ReactiveTest.disposed, d.dispose.bind(d));
+
     scheduler.start();
-    results.messages.assertEqual(onNext(100, 1), onNext(200, 2));
-    xs.subscriptions.assertEqual(subscribe(0, 500));
+
+    res.messages.assertEqual(
+        onNext(100, 1),
+        onNext(200, 2)
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(0, 500)
+    );
+
     equal(3, invoked);
 });
 
@@ -186,25 +206,41 @@ test('SelectWithIndex_Throws', function () {
 });
 
 test('SelectWithIndex_DisposeInsideSelector', function () {
-    var d, invoked, results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(100, 4), onNext(200, 3), onNext(500, 2), onNext(600, 1));
-    invoked = 0;
-    results = scheduler.createObserver();
-    d = new SerialDisposable();
-    d.disposable(xs.select(function (x, index) {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+        onNext(100, 4),
+        onNext(200, 3),
+        onNext(500, 2),
+        onNext(600, 1)
+    );
+
+    var invoked = 0;
+
+    var res = scheduler.createObserver();
+
+    var d = new SerialDisposable();
+    d.setDisposable(xs.select(function(x, index) {
         invoked++;
         if (scheduler.clock > 400) {
             d.dispose();
         }
         return x + index * 10;
-    }).subscribe(results));
-    scheduler.scheduleAbsolute(disposed, function () {
-        return d.dispose();
-    });
+    }).subscribe(res));
+
+    scheduler.scheduleAbsolute(Rx.ReactiveTest.disposed, d.dispose.bind(d));
+
     scheduler.start();
-    results.messages.assertEqual(onNext(100, 4), onNext(200, 13));
-    xs.subscriptions.assertEqual(subscribe(0, 500));
+
+    res.messages.assertEqual(
+        onNext(100, 4),
+        onNext(200, 13)
+    );
+
+    xs.subscriptions.assertEqual(
+        subscribe(0, 500)
+    );
+
     equal(3, invoked);
 });
 

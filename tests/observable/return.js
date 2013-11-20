@@ -2,6 +2,7 @@ QUnit.module('Return');
 
 var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
+    SerialDisposable = Rx.SerialDisposable,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
@@ -13,43 +14,52 @@ var Observable = Rx.Observable,
 test('Return_Basic', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
-        return Observable.returnValue(42, scheduler);
+    var res = scheduler.startWithCreate(function () {
+        return Observable.returnValue(42, scheduler)
     });
 
-    results.messages.assertEqual(
-					    onNext(201, 42),
-					    onCompleted(201));
+    res.messages.assertEqual(
+        onNext(201, 42),
+        onCompleted(201)
+    );
 });
 
 test('Return_Disposed', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithDispose(function () {
-        return Observable.returnValue(42, scheduler);
+    var res = scheduler.startWithDispose(function () {
+        return Observable.returnValue(42, scheduler)
     }, 200);
-    
-    results.messages.assertEqual();
+
+    res.messages.assertEqual(
+    );
 });
 
 test('Return_DisposedAfterNext', function () {
-    var d, results, scheduler, xs;
-    scheduler = new TestScheduler();
-    d = new Rx.SerialDisposable();
-    xs = Observable.returnValue(42, scheduler);
-    results = scheduler.createObserver();
+    var scheduler = new TestScheduler();
+
+    var d = new SerialDisposable();
+
+    var xs = Observable.returnValue(42, scheduler);
+
+    var res = scheduler.createObserver();
+
     scheduler.scheduleAbsolute(100, function () {
-        return d.disposable(xs.subscribe(function (x) {
-            d.dispose();
-            results.onNext(x);
-        }, function (e) {
-            results.onError(e);
-        }, function () {
-            results.onCompleted();
-        }));
+        d.setDisposable(xs.subscribe(
+            function (x) {
+                d.dispose();
+                res.onNext(x);
+            },
+            res.onError.bind(res),
+            res.onCompleted.bind(res)
+        ));
     });
+
     scheduler.start();
-    results.messages.assertEqual(onNext(101, 42));
+
+    res.messages.assertEqual(
+        onNext(101, 42)
+    );
 });
 
 test('Return_ObserverThrows', function () {

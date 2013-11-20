@@ -1,10 +1,6 @@
     /** Provides a set of static properties to access commonly used schedulers. */
     var Scheduler = Rx.Scheduler = (function () {
 
-        /** 
-         * @constructor 
-         * @private
-         */
         function Scheduler(now, schedule, scheduleRelative, scheduleAbsolute) {
             this.now = now;
             this._schedule = schedule;
@@ -126,7 +122,7 @@
 
         /**
          * Schedules an action to be executed after dueTime.     
-         * @param state State passed to the action to be executed.
+         * @param {Mixed} state State passed to the action to be executed.
          * @param {Function} action Action to be executed.
          * @param {Number} dueTime Relative time after which to execute the action.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).

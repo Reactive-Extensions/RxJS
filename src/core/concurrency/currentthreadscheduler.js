@@ -17,8 +17,7 @@
             while (queue.length > 0) {
                 item = queue.dequeue();
                 if (!item.isCancelled()) {
-                    while (item.dueTime - Scheduler.now() > 0) {
-                    }
+                    while (item.dueTime - Scheduler.now() > 0) { }
                     if (!item.isCancelled()) {
                         item.invoke();
                     }
@@ -31,7 +30,7 @@
         }
 
         function scheduleRelative(state, dueTime, action) {
-            var dt = this.now() + Scheduler.normalize(dueTime),
+            var dt = this.now() + normalizeTime(dueTime),
                     si = new ScheduledItem(this, state, action, dt),
                     t;
             if (!queue) {

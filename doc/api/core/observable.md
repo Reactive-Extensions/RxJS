@@ -121,6 +121,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`select`](#rxobservableprototypeselectselector-thisarg)
 - [`selectMany`](#rxobservableprototypeselectmanyselector-resultselector)
 - [`selectSwitch`](#rxobservableprototypeselectswitchselector-thisarg)
+- [`sequenceEqual`](#rxobservableprototypesequenceequalsecond-comparer)
 - [`single`](#rxobservableprototypesinglepredicate-thisarg)
 - [`singleOrDefault`](#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg)
 - [`skip`](#rxobservableprototypeskipcount)
@@ -6074,7 +6075,9 @@ var subscription = source.subscribe(
 
 - rx.js
 
-* * *### <a id="rxobservableprototypeselectswitchaselector-thisArg"></a>`Rx.Observable.prototype.selectSwitch(selector, [thisArg])`
+* * *
+
+### <a id="rxobservableprototypeselectswitchaselector-thisArg"></a>`Rx.Observable.prototype.selectSwitch(selector, [thisArg])`
 <a href="#rxobservableprototypeselectswitchaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
 
 This is an alias for the `selectSwitch` method.
@@ -6117,6 +6120,46 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.js
+
+* * *
+
+## <a id="rxobservableprototypesequenceequalsecond-comparer"></a>`Rx.Observable.prototype.sequenceEqual(second, [comparer])`
+<a href="#rxobservableprototypesequenceequalsecond-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
+
+Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
+
+#### Arguments
+1. `second` *(Observable)*:  Second observable sequence or array to compare.
+2. `[comparer]` *(Function)*: Comparer used to compare elements of both sequences.
+ 
+#### Returns
+*(Observable)*: An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.   
+
+#### Example
+```js
+var source1 = Rx.Observable.return(42);
+var source2 = Rx.Observable.return(42);
+
+var source = source1.sequenceEqual(source2);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: true
+// => Completed 
+```
+
+#### Location
+
+- rx.aggregates.js
 
 * * *
 

@@ -13,7 +13,7 @@ Reactive Programming is a hot topic as of late, especially with such things as t
 
 ## About the Reactive Extensions ##
 
-The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators modeled after Language Integrated Queries ([LINQ](http://en.wikipedia.org/wiki/LINQ)). Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using our many operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + Operators + Schedulers.
+The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators that many of you already know by Array#extras in JavaScript. Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using our many operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + Operators + Schedulers.
 
 Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming as a matter of course. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
 
@@ -29,13 +29,13 @@ var source = getStockData();
 
 source
     .filter(function (quote) { 
-        return quote.symbol === 'MSFT'; 
+        return quote.price > 30; 
     })
     .map(function (quote) { 
         return quote.price;
     })
     .forEach(function (price) {
-        console.log('MSFT Stock Prices: $' + price);
+        console.log('Prices higher than $30: $' + price);
     });
 ```
 
@@ -47,14 +47,14 @@ var source = getAsyncStockData();
 
 var subscription = source
     .filter(function (quote) { 
-        return quote.symbol === 'MSFT'; 
+        return quote.price > 30; 
     })
     .map(function (quote) { 
         return quote.price;
     })
     .subscribe(
         function (price) {
-            console.log('MSFT Stock Prices: $' + price);
+            console.log('Prices higher than $30: $' + price);
         },
         function (err) {
             console.log('Something went wrong: ' + err.message);
