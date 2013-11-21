@@ -71,9 +71,9 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 
 There are many libraries that make up the Reactive Extensions for JavaScript, so it may be a little daunting at first to know which ones to include.  This will serve as a guide for which libraries you might need.  For most operations you'll only need the newly defined [RxJS-Lite](libraries/rx.lite.md), but you may find you need more operators, so you start with [RxJS Core](libraries/rx.md) and add additional files to mix in functionality as you need it.
 
-- [rx.lite.js | rx.lite.compat.js](libraries/rx.lite.md)
-- [rx.js | rx.compat.js](libraries/rx.md)
-- [rx.async.js | rx.async.compat.js](libraries/rx.async.md)
+- [rx.lite.js](libraries/rx.lite.md)
+- [rx.js](libraries/rx.md)
+- [rx.async.js](libraries/rx.async.md)
 - [rx.binding.js](libraries/rx.binding.md)
 - [rx.coincidence.js](libraries/rx.coincidence.md)
 - [rx.experimental.js](libraries/rx.experimental.md)

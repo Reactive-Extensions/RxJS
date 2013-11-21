@@ -21,7 +21,7 @@ File Dependencies:
 - `rx.binding.js`
 
 NPM Dependencies:
-- <None>
+- None
 
 NuGet Dependencies:
 - RxJS-Main

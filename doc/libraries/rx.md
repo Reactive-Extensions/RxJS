@@ -17,13 +17,13 @@ NuGet Packages:
 - `RxJS-Main`
 
 File Dependencies:
-- <None>
+- None
 
 NPM Dependencies:
-- <None>
+- None
 
 NuGet Dependencies:
-- <None>
+- None
 
 ## Included Observable Operators ##
 

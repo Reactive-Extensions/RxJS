@@ -17,7 +17,7 @@ File Dependencies:
 - `rx.js` | `rx.compat.js`
 
 NPM Dependencies:
-- <None>
+- None
 
 NuGet Dependencies:
 - RxJS-Main

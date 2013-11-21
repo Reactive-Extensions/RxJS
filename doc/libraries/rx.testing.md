@@ -18,7 +18,7 @@ File Dependencies:
 - `rx.virtualtime.js`
 
 NPM Dependencies:
-- <None>
+- None
 
 NuGet Dependencies:
 - RxJS-Main
