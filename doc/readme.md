@@ -83,24 +83,6 @@ There are many libraries that make up the Reactive Extensions for JavaScript, so
 - [rx.time.js](libraries/rx.time.md)
 - [rx.virtualtime.js](libraries/rx.virtualtime.md)
 
-### rx.js | rx.compat.js ###
-
-
-
-Files:
-- rx.js
-- rx.min.js
-- rx.compat.js
-- rx.compat.min.js
-
-NuGet Packages:
-- RxJS-Main
-
-Required Files:
-- <None>
-
-
-
 ## How Do I? ##
 
 There is a large surface area with the Reactive Extensions for JavaScript, so it might be hard to know where to start.  This will serve as a guide to answer some of the more basic questions.
