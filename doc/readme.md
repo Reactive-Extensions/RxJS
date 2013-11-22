@@ -90,6 +90,7 @@ There is a large surface area with the Reactive Extensions for JavaScript, so it
 1. [How do I wrap an existing API?](howdoi/wrap.md)
 2. [How do I integrate jQuery with RxJS?](howdoi/jquery.md)
 3. [How do I integrate Angular.js with RxJS?](howdoi/angular.md)
+4. [How do I create a simple event emitter?](howdoi/eventemitter.md)
 
 ## Mapping RxJS from Different Libraries ##
 
