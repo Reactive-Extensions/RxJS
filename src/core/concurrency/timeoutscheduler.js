@@ -1,22 +1,33 @@
     
+    var reNative = RegExp('^' +
+      String(toString)
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/toString| for [^\]]+/g, '.*?') + '$'
+    );
+
+    var setImmediate = typeof (setImmediate = freeGlobal && moduleExports && freeGlobal.setImmediate) == 'function' &&
+        !reNative.test(setImmediate) && setImmediate,
+        clearImmediate = typeof (clearImmediate = freeGlobal && moduleExports && freeGlobal.clearImmediate) == 'function' &&
+        !reNative.test(clearImmediate) && clearImmediate;
+
     var scheduleMethod, clearMethod = noop;
     (function () {
         function postMessageSupported () {
             // Ensure not in a worker
-            if (!window.postMessage || window.importScripts) { return false; }
+            if (!root.postMessage || root.importScripts) { return false; }
             var isAsync = false, 
-                oldHandler = window.onmessage;
+                oldHandler = root.onmessage;
             // Test for async
-            window.onmessage = function () { isAsync = true; };
-            window.postMessage('','*');
-            window.onmessage = oldHandler;
+            root.onmessage = function () { isAsync = true; };
+            root.postMessage('','*');
+            root.onmessage = oldHandler;
 
             return isAsync;
         }
 
         // Check for setImmediate first for Node v0.11+
-        if (typeof window.setImmediate === 'function') {
-            scheduleMethod = window.setImmediate;
+        if (typeof setImmediate === 'function') {
+            scheduleMethod = setImmediate;
             clearMethod = clearImmediate;
         } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
             scheduleMethod = process.nextTick;
@@ -35,19 +46,19 @@
                 }
             }
 
-            if (window.addEventListener) {
-                window.addEventListener('message', onGlobalPostMessage, false);
+            if (root.addEventListener) {
+                root.addEventListener('message', onGlobalPostMessage, false);
             } else {
-                window.attachEvent('onmessage', onGlobalPostMessage, false);
+                root.attachEvent('onmessage', onGlobalPostMessage, false);
             }
 
             scheduleMethod = function (action) {
                 var currentId = taskId++;
                 tasks[currentId] = action;
-                window.postMessage(MSG_PREFIX + currentId, '*');
+                root.postMessage(MSG_PREFIX + currentId, '*');
             };
-        } else if (!!window.MessageChannel) {
-            var channel = new window.MessageChannel(),
+        } else if (!!root.MessageChannel) {
+            var channel = new root.MessageChannel(),
                 channelTasks = {},
                 channelTaskId = 0;
 
@@ -63,22 +74,22 @@
                 channelTasks[id] = action;
                 channel.port2.postMessage(id);     
             };
-        } else if ('document' in window && 'onreadystatechange' in window.document.createElement('script')) {
+        } else if ('document' in root && 'onreadystatechange' in root.document.createElement('script')) {
             
             scheduleMethod = function (action) {
-                var scriptElement = window.document.createElement('script');
+                var scriptElement = root.document.createElement('script');
                 scriptElement.onreadystatechange = function () { 
                     action();
                     scriptElement.onreadystatechange = null;
                     scriptElement.parentNode.removeChild(scriptElement);
                     scriptElement = null;  
                 };
-                window.document.documentElement.appendChild(scriptElement);  
+                root.document.documentElement.appendChild(scriptElement);  
             };
  
         } else {
-            scheduleMethod = function (action) { return window.setTimeout(action, 0); };
-            clearMethod = window.clearTimeout;
+            scheduleMethod = function (action) { return setTimeout(action, 0); };
+            clearMethod = clearTimeout;
         }
     }());
 
@@ -107,13 +118,13 @@
                 return scheduler.scheduleWithState(state, action);
             }
             var disposable = new SingleAssignmentDisposable();
-            var id = window.setTimeout(function () {
+            var id = setTimeout(function () {
                 if (!disposable.isDisposed) {
                     disposable.setDisposable(action(scheduler, state));
                 }
             }, dt);
             return new CompositeDisposable(disposable, disposableCreate(function () {
-                window.clearTimeout(id);
+                clearTimeout(id);
             }));
         }
 

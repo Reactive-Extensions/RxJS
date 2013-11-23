@@ -96,11 +96,11 @@
          * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
          */
         schedulerProto.schedulePeriodicWithState = function (state, period, action) {
-            var s = state, id = window.setInterval(function () {
+            var s = state, id = setInterval(function () {
                 s = action(s);
             }, period);
             return disposableCreate(function () {
-                window.clearInterval(id);
+                clearInterval(id);
             });
         };
 

@@ -1,18 +1,26 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
-(function (window, undefined) {
+;(function (undefined) {
 
-    var freeExports = typeof exports == 'object' && exports,
-        freeModule = typeof module == 'object' && module && module.exports == freeExports && module,
-        freeGlobal = typeof global == 'object' && global;
-    if (freeGlobal.global === freeGlobal) {
-        window = freeGlobal;
+    var objectTypes = {
+        'boolean': false,
+        'function': true,
+        'object': true,
+        'number': false,
+        'string': false,
+        'undefined': false
+    };
+
+    var root = (objectTypes[typeof window] && window) || this,
+        freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
+        freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
+        moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
+        freeGlobal = objectTypes[typeof global] && global;
+    
+    if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
+        root = freeGlobal;
     }
 
-     /** 
-     * @name Rx
-     * @type Object
-     */
     var Rx = { Internals: {} };
     
     // Defaults
@@ -672,10 +680,6 @@
     /** Provides a set of static properties to access commonly used schedulers. */
     var Scheduler = Rx.Scheduler = (function () {
 
-        /** 
-         * @constructor 
-         * @private
-         */
         function Scheduler(now, schedule, scheduleRelative, scheduleAbsolute) {
             this.now = now;
             this._schedule = schedule;
@@ -758,11 +762,11 @@
          * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
          */
         schedulerProto.schedulePeriodicWithState = function (state, period, action) {
-            var s = state, id = window.setInterval(function () {
+            var s = state, id = setInterval(function () {
                 s = action(s);
             }, period);
             return disposableCreate(function () {
-                window.clearInterval(id);
+                clearInterval(id);
             });
         };
 
@@ -797,7 +801,7 @@
 
         /**
          * Schedules an action to be executed after dueTime.     
-         * @param state State passed to the action to be executed.
+         * @param {Mixed} state State passed to the action to be executed.
          * @param {Function} action Action to be executed.
          * @param {Number} dueTime Relative time after which to execute the action.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -1044,24 +1048,35 @@
     }());
 
     
+    var reNative = RegExp('^' +
+      String(toString)
+        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+        .replace(/toString| for [^\]]+/g, '.*?') + '$'
+    );
+
+    var setImmediate = typeof (setImmediate = freeGlobal && moduleExports && freeGlobal.setImmediate) == 'function' &&
+        !reNative.test(setImmediate) && setImmediate,
+        clearImmediate = typeof (clearImmediate = freeGlobal && moduleExports && freeGlobal.clearImmediate) == 'function' &&
+        !reNative.test(clearImmediate) && clearImmediate;
+
     var scheduleMethod, clearMethod = noop;
     (function () {
         function postMessageSupported () {
             // Ensure not in a worker
-            if (!window.postMessage || window.importScripts) { return false; }
+            if (!root.postMessage || root.importScripts) { return false; }
             var isAsync = false, 
-                oldHandler = window.onmessage;
+                oldHandler = root.onmessage;
             // Test for async
-            window.onmessage = function () { isAsync = true; };
-            window.postMessage('','*');
-            window.onmessage = oldHandler;
+            root.onmessage = function () { isAsync = true; };
+            root.postMessage('','*');
+            root.onmessage = oldHandler;
 
             return isAsync;
         }
 
         // Check for setImmediate first for Node v0.11+
-        if (typeof window.setImmediate === 'function') {
-            scheduleMethod = window.setImmediate;
+        if (typeof setImmediate === 'function') {
+            scheduleMethod = setImmediate;
             clearMethod = clearImmediate;
         } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
             scheduleMethod = process.nextTick;
@@ -1080,19 +1095,19 @@
                 }
             }
 
-            if (window.addEventListener) {
-                window.addEventListener('message', onGlobalPostMessage, false);
+            if (root.addEventListener) {
+                root.addEventListener('message', onGlobalPostMessage, false);
             } else {
-                window.attachEvent('onmessage', onGlobalPostMessage, false);
+                root.attachEvent('onmessage', onGlobalPostMessage, false);
             }
 
             scheduleMethod = function (action) {
                 var currentId = taskId++;
                 tasks[currentId] = action;
-                window.postMessage(MSG_PREFIX + currentId, '*');
+                root.postMessage(MSG_PREFIX + currentId, '*');
             };
-        } else if (!!window.MessageChannel) {
-            var channel = new window.MessageChannel(),
+        } else if (!!root.MessageChannel) {
+            var channel = new root.MessageChannel(),
                 channelTasks = {},
                 channelTaskId = 0;
 
@@ -1108,22 +1123,22 @@
                 channelTasks[id] = action;
                 channel.port2.postMessage(id);     
             };
-        } else if ('document' in window && 'onreadystatechange' in window.document.createElement('script')) {
+        } else if ('document' in root && 'onreadystatechange' in root.document.createElement('script')) {
             
             scheduleMethod = function (action) {
-                var scriptElement = window.document.createElement('script');
+                var scriptElement = root.document.createElement('script');
                 scriptElement.onreadystatechange = function () { 
                     action();
                     scriptElement.onreadystatechange = null;
                     scriptElement.parentNode.removeChild(scriptElement);
                     scriptElement = null;  
                 };
-                window.document.documentElement.appendChild(scriptElement);  
+                root.document.documentElement.appendChild(scriptElement);  
             };
  
         } else {
-            scheduleMethod = function (action) { return window.setTimeout(action, 0); };
-            clearMethod = window.clearTimeout;
+            scheduleMethod = function (action) { return setTimeout(action, 0); };
+            clearMethod = clearTimeout;
         }
     }());
 
@@ -1152,13 +1167,13 @@
                 return scheduler.scheduleWithState(state, action);
             }
             var disposable = new SingleAssignmentDisposable();
-            var id = window.setTimeout(function () {
+            var id = setTimeout(function () {
                 if (!disposable.isDisposed) {
                     disposable.setDisposable(action(scheduler, state));
                 }
             }, dt);
             return new CompositeDisposable(disposable, disposableCreate(function () {
-                window.clearTimeout(id);
+                clearTimeout(id);
             }));
         }
 
@@ -4918,19 +4933,21 @@
         return ReplaySubject;
     }(Observable));
 
-    // Check for AMD
     if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
-        window.Rx = Rx;
-        return define(function () {
+        root.Rx = Rx;
+
+        define(function() {
             return Rx;
         });
-    } else if (freeExports) {
-        if (typeof module == 'object' && module && module.exports == freeExports) {
-            module.exports = Rx;
+    } else if (freeExports && freeModule) {
+        // in Node.js or RingoJS
+        if (moduleExports) {
+            (freeModule.exports = Rx).Rx = Rx;
         } else {
-            freeExports = Rx;
+          freeExports.Rx = Rx;
         }
     } else {
-        window.Rx = Rx;
+        // in a browser or Rhino
+        root.Rx = Rx;
     }
-}(this));
+}.call(this));
