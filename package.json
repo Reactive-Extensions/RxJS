@@ -24,7 +24,7 @@
   "dependencies": {},
   "devDependencies": {
     "grunt-cli": "*",
-    "grunt": "~0.4.1",
+    "grunt": "~0.4.2",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-uglify": "*",
     "grunt-contrib-concat": "*",

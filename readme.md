@@ -286,6 +286,7 @@ require({
 
 The Reactive Extensions for JavaScript have no external dependencies any library, so they'll work well with just about any library.  We provide bridges and support for various libraries including:
 
+- [AngularJS](https://github.com/Reactive-Extensions/rx.angular.js)
 - [HTML DOM](https://github.com/Reactive-Extensions/RxJS-DOM)
 - [jQuery (1.4+)](https://github.com/Reactive-Extensions/RxJS-jQuery)
 - [MooTools](https://github.com/Reactive-Extensions/RxJS-MooTools)
