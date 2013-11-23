@@ -1,6 +1,6 @@
 # How do I integrate Angular.js with RxJS? #
 
-[AngularJS](http://angularjs.org/) is a popular MV* framework for JavaScript which covers things such as data binding, controllers as well as things such as dependency injection.
+[AngularJS](http://angularjs.org/) is a popular MV* framework for JavaScript which covers things such as data binding, controllers as well as things such as dependency injection.  The Reactive Extensions for JavaScript plays well with this framework, and in fact has a dedicated library for interop called [rx.angular.js](https://github.com/Reactive-Extensions/rx.angular.js).  However, if you don't wish to use that, here are some simple ways you can integrate the two together.
 
 ## Integration with Scopes
 
