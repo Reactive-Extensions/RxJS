@@ -36,7 +36,7 @@ Using the Reactive Extensions for JavaScript, we're able to easily bind to this 
 Rx.Observable.$watch = function (scope, watchExpression, objectEquality) {
 	return Rx.Observable.create(function (observer) {
 		// Create function to handle old and new Value
-		function listener (oldValue, newValue) {
+		function listener (newValue, oldValue) {
 			observer.onNext({ oldValue: oldValue, newValue: newValue });
 		}
 
