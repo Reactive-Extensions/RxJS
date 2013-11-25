@@ -111,14 +111,14 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`pluck`](#rxobservableprototypepluckproperty)
 - [`publish`](#rxobservableprototypepublishselector)
 - [`publishLast`](#rxobservableprototypepublishlatestselector)
-- [`share`](#rxobservableprototypeshare)
 - [`publishValue`](#rxobservableprototypepublishvalueselector)
+- [`share`](#rxobservableprototypeshare)
+- [`shareReplay`](#rxobservableprototypesharereplay-buffersize-window-scheduler)
 - [`shareValue`](#rxobservableprototypesharevalue)
 - [`refCount`](#connectableobservableprototyperefcount)
 - [`reduce`](#rxobservableprototypereduceaccumulator-seed)
 - [`repeat`](#rxobservableprototyperepeatrepeatcount)
 - [`replay`](#rxobservableprototypereplayselector-buffersize-window-scheduler)
-- [`shareReplay`](#rxobservableprototypesharereplay-buffersize-window-scheduler)
 - [`retry`](#rxobservableprototyperetryretrycount)
 - [`sample`](#rxobservableprototypesampleinterval--sampleobservable)
 - [`scan`](#rxobservableprototypescanseed-accumulator)
@@ -5991,7 +5991,7 @@ function createObserver(tag) {
 
 * * *
 
-### <a id="rxobservableprototypereplayselector-buffersize-window-scheduler"></a>`Rx.Observable.prototype.shareReplay([bufferSize], [window], [scheduler])`
+### <a id="rxobservableprototypesharereplay-buffersize-window-scheduler"></a>`Rx.Observable.prototype.shareReplay([bufferSize], [window], [scheduler])`
 <a href="#rxobservableprototypesharereplay-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") 
 
 Returns an observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
