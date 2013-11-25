@@ -63,6 +63,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`catch | catchException`](#rxobservableprototypecatchsecond--handler)
 - [`combineLatest`](#rxobservableprototypecombinelatestargs-resultselector)
 - [`concat`](#rxobservableprototypeconcatargs)
+- [`concatAll`](#rxobservableprototypeconcatallargs)
 - [`connect`](#connectableobservableprototypeconnect)
 - [`contains`](#rxobservableprototypecontainsvalue-comparer)
 - [`count`](#rxobservableprototypecountpredicate)
@@ -101,7 +102,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`max`](#rxobservableprototypemaxcomparer)
 - [`maxBy`](#rxobservableprototypemaxbykeyselector-comparer)
 - [`merge`](#rxobservableprototypemergemaxconcurrent--other)
-- [`mergeObservable`](#rxobservableprototypemergeobservable)
+- [`mergeAll`](#rxobservableprototypemergeobservable)
 - [`min`](#rxobservableprototypemincomparer)
 - [`minBy`](#rxobservableprototypeminbykeyselector-comparer)
 - [`multicast`](#rxobservableprototypemulticastsubject--subjectselector-selector)
@@ -110,11 +111,14 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`pluck`](#rxobservableprototypepluckproperty)
 - [`publish`](#rxobservableprototypepublishselector)
 - [`publishLast`](#rxobservableprototypepublishlatestselector)
+- [`publishWhileObserved`](#rxobservableprototypepublishwhileobserved)
 - [`publishValue`](#rxobservableprototypepublishvalueselector)
+- [`publishValueWhileObserved`](#rxobservableprototypepublishvaluewhileobserved)
 - [`refCount`](#connectableobservableprototyperefcount)
 - [`reduce`](#rxobservableprototypereduceaccumulator-seed)
 - [`repeat`](#rxobservableprototyperepeatrepeatcount)
 - [`replay`](#rxobservableprototypereplayselector-buffersize-window-scheduler)
+- [`replayWhileObserved`](#rxobservableprototypereplaywhileobserved-buffersize-window-scheduler)
 - [`retry`](#rxobservableprototyperetryretrycount)
 - [`sample`](#rxobservableprototypesampleinterval--sampleobservable)
 - [`scan`](#rxobservableprototypescanseed-accumulator)
@@ -2885,6 +2889,49 @@ var subscription = source.subscribe(
 
 * * *
 
+### <a id="rxobservableprototypeconcatallargs"></a>`Rx.Observable.prototype.concatAll()`
+<a href="#rxobservableprototypeconcatallargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3223-L3227 "View in source") 
+
+Concatenates a sequence of observable sequences into a single observable sequence.
+
+#### Returns
+*(Observable)*: The observable sequence that merges the elements of the inner sequences. 
+ 
+#### Example
+```js
+var source = Rx.Observable.range(0, 3)
+    .map(function (x) { return Rx.Observable.range(x, 3); })
+    .concatAll();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0 
+// => Next: 1 
+// => Next: 2 
+// => Next: 1 
+// => Next: 2 
+// => Next: 3 
+// => Next: 2 
+// => Next: 3 
+// => Next: 4 
+// => Completed     
+```
+
+#### Location
+
+- rx.js
+
+* * *
+
 ### <a id="connectableobservableprototypeconnect"></a>`ConnectableObservable.prototype.connect()`
 <a href="#connectableobservableprototypeconnect">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L504 "View in source") 
 
@@ -4394,7 +4441,7 @@ var source = xs.groupJoin(
         return yy.select(function (y) { 
             return x + y; 
         })
-    }).mergeObservable().take(5);
+    }).mergeAll().take(5);
 
 var subscription = source.subscribe(
     function (x) {
@@ -4799,7 +4846,7 @@ Comonadic bind operator.
 ```js
 var source = Rx.Observable.range(0, 3)
     .manySelect(function (ys) { return ys.first(); })
-    .mergeObservable();
+    .mergeAll();
 
 var subscription = source.subscribe(
     function (x) {
@@ -5051,7 +5098,7 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="rxobservableprototypemergeobservable"></a>`Rx.Observable.prototype.mergeObservable()`
+### <a id="rxobservableprototypemergeobservable"></a>`Rx.Observable.prototype.mergeAll()`
 <a href="#rxobservableprototypemergeobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3347-L3373 "View in source") 
 
 Merges an observable sequence of observable sequences into an observable sequence.
@@ -5063,7 +5110,7 @@ Merges an observable sequence of observable sequences into an observable sequenc
 ```js
 var source = Rx.Observable.range(0, 3)
     .map(function (x) { return Rx.Observable.range(x, 3); })
-    .mergeObservable();
+    .mergeAll();
 
 var subscription = source.subscribe(
     function (x) {
@@ -5203,7 +5250,7 @@ var subscription = source.subscribe(
 
 Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
 subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
-invocation. For specializations with fixed subject types, see `publish`, , `publishValue`, `publishLast`, and `replay`.
+invocation. For specializations with fixed subject types, see `publish`, `publishWhileObserved`, `publishValue`, `publishValueWhileObserved`, `publishLast`, `replay`, and `replayWhileObserved`.
 
 #### Arguments
 1. `subjectSelector` *(Function)*:  Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
@@ -5469,6 +5516,102 @@ function createObserver(tag) {
 
 * * *
 
+### <a id="rxobservableprototypepublishwhileobserved"></a>`Rx.Observable.prototype.publishWhileObserved()`
+<a href="#rxobservableprototypepublishwhileobserved">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") 
+
+Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence. 
+
+This operator is a specialization of `publish` which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+   
+#### Example
+```js
+/* Without publishWhileObserved */
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+source.subscribe(createObserver('SourceA'));
+source.subscribe(createObserver('SourceB'));
+ 
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Side effect
+// => Next: SourceA0 
+// => Side effect
+// => Next: SourceB0 
+// => Side effect
+// => Next: SourceA1 
+// => Completed
+// => Side effect
+// => Next: SourceB1 
+// => Completed  
+
+/* With publishWhileObserved */
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(
+        function (x) { 
+            console.log('Side effect');
+        });
+ 
+var published = source.publishWhileObserved();
+ 
+// When the number of observers subscribed to published observable goes from 
+// 0 to 1, we connect to the underlying observable sequence.
+published.subscribe(createObserver('SourceA'));
+// When the second subscriber is added, no additional subscriptions are added to the
+// underlying observable sequence. As a result the operations that result in side 
+// effects are not repeated per subscriber.
+published.subscribe(createObserver('SourceB'));
+
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Side effect 
+// => Next: SourceA0 
+// => Next: SourceB0 
+// => Side effect 
+// => Next: SourceA1 
+// => Next: SourceB1
+// => Completed    
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
 ### <a id="rxobservableprototypepublishlatestselector"></a>`Rx.Observable.prototype.publishLatest([selector])`
 <a href="#rxobservableprototypepublishlatestselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L103-L109 "View in source") 
 
@@ -5555,6 +5698,62 @@ published.subscribe(createObserver('SourceA'));
 published.subscribe(createObserver('SourceB'));
  
 var connection = published.connect();
+
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Next: SourceA42 
+// => Next: SourceB42 
+// => Side effect
+// => Next: SourceA0 
+// => Next: SourceB0 
+// => Side effect
+// => Next: SourceA1 
+// => Next: SourceB1 
+// => Completed 
+// => Completed     
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
+### <a id="rxobservableprototypepublishvaluewhileobserved"></a>`Rx.Observable.prototype.publishValueWhileObserved()`
+<a href="#rxobservableprototypepublishvaluewhileobserved">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L123-L129 "View in source") 
+
+Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
+   
+This operator is a specialization of `publishValue` which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
+
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+ 
+#### Example
+```js
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(2)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = source.publishValueWhileObserved(42);
+ 
+published.subscribe(createObserver('SourceA'));
+published.subscribe(createObserver('SourceB'));
 
 function createObserver(tag) {
     return Rx.Observer.create(
@@ -5783,6 +5982,84 @@ function createObserver(tag) {
 // => Next: SourceB1 
 // => Next: SourceB0 
 // => Next: SourceB1 
+// => Completed 
+```
+
+#### Location
+
+- rx.binding.js
+
+* * *
+
+### <a id="rxobservableprototypereplayselector-buffersize-window-scheduler"></a>`Rx.Observable.prototype.replayWhileObserved([bufferSize], [window], [scheduler])`
+<a href="#rxobservableprototypereplaywhileobserved-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") 
+
+Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
+
+This operator is a specialization of `replay` that connects to the connectable observable sequence when the number of observers goes from zero to one, and disconnects when there are no more observers.
+
+#### Arguments
+1. `[bufferSize]` *(Number)*: Maximum element count of the replay buffer.
+2. `[window]` *(Number)*: Maximum time length of the replay buffer in milliseconds.
+3. `[scheduler]` *(Scheduler)*: Scheduler where connected observers within the selector function will be invoked on.
+ 
+#### Returns
+*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+
+#### Example
+```js
+var interval = Rx.Observable.interval(1000);
+
+var source = interval
+    .take(4)
+    .doAction(function (x) { 
+        console.log('Side effect');
+    });
+ 
+var published = source
+    .replayWhileObserved(3);
+ 
+published.subscribe(createObserver('SourceA'));
+published.subscribe(createObserver('SourceB'));
+
+// Creating a third subscription after the previous two subscriptions have 
+// completed. Notice that no side effects result from this subscription, because the notifications are cached and replayed. 
+Rx.Observable
+    .returnValue(true)
+    .delay(6000)
+    .flatMap(published)
+    .subscribe(createObserver('SourceC'));
+    
+function createObserver(tag) {
+    return Rx.Observer.create(
+        function (x) {
+            console.log('Next: ' + tag + x);
+        },
+        function (err) {
+            console.log('Error: ' + err);   
+        },
+        function () {
+            console.log('Completed');   
+        });
+}
+
+// => Side effect
+// => Next: SourceA0
+// => Next: SourceB0
+// => Side effect
+// => Next: SourceA1
+// => Next: SourceB1
+// => Side effect
+// => Next: SourceA2
+// => Next: SourceB2
+// => Side effect
+// => Next: SourceA3
+// => Next: SourceB3
+// => Completed
+// => Completed
+// => Next: SourceC1
+// => Next: SourceC2
+// => Next: SourceC3
 // => Completed 
 ```
 
