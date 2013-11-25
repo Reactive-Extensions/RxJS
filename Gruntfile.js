@@ -375,9 +375,12 @@ var browsers = [{
                     // Binding Operators
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
                     'src/core/linq/observable/publish.js',   // mulitcast, Subject
+                    'src/core/linq/observable/publishwhileobserved.js',   // mulitcast, Subject, Reference counted                    
                     'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
                     'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
+                    'src/core/linq/observable/publishvaluewhileobserved.js', // multicast, BehaviorSubject, Reference counted
                     'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
+                    'src/core/linq/observable/replaywhileobserved.js', // multicast, ReplaySubject, Reference counted                     
                     'src/core/linq/connectableobservable.js',                    
 
                     // Time operators
@@ -517,10 +520,14 @@ var browsers = [{
                     // Binding Operators
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
                     'src/core/linq/observable/publish.js',   // mulitcast, Subject
+                    'src/core/linq/observable/publishwhileobserved.js',   // mulitcast, Subject, Reference counted                    
                     'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
                     'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
+                    'src/core/linq/observable/publishvaluewhileobserved.js', // multicast, BehaviorSubject, Reference counted
                     'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
+                    'src/core/linq/observable/replaywhileobserved.js', // multicast, ReplaySubject, Reference counted                     
                     'src/core/linq/connectableobservable.js',                    
+
 
                     // Time operators
                     'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
@@ -639,9 +646,12 @@ var browsers = [{
                     'src/core/bindingheader.js',
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
                     'src/core/linq/observable/publish.js',   // mulitcast, Subject
+                    'src/core/linq/observable/publishwhileobserved.js',   // mulitcast, Subject, Reference counted                    
                     'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
                     'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
+                    'src/core/linq/observable/publishvaluewhileobserved.js', // multicast, BehaviorSubject, Reference counted
                     'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
+                    'src/core/linq/observable/replayWhileObserved.js', // multicast, ReplaySubject, Reference counted                     
                     'src/core/subjects/innersubscription.js',
                     'src/core/subjects/behaviorsubject.js',
                     'src/core/subjects/replaysubject.js',

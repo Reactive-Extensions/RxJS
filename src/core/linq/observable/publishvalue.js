@@ -4,7 +4,7 @@
      * 
      * @example
      * var res = source.publishValue(42);
-     * var res = source.publishLast(function (x) { return x.select(function (y) { return y * y; }) }, 42);
+     * var res = source.publishValue(function (x) { return x.select(function (y) { return y * y; }) }, 42);
      * 
      * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
      * @param {Mixed} initialValue Initial value received by observers upon subscription.
