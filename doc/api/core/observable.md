@@ -111,14 +111,14 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`pluck`](#rxobservableprototypepluckproperty)
 - [`publish`](#rxobservableprototypepublishselector)
 - [`publishLast`](#rxobservableprototypepublishlatestselector)
-- [`publishWhileObserved`](#rxobservableprototypepublishwhileobserved)
+- [`share`](#rxobservableprototypeshare)
 - [`publishValue`](#rxobservableprototypepublishvalueselector)
-- [`publishValueWhileObserved`](#rxobservableprototypepublishvaluewhileobserved)
+- [`shareValue`](#rxobservableprototypesharevalue)
 - [`refCount`](#connectableobservableprototyperefcount)
 - [`reduce`](#rxobservableprototypereduceaccumulator-seed)
 - [`repeat`](#rxobservableprototyperepeatrepeatcount)
 - [`replay`](#rxobservableprototypereplayselector-buffersize-window-scheduler)
-- [`replayWhileObserved`](#rxobservableprototypereplaywhileobserved-buffersize-window-scheduler)
+- [`shareReplay`](#rxobservableprototypesharereplay-buffersize-window-scheduler)
 - [`retry`](#rxobservableprototyperetryretrycount)
 - [`sample`](#rxobservableprototypesampleinterval--sampleobservable)
 - [`scan`](#rxobservableprototypescanseed-accumulator)
@@ -5250,7 +5250,7 @@ var subscription = source.subscribe(
 
 Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
 subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
-invocation. For specializations with fixed subject types, see `publish`, `publishWhileObserved`, `publishValue`, `publishValueWhileObserved`, `publishLast`, `replay`, and `replayWhileObserved`.
+invocation. For specializations with fixed subject types, see `publish`, `share`, `publishValue`, `shareValue`, `publishLast`, `replay`, and `shareReplay`.
 
 #### Arguments
 1. `subjectSelector` *(Function)*:  Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
@@ -5516,10 +5516,10 @@ function createObserver(tag) {
 
 * * *
 
-### <a id="rxobservableprototypepublishwhileobserved"></a>`Rx.Observable.prototype.publishWhileObserved()`
-<a href="#rxobservableprototypepublishwhileobserved">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") 
+### <a id="rxobservableprototypeshare"></a>`Rx.Observable.prototype.share()`
+<a href="#rxobservableprototypeshare">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") 
 
-Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence. 
+Returns an observable sequence that shares a single subscription to the underlying sequence. 
 
 This operator is a specialization of `publish` which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
 
@@ -5528,7 +5528,7 @@ This operator is a specialization of `publish` which creates a subscription when
    
 #### Example
 ```js
-/* Without publishWhileObserved */
+/* Without share */
 var interval = Rx.Observable.interval(1000);
 
 var source = interval
@@ -5564,7 +5564,7 @@ function createObserver(tag) {
 // => Next: SourceB1 
 // => Completed  
 
-/* With publishWhileObserved */
+/* With share */
 var interval = Rx.Observable.interval(1000);
 
 var source = interval
@@ -5574,7 +5574,7 @@ var source = interval
             console.log('Side effect');
         });
  
-var published = source.publishWhileObserved();
+var published = source.share();
  
 // When the number of observers subscribed to published observable goes from 
 // 0 to 1, we connect to the underlying observable sequence.
@@ -5730,10 +5730,10 @@ function createObserver(tag) {
 
 * * *
 
-### <a id="rxobservableprototypepublishvaluewhileobserved"></a>`Rx.Observable.prototype.publishValueWhileObserved()`
-<a href="#rxobservableprototypepublishvaluewhileobserved">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L123-L129 "View in source") 
+### <a id="rxobservableprototypesharevalue"></a>`Rx.Observable.prototype.shareValue()`
+<a href="#rxobservableprototypesharevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L123-L129 "View in source") 
 
-Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
+Returns an observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
    
 This operator is a specialization of `publishValue` which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
 
@@ -5750,7 +5750,7 @@ var source = interval
         console.log('Side effect');
     });
  
-var published = source.publishValueWhileObserved(42);
+var published = source.shareValue(42);
  
 published.subscribe(createObserver('SourceA'));
 published.subscribe(createObserver('SourceB'));
@@ -5991,10 +5991,10 @@ function createObserver(tag) {
 
 * * *
 
-### <a id="rxobservableprototypereplayselector-buffersize-window-scheduler"></a>`Rx.Observable.prototype.replayWhileObserved([bufferSize], [window], [scheduler])`
-<a href="#rxobservableprototypereplaywhileobserved-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") 
+### <a id="rxobservableprototypereplayselector-buffersize-window-scheduler"></a>`Rx.Observable.prototype.shareReplay([bufferSize], [window], [scheduler])`
+<a href="#rxobservableprototypesharereplay-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") 
 
-Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
+Returns an observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
 
 This operator is a specialization of `replay` that connects to the connectable observable sequence when the number of observers goes from zero to one, and disconnects when there are no more observers.
 
@@ -6017,13 +6017,14 @@ var source = interval
     });
  
 var published = source
-    .replayWhileObserved(3);
+    .shareReplay(3);
  
 published.subscribe(createObserver('SourceA'));
 published.subscribe(createObserver('SourceB'));
 
 // Creating a third subscription after the previous two subscriptions have 
-// completed. Notice that no side effects result from this subscription, because the notifications are cached and replayed. 
+// completed. Notice that no side effects result from this subscription, 
+// because the notifications are cached and replayed. 
 Rx.Observable
     .returnValue(true)
     .delay(6000)
