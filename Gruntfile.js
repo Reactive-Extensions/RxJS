@@ -1059,8 +1059,7 @@ var browsers = [{
         'uglify:lite',
         'uglify:litecompat',
 
-        'qunit',
-        'test'
+        'qunit'
     ]);    
 
 };

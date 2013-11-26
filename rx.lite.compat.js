@@ -3536,6 +3536,19 @@
     };
 
     /**
+     * Returns an observable sequence that shares a single subscription to the underlying sequence.
+     * This operator is a specialization of publish which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
+     * 
+     * @example
+     * var res = source.share();
+     * 
+     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+     */
+    observableProto.share = function () {
+        return this.publish(null).refCount();
+    };
+
+    /**
      * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
      * This operator is a specialization of Multicast using a AsyncSubject.
      * 
@@ -3560,7 +3573,7 @@
      * 
      * @example
      * var res = source.publishValue(42);
-     * var res = source.publishLast(function (x) { return x.select(function (y) { return y * y; }) }, 42);
+     * var res = source.publishValue(function (x) { return x.select(function (y) { return y * y; }) }, 42);
      * 
      * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
      * @param {Mixed} initialValue Initial value received by observers upon subscription.
@@ -3572,6 +3585,21 @@
                 return new BehaviorSubject(initialValue);
             }, initialValueOrSelector) :
             this.multicast(new BehaviorSubject(initialValueOrSelector));
+    };
+
+    /**
+     * Returns an observable sequence that shares a single subscription to the underlying sequence and starts with an initialValue.
+     * This operator is a specialization of publishValue which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
+     * 
+     * @example
+     * var res = source.shareValue(42);
+     * 
+     * @param {Mixed} initialValue Initial value received by observers upon subscription.
+     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+     */
+    observableProto.shareValue = function (initialValue) {
+        return this.publishValue(initialValue).
+            refCount();
     };
 
     /**
@@ -3596,6 +3624,25 @@
             this.multicast(function () {
                 return new ReplaySubject(bufferSize, window, scheduler);
             }, selector);
+    };
+
+    /**
+     * Returns an observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
+     * This operator is a specialization of replay which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
+     * 
+     * @example
+     * var res = source.shareReplay(3);
+     * var res = source.shareReplay(3, 500);
+     * var res = source.shareReplay(3, 500, scheduler);
+     * 
+
+     * @param bufferSize [Optional] Maximum element count of the replay buffer.
+     * @param window [Optional] Maximum time length of the replay buffer.
+     * @param scheduler [Optional] Scheduler where connected observers within the selector function will be invoked on.
+     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+     */
+    observableProto.shareReplay = function (bufferSize, window, scheduler) {
+        return this.replay(null, bufferSize, window, scheduler).refCount();
     };
 
     /** @private */
