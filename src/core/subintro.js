@@ -1,4 +1,4 @@
-(function (factory) {
+;(function (factory) {
     var objectTypes = {
         'boolean': false,
         'function': true,

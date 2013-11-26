@@ -854,24 +854,32 @@ var browsers = [{
                 }
             }
         },
+        connect: {
+            server: {
+                options: {
+                        base: 'tests',
+                        port: 9999
+                }
+            }
+        },        
         'saucelabs-qunit': {
             all: {
                 options: {
                     urls: [
-                        'http://127.0.0.1:9999/tests/rx.aggregates.html', 
-                        'http://127.0.0.1:9999/tests/rx.async.html', 
-                        'http://127.0.0.1:9999/tests/rx.async.compat.html', 
-                        'http://127.0.0.1:9999/tests/rx.binding.html', 
-                        'http://127.0.0.1:9999/tests/rx.coincidence.html', 
-                        'http://127.0.0.1:9999/tests/rx.experimental.html', 
-                        'http://127.0.0.1:9999/tests/rx.experimental.html', 
-                        'http://127.0.0.1:9999/tests/rx.html',
-                        'http://127.0.0.1:9999/tests/rx.modern.html', 
-                        'http://127.0.0.1:9999/tests/rx.lite.html', 
-                        'http://127.0.0.1:9999/tests/rx.lite.compat.html', 
-                        'http://127.0.0.1:9999/tests/rx.joinpatterns.html', 
-                        'http://127.0.0.1:9999/tests/rx.time.html', 
-                        'http://127.0.0.1:9999/tests/rx.virtualtime.html', 
+                        'http://127.0.0.1:9999/rx.aggregates.html', 
+                        'http://127.0.0.1:9999/rx.async.html', 
+                        'http://127.0.0.1:9999/rx.async.compat.html', 
+                        'http://127.0.0.1:9999/rx.binding.html', 
+                        'http://127.0.0.1:9999/rx.coincidence.html', 
+                        'http://127.0.0.1:9999/rx.experimental.html', 
+                        'http://127.0.0.1:9999/rx.experimental.html', 
+                        'http://127.0.0.1:9999/rx.html',
+                        'http://127.0.0.1:9999/rx.modern.html', 
+                        'http://127.0.0.1:9999/rx.lite.html', 
+                        'http://127.0.0.1:9999/rx.lite.compat.html', 
+                        'http://127.0.0.1:9999/rx.joinpatterns.html', 
+                        'http://127.0.0.1:9999/rx.time.html', 
+                        'http://127.0.0.1:9999/rx.virtualtime.html', 
                     ],
                     tunnelTimeout: 5,
                     build: process.env.TRAVIS_JOB_ID,
@@ -884,6 +892,7 @@ var browsers = [{
     });
 
     grunt.loadNpmTasks('grunt-contrib-concat');
+    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-jshint');
@@ -983,10 +992,6 @@ var browsers = [{
         'nuget-virtualtime',
     ]);
 
-    grunt.registerTask('test', [
-        'qunit'
-    ]);
-
     grunt.registerTask('lint', [
         'concat:basic',
         'concat:modern',
@@ -1003,6 +1008,14 @@ var browsers = [{
 
         'jshint'
     ]);
+
+    var testjobs = ['connect'];
+    console.log(process.env.SAUCE_ACCESS_KEY);
+    if (typeof process.env.SAUCE_ACCESS_KEY !== 'undefined'){
+        testjobs = testjobs.concat(['saucelabs-qunit']);
+    }
+
+     grunt.registerTask('test', testjobs);
 
     // Default task
     grunt.registerTask('default', [
@@ -1036,7 +1049,8 @@ var browsers = [{
         'uglify:lite',
         'uglify:litecompat',
 
-        'qunit'
+        'qunit',
+        'test'
     ]);    
 
 };
