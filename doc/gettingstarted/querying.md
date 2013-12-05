@@ -154,8 +154,6 @@ var subscription = source.subscribe(
 
 // => onNext: 0
 // => onNext: 1
-// => onNext: 2
-// => onNext: 3
 // => onNext: 4
 // => onCompleted
 ```
