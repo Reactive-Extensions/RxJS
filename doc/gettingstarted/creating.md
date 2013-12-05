@@ -268,9 +268,9 @@ setTimeout(function () {
 		console.log('Current Time after 2nd subscription: ' + Date.now());
 
 		var subscription2 = hot.subscribe(
-			function (x) { console.log('Observer 1: onNext: ' + x); },
-			function (e) { console.log('Observer 1: onError: ' + e.message); },
-			function () { console.log('Observer 1: onCompleted'); });		
+			function (x) { console.log('Observer 2: onNext: ' + x); },
+			function (e) { console.log('Observer 2: onError: ' + e.message); },
+			function () { console.log('Observer 2: onCompleted'); });		
 
 	}, 3000);
 }, 3000);
