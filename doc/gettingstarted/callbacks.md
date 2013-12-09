@@ -27,13 +27,13 @@ var subscription = source.subscribe(
 
 // => onNext: true
 // => onCompleted
-``` 
+```
 
 ## Converting Node.js Style Callbacks to Observable Sequences ##
 
 Node.js has adopted a convention in many of the callbacks where an error may occur, such as File I/O, Network requests, etc.  RxJS supports this through the [`Rx.Observable.fromNodeCallback`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromnodecallbackfunc-scheduler-context) method in which the error, if present, is captured and the `onError` notification is sent.  Otherwise, the `onNext` is sent with the rest of the callback arguments, followed by an `onCompleted` notification.
 
-In the following example, we will convert the Node.js [`fs.rename`](http://nodejs.org/api/fs.html#fs_fs_rename_oldpath_newpath_callback) function to an Observable sequence.  
+In the following example, we will convert the Node.js [`fs.rename`](http://nodejs.org/api/fs.html#fs_fs_rename_oldpath_newpath_callback) function to an Observable sequence.
 
 ```js
 var fs = require('fs'),
@@ -57,6 +57,8 @@ var subscription = source.subscribe(
 ## Converting Promises to Observable Sequences ##
 
 Callbacks aren't the only asynchronous feature that can be converted to an observable sequence.  It's quite simple to convert a Promise object which conforms to the [Promises A+ Spec](http://promises-aplus.github.io/promises-spec/) where the behavior is uniform across implementations.  To support this, we provide the [`Rx.Observable.fromPromise`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefrompromisepromise) method which calls the `then` method of the promise to handle both success and error cases.
+
+In the following example, we create promise objects using [RSVP](https://github.com/tildeio/rsvp.js) library.
 
 ```js
 // Create a promise which resolves 42
@@ -87,4 +89,4 @@ var subscription2 = source2.subscribe(
 	function () { console.log('onCompleted'); });
 
 // => onError: reject
-``` 
+```
