@@ -99,7 +99,7 @@ var $tbody = $('#dataTable tbody');
 
 var source = Rx.Observable.fromEventPattern(
 	function addHandler (h) { $tbody.on('click', 'tr', h); },
-	function delHandler (h) { $tbody.off('click', tr, h); });
+	function delHandler (h) { $tbody.off('click', 'tr', h); });
 
 var subscription = source.subscribe(function (e) {
 	alert( $(e.target).text() );
