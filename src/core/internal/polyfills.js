@@ -27,13 +27,13 @@
     if (!Array.prototype.every) {
         Array.prototype.every = function every(fun /*, thisp */) {
             var object = Object(this),
-                self = splitString && {}.toString.call(this) == "[object String]" ?
+                self = splitString && {}.toString.call(this) == stringClass ?
                     this.split("") :
                     object,
                 length = self.length >>> 0,
                 thisp = arguments[1];
 
-            if ({}.toString.call(fun) != "[object Function]") {
+            if ({}.toString.call(fun) != funcClass) {
                 throw new TypeError(fun + " is not a function");
             }
 
@@ -49,14 +49,14 @@
     if (!Array.prototype.map) {
         Array.prototype.map = function map(fun /*, thisp*/) {
             var object = Object(this),
-                self = splitString && {}.toString.call(this) == "[object String]" ?
+                self = splitString && {}.toString.call(this) == stringClass ?
                     this.split("") :
                     object,
                 length = self.length >>> 0,
                 result = Array(length),
                 thisp = arguments[1];
 
-            if ({}.toString.call(fun) != "[object Function]") {
+            if ({}.toString.call(fun) != funcClass) {
                 throw new TypeError(fun + " is not a function");
             }
 
@@ -83,10 +83,10 @@
 
     if (!Array.isArray) {
         Array.isArray = function (arg) {
-            return Object.prototype.toString.call(arg) == '[object Array]';
+            return Object.prototype.toString.call(arg) == arrayClass;
         };
     }
-    
+
     if (!Array.prototype.indexOf) {
         Array.prototype.indexOf = function indexOf(searchElement) {
             var t = Object(this);
