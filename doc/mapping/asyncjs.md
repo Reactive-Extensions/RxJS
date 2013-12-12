@@ -485,17 +485,20 @@ function(err, results) {
 
 #### RxJS version ####
 
-We can achieve the same functionality of `async.series` with an array by simply using `for` and `toArray` which then gives us the proper values.
+We can achieve the same functionality of `async.series` with an array by simply calling fromArray and calling `flatMap` to give us the observable of the current.  Then we'll call `reduce` to add each item to a new array to return. 
 
 ```js
 var Rx = require('rx');
 
 function wrapArray (items) {
     return Rx.Observable
-        .for(items, function (item) {
-            return item();
-        })
-        .toArray();
+        .fromArray(items)
+        .flatMap(function (x) { return x; })
+        .reduce(function (acc, x) {
+            var arr = acc.slice(0);
+            arr.push(x);
+            return arr;
+        }, []);
 }
 
 wrapArray([
@@ -507,25 +510,61 @@ wrapArray([
             console.log(results);
         },
         function (err) {
-            console.log('Error: ' + err;)
+            console.log('Error: ' + err);
         }
     );
+
+// => ['one', 'two']
 ```
 
-Using an object literal can also be achieved with a little bit more work, but totally reasonable, such as the following:
+Using an object literal can also be achieved with a little bit more work, but totally reasonable.  Instead of just returning the observable in `flatMap`, we'll add a property to a new object which will contain our key moving forward. Then, we'll call `reduce` much as before, copying the values to a new object, and then plucking the value from each time it comes through and adding it to our final object.
 
 ```js
 var Rx = require('rx');
 
 function wrapObject (obj) {
-    var keys = Object.keys;
+    var keys = Object.keys(obj),
+        hasOwnProperty = {}.hasOwnProperty;
 
     return Rx.Observable
         .fromArray(keys)
-        .flatMap(function (key, index) {
-            // TBD     
-        });
+        .flatMap(function (key) {
+
+            return obj[key].map(function (x) {
+                var newObj = {};
+                newObj[key] = x;
+                return newObj;
+            });
+        })
+        .reduce(function (acc, x) {
+            var newObj = {};
+            for (var prop in acc) {
+                if(!hasOwnProperty.call(acc)) {
+                    newObj[prop] = acc[prop];
+                }
+            }
+
+            var xKey = Object.keys(x)[0];
+            newObj[xKey] = x[xKey];
+
+            return newObj;
+        }, {});
 }
+
+wrapObject({
+        one: Rx.Observable.return(1),
+        two: Rx.Observable.return(2)
+    })
+    .subscribe(
+        function (results) {
+            console.log(results);
+        },
+        function (err) {
+            console.log('Error: ' + err);
+        }
+    );
+
+// => { one: 1, two: 2 }
 ```
 
 * * *
