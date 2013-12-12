@@ -17,7 +17,7 @@ Many of these concepts in the library map directly to RxJS concepts.  We'll go o
 
  ## Control Flow
  - [`async.series`](#asyncseries)
- - [`async.parallel](#asyncparallel)
+ - [`async.parallel`](#asyncparallel)
  - [`async.whilst`](#asyncwhilst)
  - [`async.doWhilst`](#asyncdowhilst)
  - [`async.nextTick`](#asyncnexttick)
@@ -649,7 +649,7 @@ wrapArrayParallel([
 // => ['one', 'two']
 ```
 
-Using an object literal can also be achieved with a little bit more work, but totally reasonable.  Instead of just returning the observable in `flatMap`, we'll add a property to a new object which will contain our key moving forward. Then, we'll call `reduce` much as before, copying the values to a new object, and then plucking the value from each time it comes through and adding it to our final object.
+Using an object literal can also be achieved with a little bit more work, but totally reasonable.  Instead of simply calling `forkJoin`, we first need to extract the observable sequences by calling `map` on the keys we obtained by `Object.keys`.  Because the order of observable sequences is deterministic, we can then call `map` to transform the array into an object, by calling `reduce` on the array, turning the array into an object with the appropriate keys.
 
 ```js
 var Rx = require('rx');
