@@ -99,7 +99,7 @@
     }
     if (!Array.isArray) {
         Array.isArray = function (arg) {
-            return Object.prototype.toString.call(arg) == '[object Array]';
+            return Object.prototype.toString.call(arg) == arrayClass;
         };
     }
     if (!Array.prototype.indexOf) {
