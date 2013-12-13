@@ -407,6 +407,9 @@ var browsers = [{
                     'src/core/linq/observable/skipuntilwithtime.js',
                     'src/core/linq/observable/takeuntilwithtime.js',                    
 
+                    // Backpressure operators
+                    //'src/core/backpressure/pausable.js',   
+
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/subjects/innersubscription.js',
@@ -551,7 +554,10 @@ var browsers = [{
                     'src/core/linq/observable/takewithtime.js',
                     'src/core/linq/observable/skipwithtime.js',
                     'src/core/linq/observable/skipuntilwithtime.js',
-                    'src/core/linq/observable/takeuntilwithtime.js',                    
+                    'src/core/linq/observable/takeuntilwithtime.js',     
+
+                    // Backpressure operators
+                    //'src/core/backpressure/pausable.js',               
 
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',

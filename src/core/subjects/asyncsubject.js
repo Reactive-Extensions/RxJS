@@ -6,13 +6,16 @@
 
         function subscribe(observer) {
             checkDisposed.call(this);
+            
             if (!this.isStopped) {
                 this.observers.push(observer);
                 return new InnerSubscription(this, observer);
             }
+
             var ex = this.exception;
-            var hv = this.hasValue;
-            var v = this.value;
+                hv = this.hasValue,
+                v = this.value;
+
             if (ex) {
                 observer.onError(ex);
             } else if (hv) {
@@ -21,6 +24,7 @@
             } else {
                 observer.onCompleted();
             }
+
             return disposableEmpty;
         }
 
@@ -33,11 +37,11 @@
         function AsyncSubject() {
             _super.call(this, subscribe);
 
-            this.isDisposed = false,
-            this.isStopped = false,
-            this.value = null,
-            this.hasValue = false,
-            this.observers = [],
+            this.isDisposed = false;
+            this.isStopped = false;
+            this.value = null;
+            this.hasValue = false;
+            this.observers = [];
             this.exception = null;
         }
 
@@ -47,6 +51,7 @@
              * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
              */         
             hasObservers: function () {
+                checkDisposed.call(this);
                 return this.observers.length > 0;
             },
             /**

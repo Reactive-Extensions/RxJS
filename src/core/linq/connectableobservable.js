@@ -1,5 +1,5 @@
     /** @private */
-    var ConnectableObservable = (function (_super) {
+    var ConnectableObservable = Rx.ConnectableObservable = (function (_super) {
         inherits(ConnectableObservable, _super);
 
         /**
