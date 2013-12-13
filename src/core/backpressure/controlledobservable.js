@@ -9,7 +9,7 @@
         function ControlledObservable (source, enableQueue) {
             _super.call(this, subscribe);
             this.subject = new ControlledSubject(enableQueue);
-            this.source = source.multicast(subject).refCount();
+            this.source = source.multicast(this.subject).refCount();
         }
 
         ControlledObservable.prototype.request = function (numberOfItems) {

@@ -26,7 +26,7 @@
 			inherits(WindowedObserver, __super);
 
 			function WindowedObserver(observer, observable, cancel) {
-				this.observer;
+				this.observer = observer;
 				this.observable = observable;
 				this.cancel = cancel;
 				this.received = 0;
