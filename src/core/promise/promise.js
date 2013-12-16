@@ -1,4 +1,4 @@
-
+    // https://github.com/jakearchibald/ES6-Promises/blob/master/lib/promise/promise.js
     var Promise = (function () {
 
         var PROMISE_STATES = {
@@ -30,7 +30,9 @@
                 thenPromise = new Promise(noop);
 
             if (this._state) {
-                
+                runCallback(function () {
+                    runCallback(self._state, thenPromise, )
+                })
             }   
         };
 
