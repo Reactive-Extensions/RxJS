@@ -2031,7 +2031,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablezipargs"></a>`Rx.Observable.zip(...args)`
-<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3018-L3022 "View in source") 
+<a href="#rxobservablezipargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparray.js#L7-L11 "View in source") 
 
 Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
 
@@ -2075,16 +2075,18 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- /src/core/observable/ziparray.js
+- /src/core/observable/zip.js
 
 Dist:
 - rx.js
 - rx.compat.js
+- rx.lite.js
+- rx.lite.compat.js
 
 * * *
 
 ### <a id="rxobservableziparrayargs"></a>`Rx.Observable.zipArray(...args)`
-<a href="#rxobservableprototypeziparrayargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") 
+<a href="#rxobservableprototypeziparrayargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparray.js#L6-L52 "View in source") 
 
 Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
 
@@ -2129,6 +2131,8 @@ File:
 Dist:
 - rx.js
 - rx.compat.js
+- rx.lite.js
+- rx.lite.compat.js
 
 * * *
 

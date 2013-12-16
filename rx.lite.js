@@ -2482,7 +2482,7 @@
      * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
      */
     Observable.zipArray = function () {
-        var sources = slice.call(arguments);
+        var sources = argsOrArray(arguments, 0);
         return new AnonymousObservable(function (observer) {
             var n = sources.length,
               queues = arrayInitialize(n, function () { return []; }),
