@@ -1,239 +1,184 @@
 
-    var promiseStates = {
-        PENDING: 'pending',
-        FULFILLED: 'fulfilled',
-        REJECTED: 'rejected'
-    };
+    var Promise = (function () {
 
-    function isFunction (f) {
-        return typeof f === 'function';
-    }
-
-    function isThenable (any) {
-        try {
-            return isFunction(any.then);
-        } catch () { }
-        return false;
-    }
-
-    function PromiseQueue (scheduler) {
-        var q = [];
-        q.pump = function (value) {
-            return scheduler.schedule(function () {
-                var len = q.length,
-                    x = 0;
-                while (x++ < len) {
-                    q.shift()(value);
-                }
-            });
+        var PROMISE_STATES = {
+            PENDING: undefined,
+            SEALED: = 'sealed',
+            FULFILLED: 'fulfilled',
+            REJECTED: 'rejected'
         };
-        return q;
-    }
 
-    function Resolver (
-        scheduler,
-        future,
-        fulfillCallbacks,
-        rejectCallbacks,
-        setValue,
-        setError,
-        setStatus) {
-
-        var isResolved = false,
-            self = this;
-
-        function fulfill (value) {
-            scheduler.schedule(function () {
-                setState(promiseStates.FULFILLED);
-                setValue(value);
-                fulfillCallbacks.pump(value);
-            });
-        }
-
-        function reject (error) {
-            scheduler.schedule(function () {
-                scheduler.schedule(promiseStates.REJECTED);
-                setError(error);
-                rejectCallbacks.pump(error);
-            });
-        }
-
-        function resolve (value) {
-            if (isThenable(value)) {
-                value.then(resolve, reject);
-            } else {
-                fulfill(value);
-            }
-        }
-
-        function handleResolution (func) {
-            return function (value) {
-                if (!isResolved) {
-                    isResolved = true;
-                    func(value)
-                } else {
-                    throw new Error('Cannot resolve multiple times');
-                }                
-            }
-        }
-
-        this.fulfill = handleResolution(fulfill);
-        this.reject = handleResolution(reject);
-        this.resolve = handleResolution(resolve);
-        this.cancel = function () { self.reject(new Error('Canceled'); )};
-        this.timeout = function () { self.reject(new Error('Timeout'); )};
-    }
-
-    var Promise = Rx.Promise = (function () {
-
-        function wrapThen (callback, resolver, method) {
-            if (!isFunction(callback)) {
-                return resolver[method].bind(resolver);
+        function Promise(resolver, scheduler) {
+            if (!(this instanceof Promise)) {
+                return new Promise(resolver);
             }
 
-            return function () {
-                var r = callback.apply(null, arguments);
-                resolver.resolve(r);
-            };
-        }
-
-        function addCallbacks(promise, onfulfill, onreject) {
-            if (isFunction(onfulfill)) {
-                promise._addFulfillCallback(onfulfill);
+            if (!isFunction (resolver)) {
+                throw new TypeError('Resolver must be a function.')
             }
-            if (isFunction(onreject)) {
-                promise._addRejectCallback(onreject);
+
+            this._scheduler = scheduler || PromiseScheduler;
+            this._subscribers = [];
+            this._state = PROMISE_STATES.PENDING;
+            this._arg = undefined;
+
+            runResolver(resolver, this);
+        }
+
+        Promise.prototype.then = function (fulfilled, rejected) {
+            var self = this,
+                thenPromise = new Promise(noop);
+
+            if (this._state) {
+                
+            }   
+        };
+
+        function runResolver(resolver, promise) {
+            function resolvePromise (value) {
+                resolve(promise, value);
             }
-            return promise;
-        }
 
-        function createPromiseArray (array) {
-            return slice.call(array).map(Promise.resolve);
-        }
+            function rejectPromise (reason) {
+                reject(promise, reason);
+            }
 
-        function Promise(init, scheduler) {
-            scheduler || (scheduler = timeoutScheduler);
+            try {
+                resolver(resolvePromise, rejectPromise);
+            } catch (e) {
+                rejectPromise(e);
+            }
+        } 
 
-            var fulfillCallbacks = new PromiseQueue(scheduler),
-                rejectCallbacks = new PromiseQueue(scheduler),
-                state = promiseStates.PENDING,
+        function runCallback(state, promise, cb, arg) {
+            var hasCb = isFunction(cb),
+                value, 
                 error,
-                value,
-                resolver = new Resolver(
-                    fulfillCallbacks,
-                    rejectCallbacks,
-                    function (v) { value = v; },
-                    function (e) { error = e; },
-                    function (s) { state = s; });
+                succeeded,
+                failed;
 
-            this._addFulfillCallback = function (callback) {
-                fulfillCallbacks.push(callback);
-                if (state === promiseStates.FULFILLED) {
-                    fulfillCallbacks.pump(value);
-                }
-            };
-
-            this._addRejectCallback = funciton (callback) {
-                rejectCallbacks.push(callback);
-                if (state === promiseStates.REJECTED) {
-                    rejectCallbacks.pump(error);
-                }
-            };
-
-            if (init) {
+            if (hasCb) {
                 try {
-                    init(r);
+                    value = cb(arg);
+                    succeeded = true;
                 } catch (e) {
-                    r.reject(e);
+                    failed = true;
+                    error = e;
                 }
+            } else {
+                value = arg;
+                succeeded = true;
+            }
+
+            if (handleThenable(promise, value)) {
+                return;
+            } else if (hasCb && succeeded) {
+                resolve(promise, value);
+            } else if (failed) {
+                reject (promise, error);
+            } else if (state === PROMISE_STATES.FULFILLED) {
+                resolve(promise, value);
+            } else if (state === PROMISE_STATES.REJECTED) {
+                reject(promise, value);
+            }
+
+        }
+
+        function subscribe (parent, child, fulfilled, rejected) {
+            var subscribers = parent._subscribers;
+            subscribers[subscribers.length] = { child: child, fulfilled: fulfilled, rejected: rejected };
+        }
+
+        function publish (promise, state) {
+            var subscribers = promise._subscribers,
+                arg = promise._arg;
+
+            for (var i = 0, len = subscribers.length; i < len; i++) {
+                var item = subscribers[i],
+                    child = item.child,
+                    cb = item[state];
+
+                runCallback(state, child, cb, arg);
+            }
+
+            promise._subscribers = null;
+        }
+
+        function handleThenable(promise, value) {
+            var then = null,
+                resolved;
+
+            try {
+                if (promise === value) {
+                    throw new Error('A promise callback cannot return the same promise');
+                }
+
+                if (objectOrFunction(value)) {
+                    then = value.then;
+                    
+                    if (isFunction(then)) {
+                        then.call(value, function (v) {
+                            if (resolved) { return true; }
+                            resolved = true;
+
+                            if (value !== v) {
+                                resolve(promise, v);
+                            } else {
+                                fulfill(promise, v);
+                            }
+                        }, function (e) {
+                            if (resolved) { return true; }
+                            resolved = true;
+
+                            reject(promise, e);
+                        });
+
+                        return true;
+                    }   
+                }
+            } catch (err) {
+                if (resolved) { return true; }
+                reject(promise, err);
+                return true;      
+            }
+
+            return false;
+        }
+
+        function resolve (promise, value) {
+            if (promise === value) {
+                fulfill(promise, value);
+            } else if (!handleThenable(promise, value)) {
+                fulfill(promise, value);
             }
         }
 
-        var promisePrototype = Promise.prototype;
+        function fulfill (promise, value) {
+            if (promise._state !== PROMISE_STATES.PENDING) { return; }
+            promise._state = PROMISE_STATES.SEALED;
+            promise._arg = reason;
 
-        promisePrototype.then = function (onfulfill, onreject) {
-            var self = this;
-            return new Promise(function (r) {
-                addCallbacks(
-                    self,
-                    wrap(self, onfulfill, 'fulfill'),
-                    wrap(self, onreject, 'reject')
-            });
-        };
+            runCallback(publishFulfillment, promise);            
+        }
 
-        promisePrototype['catch'] = promisePrototype.catchException = function (onreject) {
-            return this.then(null, onreject);    
-        };
+        function reject (promise, reason) {
+            if (promise._state !== PROMISE_STATES.PENDING) { return; }
+            promise._state = PROMISE_STATES.SEALED;
+            promise._arg = reason;
 
-        Promise.isThenable = isThenable;
+            runCallback(publishRejection, promise);
+        }
 
-        Promise.any = function () {
-            var promises = createPromiseArray(arguments);
-            return new Promise(function (r) {
-                if (!promises.length) {
-                    r.reject('No promises provided');
-                    return;
-                }
-                var isResolved = false;
-                var hasSuccess = function (value) {
-                    if (isResolved) { return; }
-                    isResolved = true;
-                    r.resolve(value);
-                };
-                var hasFailure = function (error) {
-                    if (isResolved) { return; }
-                    isResolved = true;
-                    r.reject(error);
-                };
-                for (var i = 0, len = promises.length; i < len; i++) {
-                    promises[i].then(hasSuccess, hasFailure);
-                }
-            });
-        };
+        function publishFulfillment (promise) {
+            publish(promise, promise._state = PROMISE_STATES.FULFILLED);
+        }
 
-        Promise.every = function () {
-            var promises = createPromiseArray(arguments);
-            return new Promise(function (r) {
-                if (!promises.length) {
-                    r.reject('No promises provided');
-                    return;
-                }
-                var values = [];
-                var accumulator = function (idx) {
-                    return function (v) {
-                        values.push(v);
-                        if (values.length === promises.length) {
-                            r.resolve(values);
-                        }
-                    };
-                };
-                for (var i = 0, len = promises.length; i < len; i++) {
-                    promises[i].then(accumulator(i), r.reject);
-                }                
-            });
-        };
-
-        Promise.some = function () {
-            var promises = createPromiseArray(arguments);
-            return new Promise(function (r) {
-                if (!promises.length) {
-                    r.reject('No promises provided');
-                    return;
-                }
-                var count = 0;
-                var hasFailure = function (error) {
-                    if (++count === promises.length) {
-                        r.reject(new Error('Promise.some() failed'));
-                    }
-                };
-                for (var i = 0, len = promises.length; i < len; i++) {
-                    promises[i].then(r.resolve, hasFailure);
-                }
-            });
-        };
+        function publishRejection (promise) {
+            publish(promise, promise._state = PROMISE_STATES.REJECTED);
+        }
 
         return Promise;
     }());
 
-
+ 
 
