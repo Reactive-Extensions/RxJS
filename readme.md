@@ -1,6 +1,7 @@
 [![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 [![NPM version](https://badge.fury.io/js/rx.png)](http://badge.fury.io/js/rx)
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Reactive-Extensions/rxjs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 # The Reactive Extensions for JavaScript (RxJS) <sup>2.2</sup>... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and Array#extras style composition in JavaScript*
