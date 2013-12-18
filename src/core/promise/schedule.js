@@ -21,12 +21,12 @@
         }
     }
 
-    var useMutationObserver = (function () {
-        var MutationObserver = root.MutationObserver || root.WebKitMutationObserver;
+    var BrowserMutationObserver = root.MutationObserver || root.WebKitMutationObserver;
 
+    function useMutationObserver () {
         return function () {
 
-            var observer = new MutationObserver(drainQueue),
+            var observer = new BrowserMutationObserver(drainQueue),
                 elem = document.createElement('div');
             observer.observe(element, { attributes: true });
 
@@ -39,8 +39,7 @@
                 element.setAttribute('drainQueue', 'drainQueue');
             };
         };
-
-    }());
+    }
 
     // Check for post message
     function postMessageSupported () {
@@ -125,6 +124,9 @@
     var scheduleMethod = (function () {
         if (typeof process !== 'undefined' && toString.call(process) === '[object process]') {
             return useNextTick();
+        }
+        if (!!BrowserMutationObserver) {
+            return useMutationObserver();
         }
         if (!!setImmediate) {
             return useSetImmediate();
