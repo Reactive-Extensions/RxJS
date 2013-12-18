@@ -1,12 +1,10 @@
     // https://github.com/jakearchibald/ES6-Promises/blob/master/lib/promise/promise.js
-    var Promise = (function () {
+    var Promise = Rx.Promise = (function () {
 
-        var PROMISE_STATES = {
-            PENDING: undefined,
-            SEALED: = 'sealed',
-            FULFILLED: 'fulfilled',
-            REJECTED: 'rejected'
-        };
+        var PENDING = undefined,
+            SEALED = 0,
+            FULFILLED = 1,
+            REJECTED = 2;
 
         function Promise(resolver, scheduler) {
             if (!(this instanceof Promise)) {
@@ -17,170 +15,190 @@
                 throw new TypeError('Resolver must be a function.')
             }
 
-            this._scheduler = scheduler || PromiseScheduler;
             this._subscribers = [];
-            this._state = PROMISE_STATES.PENDING;
-            this._arg = undefined;
+            this._state = PENDING;
+            this._detail = undefined;
 
-            runResolver(resolver, this);
+            invokeResolver(resolver, this);
         }
 
-        Promise.prototype.then = function (fulfilled, rejected) {
-            var self = this,
-                thenPromise = new Promise(noop);
+        // Swappable concurrency
+        var schedule = Promise.schedule = runCallback;
 
-            if (this._state) {
-                runCallback(function () {
-                    runCallback(self._state, thenPromise, )
-                })
-            }   
+        Promise.prototype.constructor = Promise;
+
+        Promise.prototype['catch'] = function (onRejection) {
+            return this.then(null, onRejection);
         };
 
-        function runResolver(resolver, promise) {
-            function resolvePromise (value) {
+        Promise.prototype.then = function (fulfilled, rejected) {
+            var promise = this,
+                thenPromise = new this.constructor(noop);
+
+            if (this._state) {
+                var callbacks = arguments;
+                schedule(function invokePromiseCallback() {
+                    invokeCallback(promise._state, thenPromise, callbacks[promise._state - 1], promise._detail);
+                });
+            } else {
+                subscribe(this, thenPromise, onFulfillment, onRejection);
+            }
+
+            return thenPromise;
+        };
+
+        Promise.all = function (promises) {
+            if (!Array.isArray(promises)) {
+                throw new Error('all expects an array of promises');
+            }
+
+            return new Promise(function (resolve, reject) {
+                var results = [],
+                    remaining = promises.length,
+
+                // Short circuit
+                if (remaining === 0) {
+                    resolve([]);
+                }
+
+                function resolver (idx) {
+                    return function (value) {
+                        resolveAll(idx, value);
+                    };
+                }
+
+                function resolveAll (idx, value) {
+                    results[idx] = value;
+                    if (--remaining === 0) {
+                        resolve(results);
+                    }
+                }
+
+                for (var i = 0, len = promises.length; i < len; i++) {
+                    var promise = promises[i];
+                    if (promise && isFunction(promise.then)) {
+                        promise.then(resolver(i), reject);
+                    } else {
+                        resolveAll(i, promise);
+                    }
+                }
+
+            });
+        }; 
+
+        Promise.cast = function (value) {
+            if (value && typeof value === 'object' && value.constructor === this) {
+                return value;
+            }
+
+            return new Promise(function (resolve) {
+                resolve(value);
+            });
+        };
+
+        Promise.race = function (promises) {
+            if (!Array.isArray(promises)) {
+                throw new Error('race expects an array of promises');
+            }
+
+            return new Promise (function (resolve, reject) {
+                var results = [];
+                for (var i = 0, len = promises.length; i < len; i++) {
+                    var promise = promises[i];
+
+                    if (promise && typeof promise === 'function') {
+                        promise.then(resolve, reject);
+                    } else {
+                        resolve(promise);
+                    }
+                }
+            });
+        };
+
+        Promise.reject = function (reason) {
+            return new Promise(function(resolve, reject) {
+                reject(reason);
+            });               
+        };
+
+        Promise.resolve = function (value) {
+            return new Promise(function(resolve, reject) {
+                resolve(value);
+            });            
+        };        
+
+
+        function invokeResolver(resolver, promise) {
+            function resolvePromise(value) {
                 resolve(promise, value);
             }
 
-            function rejectPromise (reason) {
+            function rejectPromise(reason) {
                 reject(promise, reason);
             }
 
             try {
                 resolver(resolvePromise, rejectPromise);
-            } catch (e) {
+            } catch(e) {
                 rejectPromise(e);
             }
-        } 
+        }
 
-        function runCallback(state, promise, cb, arg) {
-            var hasCb = isFunction(cb),
+        function invokeCallback(settled, promise, callback, detail) {
+            var hasCallback = isFunction(callback),
                 value, 
-                error,
-                succeeded,
+                error, 
+                succeeded, 
                 failed;
 
-            if (hasCb) {
+            if (hasCallback) {
                 try {
-                    value = cb(arg);
+                    value = callback(detail);
                     succeeded = true;
-                } catch (e) {
+                } catch(e) {
                     failed = true;
                     error = e;
                 }
             } else {
-                value = arg;
+                value = detail;
                 succeeded = true;
             }
 
             if (handleThenable(promise, value)) {
                 return;
-            } else if (hasCb && succeeded) {
+            } else if (hasCallback && succeeded) {
                 resolve(promise, value);
             } else if (failed) {
-                reject (promise, error);
-            } else if (state === PROMISE_STATES.FULFILLED) {
+                reject(promise, error);
+            } else if (settled === FULFILLED) {
                 resolve(promise, value);
-            } else if (state === PROMISE_STATES.REJECTED) {
+            } else if (settled === REJECTED) {
                 reject(promise, value);
             }
-
         }
 
-        function subscribe (parent, child, fulfilled, rejected) {
-            var subscribers = parent._subscribers;
-            subscribers[subscribers.length] = { child: child, fulfilled: fulfilled, rejected: rejected };
+        function subscribe(parent, child, onFulfillment, onRejection) {
+            var subscribers = parent._subscribers,
+                length = subscribers.length;
+
+            subscribers[length] = child;
+            subscribers[length + FULFILLED] = onFulfillment;
+            subscribers[length + REJECTED] = onRejection;
         }
 
-        function publish (promise, state) {
-            var subscribers = promise._subscribers,
-                arg = promise._arg;
+        function publish(promise, settled) {
+            var subscribers = promise._subscribers, 
+                detail = promise._detail;
 
-            for (var i = 0, len = subscribers.length; i < len; i++) {
-                var item = subscribers[i],
-                    child = item.child,
-                    cb = item[state];
+            for (var i = 0; i < subscribers.length; i += 3) {
+                var child = subscribers[i],
+                    callback = subscribers[i + settled];
 
-                runCallback(state, child, cb, arg);
+                invokeCallback(settled, child, callback, detail);
             }
 
             promise._subscribers = null;
         }
 
-        function handleThenable(promise, value) {
-            var then = null,
-                resolved;
-
-            try {
-                if (promise === value) {
-                    throw new Error('A promise callback cannot return the same promise');
-                }
-
-                if (objectOrFunction(value)) {
-                    then = value.then;
-                    
-                    if (isFunction(then)) {
-                        then.call(value, function (v) {
-                            if (resolved) { return true; }
-                            resolved = true;
-
-                            if (value !== v) {
-                                resolve(promise, v);
-                            } else {
-                                fulfill(promise, v);
-                            }
-                        }, function (e) {
-                            if (resolved) { return true; }
-                            resolved = true;
-
-                            reject(promise, e);
-                        });
-
-                        return true;
-                    }   
-                }
-            } catch (err) {
-                if (resolved) { return true; }
-                reject(promise, err);
-                return true;      
-            }
-
-            return false;
-        }
-
-        function resolve (promise, value) {
-            if (promise === value) {
-                fulfill(promise, value);
-            } else if (!handleThenable(promise, value)) {
-                fulfill(promise, value);
-            }
-        }
-
-        function fulfill (promise, value) {
-            if (promise._state !== PROMISE_STATES.PENDING) { return; }
-            promise._state = PROMISE_STATES.SEALED;
-            promise._arg = reason;
-
-            runCallback(publishFulfillment, promise);            
-        }
-
-        function reject (promise, reason) {
-            if (promise._state !== PROMISE_STATES.PENDING) { return; }
-            promise._state = PROMISE_STATES.SEALED;
-            promise._arg = reason;
-
-            runCallback(publishRejection, promise);
-        }
-
-        function publishFulfillment (promise) {
-            publish(promise, promise._state = PROMISE_STATES.FULFILLED);
-        }
-
-        function publishRejection (promise) {
-            publish(promise, promise._state = PROMISE_STATES.REJECTED);
-        }
-
         return Promise;
     }());
-
- 
-

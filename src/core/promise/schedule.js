@@ -113,21 +113,3 @@
             scheduleMethod();
         }
     }
-
-    var PromiseScheduler = (function () {
-
-        function scheduleNow(state, action) {
-            var scheduler = this,
-                disposable = new SingleAssignmentDisposable();
-            var id = scheduleMethod(function () {
-                if (!disposable.isDisposed) {
-                    disposable.setDisposable(action(scheduler, state));
-                }
-            });
-            return new CompositeDisposable(disposable);
-        }
-
-        return function () {
-            return new Scheduler(defaultNow, scheduleNow, notImeplented, notImeplented);
-        }
-    }());
