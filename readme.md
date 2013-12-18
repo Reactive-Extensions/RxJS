@@ -3,6 +3,18 @@
 [![NPM version](https://badge.fury.io/js/rx.png)](http://badge.fury.io/js/rx)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Reactive-Extensions/rxjs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
+**[The Need to go Reactive](#the-need-to-go-reactive)** |
+**[About the Reactive Extensions](#about-the-reactive-extensions)** |
+**[Batteries Included](#batteries-included)** |
+**[Why RxJS?](#why-rxjs)** |
+**[Dive In!](#dive-in)** |
+**[Resources](#resources)** |
+**[Getting Started](#getting-started)** |
+**[What about my libraries?](#what-about-my-libraries)** |
+**[Compatibility](#compatibility)** |
+**[Contributing](#contributing)** |
+**[License](#license)**
+
 # The Reactive Extensions for JavaScript (RxJS) <sup>2.2</sup>... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and Array#extras style composition in JavaScript*
 
@@ -213,7 +225,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
 
-## GETTING STARTED
+## Getting Started
 
 There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
 
