@@ -27,10 +27,16 @@
 
         Promise.prototype.constructor = Promise;
 
+        /*
+         *
+         */
         Promise.prototype['catch'] = function (onRejection) {
             return this.then(null, onRejection);
         };
 
+        /**
+         *
+         */
         Promise.prototype.then = function (fulfilled, rejected) {
             var promise = this,
                 thenPromise = new this.constructor(noop);
@@ -47,9 +53,12 @@
             return thenPromise;
         };
 
+        /*
+         *
+         */
         Promise.all = function (promises) {
             if (!Array.isArray(promises)) {
-                throw new Error('all expects an array of promises');
+                throw new Error('Promise.all expects an array of promises');
             }
 
             return new Promise(function (resolve, reject) {
@@ -86,6 +95,9 @@
             });
         }; 
 
+        /**
+         *
+         */
         Promise.cast = function (value) {
             if (value && typeof value === 'object' && value.constructor === this) {
                 return value;
@@ -96,9 +108,12 @@
             });
         };
 
+        /**
+         * Watches a series of Promises and act as soon as the first promise given to the `promises` argument fulfills or rejects.
+         */
         Promise.race = function (promises) {
             if (!Array.isArray(promises)) {
-                throw new Error('race expects an array of promises');
+                throw new Error('Promise.race expects an array of promises');
             }
 
             return new Promise (function (resolve, reject) {
@@ -115,12 +130,22 @@
             });
         };
 
+        /**
+         * Returns a Promise which is rejected with the specified reason.
+         * @param {Any} reason Reason for the rejection of the Promise.
+         * @returns {Promise} A Promise in the rejected state with the specified reason.
+         */
         Promise.reject = function (reason) {
             return new Promise(function(resolve, reject) {
                 reject(reason);
             });               
         };
 
+        /**
+         * Returns a Promise which is fulfilled with the specified value.
+         * @param {Any} value Value for the fulfillment of the Promise.
+         * @returns {Promise} A promise in the fulfilled state with the specified value.
+         */
         Promise.resolve = function (value) {
             return new Promise(function(resolve, reject) {
                 resolve(value);

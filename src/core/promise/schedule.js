@@ -14,6 +14,7 @@
         }
     }
 
+    // Node.js
     function useNextTick () {
         return function () {
             process.nextTick(drainQueue);
@@ -29,7 +30,7 @@
                 elem = document.createElement('div');
             observer.observe(element, { attributes: true });
 
-            global.addEventListener('unload', function () {
+            root.addEventListener('unload', function () {
                 observer.disconnect();
                 observer = null;
             });
@@ -40,6 +41,48 @@
         };
 
     }());
+
+    // Check for post message
+    function postMessageSupported () {
+        // Ensure not in a worker
+        if (!root.postMessage || root.importScripts) { return false; }
+        var isAsync = false, 
+            oldHandler = root.onmessage;
+        // Test for async
+        root.onmessage = function () { isAsync = true; };
+        root.postMessage('','*');
+        root.onmessage = oldHandler;
+
+        return isAsync;
+    }
+
+    function usePostMessage () {
+        var MSG_PREFIX = 'ms.rx.promise' + Math.random(),
+            tasks = {},
+            taskId = 0;
+
+        function onGlobalPostMessage(event) {
+            // Only if we're a match to avoid any other global events
+            if (typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
+                var handleId = event.data.substring(MSG_PREFIX.length),
+                    action = tasks[handleId];
+                action();
+                delete tasks[handleId];
+            }
+        }
+
+        if (root.addEventListener) {
+            root.addEventListener('message', onGlobalPostMessage, false);
+        } else {
+            root.attachEvent('onmessage', onGlobalPostMessage, false);
+        }
+
+        return function () {
+            var currentId = taskId++;
+            tasks[currentId] = drainQueue;
+            root.postMessage(MSG_PREFIX + currentId, '*');
+        };        
+    }
 
     function useMessageChannel () {
         var channel = new root.MessageChannel(),
@@ -80,14 +123,17 @@
     }
 
     var scheduleMethod = (function () {
-        if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
+        if (typeof process !== 'undefined' && toString.call(process) === '[object process]') {
             return useNextTick();
         }
-        if (typeof scheduleMethod === 'function') {
+        if (!!setImmediate) {
             return useSetImmediate();
         }
         if (!!root.MessageChannel) {
             return useMessageChannel();
+        }
+        if (postMessageSupported()) {
+            return usePostMessage();
         }
         if ('document' in root && 'onreadystatechange' in root.document.createElement('script')) {
             return useScriptReadyChange();
