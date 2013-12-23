@@ -875,6 +875,11 @@ var browsers = [{
                 }
             }
         },
+        changelog: {
+            options: {
+                dest: 'CHANGELOG.md'
+            }
+        },     
         connect: {
             server: {
                 options: {
@@ -919,6 +924,7 @@ var browsers = [{
     grunt.loadNpmTasks('grunt-contrib-jshint');
     grunt.loadNpmTasks('grunt-contrib-watch');
     grunt.loadNpmTasks('grunt-saucelabs');
+    grunt.loadNpmTasks('grunt-conventional-changelog');
 
     function createNuGetPackage(nuspec) {
         var done = this.async();

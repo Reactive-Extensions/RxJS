@@ -31,7 +31,9 @@
     "grunt-contrib-concat": "*",
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",
-    "grunt-saucelabs": "*"
+    "grunt-saucelabs": "*",
+    "grunt-conventional-changelog": "~1.0.0",
+    "load-grunt-tasks": "~0.2.0"    
   },
   "keywords": [
     "LINQ",
