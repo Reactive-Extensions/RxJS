@@ -3217,35 +3217,34 @@
     Observable.fromCallback = function (func, scheduler, context, selector) {
         scheduler || (scheduler = timeoutScheduler);
         return function () {
-            var args = slice.call(arguments, 0), 
-                subject = new AsyncSubject();
+            var args = slice.call(arguments, 0);
 
-            scheduler.schedule(function () {
-                function handler(e) {
-                    var results = e;
-                    
-                    if (selector) {
-                        try {
-                            results = selector(arguments);
-                        } catch (err) {
-                            subject.onError(err);
-                            return;
+            return new AnonymousObservable(function (observer) {
+                return scheduler.schedule(function () {
+                    function handler(e) {
+                        var results = e;
+                        
+                        if (selector) {
+                            try {
+                                results = selector(arguments);
+                            } catch (err) {
+                                observer.onError(err);
+                                return;
+                            }
+                        } else {
+                            if (results.length === 1) {
+                                results = results[0];
+                            }
                         }
-                    } else {
-                        if (results.length === 1) {
-                            results = results[0];
-                        }
+
+                        observer.onNext(results);
+                        observer.onCompleted();
                     }
 
-                    subject.onNext(results);
-                    subject.onCompleted();
-                }
-
-                args.push(handler);
-                func.apply(context, args);
+                    args.push(handler);
+                    func.apply(context, args);
+                });
             });
-
-            return subject.asObservable();
         };
     };
 
@@ -3260,40 +3259,40 @@
     Observable.fromNodeCallback = function (func, scheduler, context, selector) {
         scheduler || (scheduler = timeoutScheduler);
         return function () {
-            var args = slice.call(arguments, 0), 
-                subject = new AsyncSubject();
+            var args = slice.call(arguments, 0);
 
-            scheduler.schedule(function () {
-                function handler(err) {
-                    if (err) {
-                        subject.onError(err);
-                        return;
-                    }
-
-                    var results = slice.call(arguments, 1);
+            return new AnonymousObservable(function (observer) {
+                return scheduler.schedule(function () {
                     
-                    if (selector) {
-                        try {
-                            results = selector(results);
-                        } catch (e) {
-                            subject.onError(e);
+                    function handler(err) {
+                        if (err) {
+                            observer.onError(err);
                             return;
                         }
-                    } else {
-                        if (results.length === 1) {
-                            results = results[0];
+
+                        var results = slice.call(arguments, 1);
+                        
+                        if (selector) {
+                            try {
+                                results = selector(results);
+                            } catch (e) {
+                                observer.onError(e);
+                                return;
+                            }
+                        } else {
+                            if (results.length === 1) {
+                                results = results[0];
+                            }
                         }
+
+                        observer.onNext(results);
+                        observer.onCompleted();
                     }
 
-                    subject.onNext(results);
-                    subject.onCompleted();
-                }
-
-                args.push(handler);
-                func.apply(context, args);
+                    args.push(handler);
+                    func.apply(context, args);
+                });
             });
-
-            return subject.asObservable();
         };
     };
 
@@ -3466,18 +3465,16 @@
      * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
      */
     Observable.fromPromise = function (promise) {
-        var subject = new AsyncSubject();
-        
-        promise.then(
-            function (value) {
-                subject.onNext(value);
-                subject.onCompleted();
-            }, 
-            function (reason) {
-               subject.onError(reason);
-            });
-            
-        return subject.asObservable();
+        return new AnonymousObservable(function (observer) {
+            promise.then(
+                function (value) {
+                    observer.onNext(value);
+                    observer.onCompleted();
+                }, 
+                function (reason) {
+                   observer.onError(reason);
+                });
+        });
     };
     /**
      * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each

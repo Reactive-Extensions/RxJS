@@ -45,8 +45,8 @@ test('FromCallback', function () {
     });
 
     res.messages.assertEqual(
-        onNext(200, function (arr) { return arrayEquals(arr, [true, 'file.txt', undefined]); }),
-        onCompleted(200)
+        onNext(201, function (arr) { return arrayEquals(arr, [true, 'file.txt', undefined]); }),
+        onCompleted(201)
     );
 });
 
@@ -60,8 +60,8 @@ test('FromCallback_Single', function () {
     });
 
     res.messages.assertEqual(
-        onNext(200, 'foo'),
-        onCompleted(200)
+        onNext(201, 'foo'),
+        onCompleted(201)
     );
 });    
 
@@ -75,8 +75,8 @@ test('FromCallback_Selector', function () {
     });
 
     res.messages.assertEqual(
-        onNext(200, true),
-        onCompleted(200)
+        onNext(201, true),
+        onCompleted(201)
     );
 });
 
@@ -88,7 +88,7 @@ test('FromCallback_Context', function () {
     });
 
     res.messages.assertEqual(
-        onNext(200, function (arr) { return arrayEquals(arr, [true, 'file.txt', 42]); }),
-        onCompleted(200)
+        onNext(201, function (arr) { return arrayEquals(arr, [true, 'file.txt', 42]); }),
+        onCompleted(201)
     );
 });

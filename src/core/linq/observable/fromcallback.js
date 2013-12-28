@@ -10,34 +10,33 @@
     Observable.fromCallback = function (func, scheduler, context, selector) {
         scheduler || (scheduler = timeoutScheduler);
         return function () {
-            var args = slice.call(arguments, 0), 
-                subject = new AsyncSubject();
+            var args = slice.call(arguments, 0);
 
-            scheduler.schedule(function () {
-                function handler(e) {
-                    var results = e;
-                    
-                    if (selector) {
-                        try {
-                            results = selector(arguments);
-                        } catch (err) {
-                            subject.onError(err);
-                            return;
+            return new AnonymousObservable(function (observer) {
+                return scheduler.schedule(function () {
+                    function handler(e) {
+                        var results = e;
+                        
+                        if (selector) {
+                            try {
+                                results = selector(arguments);
+                            } catch (err) {
+                                observer.onError(err);
+                                return;
+                            }
+                        } else {
+                            if (results.length === 1) {
+                                results = results[0];
+                            }
                         }
-                    } else {
-                        if (results.length === 1) {
-                            results = results[0];
-                        }
+
+                        observer.onNext(results);
+                        observer.onCompleted();
                     }
 
-                    subject.onNext(results);
-                    subject.onCompleted();
-                }
-
-                args.push(handler);
-                func.apply(context, args);
+                    args.push(handler);
+                    func.apply(context, args);
+                });
             });
-
-            return subject.asObservable();
         };
     };

@@ -45,8 +45,8 @@ test('FromNodeCallback', function () {
     });
 
     res.messages.assertEqual(
-        onNext(200, function (arr) { return arrayEquals(arr, [window]); }),
-        onCompleted(200)
+        onNext(201, function (arr) { return arrayEquals(arr, [window]); }),
+        onCompleted(201)
     );
 });
 
@@ -60,8 +60,8 @@ test('FromNodeCallback_Single', function () {
     });
 
     res.messages.assertEqual(
-        onNext(200, 'foo'),
-        onCompleted(200)
+        onNext(201, 'foo'),
+        onCompleted(201)
     );
 });      
 
@@ -75,8 +75,8 @@ test('FromNodeCallback_Selector', function () {
     });
 
     res.messages.assertEqual(
-        onNext(200, window),
-        onCompleted(200)
+        onNext(201, window),
+        onCompleted(201)
     );
 });
 
@@ -89,8 +89,8 @@ test('FromNodeCallback_Context', function () {
     });
 
     res.messages.assertEqual(
-        onNext(200, function (arr) { return arrayEquals(arr, [42]); }),
-        onCompleted(200)
+        onNext(201, function (arr) { return arrayEquals(arr, [42]); }),
+        onCompleted(201)
     );
 });
 
@@ -103,6 +103,6 @@ test('FromNodeCallback_Error', function () {
     });
 
     res.messages.assertEqual(
-        onError(200, error)
+        onError(201, error)
     );
 });

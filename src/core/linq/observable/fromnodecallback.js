@@ -9,39 +9,39 @@
     Observable.fromNodeCallback = function (func, scheduler, context, selector) {
         scheduler || (scheduler = timeoutScheduler);
         return function () {
-            var args = slice.call(arguments, 0), 
-                subject = new AsyncSubject();
+            var args = slice.call(arguments, 0);
 
-            scheduler.schedule(function () {
-                function handler(err) {
-                    if (err) {
-                        subject.onError(err);
-                        return;
-                    }
-
-                    var results = slice.call(arguments, 1);
+            return new AnonymousObservable(function (observer) {
+                return scheduler.schedule(function () {
                     
-                    if (selector) {
-                        try {
-                            results = selector(results);
-                        } catch (e) {
-                            subject.onError(e);
+                    function handler(err) {
+                        if (err) {
+                            observer.onError(err);
                             return;
                         }
-                    } else {
-                        if (results.length === 1) {
-                            results = results[0];
+
+                        var results = slice.call(arguments, 1);
+                        
+                        if (selector) {
+                            try {
+                                results = selector(results);
+                            } catch (e) {
+                                observer.onError(e);
+                                return;
+                            }
+                        } else {
+                            if (results.length === 1) {
+                                results = results[0];
+                            }
                         }
+
+                        observer.onNext(results);
+                        observer.onCompleted();
                     }
 
-                    subject.onNext(results);
-                    subject.onCompleted();
-                }
-
-                args.push(handler);
-                func.apply(context, args);
+                    args.push(handler);
+                    func.apply(context, args);
+                });
             });
-
-            return subject.asObservable();
         };
     };
