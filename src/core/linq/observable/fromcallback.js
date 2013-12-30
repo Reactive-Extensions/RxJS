@@ -8,7 +8,7 @@
      * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
      */
     Observable.fromCallback = function (func, scheduler, context, selector) {
-        scheduler || (scheduler = timeoutScheduler);
+        scheduler || (scheduler = immediateScheduler);
         return function () {
             var args = slice.call(arguments, 0);
 

@@ -3097,7 +3097,7 @@
      * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
      */
     Observable.fromCallback = function (func, scheduler, context, selector) {
-        scheduler || (scheduler = timeoutScheduler);
+        scheduler || (scheduler = immediateScheduler);
         return function () {
             var args = slice.call(arguments, 0);
 
@@ -3139,7 +3139,7 @@
      * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
      */
     Observable.fromNodeCallback = function (func, scheduler, context, selector) {
-        scheduler || (scheduler = timeoutScheduler);
+        scheduler || (scheduler = immediateScheduler);
         return function () {
             var args = slice.call(arguments, 0);
 
@@ -3286,6 +3286,30 @@
                 function (reason) {
                    observer.onError(reason);
                 });
+        });
+    };
+    /*
+     * Converts an existing observable sequence to an ES6 Compatible Promise
+     * @example
+     * var promise = Rx.Observable.return(42).toPromise(RSVP.Promise);
+     * @param {Function} The constructor of the promise
+     * @returns {Promise} An ES6 compatible promise with the last value from the observable sequence.
+     */
+    observableProto.toPromise = function (promiseCtor) {
+        var source = this;
+        return new promiseCtor(function (resolve, reject) {
+            // No cancellation can be done
+            var value, hasValue = false;
+            source.subscribe(function (v) {
+                value = v;
+                hasValue = true;
+            }, function (err) {
+                reject(err);
+            }, function () {
+                if (hasValue) {
+                    resolve(value);
+                }
+            });
         });
     };
     /**
