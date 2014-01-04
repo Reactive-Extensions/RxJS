@@ -31,8 +31,10 @@
                 notification = message.value;
                 (function (innerNotification) {
                     scheduler.scheduleAbsoluteWithState(null, message.time, function () {
-                        for (var j = 0; j < observable.observers.length; j++) {
-                            innerNotification.accept(observable.observers[j]);
+                        var obs = observable.observers.slice(0);
+
+                        for (var j = 0, jLen = obs.length; j < jLen; j++) {
+                            innerNotification.accept(obs[j]);
                         }
                         return disposableEmpty;
                     });

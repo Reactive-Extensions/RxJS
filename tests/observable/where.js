@@ -1,4 +1,4 @@
-QUnit.module('Select');
+QUnit.module('Where');
 
 var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
@@ -143,7 +143,7 @@ test('Where_DisposeInPredicate', function () {
         });
     });
     scheduler.scheduleAbsolute(subscribed, function () {
-        d.disposable(ys.subscribe(results));
+        d.setDisposable(ys.subscribe(results));
     });
     scheduler.scheduleAbsolute(disposed, function () {
         d.dispose();
@@ -271,7 +271,7 @@ test('WhereIndex_DisposeInPredicate', function () {
         });
     });
     scheduler.scheduleAbsolute(subscribed, function () {
-        d.disposable(ys.subscribe(results));
+        d.setDisposable(ys.subscribe(results));
     });
     scheduler.scheduleAbsolute(disposed, function () {
         d.dispose();
@@ -280,4 +280,18 @@ test('WhereIndex_DisposeInPredicate', function () {
     results.messages.assertEqual(onNext(230, 3), onNext(390, 7));
     xs.subscriptions.assertEqual(subscribe(200, 450));
     equal(6, invoked);
+});
+
+test('Where multiple subscribers', function () {
+    var s = new TestScheduler(),
+        xs = s.createHotObservable([onCompleted(100)]).filter(function () { return true; }),
+        o1 = s.createObserver(), 
+        o2 = s.createObserver();
+
+    xs.subscribe(o1);
+    xs.subscribe(o2);
+    s.start();
+
+    equal(o1.messages.length, 1);
+    equal(o2.messages.length, 1); 
 });
