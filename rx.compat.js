@@ -1185,19 +1185,22 @@
     }());
 
     
-    var reNative = RegExp('^' +
-      String(toString)
-        .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-        .replace(/toString| for [^\]]+/g, '.*?') + '$'
-    );
-
-    var setImmediate = typeof (setImmediate = freeGlobal && moduleExports && freeGlobal.setImmediate) == 'function' &&
-        !reNative.test(setImmediate) && setImmediate,
-        clearImmediate = typeof (clearImmediate = freeGlobal && moduleExports && freeGlobal.clearImmediate) == 'function' &&
-        !reNative.test(clearImmediate) && clearImmediate;
-
     var scheduleMethod, clearMethod = noop;
     (function () {
+
+        var reNative = RegExp('^' +
+          String(toString)
+            .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+            .replace(/toString| for [^\]]+/g, '.*?') + '$'
+        );
+
+        var setImmediate = typeof (setImmediate = freeGlobal && moduleExports && freeGlobal.setImmediate) == 'function' &&
+            !reNative.test(setImmediate) && setImmediate,
+            clearImmediate = typeof (clearImmediate = freeGlobal && moduleExports && freeGlobal.clearImmediate) == 'function' &&
+            !reNative.test(clearImmediate) && clearImmediate;
+
+        var BrowserMutationObserver = root.MutationObserver || root.WebKitMutationObserver;
+
         function postMessageSupported () {
             // Ensure not in a worker
             if (!root.postMessage || root.importScripts) { return false; }
@@ -1211,12 +1214,44 @@
             return isAsync;
         }
 
-        // Check for setImmediate first for Node v0.11+
-        if (typeof setImmediate === 'function') {
-            scheduleMethod = setImmediate;
-            clearMethod = clearImmediate;
+        // Use in order, MutationObserver, nextTick, setImmediate, postMessage, MessageChannel, script readystatechanged, setTimeout
+        if (!!BrowserMutationObserver) {
+
+            var mutationQueue = {}, mutationId = 0;
+
+            function drainQueue (mutations) {
+                for (var i = 0, len = mutations.length; i < len; i++) {
+                    var id = mutations[i].target.getAttribute('drainQueue');
+                    mutationQueue[id]();
+                    delete mutationQueue[id];
+                }
+            }
+
+            var observer = new BrowserMutationObserver(drainQueue),
+                elem = document.createElement('div');
+            observer.observe(element, { attributes: true });
+
+            root.addEventListener('unload', function () {
+                observer.disconnect();
+                observer = null;
+            });
+
+            scheduleMethod = function (action) {
+                var id = mutationId++;
+                mutationQueue[id] = action;
+                elem.setAttribute('drainQueue', id);
+                return id;                
+            };
+
+            clearMethod = function (id) {
+                delete mutationQueue[id];
+            }
+
         } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
             scheduleMethod = process.nextTick;
+        } else if (typeof setImmediate === 'function') {
+            scheduleMethod = setImmediate;
+            clearMethod = clearImmediate;
         } else if (postMessageSupported()) {
             var MSG_PREFIX = 'ms.rx.schedule' + Math.random(),
                 tasks = {},
