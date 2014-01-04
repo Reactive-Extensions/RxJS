@@ -1229,7 +1229,7 @@
 
             var observer = new BrowserMutationObserver(drainQueue),
                 elem = document.createElement('div');
-            observer.observe(element, { attributes: true });
+            observer.observe(elem, { attributes: true });
 
             root.addEventListener('unload', function () {
                 observer.disconnect();
