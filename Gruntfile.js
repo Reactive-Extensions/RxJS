@@ -370,7 +370,8 @@ var browsers = [{
                     'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable                                      
                     'src/core/linq/observable/fromevent-modern.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
-                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable                
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable   
+                    'src/core/linq/observable/topromise.js',             
 
                     // Binding Operators
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -523,7 +524,8 @@ var browsers = [{
                     'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable                                      
                     'src/core/linq/observable/fromevent.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
-                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable                
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/topromise.js',              
 
                     // Binding Operators
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -630,6 +632,7 @@ var browsers = [{
                     'src/core/linq/observable/fromevent.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/topromise.js',  
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.async.compat.js'
@@ -646,6 +649,7 @@ var browsers = [{
                     'src/core/linq/observable/fromevent-modern.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/topromise.js',  
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.async.js'
@@ -1076,7 +1080,9 @@ var browsers = [{
         'uglify:lite',
         'uglify:litecompat',
 
-        'qunit'
+        'qunit',
+
+        'changelog'
     ]);    
 
 };

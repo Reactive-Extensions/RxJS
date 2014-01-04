@@ -40,7 +40,7 @@ Rx.Node = {
      * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
      * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
      */
-    fromNodeCallback: function (func, scheduler, context) {
+    fromNodeCallback: function (func, scheduler, context, selector) {
         return Observable.fromNodeCallback(func, scheduler, context, selector);
     },
 

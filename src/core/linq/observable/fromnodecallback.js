@@ -7,7 +7,7 @@
      * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
      */
     Observable.fromNodeCallback = function (func, scheduler, context, selector) {
-        scheduler || (scheduler = timeoutScheduler);
+        scheduler || (scheduler = immediateScheduler);
         return function () {
             var args = slice.call(arguments, 0);
 
