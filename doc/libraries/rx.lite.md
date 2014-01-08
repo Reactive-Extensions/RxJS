@@ -114,25 +114,25 @@ NuGet Dependencies:
 ## Included Classes ##
 
 ### Core Objects
-
-- [`Rx.Observer`](../api/core/observable.mdapi/core/observer.md)
-- [`Rx.Notification`](../api/core/observable.mdapi/core/notification.md)
+https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/asyncsubject.md
+- [`Rx.Observer`](../api/core/observer.md)
+- [`Rx.Notification`](../api/core/notification.md)
 
 ### Subjects
 
-- [`Rx.AsyncSubject`](../api/core/observable.mdapi/subjects/asyncsubject.md)
-- [`Rx.BehaviorSubject`](../api/core/observable.mdapi/subjects/behaviorsubject.md)
-- [`Rx.ReplaySubject`](../api/core/observable.mdapi/subjects/replaysubject.md)
-- [`Rx.Subject`](../api/core/observable.mdapi/subjects/subject.md)
+- [`Rx.AsyncSubject`](../api/subjects/asyncsubject.md)
+- [`Rx.BehaviorSubject`](../api/subjects/behaviorsubject.md)
+- [`Rx.ReplaySubject`](../api/subjects/replaysubject.md)
+- [`Rx.Subject`](../api/subjects/subject.md)
 
 ### Schedulers
 
-- [`Rx.Scheduler`](../api/core/observable.mdapi/schedulers/scheduler.md)
+- [`Rx.Scheduler`](../api/schedulers/scheduler.md)
 
 ### Disposables
 
-- [`Rx.CompositeDisposable`](../api/core/observable.mdapi/disposables/compositedisposable.md)
-- [`Rx.Disposable`](../api/core/observable.mdapi/disposables/disposable.md)
-- [`Rx.RefCountDisposable`](../api/core/observable.mdapi/disposables/refcountdisposable.md)
-- [`Rx.SerialDisposable`](../api/core/observable.mdapi/disposables/serialdisposable.md)
-- [`Rx.SingleAssignmentDisposable`](../api/core/observable.mdapi/disposables/singleassignmentdisposable.md)
+- [`Rx.CompositeDisposable`](../api/disposables/compositedisposable.md)
+- [`Rx.Disposable`](../api/disposables/disposable.md)
+- [`Rx.RefCountDisposable`](../api/disposables/refcountdisposable.md)
+- [`Rx.SerialDisposable`](../api/disposables/serialdisposable.md)
+- [`Rx.SingleAssignmentDisposable`](../api/disposables/singleassignmentdisposable.md)
