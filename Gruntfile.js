@@ -623,7 +623,7 @@ var browsers = [{
             asyncCompat: {
                 src: [
                     'src/core/license.js',
-                    'src/core/subintro.js',
+                    'src/core/asyncintro.js',
                     'src/core/asyncheader.js',
                     'src/core/linq/observable/start.js', // toasync
                     'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
@@ -640,7 +640,7 @@ var browsers = [{
             asyncModern: {
                 src: [
                     'src/core/license.js',
-                    'src/core/subintro.js',
+                    'src/core/asyncintro.js',
                     'src/core/asyncheader.js',
                     'src/core/linq/observable/start.js', // toasync
                     'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable   
@@ -729,7 +729,7 @@ var browsers = [{
             testing: {
                 src: [
                     'src/core/license.js',
-                    'src/core/subintro.js',
+                    'src/core/testintro.js',
                     'src/core/testheader.js',
                     'src/core/testing/reactivetest.js',
                     'src/core/testing/recorded.js',
