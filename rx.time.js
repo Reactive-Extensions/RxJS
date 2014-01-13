@@ -33,7 +33,7 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
     
-    // Refernces
+    // References
     var Observable = Rx.Observable,
         observableProto = Observable.prototype,
         AnonymousObservable = Rx.Internals.AnonymousObservable,
