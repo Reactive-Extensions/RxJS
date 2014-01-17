@@ -63,7 +63,7 @@
 
             return new Promise(function (resolve, reject) {
                 var results = [],
-                    remaining = promises.length,
+                    remaining = promises.length
 
                 // Short circuit
                 if (remaining === 0) {
