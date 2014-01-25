@@ -1122,44 +1122,38 @@
     var currentThreadScheduler = Scheduler.currentThread = (function () {
         var queue;
 
-        function Trampoline() {
-            queue = new PriorityQueue(4);
-        }
-
-        Trampoline.prototype.dispose = function () {
-            queue = null;
-        };
-
-        Trampoline.prototype.run = function () {
+        function runTrampoline (q) {
             var item;
-            while (queue.length > 0) {
-                item = queue.dequeue();
+            while (q.length > 0) {
+                item = q.dequeue();
                 if (!item.isCancelled()) {
-                    while (item.dueTime - Scheduler.now() > 0) { }
+                    // Note, do not schedule blocking work!
+                    while (item.dueTime - Scheduler.now() > 0) {
+                    }
                     if (!item.isCancelled()) {
                         item.invoke();
                     }
                 }
-            }
-        };
+            }            
+        }
 
         function scheduleNow(state, action) {
             return this.scheduleWithRelativeAndState(state, 0, action);
         }
 
         function scheduleRelative(state, dueTime, action) {
-            var dt = this.now() + normalizeTime(dueTime),
+            var dt = this.now() + Scheduler.normalize(dueTime),
                     si = new ScheduledItem(this, state, action, dt),
                     t;
             if (!queue) {
-                t = new Trampoline();
+                queue = new PriorityQueue(4);
+                queue.enqueue(si);
                 try {
-                    queue.enqueue(si);
-                    t.run();
+                    runTrampoline(queue);
                 } catch (e) { 
                     throw e;
                 } finally {
-                    t.dispose();
+                    queue = null;
                 }
             } else {
                 queue.enqueue(si);
