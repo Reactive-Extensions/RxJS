@@ -12,7 +12,7 @@
                 return new InnerSubscription(this, observer);
             }
 
-            var ex = this.exception;
+            var ex = this.exception,
                 hv = this.hasValue,
                 v = this.value;
 
