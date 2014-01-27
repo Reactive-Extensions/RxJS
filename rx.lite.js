@@ -4606,7 +4606,7 @@
                 return new InnerSubscription(this, observer);
             }
 
-            var ex = this.exception;
+            var ex = this.exception,
                 hv = this.hasValue,
                 v = this.value;
 
@@ -4655,10 +4655,10 @@
                 var o, i, len;
                 checkDisposed.call(this);
                 if (!this.isStopped) {
-                    var os = this.observers.slice(0);
                     this.isStopped = true;
-                    var v = this.value;
-                    var hv = this.hasValue;
+                    var os = this.observers.slice(0),
+                        v = this.value,
+                        hv = this.hasValue;
 
                     if (hv) {
                         for (i = 0, len = os.length; i < len; i++) {
