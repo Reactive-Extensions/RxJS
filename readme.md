@@ -115,7 +115,7 @@ var $input = $('#input'),
     $results = $('#results');
 
 /* Only get the value from each key up */
-var keyups = Rx.Observable.fromEvent(input, 'keyup')
+var keyups = Rx.Observable.fromEvent($input, 'keyup')
     .map(function (e) {
         return e.target.value;
     })
