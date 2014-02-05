@@ -50,7 +50,7 @@ var browsers = [{
                     'src/core/intro.js',
                     'src/core/basicheader.js',
                     'src/core/internal/deepEquals.js',
-                    'src/core/internal/util.js',                    
+                    'src/core/internal/util.js',
                     'src/core/internal/polyfills.js',
                     'src/core/internal/priorityqueue.js',
                     'src/core/disposables/compositedisposable.js',
@@ -79,7 +79,7 @@ var browsers = [{
                     'src/core/observable.js',
 
                     'src/core/linq/observable/observeon.js', // ObserveOnObserver
-                    'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable                
+                    'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
 
                     'src/core/linq/observable/create.js',
                     'src/core/linq/observable/defer.js',
@@ -264,7 +264,7 @@ var browsers = [{
                     'src/core/linq/observable/take.js',
                     'src/core/linq/observable/takewhile.js',
                     'src/core/linq/observable/where.js',
-                    
+
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/linq/groupedobservable.js',
@@ -319,7 +319,7 @@ var browsers = [{
                     'src/core/linq/observable/range.js',
                     'src/core/linq/observable/repeat.js',
                     'src/core/linq/observable/return.js',
-                    'src/core/linq/observable/throw.js',                   
+                    'src/core/linq/observable/throw.js',
 
                     // Multiple
                     'src/core/linq/observable/catchproto.js',
@@ -341,12 +341,12 @@ var browsers = [{
 
                     // Single
                     'src/core/linq/observable/asobservable.js',
-                    'src/core/linq/observable/dematerialize.js',                    
+                    'src/core/linq/observable/dematerialize.js',
                     'src/core/linq/observable/distinctuntilchanged.js',
                     'src/core/linq/observable/do.js',
                     'src/core/linq/observable/finally.js',
                     'src/core/linq/observable/ignoreelements.js',
-                    'src/core/linq/observable/materialize.js',                    
+                    'src/core/linq/observable/materialize.js',
                     'src/core/linq/observable/repeatproto.js',
                     'src/core/linq/observable/retry.js',
                     'src/core/linq/observable/scan.js',
@@ -363,26 +363,26 @@ var browsers = [{
                     'src/core/linq/observable/skipwhile.js',
                     'src/core/linq/observable/take.js',
                     'src/core/linq/observable/takewhile.js',
-                    'src/core/linq/observable/where.js',                                       
+                    'src/core/linq/observable/where.js',
 
                     // Async Operators
                     'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable                                      
+                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/fromevent-modern.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
-                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable   
-                    'src/core/linq/observable/topromise.js',             
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/topromise.js',
 
                     // Binding Operators
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
                     'src/core/linq/observable/publish.js',   // mulitcast, Subject
-                    'src/core/linq/observable/share.js',   // mulitcast, Subject, Reference counted                    
+                    'src/core/linq/observable/share.js',   // mulitcast, Subject, Reference counted
                     'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
                     'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
                     'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
-                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
-                    'src/core/linq/observable/sharereplay.js', // multicast, ReplaySubject, Reference counted                     
-                    'src/core/linq/connectableobservable.js',                    
+                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject
+                    'src/core/linq/observable/sharereplay.js', // multicast, ReplaySubject, Reference counted
+                    'src/core/linq/connectableobservable.js',
 
                     // Time operators
                     'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
@@ -395,7 +395,7 @@ var browsers = [{
                     'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
                     'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
                     'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-                    'src/core/linq/observable/generatewithtime.js', 
+                    'src/core/linq/observable/generatewithtime.js',
                     'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
                     'src/core/linq/observable/delaywithselector.js',
                     'src/core/linq/observable/timeoutwithselector.js',
@@ -406,7 +406,7 @@ var browsers = [{
                     'src/core/linq/observable/takewithtime.js',
                     'src/core/linq/observable/skipwithtime.js',
                     'src/core/linq/observable/skipuntilwithtime.js',
-                    'src/core/linq/observable/takeuntilwithtime.js',                    
+                    'src/core/linq/observable/takeuntilwithtime.js',
 
                     // Backpressure operators
                     //'src/core/backpressure/pausable.js',
@@ -421,12 +421,12 @@ var browsers = [{
                     'src/core/subjects/innersubscription.js',
                     'src/core/subjects/subject.js',
                     'src/core/subjects/asyncsubject.js',
-                    'src/core/subjects/anonymoussubject.js',   
+                    'src/core/subjects/anonymoussubject.js',
                     'src/core/subjects/behaviorsubject.js',
-                    'src/core/subjects/replaysubject.js',                                     
+                    'src/core/subjects/replaysubject.js',
 
                     'src/core/exports.js',
-                    'src/core/outro.js'  
+                    'src/core/outro.js'
                 ],
                 dest: 'rx.lite.js'
             },
@@ -473,7 +473,7 @@ var browsers = [{
                     'src/core/linq/observable/range.js',
                     'src/core/linq/observable/repeat.js',
                     'src/core/linq/observable/return.js',
-                    'src/core/linq/observable/throw.js',                   
+                    'src/core/linq/observable/throw.js',
 
                     // Multiple
                     'src/core/linq/observable/catchproto.js',
@@ -495,12 +495,12 @@ var browsers = [{
 
                     // Single
                     'src/core/linq/observable/asobservable.js',
-                    'src/core/linq/observable/dematerialize.js',                    
+                    'src/core/linq/observable/dematerialize.js',
                     'src/core/linq/observable/distinctuntilchanged.js',
                     'src/core/linq/observable/do.js',
                     'src/core/linq/observable/finally.js',
                     'src/core/linq/observable/ignoreelements.js',
-                    'src/core/linq/observable/materialize.js',                    
+                    'src/core/linq/observable/materialize.js',
                     'src/core/linq/observable/repeatproto.js',
                     'src/core/linq/observable/retry.js',
                     'src/core/linq/observable/scan.js',
@@ -517,26 +517,26 @@ var browsers = [{
                     'src/core/linq/observable/skipwhile.js',
                     'src/core/linq/observable/take.js',
                     'src/core/linq/observable/takewhile.js',
-                    'src/core/linq/observable/where.js',                                       
+                    'src/core/linq/observable/where.js',
 
                     // Async Operators
                     'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable                                      
+                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/fromevent.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-                    'src/core/linq/observable/topromise.js',              
+                    'src/core/linq/observable/topromise.js',
 
                     // Binding Operators
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
                     'src/core/linq/observable/publish.js',   // mulitcast, Subject
-                    'src/core/linq/observable/share.js',   // mulitcast, Subject, Reference counted                    
+                    'src/core/linq/observable/share.js',   // mulitcast, Subject, Reference counted
                     'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
                     'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
                     'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
-                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
-                    'src/core/linq/observable/sharereplay.js', // multicast, ReplaySubject, Reference counted                     
-                    'src/core/linq/connectableobservable.js',                    
+                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject
+                    'src/core/linq/observable/sharereplay.js', // multicast, ReplaySubject, Reference counted
+                    'src/core/linq/connectableobservable.js',
 
 
                     // Time operators
@@ -550,7 +550,7 @@ var browsers = [{
                     'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
                     'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
                     'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-                    'src/core/linq/observable/generatewithtime.js', 
+                    'src/core/linq/observable/generatewithtime.js',
                     'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
                     'src/core/linq/observable/delaywithselector.js',
                     'src/core/linq/observable/timeoutwithselector.js',
@@ -561,24 +561,24 @@ var browsers = [{
                     'src/core/linq/observable/takewithtime.js',
                     'src/core/linq/observable/skipwithtime.js',
                     'src/core/linq/observable/skipuntilwithtime.js',
-                    'src/core/linq/observable/takeuntilwithtime.js',     
+                    'src/core/linq/observable/takeuntilwithtime.js',
 
                     // Backpressure operators
-                    //'src/core/backpressure/pausable.js',               
+                    //'src/core/backpressure/pausable.js',
 
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/subjects/innersubscription.js',
                     'src/core/subjects/subject.js',
                     'src/core/subjects/asyncsubject.js',
-                    'src/core/subjects/anonymoussubject.js',   
+                    'src/core/subjects/anonymoussubject.js',
                     'src/core/subjects/behaviorsubject.js',
-                    'src/core/subjects/replaysubject.js',                                     
+                    'src/core/subjects/replaysubject.js',
 
                     'src/core/exports.js',
-                    'src/core/outro.js'  
+                    'src/core/outro.js'
                 ],
-                dest: 'rx.lite.compat.js'                  
+                dest: 'rx.lite.compat.js'
             },
             aggregates: {
                 src: [
@@ -606,16 +606,16 @@ var browsers = [{
                     'src/core/linq/observable/elementatordefault.js', // _elementatordefault
                     'src/core/linq/observable/_singleordefault.js',
                     'src/core/linq/observable/single.js', // _singleordefault, where
-                    'src/core/linq/observable/singleordefault.js', // _singleordefault, where    
+                    'src/core/linq/observable/singleordefault.js', // _singleordefault, where
                     'src/core/linq/observable/_firstordefault.js',
                     'src/core/linq/observable/first.js', // _firstordefault, where
-                    'src/core/linq/observable/firstordefault.js', // _firstordefault, where    
+                    'src/core/linq/observable/firstordefault.js', // _firstordefault, where
                     'src/core/linq/observable/_lastordefault.js',
                     'src/core/linq/observable/last.js', // _firstordefault, where
-                    'src/core/linq/observable/lastordefault.js', // _firstordefault, where                                                           
+                    'src/core/linq/observable/lastordefault.js', // _firstordefault, where
                     'src/core/linq/observable/_findvalue.js',
                     'src/core/linq/observable/find.js', // _findvalue, where
-                    'src/core/linq/observable/findindex.js', // _findvalue, where     
+                    'src/core/linq/observable/findindex.js', // _findvalue, where
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.aggregates.js'
@@ -632,7 +632,7 @@ var browsers = [{
                     'src/core/linq/observable/fromevent.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-                    'src/core/linq/observable/topromise.js',  
+                    'src/core/linq/observable/topromise.js',
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.async.compat.js'
@@ -643,17 +643,17 @@ var browsers = [{
                     'src/core/asyncintro.js',
                     'src/core/asyncheader.js',
                     'src/core/linq/observable/start.js', // toasync
-                    'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable   
+                    'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable                                      
+                    'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/fromevent-modern.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-                    'src/core/linq/observable/topromise.js',  
+                    'src/core/linq/observable/topromise.js',
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.async.js'
-            },            
+            },
             binding: {
                 src: [
                     'src/core/license.js',
@@ -661,12 +661,12 @@ var browsers = [{
                     'src/core/bindingheader.js',
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
                     'src/core/linq/observable/publish.js',   // mulitcast, Subject
-                    'src/core/linq/observable/share.js',   // mulitcast, Subject, Reference counted                    
+                    'src/core/linq/observable/share.js',   // mulitcast, Subject, Reference counted
                     'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
                     'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
                     'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
-                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject 
-                    'src/core/linq/observable/replayWhileObserved.js', // multicast, ReplaySubject, Reference counted                     
+                    'src/core/linq/observable/replay.js', // multicast, ReplaySubject
+                    'src/core/linq/observable/replayWhileObserved.js', // multicast, ReplaySubject, Reference counted
                     'src/core/subjects/innersubscription.js',
                     'src/core/subjects/behaviorsubject.js',
                     'src/core/subjects/replaysubject.js',
@@ -782,16 +782,16 @@ var browsers = [{
                 dest: 'rx.time.js'
             },
             virtualtime: {
-                src: [                
+                src: [
                     'src/core/license.js',
                     'src/core/subintro.js',
                     'src/core/virtualtimeheader.js',
                     'src/core/concurrency/virtualtimescheduler.js',
-                    'src/core/concurrency/historicalscheduler.js',                    
+                    'src/core/concurrency/historicalscheduler.js',
                     'src/core/suboutro.js'
                 ],
-                dest: 'rx.virtualtime.js'                    
-            }        
+                dest: 'rx.virtualtime.js'
+            }
         },
         uglify: {
             basic: {
@@ -809,7 +809,7 @@ var browsers = [{
             litecompat: {
                 src: ['<banner>', 'rx.lite.compat.js'],
                 dest: 'rx.lite.compat.min.js'
-            },                    
+            },
             aggregates: {
                 src: ['<banner>', 'rx.aggregates.js'],
                 dest: 'rx.aggregates.min.js'
@@ -821,7 +821,7 @@ var browsers = [{
             asyncModern: {
                 src: ['<banner>', 'rx.async.js'],
                 dest: 'rx.async.min.js'
-            },            
+            },
             binding: {
                 src: ['<banner>', 'rx.binding.js'],
                 dest: 'rx.binding.min.js'
@@ -856,13 +856,13 @@ var browsers = [{
         },
         jshint: {
             all: [
-                'rx.js', 
-                'rx.compat.js', 
+                'rx.js',
+                'rx.compat.js',
                 'rx.aggregates.js',
                 'rx.async.js',
-                'rx.async.compat.js', 
-                'rx.binding.js', 
-                'rx.coincidence.js', 
+                'rx.async.compat.js',
+                'rx.binding.js',
+                'rx.coincidence.js',
                 'rx.experimental.js',
                 'rx.joinpatterns.js',
                 'rx.testing.js',
@@ -883,7 +883,7 @@ var browsers = [{
             options: {
                 dest: 'CHANGELOG.md'
             }
-        },     
+        },
         connect: {
             server: {
                 options: {
@@ -891,25 +891,25 @@ var browsers = [{
                         port: 9999
                 }
             }
-        },        
+        },
         'saucelabs-qunit': {
             all: {
                 options: {
                     urls: [
-                        'http://127.0.0.1:9999/rx.aggregates.html', 
-                        'http://127.0.0.1:9999/rx.async.html', 
-                        'http://127.0.0.1:9999/rx.async.compat.html', 
-                        'http://127.0.0.1:9999/rx.binding.html', 
-                        'http://127.0.0.1:9999/rx.coincidence.html', 
-                        'http://127.0.0.1:9999/rx.experimental.html', 
-                        'http://127.0.0.1:9999/rx.experimental.html', 
+                        'http://127.0.0.1:9999/rx.aggregates.html',
+                        'http://127.0.0.1:9999/rx.async.html',
+                        'http://127.0.0.1:9999/rx.async.compat.html',
+                        'http://127.0.0.1:9999/rx.binding.html',
+                        'http://127.0.0.1:9999/rx.coincidence.html',
+                        'http://127.0.0.1:9999/rx.experimental.html',
+                        'http://127.0.0.1:9999/rx.experimental.html',
                         'http://127.0.0.1:9999/rx.html',
-                        'http://127.0.0.1:9999/rx.modern.html', 
-                        'http://127.0.0.1:9999/rx.lite.html', 
-                        'http://127.0.0.1:9999/rx.lite.compat.html', 
-                        'http://127.0.0.1:9999/rx.joinpatterns.html', 
-                        'http://127.0.0.1:9999/rx.time.html', 
-                        'http://127.0.0.1:9999/rx.virtualtime.html', 
+                        'http://127.0.0.1:9999/rx.modern.html',
+                        'http://127.0.0.1:9999/rx.lite.html',
+                        'http://127.0.0.1:9999/rx.lite.compat.html',
+                        'http://127.0.0.1:9999/rx.joinpatterns.html',
+                        'http://127.0.0.1:9999/rx.time.html',
+                        'http://127.0.0.1:9999/rx.virtualtime.html',
                     ],
                     tunnelTimeout: 5,
                     build: process.env.TRAVIS_JOB_ID,
@@ -921,14 +921,8 @@ var browsers = [{
         }
     });
 
-    grunt.loadNpmTasks('grunt-contrib-concat');
-    grunt.loadNpmTasks('grunt-contrib-connect');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-qunit');
-    grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-watch');
-    grunt.loadNpmTasks('grunt-saucelabs');
-    grunt.loadNpmTasks('grunt-conventional-changelog');
+    // Load all "grunt-*" tasks
+    require('load-grunt-tasks')(grunt);
 
     function createNuGetPackage(nuspec) {
         var done = this.async();
@@ -944,7 +938,7 @@ var browsers = [{
                 //specify where we want the package to be created
                 "-OutputDirectory",
                 "nuget",
-     
+
                 //override the version with whatever is currently defined in package.json
                 "-Version",
                 grunt.config.get("pkg").version
@@ -957,7 +951,7 @@ var browsers = [{
             }
 
             done();
-        });        
+        });
     }
 
     grunt.registerTask('nuget-aggregates', 'Register NuGet-Aggregates', function () {
@@ -970,7 +964,7 @@ var browsers = [{
 
     grunt.registerTask('nuget-async', 'Register NuGet-Async', function () {
         createNuGetPackage.call(this, 'nuget/RxJS-Async/RxJS-Async.nuspec');
-    }); 
+    });
 
     grunt.registerTask('nuget-binding', 'Register NuGet-Binding', function () {
         createNuGetPackage.call(this, 'nuget/RxJS-Binding/RxJS-Binding.nuspec');
@@ -1002,11 +996,11 @@ var browsers = [{
 
     grunt.registerTask('nuget-time', 'Register NuGet-Time', function () {
         createNuGetPackage.call(this, 'nuget/RxJS-Time/RxJS-Time.nuspec');
-    });    
+    });
 
     grunt.registerTask('nuget-virtualtime', 'Register NuGet-VirtualTime', function () {
         createNuGetPackage.call(this, 'nuget/RxJS-VirtualTime/RxJS-VirtualTime.nuspec');
-    });       
+    });
 
     grunt.registerTask('nuget', [
         'nuget-aggregates',
@@ -1054,7 +1048,7 @@ var browsers = [{
         'concat:modern',
         'concat:aggregates',
         'concat:asyncCompat',
-        'concat:asyncModern',        
+        'concat:asyncModern',
         'concat:binding',
         'concat:coincidence',
         'concat:experimental',
@@ -1069,7 +1063,7 @@ var browsers = [{
         'uglify:modern',
         'uglify:aggregates',
         'uglify:asyncCompat',
-        'uglify:asyncModern',        
+        'uglify:asyncModern',
         'uglify:binding',
         'uglify:coincidence',
         'uglify:experimental',
@@ -1083,6 +1077,6 @@ var browsers = [{
         'qunit',
 
         'changelog'
-    ]);    
+    ]);
 
 };
