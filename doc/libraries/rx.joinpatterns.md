@@ -31,4 +31,4 @@ NuGet Dependencies:
 - [`and`](../api/core/observable.md#rxobservableprototypeandrightsource)
 
 ### `Pattern Instance Methods`
-- [`then`](../api/core/observable.md#)
+- [`then`](../api/core/observable.md##rxobservablewhenargs)
