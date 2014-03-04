@@ -13,7 +13,7 @@ In addition to taking an `Observer`, the [`subscribe`](https://github.com/Reacti
 ```js
 var subject = new Rx.Subject();
 
-var subscription = source.subscribe(
+var subscription = subject.subscribe(
 	function (x) { console.log('onNext: ' + x); },
 	function (e) { console.log('onError: ' + e.message); },
 	function () { console.log('onCompleted'); });
