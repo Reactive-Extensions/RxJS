@@ -21,7 +21,7 @@
         root = freeGlobal;
     }
 
-    var Rx = { Internals: {} };
+    var Rx = { Internals: {}, config: {} };
     
     // Defaults
     function noop() { }
@@ -1164,8 +1164,6 @@
             clearImmediate = typeof (clearImmediate = freeGlobal && moduleExports && freeGlobal.clearImmediate) == 'function' &&
             !reNative.test(clearImmediate) && clearImmediate;
 
-        var BrowserMutationObserver = root.MutationObserver || root.WebKitMutationObserver;
-
         function postMessageSupported () {
             // Ensure not in a worker
             if (!root.postMessage || root.importScripts) { return false; }
@@ -1179,40 +1177,8 @@
             return isAsync;
         }
 
-        // Use in order, MutationObserver, nextTick, setImmediate, postMessage, MessageChannel, script readystatechanged, setTimeout
-        if (!!BrowserMutationObserver) {
-
-            var mutationQueue = {}, mutationId = 0;
-
-            function drainQueue (mutations) {
-                for (var i = 0, len = mutations.length; i < len; i++) {
-                    var id = mutations[i].target.getAttribute('drainQueue');
-                    mutationQueue[id]();
-                    delete mutationQueue[id];
-                }
-            }
-
-            var observer = new BrowserMutationObserver(drainQueue),
-                elem = document.createElement('div');
-            observer.observe(elem, { attributes: true });
-
-            root.addEventListener('unload', function () {
-                observer.disconnect();
-                observer = null;
-            });
-
-            scheduleMethod = function (action) {
-                var id = mutationId++;
-                mutationQueue[id] = action;
-                elem.setAttribute('drainQueue', id);
-                return id;                
-            };
-
-            clearMethod = function (id) {
-                delete mutationQueue[id];
-            }
-
-        } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
+        // Use in order, nextTick, setImmediate, postMessage, MessageChannel, script readystatechanged, setTimeout
+        if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
             scheduleMethod = process.nextTick;
         } else if (typeof setImmediate === 'function') {
             scheduleMethod = setImmediate;
@@ -2018,6 +1984,38 @@
                     self();
                 } else {
                     observer.onCompleted();
+                }
+            });
+        });
+    };
+
+    /**
+     *  Converts a generator function to an observable sequence, using an optional scheduler to enumerate the generator.
+     *  
+     * @example
+     *  var res = Rx.Observable.fromGenerator(function* () { yield 42; });
+     *  var res = Rx.Observable.fromArray(function* () { yield 42; }, Rx.Scheduler.timeout);
+     * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
+     * @returns {Observable} The observable sequence whose elements are pulled from the given generator sequence.
+     */
+    observableProto.fromGenerator = function (genFn, scheduler) {
+        scheduler || (scheduler = currentThreadScheduler);
+        return new AnonymousObservable(function (observer) {
+            var gen;
+            try {
+                gen = genFn();
+            } catch (e) {
+                observer.onError(e);
+                return;
+            }
+
+            return scheduler.scheduleRecursive(function (self) {
+                var next = gen.next();
+                if (next.done) {
+                    observer.onCompleted();
+                } else {
+                    observer.onNext(next.value);
+                    self();
                 }
             });
         });
@@ -3509,10 +3507,18 @@
      * Converts an existing observable sequence to an ES6 Compatible Promise
      * @example
      * var promise = Rx.Observable.return(42).toPromise(RSVP.Promise);
-     * @param {Function} The constructor of the promise
+     * 
+     * // With config
+     * Rx.config.Promise = RSVP.Promise;
+     * var promise = Rx.Observable.return(42).toPromise();
+     * @param {Function} [promiseCtor] The constructor of the promise. If not provided, it looks for it in Rx.config.Promise.
      * @returns {Promise} An ES6 compatible promise with the last value from the observable sequence.
      */
     observableProto.toPromise = function (promiseCtor) {
+        promiseCtor || (promiseCtor = Rx.config.Promise);
+        if (!promiseCtor) {
+            throw new Error('Promise type not provided nor in Rx.config.Promise');
+        }
         var source = this;
         return new promiseCtor(function (resolve, reject) {
             // No cancellation can be done

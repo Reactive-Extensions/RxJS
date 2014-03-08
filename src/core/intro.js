@@ -19,5 +19,5 @@
         root = freeGlobal;
     }
 
-    var Rx = { Internals: {} };
+    var Rx = { Internals: {}, config: {} };
     
