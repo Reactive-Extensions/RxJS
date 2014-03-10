@@ -1,7 +1,7 @@
     /**
      * Attaches a controller to the observable sequence with the ability to queue.
      * @example
-     * var source = Rx.Observable.interval(100).attachController(true);
+     * var source = Rx.Observable.interval(100).controlled();
      * var controller = new Rx.Subject();
      * var controlledSource = source.controlledBy(controller);
      * controller.onNext(3); // Reads 3 values
