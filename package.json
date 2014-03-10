@@ -24,7 +24,7 @@
   "dependencies": {},
   "devDependencies": {
     "grunt-cli": "*",
-    "grunt": "~0.4.2",
+    "grunt": "~0.4.3",
     "grunt-contrib-jshint": "*",
     "grunt-contrib-connect": "*",
     "grunt-contrib-uglify": "*",
@@ -32,7 +32,7 @@
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",
     "grunt-saucelabs": "*",
-    "grunt-conventional-changelog": "~1.0.0",
+    "grunt-conventional-changelog": "*",
     "load-grunt-tasks": "*"
   },
   "keywords": [

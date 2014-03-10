@@ -1,7 +1,8 @@
-    /**
-     * Attaches a stop and wait observable to the current observable.
-     * @returns {Observable} A stop and wait observable.
-     */
-    observableProto.stopAndWait = function () {
-        return new StopAndWaitObservable(this);
-    };
+  /**
+   * Attaches a stop and wait observable to the current observable.
+   * @param {Scheduler} [scheduler] Optional scheduler used for yielding values.
+   * @returns {Observable} A stop and wait observable.
+   */
+  ControlledObservable.prototype.stopAndWait = function (scheduler) {
+    return new StopAndWaitObservable(this, scheduler || timeoutScheduler);
+  };

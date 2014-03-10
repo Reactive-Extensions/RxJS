@@ -1,33 +1,71 @@
-    var StopAndWaitObservable = (function (_super) {
+  var StopAndWaitObservable = (function (_super) {
 
-        function subscribe (observer) {
-            var self = this,
-                subscription = new SerialDisposable();
+    function subscribe (observer) {
+      var self = this;
 
-            subscription.setDisposable(this.source.subscribe(new StopAndWaitObserver(observer, this, subscription)));
+      this.subscription = this.source.subscribe(new StopAndWaitObserver(observer, this, this.subscription, this.scheduler));
 
-            if (count++ === 0) {
-                this.controllerSubscription = this.source.controlledBy(this.controller);
-            }
+      self.scheduler.schedule(function () {
+        self.source.request(1);
+      });
 
-            timeoutScheduler.schedule(function () {
-                self.controller.onNext(1);
-            });
+      return this.subscription;
+    }
 
-            return disposableCreate(function () {
-                subscription.dispose();
-                if (--count === 0) {
-                    self.controllerSubscription.dispose();
-                }
-            })
+    function StopAndWaitObservable (source, scheduler) {
+      _super.call(this, subscribe);
+      this.scheduler = scheduler;
+      this.source = source;
+    }
+
+    var StopAndWaitObserver = (function (__super) {
+
+      function StopAndWaitObserver (observer, observable, cancel, scheduler) {
+        __super.call(this);
+        this.observer = observer;
+        this.observable = observable;
+        this.cancel = cancel;
+        this.isDisposed = false;
+      }
+
+      var stopAndWaitObserverProto = StopAndWaitObserver.prototype;
+
+      stopAndWaitObserverProto.onCompleted = function () {
+        checkDisposed.call(this);
+
+        this.observer.onCompleted();
+        this.dispose();
+      };
+
+      stopAndWaitObserverProto.onError = function (error) {
+        checkDisposed.call(this);
+
+        this.observer.onError(error);
+        this.dispose();
+      }
+
+      stopAndWaitObserverProto.onNext = function (value) {
+        checkDisposed.call(this);
+
+        this.observer.onNext(value);
+
+        var self = this;
+        this.scheduler.schedule(function () {
+          self.observable.source.request(1);
+        });
+      };
+
+      stopAndWaitObserverProto.dispose = function () {
+        this.observer = null;
+        if (this.cancel) {
+          this.cancel.dispose();
+          this.cancel = null;
         }
+        this.isDisposed = true;
+      };
 
-        function StopAndWaitObservable (source) {
-            _super.call(this, subscribe);
-            this.source = source;
-            this.controller = new Subject();
-            this.count = 0;
-        }
+      return StopAndWaitObserver;
+    }(Observer));    
 
-        return StopAndWaitObservable;
-    }(Observable));
+    return StopAndWaitObservable;
+  }(Observable));

@@ -1,5 +1,6 @@
 var Rx = require('./rx');
 require('./rx.aggregates');
+require('./rx.backpressure');
 require('./rx.async');
 require('./rx.binding');
 require('./rx.coincidence');

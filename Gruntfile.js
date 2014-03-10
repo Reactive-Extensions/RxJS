@@ -1,28 +1,28 @@
 module.exports = function (grunt) {
 
 var browsers = [{
-    browserName: 'firefox',
-    version: '19',
-    platform: 'XP'
-}, {
-    browserName: 'chrome',
-    platform: 'XP'
-}, {
-    browserName: 'chrome',
-    platform: 'linux'
-}, {
-    browserName: 'internet explorer',
-    platform: 'WIN8',
-    version: '10'
-}, {
-    browserName: 'internet explorer',
-    platform: 'VISTA',
-    version: '9'
-}, {
-    browserName: 'opera',
-    platform: 'Windows 2008',
-    version: '12'
-}];
+        browserName: 'firefox',
+        version: '19',
+        platform: 'XP'
+    }, {
+        browserName: 'chrome',
+        platform: 'XP'
+    }, {
+        browserName: 'chrome',
+        platform: 'linux'
+    }, {
+        browserName: 'internet explorer',
+        platform: 'WIN8',
+        version: '10'
+    }, {
+        browserName: 'internet explorer',
+        platform: 'VISTA',
+        version: '9'
+    }, {
+        browserName: 'opera',
+        platform: 'Windows 2008',
+        version: '12'
+    }];
 
     grunt.initConfig({
         pkg: grunt.file.readJSON('package.json'),
@@ -412,12 +412,12 @@ var browsers = [{
                     'src/core/linq/observable/takeuntilwithtime.js',
 
                     // Backpressure operators
-                    //'src/core/backpressure/pausable.js',
-                    //'src/core/backpressure/controlled.js',
-                    //'src/core/backpressure/controlledobservable.js',
-                    //'src/core/backpressure/controlledsubject.js',
-                    //'src/core/backpressure/windowed.js',
-                    //'src/core/backpressure/windowedobservable.js',
+                    'src/core/backpressure/pausable.js',
+                    'src/core/backpressure/controlled.js',
+                    'src/core/backpressure/controlledobservable.js',
+                    'src/core/backpressure/controlledsubject.js',
+                    'src/core/backpressure/windowed.js',
+                    'src/core/backpressure/windowedobservable.js',
 
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
@@ -568,7 +568,12 @@ var browsers = [{
                     'src/core/linq/observable/takeuntilwithtime.js',
 
                     // Backpressure operators
-                    //'src/core/backpressure/pausable.js',
+                    'src/core/backpressure/pausable.js',
+                    'src/core/backpressure/controlled.js',
+                    'src/core/backpressure/controlledobservable.js',
+                    'src/core/backpressure/controlledsubject.js',
+                    'src/core/backpressure/windowed.js',
+                    'src/core/backpressure/windowedobservable.js',
 
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
@@ -583,6 +588,24 @@ var browsers = [{
                     'src/core/outro.js'
                 ],
                 dest: 'rx.lite.compat.js'
+            },
+            backpressure: {
+                src: [
+                    'src/core/license.js',
+                    'src/core/subintro.js',
+                    'src/core/backpressureheader.js',
+
+                    // Backpressure operators
+                    'src/core/backpressure/pausable.js',
+                    'src/core/backpressure/controlled.js',
+                    'src/core/backpressure/controlledobservable.js',
+                    'src/core/backpressure/controlledsubject.js',
+                    'src/core/backpressure/windowed.js',
+                    'src/core/backpressure/windowedobservable.js',
+
+                    'src/core/suboutro.js'                    
+                ],
+                dest: 'rx.backpressure.js'
             },
             aggregates: {
                 src: [
@@ -814,6 +837,10 @@ var browsers = [{
                 src: ['<banner>', 'rx.lite.compat.js'],
                 dest: 'rx.lite.compat.min.js'
             },
+            backpressure: {
+                src: ['<banner>', 'rx.backpressure.js'],
+                dest: 'rx.backpressure.min.js'
+            },            
             aggregates: {
                 src: ['<banner>', 'rx.aggregates.js'],
                 dest: 'rx.aggregates.min.js'
@@ -862,6 +889,8 @@ var browsers = [{
             all: [
                 'rx.js',
                 'rx.compat.js',
+                'rx.lite.js',
+                'rx.lite.compat.js',
                 'rx.aggregates.js',
                 'rx.async.js',
                 'rx.async.compat.js',
@@ -1021,23 +1050,6 @@ var browsers = [{
         'nuget-virtualtime',
     ]);
 
-    grunt.registerTask('lint', [
-        'concat:basic',
-        'concat:modern',
-        'concat:asyncCompat',
-        'concat:asyncModern',
-        'concat:aggregates',
-        'concat:binding',
-        'concat:coincidence',
-        'concat:experimental',
-        'concat:joinpatterns',
-        'concat:time',
-        'concat:testing',
-        'concat:virtualtime',
-
-        'jshint'
-    ]);
-
     var testjobs = ['connect'];
     console.log(process.env.SAUCE_ACCESS_KEY);
     if (typeof process.env.SAUCE_ACCESS_KEY !== 'undefined'){
@@ -1050,6 +1062,7 @@ var browsers = [{
     grunt.registerTask('default', [
         'concat:basic',
         'concat:modern',
+        'concat:backpressure',
         'concat:aggregates',
         'concat:asyncCompat',
         'concat:asyncModern',
@@ -1065,6 +1078,7 @@ var browsers = [{
 
         'uglify:basic',
         'uglify:modern',
+        'uglify:backpressure',
         'uglify:aggregates',
         'uglify:asyncCompat',
         'uglify:asyncModern',
@@ -1078,9 +1092,7 @@ var browsers = [{
         'uglify:lite',
         'uglify:litecompat',
 
-        'qunit',
-
-        'changelog'
+        'qunit'
     ]);
 
 };

@@ -1,4 +1,4 @@
-    var ControlledSubject = (function (_super) {
+    var ControlledSubject = Rx.ControlledSubject = (function (_super) {
 
         function subscribe (observer) {
             return this.subject.subscribe(observer);
@@ -7,12 +7,18 @@
         inherits(ControlledSubject, _super);
 
         function ControlledSubject(enableQueue) {
+            if (enableQueue == null) {
+                enableQueue = true;
+            }
+
             _super.call(this, subscribe);
             this.subject = new Subject();
+            this.enableQueue = enableQueue;
             this.queue = enableQueue ? [] : null;
-            this.requested = emptyRequest;
+            this.requestedCount = 0;
             this.requestedDisposable = disposableEmpty;
             this.error = null;
+            this.hasFailed = false;
             this.hasCompleted = false;
             this.controlledDisposable = disposableEmpty;
         }
@@ -22,30 +28,30 @@
                 checkDisposed.call(this);
                 this.hasCompleted = true;
 
-                if (!!this.queue || this.queue.length === 0) {
+                if (!this.enableQueue || this.queue.length === 0) {
                     this.onCompleted();
                 }
             },
             onError: function (error) {
                 checkDisposed.call(this);
+                this.hasFailed = true;
                 this.error = error;
 
-                if (!!this.queue || this.queue.length === 0) {
+                if (!this.enableQueue || this.queue.length === 0) {
                     this.onError(error);
                 }   
             },
             onNext: function (value) {
                 checkDisposed.call(this);
-                var hasRequested = true,
-                    req = this.requested;
+                var hasRequested = true;
 
-                if (req === emptyRequest) {
-                    if (!!this.queue) {
+                if (this.requestedCount === 0) {
+                    if (this.enableQueue) {
                         this.queue.push(value);
                     }
                 } else {
-                    if (req !== unboundedRequest) {
-                        if (req.count-- === 0) {
+                    if (this.requestedCount !== -1) {
+                        if (this.requestedCount-- === 0) {
                             this.disposeCurrentRequest();
                         }
                     }
@@ -59,8 +65,11 @@
             _processRequest: function (numberOfItems) {
                 this.disposeCurrentRequest();
 
-                if (!!this.queue) {
-                    while (this.queue.length > numberOfItems && numberOfItems > 0) {
+                if (this.enableQueue) {
+                    console.log('queue length', this.queue.length);
+
+                    while (this.queue.length >= numberOfItems && numberOfItems > 0) {
+                        console.log('number of items', numberOfItems);
                         this.subject.onNext(this.queue.shift());
                         numberOfItems--;
                     }
@@ -72,7 +81,7 @@
                     }
                 }
 
-                if (!!this.error) {
+                if (this.hasFailed) {
                     this.subject.onError(this.error);
                     this.controlledDisposable.dispose();
                     this.controlledDisposable = disposableEmpty;
@@ -90,11 +99,11 @@
                 var self = this,
                     r = this._processRequest(number);
 
-                number = r.number;
+                number = r.numberOfItems;
                 if (r.returnValue) {
-                    this.requested = new Requested(number);
+                    this.requestedCount = number;
                     this.requestedDisposable = disposableCreate(function () {
-                        self.requested = emptyRequest;
+                        self.requestedCount = 0;
                     });
 
                     return this.requestedDisposable
@@ -114,12 +123,6 @@
                 this.requestedDisposable.dispose();
             }
         });
-
-        function Requested(count) {
-            this.count = count;
-        }
-        var emptyRequest = new Requested(0),
-            unboundedRequest = new Requested(-1);
 
         return ControlledSubject;
     }(Observable));
