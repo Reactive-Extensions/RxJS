@@ -118,8 +118,8 @@
         function Requested(count) {
             this.count = count;
         }
-        var emptyRequest = new Requested(0);
-        var unboundedRequest = new Requested(-1);
+        var emptyRequest = new Requested(0),
+            unboundedRequest = new Requested(-1);
 
         return ControlledSubject;
     }(Observable));

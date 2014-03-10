@@ -1,76 +1,74 @@
-	var WindowedObservable = (function (_super) {
+    var WindowedObservable = (function (_super) {
 
-		function subscribe (observer) {
-			var subscription = this.source.subscribe(new WindowedObserver(observer, this, subscription));
+        function subscribe (observer) {
+            this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
 
-			// TODO: Refactor out to scheduler for testability
-			var self = this;
-			timeoutScheduler.schedule(function () {
-				self.source.request(self.windowSize);
-			});
+            var self = this;
+            self.scheduler.schedule(function () {
+                self.source.request(self.windowSize);
+            });
 
-			return subscription;
-		}
+            return this.subscription;
+        }
 
-		inherits(WindowedObservable, _super);
+        inherits(WindowedObservable, _super);
 
-		function WindowedObservable(source, windowSize) {
-			_super.call(this, subscribe);
-			this.source = source;
-			this.windowSize = windowSize;
-			this.isDisposed = false;
-		}
+        function WindowedObservable(source, windowSize, scheduler) {
+            _super.call(this, subscribe);
+            this.source = source;
+            this.windowSize = windowSize;
+            this.scheduler = scheduler;
+            this.isDisposed = false;
+        }
 
-		var WindowedObserver = (function (__super) {
+        var WindowedObserver = (function (__super) {
 
-			inherits(WindowedObserver, __super);
+            inherits(WindowedObserver, __super);
 
-			function WindowedObserver(observer, observable, cancel) {
-				this.observer = observer;
-				this.observable = observable;
-				this.cancel = cancel;
-				this.received = 0;
-			}
+            function WindowedObserver(observer, observable, cancel) {
+                this.observer = observer;
+                this.observable = observable;
+                this.cancel = cancel;
+                this.received = 0;
+            }
 
-			var windowedObserverPrototype = WindowedObserver.prototype;
+            var windowedObserverPrototype = WindowedObserver.prototype;
 
-			windowedObserverPrototype.onCompleted = function () {
-				checkDisposed.call(this);
-				this.observer.onCompleted();
-				this.dispose();
-			};
+            windowedObserverPrototype.onCompleted = function () {
+                checkDisposed.call(this);
+                this.observer.onCompleted();
+                this.dispose();
+            };
 
-			windowedObserverPrototype.onError = function (error) {
-				checkDisposed.call(this);
-				this.observer.onError(error);
-				this.dispose();
-			};
+            windowedObserverPrototype.onError = function (error) {
+                checkDisposed.call(this);
+                this.observer.onError(error);
+                this.dispose();
+            };
 
-			windowedObserverPrototype.onNext = function (value) {
-				checkDisposed.call(this);
-				this.observer.onNext(value);
+            windowedObserverPrototype.onNext = function (value) {
+                checkDisposed.call(this);
+                this.observer.onNext(value);
 
-				this.received = ++this.received % this.observable.windowSize;
-				if (this.received === 0) {
+                this.received = ++this.received % this.observable.windowSize;
+                if (this.received === 0) {
+                    var self = this;
+                    self.scheduler.schedule(function () {
+                        self.observable.source.request(self.observable.windowSize);
+                    });
+                }
+            };
 
-					// TODO: Refactor out to scheduler for testability
-					var self = this;
-					timeoutScheduler.schedule(function () {
-						self.observable.source.request(self.observable.windowSize);
-					});
-				}
-			};
+            windowedObserverPrototype.dispose = function () {
+                this.observer = null;
+                if (!!this.cancel) {
+                    this.cancel.dispose();
+                }
+                this.isDisposed = true;
+            };
 
-			windowedObserverPrototype.dispose = function () {
-				this.observer = null;
-				if (!!this.cancel) {
-					this.cancel.dispose();
-				}
-				this.isDisposed = true;
-			};
+            return WindowedObserver;
+        }(Observer));
 
-			return WindowedObserver;
-		}(Observer));
-
-		return WindowedObservable;
-	}(Observable));
+        return WindowedObservable;
+    }(Observable));
