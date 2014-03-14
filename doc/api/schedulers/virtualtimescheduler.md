@@ -4,7 +4,7 @@ Base class for providing scheduling in virtual time.  This inherits from the `Rx
 
 ## Usage ##
 
-The following shows an example of using the `Rx.VirtualScheduler`. In order for this to work, you must implement the `add`, `toDateTimeOffset` and `toRelative` methods as described below.
+The following shows an example of using the `Rx.VirtualTimeScheduler`. In order for this to work, you must implement the `add`, `toDateTimeOffset` and `toRelative` methods as described below.
 
 ```js
 /* Comparer required for scheduling priority */
@@ -14,7 +14,7 @@ function comparer (x, y) {
     return 0;
 }
 
-var scheduler = new Rx.VirtualScheduler(0, comparer);
+var scheduler = new Rx.VirtualTimeScheduler(0, comparer);
 
 /**
  * Adds a relative time value to an absolute time value.
@@ -56,10 +56,10 @@ scheduler.start();
 // => bar
 
 // Check the clock once stopped
-console.log(s.now());
+console.log(scheduler.now());
 // => 3
 
-console.log(s.clock);
+console.log(scheduler.clock);
 // => 3
 
 ```
