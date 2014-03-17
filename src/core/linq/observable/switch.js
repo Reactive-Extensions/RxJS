@@ -13,6 +13,12 @@
                     var d = new SingleAssignmentDisposable(), id = ++latest;
                     hasLatest = true;
                     innerSubscription.setDisposable(d);
+
+                    // Check if Promise or Observable
+                    if (isPromise(innerSource)) {
+                        innerSource = observableFromPromise(innerSource);
+                    }
+
                     d.setDisposable(innerSource.subscribe(function (x) {
                         if (latest === id) {
                             observer.onNext(x);

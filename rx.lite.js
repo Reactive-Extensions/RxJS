@@ -31,6 +31,7 @@
     function defaultSubComparer(x, y) { return x - y; }
     function defaultKeySerializer(x) { return x.toString(); }
     function defaultError(err) { throw err; }
+    function isPromise(p) { return typeof p.then === 'function'; }
 
     // Errors
     var sequenceContainsNoElements = 'Sequence contains no elements.';
@@ -2313,6 +2314,10 @@
                 subscribe = function (xs) {
                     var subscription = new SingleAssignmentDisposable();
                     group.add(subscription);
+
+                    // Check for promises support
+                    if (isPromise(xs)) { xs = observableFromPromise(xs); }
+
                     subscription.setDisposable(xs.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
                         var s;
                         group.remove(subscription);
@@ -2373,37 +2378,40 @@
         return observableFromArray(sources, scheduler).mergeObservable();
     };   
 
-    /**
-     * Merges an observable sequence of observable sequences into an observable sequence.
-     * @returns {Observable} The observable sequence that merges the elements of the inner sequences.   
-     */  
-    observableProto.mergeObservable = observableProto.mergeAll =function () {
-        var sources = this;
-        return new AnonymousObservable(function (observer) {
-            var group = new CompositeDisposable(),
-                isStopped = false,
-                m = new SingleAssignmentDisposable();
-            group.add(m);
-            m.setDisposable(sources.subscribe(function (innerSource) {
-                var innerSubscription = new SingleAssignmentDisposable();
-                group.add(innerSubscription);
-                innerSubscription.setDisposable(innerSource.subscribe(function (x) {
-                    observer.onNext(x);
-                }, observer.onError.bind(observer), function () {
-                    group.remove(innerSubscription);
-                    if (isStopped && group.length === 1) {
-                        observer.onCompleted();
-                    }
-                }));
-            }, observer.onError.bind(observer), function () {
-                isStopped = true;
-                if (group.length === 1) {
-                    observer.onCompleted();
-                }
-            }));
-            return group;
-        });
-    };
+  /**
+   * Merges an observable sequence of observable sequences into an observable sequence.
+   * @returns {Observable} The observable sequence that merges the elements of the inner sequences.   
+   */  
+  observableProto.mergeObservable = observableProto.mergeAll =function () {
+    var sources = this;
+    return new AnonymousObservable(function (observer) {
+      var group = new CompositeDisposable(),
+        isStopped = false,
+        m = new SingleAssignmentDisposable();
+
+      group.add(m);
+      m.setDisposable(sources.subscribe(function (innerSource) {
+        var innerSubscription = new SingleAssignmentDisposable();
+        group.add(innerSubscription);
+
+        // Check if Promise or Observable
+        if (isPromise(innerSource)) {
+            innerSource = observableFromPromise(innerSource);
+        }
+
+        innerSubscription.setDisposable(innerSource.subscribe(function (x) {
+            observer.onNext(x);
+        }, observer.onError.bind(observer), function () {
+            group.remove(innerSubscription);
+            if (isStopped && group.length === 1) { observer.onCompleted(); }
+        }));
+      }, observer.onError.bind(observer), function () {
+        isStopped = true;
+        if (group.length === 1) { observer.onCompleted(); }
+      }));
+      return group;
+    });
+  };
 
     /**
      * Returns the values from the source observable sequence only after the other observable sequence produces a value.
@@ -2452,6 +2460,12 @@
                     var d = new SingleAssignmentDisposable(), id = ++latest;
                     hasLatest = true;
                     innerSubscription.setDisposable(d);
+
+                    // Check if Promise or Observable
+                    if (isPromise(innerSource)) {
+                        innerSource = observableFromPromise(innerSource);
+                    }
+
                     d.setDisposable(innerSource.subscribe(function (x) {
                         if (latest === id) {
                             observer.onNext(x);
@@ -3004,10 +3018,7 @@
     function selectMany(selector) {
       return this.select(function (x, i) {
         var result = selector(x, i);
-        // Shortcut if promise
-        return result.then === 'function' ?
-          observablefromPromise(result) :
-          result;
+        return isPromise(result) ? observablefromPromise(result) : result;
       }).mergeObservable();
     }
 
@@ -3034,7 +3045,7 @@
       if (resultSelector) {
           return this.selectMany(function (x, i) {
             var selectorResult = selector(x, i),
-              result = typeof selectorResult.then === 'function' ? observablefromPromise(selectorResult) : selectorResult;
+              result = isPromise(selectorResult) ? observablefromPromise(selectorResult) : selectorResult;
 
             return result.select(function (y) {
               return resultSelector(x, y, i);
@@ -3439,6 +3450,21 @@
             });
         });
     };
+  /**
+   * Invokes the asynchronous function, surfacing the result through an observable sequence.
+   * @param {Function} functionAsync Asynchronous function which returns a Promise to run.
+   * @returns {Observable} An observable sequence exposing the function's result value, or an exception.
+   */
+  Observable.startAsync = function (functionAsync) {
+    var promise;
+    try {
+      promise = functionAsync();
+    } catch (e) {
+      return observableThrow(e);
+    }
+    return observableFromPromise(promise);
+  }
+
     /**
      * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
      * subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's

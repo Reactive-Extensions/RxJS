@@ -21,6 +21,10 @@
                 subscribe = function (xs) {
                     var subscription = new SingleAssignmentDisposable();
                     group.add(subscription);
+
+                    // Check for promises support
+                    if (isPromise(xs)) { xs = observableFromPromise(xs); }
+
                     subscription.setDisposable(xs.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
                         var s;
                         group.remove(subscription);

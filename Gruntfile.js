@@ -375,6 +375,7 @@ var browsers = [{
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/topromise.js',
+                    'src/core/linq/observable/startasync.js',
 
                     // Binding Operators
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -531,6 +532,7 @@ var browsers = [{
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/topromise.js',
+                    'src/core/linq/observable/startasync.js',
 
                     // Binding Operators
                     'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -663,6 +665,7 @@ var browsers = [{
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/topromise.js',
+                    'src/core/linq/observable/startasync.js',
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.async.compat.js'
@@ -680,6 +683,7 @@ var browsers = [{
                     'src/core/linq/observable/fromeventpattern.js', // publish
                     'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/topromise.js',
+                    'src/core/linq/observable/startasync.js',
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.async.js'

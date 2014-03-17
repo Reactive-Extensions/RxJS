@@ -6,6 +6,7 @@
     function defaultSubComparer(x, y) { return x - y; }
     function defaultKeySerializer(x) { return x.toString(); }
     function defaultError(err) { throw err; }
+    function isPromise(p) { return typeof p.then === 'function'; }
 
     // Errors
     var sequenceContainsNoElements = 'Sequence contains no elements.';

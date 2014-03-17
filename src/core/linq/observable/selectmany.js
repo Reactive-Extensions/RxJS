@@ -1,10 +1,7 @@
     function selectMany(selector) {
       return this.select(function (x, i) {
         var result = selector(x, i);
-        // Shortcut if promise
-        return result.then === 'function' ?
-          observablefromPromise(result) :
-          result;
+        return isPromise(result) ? observablefromPromise(result) : result;
       }).mergeObservable();
     }
 
@@ -31,7 +28,7 @@
       if (resultSelector) {
           return this.selectMany(function (x, i) {
             var selectorResult = selector(x, i),
-              result = typeof selectorResult.then === 'function' ? observablefromPromise(selectorResult) : selectorResult;
+              result = isPromise(selectorResult) ? observablefromPromise(selectorResult) : selectorResult;
 
             return result.select(function (y) {
               return resultSelector(x, y, i);
