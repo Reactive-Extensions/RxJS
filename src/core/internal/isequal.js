@@ -148,7 +148,7 @@
     };
   }        
 
-  var isEqual = Rx.Internals.isEqual = function (x, y) {
+  var isEqual = Rx.internals.isEqual = function (x, y) {
     return deepEquals(x, y, [], []); 
   };
 

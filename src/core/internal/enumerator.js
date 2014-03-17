@@ -2,7 +2,7 @@
      * @constructor
      * @private
      */
-    var Enumerator = Rx.Internals.Enumerator = function (moveNext, getCurrent) {
+    var Enumerator = Rx.internals.Enumerator = function (moveNext, getCurrent) {
         this.moveNext = moveNext;
         this.getCurrent = getCurrent;
     };

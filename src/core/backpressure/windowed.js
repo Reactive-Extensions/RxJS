@@ -7,5 +7,5 @@
      * @returns {Observable} A windowed observable based upon the window size.
      */
     ControlledObservable.prototype.windowed = function (windowSize, scheduler) {
-      return new WindowedObservable(this, windowSize, scheduler || timeoutScheduler);
+      return new WindowedObservable(this, windowSize, scheduler || Rx.Scheduler.currentThread);
     };

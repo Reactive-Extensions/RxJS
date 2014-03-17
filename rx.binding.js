@@ -35,17 +35,17 @@
     
     var Observable = Rx.Observable,
         observableProto = Observable.prototype,
-        AnonymousObservable = Rx.Internals.AnonymousObservable,
+        AnonymousObservable = Rx.AnonymousObservable,
         Subject = Rx.Subject,
         AsyncSubject = Rx.AsyncSubject,
         Observer = Rx.Observer,
-        ScheduledObserver = Rx.Internals.ScheduledObserver,
+        ScheduledObserver = Rx.internals.ScheduledObserver,
         disposableCreate = Rx.Disposable.create,
         disposableEmpty = Rx.Disposable.empty,
         CompositeDisposable = Rx.CompositeDisposable,
         currentThreadScheduler = Rx.Scheduler.currentThread,
-        inherits = Rx.Internals.inherits,
-        addProperties = Rx.Internals.addProperties;
+        inherits = Rx.internals.inherits,
+        addProperties = Rx.internals.addProperties;
 
     // Utilities
     var objectDisposed = 'Object has been disposed';

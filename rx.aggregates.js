@@ -37,8 +37,8 @@
     var Observable = Rx.Observable,
         observableProto = Observable.prototype,
         CompositeDisposable = Rx.CompositeDisposable,
-        AnonymousObservable = Rx.Internals.AnonymousObservable,
-        isEqual = Rx.Internals.isEqual;
+        AnonymousObservable = Rx.AnonymousObservable,
+        isEqual = Rx.internals.isEqual;
 
     // Defaults
     var argumentOutOfRange = 'Argument out of range';

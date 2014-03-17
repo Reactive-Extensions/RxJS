@@ -4,5 +4,5 @@
    * @returns {Observable} A stop and wait observable.
    */
   ControlledObservable.prototype.stopAndWait = function (scheduler) {
-    return new StopAndWaitObservable(this, scheduler || timeoutScheduler);
+    return new StopAndWaitObservable(this, scheduler || Rx.Scheduler.currentThread);
   };

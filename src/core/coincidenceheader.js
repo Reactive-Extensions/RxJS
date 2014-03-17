@@ -6,11 +6,11 @@
         Subject = Rx.Subject,
         observableProto = Observable.prototype,
         observableEmpty = Observable.empty,
-        AnonymousObservable = Rx.Internals.AnonymousObservable,
+        AnonymousObservable = Rx.AnonymousObservable,
         observerCreate = Rx.Observer.create,
-        addRef = Rx.Internals.addRef;
+        addRef = Rx.internals.addRef,
+        defaultComparer = Rx.internals.isEqual;
 
     // defaults
     function noop() { }
-    function defaultComparer(x, y) { return x === y; }
     

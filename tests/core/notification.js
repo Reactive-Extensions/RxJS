@@ -4,7 +4,7 @@ var createOnNext = Rx.Notification.createOnNext,
     createOnError = Rx.Notification.createOnError,
     createOnCompleted = Rx.Notification.createOnCompleted;
 
-var inherits = Rx.Internals.inherits;
+var inherits = Rx.internals.inherits;
 
 test('OnNext_CtorAndProps', function () {
     var n = createOnNext(42);

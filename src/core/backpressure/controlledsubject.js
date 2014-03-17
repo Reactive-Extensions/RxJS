@@ -43,7 +43,7 @@
             },
             onNext: function (value) {
                 checkDisposed.call(this);
-                var hasRequested = true;
+                var hasRequested = false;
 
                 if (this.requestedCount === 0) {
                     if (this.enableQueue) {
@@ -55,7 +55,7 @@
                             this.disposeCurrentRequest();
                         }
                     }
-                    hasRequested = false;
+                    hasRequested = true;
                 }
 
                 if (hasRequested) {
@@ -63,8 +63,6 @@
                 }
             },
             _processRequest: function (numberOfItems) {
-                this.disposeCurrentRequest();
-
                 if (this.enableQueue) {
                     console.log('queue length', this.queue.length);
 
@@ -100,7 +98,7 @@
                     r = this._processRequest(number);
 
                 number = r.numberOfItems;
-                if (r.returnValue) {
+                if (!r.returnValue) {
                     this.requestedCount = number;
                     this.requestedDisposable = disposableCreate(function () {
                         self.requestedCount = 0;

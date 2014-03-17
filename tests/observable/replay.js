@@ -10,7 +10,7 @@ var TestScheduler = Rx.TestScheduler,
     created = Rx.ReactiveTest.created,
     disposed = Rx.ReactiveTest.disposed,
     subscribed = Rx.ReactiveTest.subscribed,
-    inherits = Rx.Internals.inherits;
+    inherits = Rx.internals.inherits;
 
 test('ReplayCount_Basic', function () {
     var connection, results, scheduler, subscription, xs, ys;

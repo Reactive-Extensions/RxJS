@@ -10,7 +10,7 @@ var TestScheduler = Rx.TestScheduler,
     created = Rx.ReactiveTest.created,
     disposed = Rx.ReactiveTest.disposed,
     subscribed = Rx.ReactiveTest.subscribed,
-    inherits = Rx.Internals.inherits;
+    inherits = Rx.internals.inherits;
 
 test('Multicast_Hot_1', function () {
     var c, d1, d2, o, s, scheduler, xs;

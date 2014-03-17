@@ -1,4 +1,4 @@
-    var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
+    var AnonymousObservable = Rx.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
 
         // Fix subscriber to check for undefined or function returned to decorate as Disposable

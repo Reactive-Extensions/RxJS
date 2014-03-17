@@ -2,7 +2,7 @@
 
 var Observable = Rx.Observable,
     Subject = Rx.Subject,
-    inherits = Rx.Internals.inherits,
+    inherits = Rx.internals.inherits,
     TestScheduler = Rx.TestScheduler,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,

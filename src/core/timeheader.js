@@ -1,7 +1,7 @@
     // Refernces
     var Observable = Rx.Observable,
         observableProto = Observable.prototype,
-        AnonymousObservable = Rx.Internals.AnonymousObservable,
+        AnonymousObservable = Rx.AnonymousObservable,
         observableDefer = Observable.defer,
         observableEmpty = Observable.empty,
         observableNever = Observable.never,
@@ -13,6 +13,5 @@
         CompositeDisposable = Rx.CompositeDisposable,
         RefCountDisposable = Rx.RefCountDisposable,
         Subject = Rx.Subject,
-        BinaryObserver = Rx.Internals.BinaryObserver,
-        addRef = Rx.Internals.addRef,
+        addRef = Rx.internals.addRef,
         normalizeTime = Rx.Scheduler.normalize;

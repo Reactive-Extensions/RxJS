@@ -9,13 +9,8 @@
         CompositeDisposable = Rx.CompositeDisposable,
         SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
         slice = Array.prototype.slice,
-        inherits = Rx.Internals.inherits,
-        isEqual = Rx.Internals.isEqual;
-
-    // Utilities
-    function defaultComparer(x, y) {
-        return isEqual(x, y);
-    }
+        inherits = Rx.internals.inherits,
+        defaultComparer = Rx.internals.isEqual;
 
     function argsOrArray(args, idx) {
         return args.length === 1 && Array.isArray(args[idx]) ?

@@ -36,12 +36,12 @@
     // Aliases
     var Observable = Rx.Observable,
     	observableProto = Observable.prototype,
-        AnonymousObservable = Rx.Internals.AnonymousObservable,
-        AsyncSubject = Rx.AsyncSubject,
-        disposableCreate = Rx.Disposable.create,
-        CompositeDisposable= Rx.CompositeDisposable,
-        immediateScheduler = Rx.Scheduler.immediate,
-        slice = Array.prototype.slice;
+      AnonymousObservable = Rx.AnonymousObservable,
+      AsyncSubject = Rx.AsyncSubject,
+      disposableCreate = Rx.Disposable.create,
+      CompositeDisposable= Rx.CompositeDisposable,
+      immediateScheduler = Rx.Scheduler.immediate,
+      slice = Array.prototype.slice;
 
     /**
      * Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
@@ -352,23 +352,23 @@
         }).publish().refCount();
     };
 
-    /**
-     * Converts a Promise to an Observable sequence
-     * @param {Promise} A Promises A+ implementation instance.
-     * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
-     */
-    Observable.fromPromise = function (promise) {
-        return new AnonymousObservable(function (observer) {
-            promise.then(
-                function (value) {
-                    observer.onNext(value);
-                    observer.onCompleted();
-                }, 
-                function (reason) {
-                   observer.onError(reason);
-                });
+  /**
+   * Converts a Promise to an Observable sequence
+   * @param {Promise} An ES6 Compliant promise.
+   * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
+   */
+  var observablefromPromise = Observable.fromPromise = function (promise) {
+    return new AnonymousObservable(function (observer) {
+      promise.then(
+        function (value) {
+          observer.onNext(value);
+          observer.onCompleted();
+        }, 
+        function (reason) {
+          observer.onError(reason);
         });
-    };
+    });
+  };
     /*
      * Converts an existing observable sequence to an ES6 Compatible Promise
      * @example

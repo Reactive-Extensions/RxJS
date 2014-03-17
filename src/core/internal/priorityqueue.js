@@ -13,7 +13,7 @@
     };
 
     // Priority Queue for Scheduling
-    var PriorityQueue = Rx.Internals.PriorityQueue = function (capacity) {
+    var PriorityQueue = Rx.internals.PriorityQueue = function (capacity) {
         this.items = new Array(capacity);
         this.length = 0;
     };

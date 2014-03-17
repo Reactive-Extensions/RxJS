@@ -1,4 +1,4 @@
-    var Enumerable = Rx.Internals.Enumerable = function (getEnumerator) {
+    var Enumerable = Rx.internals.Enumerable = function (getEnumerator) {
         this.getEnumerator = getEnumerator;
     };
 

@@ -1,4 +1,4 @@
-    var ScheduledItem = Rx.Internals.ScheduledItem = function (scheduler, state, action, dueTime, comparer) {
+    var ScheduledItem = Rx.internals.ScheduledItem = function (scheduler, state, action, dueTime, comparer) {
         this.scheduler = scheduler;
         this.state = state;
         this.action = action;

@@ -1,9 +1,9 @@
 	// Aliases
 	var Scheduler = Rx.Scheduler,
-		PriorityQueue = Rx.Internals.PriorityQueue,
-		ScheduledItem = Rx.Internals.ScheduledItem,
-		SchedulePeriodicRecursive  = Rx.Internals.SchedulePeriodicRecursive,
+		PriorityQueue = Rx.internals.PriorityQueue,
+		ScheduledItem = Rx.internals.ScheduledItem,
+		SchedulePeriodicRecursive  = Rx.internals.SchedulePeriodicRecursive,
 		disposableEmpty = Rx.Disposable.empty,
-		inherits = Rx.Internals.inherits;
+		inherits = Rx.internals.inherits;
 
-	function defaultSubComparer(x, y) { return x - y; }
+	function defaultSubComparer(x, y) { return x > y ? 1 : (x < y ? -1 : 0); }

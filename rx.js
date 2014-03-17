@@ -21,7 +21,7 @@
         root = freeGlobal;
     }
 
-    var Rx = { Internals: {}, config: {} };
+    var Rx = { internals: {}, config: {} };
     
     // Defaults
     function noop() { }
@@ -192,7 +192,7 @@
     };
   }        
 
-  var isEqual = Rx.Internals.isEqual = function (x, y) {
+  var isEqual = Rx.internals.isEqual = function (x, y) {
     return deepEquals(x, y, [], []); 
   };
 
@@ -343,14 +343,14 @@
     var hasProp = {}.hasOwnProperty;
 
     /** @private */
-    var inherits = this.inherits = Rx.Internals.inherits = function (child, parent) {
+    var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
         function __() { this.constructor = child; }
         __.prototype = parent.prototype;
         child.prototype = new __();
     };
 
     /** @private */    
-    var addProperties = Rx.Internals.addProperties = function (obj) {
+    var addProperties = Rx.internals.addProperties = function (obj) {
         var sources = slice.call(arguments, 1);
         for (var i = 0, len = sources.length; i < len; i++) {
             var source = sources[i];
@@ -361,7 +361,7 @@
     };
 
     // Rx Utils
-    var addRef = Rx.Internals.addRef = function (xs, r) {
+    var addRef = Rx.internals.addRef = function (xs, r) {
         return new AnonymousObservable(function (observer) {
             return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
         });
@@ -391,7 +391,7 @@
     };
 
     // Priority Queue for Scheduling
-    var PriorityQueue = Rx.Internals.PriorityQueue = function (capacity) {
+    var PriorityQueue = Rx.internals.PriorityQueue = function (capacity) {
         this.items = new Array(capacity);
         this.length = 0;
     };
@@ -754,7 +754,7 @@
         });
     };
 
-    var ScheduledItem = Rx.Internals.ScheduledItem = function (scheduler, state, action, dueTime, comparer) {
+    var ScheduledItem = Rx.internals.ScheduledItem = function (scheduler, state, action, dueTime, comparer) {
         this.scheduler = scheduler;
         this.state = state;
         this.action = action;
@@ -1045,7 +1045,7 @@
 
     var normalizeTime = Scheduler.normalize;
     
-    var SchedulePeriodicRecursive = Rx.Internals.SchedulePeriodicRecursive = (function () {
+    var SchedulePeriodicRecursive = Rx.internals.SchedulePeriodicRecursive = (function () {
         function tick(command, recurse) {
             recurse(0, this._period);
             try {
@@ -1515,7 +1515,7 @@
      * @constructor
      * @private
      */
-    var Enumerator = Rx.Internals.Enumerator = function (moveNext, getCurrent) {
+    var Enumerator = Rx.internals.Enumerator = function (moveNext, getCurrent) {
         this.moveNext = moveNext;
         this.getCurrent = getCurrent;
     };
@@ -1539,7 +1539,7 @@
         }, function () { return getCurrent(); });
     };
     
-    var Enumerable = Rx.Internals.Enumerable = function (getEnumerator) {
+    var Enumerable = Rx.internals.Enumerable = function (getEnumerator) {
         this.getEnumerator = getEnumerator;
     };
 
@@ -1744,7 +1744,7 @@
      * Abstract base class for implementations of the Observer class.
      * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages. 
      */
-    var AbstractObserver = Rx.Internals.AbstractObserver = (function (_super) {
+    var AbstractObserver = Rx.internals.AbstractObserver = (function (_super) {
         inherits(AbstractObserver, _super);
 
         /**
@@ -1812,58 +1812,50 @@
         return AbstractObserver;
     }(Observer));
 
+  /**
+   * Class to create an Observer instance from delegate-based implementations of the on* methods.
+   */
+  var AnonymousObserver = Rx.AnonymousObserver = (function (_super) {
+    inherits(AnonymousObserver, _super);
+
     /**
-     * Class to create an Observer instance from delegate-based implementations of the on* methods.
-     */
-    var AnonymousObserver = Rx.AnonymousObserver = (function (_super) {
-        inherits(AnonymousObserver, _super);
+     * Creates an observer from the specified OnNext, OnError, and OnCompleted actions.
+     * @param {Any} onNext Observer's OnNext action implementation.
+     * @param {Any} onError Observer's OnError action implementation.
+     * @param {Any} onCompleted Observer's OnCompleted action implementation.  
+     */      
+    function AnonymousObserver(onNext, onError, onCompleted) {
+      _super.call(this);
+      this._onNext = onNext;
+      this._onError = onError;
+      this._onCompleted = onCompleted;
+    }
 
-        /**
-         * Creates an observer from the specified OnNext, OnError, and OnCompleted actions.
-         * 
-         * @constructor
-         * @param {Any} onNext Observer's OnNext action implementation.
-         * @param {Any} onError Observer's OnError action implementation.
-         * @param {Any} onCompleted Observer's OnCompleted action implementation.  
-         */      
-        function AnonymousObserver(onNext, onError, onCompleted) {
-            _super.call(this);
-            this._onNext = onNext;
-            this._onError = onError;
-            this._onCompleted = onCompleted;
-        }
+    /**
+     * Calls the onNext action.
+     * @param {Any} value Next element in the sequence.   
+     */     
+    AnonymousObserver.prototype.next = function (value) {
+      this._onNext(value);
+    };
 
-        /**
-         * Calls the onNext action.
-         * 
-         * @memberOf AnonymousObserver
-         * @param {Any} value Next element in the sequence.   
-         */     
-        AnonymousObserver.prototype.next = function (value) {
-            this._onNext(value);
-        };
+    /**
+     * Calls the onError action.
+     * @param {Any} error The error that has occurred.   
+     */     
+    AnonymousObserver.prototype.error = function (exception) {
+      this._onError(exception);
+    };
 
-        /**
-         * Calls the onError action.
-         * 
-         * @memberOf AnonymousObserver
-         * @param {Any{ error The error that has occurred.   
-         */     
-        AnonymousObserver.prototype.error = function (exception) {
-            this._onError(exception);
-        };
+    /**
+     *  Calls the onCompleted action.
+     */        
+    AnonymousObserver.prototype.completed = function () {
+      this._onCompleted();
+    };
 
-        /**
-         *  Calls the onCompleted action.
-         *
-         * @memberOf AnonymousObserver
-         */        
-        AnonymousObserver.prototype.completed = function () {
-            this._onCompleted();
-        };
-
-        return AnonymousObserver;
-    }(AbstractObserver));
+    return AnonymousObserver;
+  }(AbstractObserver));
 
     var CheckedObserver = (function (_super) {
         inherits(CheckedObserver, _super);
@@ -1918,80 +1910,74 @@
         return CheckedObserver;
     }(Observer));
 
-    /** @private */
-    var ScheduledObserver = Rx.Internals.ScheduledObserver = (function (_super) {
-        inherits(ScheduledObserver, _super);
+  var ScheduledObserver = Rx.internals.ScheduledObserver = (function (_super) {
+    inherits(ScheduledObserver, _super);
 
-        function ScheduledObserver(scheduler, observer) {
-            _super.call(this);
-            this.scheduler = scheduler;
-            this.observer = observer;
-            this.isAcquired = false;
-            this.hasFaulted = false;
-            this.queue = [];
-            this.disposable = new SerialDisposable();
-        }
+    function ScheduledObserver(scheduler, observer) {
+      _super.call(this);
+      this.scheduler = scheduler;
+      this.observer = observer;
+      this.isAcquired = false;
+      this.hasFaulted = false;
+      this.queue = [];
+      this.disposable = new SerialDisposable();
+    }
 
-        /** @private */
-        ScheduledObserver.prototype.next = function (value) {
-            var self = this;
-            this.queue.push(function () {
-                self.observer.onNext(value);
-            });
-        };
+    ScheduledObserver.prototype.next = function (value) {
+      var self = this;
+      this.queue.push(function () {
+        self.observer.onNext(value);
+      });
+    };
 
-        /** @private */
-        ScheduledObserver.prototype.error = function (exception) {
-            var self = this;
-            this.queue.push(function () {
-                self.observer.onError(exception);
-            });
-        };
+    ScheduledObserver.prototype.error = function (exception) {
+      var self = this;
+      this.queue.push(function () {
+        self.observer.onError(exception);
+      });
+    };
 
-        /** @private */
-        ScheduledObserver.prototype.completed = function () {
-            var self = this;
-            this.queue.push(function () {
-                self.observer.onCompleted();
-            });
-        };
+    ScheduledObserver.prototype.completed = function () {
+      var self = this;
+      this.queue.push(function () {
+        self.observer.onCompleted();
+      });
+    };
 
-        /** @private */
-        ScheduledObserver.prototype.ensureActive = function () {
-            var isOwner = false, parent = this;
-            if (!this.hasFaulted && this.queue.length > 0) {
-                isOwner = !this.isAcquired;
-                this.isAcquired = true;
-            }
-            if (isOwner) {
-                this.disposable.setDisposable(this.scheduler.scheduleRecursive(function (self) {
-                    var work;
-                    if (parent.queue.length > 0) {
-                        work = parent.queue.shift();
-                    } else {
-                        parent.isAcquired = false;
-                        return;
-                    }
-                    try {
-                        work();
-                    } catch (ex) {
-                        parent.queue = [];
-                        parent.hasFaulted = true;
-                        throw ex;
-                    }
-                    self();
-                }));
-            }
-        };
+    ScheduledObserver.prototype.ensureActive = function () {
+      var isOwner = false, parent = this;
+      if (!this.hasFaulted && this.queue.length > 0) {
+        isOwner = !this.isAcquired;
+        this.isAcquired = true;
+      }
+      if (isOwner) {
+        this.disposable.setDisposable(this.scheduler.scheduleRecursive(function (self) {
+          var work;
+          if (parent.queue.length > 0) {
+            work = parent.queue.shift();
+          } else {
+            parent.isAcquired = false;
+            return;
+          }
+          try {
+            work();
+          } catch (ex) {
+            parent.queue = [];
+            parent.hasFaulted = true;
+            throw ex;
+          }
+          self();
+        }));
+      }
+    };
 
-        /** @private */
-        ScheduledObserver.prototype.dispose = function () {
-            _super.prototype.dispose.call(this);
-            this.disposable.dispose();
-        };
+    ScheduledObserver.prototype.dispose = function () {
+      _super.prototype.dispose.call(this);
+      this.disposable.dispose();
+    };
 
-        return ScheduledObserver;
-    }(AbstractObserver));
+    return ScheduledObserver;
+  }(AbstractObserver));
 
     /** @private */
     var ObserveOnObserver = (function (_super) {
@@ -3704,7 +3690,13 @@
     };
 
     function selectMany(selector) {
-        return this.select(selector).mergeObservable();
+      return this.select(function (x, i) {
+        var result = selector(x, i);
+        // Shortcut if promise
+        return result.then === 'function' ?
+          observablefromPromise(result) :
+          result;
+      }).mergeObservable();
     }
 
     /**
@@ -3721,24 +3713,28 @@
      *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
      *  
      *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
-     * @param selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
+     * @param selector A transform function to apply to each element or an observable sequence to project each element from the 
+     * source sequence onto which could be either an observable or Promise.
      * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
      */
     observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector) {
-        if (resultSelector) {
-            return this.selectMany(function (x) {
-                return selector(x).select(function (y) {
-                    return resultSelector(x, y);
-                });
+      if (resultSelector) {
+          return this.selectMany(function (x, i) {
+            var selectorResult = selector(x, i),
+              result = typeof selectorResult.then === 'function' ? observablefromPromise(selectorResult) : selectorResult;
+
+            return result.select(function (y) {
+              return resultSelector(x, y, i);
             });
-        }
-        if (typeof selector === 'function') {
-            return selectMany.call(this, selector);
-        }
-        return selectMany.call(this, function () {
-            return selector;
-        });
+          });
+      }
+      if (typeof selector === 'function') {
+        return selectMany.call(this, selector);
+      }
+      return selectMany.call(this, function () {
+        return selector;
+      });
     };
 
     /**
@@ -3898,7 +3894,7 @@
         });
     };
 
-    var AnonymousObservable = Rx.Internals.AnonymousObservable = (function (_super) {
+    var AnonymousObservable = Rx.AnonymousObservable = (function (_super) {
         inherits(AnonymousObservable, _super);
 
         // Fix subscriber to check for undefined or function returned to decorate as Disposable

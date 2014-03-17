@@ -2,7 +2,7 @@
      * Abstract base class for implementations of the Observer class.
      * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages. 
      */
-    var AbstractObserver = Rx.Internals.AbstractObserver = (function (_super) {
+    var AbstractObserver = Rx.internals.AbstractObserver = (function (_super) {
         inherits(AbstractObserver, _super);
 
         /**

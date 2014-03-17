@@ -7,14 +7,14 @@
     var hasProp = {}.hasOwnProperty;
 
     /** @private */
-    var inherits = this.inherits = Rx.Internals.inherits = function (child, parent) {
+    var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
         function __() { this.constructor = child; }
         __.prototype = parent.prototype;
         child.prototype = new __();
     };
 
     /** @private */    
-    var addProperties = Rx.Internals.addProperties = function (obj) {
+    var addProperties = Rx.internals.addProperties = function (obj) {
         var sources = slice.call(arguments, 1);
         for (var i = 0, len = sources.length; i < len; i++) {
             var source = sources[i];
@@ -25,7 +25,7 @@
     };
 
     // Rx Utils
-    var addRef = Rx.Internals.addRef = function (xs, r) {
+    var addRef = Rx.internals.addRef = function (xs, r) {
         return new AnonymousObservable(function (observer) {
             return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
         });

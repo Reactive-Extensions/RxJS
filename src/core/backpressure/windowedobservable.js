@@ -56,6 +56,7 @@
         if (this.received === 0) {
           var self = this;
           self.scheduler.schedule(function () {
+            console.log('requested size', self.observable.windowSize);
             self.observable.source.request(self.observable.windowSize);
           });
         }

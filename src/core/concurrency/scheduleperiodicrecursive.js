@@ -1,4 +1,4 @@
-    var SchedulePeriodicRecursive = Rx.Internals.SchedulePeriodicRecursive = (function () {
+    var SchedulePeriodicRecursive = Rx.internals.SchedulePeriodicRecursive = (function () {
         function tick(command, recurse) {
             recurse(0, this._period);
             try {
