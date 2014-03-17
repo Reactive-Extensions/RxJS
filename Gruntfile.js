@@ -1010,6 +1010,10 @@ var browsers = [{
         createNuGetPackage.call(this, 'nuget/RxJS-Async/RxJS-Async.nuspec');
     });
 
+    grunt.registerTask('nuget-backpressure', 'Register NuGet-BackPressure', function () {
+        createNuGetPackage.call(this, 'nuget/RxJS-BackPressure/RxJS-BackPressure.nuspec');
+    });    
+
     grunt.registerTask('nuget-binding', 'Register NuGet-Binding', function () {
         createNuGetPackage.call(this, 'nuget/RxJS-Binding/RxJS-Binding.nuspec');
     });
@@ -1050,6 +1054,7 @@ var browsers = [{
         'nuget-aggregates',
         'nuget-all',
         'nuget-async',
+        'nuget-backpressure',
         'nuget-binding',
         'nuget-coincidence',
         'nuget-experimental',
