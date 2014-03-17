@@ -1,11 +1,59 @@
 QUnit.module('ConcatProto');
 
 var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  TestScheduler = Rx.TestScheduler,
+  onNext = Rx.ReactiveTest.onNext,
+  onError = Rx.ReactiveTest.onError,
+  onCompleted = Rx.ReactiveTest.onCompleted,
+  subscribe = Rx.ReactiveTest.subscribe,
+  isEqual = Rx.internals.isEqual;
+
+asyncTest('ConcatAll_Task', function () {
+  var sources = Rx.Observable.fromArray([
+    new RSVP.Promise(function (res) { res(0); }),
+    new RSVP.Promise(function (res) { res(1); }),
+    new RSVP.Promise(function (res) { res(2); }),
+    new RSVP.Promise(function (res) { res(3); }), 
+  ]);
+
+  var res = [];
+  sources.concatAll().subscribe(
+    function (x) {
+      res.push(x);
+    },
+    function (err) {
+      ok(false);
+      start();
+    }, 
+    function () {
+      ok(isEqual([0,1,2,3], res));
+      start();
+    });
+});
+
+asyncTest('ConcatAll_Task_Error', function () {
+  var sources = Rx.Observable.fromArray([
+    new RSVP.Promise(function (res) { res(0); }),
+    new RSVP.Promise(function (res, rej) { rej(1); }),
+    new RSVP.Promise(function (res) { res(2); }),
+    new RSVP.Promise(function (res) { res(3); }), 
+  ]);
+
+  var res = [];
+  sources.concatAll().subscribe(
+    function (x) {
+      res.push(x);
+    },
+    function (err) {
+      ok(res.length === 1);
+      equal(1, err);
+      start();
+    }, 
+    function () {
+      ok(false);
+      start();
+    });
+});
 
 test('Concat_EmptyEmpty', function () {
     var e1, e2, msgs1, msgs2, results, scheduler;
@@ -201,13 +249,3 @@ test('Concat_SomeDataSomeData', function () {
     results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250));
 });
 
-test('MergeConcat_Basic', function () {
-    var results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(210, scheduler.createColdObservable(onNext(50, 1), onNext(100, 2), onNext(120, 3), onCompleted(140))), onNext(260, scheduler.createColdObservable(onNext(20, 4), onNext(70, 5), onCompleted(200))), onNext(270, scheduler.createColdObservable(onNext(10, 6), onNext(90, 7), onNext(110, 8), onCompleted(130))), onNext(320, scheduler.createColdObservable(onNext(210, 9), onNext(240, 10), onCompleted(300))), onCompleted(400));
-    results = scheduler.startWithCreate(function () {
-        return xs.merge(2);
-    });
-    results.messages.assertEqual(onNext(260, 1), onNext(280, 4), onNext(310, 2), onNext(330, 3), onNext(330, 5), onNext(360, 6), onNext(440, 7), onNext(460, 8), onNext(670, 9), onNext(700, 10), onCompleted(760));
-    xs.subscriptions.assertEqual(subscribe(200, 760));
-});

@@ -3,7 +3,7 @@
    * @param {Promise} An ES6 Compliant promise.
    * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
    */
-  var observablefromPromise = Observable.fromPromise = function (promise) {
+  var observableFromPromise = Observable.fromPromise = function (promise) {
     return new AnonymousObservable(function (observer) {
       promise.then(
         function (value) {

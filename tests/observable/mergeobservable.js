@@ -5,7 +5,57 @@ var Observable = Rx.Observable,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+    subscribe = Rx.ReactiveTest.subscribe,
+    isEqual = Rx.internals.isEqual;
+
+  isEqual = Rx.internals.isEqual;
+
+asyncTest('MergeAll_Task', function () {
+  var sources = Rx.Observable.fromArray([
+    new RSVP.Promise(function (res) { res(0); }),
+    new RSVP.Promise(function (res) { res(1); }),
+    new RSVP.Promise(function (res) { res(2); }),
+    new RSVP.Promise(function (res) { res(3); }), 
+  ]);
+
+  var res = [];
+  sources.mergeAll().subscribe(
+    function (x) {
+      res.push(x);
+    },
+    function (err) {
+      ok(false);
+      start();
+    }, 
+    function () {
+      ok(isEqual([0,1,2,3], res));
+      start();
+    });
+});
+
+asyncTest('MergeAll_Task_Error', function () {
+  var sources = Rx.Observable.fromArray([
+    new RSVP.Promise(function (res) { res(0); }),
+    new RSVP.Promise(function (res, rej) { rej(1); }),
+    new RSVP.Promise(function (res) { res(2); }),
+    new RSVP.Promise(function (res) { res(3); }), 
+  ]);
+
+  var res = [];
+  sources.mergeAll().subscribe(
+    function (x) {
+      res.push(x);
+    },
+    function (err) {
+      ok(res.length === 1);
+      equal(1, err);
+      start();
+    }, 
+    function () {
+      ok(false);
+      start();
+    });
+});
 
 test('Merge_ObservableOfObservable_Data', function () {
     var scheduler = new TestScheduler();

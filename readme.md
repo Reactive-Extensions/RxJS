@@ -134,7 +134,7 @@ var distinct = throttled
     .distinctUntilChanged();
 ```
 
-Now, let's query Wikipedia!  We'll use the new Promise bindings which will bind to any [Promises A+](https://github.com/promises-aplus/promises-spec) implementation through the `Rx.Observable.fromPromise` method.
+Now, let's query Wikipedia!  In RxJS, we can instantly bind to any [Promises A+](https://github.com/promises-aplus/promises-spec) implementation through the `Rx.Observable.fromPromise` method or by just directly returning it, and we wrap it for you.
 
 ```js
 function searchWikipedia (term) {
@@ -147,7 +147,6 @@ function searchWikipedia (term) {
             search: encodeURI(term)
         }
     }).promise();
-    return Rx.Observable.fromPromise(promise);
 }
 ```
 
@@ -229,7 +228,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 
 ## Getting Started
 
-There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
+There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/libraries/rxjs/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
 
 ### Download the Source
 

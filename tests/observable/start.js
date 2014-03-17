@@ -1,11 +1,37 @@
-QUnit.module('Start');
-
 var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
+
+function noop() {}
+
+QUnit.module('StartAsync');
+
+asyncTest('StartAsync', function () {
+  var source = Rx.Observable.startAsync(function () {
+    return new RSVP.Promise(function (res) { res(42); })
+  });
+
+  source.subscribe(function (x) {
+    equal(42, x);
+    start();
+  });
+});
+
+asyncTest('StartAsync_Error', function () {
+  var source = Rx.Observable.startAsync(function () {
+    return new RSVP.Promise(function (res, rej) { rej(42); })
+  });
+
+  source.subscribe(noop, function (err) {
+    equal(42, err);
+    start();
+  });
+});
+
+QUnit.module('Start');
 
 test('Start_Action2', function () {
     var scheduler = new TestScheduler();

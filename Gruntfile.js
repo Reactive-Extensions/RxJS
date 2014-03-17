@@ -81,6 +81,10 @@ var browsers = [{
                     'src/core/linq/observable/observeon.js', // ObserveOnObserver
                     'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
 
+                    // Async
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/topromise.js',                    
+
                     'src/core/linq/observable/create.js',
                     'src/core/linq/observable/defer.js',
                     'src/core/linq/observable/empty.js',
@@ -197,6 +201,10 @@ var browsers = [{
                     // Concurrency
                     'src/core/linq/observable/observeon.js', // ObserveOnObserver
                     'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
+
+                    // Async
+                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+                    'src/core/linq/observable/topromise.js',    
 
                     // Creation
                     'src/core/linq/observable/create.js',
@@ -663,8 +671,6 @@ var browsers = [{
                     'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/fromevent.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
-                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-                    'src/core/linq/observable/topromise.js',
                     'src/core/linq/observable/startasync.js',
                     'src/core/suboutro.js'
                 ],
@@ -681,8 +687,6 @@ var browsers = [{
                     'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
                     'src/core/linq/observable/fromevent-modern.js', // publish
                     'src/core/linq/observable/fromeventpattern.js', // publish
-                    'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-                    'src/core/linq/observable/topromise.js',
                     'src/core/linq/observable/startasync.js',
                     'src/core/suboutro.js'
                 ],

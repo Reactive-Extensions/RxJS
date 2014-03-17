@@ -3136,7 +3136,7 @@
     function selectMany(selector) {
       return this.select(function (x, i) {
         var result = selector(x, i);
-        return isPromise(result) ? observablefromPromise(result) : result;
+        return isPromise(result) ? observableFromPromise(result) : result;
       }).mergeObservable();
     }
 
@@ -3163,7 +3163,7 @@
       if (resultSelector) {
           return this.selectMany(function (x, i) {
             var selectorResult = selector(x, i),
-              result = isPromise(selectorResult) ? observablefromPromise(selectorResult) : selectorResult;
+              result = isPromise(selectorResult) ? observableFromPromise(selectorResult) : selectorResult;
 
             return result.select(function (y) {
               return resultSelector(x, y, i);
@@ -3594,7 +3594,7 @@
    * @param {Promise} An ES6 Compliant promise.
    * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
    */
-  var observablefromPromise = Observable.fromPromise = function (promise) {
+  var observableFromPromise = Observable.fromPromise = function (promise) {
     return new AnonymousObservable(function (observer) {
       promise.then(
         function (value) {

@@ -1,7 +1,7 @@
     function selectMany(selector) {
       return this.select(function (x, i) {
         var result = selector(x, i);
-        return isPromise(result) ? observablefromPromise(result) : result;
+        return isPromise(result) ? observableFromPromise(result) : result;
       }).mergeObservable();
     }
 
@@ -28,7 +28,7 @@
       if (resultSelector) {
           return this.selectMany(function (x, i) {
             var selectorResult = selector(x, i),
-              result = isPromise(selectorResult) ? observablefromPromise(selectorResult) : selectorResult;
+              result = isPromise(selectorResult) ? observableFromPromise(selectorResult) : selectorResult;
 
             return result.select(function (y) {
               return resultSelector(x, y, i);

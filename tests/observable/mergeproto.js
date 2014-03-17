@@ -1,3 +1,14 @@
+test('MergeConcat_Basic', function () {
+    var results, scheduler, xs;
+    scheduler = new TestScheduler();
+    xs = scheduler.createHotObservable(onNext(210, scheduler.createColdObservable(onNext(50, 1), onNext(100, 2), onNext(120, 3), onCompleted(140))), onNext(260, scheduler.createColdObservable(onNext(20, 4), onNext(70, 5), onCompleted(200))), onNext(270, scheduler.createColdObservable(onNext(10, 6), onNext(90, 7), onNext(110, 8), onCompleted(130))), onNext(320, scheduler.createColdObservable(onNext(210, 9), onNext(240, 10), onCompleted(300))), onCompleted(400));
+    results = scheduler.startWithCreate(function () {
+        return xs.merge(2);
+    });
+    results.messages.assertEqual(onNext(260, 1), onNext(280, 4), onNext(310, 2), onNext(330, 3), onNext(330, 5), onNext(360, 6), onNext(440, 7), onNext(460, 8), onNext(670, 9), onNext(700, 10), onCompleted(760));
+    xs.subscriptions.assertEqual(subscribe(200, 760));
+});
+
 test('MergeConcat_Basic_Long', function () {
     var results, scheduler, xs;
     scheduler = new TestScheduler();
