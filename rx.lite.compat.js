@@ -2103,13 +2103,20 @@
       }
 
       return scheduler.scheduleRecursive(function (self) {
-        var next = iterator.next();
+        var next;
+        try {
+          next = iterator.next();
+        } catch (err) {
+          observer.onError(err);
+          return;
+        }
+
         if (next.done) {
           observer.onCompleted();
         } else {
           observer.onNext(next.value);
           self();
-          }
+        }
       });
     });
   };

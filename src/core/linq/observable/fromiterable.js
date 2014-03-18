@@ -2,8 +2,8 @@
    *  Converts an iterable into an Observable sequence
    *  
    * @example
-   *  var res = Rx.Observable.fromGenerator(new Map());
-   *  var res = Rx.Observable.fromArray(new Set(), Rx.Scheduler.timeout);
+   *  var res = Rx.Observable.fromIterable(new Map());
+   *  var res = Rx.Observable.fromIterable(new Set(), Rx.Scheduler.timeout);
    * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
    * @returns {Observable} The observable sequence whose elements are pulled from the given generator sequence.
    */
@@ -19,7 +19,14 @@
       }
 
       return scheduler.scheduleRecursive(function (self) {
-        var next = iterator.next();
+        var next;
+        try {
+          next = iterator.next();
+        } catch (err) {
+          observer.onError(err);
+          return;
+        }
+
         if (next.done) {
           observer.onCompleted();
         } else {

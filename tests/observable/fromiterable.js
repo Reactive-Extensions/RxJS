@@ -110,3 +110,93 @@ test('fromIterable empty', function () {
   );  
 });
 
+function InfiniteIterable() { }
+InfiniteIterable.prototype[$iterator$] = function () {
+  return new InfiniteIterator();
+};
+
+function InfiniteIterator() {
+  this.index = 0;
+}
+
+InfiniteIterator.prototype.next = function () {
+  return { done: false, value: this.index++ };
+};
+
+addIterator(ThrowableIterator.prototype);
+
+test('fromIterable infinite', function () {
+  var iterable = new InfiniteIterable();
+  
+  var scheduler = new TestScheduler();
+  
+  var results = scheduler.startWithCreate(function () {
+    return Observable.fromIterable(iterable, scheduler).take(5);
+  });
+
+  results.messages.assertEqual(
+    onNext(201, 1),
+    onNext(202, 2),
+    onNext(203, 3),
+    onNext(204, 4),
+    onNext(205, 5),
+    onCompleted(205)
+  );  
+});
+
+
+function ThrowableIterable(err) {
+  this.err = err;
+}
+
+ThrowableIterable.prototype[$iterator$] = function () {
+  throw this.err;
+};
+
+test('fromIterable iterator throws', function () {
+  var err = new Error();
+  var iterable = new ThrowableIterable(err);
+  
+  var scheduler = new TestScheduler();
+  
+  var results = scheduler.startWithCreate(function () {
+    return Observable.fromIterable(iterable, scheduler);
+  });
+
+  results.messages.assertEqual(
+    onError(200, err)
+  ); 
+});
+
+function ThrowableIteratorHost(err) {
+  this.err = err;
+}
+
+ThrowableIteratorHost.prototype[$iterator$] = function () {
+  return new ThrowableIterator(this.err);
+};
+
+function ThrowableIterator(err) {
+  this.err = err;
+}
+
+ThrowableIterator.prototype.next = function () {
+  throw this.err;
+};
+
+addIterator(ThrowableIterator.prototype);
+
+test('fromIterable next throws', function () {
+  var err = new Error();
+  var iterable = new ThrowableIteratorHost(err);
+  
+  var scheduler = new TestScheduler();
+  
+  var results = scheduler.startWithCreate(function () {
+    return Observable.fromIterable(iterable, scheduler);
+  });
+
+  results.messages.assertEqual(
+    onError(201, err)
+  ); 
+});
