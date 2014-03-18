@@ -49,6 +49,8 @@ var browsers = [{
                     'src/core/license.js',
                     'src/core/intro.js',
                     'src/core/basicheader.js',
+                    'src/core/enumeratorheader.js',
+
                     'src/core/internal/isequal.js',
                     'src/core/internal/util.js',
                     'src/core/internal/polyfills.js',
@@ -170,6 +172,8 @@ var browsers = [{
                     'src/core/license.js',
                     'src/core/intro.js',
                     'src/core/basicheader-modern.js',
+                    'src/core/enumeratorheader.js',
+
                     'src/core/internal/isequal.js',
                     'src/core/internal/util.js',
                     'src/core/internal/priorityqueue.js',
@@ -292,6 +296,7 @@ var browsers = [{
                     'src/core/license.js',
                     'src/core/intro.js',
                     'src/core/liteheader.js',
+                    'src/core/enumeratorheader.js',
 
                     'src/core/internal/isequal.js',
                     'src/core/internal/util.js',
@@ -448,6 +453,7 @@ var browsers = [{
                     'src/core/license.js',
                     'src/core/intro.js',
                     'src/core/liteheader-compat.js',
+                    'src/core/enumeratorheader.js',
 
                     'src/core/internal/isequal.js',
                     'src/core/internal/util.js',
@@ -732,6 +738,7 @@ var browsers = [{
                     'src/core/license.js',
                     'src/core/subintro.js',
                     'src/core/experimentalheader.js',
+                    'src/core/enumeratorheader.js',
                     'src/core/linq/enumerable/while.js', // Enumerable
                     'src/core/linq/observable/let.js',
                     'src/core/linq/observable/if.js', // defer, empty

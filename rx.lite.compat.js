@@ -23,36 +23,33 @@
 
     var Rx = { internals: {}, config: {} };
     
-    // Defaults
-    function noop() { }
-    function identity(x) { return x; }
-    var defaultNow = (function () { return !!Date.now ? Date.now : function () { return +new Date; }; }());
-    function defaultComparer(x, y) { return isEqual(x, y); }
-    function defaultSubComparer(x, y) { return x - y; }
-    function defaultKeySerializer(x) { return x.toString(); }
-    function defaultError(err) { throw err; }
-    function isPromise(p) { return typeof p.then === 'function'; }
+  // Defaults
+  function noop() { }
+  function identity(x) { return x; }
+  var defaultNow = (function () { return !!Date.now ? Date.now : function () { return +new Date; }; }());
+  function defaultComparer(x, y) { return isEqual(x, y); }
+  function defaultSubComparer(x, y) { return x - y; }
+  function defaultKeySerializer(x) { return x.toString(); }
+  function defaultError(err) { throw err; }
+  function isPromise(p) { return typeof p.then === 'function' && typeof p.subscribe === 'undefined'; }
 
-    // Errors
-    var sequenceContainsNoElements = 'Sequence contains no elements.';
-    var argumentOutOfRange = 'Argument out of range';
-    var objectDisposed = 'Object has been disposed';
-    function checkDisposed() {
-        if (this.isDisposed) {
-            throw new Error(objectDisposed);
-        }
-    }
+  // Errors
+  var sequenceContainsNoElements = 'Sequence contains no elements.';
+  var argumentOutOfRange = 'Argument out of range';
+  var objectDisposed = 'Object has been disposed';
+  function checkDisposed() { if (this.isDisposed) { throw new Error(objectDisposed); } }
+  
+  // Shim in iterator support
+  var $iterator$ = (typeof Symbol === 'object' && Symbol.iterator) ||
+    '_es6shim_iterator_';
+  // Firefox ships a partial implementation using the name @@iterator.
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
+  // So use that name if we detect it.
+  if (root.Set && typeof new root.Set()['@@iterator'] === 'function') {
+    $iterator$ = '@@iterator';
+  }
+  var doneEnumerator = { done: true, value: undefined };
 
-    // Shim in iterator support
-    var $iterator$ = (typeof Symbol === 'object' && Symbol.iterator) ||
-      '_es6shim_iterator_';
-    // Firefox ships a partial implementation using the name @@iterator.
-    // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
-    // So use that name if we detect it.
-    if (window.Set && typeof new window.Set()['@@iterator'] === 'function') {
-      $iterator$ = '@@iterator';
-    }     
-    
   /** `Object#toString` result shortcuts */
   var argsClass = '[object Arguments]',
     arrayClass = '[object Array]',
@@ -1529,155 +1526,143 @@
         };
     }());
 
-    /** 
-     * @constructor
-     * @private
-     */
-    var Enumerator = Rx.internals.Enumerator = function (moveNext, getCurrent) {
-        this.moveNext = moveNext;
-        this.getCurrent = getCurrent;
-    };
+  var Enumerator = Rx.internals.Enumerator = function (next) {
+    this._next = next;
+  };
 
-    /**
-     * @static
-     * @memberOf Enumerator
-     * @private
-     */
-    var enumeratorCreate = Enumerator.create = function (moveNext, getCurrent) {
-        var done = false;
-        return new Enumerator(function () {
-            if (done) {
-                return false;
-            }
-            var result = moveNext();
-            if (!result) {
-                done = true;
-            }
-            return result;
-        }, function () { return getCurrent(); });
-    };
-    
-    var Enumerable = Rx.internals.Enumerable = function (getEnumerator) {
-        this.getEnumerator = getEnumerator;
-    };
+  Enumerator.prototype.next = function () {
+    return this._next();
+  };
 
-    Enumerable.prototype.concat = function () {
-        var sources = this;
-        return new AnonymousObservable(function (observer) {
-            var e = sources.getEnumerator(), isDisposed, subscription = new SerialDisposable();
-            var cancelable = immediateScheduler.scheduleRecursive(function (self) {
-                var current, hasNext;
-                if (isDisposed) { return; }
+  Enumerator.prototype[$iterator$] = function () { return this; }
 
-                try {
-                    hasNext = e.moveNext();
-                    if (hasNext) {
-                        current = e.getCurrent();
-                    } 
-                } catch (ex) {
-                    observer.onError(ex);
-                    return;
-                }
+  var Enumerable = Rx.internals.Enumerable = function (iterator) {
+      this._iterator = iterator;
+  };
 
-                if (!hasNext) {
-                    observer.onCompleted();
-                    return;
-                }
+  Enumerable.prototype[$iterator$] = function () {
+      return this._iterator();
+  };
 
-                var d = new SingleAssignmentDisposable();
-                subscription.setDisposable(d);
-                d.setDisposable(current.subscribe(
-                    observer.onNext.bind(observer),
-                    observer.onError.bind(observer),
-                    function () { self(); })
-                );
-            });
-            return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
-                isDisposed = true;
-            }));
-        });
-    };
-
-    Enumerable.prototype.catchException = function () {
-        var sources = this;
-        return new AnonymousObservable(function (observer) {
-            var e = sources.getEnumerator(), isDisposed, lastException;
-            var subscription = new SerialDisposable();
-            var cancelable = immediateScheduler.scheduleRecursive(function (self) {
-                var current, hasNext;
-                if (isDisposed) { return; }
-
-                try {
-                    hasNext = e.moveNext();
-                    if (hasNext) {
-                        current = e.getCurrent();
-                    } 
-                } catch (ex) {
-                    observer.onError(ex);
-                    return;
-                }
-
-                if (!hasNext) {
-                    if (lastException) {
-                        observer.onError(lastException);
-                    } else {
-                        observer.onCompleted();
-                    }
-                    return;
-                }
-
-                var d = new SingleAssignmentDisposable();
-                subscription.setDisposable(d);
-                d.setDisposable(current.subscribe(
-                    observer.onNext.bind(observer),
-                    function (exn) {
-                        lastException = exn;
-                        self();
-                    },
-                    observer.onCompleted.bind(observer)));
-            });
-            return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
-                isDisposed = true;
-            }));
-        });
-    };
-
-
-    var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
-        if (arguments.length === 1) {
-            repeatCount = -1;
+  Enumerable.prototype.concat = function () {
+      var sources = this;
+      return new AnonymousObservable(function (observer) {
+        var e;
+        try {
+          e = sources[$iterator$]();
+        } catch(err) {
+          observer.onError();
+          return;
         }
-        return new Enumerable(function () {
-            var current, left = repeatCount;
-            return enumeratorCreate(function () {
-                if (left === 0) {
-                    return false;
-                }
-                if (left > 0) {
-                    left--;
-                }
-                current = value;
-                return true;
-            }, function () { return current; });
-        });
-    };
 
-    var enumerableFor = Enumerable.forEach = function (source, selector, thisArg) {
-        selector || (selector = identity);
-        return new Enumerable(function () {
-            var current, index = -1;
-            return enumeratorCreate(
-                function () {
-                    if (++index < source.length) {
-                        current = selector.call(thisArg, source[index], index, source);
-                        return true;
-                    }
-                    return false;
-                },
-                function () { return current; }
-            );
+        var isDisposed, 
+          subscription = new SerialDisposable();
+        var cancelable = immediateScheduler.scheduleRecursive(function (self) {
+          var currentItem;
+          if (isDisposed) { return; }
+
+          try {
+            currentItem = e.next();
+          } catch (ex) {
+            observer.onError(ex);
+            return;
+          }
+
+          if (currentItem.done) {
+            observer.onCompleted();
+            return;
+          }
+
+          var d = new SingleAssignmentDisposable();
+          subscription.setDisposable(d);
+          d.setDisposable(currentItem.value.subscribe(
+            observer.onNext.bind(observer),
+            observer.onError.bind(observer),
+            function () { self(); })
+          );
         });
-    };
+
+        return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
+          isDisposed = true;
+        }));
+      });
+  };
+
+  Enumerable.prototype.catchException = function () {
+    var sources = this;
+    return new AnonymousObservable(function (observer) {
+      var e;
+      try {
+        e = sources[$iterator$]();
+      } catch(err) {
+        observer.onError();
+        return;
+      }
+
+      var isDisposed, 
+        lastException,
+        subscription = new SerialDisposable();
+      var cancelable = immediateScheduler.scheduleRecursive(function (self) {
+        if (isDisposed) { return; }
+
+        var currentItem;
+        try {
+          currentItem = e.next();
+        } catch (ex) {
+          observer.onError(ex);
+          return;
+        }
+
+        if (currentItem.done) {
+          if (lastException) {
+            observer.onError(lastException);
+          } else {
+            observer.onCompleted();
+          }
+          return;
+        }
+
+        var d = new SingleAssignmentDisposable();
+        subscription.setDisposable(d);
+        d.setDisposable(currentItem.value.subscribe(
+          observer.onNext.bind(observer),
+          function (exn) {
+            lastException = exn;
+            self();
+          },
+          observer.onCompleted.bind(observer)));
+      });
+      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
+        isDisposed = true;
+      }));
+    });
+  };
+
+
+  var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
+    if (repeatCount == null) { repeatCount = -1; }
+    return new Enumerable(function () {
+      var left = repeatCount;
+      return new Enumerator(function () {
+        if (left === 0) { return doneEnumerator; }
+        if (left > 0) { left--; }
+        return { done: false, value: value };
+      });
+    });
+  };
+
+  var enumerableFor = Enumerable.forEach = function (source, selector, thisArg) {
+    selector || (selector = identity);
+    return new Enumerable(function () {
+      var index = -1;
+      return new Enumerator(
+        function () {
+          return ++index < source.length ?
+            { done: false, value: selector.call(thisArg, source[index], index, source) } :
+            doneEnumerator;
+        });
+    });
+  };
 
     /**
      * Supports push-style iteration over an observable sequence.
@@ -2086,8 +2071,8 @@
    *  Converts an iterable into an Observable sequence
    *  
    * @example
-   *  var res = Rx.Observable.fromGenerator(new Map());
-   *  var res = Rx.Observable.fromArray(new Set(), Rx.Scheduler.timeout);
+   *  var res = Rx.Observable.fromIterable(new Map());
+   *  var res = Rx.Observable.fromIterable(new Set(), Rx.Scheduler.timeout);
    * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
    * @returns {Observable} The observable sequence whose elements are pulled from the given generator sequence.
    */

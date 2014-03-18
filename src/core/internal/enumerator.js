@@ -1,28 +1,9 @@
-    /** 
-     * @constructor
-     * @private
-     */
-    var Enumerator = Rx.internals.Enumerator = function (moveNext, getCurrent) {
-        this.moveNext = moveNext;
-        this.getCurrent = getCurrent;
-    };
+  var Enumerator = Rx.internals.Enumerator = function (next) {
+    this._next = next;
+  };
 
-    /**
-     * @static
-     * @memberOf Enumerator
-     * @private
-     */
-    var enumeratorCreate = Enumerator.create = function (moveNext, getCurrent) {
-        var done = false;
-        return new Enumerator(function () {
-            if (done) {
-                return false;
-            }
-            var result = moveNext();
-            if (!result) {
-                done = true;
-            }
-            return result;
-        }, function () { return getCurrent(); });
-    };
-    
+  Enumerator.prototype.next = function () {
+    return this._next();
+  };
+
+  Enumerator.prototype[$iterator$] = function () { return this; }

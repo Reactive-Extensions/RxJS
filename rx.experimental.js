@@ -33,48 +33,56 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
     
-    // Aliases
-    var Observable = Rx.Observable,
-        observableProto = Observable.prototype,
-        AnonymousObservable = Rx.AnonymousObservable,
-        observableConcat = Observable.concat,
-        observableDefer = Observable.defer,
-        observableEmpty = Observable.empty,
-        disposableEmpty = Rx.Disposable.empty,
-        CompositeDisposable = Rx.CompositeDisposable,
-        SerialDisposable = Rx.SerialDisposable,
-        SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
-        enumeratorCreate = Rx.internals.Enumerator.create,
-        Enumerable = Rx.internals.Enumerable,
-        enumerableForEach = Enumerable.forEach,
-        immediateScheduler = Rx.Scheduler.immediate,
-        currentThreadScheduler = Rx.Scheduler.currentThread,
-        slice = Array.prototype.slice,
-        AsyncSubject = Rx.AsyncSubject,
-        Observer = Rx.Observer,
-        inherits = Rx.internals.inherits,
-        addProperties = Rx.internals.addProperties;
+  // Aliases
+  var Observable = Rx.Observable,
+    observableProto = Observable.prototype,
+    AnonymousObservable = Rx.AnonymousObservable,
+    observableConcat = Observable.concat,
+    observableDefer = Observable.defer,
+    observableEmpty = Observable.empty,
+    disposableEmpty = Rx.Disposable.empty,
+    CompositeDisposable = Rx.CompositeDisposable,
+    SerialDisposable = Rx.SerialDisposable,
+    SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
+    Enumerator = Rx.internals.Enumerator,
+    Enumerable = Rx.internals.Enumerable,
+    enumerableForEach = Enumerable.forEach,
+    immediateScheduler = Rx.Scheduler.immediate,
+    currentThreadScheduler = Rx.Scheduler.currentThread,
+    slice = Array.prototype.slice,
+    AsyncSubject = Rx.AsyncSubject,
+    Observer = Rx.Observer,
+    inherits = Rx.internals.inherits,
+    addProperties = Rx.internals.addProperties;
 
-    // Utilities
-    function nothing () { }
-    function argsOrArray(args, idx) {
-        return args.length === 1 && Array.isArray(args[idx]) ?
-            args[idx] :
-            slice.call(args);
-    }
+  // Utilities
+  function nothing () { }
+  function argsOrArray(args, idx) {
+    return args.length === 1 && Array.isArray(args[idx]) ?
+      args[idx] :
+      slice.call(args);
+  }
 
-   function enumerableWhile(condition, source) {
-        return new Enumerable(function () {
-            var current;
-            return enumeratorCreate(function () {
-                if (condition()) {
-                    current = source;
-                    return true;
-                }
-                return false;
-            }, function () { return current; });
-        });
-    }
+  // Shim in iterator support
+  var $iterator$ = (typeof Symbol === 'object' && Symbol.iterator) ||
+    '_es6shim_iterator_';
+  // Firefox ships a partial implementation using the name @@iterator.
+  // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
+  // So use that name if we detect it.
+  if (root.Set && typeof new root.Set()['@@iterator'] === 'function') {
+    $iterator$ = '@@iterator';
+  }
+  var doneEnumerator = { done: true, value: undefined };
+
+  function enumerableWhile(condition, source) {
+    return new Enumerable(function () {
+      return new Enumerator(function () {
+        return condition() ?
+          { done: false, value: source } :
+          { done: true, value: undefined };  
+      });
+    });
+  }
 
      /**
      *  Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.

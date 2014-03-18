@@ -1,12 +1,13 @@
 {
   "name": "rxjs",
-  "version": "2.2.15",
+  "version": "2.2.16",
   "main": [
     "rx.js",
     "rx.compat.js",    
     "rx.aggregates.js",
     "rx.async.js",
     "rx.async.compat.js",    
+    "rx.backpressure.js",
     "rx.binding.js",
     "rx.coincidence.js",
     "rx.experimental.js",

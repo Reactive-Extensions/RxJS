@@ -1,12 +1,9 @@
-   function enumerableWhile(condition, source) {
-        return new Enumerable(function () {
-            var current;
-            return enumeratorCreate(function () {
-                if (condition()) {
-                    current = source;
-                    return true;
-                }
-                return false;
-            }, function () { return current; });
-        });
-    }
+  function enumerableWhile(condition, source) {
+    return new Enumerable(function () {
+      return new Enumerator(function () {
+        return condition() ?
+          { done: false, value: source } :
+          { done: true, value: undefined };  
+      });
+    });
+  }
