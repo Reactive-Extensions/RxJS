@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package>
   <metadata>
-    <id>RxJS-Async</id>
+    <id>RxJS-BackPressure</id>
     <title>Reactive Extensions for JavaScript - BackPressure-Based Operations</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
     <version>2.2.7</version>

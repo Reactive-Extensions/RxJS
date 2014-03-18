@@ -423,11 +423,11 @@ var browsers = [{
                     // Backpressure operators
                     'src/core/backpressure/pausable.js',
                     'src/core/backpressure/pausablebuffered.js',
-/*                    'src/core/backpressure/controlled.js',
+                    'src/core/backpressure/controlled.js',
                     'src/core/backpressure/controlledobservable.js',
                     'src/core/backpressure/controlledsubject.js',
-                    'src/core/backpressure/windowed.js',
-                    'src/core/backpressure/windowedobservable.js',*/
+                    //'src/core/backpressure/windowed.js',
+                    //'src/core/backpressure/windowedobservable.js',
 
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
@@ -581,11 +581,11 @@ var browsers = [{
                     // Backpressure operators
                     'src/core/backpressure/pausable.js',
                     'src/core/backpressure/pausablebuffered.js',
-/*                    'src/core/backpressure/controlled.js',
+                    'src/core/backpressure/controlled.js',
                     'src/core/backpressure/controlledobservable.js',
                     'src/core/backpressure/controlledsubject.js',
-                    'src/core/backpressure/windowed.js',
-                    'src/core/backpressure/windowedobservable.js',*/
+                    //'src/core/backpressure/windowed.js',
+                    //'src/core/backpressure/windowedobservable.js',
 
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
@@ -610,11 +610,11 @@ var browsers = [{
                     // Backpressure operators
                     'src/core/backpressure/pausable.js',
                     'src/core/backpressure/pausablebuffered.js',
-/*                    'src/core/backpressure/controlled.js',
+                    'src/core/backpressure/controlled.js',
                     'src/core/backpressure/controlledobservable.js',
                     'src/core/backpressure/controlledsubject.js',
-                    'src/core/backpressure/windowed.js',
-                    'src/core/backpressure/windowedobservable.js',*/
+                    //'src/core/backpressure/windowed.js',
+                    //'src/core/backpressure/windowedobservable.js',
 
                     'src/core/suboutro.js'                    
                 ],

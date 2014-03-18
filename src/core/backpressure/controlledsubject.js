@@ -29,7 +29,7 @@
                 this.hasCompleted = true;
 
                 if (!this.enableQueue || this.queue.length === 0) {
-                    this.onCompleted();
+                    this.subject.onCompleted();
                 }
             },
             onError: function (error) {
@@ -38,7 +38,7 @@
                 this.error = error;
 
                 if (!this.enableQueue || this.queue.length === 0) {
-                    this.onError(error);
+                    this.subject.onError(error);
                 }   
             },
             onNext: function (value) {
@@ -64,10 +64,10 @@
             },
             _processRequest: function (numberOfItems) {
                 if (this.enableQueue) {
-                    console.log('queue length', this.queue.length);
+                    //console.log('queue length', this.queue.length);
 
                     while (this.queue.length >= numberOfItems && numberOfItems > 0) {
-                        console.log('number of items', numberOfItems);
+                        //console.log('number of items', numberOfItems);
                         this.subject.onNext(this.queue.shift());
                         numberOfItems--;
                     }

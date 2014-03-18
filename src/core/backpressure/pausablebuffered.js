@@ -1,3 +1,47 @@
+  function combineLatestSource(source, subject, resultSelector) {
+    return new AnonymousObservable(function (observer) {
+      var n = 2,
+        hasValue = [false, false],
+        hasValueAll = false,
+        isDone = false,
+        values = new Array(n);
+
+      function next(x, i) {
+        values[i] = x
+        var res;
+        hasValue[i] = true;
+        if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
+            try {
+                res = resultSelector.apply(null, values);
+            } catch (ex) {
+                observer.onError(ex);
+                return;
+            }
+            observer.onNext(res);
+        } else if (isDone) {
+            observer.onCompleted();
+        }
+      }
+
+      return new CompositeDisposable(
+        source.subscribe(
+          function (x) {
+            next(x, 0);
+          },
+          observer.onError.bind(observer),
+          function () {
+            isDone = true;
+            observer.onCompleted();
+          }),
+        subject.subscribe(
+          function (x) {
+            next(x, 1);
+          },
+          observer.onError.bind(observer))
+        );
+    });
+  }
+
   /**
    * Pauses the underlying observable sequence based upon the observable sequence which yields true/false,
    * and yields the values that were buffered while paused.
@@ -13,7 +57,8 @@
       var q = [], previous = true;
       
       var subscription =  
-        source.combineLatest(
+        combineLatestSource(
+          source,
           subject.distinctUntilChanged(), 
           function (data, shouldFire) {
             return { data: data, shouldFire: shouldFire };      
