@@ -31,7 +31,7 @@
   function defaultSubComparer(x, y) { return x - y; }
   function defaultKeySerializer(x) { return x.toString(); }
   function defaultError(err) { throw err; }
-  function isPromise(p) { return typeof p.then === 'function' && typeof p.subscribe === 'undefined'; }
+  function isPromise(p) { return typeof p.then === 'function' && p.then !== Rx.Observable.prototype.then; }
 
   // Errors
   var sequenceContainsNoElements = 'Sequence contains no elements.';
