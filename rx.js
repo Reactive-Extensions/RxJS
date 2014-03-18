@@ -42,6 +42,16 @@
             throw new Error(objectDisposed);
         }
     }
+
+    // Shim in iterator support
+    var $iterator$ = (typeof Symbol === 'object' && Symbol.iterator) ||
+      '_es6shim_iterator_';
+    // Firefox ships a partial implementation using the name @@iterator.
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
+    // So use that name if we detect it.
+    if (window.Set && typeof new window.Set()['@@iterator'] === 'function') {
+      $iterator$ = '@@iterator';
+    }    
     
   /** `Object#toString` result shortcuts */
   var argsClass = '[object Arguments]',
@@ -2252,37 +2262,37 @@
         });
     };
 
-    /**
-     *  Converts a generator function to an observable sequence, using an optional scheduler to enumerate the generator.
-     *  
-     * @example
-     *  var res = Rx.Observable.fromGenerator(function* () { yield 42; });
-     *  var res = Rx.Observable.fromArray(function* () { yield 42; }, Rx.Scheduler.timeout);
-     * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
-     * @returns {Observable} The observable sequence whose elements are pulled from the given generator sequence.
-     */
-    observableProto.fromGenerator = function (genFn, scheduler) {
-        scheduler || (scheduler = currentThreadScheduler);
-        return new AnonymousObservable(function (observer) {
-            var gen;
-            try {
-                gen = genFn();
-            } catch (e) {
-                observer.onError(e);
-                return;
-            }
+  /**
+   *  Converts an iterable into an Observable sequence
+   *  
+   * @example
+   *  var res = Rx.Observable.fromGenerator(new Map());
+   *  var res = Rx.Observable.fromArray(new Set(), Rx.Scheduler.timeout);
+   * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
+   * @returns {Observable} The observable sequence whose elements are pulled from the given generator sequence.
+   */
+  Observable.fromIterable = function (iterable, scheduler) {
+    scheduler || (scheduler = currentThreadScheduler);
+    return new AnonymousObservable(function (observer) {
+      var iterator;
+      try {
+        iterator = iterable[$iterator$]();
+      } catch (e) {
+        observer.onError(e);
+        return;
+      }
 
-            return scheduler.scheduleRecursive(function (self) {
-                var next = gen.next();
-                if (next.done) {
-                    observer.onCompleted();
-                } else {
-                    observer.onNext(next.value);
-                    self();
-                }
-            });
-        });
-    };
+      return scheduler.scheduleRecursive(function (self) {
+        var next = iterator.next();
+        if (next.done) {
+          observer.onCompleted();
+        } else {
+          observer.onNext(next.value);
+          self();
+          }
+      });
+    });
+  };
 
     /**
      *  Generates an observable sequence by running a state-driven loop producing the sequence's elements, using the specified scheduler to send out observer messages.
