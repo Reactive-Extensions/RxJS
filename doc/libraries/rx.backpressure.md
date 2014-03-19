@@ -27,7 +27,7 @@ NuGet Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Instance Methods`
-- [`controlled`](#rxobservableprototypecontrolledenablequeue)
-- [`pausable`](#rxobservableprototypepausablepauser)
-- [`pausableBuffered`](#rxobservableprototypepausablebufferedpauser)
+- [`controlled`](../api/core/observable.md#rxobservableprototypecontrolledenablequeue)
+- [`pausable`](../api/core/observable.md#rxobservableprototypepausablepauser)
+- [`pausableBuffered`](../api/core/observable.md#rxobservableprototypepausablebufferedpauser)
 

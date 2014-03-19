@@ -30,10 +30,11 @@ NuGet Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`fromCallback`](#rxobservablefromcallbackfunc-scheduler-context-selector)
-- [`fromEvent`](#rxobservablefromeventelement-eventname-selector)
-- [`fromEventPattern`](#rxobservablefromeventpatternaddhandler-removehandler-selector)
-- [`fromNodeCallback`](#rxobservablefromnodecallbackfunc-scheduler-context-selector)
-- [`fromPromise`](#rxobservablefrompromisepromise)
-- [`start`](#rxobservablestartfunc-scheduler-context)
-- [`toAsync`](#rxobservabletoasyncfunc-scheduler-context)
+- [`fromCallback`](../api/core/observable.md#rxobservablefromcallbackfunc-scheduler-context-selector)
+- [`fromEvent`](../api/core/observable.md#rxobservablefromeventelement-eventname-selector)
+- [`fromEventPattern`](../api/core/observable.md#rxobservablefromeventpatternaddhandler-removehandler-selector)
+- [`fromNodeCallback`](../api/core/observable.md#rxobservablefromnodecallbackfunc-scheduler-context-selector)
+- [`fromPromise`](../api/core/observable.md#rxobservablefrompromisepromise)
+- [`start`](../api/core/observable.md#rxobservablestartfunc-scheduler-context)
+- [`startAsync`](../api/core/observable.md#rxobservablestartasyncfunctionasync)
+- [`toAsync`](../api/core/observable.md#rxobservabletoasyncfunc-scheduler-context)

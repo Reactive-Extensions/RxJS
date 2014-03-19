@@ -20,6 +20,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`fromCallback`](#rxobservablefromcallbackfunc-scheduler-context-selector)
 - [`fromEvent`](#rxobservablefromeventelement-eventname-selector)
 - [`fromEventPattern`](#rxobservablefromeventpatternaddhandler-removehandler-selector)
+- [`fromIterable`](#rxobservablefromiterableiterable-scheduler)
 - [`fromNodeCallback`](#rxobservablefromnodecallbackfunc-scheduler-context-selector)
 - [`fromPromise`](#rxobservablefrompromisepromise)
 - [`generate`](#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
@@ -34,6 +35,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`repeat`](#rxobservablerepeatvalue-repeatcount-scheduler)
 - [`return | returnValue`](#rxobservablereturnvalue-scheduler)
 - [`start`](#rxobservablestartfunc-scheduler-context)
+- [`startAsync`](#rxobservablestartasyncfunctionasync)
 - [`throw | throwException`](#rxobservablethrowexception-scheduler)
 - [`timer`](#rxobservabletimerduetime-period-scheduler)
 - [`toAsync`](#rxobservabletoasyncfunc-scheduler-context)
@@ -66,6 +68,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`concatAll`](#rxobservableprototypeconcatallargs)
 - [`connect`](#connectableobservableprototypeconnect)
 - [`contains`](#rxobservableprototypecontainsvalue-comparer)
+- [`controlled`](#rxobservableprototypecontrolledenablequeue)
 - [`count`](#rxobservableprototypecountpredicate)
 - [`defaultIfEmpty`](#rxobservableprototypedefaultifemptydefaultvalue)
 - [`delay`](#rxobservableprototypedelayduetime-scheduler)
@@ -108,6 +111,8 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`multicast`](#rxobservableprototypemulticastsubject--subjectselector-selector)
 - [`observeOn`](#rxobservableprototypeobserveonscheduler)
 - [`onErrorResumeNext`](#rxobservableprototypeonerrorresumenextsecond)
+- [`pausable`](#rxobservableprototypepausablepauser)
+- [`pausableBuffered`](#rxobservableprototypepausablebufferedpauser)
 - [`pluck`](#rxobservableprototypepluckproperty)
 - [`publish`](#rxobservableprototypepublishselector)
 - [`publishLast`](#rxobservableprototypepublishlatestselector)
@@ -1089,6 +1094,70 @@ Dist:
 
 * * *
 
+### <a id="rxobservablefromiterableiterable-scheduler"></a>`Rx.Observable.fromIterable(iterable, [scheduler])`
+<a href="#rxobservablefromiterableiterable-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromiterable.js#L10-L38 "View in source") 
+
+Converts an ES6 iterable into an Observable sequence.
+
+#### Arguments
+1. `iterable` *(Iterable)*: Either a generator function or iterable such as Set, Map, etc.
+2. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.currentThread`.
+
+#### Returns
+*(Function)*: The observable sequence whose elements are pulled from the given generator sequence.
+
+#### Example
+```js
+// Using a Set
+var source = Rx.Observable.fromIterable(new Set([1,2,3]));
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Completed
+
+// Using a generator function
+var source = Rx.Observable.fromIterable(function* () { yield 42; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed
+```
+
+### Location
+
+File:
+- /src/core/observable/fromiterable.js
+
+Dist:
+- rx.js
+- rx.compat.js
+- rx.lite.js
+- rx.lite.compat.js
+
+* * *
+
 ### <a id="rxobservablefromnodecallbackfunc-scheduler-context-selector"></a>`Rx.Observable.fromNodeCallback(func, [scheduler], [context], [selector])`
 <a href="#rxobservablefromnodecallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js#L9-L43 "View in source") 
 
@@ -1704,7 +1773,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablestartfunc-scheduler-context"></a>`Rx.Observable.start(func, [scheduler], [context])`
-<a href="#rxobservablestartfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2639-L2641 "View in source") 
+<a href="#rxobservablestartfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/start.js "View in source") 
 
 Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
 
@@ -1745,7 +1814,89 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/start.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/start.js)
+
+Dist:
+- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.async.js | rx.async.compat.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Async
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/start.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/start.js)
+
+* * *
+
+### <a id="rxobservablestartasyncfunctionasync"></a>`Rx.Observable.startAsync(functionAsync)`
+<a href="#rxobservablestartasyncfunctionasync">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startasync.js#L6-L14 "View in source") 
+
+Invokes the asynchronous function, surfacing the result through an observable sequence.
+
+### Arguments
+1. `functionAsync` *(Function)*: Asynchronous function which returns a Promise to run.
+
+#### Returns
+*(Observable)*: An observable sequence exposing the function's Promises's value or error.
+
+#### Example
+```js
+var source = Rx.Observable.startAsync(function () { 
+    return Promise.resolve(42);
+})
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42 
+// => Completed 
+```
+
+### Location
+
+File:
+- [/src/core/observable/startasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startasync.js)
+
+Dist:
+- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.async.js | rx.async.compat.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Async
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/startasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/startasync.js)
 
 * * *
 
@@ -3047,6 +3198,64 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.aggregates.js
+
+* * *
+
+### <a id="rxobservableprototypecontrolledenablequeue"></a>`Rx.Observable.prototype.controlled([enableQueue])`
+<a href="#rxobservableprototypecontrolledenablequeue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/controlled.js "View in source") 
+
+Attaches a controller to the observable sequence with the ability to queue.
+
+#### Arguments
+1. `[enableQueue]` *(Boolean)*: Whether to enable queueing.  If not specified, defaults to true.
+
+#### Returns
+*(Observable)*: An observable sequence which can be used to request values from the sequence.
+
+#### Example
+```js
+var source = Rx.Observable.range(0, 10).controlled();
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+source.request(2);
+
+// => Next: 0
+// => Next: 1 
+```
+### Location
+
+File:
+- [/src/core/backpressure/controlled.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/controlled.js)
+
+Dist:
+- [rx.backpressure.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.backpressure.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-BackPressure
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/controlled.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/controlled.js)
 
 * * *
 
@@ -5378,6 +5587,129 @@ var subscription = source.subscribe(
 #### Location
 
 - rx.js
+
+* * *
+
+### <a id="rxobservableprototypepausablepauser"></a>`Rx.Observable.prototype.pausable(pauser)`
+<a href="#rxobservableprototypepausablepauser">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausable.js "View in source") 
+
+Pauses the underlying observable sequence based upon the observable sequence which yields true/false.  Note that this only works on hot observables.
+
+#### Arguments
+1. `pauser` *(Rx.Subject)*: The observable sequence used to pause the underlying sequence.
+
+#### Returns
+*(Observable)*: The observable sequence which is paused based upon the pauser.
+
+#### Example
+```js
+var pauser = new Rx.Subject();
+var source = Rx.Observable.fromEvent(document, 'mousemove').pausable(pauser);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// To begin the flow
+pauser.onNext(true);
+
+// To pause the flow at any point
+pauser.onNext(false);
+```
+### Location
+
+File:
+- [/src/core/backpressure/pausable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausable.js)
+
+Dist:
+- [rx.backpressure.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.backpressure.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.backpressure.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-BackPressure
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/pausable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/pausable.js)
+
+* * *
+
+### <a id="rxobservableprototypepausablepauser"></a>`Rx.Observable.prototype.pausable(pauser)`
+<a href="#rxobservableprototypepausablepauser">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausable.js "View in source") 
+
+Pauses the underlying observable sequence based upon the observable sequence which yields true/false.  Note that this only works on hot observables.
+
+#### Arguments
+1. `pauser` *(Rx.Subject)*: The observable sequence used to pause the underlying sequence.
+
+#### Returns
+*(Observable)*: The observable sequence which is paused based upon the pauser.
+
+#### Example
+```js
+var pauser = new Rx.Subject();
+var source = Rx.Observable.interval(1000).pausableBuffered(pauser);
+    
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// To begin the flow
+pauser.onNext(true);
+
+// To pause the flow at any point
+pauser.onNext(false);
+
+// Resume the flow which empties the queue from when you last paused
+pauser.onNext(true);
+```
+### Location
+
+File:
+- [/src/core/backpressure/pausablebuffered.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausablebuffered.js)
+
+Dist:
+- [rx.backpressure.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.backpressure.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.backpressure.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-BackPressure
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/pausablebuffered.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/pausablebuffered.js)
 
 * * *
 
