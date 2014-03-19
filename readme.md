@@ -91,6 +91,7 @@ This set of libraries include:
 - [rx.js](doc/libraries/rx.md) - core library for ES5 compliant browsers and runtimes plus compatibility for older browsers.
 - [rx.aggregates.js](doc/libraries/rx.aggregates.md) - aggregation event processing query operations
 - [rx.async.js](doc/libraries/rx.async.md) - async operationrs such as events, callbacks and promises plus a compat file for older browsers.
+- [rx.backpressure.js](doc/libraries/rx.backpressure.md) - backpressure operators such as pause/resume and controlled.
 - [rx.binding.js](doc/libraries/rx.binding.md) - binding operators including multicast, publish, publishLast, publishValue, and replay
 - [rx.coincidence.js](doc/libraries/rx.coincidence.md) - reactive coincidence join event processing query operations
 - [rx.experimental.js](doc/libraries/rx.experimental.md) - experimental operators including imperative operators and forkJoin
