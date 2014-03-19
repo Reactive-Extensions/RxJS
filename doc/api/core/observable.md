@@ -6634,22 +6634,25 @@ var subscription = source.subscribe(
 
 One of the following:
 
-Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences or Promises into one observable sequence.
 
 ```js
-source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+source.selectMany(function (x, i) { return Rx.Observable.range(0, x); });
+source.selectMany(function (x, i) { return Promise.resolve(x + 1}; });
 ```
 
-Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+Projects each element of an observable sequence or Promise to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
 
 ```js
-source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+source.selectMany(function (x, i) { return Rx.Observable.range(0, x); }, function (x, y, i) { return x + y + i; });
+source.selectMany(function (x, i) { return Promise.resolve(x + i); }, function (x, y, i) { return x + y + i; });
 ```
 
-Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+Projects each element of the source observable sequence to the other observable sequence or Promise and merges the resulting observable sequences into one observable sequence.
  
  ```js
 source.selectMany(Rx.Observable.fromArray([1,2,3]));
+source.selectMany(Promise.resolve(42));
  ```
 
 #### Arguments
@@ -6683,11 +6686,51 @@ var subscription = source.subscribe(
 // => Next: 2 
 // => Next: 3 
 // => Completed 
+
+/* Using a promise */
+var source = Rx.Observable.fromArray([1,2,3,4])
+    .selectMany(function (x, i) {
+        return Promise.resolve(x + i);
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 4
+// => Next: 4 
+// => Next: 4 
+// => Next: 4 
+// => Completed    
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [/src/core/observable/selectmany.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/selectmany.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/selectmany.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js)
 
 * * *
 
