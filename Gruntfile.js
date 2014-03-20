@@ -412,7 +412,7 @@ var browsers = [{
                     'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
                     'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
                     'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-                    'src/core/linq/observable/generatewithtime.js',
+                    'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
                     'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
                     'src/core/linq/observable/delaywithselector.js',
                     'src/core/linq/observable/timeoutwithselector.js',
@@ -571,7 +571,7 @@ var browsers = [{
                     'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
                     'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
                     'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-                    'src/core/linq/observable/generatewithtime.js',
+                    'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
                     'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
                     'src/core/linq/observable/delaywithselector.js',
                     'src/core/linq/observable/timeoutwithselector.js',
