@@ -139,13 +139,13 @@ Now, let's query Wikipedia!  In RxJS, we can instantly bind to any [Promises A+]
 
 ```js
 function searchWikipedia (term) {
-    var promise = $.ajax({
+    return $.ajax({
         url: 'http://en.wikipedia.org/w/api.php',
         dataType: 'jsonp',
         data: {
             action: 'opensearch',
             format: 'json',
-            search: encodeURI(term)
+            search: term
         }
     }).promise();
 }
