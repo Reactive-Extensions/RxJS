@@ -192,6 +192,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Twitter @OpenAtMicrosoft](http://twitter.com/OpenAtMicrosoft)
     - [IRC #reactivex](http://webchat.freenode.net/#reactivex)
     - [JabbR rx](https://jabbr.net/#/rooms/rx)
+    - [StackOverflow rxjs](http://stackoverflow.com/questions/tagged/rxjs)
 
 - Required Reading
     - [Reactive Manifesto](http://www.reactivemanifesto.org/)
@@ -265,6 +266,7 @@ There are a number of ways to get started with RxJS. The files are available on 
     Install-Package RxJS-Main
     Install-Package RxJS-Aggregates
     Install-Package RxJS-Async
+    Install-Package RxJS-BackPressure
     Install-Package RxJS-Binding
     Install-Package RxJS-Coincidence
     Install-Package RxJS-Experimental
@@ -280,6 +282,7 @@ There are a number of ways to get started with RxJS. The files are available on 
     
     <script src="rx.aggregates.js"></script>
     <script src="rx.async.js"></script>
+    <script src="rx.backpressure.js"></script>
     <script src="rx.binding.js"></script>
     <script src="rx.coincidencejs"></script>
     <script src="rx.experimental.js"></script>
