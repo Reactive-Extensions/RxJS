@@ -190,6 +190,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Tech Blog](http://blogs.msdn.com/b/rxteam) 
     - [Twitter @ReactiveX](https://twitter.com/ReactiveX)
     - [Twitter @OpenAtMicrosoft](http://twitter.com/OpenAtMicrosoft)
+    - [IRC #reactivex](http://webchat.freenode.net/#reactivex)
 
 - Required Reading
     - [Reactive Manifesto](http://www.reactivemanifesto.org/)
@@ -216,6 +217,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [RxJS Today and Tomorrow - Channel 9](http://channel9.msdn.com/Blogs/Charles/Matthew-Podwysocki-and-Bart-J-F-De-Smet-RxJS-Today-and-Tomorrow)
     - [Cascadia.js 2012](http://www.youtube.com/watch?v=FqBq4uoiG0M)
     - [Reactive Extensions Videos on Channel 9](http://channel9.msdn.com/Tags/reactive+extensions)
+    - [Async JavaScript at Netflix](https://www.youtube.com/watch?v=XRYN2xt11Ek)
 
 - Reference Material
     - [Intro to Rx](http://introtorx.com/)
