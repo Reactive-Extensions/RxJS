@@ -191,6 +191,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Twitter @ReactiveX](https://twitter.com/ReactiveX)
     - [Twitter @OpenAtMicrosoft](http://twitter.com/OpenAtMicrosoft)
     - [IRC #reactivex](http://webchat.freenode.net/#reactivex)
+    - [JabbR rx](https://jabbr.net/#/rooms/rx)
 
 - Required Reading
     - [Reactive Manifesto](http://www.reactivemanifesto.org/)
