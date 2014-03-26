@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <meta name="author" content="">    
+    <title>Rx for JavaScript Rocks!</title>
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="http://ajax.aspnetcdn.com/ajax/bootstrap/2.3.2/css/bootstrap-responsive.min.css">
+</head>
+<body>
+    <div class="container">
+        <div class="page-header">
+            <h1>Simple Data Binding Example</h1>
+            <p class="lead">Show simple concepts of data binding!</p>
+        </div>
+        <div class="row-fluid">
+            <form>
+                <fieldset>
+                    <legend>First Example Using Simple Binds</legend>
+                    <label id="label1"></label>
+                    <label for="firstName1">First Name</label>
+                    <input id="firstName1" type="text" placeholder="Enter First Name...">
+                    <label for="lastName1">Last Name</label>
+                    <input id="lastName1" type="text" placeholder="Enter Last Name...">
+                    <label for="fullName1">Full Name</label>
+                    <input id="fullName1" type="text" readonly>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-1.10.2.min.js"></script>
+    <script src="../../rx.lite.js"></script>
+    <script src="simpledatabinding.js"></script>
+</body>
+</html>

@@ -4,6 +4,13 @@ The Reactive Extensions for JavaScript have a number of examples that highlight 
 
 ## Scenarios
 
+### Simple Data Binding ###
+
+Using nothing more than `Rx.BehaviorSubject` objects, see how easy it is to accomplish Knockout.js style data-binding.
+
+- [See the code](https://github.com/Reactive-Extensions/RxJS/tree/master/examples/simpledatabinding)
+- [Edit the code in JSFiddle](http://jsfiddle.net/mattpodwysocki/rwr42/)
+
 ### Autocomplete ###
 
 Coordinate key up behavior with querying a web service to retrieve hints for queries.
