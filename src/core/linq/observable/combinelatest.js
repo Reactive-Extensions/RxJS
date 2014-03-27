@@ -7,7 +7,7 @@
      * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
      */
     var combineLatest = Observable.combineLatest = function () {
-        var args = slice.call(arguments), resultSelector = args.pop();
+        var args = slice.call(arguments), resultSelector = args.pop() || noop;
         
         if (Array.isArray(args[0])) {
             args = args[0];
