@@ -53,10 +53,10 @@
     AsyncSubject = Rx.AsyncSubject,
     Observer = Rx.Observer,
     inherits = Rx.internals.inherits,
-    addProperties = Rx.internals.addProperties;
+    addProperties = Rx.internals.addProperties,
+    noop = Rx.helpers.noop;
 
   // Utilities
-  function nothing () { }
   function argsOrArray(args, idx) {
     return args.length === 1 && Array.isArray(args[idx]) ?
       args[idx] :
@@ -403,7 +403,7 @@
                         return curr;
                     })
                 .doAction(
-                    nothing,
+                    noop,
                     function (e) {
                         if (chain) {
                             chain.onError(e);
