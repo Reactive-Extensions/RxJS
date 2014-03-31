@@ -37,7 +37,7 @@
 
           // Check if promise
           var currentValue = currentItem.value;
-          isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+          isPromise(currentValue) || (currentValue = observableFromPromise(currentValue));
 
           var d = new SingleAssignmentDisposable();
           subscription.setDisposable(d);
@@ -90,7 +90,7 @@
 
         // Check if promise
         var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));        
+        isPromise(currentValue) || (currentValue = observableFromPromise(currentValue));        
 
         var d = new SingleAssignmentDisposable();
         subscription.setDisposable(d);
