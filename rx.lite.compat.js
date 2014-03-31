@@ -1581,9 +1581,13 @@
             return;
           }
 
+          // Check if promise
+          var currentValue = currentItem.value;
+          isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
           var d = new SingleAssignmentDisposable();
           subscription.setDisposable(d);
-          d.setDisposable(currentItem.value.subscribe(
+          d.setDisposable(currentValue.subscribe(
             observer.onNext.bind(observer),
             observer.onError.bind(observer),
             function () { self(); })
@@ -1630,9 +1634,13 @@
           return;
         }
 
+        // Check if promise
+        var currentValue = currentItem.value;
+        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));        
+
         var d = new SingleAssignmentDisposable();
         subscription.setDisposable(d);
-        d.setDisposable(currentItem.value.subscribe(
+        d.setDisposable(currentValue.subscribe(
           observer.onNext.bind(observer),
           function (exn) {
             lastException = exn;
@@ -2029,6 +2037,9 @@
             } catch (e) {
                 return observableThrow(e).subscribe(observer);
             }
+
+            // Check if promise
+            isPromise(result) && (result = observableFromPromise(result));
             return result.subscribe(observer);
         });
     };
@@ -3614,6 +3625,12 @@
         function (reason) {
           observer.onError(reason);
         });
+
+      return function () {
+        if (promise && promise.abort) {
+          promise.abort();
+        }
+      }
     });
   };
     /*

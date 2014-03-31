@@ -16,7 +16,7 @@
             }
 
             // Check if promise
-            isPromise(result) || (result = observableFromPromise(result));
+            isPromise(result) && (result = observableFromPromise(result));
             return result.subscribe(observer);
         });
     };
