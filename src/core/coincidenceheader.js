@@ -9,8 +9,6 @@
         AnonymousObservable = Rx.AnonymousObservable,
         observerCreate = Rx.Observer.create,
         addRef = Rx.internals.addRef,
-        defaultComparer = Rx.internals.isEqual;
-
-    // defaults
-    function noop() { }
+        defaultComparer = Rx.internals.isEqual,
+        noop = Rx.helpers.noop;
     

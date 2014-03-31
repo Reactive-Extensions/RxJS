@@ -4,6 +4,5 @@
 		ScheduledItem = Rx.internals.ScheduledItem,
 		SchedulePeriodicRecursive  = Rx.internals.SchedulePeriodicRecursive,
 		disposableEmpty = Rx.Disposable.empty,
-		inherits = Rx.internals.inherits;
-
-	function defaultSubComparer(x, y) { return x > y ? 1 : (x < y ? -1 : 0); }
+		inherits = Rx.internals.inherits,
+    defaultSubComparer = Rx.helpers.defaultSubComparer;

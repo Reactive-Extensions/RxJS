@@ -22,7 +22,7 @@
                         return curr;
                     })
                 .doAction(
-                    nothing,
+                    noop,
                     function (e) {
                         if (chain) {
                             chain.onError(e);

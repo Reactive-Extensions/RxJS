@@ -23,6 +23,7 @@
       internals: {}, 
       config: {
         Promise: root.Promise // Detect if promise exists
-      } 
+      },
+      helpers: { }
   };
     
