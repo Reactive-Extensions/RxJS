@@ -22,5 +22,6 @@
   <files>
     <file src="..\..\rx.backpressure.js" target="content\Scripts\rx.backpressure.js" />
     <file src="..\..\rx.backpressure.min.js" target="content\Scripts\rx.backpressure.min.js" /> 
+    <file src="..\..\ts\rx.backpressure.d.ts" target="content\Scripts\rx.backpressure.d.ts" />  
   </files>
 </package>

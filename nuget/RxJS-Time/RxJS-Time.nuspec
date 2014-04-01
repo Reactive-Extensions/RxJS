@@ -21,5 +21,6 @@
   <files>
     <file src="..\..\rx.time.js" target="content\Scripts\rx.time.js" />
     <file src="..\..\rx.time.min.js" target="content\Scripts\rx.time.min.js" />
+    <file src="..\..\ts\rx.time.d.ts" target="content\Scripts\rx.time.d.ts" />  
   </files>
 </package>
