@@ -46,21 +46,29 @@ test('Event_1', function () {
     equal(element.removeEventListenerCalled, true);
 });
 
+function FakeNodeList(arr) {
+    this.arr = arr;
+    this.length = arr.length;
+}
+FakeNodeList.prototype.item = function (index) {
+    return this.arr[index];
+}
+
 test('Event_2', function () {
-    var elements = [new FakeDOMStandardElement('foo')];
+    var elements = new FakeNodeList([new FakeDOMStandardElement('foo')]);
 
     var d = Observable.fromEvent(elements, 'someEvent')
         .subscribe(function (x) {
             equal(x, 42);
         });
 
-    elements[0].trigger('someEvent', 42);
-    equal(elements[0].addEventListenerCalled, true);
-    equal(elements[0].removeEventListenerCalled, false);    
+    elements.item(0).trigger('someEvent', 42);
+    equal(elements.item(0).addEventListenerCalled, true);
+    equal(elements.item(0).removeEventListenerCalled, false);    
 
     d.dispose();
 
-    equal(elements[0].removeEventListenerCalled, true);    
+    equal(elements.item(0).removeEventListenerCalled, true);    
 });
 
 /** Fake DOM Element */
@@ -105,20 +113,20 @@ test('Event_3', function () {
 });
 
 test('Event_4', function () {
-    var elements = [new FakeDOMIEElement('foo')];
+    var elements = new FakeNodeList([new FakeDOMIEElement('foo')]);
 
     var d = Observable.fromEvent(elements, 'someevent')
         .subscribe(function (x) {
             equal(x, 42);
         });
 
-    elements[0].trigger('onsomeevent', 42);
-    equal(elements[0].attachEventCalled, true);
-    equal(elements[0].detachEventCalled, false);    
+    elements.item(0).trigger('onsomeevent', 42);
+    equal(elements.item(0).attachEventCalled, true);
+    equal(elements.item(0).detachEventCalled, false);    
 
     d.dispose();
 
-    equal(elements[0].detachEventCalled, true);    
+    equal(elements.item(0).detachEventCalled, true);    
 });
 
 /** Fake DOM Element */

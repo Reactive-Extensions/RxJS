@@ -3447,168 +3447,190 @@
         };
     };
 
-    function fixEvent(event) {
-        var stopPropagation = function () {
-            this.cancelBubble = true;
-        };
-
-        var preventDefault = function () {
-            this.bubbledKeyCode = this.keyCode;
-            if (this.ctrlKey) {
-                try {
-                    this.keyCode = 0;
-                } catch (e) { }
-            }
-            this.defaultPrevented = true;
-            this.returnValue = false;
-            this.modified = true;
-        };
-
-        event || (event = window.event);
-        if (!event.target) {
-            event.target = event.target || event.srcElement; 
-
-            if (event.type == 'mouseover') {
-                event.relatedTarget = event.fromElement;
-            }
-            if (event.type == 'mouseout') {
-                event.relatedTarget = event.toElement;
-            }
-            // Adding stopPropogation and preventDefault to IE
-            if (!event.stopPropagation){
-                event.stopPropagation = stopPropagation;
-                event.preventDefault = preventDefault;
-            }
-            // Normalize key events
-            switch(event.type){
-                case 'keypress':
-                    var c = ('charCode' in event ? event.charCode : event.keyCode);
-                    if (c == 10) {
-                        c = 0;
-                        event.keyCode = 13;
-                    } else if (c == 13 || c == 27) {
-                        c = 0; 
-                    } else if (c == 3) {
-                        c = 99; 
-                    }
-                    event.charCode = c;
-                    event.keyChar = event.charCode ? String.fromCharCode(event.charCode) : '';
-                    break;
-            }                    
-        }
-
-        return event;
-    }
-
-    function createListener (element, name, handler) {
-        // Node.js specific
-        if (element.addListener) {
-            element.addListener(name, handler);
-            return disposableCreate(function () {
-                element.removeListener(name, handler);
-            });
-        }
-        // Standards compliant
-        if (element.addEventListener) {
-            element.addEventListener(name, handler, false);
-            return disposableCreate(function () {
-                element.removeEventListener(name, handler, false);
-            });
-        } else if (element.attachEvent) {
-            // IE Specific
-            var innerHandler = function (event) {
-                handler(fixEvent(event));
-            };
-            element.attachEvent('on' + name, innerHandler);
-            return disposableCreate(function () {
-                element.detachEvent('on' + name, innerHandler);
-            });         
-        } else {
-            // Level 1 DOM Events      
-            element['on' + name] = handler;
-            return disposableCreate(function () {
-                element['on' + name] = null;
-            });
-        }
-    }
-
-    function createEventListener (el, eventName, handler) {
-        var disposables = new CompositeDisposable();
-
-        // Asume NodeList
-        if (el && el.length) {
-            for (var i = 0, len = el.length; i < len; i++) {
-                disposables.add(createEventListener(el[i], eventName, handler));
-            }
-        } else if (el) {
-            disposables.add(createListener(el, eventName, handler));
-        }
-
-        return disposables;
-    }
-
-    /**
-     * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
-     *
-     * @example
-     *   var source = Rx.Observable.fromEvent(element, 'mouseup');
-     * 
-     * @param {Object} element The DOMElement or NodeList to attach a listener.
-     * @param {String} eventName The event name to attach the observable sequence.
-     * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
-     * @returns {Observable} An observable sequence of events from the specified element and the specified event.
-     */
-    Observable.fromEvent = function (element, eventName, selector) {
-        return new AnonymousObservable(function (observer) {
-            return createEventListener(
-                element, 
-                eventName, 
-                function handler (e) { 
-                    var results = e;
-
-                    if (selector) {
-                        try {
-                            results = selector(arguments);
-                        } catch (err) {
-                            observer.onError(err);
-                            return
-                        }
-                    }
-
-                    observer.onNext(results); 
-                });
-        }).publish().refCount();
+  function fixEvent(event) {
+    var stopPropagation = function () {
+      this.cancelBubble = true;
     };
-    /**
-     * Creates an observable sequence from an event emitter via an addHandler/removeHandler pair.
-     * @param {Function} addHandler The function to add a handler to the emitter.
-     * @param {Function} [removeHandler] The optional function to remove a handler from an emitter.
-     * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
-     * @returns {Observable} An observable sequence which wraps an event from an event emitter
-     */
-    Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
-        return new AnonymousObservable(function (observer) {
-            function innerHandler (e) {
-                var result = e;
-                if (selector) {
-                    try {
-                        result = selector(arguments);
-                    } catch (err) {
-                        observer.onError(err);
-                        return;
-                    }
-                }
-                observer.onNext(result);
-            }
 
-            var returnValue = addHandler(innerHandler);
-            return disposableCreate(function () {
-                if (removeHandler) {
-                    removeHandler(innerHandler, returnValue);
-                }
-            });
-        }).publish().refCount();
+    var preventDefault = function () {
+      this.bubbledKeyCode = this.keyCode;
+      if (this.ctrlKey) {
+        try {
+          this.keyCode = 0;
+        } catch (e) { }
+      }
+      this.defaultPrevented = true;
+      this.returnValue = false;
+      this.modified = true;
     };
+
+    event || (event = root.event);
+    if (!event.target) {
+      event.target = event.target || event.srcElement; 
+
+      if (event.type == 'mouseover') {
+        event.relatedTarget = event.fromElement;
+      }
+      if (event.type == 'mouseout') {
+        event.relatedTarget = event.toElement;
+      }
+      // Adding stopPropogation and preventDefault to IE
+      if (!event.stopPropagation){
+        event.stopPropagation = stopPropagation;
+        event.preventDefault = preventDefault;
+      }
+      // Normalize key events
+      switch(event.type){
+        case 'keypress':
+          var c = ('charCode' in event ? event.charCode : event.keyCode);
+          if (c == 10) {
+            c = 0;
+            event.keyCode = 13;
+          } else if (c == 13 || c == 27) {
+            c = 0; 
+          } else if (c == 3) {
+            c = 99; 
+          }
+          event.charCode = c;
+          event.keyChar = event.charCode ? String.fromCharCode(event.charCode) : '';
+          break;
+      }                    
+    }
+
+    return event;
+  }
+
+  function createListener (element, name, handler) {
+    // Node.js specific
+    if (element.addListener) {
+      element.addListener(name, handler);
+      return disposableCreate(function () {
+        element.removeListener(name, handler);
+      });
+    }
+    // Standards compliant
+    if (element.addEventListener) {
+      element.addEventListener(name, handler, false);
+      return disposableCreate(function () {
+        element.removeEventListener(name, handler, false);
+      });
+    } 
+    if (element.attachEvent) {
+      // IE Specific
+      var innerHandler = function (event) {
+        handler(fixEvent(event));
+      };
+      element.attachEvent('on' + name, innerHandler);
+      return disposableCreate(function () {
+        element.detachEvent('on' + name, innerHandler);
+      });         
+    }
+    // Level 1 DOM Events      
+    element['on' + name] = handler;
+    return disposableCreate(function () {
+      element['on' + name] = null;
+    });
+  }
+
+  function createEventListener (el, eventName, handler) {
+    var disposables = new CompositeDisposable();
+
+    // Asume NodeList
+    if (typeof el.item === 'function' && typeof el.length === 'number') {
+      for (var i = 0, len = el.length; i < len; i++) {
+        disposables.add(createEventListener(el.item(i), eventName, handler));
+      }
+    } else if (el) {
+      disposables.add(createListener(el, eventName, handler));
+    }
+
+    return disposables;
+  }
+
+  // Check for Angular/jQuery/Zepto support
+  var jq =
+   !!root.angular && !!angular.element ? angular.element :
+   (!!root.jQuery ? root.jQuery : (
+     !!root.Zepto ? root.Zepto : null));
+
+  // Check for ember
+  var ember = !!root.Ember && typeof root.Ember.addListener === 'function';
+
+  /**
+   * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
+   *
+   * @example
+   *   var source = Rx.Observable.fromEvent(element, 'mouseup');
+   * 
+   * @param {Object} element The DOMElement or NodeList to attach a listener.
+   * @param {String} eventName The event name to attach the observable sequence.
+   * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
+   * @returns {Observable} An observable sequence of events from the specified element and the specified event.
+   */
+  Observable.fromEvent = function (element, eventName, selector) {
+    if (ember) {
+      return fromEventPattern(
+        function (h) { Ember.addListener(element, eventName); },
+        function (h) { Ember.removeListener(element, eventName); },
+        selector);
+    }    
+    if (jq) {
+      var $elem = jq(elem);
+      return fromEventPattern(
+        function (h) { $elem.on(eventName, h); },
+        function (h) { $elem.off(eventName, h); },
+        selector);
+    }
+    return new AnonymousObservable(function (observer) {
+      return createEventListener(
+        element, 
+        eventName, 
+        function handler (e) { 
+          var results = e;
+
+          if (selector) {
+            try {
+              results = selector(arguments);
+            } catch (err) {
+              observer.onError(err);
+              return
+            }
+          }
+
+          observer.onNext(results); 
+        });
+    }).publish().refCount();
+  };
+  /**
+   * Creates an observable sequence from an event emitter via an addHandler/removeHandler pair.
+   * @param {Function} addHandler The function to add a handler to the emitter.
+   * @param {Function} [removeHandler] The optional function to remove a handler from an emitter.
+   * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
+   * @returns {Observable} An observable sequence which wraps an event from an event emitter
+   */
+  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
+    return new AnonymousObservable(function (observer) {
+      function innerHandler (e) {
+        var result = e;
+        if (selector) {
+          try {
+            result = selector(arguments);
+          } catch (err) {
+            observer.onError(err);
+            return;
+          }
+        }
+        observer.onNext(result);
+      }
+
+      var returnValue = addHandler(innerHandler);
+      return disposableCreate(function () {
+        if (removeHandler) {
+          removeHandler(innerHandler, returnValue);
+        }
+      });
+    }).publish().refCount();
+  };
 
   /**
    * Converts a Promise to an Observable sequence
