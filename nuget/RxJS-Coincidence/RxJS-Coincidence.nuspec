@@ -21,5 +21,6 @@
   <files>
     <file src="..\..\rx.coincidence.js" target="content\Scripts\rx.coincidence.js" />
     <file src="..\..\rx.coincidence.min.js" target="content\Scripts\rx.coincidence.min.js" />
+    <file src="..\..\ts\rx.coincidence.d.ts" target="content\Scripts\rx.coincidence.d.ts" />  
   </files>
 </package>
