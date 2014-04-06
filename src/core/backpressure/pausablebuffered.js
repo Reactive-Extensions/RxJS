@@ -42,24 +42,17 @@
     });
   }
 
-  /**
-   * Pauses the underlying observable sequence based upon the observable sequence which yields true/false,
-   * and yields the values that were buffered while paused.
-   * @example
-   * var pauser = new Rx.Subject();
-   * var source = Rx.Observable.interval(100).pausableBuffered(pauser);
-   * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
-   * @returns {Observable} The observable sequence which is paused based upon the pauser.
-   */  
-  observableProto.pausableBuffered = function (subject) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
+  var PausableBufferedObservable = (function (_super) {
+
+    inherits(PausableBufferedObservable, _super);
+
+    function subscribe(observer) {
       var q = [], previous = true;
       
       var subscription =  
         combineLatestSource(
-          source,
-          subject.distinctUntilChanged(), 
+          this.source,
+          this.subject.distinctUntilChanged(), 
           function (data, shouldFire) {
             return { data: data, shouldFire: shouldFire };      
           })
@@ -84,8 +77,47 @@
             observer.onCompleted.bind(observer)
           );
 
-      subject.onNext(false);
+      this.subject.onNext(false);
 
-      return subscription;
-    });
+      return subscription;      
+    }
+
+    function PausableBufferedObservable(source, subject) {
+      this.source = source;
+      this.subject = subject || new Subject();
+      this.isPaused = true;
+      _super.call(this, subscribe);
+    }
+
+    PausableBufferedObservable.prototype.pause = function () {
+      if (this.isPaused === true){
+        return;
+      }
+      this.isPaused = true;
+      this.subject.onNext(false);
+    };
+
+    PausableBufferedObservable.prototype.resume = function () {
+      if (this.isPaused === false){
+        return;
+      }
+      this.isPaused = false;
+      this.subject.onNext(true);
+    };
+
+    return PausableBufferedObservable; 
+
+  }(Observable));
+
+  /**
+   * Pauses the underlying observable sequence based upon the observable sequence which yields true/false,
+   * and yields the values that were buffered while paused.
+   * @example
+   * var pauser = new Rx.Subject();
+   * var source = Rx.Observable.interval(100).pausableBuffered(pauser);
+   * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
+   * @returns {Observable} The observable sequence which is paused based upon the pauser.
+   */  
+  observableProto.pausableBuffered = function (subject) {
+    return new PausableBufferedObservable(this, subject);
   };
