@@ -80,7 +80,7 @@
      * @returns {Function} Asynchronous function.
      */
     var observableToAsync = Observable.toAsync = function (func, scheduler, context) {
-        scheduler || (scheduler = timeoutScheduler);
+        scheduler || (scheduler = immediateScheduler);
         return function () {
             var args = arguments, 
                 subject = new AsyncSubject();
