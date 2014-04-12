@@ -1,4 +1,4 @@
-# RxJS Join Pattenrs Module #
+# RxJS Join Patterns Module #
 
 The Reactive Extensions for JavaScript also supports join calculus in that you can easily create patterns for when certain observable sequences fire.
 
