@@ -3579,7 +3579,7 @@
         selector);
     }    
     if (jq) {
-      var $elem = jq(elem);
+      var $elem = jq(element);
       return fromEventPattern(
         function (h) { $elem.on(eventName, h); },
         function (h) { $elem.off(eventName, h); },
