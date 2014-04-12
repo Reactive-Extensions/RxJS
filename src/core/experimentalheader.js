@@ -19,7 +19,9 @@
     Observer = Rx.Observer,
     inherits = Rx.internals.inherits,
     addProperties = Rx.internals.addProperties,
-    noop = Rx.helpers.noop;
+    noop = Rx.helpers.noop,
+    isPromise = Rx.helpers.isPromise,
+    observableFromPromise = Observable.fromPromise;
 
   // Utilities
   function argsOrArray(args, idx) {
