@@ -19,6 +19,7 @@
     <file src="..\..\rx.min.js" target="content\Scripts\rx.min.js" />
     <file src="..\..\rx.compat.js" target="content\Scripts\rx.compat.js" />
     <file src="..\..\rx.compat.min.js" target="content\Scripts\rx.compat.min.js" />   
-    <file src="..\..\ts\rx.d.ts" target="content\Scripts\rx.d.ts" />   
+    <file src="..\..\ts\rx.d.ts" target="content\Scripts\rx.d.ts" />
+    <file src="..\..\ts\rx-lite.d.ts" target="content\Scripts\rx-lite.d.ts" />
   </files>
 </package>
