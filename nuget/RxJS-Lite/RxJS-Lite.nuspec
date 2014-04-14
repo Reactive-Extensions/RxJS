@@ -19,6 +19,11 @@
     <file src="..\..\rx.lite.min.js" target="content\Scripts\rx.lite.min.js" />
     <file src="..\..\rx.lite.compat.js" target="content\Scripts\rx.lite.compat.js" />
     <file src="..\..\rx.lite.compat.min.js" target="content\Scripts\rx.lite.compat.min.js" /> 
-    <file src="..\..\ts\rx.lite.d.ts" target="content\Scripts\rx.lite.d.ts" />     
+    <file src="..\..\ts\rx.lite.d.ts" target="content\Scripts\rx.lite.d.ts" />
+    <file src="..\..\ts\rx-lite.d.ts" target="content\Scripts\rx-lite.d.ts" />
+    <file src="..\..\ts\rx.async-lite.d.ts" target="content\Scripts\rx.async-lite.d.ts" />
+    <file src="..\..\ts\rx.binding-lite.d.ts" target="content\Scripts\rx.binding-lite.d.ts" />
+    <file src="..\..\ts\rx.time-lite.d.ts" target="content\Scripts\rx.time-lite.d.ts" />
+    <file src="..\..\ts\rx.backpressure-lite.d.ts" target="content\Scripts\rx.backpressure-lite.d.ts" />
   </files>
 </package>
