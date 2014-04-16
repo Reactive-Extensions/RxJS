@@ -434,6 +434,10 @@ var browsers = [{
                     //'src/core/backpressure/windowed.js',
                     //'src/core/backpressure/windowedobservable.js',
 
+                    // Coincidence Operators
+                    'src/core/linq/observable/pairwise.js',
+                    'src/core/linq/observable/partition.js',  
+
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/subjects/innersubscription.js',
@@ -593,6 +597,10 @@ var browsers = [{
                     //'src/core/backpressure/windowed.js',
                     //'src/core/backpressure/windowedobservable.js',
 
+                    // Coincidence Operators
+                    'src/core/linq/observable/pairwise.js',
+                    'src/core/linq/observable/partition.js',                    
+
                     'src/core/anonymousobservable.js',
                     'src/core/autodetachobserver.js',
                     'src/core/subjects/innersubscription.js',
@@ -729,6 +737,8 @@ var browsers = [{
                     'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
                     'src/core/linq/observable/buffer.js', // window, selectMany, toArray
                     'src/core/linq/observable/window.js', // CompositeDisposable, RefCountDisposable, Subject, SingleAssignmentDisposable
+                    'src/core/linq/observable/pairwise.js',
+                    'src/core/linq/observable/partition.js',
                     'src/core/suboutro.js'
                 ],
                 dest: 'rx.coincidence.js'
