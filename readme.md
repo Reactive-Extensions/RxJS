@@ -220,6 +220,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Cascadia.js 2012](http://www.youtube.com/watch?v=FqBq4uoiG0M)
     - [Reactive Extensions Videos on Channel 9](http://channel9.msdn.com/Tags/reactive+extensions)
     - [Async JavaScript at Netflix](https://www.youtube.com/watch?v=XRYN2xt11Ek)
+    - [Adding Even More Fun to Functional Programming With RXJS](https://www.youtube.com/watch?v=8EExNfm0gt4)
 
 - Reference Material
     - [Intro to Rx](http://introtorx.com/)
