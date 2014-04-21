@@ -18,9 +18,9 @@
 **[License](#license)**
 
 # The Reactive Extensions for JavaScript (RxJS) <sup>2.2</sup>... #
-*...is a set of libraries to compose asynchronous and event-based programs using observable collections and Array#extras style composition in JavaScript*
+*...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
-The project is actively developed by Microsoft Open Technologies, Inc., in collaboration with a community of open source developers.
+The project is actively developed by [Microsoft Open Technologies, Inc.](http://msopentech.com/), in collaboration with a community of open source developers.
 
 This project is a mirror of the [CodePlex](http://rxjs.codeplex.com/) repository.
 
@@ -30,7 +30,7 @@ Reactive Programming is a hot topic as of late, especially with such things as t
 
 ## About the Reactive Extensions ##
 
-The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators that many of you already know by Array#extras in JavaScript. Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using our many operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + Operators + Schedulers.
+The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators that many of you already know by [Array#extras)http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) in JavaScript. Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using our many operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + Operators + Schedulers.
 
 Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming as a matter of course. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
 
@@ -111,7 +111,7 @@ First, we'll reference the JavaScript files, including jQuery, although RxJS has
     <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
     <script src="rx.lite.js"></script>
 
-Next, we'll get the user input from an input, listening to the keyup event by using the `Rx.Observable.fromEvent` method.
+Next, we'll get the user input from an input, listening to the keyup event by using the `Rx.Observable.fromEvent` method.  This will either use the event binding from [jQuery](http://jquery.com), [Zepto](http://zeptojs.com/), [AngularJS](https://angularjs.org/) and [Ember.js](http://emberjs.com/) if available, and if not, falls back to the native event binding.  This gives you consistent ways of thinking of events depending on your framework, so there are no surprises.
 
 ```js
 var $input = $('#input'),
@@ -170,7 +170,7 @@ suggestions.subscribe( function (data) {
     $.each(res, function (_, value) {
         $('<li>' + value + '</li>').appendTo($results);
     });    
-}, function (e) {
+}, function (error) {
     /* handle any errors */
     $results.empty();
 
@@ -217,9 +217,11 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Hello RxJS - Channel 9](http://channel9.msdn.com/Blogs/Charles/Introducing-RxJS-Reactive-Extensions-for-JavaScript)
     - [MIX 2011](http://channel9.msdn.com/events/MIX/MIX11/HTM07)
     - [RxJS Today and Tomorrow - Channel 9](http://channel9.msdn.com/Blogs/Charles/Matthew-Podwysocki-and-Bart-J-F-De-Smet-RxJS-Today-and-Tomorrow)
-    - [Cascadia.js 2012](http://www.youtube.com/watch?v=FqBq4uoiG0M)
+    - [Cascadia.js 2012 - Matthew Podwysocki](http://www.youtube.com/watch?v=FqBq4uoiG0M)
     - [Reactive Extensions Videos on Channel 9](http://channel9.msdn.com/Tags/reactive+extensions)
-    - [Async JavaScript at Netflix](https://www.youtube.com/watch?v=XRYN2xt11Ek)
+    - [Asynchronous JavaScript at Netflix - Netflix JavaScript Talks - Jafar Husain](https://www.youtube.com/watch?v=XRYN2xt11Ek)
+    - [Asynchronous JavaScript at Netflix - MountainWest JavaScript 2014 - Jafar Husain](https://www.youtube.com/watch?v=XE692Clb5LU)
+    - [Adding Even More Fun to Functional Programming With RXJS - Ryan Anklam](https://www.youtube.com/watch?v=8EExNfm0gt4)
 
 - Reference Material
     - [Intro to Rx](http://introtorx.com/)

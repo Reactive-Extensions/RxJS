@@ -111,6 +111,8 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`multicast`](#rxobservableprototypemulticastsubject--subjectselector-selector)
 - [`observeOn`](#rxobservableprototypeobserveonscheduler)
 - [`onErrorResumeNext`](#rxobservableprototypeonerrorresumenextsecond)
+- [`pairwise`](#rxobservableprototypepairwise)
+- [`partition`](#rxobservableprototypepartitionpredicate-thisarg)
 - [`pausable`](#rxobservableprototypepausablepauser)
 - [`pausableBuffered`](#rxobservableprototypepausablebufferedpauser)
 - [`pluck`](#rxobservableprototypepluckproperty)
@@ -168,18 +170,19 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 ## _Observable Methods_ ##
 
 ### <a id="rxobservableambargs"></a>`Rx.Observable.amb(...args)`
-<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/amb.js#L8-L18 "View in source") 
+<a href="#rxobservableambargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/amb.js "View in source") 
 
-Propagates the observable sequence that reacts first.
+Propagates the observable sequence or Promise that reacts first.
 
 #### Arguments
-1. `args` *(Array|arguments)*: Observable sources competing to react first either as an array or arguments.
+1. `args` *(Array|arguments)*: Observable sources or Promises competing to react first either as an array or arguments.
 
 #### Returns
 *(Observable)*: An observable sequence that surfaces any of the given sequences, whichever reacted first.
 
 #### Example
 ```js
+/* Using Observable sequences */
 var source = Rx.Observable.amb(
     Rx.Observable.timer(500).select(function () { return 'foo'; }),
     Rx.Observable.timer(200).select(function () { return 'bar'; })
@@ -197,6 +200,27 @@ var subscription = source.subscribe(
     });
 
 // => Next: bar
+// => Completed
+
+/* Using Promises and Observables */
+/* Using Observable sequences */
+var source = Rx.Observable.amb(
+    RSVP.Promise.resolve('foo')
+    Rx.Observable.timer(200).select(function () { return 'bar'; })
+);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: foo
 // => Completed
 ```
 
@@ -224,7 +248,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservablecaseselector-sources-elsesourcescheduler"></a>`Rx.Observable.case(selector, sources, [elseSource|scheduler])`
-<a href="#rxobservablecaseselector-sources-elsesourcescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js#L16-L27 "View in source") 
+<a href="#rxobservablecaseselector-sources-elsesourcescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js "View in source") 
 
 Uses selector to determine which source in sources to use.  There is an alias 'switchCase' for browsers <IE9.
 
@@ -290,7 +314,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservablecatchargs"></a>`Rx.Observable.catch(...args)`
-<a href="#rxobservablecatchargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/catch.js#L9-L12 "View in source") 
+<a href="#rxobservablecatchargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/catch.js "View in source") 
 
 Continues an observable sequence that is terminated by an exception with the next observable sequence.  There is an alias for this method `catchException` for browsers <IE9
 
@@ -349,20 +373,42 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableconcatargs"></a>`Rx.Observable.concat(...args)`
-<a href="#rxobservableconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js#L9-L12 "View in source") 
+<a href="#rxobservableconcatargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js "View in source") 
 
 Concatenates all of the specified observable sequences, as long as the previous observable sequence terminated successfully.
 
 #### Arguments
-1. `args` *(Array|arguments)*: Observable sequences to concatenate.
+1. `args` *(Array|arguments)*: Observable sequences or Promises to concatenate.
 
 #### Returns
 *(Observable)*: An observable sequence that contains the elements of each given sequence, in sequential order.
 
 #### Example
 ```js
+/* Using Observable sequences */
 var source1 = Rx.Observable.return(42);
 var source2 = Rx.Observable.return(56);
+
+var source = Rx.Observable.concat(source1, source2);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Next: 56
+// => Completed
+
+/* Using Promises and Observable sequences */
+var source1 = Rx.Observable.return(42);
+var source2 = RSVP.Promise.resolve(56);
 
 var source = Rx.Observable.concat(source1, source2);
 
@@ -409,7 +455,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservablecreatesubscribe"></a>`Rx.Observable.create(subscribe)`
-<a href="#rxobservablecreatesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js#L12-L14 "View in source") 
+<a href="#rxobservablecreatesubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js "View in source") 
 
 Creates an observable sequence from a specified subscribe method implementation.  This is an alias for the `createWithDisposable` method
 
@@ -504,7 +550,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservabledeferobservablefactory"></a>`Rx.Observable.defer(observableFactory)`
-<a href="#rxobservabledeferobservablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js#L9-L19 "View in source") 
+<a href="#rxobservabledeferobservablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js "View in source") 
 
 Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
 
@@ -516,8 +562,28 @@ Returns an observable sequence that invokes the specified factory function whene
 
 #### Example
 ```js
+/* Using an observable sequence */
 var source = Rx.Observable.defer(function () {
     return Rx.Observable.return(42);
+});
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 42
+// => Completed
+
+/* Using a promise */
+var source = Rx.Observable.defer(function () {
+    return RSVP.Promise.resolve(42);
 });
 
 var subscription = source.subscribe(
@@ -562,7 +628,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableemptyscheduler"></a>`Rx.Observable.empty([scheduler])`
-<a href="#rxobservableemptyscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/empty.js#L10-L17 "View in source") 
+<a href="#rxobservableemptyscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/empty.js "View in source") 
 
 Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
 
@@ -617,9 +683,9 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableforsources-resultselector"></a>`Rx.Observable.for(sources, resultSelector)`
-<a href="#rxobservableforsources-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/for.js#L8-L10 "View in source") 
+<a href="#rxobservableforsources-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/for.js "View in source") 
 
-Concatenates the observable sequences obtained by running the specified result selector for each element in source.
+Concatenates the observable sequences or Promises obtained by running the specified result selector for each element in source.
 There is an alias for this method called `forIn` for browsers <IE9
 
 #### Arguments
@@ -627,16 +693,42 @@ There is an alias for this method called `forIn` for browsers <IE9
 2. `resultSelector` *(Function)*: A function to apply to each item in the sources array to turn it into an observable sequence.
 
 #### Returns
-*(Observable)*: An observable sequence from the concatenated observable sequences.  
+*(Observable)*: An observable sequence from the concatenated observable sequences or Promises.  
 
 #### Example
 ```js
+/* Using Observables */
 var array = [1, 2, 3];
 
 var source = Rx.Observable.for(
     array,
     function (x) {
         return Rx.Observable.returnValue(x);
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Completed
+
+/* Using Promises */
+var array = [1, 2, 3];
+
+var source = Rx.Observable.for(
+    array,
+    function (x) {
+        return RSVP.Promise.resolve(x);
     });
 
 var subscription = source.subscribe(
@@ -679,22 +771,24 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableforkjoinargs"></a>`Rx.Observable.forkJoin(...args)`
-<a href="#rxobservableforkjoinargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/forkjoin.js#L9-L57 "View in source") 
+<a href="#rxobservableforkjoinargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/forkjoin.js "View in source") 
 
 Runs all observable sequences in parallel and collect their last elements.
 
 #### Arguments
-1. `args` *(Arguments | Array)*: An array or arguments of Observable sequences to collect the last elements for.
+1. `args` *(Arguments | Array)*: An array or arguments of Observable sequences or Promises to collect the last elements for.
 
 #### Returns
 *(Observable)*: An observable sequence with an array collecting the last elements of all the input sequences.
 
 #### Example
 ```js
+/* Using observables and Promises */
 var source = Rx.Observable.forkJoin(
     Rx.Observable.return(42),
     Rx.Observable.range(0, 10),
-    Rx.Observable.fromArray([1,2,3])
+    Rx.Observable.fromArray([1,2,3]),
+    RSVP.Promise.resolve(56)
 );
 
 var subscription = source.subscribe(
@@ -708,7 +802,7 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: [42, 9, 3]
+// => Next: [42, 9, 3, 56]
 // => Completed
 ```
 
@@ -735,7 +829,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservablefromarrayarray-scheduler"></a>`Rx.Observable.fromArray(array, [scheduler])`
-<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js#L10-L23 "View in source") 
+<a href="#rxobservablefromarrayarray-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js "View in source") 
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -796,7 +890,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservablefromcallbackfunc-scheduler-context-selector"></a>`Rx.Observable.fromCallback(func, [scheduler], [context], [selector])`
-<a href="#rxobservablefromcallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js#L10-L39 "View in source") 
+<a href="#rxobservablefromcallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js "View in source") 
 
 Converts a callback function to an observable sequence. 
 
@@ -818,18 +912,10 @@ var fs = require('fs'),
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 // Check if file.txt exists
-var source = exists('file.txt', 
-    null, /* no scheduler */
-    null, /* no context */
-    function (arr) {
-        return arr[0]; /* return only the true/false */
-    });
+var source = exists('file.txt');
 
 var subscription = source.subscribe(
     function (x) {
-        // Extract value from arguments array
-        var result = x[0];
-
         console.log('Next: ' + result);
     },
     function (err) {
@@ -858,6 +944,7 @@ Required Files:
 - If using rx.async.js | rx.async.compat.js
     - rx.js | rx.compat.js
     - rx.binding.js
+- rx.lite.js | rx.lite.compat.js
 
 NPM Packages:
 - rx
@@ -872,12 +959,13 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservablefromeventelement-eventname-selector"></a>`Rx.Observable.fromEvent(element, eventName, [selector])`
-<a href="#rxobservablefromeventelement-eventname-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js#L112-L132 "View in source") 
+<a href="#rxobservablefromeventelement-eventname-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js "View in source") 
 
-Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
+Creates an observable sequence by adding an event listener to the matching DOMElement, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter.
+Note that this uses the library approaches for jQuery, Zepto, AngularJS and Ember.js and falls back to native binding if not present.
 
 #### Arguments
-1. `element` *(Any)*: The DOMElement, NodeList or EventEmitter to attach a listener.
+1. `element` *(Any)*: The DOMElement, NodeList, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter to attach a listener.
 2. `eventName` *(String)*: The event name to attach the observable sequence.
 3. `[selector]` *(Function)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
 
@@ -970,9 +1058,9 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservablefromeventpatternaddhander-removehandler-selector"></a>`Rx.Observable.fromEventPattern(addHandler, removeHandler, [selector])`
-<a href="#rxobservablefromeventpatternaddhander-removehandler-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js#L8-L30 "View in source") 
+<a href="#rxobservablefromeventpatternaddhander-removehandler-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js "View in source") 
 
-Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList or Node.js EventEmitter.
+Creates an observable sequence by using teh addHandler and removeHandler functions to add and remove the handlers, with an optional selector function to project the event arguments.
 
 #### Arguments
 1. `addHandler` *(Function)*: The DOMElement, NodeList or EventEmitter to attach a listener.
@@ -1086,16 +1174,34 @@ e.emit('data', 'foo', 'bar');
 ### Location
 
 File:
-- /src/core/observable/fromeventpattern.js
+- [/src/core/observable/fromeventpattern.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js)
 
 Dist:
-- rx.async.js
-- rx.async.compat.js
+- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.async.js | rx.async.compat.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+- rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Async
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/fromeventpattern.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromeventpattern.js)
 
 * * *
 
 ### <a id="rxobservablefromiterableiterable-scheduler"></a>`Rx.Observable.fromIterable(iterable, [scheduler])`
-<a href="#rxobservablefromiterableiterable-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromiterable.js#L10-L38 "View in source") 
+<a href="#rxobservablefromiterableiterable-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromiterable.js "View in source") 
 
 Converts an ES6 iterable into an Observable sequence.
 
@@ -1148,18 +1254,31 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- /src/core/observable/fromiterable.js
+- [/src/core/observable/fromiterable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromiterable.js)
 
 Dist:
-- rx.js
-- rx.compat.js
-- rx.lite.js
-- rx.lite.compat.js
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/fromiterable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromiterable.js)
 
 * * *
 
 ### <a id="rxobservablefromnodecallbackfunc-scheduler-context-selector"></a>`Rx.Observable.fromNodeCallback(func, [scheduler], [context], [selector])`
-<a href="#rxobservablefromnodecallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js#L9-L43 "View in source") 
+<a href="#rxobservablefromnodecallbackfunc-scheduler-context-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js "View in source") 
 
 Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
 
@@ -1184,7 +1303,7 @@ var rename = Rx.Observable.fromNodeCallback(fs.rename);
 var source = rename('file1.txt', 'file2.txt');
 
 var subscription = source.subscribe(
-    function (x) {
+    function () {
         console.log('Next: success!');
     },
     function (err) {
@@ -1201,18 +1320,36 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- /src/core/observable/fromnodecallback.js
+- [/src/core/observable/fromnodecallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js)
 
 Dist:
-- rx.async.js
-- rx.async.compat.js
+- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.async.js | rx.async.compat.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+- rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Async
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/fromnodecallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromnodecallback.js)
 
 * * *
 
 ### <a id="rxobservablefrompromisepromise"></a>`Rx.Observable.fromPromise(promise)`
-<a href="#rxobservablefrompromisepromise">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js#L6-L19 "View in source") 
+<a href="#rxobservablefrompromisepromise">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js "View in source") 
 
-Converts a Promises/A+ spec compliant Promise to an Observable sequence.
+Converts a Promises/A+ spec compliant Promise and/or ES6 compliant Promise to an Observable sequence.
 
 #### Arguments
 1. `promise` *(Promise)*: Promises/A+ spec compliant Promise to an Observable sequence.
@@ -1268,16 +1405,34 @@ var subscription1 = source1.subscribe(
 ### Location
 
 File:
-- /src/core/observable/frompromise.js
+- [/src/core/observable/frompromise.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js)
 
 Dist:
-- rx.async.js
-- rx.async.compat.js
+- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- If using rx.async.js | rx.async.compat.js
+    - rx.js | rx.compat.js
+    - rx.binding.js
+- rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Async
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/fromnodecallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/frompromise.js)
 
 * * *
 
 ### <a id="rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler"></a>`Rx.Observable.generate(initialState, condition, iterate, resultSelector, [scheduler])`
-<a href="#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generate.js "View in source") 
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -1319,12 +1474,32 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/generate.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generate.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/generate.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/generate.js)
 
 * * *
 
 ### <a id="rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-schedule"></a>`Rx.Observable.generateWithAbsoluteTime(initialState, condition, iterate, resultSelector, timeSelector, [scheduler])`
-<a href="#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-schedule">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-schedule">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generatewithabsolutetime.js "View in source") 
 
 Generates an observable sequence by iterating a state from an initial state until the condition fails.
 
@@ -1369,12 +1544,29 @@ var subscription = source.subscribe(
 
 ### Location
 
+File:
+- [/src/core/observable/generatewithabsolutetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generatewithabsolutetime.js)
+
+Dist:
+- [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Required Files:
 - rx.time.js
+- rx.js | rx.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Time
+
+Unit Tests:
+- [/tests/observable/generatewithabsolutetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/generatewithabsolutetime.js)
 
 * * *
 
 ### <a id="rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler"></a>`Rx.Observable.generateWithRelativeTime(initialState, condition, iterate, resultSelector, timeSelector, [scheduler])`
-<a href="#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generatewithrelativetime.js "View in source") 
 
 Generates an observable sequence by iterating a state from an initial state until the condition fails.
 
@@ -1419,12 +1611,33 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.time.js
+File:
+- [/src/core/observable/generatewithrelativetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generatewithrelativetime.js)
+
+Dist:
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Required Files:
+- if rx.time.js
+    - rx.js | rx.compat.js
+- rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Time
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/generatewithrelativetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/generatewithrelativetime.js)
 
 * * *
 
 ### <a id="rxobservableifcondition-thensource-elsesource"></a>`Rx.Observable.if(condition, thenSource, [elseSource])`
-<a href="#rxobservableifcondition-thensource-elsesource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservableifcondition-thensource-elsesource">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/if.js "View in source") 
 
 Determines whether an observable collection contains values. There is an alias for this method called `ifThen` for browsers <IE9
 
@@ -1486,12 +1699,31 @@ var subscription = source.subscribe(
 
 ### Location
 
+File:
+- [/src/core/observable/if.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/if.js)
+
+Dist:
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Required Files:
 - rx.experimental.js
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Experimental
+
+Unit Tests:
+- [/tests/observable/if.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/if.js)
 
 * * *
 
 ### <a id="rxobservableintervalperiod-scheduler"></a>`Rx.Observable.interval(period, [scheduler])`
-<a href="#rxobservableintervalperiod-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservableintervalperiod-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/interval.js "View in source") 
 
 Returns an observable sequence that produces a value after each period.
 
@@ -1528,14 +1760,35 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.time.js
+File:
+- [/src/core/observable/interval.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/interval.js)
+
+Dist:
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Required Files:
+- if rx.time.js
+    - rx.js | rx.compat.js
+- rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Time
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/interval.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/interval.js)
 
 * * *
 
 ### <a id="rxobservablemergescheduler-args"></a>`Rx.Observable.merge([scheduler], ...args)`
-<a href="#rxobservablemergescheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablemergescheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/merge.js "View in source") 
 
-Merges all the observable sequences into a single observable sequence.  
+Merges all the observable sequences and Promises into a single observable sequence.  
 
 #### Arguments
 1. `[scheduler]` *(Scheduler=Rx.Scheduler.timeout)*: Scheduler to run the timer on. If not specified, Rx.Scheduler.immediate is used.
@@ -1579,12 +1832,32 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/merge.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/merge.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/merge.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/merge.js)
 
 * * *
 
 ### <a id="rxobservablenever"></a>`Rx.Observable.never()`
-<a href="#rxobservablenever">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablenever">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.js "View in source") 
 
 Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins). 
 
@@ -1610,14 +1883,34 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/never.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/never.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/never.js)
 
 * * *
 
 ### <a id="rxobservableonerrorresumenextargs"></a>`Rx.Observable.onErrorResumeNext(...args)`
-<a href="#rxobservableonerrorresumenextargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservableonerrorresumenextargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js "View in source") 
 
-Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
+Continues an observable sequence that is terminated normally or by an exception with the next observable sequence or Promise.
 
 ### Arguments
 1. `args` *(Array|arguments)*: Observable sequences to concatenate.
@@ -1650,12 +1943,29 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/onerrorresumenext.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+
+Unit Tests:
+- [/tests/observable/onerrorresumenext.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/onerrorresumenext.js)
 
 * * *
 
 ### <a id="rxobservablerangestart-count-scheduler"></a>`Rx.Observable.range(start, count, [scheduler])`
-<a href="#rxobservablerangestart-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablerangestart-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js "View in source") 
 
 Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
 
@@ -1690,12 +2000,32 @@ var subscription = source.subscribe(
 
 ### Location
 
-- rx.js
+File:
+- [/src/core/observable/range.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js)
+
+Dist:
+- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Required Files:
+- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+
+NPM Packages:
+- rx
+
+NuGet Packages:
+- RxJS-Main
+- RxJS-Lite
+
+Unit Tests:
+- [/tests/observable/range.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/range.js)
 
 * * *
 
 ### <a id="rxobservablerepeatvalue-repeatcount-scheduler"></a>`Rx.Observable.repeat(value, [repeatCount], [scheduler])`
-<a href="#rxobservablerepeatvalue-repeatcount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablerepeatvalue-repeatcount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.j9 "View in source") 
 
 Generates an observable sequence that repeats the given element the specified number of times, using the specified scheduler to send out observer messages.
 
@@ -1735,7 +2065,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservablereturnvalue-scheduler"></a>`Rx.Observable.return(value, [scheduler])`
-<a href="#rxobservablereturnvalue-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js#L2549-L2559 "View in source") 
+<a href="#rxobservablereturnvalue-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.j9 "View in source") 
 
 Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
 There is an alias called `returnValue` for browsers <IE9.
