@@ -178,7 +178,7 @@ Propagates the observable sequence or Promise that reacts first.
 1. `args` *(Array|arguments)*: Observable sources or Promises competing to react first either as an array or arguments.
 
 #### Returns
-*(Observable)*: An observable sequence that surfaces any of the given sequences, whichever reacted first.
+*(`Observable`)*: An observable sequence that surfaces any of the given sequences, whichever reacted first.
 
 #### Example
 ```js
@@ -227,23 +227,23 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/amb.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/amb.js)
+- [`/src/core/observable/amb.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/amb.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
 
-Required Files:
-- <None>
+Prerequisites:
+- None
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 
 Unit Tests:
-- [/tests/observable/ambproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/ambproto.js)
+- [`/tests/observable/ambproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/ambproto.js)
 
 * * *
 
@@ -253,12 +253,12 @@ Unit Tests:
 Uses selector to determine which source in sources to use.  There is an alias 'switchCase' for browsers <IE9.
 
 ### Arguments
-1. `selector` *(Function)*: The function which extracts the value for to test in a case statement.
-2. `sources` *(Object)*: A object which has keys which correspond to the case statement labels.
-3. `[elseSource|scheduler]` *(Observable|Scheduler)*: The observable sequence that will be run if the sources are not matched. If this is not provided, it defaults to `Rx.Observabe.empty` with the specified scheduler.
+1. `selector` *(`Function`)*: The function which extracts the value for to test in a case statement.
+2. `sources` *(`Object`)*: A object which has keys which correspond to the case statement labels.
+3. `[elseSource|scheduler]` *(`Observable` | `Scheduler`)*: The observable sequence that will be run if the sources are not matched. If this is not provided, it defaults to `Rx.Observabe.empty` with the specified scheduler.
 
 #### Returns
-*(Observable)*: An observable sequence which is determined by a case statement. 
+*(`Observable`)*: An observable sequence which is determined by a case statement. 
 
 #### Example
 ```js
@@ -294,22 +294,22 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/case.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js)
+- [`/src/core/observable/case.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js)
 
 Dist:
-- [rx.experimental.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
+- [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Experimental
+- [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
-- [/tests/observable/case.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/case.js)
+- [`/tests/observable/case.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/case.js)
 
 * * *
 
@@ -319,10 +319,10 @@ Unit Tests:
 Continues an observable sequence that is terminated by an exception with the next observable sequence.  There is an alias for this method `catchException` for browsers <IE9
 
 #### Arguments
-1. `args` *(Array|arguments)*: Observable sequences to catch exceptions for.
+1. `args` *(`Array` | `arguments`)*: Observable sequences to catch exceptions for.
 
 #### Returns
-*(Observable)*: An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
+*(`Observable`)*: An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
 
 #### Example
 ```js
@@ -349,26 +349,26 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/catch.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/catch.js)
+- [`/src/core/observable/catch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/catch.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- <None>
+Prerequisites:
+- None
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/catchexceptionproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/catchexceptionproto.js)
+- [`/tests/observable/catchexceptionproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/catchexceptionproto.js)
 
 * * *
 
@@ -378,10 +378,10 @@ Unit Tests:
 Concatenates all of the specified observable sequences, as long as the previous observable sequence terminated successfully.
 
 #### Arguments
-1. `args` *(Array|arguments)*: Observable sequences or Promises to concatenate.
+1. `args` *(`Array` | `arguments`)*: Observable sequences or Promises to concatenate.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of each given sequence, in sequential order.
+*(`Observable`)*: An observable sequence that contains the elements of each given sequence, in sequential order.
 
 #### Example
 ```js
@@ -431,26 +431,26 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/concat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js)
+- [`/src/core/observable/concat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- <None>
+Prerequisites:
+- None
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/concatproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatproto.js)
+- [`/tests/observable/concatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatproto.js)
 
 * * *
 
@@ -460,10 +460,10 @@ Unit Tests:
 Creates an observable sequence from a specified subscribe method implementation.  This is an alias for the `createWithDisposable` method
 
 #### Arguments
-1. `subscribe` *(Function)*: Implementation of the resulting observable sequence's subscribe method, optionally returning a function that will be wrapped in a disposable object.  This could also be a disposable object.
+1. `subscribe` *(`Function`)*: Implementation of the resulting observable sequence's subscribe method, optionally returning a function that will be wrapped in a disposable object.  This could also be a disposable object.
 
 #### Returns
-*(Observable)*: The observable sequence with the specified implementation for the subscribe method.
+*(`Observable`)*: The observable sequence with the specified implementation for the subscribe method.
 
 #### Example
 ```js
@@ -525,27 +525,27 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/create.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js)
+- [`/src/core/observable/create.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- <None>
+Prerequisites:
+- None
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/create.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/create.js)
-- [/tests/observable/createwithdisposable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/createwithdisposable.js)
+- [`/tests/observable/create.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/create.js)
+- [`/tests/observable/createwithdisposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/createwithdisposable.js)
 
 * * *
 
@@ -555,10 +555,10 @@ Unit Tests:
 Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
 
 #### Arguments
-1. `observableFactory` *(Function)*: Observable factory function to invoke for each observer that subscribes to the resulting sequence.
+1. `observableFactory` *(`Function`)*: Observable factory function to invoke for each observer that subscribes to the resulting sequence.
 
 #### Returns
-*(Observable)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
+*(`Observable`)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
 
 #### Example
 ```js
@@ -604,26 +604,26 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/defer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js)
+- [`/src/core/observable/defer.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- <None>
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/defer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/defer.js)
+- [`/tests/observable/defer.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/defer.js)
 
 * * *
 
@@ -633,10 +633,10 @@ Unit Tests:
 Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
 
 #### Arguments
-1. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to send the termination call on.
+1. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to send the termination call on.
 
 #### Returns
-*(Observable)*: An observable sequence with no elements.
+*(`Observable`)*: An observable sequence with no elements.
 
 #### Example
 ```js
@@ -662,20 +662,20 @@ File:
 - [/src/core/observable/empty.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/empty.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - <None>
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/empty.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/empty.js)
@@ -690,10 +690,10 @@ There is an alias for this method called `forIn` for browsers <IE9
 
 #### Arguments
 1. `sources` *(Array)*: An array of values to turn into an observable sequence.
-2. `resultSelector` *(Function)*: A function to apply to each item in the sources array to turn it into an observable sequence.
+2. `resultSelector` *(`Function`)*: A function to apply to each item in the sources array to turn it into an observable sequence.
 
 #### Returns
-*(Observable)*: An observable sequence from the concatenated observable sequences or Promises.  
+*(`Observable`)*: An observable sequence from the concatenated observable sequences or Promises.  
 
 #### Example
 ```js
@@ -754,19 +754,19 @@ File:
 - [/src/core/observable/for.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/for.js)
 
 Dist:
-- [rx.experimental.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
+- [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Experimental
+- [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
-- [/tests/observable/for.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/for.js)
+- [`/tests/observable/for.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/for.js)
 
 * * *
 
@@ -779,7 +779,7 @@ Runs all observable sequences in parallel and collect their last elements.
 1. `args` *(Arguments | Array)*: An array or arguments of Observable sequences or Promises to collect the last elements for.
 
 #### Returns
-*(Observable)*: An observable sequence with an array collecting the last elements of all the input sequences.
+*(`Observable`)*: An observable sequence with an array collecting the last elements of all the input sequences.
 
 #### Example
 ```js
@@ -809,22 +809,22 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/forkjoin.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/forkjoin.js)
+- [`/src/core/observable/forkjoin.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/forkjoin.js)
 
 Dist:
-- [rx.experimental.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
+- [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Experimental
+- [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
-- [/tests/observable/forkjoin.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/forkjoin.js)
+- [`/tests/observable/forkjoin.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/forkjoin.js)
 
 * * *
 
@@ -838,7 +838,7 @@ Converts an array to an observable sequence, using an optional scheduler to enum
 2. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the enumeration of the input sequence on.
 
 #### Returns
-*(Observable)*: The observable sequence whose elements are pulled from the given enumerable sequence.
+*(`Observable`)*: The observable sequence whose elements are pulled from the given enumerable sequence.
 
 #### Example
 ```js
@@ -866,26 +866,26 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/fromarray.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js)
+- [`/src/core/observable/fromarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- <None>
+Prerequisites:
+- None
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/fromarray.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromarray.js)
+- [`/tests/observable/fromarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromarray.js)
 
 * * *
 
@@ -895,13 +895,13 @@ Unit Tests:
 Converts a callback function to an observable sequence. 
 
 #### Arguments
-1. `func` *(Function)*: Function with a callback as the last parameter to convert to an Observable sequence.
+1. `func` *(`Function`)*: Function with a callback as the last parameter to convert to an Observable sequence.
 2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
-3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
-4. `[selector]` *(Function)*: A selector which takes the arguments from the callback to produce a single item to yield on next.
+3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+4. `[selector]` *(`Function`)*: A selector which takes the arguments from the callback to produce a single item to yield on next.
 
 #### Returns
-*(Function)*: A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array if no selector given, else the object created by the selector function.
+*(`Function`)*: A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array if no selector given, else the object created by the selector function.
 
 #### Example
 ```js
@@ -932,26 +932,26 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/fromcallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js)
+- [`/src/core/observable/fromcallback.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js)
 
 Dist:
-- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.async.js | rx.async.compat.js
     - rx.js | rx.compat.js
     - rx.binding.js
 - rx.lite.js | rx.lite.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Async
-- RxJS-Lite
+- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/fromcallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromcallback.js)
@@ -965,12 +965,12 @@ Creates an observable sequence by adding an event listener to the matching DOMEl
 Note that this uses the library approaches for jQuery, Zepto, AngularJS and Ember.js and falls back to native binding if not present.
 
 #### Arguments
-1. `element` *(Any)*: The DOMElement, NodeList, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter to attach a listener.
-2. `eventName` *(String)*: The event name to attach the observable sequence.
-3. `[selector]` *(Function)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
+1. `element` *(`Any`)*: The DOMElement, NodeList, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter to attach a listener.
+2. `eventName` *(`String`)*: The event name to attach the observable sequence.
+3. `[selector]` *(`Function`)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
 
 #### Returns
-*(Observable)*: An observable sequence of events from the specified element and the specified event.
+*(`Observable`)*: An observable sequence of events from the specified element and the specified event.
 
 #### Example
 
@@ -1030,30 +1030,30 @@ eventEmitter.emit('data', 'baz', 'quux');
 ### Location
 
 File:
-- [/src/core/observable/fromevent.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js)
-- [/src/core/observable/fromevent-modern.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent-modern.js)
+- [`/src/core/observable/fromevent.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js)
+- [`/src/core/observable/fromevent-modern.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent-modern.js)
 
 Dist:
-- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- If using rx.async.js | rx.async.compat.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
+Prerequisites:
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js) | [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Async
-- RxJS-Lite
+- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/fromevent-compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent-compat.js)
-- [/tests/observable/fromevent.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent.js)
+- [`/tests/observable/fromevent-compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent-compat.js)
+- [`/tests/observable/fromevent.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent.js)
 
 * * *
 
@@ -1063,12 +1063,12 @@ Unit Tests:
 Creates an observable sequence by using teh addHandler and removeHandler functions to add and remove the handlers, with an optional selector function to project the event arguments.
 
 #### Arguments
-1. `addHandler` *(Function)*: The DOMElement, NodeList or EventEmitter to attach a listener.
-2. `removeHandler` *(Function)*: The event name to attach the observable sequence.
-3. `[selector]` *(Function)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
+1. `addHandler` *(`Function`)*: The DOMElement, NodeList or EventEmitter to attach a listener.
+2. `removeHandler` *(`Function`)*: The event name to attach the observable sequence.
+3. `[selector]` *(`Function`)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
 
 #### Returns
-*(Observable)*: An observable sequence of events from the specified element and the specified event.
+*(`Observable`)*: An observable sequence of events from the specified element and the specified event.
 
 #### Example
 
@@ -1177,23 +1177,23 @@ File:
 - [/src/core/observable/fromeventpattern.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js)
 
 Dist:
-- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.async.js | rx.async.compat.js
     - rx.js | rx.compat.js
     - rx.binding.js
 - rx.lite.js | rx.lite.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Async
-- RxJS-Lite
+- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/fromeventpattern.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromeventpattern.js)
@@ -1210,7 +1210,7 @@ Converts an ES6 iterable into an Observable sequence.
 2. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.currentThread`.
 
 #### Returns
-*(Function)*: The observable sequence whose elements are pulled from the given generator sequence.
+*(`Function`)*: The observable sequence whose elements are pulled from the given generator sequence.
 
 #### Example
 ```js
@@ -1257,20 +1257,20 @@ File:
 - [/src/core/observable/fromiterable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromiterable.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/fromiterable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromiterable.js)
@@ -1283,13 +1283,13 @@ Unit Tests:
 Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
 
 #### Arguments
-1. `func` *(Function)*: Function with a callback as the last parameter to convert to an Observable sequence.
+1. `func` *(`Function`)*: Function with a callback as the last parameter to convert to an Observable sequence.
 2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
-3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
-4. `[selector]` *(Function)*: A selector which takes the arguments from callback sans the error to produce a single item to yield on next.
+3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+4. `[selector]` *(`Function`)*: A selector which takes the arguments from callback sans the error to produce a single item to yield on next.
 
 #### Returns
-*(Function)*: A function which when applied, returns an observable sequence with the callback arguments as an array if no selector given, else the object created by the selector function on success, or an error if the first parameter is not falsy.
+*(`Function`)*: A function which when applied, returns an observable sequence with the callback arguments as an array if no selector given, else the object created by the selector function on success, or an error if the first parameter is not falsy.
 
 #### Example
 ```js
@@ -1323,23 +1323,23 @@ File:
 - [/src/core/observable/fromnodecallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromnodecallback.js)
 
 Dist:
-- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.async.js | rx.async.compat.js
     - rx.js | rx.compat.js
     - rx.binding.js
 - rx.lite.js | rx.lite.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Async
-- RxJS-Lite
+- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/fromnodecallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromnodecallback.js)
@@ -1355,7 +1355,7 @@ Converts a Promises/A+ spec compliant Promise and/or ES6 compliant Promise to an
 1. `promise` *(Promise)*: Promises/A+ spec compliant Promise to an Observable sequence.
 
 #### Returns
-*(Observable)*: An Observable sequence which wraps the existing promise success and failure.
+*(`Observable`)*: An Observable sequence which wraps the existing promise success and failure.
 
 #### Example
 ```js
@@ -1408,23 +1408,23 @@ File:
 - [/src/core/observable/frompromise.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js)
 
 Dist:
-- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.async.js | rx.async.compat.js
     - rx.js | rx.compat.js
     - rx.binding.js
 - rx.lite.js | rx.lite.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Async
-- RxJS-Lite
+- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/fromnodecallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/frompromise.js)
@@ -1437,14 +1437,14 @@ Unit Tests:
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
 #### Arguments
-1. `initialState` *(Any)*: Initial state.
-2. `condition` *(Function)*: Condition to terminate generation (upon returning false).
-3. `iterate` *(Function)*: Iteration step function.
-4. `resultSelector` *(Function)*: Selector function for results produced in the sequence.
+1. `initialState` *(`Any`)*: Initial state.
+2. `condition` *(`Function`)*: Condition to terminate generation (upon returning false).
+3. `iterate` *(`Function`)*: Iteration step function.
+4. `resultSelector` *(`Function`)*: Selector function for results produced in the sequence.
 5. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.currentThread.
 
 #### Returns
-*(Observable)*: The generated sequence.
+*(`Observable`)*: The generated sequence.
 
 #### Example
 ```js
@@ -1478,20 +1478,20 @@ File:
 - [/src/core/observable/generate.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generate.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/generate.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/generate.js)
@@ -1504,15 +1504,15 @@ Unit Tests:
 Generates an observable sequence by iterating a state from an initial state until the condition fails.
 
 #### Arguments
-1. `initialState` *(Any)*: Initial state.
-2. `condition` *(Function)*: Condition to terminate generation (upon returning false).
-3. `iterate` *(Function)*: Iteration step function.
-4. `resultSelector` *(Function)*: Selector function for results produced in the sequence.
-5. `timeSelector` *(Function)*: Time selector function to control the speed of values being produced each iteration, returning Date values.
+1. `initialState` *(`Any`)*: Initial state.
+2. `condition` *(`Function`)*: Condition to terminate generation (upon returning false).
+3. `iterate` *(`Function`)*: Iteration step function.
+4. `resultSelector` *(`Function`)*: Selector function for results produced in the sequence.
+5. `timeSelector` *(`Function`)*: Time selector function to control the speed of values being produced each iteration, returning Date values.
 6. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.timeout.
 
 #### Returns
-*(Observable)*: The generated sequence.
+*(`Observable`)*: The generated sequence.
 
 #### Example
 ```js
@@ -1550,12 +1550,12 @@ File:
 Dist:
 - [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
 
-Required Files:
+Prerequisites:
 - rx.time.js
 - rx.js | rx.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - RxJS-Time
@@ -1571,15 +1571,15 @@ Unit Tests:
 Generates an observable sequence by iterating a state from an initial state until the condition fails.
 
 #### Arguments
-1. `initialState` *(Any)*: Initial state.
-2. `condition` *(Function)*: Condition to terminate generation (upon returning false).
-3. `iterate` *(Function)*: Iteration step function.
-4. `resultSelector` *(Function)*: Selector function for results produced in the sequence.
-5. `timeSelector` *(Function)*: Time selector function to control the speed of values being produced each iteration, returning integer values denoting milliseconds.
+1. `initialState` *(`Any`)*: Initial state.
+2. `condition` *(`Function`)*: Condition to terminate generation (upon returning false).
+3. `iterate` *(`Function`)*: Iteration step function.
+4. `resultSelector` *(`Function`)*: Selector function for results produced in the sequence.
+5. `timeSelector` *(`Function`)*: Time selector function to control the speed of values being produced each iteration, returning integer values denoting milliseconds.
 6. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.timeout.
 
 #### Returns
-*(Observable)*: The generated sequence.
+*(`Observable`)*: The generated sequence.
 
 #### Example
 ```js
@@ -1615,21 +1615,21 @@ File:
 - [/src/core/observable/generatewithrelativetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generatewithrelativetime.js)
 
 Dist:
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 - [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
 
-Required Files:
+Prerequisites:
 - if rx.time.js
     - rx.js | rx.compat.js
 - rx.lite.js | rx.lite.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - RxJS-Time
-- RxJS-Lite
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/generatewithrelativetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/generatewithrelativetime.js)
@@ -1642,12 +1642,12 @@ Unit Tests:
 Determines whether an observable collection contains values. There is an alias for this method called `ifThen` for browsers <IE9
 
 #### Arguments
-1. `condition` *(Function)*: The condition which determines if the thenSource or elseSource will be run.
-2. `thenSource` *(Observable)*: thenSource The observable sequence that will be run if the condition function returns true.
+1. `condition` *(`Function`)*: The condition which determines if the thenSource or elseSource will be run.
+2. `thenSource` *(`Observable`)*: thenSource The observable sequence that will be run if the condition function returns true.
 3. `[elseSource]` *(Observable|Scheduler)*: The observable sequence that will be run if the condition function returns false. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.
 
 #### Returns
-*(Observable)*: The generated sequence.
+*(`Observable`)*: The generated sequence.
 
 #### Example
 ```js
@@ -1703,19 +1703,19 @@ File:
 - [/src/core/observable/if.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/if.js)
 
 Dist:
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 - [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
 
-Required Files:
+Prerequisites:
 - rx.experimental.js
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Experimental
+- [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
 - [/tests/observable/if.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/if.js)
@@ -1732,7 +1732,7 @@ Returns an observable sequence that produces a value after each period.
 2. `[scheduler]` *(Scheduler=Rx.Scheduler.timeout)*: Scheduler to run the timer on. If not specified, Rx.Scheduler.timeout is used.
 
 #### Returns
-*(Observable)*: An observable sequence that produces a value after each period.
+*(`Observable`)*: An observable sequence that produces a value after each period.
 
 #### Example
 ```js
@@ -1764,21 +1764,21 @@ File:
 - [/src/core/observable/interval.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/interval.js)
 
 Dist:
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 - [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
 
-Required Files:
+Prerequisites:
 - if rx.time.js
     - rx.js | rx.compat.js
 - rx.lite.js | rx.lite.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - RxJS-Time
-- RxJS-Lite
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/interval.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/interval.js)
@@ -1795,7 +1795,7 @@ Merges all the observable sequences and Promises into a single observable sequen
 1. `args` *(Array|arguments)*: Observable sequences to merge into a single sequence.
 
 #### Returns
-*(Observable)*: An observable sequence that produces a value after each period.
+*(`Observable`)*: An observable sequence that produces a value after each period.
 
 #### Example
 ```js
@@ -1836,20 +1836,20 @@ File:
 - [/src/core/observable/merge.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/merge.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/merge.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/merge.js)
@@ -1862,7 +1862,7 @@ Unit Tests:
 Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins). 
 
 #### Returns
-*(Observable)*: An observable sequence whose observers will never get called.
+*(`Observable`)*: An observable sequence whose observers will never get called.
 
 #### Example
 ```js
@@ -1887,20 +1887,20 @@ File:
 - [/src/core/observable/never.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/never.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/never.js)
@@ -1916,7 +1916,7 @@ Continues an observable sequence that is terminated normally or by an exception 
 1. `args` *(Array|arguments)*: Observable sequences to concatenate.
 
 #### Returns
-*(Observable)*: An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally. 
+*(`Observable`)*: An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally. 
 
 #### Example
 ```js
@@ -1947,17 +1947,17 @@ File:
 - [/src/core/observable/onerrorresumenext.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 
 Unit Tests:
 - [/tests/observable/onerrorresumenext.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/onerrorresumenext.js)
@@ -1975,7 +1975,7 @@ Generates an observable sequence of integral numbers within a specified range, u
 3. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
 
 #### Returns
-*(Observable)*: An observable sequence that contains a range of sequential integral numbers. 
+*(`Observable`)*: An observable sequence that contains a range of sequential integral numbers. 
 
 #### Example
 ```js
@@ -2004,20 +2004,20 @@ File:
 - [/src/core/observable/range.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/range.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/range.js)
@@ -2030,12 +2030,12 @@ Unit Tests:
 Generates an observable sequence that repeats the given element the specified number of times, using the specified scheduler to send out observer messages.
 
 ### Arguments
-1. `value` *(Any)*: Element to repeat.
+1. `value` *(`Any`)*: Element to repeat.
 2. `[repeatCount=-1]` *(Number)*:Number of times to repeat the element. If not specified, repeats indefinitely.
 3. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to run the producer loop on. If not specified, defaults to Scheduler.immediate.
 
 #### Returns
-*(Observable)*: An observable sequence that repeats the given element the specified number of times.
+*(`Observable`)*: An observable sequence that repeats the given element the specified number of times.
 
 #### Example
 ```js
@@ -2064,20 +2064,20 @@ File:
 - [/src/core/observable/repeat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeat.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/repeat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/repeat.js)
@@ -2091,11 +2091,11 @@ Returns an observable sequence that contains a single element, using the specifi
 There is an alias called `returnValue` for browsers <IE9.
 
 ### Arguments
-1. `value` *(Any)*: Single element in the resulting observable sequence.
+1. `value` *(`Any`)*: Single element in the resulting observable sequence.
 2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
 
 #### Returns
-*(Observable)*: An observable sequence that repeats the given element the specified number of times.
+*(`Observable`)*: An observable sequence that repeats the given element the specified number of times.
 
 #### Example
 ```js
@@ -2122,20 +2122,20 @@ File:
 - [/src/core/observable/return.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/return.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/return.js)
@@ -2148,12 +2148,12 @@ Unit Tests:
 Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
 
 ### Arguments
-1. `func` *(Function)*: Function to run asynchronously.
+1. `func` *(`Function`)*: Function to run asynchronously.
 2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
-3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
 
 #### Returns
-*(Observable)*: An observable sequence exposing the function's result value, or an exception.
+*(`Observable`)*: An observable sequence exposing the function's result value, or an exception.
 
 #### Example
 ```js
@@ -2188,22 +2188,22 @@ File:
 - [/src/core/observable/start.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/start.js)
 
 Dist:
-- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.async.js | rx.async.compat.js
     - rx.js | rx.compat.js
     - rx.binding.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Async
-- RxJS-Lite
+- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/start.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/start.js)
@@ -2216,10 +2216,10 @@ Unit Tests:
 Invokes the asynchronous function, surfacing the result through an observable sequence.
 
 ### Arguments
-1. `functionAsync` *(Function)*: Asynchronous function which returns a Promise to run.
+1. `functionAsync` *(`Function`)*: Asynchronous function which returns a Promise to run.
 
 #### Returns
-*(Observable)*: An observable sequence exposing the function's Promises's value or error.
+*(`Observable`)*: An observable sequence exposing the function's Promises's value or error.
 
 #### Example
 ```js
@@ -2248,22 +2248,22 @@ File:
 - [/src/core/observable/startasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startasync.js)
 
 Dist:
-- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.async.js | rx.async.compat.js
     - rx.js | rx.compat.js
     - rx.binding.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Async
-- RxJS-Lite
+- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/startasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/startasync.js)
@@ -2277,11 +2277,11 @@ Returns an observable sequence that terminates with an exception, using the spec
 There is an alias to this method called `throwException` for browsers <IE9.
 
 ### Arguments
-1. `dueTime` *(Any)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
+1. `dueTime` *(`Any`)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
 2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to send the exceptional termination call on. If not specified, defaults to the immediate scheduler.
 
 #### Returns
-*(Observable)*: The observable sequence that terminates exceptionally with the specified exception object.
+*(`Observable`)*: The observable sequence that terminates exceptionally with the specified exception object.
    
 #### Example
 ```js
@@ -2308,20 +2308,20 @@ File:
 - [/src/core/observable/throw.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throw.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/throw.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/throw.js)
@@ -2340,7 +2340,7 @@ relative time is supported.
 3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: An observable sequence that produces a value after due time has elapsed and then each period.
+*(`Observable`)*: An observable sequence that produces a value after due time has elapsed and then each period.
 
 #### Example
 ```js
@@ -2373,20 +2373,20 @@ File:
 
 Dist:
 - [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - rx.time.js
     - rx.js | rx.compat.js
 - rx.lite.js | rx.lite.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - RxJS-Time
-- RxJS-Lite
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/timer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/timer.js)
@@ -2400,12 +2400,12 @@ Unit Tests:
 Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
 
 ### Arguments
-1. `func` *(Function)*: Function to convert to an asynchronous function.
+1. `func` *(`Function`)*: Function to convert to an asynchronous function.
 2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
-3. `[context]` *(Any)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
+3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
 
 #### Returns
-*(Function)*: Asynchronous function.
+*(`Function`)*: Asynchronous function.
 
 #### Example
 ```js
@@ -2437,16 +2437,16 @@ File:
 - [/src/core/observable/toasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toasync.js)
 
 Dist:
-- [rx.async.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.async.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
+- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
 
-Required Files:
+Prerequisites:
 - rx.async.js | rx.async.compat.js
 - rx.js | rx.compat.js
 - rx.binding.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - RxJS-Binding
@@ -2462,11 +2462,11 @@ Unit Tests:
  Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
 
 ### Arguments
-1. `resourceFactory` *(Function)*: Factory function to obtain a resource object.
+1. `resourceFactory` *(`Function`)*: Factory function to obtain a resource object.
 2. `observableFactory` *(Scheduler)*: Factory function to obtain an observable sequence that depends on the obtained resource.
 
 #### Returns
-*(Function)*: An observable sequence whose lifetime controls the lifetime of the dependent resource object.
+*(`Function`)*: An observable sequence whose lifetime controls the lifetime of the dependent resource object.
 
 #### Example
 ```js
@@ -2526,17 +2526,17 @@ File:
 - [/src/core/observable/using.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/using.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
 
-Required Files:
+Prerequisites:
 - rx.js | rx.compat.js
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 
 Unit Tests:
 - [/tests/observable/using.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/using.js)
@@ -2552,7 +2552,7 @@ A series of plans (specified as an Array of as a series of arguments) created by
 1. `args` *(arguments|Array)*: A series of plans (specified as an Array of as a series of arguments) created by use of the then operator on patterns.
 
 #### Returns
-*(Observable)*: Observable sequence with the results form matching several patterns. 
+*(`Observable`)*: Observable sequence with the results form matching several patterns. 
 
 #### Example
 ```js
@@ -2587,12 +2587,12 @@ File:
 Dist:
 - [rx.joinpatterns.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js)
 
-Required Files:
+Prerequisites:
 - rx.joinpatterns.js
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - RxJS-JoinPatterns
@@ -2608,11 +2608,11 @@ Unit Tests:
 Repeats source as long as condition holds emulating a while loop.  There is an alias for this method called 'whileDo' for browsers <IE9.
 
 ### Arguments
-1. `condition` *(Function)*: The condition which determines if the source will be repeated.
-2. `source` *(Observable)*: The observable sequence that will be run if the condition function returns true.
+1. `condition` *(`Function`)*: The condition which determines if the source will be repeated.
+2. `source` *(`Observable`)*: The observable sequence that will be run if the condition function returns true.
 
 #### Returns
-*(Observable)*: An observable sequence which is repeated as long as the condition holds. 
+*(`Observable`)*: An observable sequence which is repeated as long as the condition holds. 
 
 #### Example
 ```js
@@ -2648,17 +2648,17 @@ File:
 - [/src/core/observable/while.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/while.js)
 
 Dist:
-- [rx.experimental.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
+- [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
-Required Files:
+Prerequisites:
 - rx.experimental.js
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Experimental
+- [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
 - [/tests/observable/while.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/while.js)
@@ -2674,7 +2674,7 @@ Merges the specified observable sequences or Promises into one observable sequen
 1. `args` *(Array|arguments)*: Observable sources.
 
 #### Returns
-*(Observable)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+*(`Observable`)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function.
 
 #### Example
 ```js
@@ -2739,21 +2739,21 @@ File:
 - [/src/core/observable/zip.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zip.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - rx.experimental.js
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/zip.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/zip.js)
@@ -2769,7 +2769,7 @@ Merges the specified observable sequences into one observable sequence by emitti
 1. `args` *(Arguments | Array)*: Observable sources.
 
 #### Returns
-*(Observable)*: An observable sequence containing lists of elements at corresponding indexes.
+*(`Observable`)*: An observable sequence containing lists of elements at corresponding indexes.
 
 #### Example
 ```js
@@ -2804,21 +2804,21 @@ File:
 - [/src/core/observable/zip.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparay.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - rx.experimental.js
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/ziparay.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/ziparay.js)
@@ -2835,10 +2835,10 @@ Unit Tests:
 
 #### Arguments
 1. `[seed]` *(Mixed)*: The initial accumulator value.
-2. `accumulator` *(Function)*: accumulator An accumulator function to be invoked on each element.
+2. `accumulator` *(`Function`)*: accumulator An accumulator function to be invoked on each element.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element with the final accumulator value.
+*(`Observable`)*: An observable sequence containing a single element with the final accumulator value.
 
 #### Example
 ```js
@@ -2889,12 +2889,12 @@ File:
 Dist:
 - [rx.aggregates.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
 
-Required Files:
+Prerequisites:
 - rx.aggregates.js
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - RxJS-Aggregates
@@ -2910,11 +2910,11 @@ Unit Tests:
 Determines whether all elements of an observable sequence satisfy a condition.  There is an alias for this method called `every`.
 
 #### Arguments
-1. `predicate` *(Function)*: A function to test each element for a condition.
-2. `[thisArg]` *(Function)*: Object to use as this when executing callback.
+1. `predicate` *(`Function`)*: A function to test each element for a condition.
+2. `[thisArg]` *(`Function`)*: Object to use as this when executing callback.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
+*(`Observable`)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
 
 #### Example
 ```js
@@ -2946,12 +2946,12 @@ File:
 Dist:
 - [rx.aggregates.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
 
-Required Files:
+Prerequisites:
 - rx.aggregates.js
-- rx.js | rx.compat.js | rx.lite.js | rx.lite.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - RxJS-Aggregates
@@ -2967,10 +2967,10 @@ Unit Tests:
 Propagates the observable sequence that reacts first.
 
 #### Arguments
-1. `rightSource` *(Observable)*: Second observable sequence.
+1. `rightSource` *(`Observable`)*: Second observable sequence.
 
 #### Returns
-*(Observable)*: An observable sequence that surfaces either of the given sequences, whichever reacted first.
+*(`Observable`)*: An observable sequence that surfaces either of the given sequences, whichever reacted first.
 
 #### Example
 ```js
@@ -3006,7 +3006,7 @@ var subscription = source.subscribe(
 Propagates the observable sequence that reacts first.
 
 #### Arguments
-1. `right` *(Observable)*: Observable sequence to match with the current sequence.
+1. `right` *(`Observable`)*: Observable sequence to match with the current sequence.
 
 #### Returns
 *(Pattern)*: Pattern object that matches when both observable sequences have an available value.  
@@ -3047,11 +3047,11 @@ var subscription = source.subscribe(
 Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence. There is an alias to this function called `some`.
 
 #### Arguments
-1. `[predicate]` *(Function)*: A function to test each element for a condition.
-2. `[thisArg]` *(Any)*: Object to use as this when executing callback.
+1. `[predicate]` *(`Function`)*: A function to test each element for a condition.
+2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate. 
+*(`Observable`)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate. 
 
 #### Example
 ```js
@@ -3103,7 +3103,7 @@ var subscription = source.subscribe(
 Hides the identity of an observable sequence.
 
 #### Returns
-*(Observable)*: An observable sequence that hides the identity of the source sequence.  
+*(`Observable`)*: An observable sequence that hides the identity of the source sequence.  
 
 #### Example
 ```js
@@ -3144,10 +3144,10 @@ var subscription = source.subscribe(
 Computes the average of an observable sequence of values that are in the sequence or obtained by invoking a transform function on each element of the input sequence if present.
 
 #### Arguments
-1. `[selector]` *(Function)*: A transform function to apply to each element.
+1. `[selector]` *(`Function`)*: A transform function to apply to each element.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element with the average of the sequence of values.
+*(`Observable`)*: An observable sequence containing a single element with the average of the sequence of values.
 
 #### Example
 ```js
@@ -3217,12 +3217,12 @@ Rx.Observable.prototype.buffer(bufferBoundaries);
 ```
 
 #### Arguments
-1. `[bufferOpenings]` *(Observable)*: Observable sequence whose elements denote the creation of new windows.
-2. `[bufferBoundaries] *(Observable)*: Sequence of buffer boundary markers. The current buffer is closed and a new buffer is opened upon receiving a boundary marker.
-2. `[bufferClosingSelector]` *(Function)*: A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
+1. `[bufferOpenings]` *(`Observable`)*: Observable sequence whose elements denote the creation of new windows.
+2. `[bufferBoundaries] *(`Observable`)*: Sequence of buffer boundary markers. The current buffer is closed and a new buffer is opened upon receiving a boundary marker.
+2. `[bufferClosingSelector]` *(`Function`)*: A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
 
 #### Returns
-*(Observable)*: An observable sequence of windows. 
+*(`Observable`)*: An observable sequence of windows. 
 
 #### Example
 ```js
@@ -3307,11 +3307,11 @@ var subscription = source.subscribe(
 Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
 
 #### Arguments
-1. `count` *(Function)*: Length of each buffer.
-2. `[skip]` *(Function)*: Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
+1. `count` *(`Function`)*: Length of each buffer.
+2. `[skip]` *(`Function`)*: Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
 
 #### Returns
-*(Observable)*: An observable sequence of buffers. 
+*(`Observable`)*: An observable sequence of buffers. 
 
 #### Example
 ```js
@@ -3375,7 +3375,7 @@ Projects each element of an observable sequence into zero or more buffers which 
 3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: An observable sequence of buffers. 
+*(`Observable`)*: An observable sequence of buffers. 
 
 #### Example
 ```js
@@ -3438,7 +3438,7 @@ Projects each element of an observable sequence into a buffer that is completed 
 3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: An observable sequence of buffers. 
+*(`Observable`)*: An observable sequence of buffers. 
 
 #### Example
 ```js
@@ -3475,11 +3475,11 @@ var subscription = source.subscribe(
 Continues an observable sequence that is terminated by an exception with the next observable sequence.  There is an alias for this method `catchException` for browsers <IE9
 
 #### Arguments
-1. `second` *(Observable)*: A second observable sequence used to produce results when an error occurred in the first sequence.
-1. `handler` *(Function)*: Exception handler function that returns an observable sequence given the error that occurred in the first sequence
+1. `second` *(`Observable`)*: A second observable sequence used to produce results when an error occurred in the first sequence.
+1. `handler` *(`Function`)*: Exception handler function that returns an observable sequence given the error that occurred in the first sequence
 
 #### Returns
-*(Observable)*: An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
+*(`Observable`)*: An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
 
 #### Example
 ```js
@@ -3534,10 +3534,10 @@ Merges the specified observable sequences into one observable sequence by using 
 
 #### Arguments
 1. `args` *(arguments | Array)*: An array or arguments of Observable sequences.
-1. `resultSelector` *(Function)*: Function to invoke whenever either of the sources produces an element.
+1. `resultSelector` *(`Function`)*: Function to invoke whenever either of the sources produces an element.
 
 #### Returns
-*(Observable)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
+*(`Observable`)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
 
 #### Example
 ```js
@@ -3586,7 +3586,7 @@ Concatenates all the observable sequences.  This takes in either an array or var
 1. `args` *(arguments | Array)*: An array or arguments of Observable sequences.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of each given sequence, in sequential order. 
+*(`Observable`)*: An observable sequence that contains the elements of each given sequence, in sequential order. 
 
 #### Example
 ```js
@@ -3622,7 +3622,7 @@ var subscription = source.subscribe(
 Concatenates a sequence of observable sequences into a single observable sequence.
 
 #### Returns
-*(Observable)*: The observable sequence that merges the elements of the inner sequences. 
+*(`Observable`)*: The observable sequence that merges the elements of the inner sequences. 
  
 #### Example
 ```js
@@ -3720,11 +3720,11 @@ function createObserver(tag) {
 Determines whether an observable sequence contains a specified element with an optional equality comparer.
 
 #### Arguments
-1. `value` *(Any)*: The value to locate in the source sequence.
-2. `[comparer]` *(Function)*: An equality comparer function to compare elements.
+1. `value` *(`Any`)*: The value to locate in the source sequence.
+2. `[comparer]` *(`Function`)*: An equality comparer function to compare elements.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value.
+*(`Observable`)*: An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value.
 
 #### Example
 ```js
@@ -3782,7 +3782,7 @@ Attaches a controller to the observable sequence with the ability to queue.
 1. `[enableQueue]` *(Boolean)*: Whether to enable queueing.  If not specified, defaults to true.
 
 #### Returns
-*(Observable)*: An observable sequence which can be used to request values from the sequence.
+*(`Observable`)*: An observable sequence which can be used to request values from the sequence.
 
 #### Example
 ```js
@@ -3811,10 +3811,10 @@ File:
 
 Dist:
 - [rx.backpressure.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.backpressure.js
     - rx.js | rx.compat.js
     - rx.binding.js
@@ -3824,7 +3824,7 @@ NPM Packages:
 
 NuGet Packages:
 - RxJS-BackPressure
-- RxJS-Lite
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/controlled.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/controlled.js)
@@ -3837,13 +3837,13 @@ Unit Tests:
 Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
 
 #### Arguments
-1. `[predicate]` *(Any)*: A function to test each element for a condition.  The callback is called with the following information:
+1. `[predicate]` *(`Any`)*: A function to test each element for a condition.  The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
+*(`Observable`)*: An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
 
 #### Example
 ```js
@@ -3894,10 +3894,10 @@ var subscription = source.subscribe(
 Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
 
 #### Arguments
-1. `[defaultValue=null]` *(Any)*: The value to return if the sequence is empty. If not provided, this defaults to null.
+1. `[defaultValue=null]` *(`Any`)*: The value to return if the sequence is empty. If not provided, this defaults to null.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself. 
+*(`Observable`)*: An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself. 
   
 #### Example
 ```js
@@ -3951,7 +3951,7 @@ Time shifts the observable sequence by dueTime. The relative time intervals betw
 2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: Time-shifted sequence.
+*(`Observable`)*: Time-shifted sequence.
   
 #### Example
 ```js
@@ -4005,11 +4005,11 @@ var subscription = source.subscribe(
 Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
 
 #### Arguments
-1. `[subscriptionDelay]` *(Observable)*: Sequence indicating the delay for the subscription to the source. 
-2. `delayDurationSelector` *(Function)*: Selector function to retrieve a sequence indicating the delay for each given element.
+1. `[subscriptionDelay]` *(`Observable`)*: Sequence indicating the delay for the subscription to the source. 
+2. `delayDurationSelector` *(`Function`)*: Selector function to retrieve a sequence indicating the delay for each given element.
 
 #### Returns
-*(Observable)*: Time-shifted sequence.
+*(`Observable`)*: Time-shifted sequence.
   
 #### Example
 ```js
@@ -4079,7 +4079,7 @@ var subscription = source.subscribe(
 Dematerializes the explicit notification values of an observable sequence as implicit notifications.
 
 #### Returns
-*(Observable)*: An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
+*(`Observable`)*: An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
   
 #### Example
 ```js
@@ -4116,11 +4116,11 @@ var subscription = source.subscribe(
 Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
 
 #### Arguments
-1. `[keySelector]` *(Function)*: A function to compute the comparison key for each element.
-2. `[keySerializer]` *(Function)*: Used to serialize the given object into a string for object comparison.
+1. `[keySelector]` *(`Function`)*: A function to compute the comparison key for each element.
+2. `[keySerializer]` *(`Function`)*: Used to serialize the given object into a string for object comparison.
 
 #### Returns
-*(Observable)*: An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
+*(`Observable`)*: An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
 
 #### Example
 ```js
@@ -4178,11 +4178,11 @@ var subscription = source.subscribe(
 Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
 
 #### Arguments
-1. `[keySelector]` *(Function)*: A function to compute the comparison key for each element.
-2. `[comparer]` *(Function)*: Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
+1. `[keySelector]` *(`Function`)*: A function to compute the comparison key for each element.
+2. `[comparer]` *(`Function`)*: Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
 
 #### Returns
-*(Observable)*: An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
+*(`Observable`)*: An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
 
 #### Example
 ```js
@@ -4243,12 +4243,12 @@ There is an alias to this method `doAction` for browsers <IE9.
 
 #### Arguments
 1. `observer` *(Observer)*: An observer to invoke for each element in the observable sequence.
-1. `[onNext]` *(Function)*: Function to invoke for each element in the observable sequence.
-2. `[onError]` *(Function)*: Function to invoke upon exceptional termination of the observable sequence. Used if only the first parameter is also a function.
-3. `[oncompleted]` *(Function)*: Function to invoke upon graceful termination of the observable sequence. Used if only the first parameter is also a function.
+1. `[onNext]` *(`Function`)*: Function to invoke for each element in the observable sequence.
+2. `[onError]` *(`Function`)*: Function to invoke upon exceptional termination of the observable sequence. Used if only the first parameter is also a function.
+3. `[oncompleted]` *(`Function`)*: Function to invoke upon graceful termination of the observable sequence. Used if only the first parameter is also a function.
 
 #### Returns
-*(Observable)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
+*(`Observable`)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
 
 #### Example
 ```js
@@ -4323,11 +4323,11 @@ var subscription = source.subscribe(
 Repeats source as long as condition holds emulating a do while loop.
 
 #### Arguments
-1. `condition` *(Function)*: The condition which determines if the source will be repeated.
-2. `source` *(Function)*: The observable sequence that will be run if the condition function returns true.
+1. `condition` *(`Function`)*: The condition which determines if the source will be repeated.
+2. `source` *(`Function`)*: The observable sequence that will be run if the condition function returns true.
 
 #### Returns
-*(Observable)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
+*(`Observable`)*: An observable sequence whose observers trigger an invocation of the given observable factory function.
 
 #### Example
 ```js
@@ -4363,10 +4363,10 @@ var subscription = source.subscribe(
 Returns the element at a specified index in a sequence.
 
 #### Arguments
-1. `index` *(Function)*: The zero-based index of the element to retrieve.
+1. `index` *(`Function`)*: The zero-based index of the element to retrieve.
 
 #### Returns
-*(Observable)*: An observable sequence that produces the element at the specified position in the source sequence.
+*(`Observable`)*: An observable sequence that produces the element at the specified position in the source sequence.
 
 #### Example
 ```js
@@ -4417,11 +4417,11 @@ var subscription = source.subscribe(
 Returns the element at a specified index in a sequence.
 
 #### Arguments
-1. `index` *(Function)*: The zero-based index of the element to retrieve.
-2. `[defaultValue = null]` *(Any)*: The default value if the index is outside the bounds of the source sequence.
+1. `index` *(`Function`)*: The zero-based index of the element to retrieve.
+2. `[defaultValue = null]` *(`Any`)*: The default value if the index is outside the bounds of the source sequence.
 
 #### Returns
-*(Observable)*: An observable sequence that produces the element at the specified position in the source sequence, or a default value if the index is outside the bounds of the source sequence.
+*(`Observable`)*: An observable sequence that produces the element at the specified position in the source sequence, or a default value if the index is outside the bounds of the source sequence.
 
 #### Example
 ```js
@@ -4473,11 +4473,11 @@ var subscription = source.subscribe(
 Determines whether all elements of an observable sequence satisfy a condition.  This is an alias to `all`.
 
 #### Arguments
-1. `predicate` *(Function)*: A function to test each element for a condition.
-2. `[thisArg]` *(Function)*: Object to use as this when executing callback.
+1. `predicate` *(`Function`)*: A function to test each element for a condition.
+2. `[thisArg]` *(`Function`)*: Object to use as this when executing callback.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
+*(`Observable`)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
 
 #### Example
 ```js
@@ -4513,11 +4513,11 @@ var subscription = source.subscribe(
 Expands an observable sequence by recursively invoking selector.
 
 #### Arguments
-1. `selector` *(Function)*: Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
+1. `selector` *(`Function`)*: Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
 2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler on which to perform the expansion. If not provided, this defaults to the immediate scheduler.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
+*(`Observable`)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
 
 #### Example
 ```js
@@ -4556,14 +4556,14 @@ var subscription = source.subscribe(
 Filters the elements of an observable sequence based on a predicate.  This is an alias for the `where` method.
 
 #### Arguments
-1. `predicate` *(Function)*: A function to test each source element for a condition. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A function to test each source element for a condition. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
 
 #### Example
 ```js
@@ -4601,14 +4601,14 @@ var subscription = source.subscribe(
 Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.  There is an alias called `finallyAction` for browsers <IE9
 
 #### Arguments
-1. `predicate` *(Function)*: A function to test each source element for a condition;  The callback is called with the following information:
+1. `predicate` *(`Function`)*: A function to test each source element for a condition;  The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
 
 #### Example
 ```js
@@ -4645,14 +4645,14 @@ var subscription = source.subscribe(
 Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire Observable sequence.
  
 #### Arguments
-1. `predicate` *(Function)*: A function to test each source element for a condition;  The callback is called with the following information:
+1. `predicate` *(`Function`)*: A function to test each source element for a condition;  The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
+*(`Observable`)*: An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
 
 #### Example
 ```js
@@ -4713,14 +4713,14 @@ var subscription = source.subscribe(
 Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire Observable sequence.
  
 #### Arguments
-1. `predicate` *(Function)*: A function to test each source element for a condition;  The callback is called with the following information:
+1. `predicate` *(`Function`)*: A function to test each source element for a condition;  The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
+*(`Observable`)*: An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
 
 #### Example
 ```js
@@ -4781,14 +4781,14 @@ var subscription = source.subscribe(
 Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
 
 #### Arguments
-1. `predicate` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
 
 #### Example
 ```js
@@ -4858,15 +4858,15 @@ var subscription = source.subscribe(
 Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
 
 #### Arguments
-1. `predicate` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[defaultValue]` *(Any)*: The default value if no such element exists.  If not specified, defaults to null.
-3. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[defaultValue]` *(`Any`)*: The default value if no such element exists.  If not specified, defaults to null.
+3. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
 
 #### Example
 ```js
@@ -4939,11 +4939,11 @@ source.flatMap(Rx.Observable.fromArray([1,2,3]));
  ```
 
 #### Arguments
-1. `selector` *(Function)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
-2. `[resultSelector]` *(Function)*: A transform function to apply to each element of the intermediate sequence.
+1. `selector` *(`Function`)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
+2. `[resultSelector]` *(`Function`)*: A transform function to apply to each element of the intermediate sequence.
  
 #### Returns
-*(Observable)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
+*(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
 
 #### Example
 ```js
@@ -4985,14 +4985,14 @@ This is an alias for the `selectSwitch` method.
  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
 
 #### Arguments
-1. `selector` *(Function)*:  A transform function to apply to each source element.  The callback has the following information:
+1. `selector` *(`Function`)*:  A transform function to apply to each source element.  The callback has the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
  
 #### Returns
-*(Observable)*: An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences and that at any point in time produces the elements of the most recent inner observable sequence that has been received.    
+*(`Observable`)*: An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences and that at any point in time produces the elements of the most recent inner observable sequence that has been received.    
 
 #### Example
 ```js
@@ -5029,11 +5029,11 @@ var subscription = source.subscribe(
 Runs two observable sequences in parallel and combines their last elements.
 
 #### Arguments
-1. `second` *(Observable)*: Second observable sequence.
-2. `resultSelector` *(Any)*: The default value if no such element exists.  If not specified, defaults to null.
+1. `second` *(`Observable`)*: Second observable sequence.
+2. `resultSelector` *(`Any`)*: The default value if no such element exists.  If not specified, defaults to null.
 
 #### Returns
-*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
 
 #### Example
 ```js
@@ -5071,12 +5071,12 @@ var subscription = source.subscribe(
 Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
 
 #### Arguments
-1. `keySelector` *(Function)*: A function to extract the key for each element.
-2. `[elementSelector]` *(Function)*: A function to map each source element to an element in an observable group.
-3. `[keySerializer]` *(Any)*: Used to serialize the given object into a string for object comparison.
+1. `keySelector` *(`Function`)*: A function to extract the key for each element.
+2. `[elementSelector]` *(`Function`)*: A function to map each source element to an element in an observable group.
+3. `[keySerializer]` *(`Any`)*: Used to serialize the given object into a string for object comparison.
 
 #### Returns
-*(Observable)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
+*(`Observable`)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
 
 #### Example
 ```js
@@ -5133,13 +5133,13 @@ var subscription = source.subscribe(
 Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
 
 #### Arguments
-1. `keySelector` *(Function)*: A function to extract the key for each element.
-2. `[elementSelector]` *(Function)*: A function to map each source element to an element in an observable group.
-3. `durationSelector` *(Function)*: A function to signal the expiration of a group.
-4. `[keySerializer]` *(Any)*: Used to serialize the given object into a string for object comparison.
+1. `keySelector` *(`Function`)*: A function to extract the key for each element.
+2. `[elementSelector]` *(`Function`)*: A function to map each source element to an element in an observable group.
+3. `durationSelector` *(`Function`)*: A function to signal the expiration of a group.
+4. `[keySerializer]` *(`Any`)*: Used to serialize the given object into a string for object comparison.
 
 #### Returns
-*(Observable)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.  
+*(`Observable`)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.  
 
 If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
 
@@ -5200,15 +5200,15 @@ var subscription = source.subscribe(
 Correlates the elements of two sequences based on overlapping durations, and groups the results.
 
 #### Arguments
-1. `right` *(Observable)*: The right observable sequence to join elements for.
-2. `leftDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
-3. `rightDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
-4. `resultSelector` *(Any)*: A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. It has the following arguments
-    1. *(Any)* An element of the left sequence. 
-    2. *(Observable)* An observable sequence with elements from the right sequence that overlap with the left sequence's element.
+1. `right` *(`Observable`)*: The right observable sequence to join elements for.
+2. `leftDurationSelector` *(`Function`)*: A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+3. `rightDurationSelector` *(`Function`)*: A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+4. `resultSelector` *(`Any`)*: A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. It has the following arguments
+    1. *(`Any`)* An element of the left sequence. 
+    2. *(`Observable`)* An observable sequence with elements from the right sequence that overlap with the left sequence's element.
 
 #### Returns
-*(Observable)*: An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+*(`Observable`)*: An observable sequence that contains result elements computed from source elements that have an overlapping duration.
 
 #### Example
 ```js
@@ -5259,7 +5259,7 @@ var subscription = source.subscribe(
 Ignores all elements in an observable sequence leaving only the termination messages.
 
 #### Returns
-*(Observable)*: An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
+*(`Observable`)*: An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
 
 #### Example
 ```js
@@ -5292,7 +5292,7 @@ var subscription = source.subscribe(
 Determines whether an observable sequence is empty.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element determining whether the source sequence is empty.
+*(`Observable`)*: An observable sequence containing a single element determining whether the source sequence is empty.
 
 #### Example
 ```js
@@ -5345,15 +5345,15 @@ var subscription = source.subscribe(
 Correlates the elements of two sequences based on overlapping durations.
 
 #### Arguments
-1. `right` *(Observable)*: The right observable sequence to join elements for.
-2. `leftDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
-3. `rightDurationSelector` *(Function)*: A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
-4. `resultSelector` *(Any)*: A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters are as follows:
-    1. *(Any)* Element from the left source for which the overlap occurs.
-    2. *(Any)* Element from the right source for which the overlap occurs.
+1. `right` *(`Observable`)*: The right observable sequence to join elements for.
+2. `leftDurationSelector` *(`Function`)*: A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+3. `rightDurationSelector` *(`Function`)*: A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+4. `resultSelector` *(`Any`)*: A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters are as follows:
+    1. *(`Any`)* Element from the left source for which the overlap occurs.
+    2. *(`Any`)* Element from the right source for which the overlap occurs.
 
 #### Returns
-*(Observable)*: An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+*(`Observable`)*: An observable sequence that contains result elements computed from source elements that have an overlapping duration.
  
 #### Example
 ```js
@@ -5403,14 +5403,14 @@ var subscription = source.subscribe(
 Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
 
 #### Arguments
-1. `predicate` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
+*(`Observable`)*: Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
 
 #### Example
 ```js
@@ -5482,15 +5482,15 @@ var subscription = source.subscribe(
 Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
 
 #### Arguments
-1. `predicate` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[defaultValue]` *(Any)*: The default value if no such element exists.  If not specified, defaults to null.
-3. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[defaultValue]` *(`Any`)*: The default value if no such element exists.  If not specified, defaults to null.
+3. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
+*(`Observable`)*: Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
 
 #### Example
 ```js
@@ -5567,10 +5567,10 @@ Returns an observable sequence that is the result of invoking the selector on th
 This operator allows for a fluent style of writing queries that use the same sequence multiple times.  There is an alias of `letBind` for browsers older than IE 9.
 
 #### Arguments
-1. `func` *(Function)*: Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.
+1. `func` *(`Function`)*: Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
 
 #### Example
 ```js
@@ -5621,11 +5621,11 @@ var subscription = source.subscribe(
 Comonadic bind operator.
 
 #### Arguments
-1. `selector` *(Function)*: A transform function to apply to each element.
+1. `selector` *(`Function`)*: A transform function to apply to each element.
 2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler used to execute the operation. If not specified, defaults to the `Rx.Scheduler.immediate` scheduler.
  
 #### Returns
-*(Observable)*: An observable sequence which results from the comonadic bind operation.
+*(`Observable`)*: An observable sequence which results from the comonadic bind operation.
 
 #### Example
 ```js
@@ -5662,14 +5662,14 @@ var subscription = source.subscribe(
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
 #### Arguments
-1. `selector` *(Function)*:  Transform function to apply to each source element.  The selector is called with the following information:
+1. `selector` *(`Function`)*:  Transform function to apply to each source element.  The selector is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
  
 #### Returns
-*(Observable)*: An observable sequence which results from the comonadic bind operation.
+*(`Observable`)*: An observable sequence which results from the comonadic bind operation.
 
 #### Example
 ```js
@@ -5707,10 +5707,10 @@ var subscription = source.subscribe(
 Returns the maximum value in an observable sequence according to the specified comparer.
 
 #### Arguments
-1. `[comparer]` *(Function)*:  Comparer used to compare elements.
+1. `[comparer]` *(`Function`)*:  Comparer used to compare elements.
  
 #### Returns
-*(Observable)*: An observable sequence containing a single element with the maximum element in the source sequence.
+*(`Observable`)*: An observable sequence containing a single element with the maximum element in the source sequence.
 
 #### Example
 ```js
@@ -5772,11 +5772,11 @@ var subscription = source.subscribe(
 Returns the maximum value in an observable sequence according to the specified comparer.
 
 #### Arguments
-1. `keySelector` *(Function)*: Key selector function.
-2. `[comparer]` *(Function)*:  Comparer used to compare elements.
+1. `keySelector` *(`Function`)*: Key selector function.
+2. `[comparer]` *(`Function`)*:  Comparer used to compare elements.
  
 #### Returns
-*(Observable)*: An observable sequence containing a list of zero or more elements that have a maximum key value.
+*(`Observable`)*: An observable sequence containing a list of zero or more elements that have a maximum key value.
  
 #### Example
 ```js
@@ -5812,11 +5812,11 @@ Merges an observable sequence of observable sequences into an observable sequenc
 Or merges two observable sequences into a single observable sequence.
 
 #### Arguments
-1. `maxConcurrent` *(Function)*: Maximum number of inner observable sequences being subscribed to concurrently.
-1. `other` *(Observable)*:  The second observable sequence to merge into the first.
+1. `maxConcurrent` *(`Function`)*: Maximum number of inner observable sequences being subscribed to concurrently.
+1. `other` *(`Observable`)*:  The second observable sequence to merge into the first.
  
 #### Returns
-*(Observable)*: The observable sequence that merges the elements of the inner sequences. 
+*(`Observable`)*: The observable sequence that merges the elements of the inner sequences. 
  
 #### Example
 ```js
@@ -5889,7 +5889,7 @@ var subscription = source.subscribe(
 Merges an observable sequence of observable sequences into an observable sequence.
 
 #### Returns
-*(Observable)*: The observable sequence that merges the elements of the inner sequences. 
+*(`Observable`)*: The observable sequence that merges the elements of the inner sequences. 
  
 #### Example
 ```js
@@ -5932,10 +5932,10 @@ var subscription = source.subscribe(
 Returns the minimum element in an observable sequence according to the optional comparer else a default greater than less than check.
 
 #### Arguments
-1. `[comparer]` *(Function)*:  Comparer used to compare elements.
+1. `[comparer]` *(`Function`)*:  Comparer used to compare elements.
  
 #### Returns
-*(Observable)*: An observable sequence containing a single element with the minimum element in the source sequence.
+*(`Observable`)*: An observable sequence containing a single element with the minimum element in the source sequence.
  
 #### Example
 ```js
@@ -5997,11 +5997,11 @@ var subscription = source.subscribe(
 Returns the elements in an observable sequence with the minimum key value according to the specified comparer.
 
 #### Arguments
-1. `keySelector` *(Function)*: Key selector function.
-2. `[comparer]` *(Function)*:  Comparer used to compare elements.
+1. `keySelector` *(`Function`)*: Key selector function.
+2. `[comparer]` *(`Function`)*:  Comparer used to compare elements.
  
 #### Returns
-*(Observable)*: An observable sequence containing a list of zero or more elements that have a minimum key value.
+*(`Observable`)*: An observable sequence containing a list of zero or more elements that have a minimum key value.
 
 #### Example
 ```js
@@ -6038,12 +6038,12 @@ subscription to the resulting sequence causes a separate multicast invocation, e
 invocation. For specializations with fixed subject types, see `publish`, `share`, `publishValue`, `shareValue`, `publishLast`, `replay`, and `shareReplay`.
 
 #### Arguments
-1. `subjectSelector` *(Function)*:  Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
+1. `subjectSelector` *(`Function`)*:  Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
 1. `subject` *(Subject)*: Subject to push source elements into.
-2. `[selector]` *(Function)*: Optional selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if `subjectSelector` is provided.
+2. `[selector]` *(`Function`)*: Optional selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if `subjectSelector` is provided.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
  
 #### Example
 ```js
@@ -6096,7 +6096,7 @@ This only invokes observer callbacks on a scheduler. In case the subscription an
 1. `scheduler` *(Scheduler)*:  Scheduler to notify observers on.
 
 #### Returns
-*(Observable)*: The source sequence whose observations happen on the specified scheduler. 
+*(`Observable`)*: The source sequence whose observations happen on the specified scheduler. 
  
 #### Example
 ```js
@@ -6131,10 +6131,10 @@ var subscription = source.subscribe(
 Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
 
 #### Arguments
-1. `second` *(Observable)*:  Second observable sequence used to produce results after the first sequence terminates.
+1. `second` *(`Observable`)*:  Second observable sequence used to produce results after the first sequence terminates.
 
 #### Returns
-*(Observable)*: An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
+*(`Observable`)*: An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
 
 #### Example
 ```js
@@ -6171,7 +6171,7 @@ Pauses the underlying observable sequence based upon the observable sequence whi
 1. `pauser` *(Rx.Subject)*: The observable sequence used to pause the underlying sequence.
 
 #### Returns
-*(Observable)*: The observable sequence which is paused based upon the pauser.
+*(`Observable`)*: The observable sequence which is paused based upon the pauser.
 
 #### Example
 ```js
@@ -6202,10 +6202,10 @@ File:
 
 Dist:
 - [rx.backpressure.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.backpressure.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.backpressure.js
     - rx.js | rx.compat.js
     - rx.binding.js
@@ -6215,7 +6215,7 @@ NPM Packages:
 
 NuGet Packages:
 - RxJS-BackPressure
-- RxJS-Lite
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/pausable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/pausable.js)
@@ -6231,7 +6231,7 @@ Pauses the underlying observable sequence based upon the observable sequence whi
 1. `pauser` *(Rx.Subject)*: The observable sequence used to pause the underlying sequence.
 
 #### Returns
-*(Observable)*: The observable sequence which is paused based upon the pauser.
+*(`Observable`)*: The observable sequence which is paused based upon the pauser.
 
 #### Example
 ```js
@@ -6265,10 +6265,10 @@ File:
 
 Dist:
 - [rx.backpressure.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.backpressure.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
-Required Files:
+Prerequisites:
 - If using rx.backpressure.js
     - rx.js | rx.compat.js
     - rx.binding.js
@@ -6278,7 +6278,7 @@ NPM Packages:
 
 NuGet Packages:
 - RxJS-BackPressure
-- RxJS-Lite
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/pausablebuffered.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/pausablebuffered.js)
@@ -6291,10 +6291,10 @@ Unit Tests:
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
 #### Arguments
-1. `property` *(String)*: The property to pluck.
+1. `property` *(`String`)*: The property to pluck.
  
 #### Returns
-*(Observable)*: Returns a new Observable sequence of property values.
+*(`Observable`)*: Returns a new Observable sequence of property values.
 
 #### Example
 ```js
@@ -6337,7 +6337,7 @@ Returns an observable sequence that is the result of invoking the selector on a 
 This operator is a specialization of `multicast` using a regular `Rx.Subject`.
 
 #### Arguments
-1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
+1. `[selector]` *(`Function`)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
   
 #### Returns
 *(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -6432,7 +6432,7 @@ Returns an observable sequence that shares a single subscription to the underlyi
 This operator is a specialization of `publish` which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
    
 #### Example
 ```js
@@ -6528,7 +6528,7 @@ Returns an observable sequence that is the result of invoking the selector on a 
 This operator is a specialization of `multicast` using a `Rx.AsyncSubject`.
 
 #### Arguments
-1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
+1. `[selector]` *(`Function`)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
 
 #### Returns
 *(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -6585,7 +6585,7 @@ Returns an observable sequence that is the result of invoking the selector on a 
 This operator is a specialization of `multicast` using a `Rx.BehaviorSubject`.
 
 #### Arguments
-1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
+1. `[selector]` *(`Function`)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
  
 #### Returns
 *(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -6646,7 +6646,7 @@ Returns an observable sequence that shares a single subscription to the underlyi
 This operator is a specialization of `publishValue` which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
  
 #### Example
 ```js
@@ -6700,7 +6700,7 @@ function createObserver(tag) {
 Returns an observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
    
 #### Returns
-*(Observable)*: An observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
+*(`Observable`)*: An observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
  
 #### Example
 ```js
@@ -6754,11 +6754,11 @@ Applies an accumulator function over an observable sequence, returning the resul
 For aggregation behavior with incremental intermediate results, see the `scan` method.
 
 #### Arguments
-1. `accumulator` *(Function)*:  An accumulator function to be invoked on each element.
-2. `[seed]` *(Any)*: The initial accumulator value.
+1. `accumulator` *(`Function`)*:  An accumulator function to be invoked on each element.
+2. `[seed]` *(`Any`)*: The initial accumulator value.
  
 #### Returns
-*(Observable)*: An observable sequence containing a single element with the final accumulator value.
+*(`Observable`)*: An observable sequence containing a single element with the final accumulator value.
 
 #### Example
 ```js
@@ -6797,7 +6797,7 @@ Repeats the observable sequence a specified number of times. If the repeat count
 1. `repeatCount` *(Number)*:  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
  
 #### Returns
-*(Observable)*: The observable sequence producing the elements of the given sequence repeatedly.  
+*(`Observable`)*: The observable sequence producing the elements of the given sequence repeatedly.  
 
 #### Example
 ```js
@@ -6838,13 +6838,13 @@ Returns an observable sequence that is the result of invoking the selector on a 
 This operator is a specialization of `multicast` using a `Rx.ReplaySubject`.
 
 #### Arguments
-1. `[selector]` *(Function)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
+1. `[selector]` *(`Function`)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
 2. `[bufferSize]` *(Number)*: Maximum element count of the replay buffer.
 3. `[window]` *(Number)*: Maximum time length of the replay buffer in milliseconds.
 4. `[scheduler]` *(Scheduler)*: Scheduler where connected observers within the selector function will be invoked on.
  
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
 
 #### Example
 ```js
@@ -6912,7 +6912,7 @@ This operator is a specialization of `replay` that connects to the connectable o
 3. `[scheduler]` *(Scheduler)*: Scheduler where connected observers within the selector function will be invoked on.
  
 #### Returns
-*(Observable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
 
 #### Example
 ```js
@@ -6987,7 +6987,7 @@ Projects each element of an observable sequence into a new form by incorporating
 1. `[retryCount]` *(Number)*:  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
  
 #### Returns
-*(Observable)*: An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully. 
+*(`Observable`)*: An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully. 
 
 #### Example
 ```js
@@ -7031,11 +7031,11 @@ Samples the observable sequence at each interval.
 
 #### Arguments
 1. `[interval]` *(Number)*: Interval at which to sample (specified as an integer denoting milliseconds)
-2. `[sampleObservable]` *(Observable)*: Sampler Observable.
+2. `[sampleObservable]` *(`Observable`)*: Sampler Observable.
 3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the sampling timer on. If not specified, the timeout scheduler is used.
  
 #### Returns
-*(Observable)*: Sampled observable sequence.
+*(`Observable`)*: Sampled observable sequence.
 
 #### Example
 ```js
@@ -7094,11 +7094,11 @@ Applies an accumulator function over an observable sequence and returns each int
 For aggregation behavior with no intermediate results, see `Rx.Observable.aggregate`.
 
 #### Arguments
-1. `[seed]` *(Any)*: The initial accumulator value.
-2. `accumulator` *(Function)*: An accumulator function to be invoked on each element.
+1. `[seed]` *(`Any`)*: The initial accumulator value.
+2. `accumulator` *(`Function`)*: An accumulator function to be invoked on each element.
  
 #### Returns
-*(Observable)*: An observable sequence which results from the comonadic bind operation.
+*(`Observable`)*: An observable sequence which results from the comonadic bind operation.
 
 #### Example
 ```js
@@ -7162,14 +7162,14 @@ var subscription = source.subscribe(
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `map` method.
 
 #### Arguments
-1. `selector` *(Function)*:  Transform function to apply to each source element.  The selector is called with the following information:
+1. `selector` *(`Function`)*:  Transform function to apply to each source element.  The selector is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
  
 #### Returns
-*(Observable)*: An observable sequence which results from the comonadic bind operation.
+*(`Observable`)*: An observable sequence which results from the comonadic bind operation.
 
 #### Example
 ```js
@@ -7228,11 +7228,11 @@ source.selectMany(Promise.resolve(42));
  ```
 
 #### Arguments
-1. `selector` *(Function)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
-2. `[resultSelector]` *(Function)*: A transform function to apply to each element of the intermediate sequence.
+1. `selector` *(`Function`)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
+2. `[resultSelector]` *(`Function`)*: A transform function to apply to each element of the intermediate sequence.
  
 #### Returns
-*(Observable)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
+*(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
 
 #### Example
 ```js
@@ -7289,17 +7289,17 @@ File:
 - [/src/core/observable/selectmany.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/selectmany.js)
 
 Dist:
-- [rx.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [rx.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
-- [rx.lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [rx.lite.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
 - rx
 
 NuGet Packages:
-- RxJS-Main
-- RxJS-Lite
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/selectmany.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js)
@@ -7314,14 +7314,14 @@ This is an alias for the `selectSwitch` method.
  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
 
 #### Arguments
-1. `selector` *(Function)*:  A transform function to apply to each source element.  The callback has the following information:
+1. `selector` *(`Function`)*:  A transform function to apply to each source element.  The callback has the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
  
 #### Returns
-*(Observable)*: An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences and that at any point in time produces the elements of the most recent inner observable sequence that has been received.    
+*(`Observable`)*: An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences and that at any point in time produces the elements of the most recent inner observable sequence that has been received.    
 
 #### Example
 ```js
@@ -7358,11 +7358,11 @@ var subscription = source.subscribe(
 Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
 
 #### Arguments
-1. `second` *(Observable)*:  Second observable sequence or array to compare.
-2. `[comparer]` *(Function)*: Comparer used to compare elements of both sequences.
+1. `second` *(`Observable`)*:  Second observable sequence or array to compare.
+2. `[comparer]` *(`Function`)*: Comparer used to compare elements of both sequences.
  
 #### Returns
-*(Observable)*: An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.   
+*(`Observable`)*: An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.   
 
 #### Example
 ```js
@@ -7398,14 +7398,14 @@ var subscription = source.subscribe(
 Returns the only element of an observable sequence that satisfies the condition in the optional predicate, and reports an exception if there is not exactly one element in the observable sequence.
  
 #### Arguments
-1. `[predicate]` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+1. `[predicate]` *(`Function`)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
+*(`Observable`)*: Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
 
 #### Example
 ```js
@@ -7492,15 +7492,15 @@ var subscription = source.subscribe(
 Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
 
 #### Arguments
-1. `predicate` *(Function)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[defaultValue]` *(Any)*: The default value if no such element exists.  If not specified, defaults to null.
-3. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[defaultValue]` *(`Any`)*: The default value if no such element exists.  If not specified, defaults to null.
+3. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
 
 #### Example
 ```js
@@ -7556,7 +7556,7 @@ Bypasses a specified number of elements in an observable sequence and then retur
 1. `count` *(Number)*: The number of elements to skip before returning the remaining elements.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.   
+*(`Observable`)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.   
 
 #### Example
 ```js
@@ -7596,7 +7596,7 @@ This operator accumulates a queue with a length enough to store the first `count
 1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
 
 #### Returns
-*(Observable)*: An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
+*(`Observable`)*: An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
   
 #### Example
 ```js
@@ -7637,7 +7637,7 @@ This operator accumulates a queue with a length enough to store the first `count
 1. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
 
 #### Returns
-*(Observable)*: An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
+*(`Observable`)*: An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
  
 #### Example
 ```js
@@ -7675,10 +7675,10 @@ var subscription = source.subscribe(
 Returns the values from the source observable sequence only after the other observable sequence produces a value.
 
 #### Arguments
-1. `other` *(Observable)*: The observable sequence that triggers propagation of elements of the source sequence.
+1. `other` *(`Observable`)*: The observable sequence that triggers propagation of elements of the source sequence.
 
 #### Returns
-*(Observable)*: An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.    
+*(`Observable`)*: An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.    
 
 #### Example
 ```js
@@ -7714,14 +7714,14 @@ var subscription = source.subscribe(
 Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
 
 #### Arguments
-1. `predicate` *(Function)*: A function to test each source element for a condition. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A function to test each source element for a condition. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as this when executing callback.
+2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
+*(`Observable`)*: An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
  
 #### Example
 ```js
@@ -7758,14 +7758,14 @@ var subscription = source.subscribe(
 Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence.  There is an alias to this method called `any`.
 
 #### Arguments
-1. `predicate` *(Function)*: A function to test each source element for a condition. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A function to test each source element for a condition. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as this when executing callback.
+2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate. 
+*(`Observable`)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate. 
 
 #### Example
 ```js
@@ -7804,7 +7804,7 @@ Prepends a sequence of values to an observable sequence with an optional schedul
 2. `args` *(arguments)*: Values to prepend to the observable sequence.
 
 #### Returns
-*(Observable)*: The source sequence prepended with the specified values.
+*(`Observable`)*: The source sequence prepended with the specified values.
 
 #### Example
 ```js
@@ -7842,9 +7842,9 @@ Prepends a sequence of values to an observable sequence with an optional schedul
 
 #### Arguments
 1. `[observer]` *(Observer)*: The object that is to receive notifications.
-1. `[onNext]` *(Function)*: Function to invoke for each element in the observable sequence.
-2. `[onError]` *(Function)*: Function to invoke upon exceptional termination of the observable sequence.
-3. `[onCompleted]` *(Function)*: Function to invoke upon graceful termination of the observable sequence.
+1. `[onNext]` *(`Function`)*: Function to invoke for each element in the observable sequence.
+2. `[onError]` *(`Function`)*: Function to invoke upon exceptional termination of the observable sequence.
+3. `[onCompleted]` *(`Function`)*: Function to invoke upon graceful termination of the observable sequence.
 
 #### Returns
 *(Disposable)*:  The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler. 
@@ -7917,7 +7917,7 @@ This only performs the side-effects of subscription and unsubscription on the sp
 1. `scheduler` *(Scheduler)*:  Scheduler to notify observers on.
 
 #### Returns
-*(Observable)*: The source sequence whose observations happen on the specified scheduler. 
+*(`Observable`)*: The source sequence whose observations happen on the specified scheduler. 
  
 #### Example
 ```js
@@ -7972,7 +7972,7 @@ Computes the sum of a sequence of values that are obtained by invoking an option
     3. the Observable object being subscribed
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element with the sum of the values in the source sequence.
+*(`Observable`)*: An observable sequence containing a single element with the sum of the values in the source sequence.
  
 #### Example
 ```js
@@ -8034,7 +8034,7 @@ var subscription = source.subscribe(
 Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.  There is an alias for this method called `switchLatest` for browsers <IE9.
   
 #### Returns
-*(Observable)*: The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
+*(`Observable`)*: The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
  
 #### Example
 ```js
@@ -8077,7 +8077,7 @@ Returns a specified number of contiguous elements from the start of an observabl
 2. `[schduler]` *(Scheduler)*: Scheduler used to produce an onCompleted message in case `count` is set to 0.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.   
+*(`Observable`)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.   
 
 #### Example
 ```js
@@ -8118,7 +8118,7 @@ This operator accumulates a buffer with a length enough to store elements count 
 1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
 
 #### Returns
-*(Observable)*: An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
+*(`Observable`)*: An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
   
 #### Example
 ```js
@@ -8157,7 +8157,7 @@ Returns an array with the specified number of contiguous elements from the end o
 1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
+*(`Observable`)*: An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
      
 #### Example
 ```js
@@ -8197,7 +8197,7 @@ This operator accumulates a queue with a length enough to store elements receive
 2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single array with the elements taken during the specified duration from the end of the source sequence.
+*(`Observable`)*: An observable sequence containing a single array with the elements taken during the specified duration from the end of the source sequence.
  
 #### Example
 ```js
@@ -8238,7 +8238,7 @@ Returns elements within the specified duration from the end of the observable so
 2. `[loopScheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to drain the collected elements. If not specified, defaults to current thread scheduler.
 
 #### Returns
-*(Observable)*: An observable sequence with the elements taken during the specified duration from the end of the source sequence.
+*(`Observable`)*: An observable sequence with the elements taken during the specified duration from the end of the source sequence.
     
 #### Example
 ```js
@@ -8277,10 +8277,10 @@ var subscription = source.subscribe(
 Returns the values from the source observable sequence until the other observable sequence produces a value.
 
 #### Arguments
-1. `other` *(Observable)*: Observable sequence that terminates propagation of elements of the source sequence.
+1. `other` *(`Observable`)*: Observable sequence that terminates propagation of elements of the source sequence.
 
 #### Returns
-*(Observable)*: An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.    
+*(`Observable`)*: An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.    
 
 #### Example
 ```js
@@ -8318,14 +8318,14 @@ var subscription = source.subscribe(
 Returns elements from an observable sequence as long as a specified condition is true.
 
 #### Arguments
-1. `predicate` *(Function)*: A function to test each source element for a condition. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A function to test each source element for a condition. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as this when executing callback.
+2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(Observable)*: An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
+*(`Observable`)*: An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
     
 #### Example
 ```js
@@ -8363,10 +8363,10 @@ Ignores values from an observable sequence which are followed by another value b
 
 #### Arguments
 1. `dueTime` *(Number)*: Duration of the throttle period for each value (specified as an integer denoting milliseconds).
-2. `[scheduler=Rx.Scheduler.timeout]` *(Any)*: Scheduler to run the throttle timers on. If not specified, the timeout scheduler is used.
+2. `[scheduler=Rx.Scheduler.timeout]` *(`Any`)*: Scheduler to run the throttle timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: The throttled sequence. 
+*(`Observable`)*: The throttled sequence. 
     
 #### Example
 ```js
@@ -8420,7 +8420,7 @@ Ignores values from an observable sequence which are followed by another value b
 1. `dueTime` *(Number)*: Selector function to retrieve a sequence indicating the throttle duration for each given element.
 
 #### Returns
-*(Observable)*: The throttled sequence. 
+*(`Observable`)*: The throttled sequence. 
     
 #### Example
 ```js
@@ -8473,7 +8473,7 @@ Records the time interval between consecutive values in an observable sequence.
 1. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler used to compute time intervals. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: An observable sequence with time interval information on values.
+*(`Observable`)*: An observable sequence with time interval information on values.
 
 #### Example
 ```js
@@ -8514,11 +8514,11 @@ Returns the source observable sequence or the other observable sequence if dueTi
 
 #### Arguments
 1. `dueTime` *(Date | Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
-2. `[other]` *(Observable)*: Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
+2. `[other]` *(`Observable`)*: Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
 3. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: An observable sequence with time interval information on values.
+*(`Observable`)*: An observable sequence with time interval information on values.
 
 #### Example
 ```js
@@ -8573,12 +8573,12 @@ var subscription = source.subscribe(
 Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
 
 #### Arguments
-1. `[firstTimeout=Rx.Observable.never()]` *(Observable)*: Observable sequence that represents the timeout for the first element. If not provided, this defaults to `Rx.Observable.never()`.
-2. `timeoutDurationSelector` *(Function)*: Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
+1. `[firstTimeout=Rx.Observable.never()]` *(`Observable`)*: Observable sequence that represents the timeout for the first element. If not provided, this defaults to `Rx.Observable.never()`.
+2. `timeoutDurationSelector` *(`Function`)*: Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
 3. `[other=Rx.Observable.throw]` *(Scheduler)*:Sequence to return in case of a timeout. If not provided, this is set to `Observable.throw`
 
 #### Returns
-*(Observable)*: The source sequence switching to the other sequence in case of a timeout.
+*(`Observable`)*: The source sequence switching to the other sequence in case of a timeout.
 
 #### Example
 ```js
@@ -8698,7 +8698,7 @@ Records the timestamp for each value in an observable sequence.
 1. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler used to compute timestamps. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: An observable sequence with timestamp information on values.
+*(`Observable`)*: An observable sequence with timestamp information on values.
 
 #### Example
 ```js
@@ -8738,7 +8738,7 @@ var subscription = source.subscribe(
 Creates a list from an observable sequence.
 
 #### Returns
-*(Observable)*: An observable sequence containing a single element with a list containing all the elements of the source sequence.  
+*(`Observable`)*: An observable sequence containing a single element with a list containing all the elements of the source sequence.  
 
 #### Example
 ```js
@@ -8773,14 +8773,14 @@ var subscription = source.subscribe(
 Filters the elements of an observable sequence based on a predicate.  This is an alias for the `filter` method.
 
 #### Arguments
-1. `predicate` *(Function)*: A function to test each source element for a condition. The callback is called with the following information:
+1. `predicate` *(`Function`)*: A function to test each source element for a condition. The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
-2. `[thisArg]` *(Any)*: Object to use as `this` when executing the predicate.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(Observable)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
 
 #### Example
 ```js
@@ -8829,12 +8829,12 @@ Rx.Observable.prototype.window(windowBoundaries);
 ```
 
 #### Arguments
-1. `[windowOpenings]` *(Observable)*: Observable sequence whose elements denote the creation of new windows 
-2.`[windowBoundaries]` *(Observable)*: Sequence of window boundary markers. The current window is closed and a new window is opened upon receiving a boundary marker. 
-3. `windowClosingSelector` *(Function)*: A function invoked to define the closing of each produced window.
+1. `[windowOpenings]` *(`Observable`)*: Observable sequence whose elements denote the creation of new windows 
+2.`[windowBoundaries]` *(`Observable`)*: Sequence of window boundary markers. The current window is closed and a new window is opened upon receiving a boundary marker. 
+3. `windowClosingSelector` *(`Function`)*: A function invoked to define the closing of each produced window.
 
 #### Returns
-*(Observable)*: An observable sequence of windows.
+*(`Observable`)*: An observable sequence of windows.
 
 #### Example
 ```js
@@ -8931,11 +8931,11 @@ Dist:
 Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
 
 #### Arguments
-1. `count` *(Function)*: Length of each buffer.
-2. `[skip]` *(Function)*: Number of elements to skip between creation of consecutive windows. If not provided, defaults to the count.
+1. `count` *(`Function`)*: Length of each buffer.
+2. `[skip]` *(`Function`)*: Number of elements to skip between creation of consecutive windows. If not provided, defaults to the count.
 
 #### Returns
-*(Observable)*: An observable sequence of windows. 
+*(`Observable`)*: An observable sequence of windows. 
 
 #### Example
 ```js
@@ -9008,7 +9008,7 @@ Projects each element of an observable sequence into zero or more buffers which 
 3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: An observable sequence of buffers. 
+*(`Observable`)*: An observable sequence of buffers. 
 
 #### Example
 ```js
@@ -9107,7 +9107,7 @@ Projects each element of an observable sequence into a window that is completed 
 3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run windows timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(Observable)*: An observable sequence of windows. 
+*(`Observable`)*: An observable sequence of windows. 
 
 #### Example
 ```js
@@ -9155,10 +9155,10 @@ The last element in the arguments must be a function to invoke for each series o
 
 #### Arguments
 1. `args` *(Arguments | Array)*: Arguments or an array of observable sequences.
-2. `[resultSelector]` *(Any)*: Function to invoke for each series of elements at corresponding indexes in the sources, used only if the first parameter is not an array.
+2. `[resultSelector]` *(`Any`)*: Function to invoke for each series of elements at corresponding indexes in the sources, used only if the first parameter is not an array.
 
 #### Returns
-*(Observable)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
+*(`Observable`)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
 
 #### Example
 ```js
