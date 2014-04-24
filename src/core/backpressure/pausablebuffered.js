@@ -11,15 +11,15 @@
         var res;
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
-            try {
-                res = resultSelector.apply(null, values);
-            } catch (ex) {
-                observer.onError(ex);
-                return;
-            }
-            observer.onNext(res);
+          try {
+            res = resultSelector.apply(null, values);
+          } catch (ex) {
+            observer.onError(ex);
+            return;
+          }
+          observer.onNext(res);
         } else if (isDone) {
-            observer.onCompleted();
+          observer.onCompleted();
         }
       }
 
@@ -73,8 +73,20 @@
               }
 
             }, 
-            observer.onError.bind(observer),
-            observer.onCompleted.bind(observer)
+            function (err) {
+              // Empty buffer before sending error
+              while (q.length > 0) {
+                observer.onNext(q.shift());
+              }
+              observer.onError(err);
+            },
+            function () {
+              // Empty buffer before sending completion
+              while (q.length > 0) {
+                observer.onNext(q.shift());
+              }
+              observer.onCompleted();              
+            }
           );
 
       this.subject.onNext(false);
