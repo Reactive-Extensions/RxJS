@@ -1,6 +1,6 @@
 [![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
-[![dependency Status](https://david-dm.org/Reactive-Extensions/RxJS/status.png?theme=shields.io)](https://david-dm.org/Reactive-Extensions/RxJS#info=dependencies) 
-[![devDependency Status](https://david-dm.org/Reactive-Extensions/RxJS/dev-status.png?theme=shields.io)](https://david-dm.org/Reactive-Extensions/RxJS#info=devDependencies) 
+[![dependency Status](https://david-dm.org/Reactive-Extensions/RxJS/status.png?theme=shields.io)](https://david-dm.org/Reactive-Extensions/RxJS#info=dependencies)
+[![devDependency Status](https://david-dm.org/Reactive-Extensions/RxJS/dev-status.png?theme=shields.io)](https://david-dm.org/Reactive-Extensions/RxJS#info=devDependencies)
 [![NPM version](https://badge.fury.io/js/rx.png)](http://badge.fury.io/js/rx)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Reactive-Extensions/rxjs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
@@ -45,10 +45,10 @@ But the best news of all is that you already know how to program like this.  Tak
 var source = getStockData();
 
 source
-    .filter(function (quote) { 
-        return quote.price > 30; 
+    .filter(function (quote) {
+        return quote.price > 30;
     })
-    .map(function (quote) { 
+    .map(function (quote) {
         return quote.price;
     })
     .forEach(function (price) {
@@ -56,17 +56,17 @@ source
     });
 ```
 
-Now what if this data were to come as some sort of event, for example a stream, such as as a WebSocket, then we could pretty much write the same query to iterate our data, with very litle change.
+Now what if this data were to come as some sort of event, for example a stream, such as as a WebSocket, then we could pretty much write the same query to iterate our data, with very little change.
 
 ```js
 /* Get stock data somehow */
 var source = getAsyncStockData();
 
 var subscription = source
-    .filter(function (quote) { 
-        return quote.price > 30; 
+    .filter(function (quote) {
+        return quote.price > 30;
     })
-    .map(function (quote) { 
+    .map(function (quote) {
         return quote.price;
     })
     .subscribe(
@@ -81,7 +81,7 @@ var subscription = source
 subscription.dispose();
 ```
 
-The only difference is that we can handle the errors inline with our subscription.  And when we're no longer interested in receiving the data as it comes steraming in, we call `dispose` on our subscription.
+The only difference is that we can handle the errors inline with our subscription.  And when we're no longer interested in receiving the data as it comes streaming in, we call `dispose` on our subscription.
 
 ## Batteries Included ##
 
@@ -90,7 +90,7 @@ This set of libraries include:
 - [rx.lite.js](doc/libraries/rx.lite.md) - lite version with event bindings, creation, time and standard query operators with a compat file for older browsers.
 - [rx.js](doc/libraries/rx.md) - core library for ES5 compliant browsers and runtimes plus compatibility for older browsers.
 - [rx.aggregates.js](doc/libraries/rx.aggregates.md) - aggregation event processing query operations
-- [rx.async.js](doc/libraries/rx.async.md) - async operationrs such as events, callbacks and promises plus a compat file for older browsers.
+- [rx.async.js](doc/libraries/rx.async.md) - async operations such as events, callbacks and promises plus a compat file for older browsers.
 - [rx.backpressure.js](doc/libraries/rx.backpressure.md) - backpressure operators such as pause/resume and controlled.
 - [rx.binding.js](doc/libraries/rx.binding.md) - binding operators including multicast, publish, publishLast, publishValue, and replay
 - [rx.coincidence.js](doc/libraries/rx.coincidence.md) - reactive coincidence join event processing query operations
@@ -151,7 +151,7 @@ function searchWikipedia (term) {
 }
 ```
 
-Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call `flatMapLatest` to get the value and ensure that we're not introducing any out of order sequence calls.  
+Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call `flatMapLatest` to get the value and ensure that we're not introducing any out of order sequence calls.
 
 ```js
 var suggestions = distinct
@@ -169,12 +169,12 @@ suggestions.subscribe( function (data) {
 
     $.each(res, function (_, value) {
         $('<li>' + value + '</li>').appendTo($results);
-    });    
+    });
 }, function (error) {
     /* handle any errors */
     $results.empty();
 
-    $('<li>Error: ' + error + '</li>').appendTo($results);    
+    $('<li>Error: ' + error + '</li>').appendTo($results);
 });
 ```
 
@@ -187,7 +187,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 ## Resources
 
 - Contact us
-    - [Tech Blog](http://blogs.msdn.com/b/rxteam) 
+    - [Tech Blog](http://blogs.msdn.com/b/rxteam)
     - [Twitter @ReactiveX](https://twitter.com/ReactiveX)
     - [Twitter @OpenAtMicrosoft](http://twitter.com/OpenAtMicrosoft)
     - [IRC #reactivex](http://webchat.freenode.net/#reactivex)
@@ -256,7 +256,7 @@ There are a number of ways to get started with RxJS. The files are available on 
     bower install rxjs
 
 ### Installing with [Jam](http://jamjs.org/)
-    
+
     jam install rx
 
 ### Installing All of RxJS via [NuGet](http://nuget.org/)
@@ -281,7 +281,7 @@ There are a number of ways to get started with RxJS. The files are available on 
     <script src="rx.js"></script>
 
 ### Along with a number of our extras for RxJS:
-    
+
     <script src="rx.aggregates.js"></script>
     <script src="rx.async.js"></script>
     <script src="rx.backpressure.js"></script>
@@ -322,7 +322,7 @@ In addition, we have support for [common Node.js functions](https://github.com/R
 
 ## Compatibility ##
 
-RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+. 
+RxJS has been thoroughly tested against all major browsers and supports IE6+, Chrome 4+, FireFox 1+, and Node.js v0.4+.
 
 ## Contributing ##
 
