@@ -36,7 +36,7 @@
     // Refernces
     var Observable = Rx.Observable,
         observableProto = Observable.prototype,
-        AnonymousObservable = Rx.AnonymousObservable,
+        AnonymousObservable = Rx.Internals.AnonymousObservable,
         observableDefer = Observable.defer,
         observableEmpty = Observable.empty,
         observableNever = Observable.never,
@@ -48,7 +48,7 @@
         CompositeDisposable = Rx.CompositeDisposable,
         RefCountDisposable = Rx.RefCountDisposable,
         Subject = Rx.Subject,
-        addRef = Rx.internals.addRef,
+        addRef = Rx.Internals.addRef,
         normalizeTime = Rx.Scheduler.normalize;
 
     function observableTimerDate(dueTime, scheduler) {
