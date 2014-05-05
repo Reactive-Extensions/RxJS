@@ -152,6 +152,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`takeLastBufferWithTime`](#rxobservableprototypetakelastbufferwithtimeduration-scheduler)
 - [`takeLastWithTime`](#rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler)
 - [`takeUntil`](#rxobservableprototypetakeuntilother)
+- [`takeUntilWithTime`](#rxobservableprototypetakeuntilwithtimeendtime-scheduler)
 - [`takeWhile`](#rxobservableprototypetakewhilepredicate-thisarg)
 - [`throttle`](#rxobservableprototypethrottleduetime-scheduler)
 - [`throttleWithSelector`](#rxobservableprototypethrottlewithselectorthrottleselector)
@@ -203,7 +204,6 @@ var subscription = source.subscribe(
 // => Completed
 
 /* Using Promises and Observables */
-/* Using Observable sequences */
 var source = Rx.Observable.amb(
     RSVP.Promise.resolve('foo')
     Rx.Observable.timer(200).select(function () { return 'bar'; })
@@ -835,7 +835,7 @@ Converts an array to an observable sequence, using an optional scheduler to enum
 
 #### Arguments
 1. `array` *(Array)*: An array to convert to an Observable sequence.
-2. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the enumeration of the input sequence on.
+2. `[scheduler=Rx.Scheduler.currentThread]` *(`Scheduler`)*: Scheduler to run the enumeration of the input sequence on.
 
 #### Returns
 *(`Observable`)*: The observable sequence whose elements are pulled from the given enumerable sequence.
@@ -896,7 +896,7 @@ Converts a callback function to an observable sequence.
 
 #### Arguments
 1. `func` *(`Function`)*: Function with a callback as the last parameter to convert to an Observable sequence.
-2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
+2. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
 3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
 4. `[selector]` *(`Function`)*: A selector which takes the arguments from the callback to produce a single item to yield on next.
 
@@ -1207,7 +1207,7 @@ Converts an ES6 iterable into an Observable sequence.
 
 #### Arguments
 1. `iterable` *(Iterable)*: Either a generator function or iterable such as Set, Map, etc.
-2. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.currentThread`.
+2. `[scheduler=Rx.Scheduler.currentThread]` *(`Scheduler`)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.currentThread`.
 
 #### Returns
 *(`Function`)*: The observable sequence whose elements are pulled from the given generator sequence.
@@ -1284,7 +1284,7 @@ Converts a Node.js callback style function to an observable sequence.  This must
 
 #### Arguments
 1. `func` *(`Function`)*: Function with a callback as the last parameter to convert to an Observable sequence.
-2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
+2. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the function on. If not specified, defaults to `Rx.Scheduler.timeout`.
 3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
 4. `[selector]` *(`Function`)*: A selector which takes the arguments from callback sans the error to produce a single item to yield on next.
 
@@ -1441,7 +1441,7 @@ Converts an array to an observable sequence, using an optional scheduler to enum
 2. `condition` *(`Function`)*: Condition to terminate generation (upon returning false).
 3. `iterate` *(`Function`)*: Iteration step function.
 4. `resultSelector` *(`Function`)*: Selector function for results produced in the sequence.
-5. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.currentThread.
+5. `[scheduler=Rx.Scheduler.currentThread]` *(`Scheduler`)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.currentThread.
 
 #### Returns
 *(`Observable`)*: The generated sequence.
@@ -1509,7 +1509,7 @@ Generates an observable sequence by iterating a state from an initial state unti
 3. `iterate` *(`Function`)*: Iteration step function.
 4. `resultSelector` *(`Function`)*: Selector function for results produced in the sequence.
 5. `timeSelector` *(`Function`)*: Time selector function to control the speed of values being produced each iteration, returning Date values.
-6. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.timeout.
+6. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.timeout.
 
 #### Returns
 *(`Observable`)*: The generated sequence.
@@ -1576,7 +1576,7 @@ Generates an observable sequence by iterating a state from an initial state unti
 3. `iterate` *(`Function`)*: Iteration step function.
 4. `resultSelector` *(`Function`)*: Selector function for results produced in the sequence.
 5. `timeSelector` *(`Function`)*: Time selector function to control the speed of values being produced each iteration, returning integer values denoting milliseconds.
-6. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.timeout.
+6. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.timeout.
 
 #### Returns
 *(`Observable`)*: The generated sequence.
@@ -1728,7 +1728,7 @@ Unit Tests:
 Returns an observable sequence that produces a value after each period.
 
 #### Arguments
-1. `period` *(Number)*: Period for producing the values in the resulting sequence (specified as an integer denoting milliseconds).
+1. `period` *(`Number`)*: Period for producing the values in the resulting sequence (specified as an integer denoting milliseconds).
 2. `[scheduler]` *(Scheduler=Rx.Scheduler.timeout)*: Scheduler to run the timer on. If not specified, Rx.Scheduler.timeout is used.
 
 #### Returns
@@ -1970,9 +1970,9 @@ Unit Tests:
 Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
 
 ### Arguments
-1. `start` *(Number)*: The value of the first integer in the sequence.
-2. `count` *(Number)*: The number of sequential integers to generate.
-3. `[scheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
+1. `start` *(`Number`)*: The value of the first integer in the sequence.
+2. `count` *(`Number`)*: The number of sequential integers to generate.
+3. `[scheduler=Rx.Scheduler.currentThread]` *(`Scheduler`)*: Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
 
 #### Returns
 *(`Observable`)*: An observable sequence that contains a range of sequential integral numbers. 
@@ -2031,8 +2031,8 @@ Generates an observable sequence that repeats the given element the specified nu
 
 ### Arguments
 1. `value` *(`Any`)*: Element to repeat.
-2. `[repeatCount=-1]` *(Number)*:Number of times to repeat the element. If not specified, repeats indefinitely.
-3. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to run the producer loop on. If not specified, defaults to Scheduler.immediate.
+2. `[repeatCount=-1]` *(`Number`)*:Number of times to repeat the element. If not specified, repeats indefinitely.
+3. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to run the producer loop on. If not specified, defaults to Scheduler.immediate.
 
 #### Returns
 *(`Observable`)*: An observable sequence that repeats the given element the specified number of times.
@@ -2092,7 +2092,7 @@ There is an alias called `returnValue` for browsers <IE9.
 
 ### Arguments
 1. `value` *(`Any`)*: Single element in the resulting observable sequence.
-2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
+2. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
 
 #### Returns
 *(`Observable`)*: An observable sequence that repeats the given element the specified number of times.
@@ -2149,7 +2149,7 @@ Invokes the specified function asynchronously on the specified scheduler, surfac
 
 ### Arguments
 1. `func` *(`Function`)*: Function to run asynchronously.
-2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
+2. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
 3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
 
 #### Returns
@@ -2278,7 +2278,7 @@ There is an alias to this method called `throwException` for browsers <IE9.
 
 ### Arguments
 1. `dueTime` *(`Any`)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
-2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler to send the exceptional termination call on. If not specified, defaults to the immediate scheduler.
+2. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to send the exceptional termination call on. If not specified, defaults to the immediate scheduler.
 
 #### Returns
 *(`Observable`)*: The observable sequence that terminates exceptionally with the specified exception object.
@@ -2337,7 +2337,7 @@ relative time is supported.
 ### Arguments
 1. `dueTime` *(Date|Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
 2. `[period|scheduler=Rx.Scheduler.timeout]` *(Number|Scheduler)*: Period to produce subsequent values (specified as an integer denoting milliseconds), or the scheduler to run the timer on. If not specified, the resulting timer is not recurring.
-3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, the timeout scheduler is used.
+3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the timer on. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: An observable sequence that produces a value after due time has elapsed and then each period.
@@ -2401,7 +2401,7 @@ Converts the function into an asynchronous function. Each invocation of the resu
 
 ### Arguments
 1. `func` *(`Function`)*: Function to convert to an asynchronous function.
-2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
+2. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
 3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
 
 #### Returns
@@ -2463,7 +2463,7 @@ Unit Tests:
 
 ### Arguments
 1. `resourceFactory` *(`Function`)*: Factory function to obtain a resource object.
-2. `observableFactory` *(Scheduler)*: Factory function to obtain an observable sequence that depends on the obtained resource.
+2. `observableFactory` *(`Scheduler`)*: Factory function to obtain an observable sequence that depends on the obtained resource.
 
 #### Returns
 *(`Function`)*: An observable sequence whose lifetime controls the lifetime of the dependent resource object.
@@ -2897,7 +2897,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Aggregates
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
 
 Unit Tests:
 - [/tests/observable/aggregate.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/aggregate.js)
@@ -2954,7 +2954,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Aggregates
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
 
 Unit Tests:
 - [/tests/observable/all.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/all.js)
@@ -3370,9 +3370,9 @@ var subscription = source.subscribe(
 Projects each element of an observable sequence into zero or more buffers which are produced based on timing information.
 
 #### Arguments
-1. `timeSpan` *(Number)*: Length of each buffer (specified as an integer denoting milliseconds).
-2. `[timeShift]` *(Number)*: Interval between creation of consecutive buffers (specified as an integer denoting milliseconds).
-3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
+1. `timeSpan` *(`Number`)*: Length of each buffer (specified as an integer denoting milliseconds).
+2. `[timeShift]` *(`Number`)*: Interval between creation of consecutive buffers (specified as an integer denoting milliseconds).
+3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: An observable sequence of buffers. 
@@ -3433,9 +3433,9 @@ var subscription = source.subscribe(
 Projects each element of an observable sequence into a buffer that is completed when either it's full or a given amount of time has elapsed.
 
 #### Arguments
-1. `timeSpan` *(Number)*: Maximum time length of a buffer.
-2. `count` *(Number)*: Maximum element count of a buffer.
-3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
+1. `timeSpan` *(`Number`)*: Maximum time length of a buffer.
+2. `count` *(`Number`)*: Maximum element count of a buffer.
+3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: An observable sequence of buffers. 
@@ -3948,7 +3948,7 @@ Time shifts the observable sequence by dueTime. The relative time intervals betw
 
 #### Arguments
 1. `dueTime` *(Date | Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
-2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
+2. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: Time-shifted sequence.
@@ -4514,7 +4514,7 @@ Expands an observable sequence by recursively invoking selector.
 
 #### Arguments
 1. `selector` *(`Function`)*: Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
-2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler on which to perform the expansion. If not provided, this defaults to the immediate scheduler.
+2. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler on which to perform the expansion. If not provided, this defaults to the immediate scheduler.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
@@ -5622,7 +5622,7 @@ Comonadic bind operator.
 
 #### Arguments
 1. `selector` *(`Function`)*: A transform function to apply to each element.
-2. `[scheduler=Rx.Scheduler.immediate]` *(Scheduler)*: Scheduler used to execute the operation. If not specified, defaults to the `Rx.Scheduler.immediate` scheduler.
+2. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler used to execute the operation. If not specified, defaults to the `Rx.Scheduler.immediate` scheduler.
  
 #### Returns
 *(`Observable`)*: An observable sequence which results from the comonadic bind operation.
@@ -6093,7 +6093,7 @@ Wraps the source sequence in order to run its observer callbacks on the specifie
 This only invokes observer callbacks on a scheduler. In case the subscription and/or unsubscription actions have side-effects that require to be run on a scheduler, use subscribeOn.
 
 #### Arguments
-1. `scheduler` *(Scheduler)*:  Scheduler to notify observers on.
+1. `scheduler` *(`Scheduler`)*:  Scheduler to notify observers on.
 
 #### Returns
 *(`Observable`)*: The source sequence whose observations happen on the specified scheduler. 
@@ -6794,7 +6794,7 @@ var subscription = source.subscribe(
 Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
  
 #### Arguments
-1. `repeatCount` *(Number)*:  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
+1. `repeatCount` *(`Number`)*:  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
  
 #### Returns
 *(`Observable`)*: The observable sequence producing the elements of the given sequence repeatedly.  
@@ -6839,9 +6839,9 @@ This operator is a specialization of `multicast` using a `Rx.ReplaySubject`.
 
 #### Arguments
 1. `[selector]` *(`Function`)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
-2. `[bufferSize]` *(Number)*: Maximum element count of the replay buffer.
-3. `[window]` *(Number)*: Maximum time length of the replay buffer in milliseconds.
-4. `[scheduler]` *(Scheduler)*: Scheduler where connected observers within the selector function will be invoked on.
+2. `[bufferSize]` *(`Number`)*: Maximum element count of the replay buffer.
+3. `[window]` *(`Number`)*: Maximum time length of the replay buffer in milliseconds.
+4. `[scheduler]` *(`Scheduler`)*: Scheduler where connected observers within the selector function will be invoked on.
  
 #### Returns
 *(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -6907,9 +6907,9 @@ Returns an observable sequence that shares a single subscription to the underlyi
 This operator is a specialization of `replay` that connects to the connectable observable sequence when the number of observers goes from zero to one, and disconnects when there are no more observers.
 
 #### Arguments
-1. `[bufferSize]` *(Number)*: Maximum element count of the replay buffer.
-2. `[window]` *(Number)*: Maximum time length of the replay buffer in milliseconds.
-3. `[scheduler]` *(Scheduler)*: Scheduler where connected observers within the selector function will be invoked on.
+1. `[bufferSize]` *(`Number`)*: Maximum element count of the replay buffer.
+2. `[window]` *(`Number`)*: Maximum time length of the replay buffer in milliseconds.
+3. `[scheduler]` *(`Scheduler`)*: Scheduler where connected observers within the selector function will be invoked on.
  
 #### Returns
 *(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -6984,7 +6984,7 @@ function createObserver(tag) {
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
 #### Arguments
-1. `[retryCount]` *(Number)*:  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
+1. `[retryCount]` *(`Number`)*:  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
  
 #### Returns
 *(`Observable`)*: An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully. 
@@ -7030,9 +7030,9 @@ var subscription = source.subscribe(
 Samples the observable sequence at each interval.
 
 #### Arguments
-1. `[interval]` *(Number)*: Interval at which to sample (specified as an integer denoting milliseconds)
+1. `[interval]` *(`Number`)*: Interval at which to sample (specified as an integer denoting milliseconds)
 2. `[sampleObservable]` *(`Observable`)*: Sampler Observable.
-3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the sampling timer on. If not specified, the timeout scheduler is used.
+3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the sampling timer on. If not specified, the timeout scheduler is used.
  
 #### Returns
 *(`Observable`)*: Sampled observable sequence.
@@ -7553,7 +7553,7 @@ var subscription = source.subscribe(
 Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
 
 #### Arguments
-1. `count` *(Number)*: The number of elements to skip before returning the remaining elements.
+1. `count` *(`Number`)*: The number of elements to skip before returning the remaining elements.
 
 #### Returns
 *(`Observable`)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.   
@@ -7593,7 +7593,7 @@ Bypasses a specified number of elements at the end of an observable sequence.
 This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed. 
 
 #### Arguments
-1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
+1. `count` *(`Number`)*: Number of elements to bypass at the end of the source sequence.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
@@ -7633,8 +7633,8 @@ Bypasses a specified number of elements at the end of an observable sequence.
 This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed. 
 
 #### Arguments
-1. `duration` *(Number)*: Duration for skipping elements from the end of the sequence.
-1. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
+1. `duration` *(`Number`)*: Duration for skipping elements from the end of the sequence.
+1. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
 
 #### Returns
 *(`Observable`)*: An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
@@ -7683,7 +7683,7 @@ Returns the values from the source observable sequence only after the other obse
 #### Example
 ```js
 var source = Rx.Observable.timer(0, 1000)
-    .takeUntil(Rx.Observable.timer(5000));
+    .skipUntil(Rx.Observable.timer(5000));
 
 var subscription = source.subscribe(
     function (x) {
@@ -7800,7 +7800,7 @@ var subscription = source.subscribe(
 Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
 
 #### Arguments
-1. `[scheduler]` *(Scheduler)*: Scheduler to execute the function.
+1. `[scheduler]` *(`Scheduler`)*: Scheduler to execute the function.
 2. `args` *(arguments)*: Values to prepend to the observable sequence.
 
 #### Returns
@@ -7836,7 +7836,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted"></a>`Rx.Observable.prototype.subscribe([observer] | [onNext], [onError], [onCompleted])`
-<a href="#rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2593-L2602 "View in source") 
+<a href="#rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable.js "View in source") 
 
 Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
 
@@ -7900,21 +7900,40 @@ var subscription = source.subscribe(
 // => Next: 2
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+
+Unit Tests:
+- [`/tests/core/observable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/core/observable.js)
 
 * * *
 
 ### <a id="rxobservableprototypesubscribeonscheduler"></a>`Rx.Observable.prototype.subscribeOn(scheduler)`
-<a href="#rxobservableprototypesubscribeonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2700-L2710 "View in source") 
+<a href="#rxobservableprototypesubscribeonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/subscribeon.js "View in source") 
 
 Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler.
 
 This only performs the side-effects of subscription and unsubscription on the specified scheduler. In order to invoke observer callbacks on a scheduler, use `observeOn`.
 
 #### Arguments
-1. `scheduler` *(Scheduler)*:  Scheduler to notify observers on.
+1. `scheduler` *(`Scheduler`)*:  Scheduler to notify observers on.
 
 #### Returns
 *(`Observable`)*: The source sequence whose observations happen on the specified scheduler. 
@@ -7954,19 +7973,36 @@ var subscription = source.subscribe(
 // => Completed   
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/subscribeon.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/subscribeon.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+
+Unit Tests:
+- [`/tests/observable/subscribeon.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/subscribeon.js)
 
 * * *
 
 ### <a id="rxobservableprototypesumkeyselector-thisarg"></a>`Rx.Observable.prototype.sum([keySelector], [thisArg])`
-<a href="#rxobservableprototypesumkeyselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L231-L237 "View in source") 
+<a href="#rxobservableprototypesumkeyselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sum.js "View in source") 
 
 Computes the sum of a sequence of values that are obtained by invoking an optional transform function on each element of the input sequence, else if not specified computes the sum on each item in the sequence.
 
 #### Arguments
-1. `[keySelector]` *(Scheduler)*:  A transform function to apply to each element.  The callback is called with the following information:
+1. `[keySelector]` *(`Scheduler`)*:  A transform function to apply to each element.  The callback is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
@@ -8022,14 +8058,31 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
+File:
+- [/src/core/observable/sum.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sum.js)
+
+Dist:
+- [rx.aggregates.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
 - rx.aggregates.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [/tests/observable/sum.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/sum.js)
 
 * * *
 
 ### <a id="rxobservableprototypeswitch"></a>`Rx.Observable.prototype.switch()`
-<a href="#rxobservableprototypeswitch">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3462-L3497 "View in source") 
+<a href="#rxobservableprototypeswitch">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switchlatest.js "View in source") 
 
 Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.  There is an alias for this method called `switchLatest` for browsers <IE9.
   
@@ -8040,7 +8093,7 @@ Transforms an observable sequence of observable sequences into an observable seq
 ```js
 var source = Rx.Observable.range(0, 3)
     .select(function (x) { return Rx.Observable.range(x, 3); })
-    .switchLatest();
+    .switch();
 
 var subscription = source.subscribe(
     function (x) {
@@ -8061,20 +8114,40 @@ var subscription = source.subscribe(
 // => Completed    
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/switchlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switchlatest.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/switchlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/switchlatest.js)
 
 * * *
 
 ### <a id="rxobservableprototypetakecount-scheduler"></a>`Rx.Observable.prototype.take(count, [scheduler])`
-<a href="#rxobservableprototypetakecount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4446-L4466 "View in source") 
+<a href="#rxobservableprototypetakecount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/take.js "View in source") 
 
 Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of `take(0)`.
   
 #### Arguments
-1. `count` *(Number)*: The number of elements to return.
-2. `[schduler]` *(Scheduler)*: Scheduler used to produce an onCompleted message in case `count` is set to 0.
+1. `count` *(`Number`)*: The number of elements to return.
+2. `[schduler]` *(`Scheduler`)*: Scheduler used to produce an onCompleted message in case `count` is set to 0.
 
 #### Returns
 *(`Observable`)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.   
@@ -8101,21 +8174,41 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/take.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/take.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/take.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/take.js)
 
 * * *
 
 ### <a id="rxobservableprototypetakelastcount"></a>`Rx.Observable.prototype.takeLast(count)`
-<a href="#rxobservableprototypetakelastcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4008-L4010 "View in source") 
+<a href="#rxobservableprototypetakelastcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelast.js "View in source") 
 
 Returns a specified number of contiguous elements from the end of an observable sequence, using an optional scheduler to drain the queue.
   
 This operator accumulates a buffer with a length enough to store elements count elements. Upon completion of the source sequence, this buffer is drained on the result sequence. This causes the elements to be delayed.
 
 #### Arguments
-1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
+1. `count` *(`Number`)*: Number of elements to bypass at the end of the source sequence.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
@@ -8142,19 +8235,39 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/takelast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelast.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/takelast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/takelast.js)
 
 * * *
 
 ### <a id="rxobservableprototypetakelastbuffercount"></a>`Rx.Observable.prototype.takeLastBuffer(count)`
-<a href="#rxobservableprototypetakelastbuffercount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4023-L4037 "View in source") 
+<a href="#rxobservableprototypetakelastbuffercount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastbuffer.js "View in source") 
 
 Returns an array with the specified number of contiguous elements from the end of an observable sequence.
 
 #### Arguments
-1. `count` *(Number)*: Number of elements to bypass at the end of the source sequence.
+1. `count` *(`Number`)*: Number of elements to bypass at the end of the source sequence.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
@@ -8175,26 +8288,46 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: [2, 3, 4]
+// => Next: 2,3,4
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/takelastbuffer.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastbuffer.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/takelastbuffer.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/takelastbuffer.js)
 
 * * *
 
 ### <a id="rxobservableprototypetakelastbufferwithtimeduration-scheduler"></a>`Rx.Observable.prototype.takeLastBufferWithTime(duration, [scheduler])`
-<a href="#rxobservableprototypetakelastbufferwithtimeduration-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L1089-L1114 "View in source") 
+<a href="#rxobservableprototypetakelastbufferwithtimeduration-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastbufferwithtime.js "View in source") 
 
 Returns an array with the elements within the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
 
 This operator accumulates a queue with a length enough to store elements received during the initial duration window. As more elements are received, elements older than the specified duration are taken from the queue and produced on the result sequence. This causes elements to be delayed with duration.  
  
 #### Arguments
-1. `duration` *(Number)*: Duration for taking elements from the end of the sequence.
-2. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
+1. `duration` *(`Number`)*: Duration for taking elements from the end of the sequence.
+2. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing a single array with the elements taken during the specified duration from the end of the source sequence.
@@ -8217,25 +8350,41 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: 5,6,7,8,9]
+// => Next: 5,6,7,8,9
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/takelastbufferwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastbufferwithtime.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/takelastbufferwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/takelastbufferwithtime.js)
 
 * * *
 
 ### <a id="rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler"></a>`Rx.Observable.prototype.takeLastWithTime(duration, [timeScheduler], [loopScheduler])`
-<a href="#rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L1071-L1073 "View in source") 
+<a href="#rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastwithtime.js "View in source") 
 
 Returns elements within the specified duration from the end of the observable source sequence, using the specified schedulers to run timers and to drain the collected elements.
 
 #### Arguments
-1. `duration` *(Number)*: Duration for taking elements from the end of the sequence.
-2. `[timeScheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
-2. `[loopScheduler=Rx.Scheduler.currentThread]` *(Scheduler)*: Scheduler to drain the collected elements. If not specified, defaults to current thread scheduler.
+1. `duration` *(`Number`)*: Duration for taking elements from the end of the sequence.
+2. `[timeScheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the timer on. If not specified, defaults to timeout scheduler.
+2. `[loopScheduler=Rx.Scheduler.currentThread]` *(`Scheduler`)*: Scheduler to drain the collected elements. If not specified, defaults to current thread scheduler.
 
 #### Returns
 *(`Observable`)*: An observable sequence with the elements taken during the specified duration from the end of the source sequence.
@@ -8265,19 +8414,35 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/takelastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastwithtime.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/takelastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/takelastwithtime.js)
 
 * * *
 
 ### <a id="rxobservableprototypetakeuntilother"></a>`Rx.Observable.prototype.takeUntil(other)`
-<a href="#rxobservableprototypetakeuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3506-L3514 "View in source") 
+<a href="#rxobservableprototypetakeuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js "View in source") 
 
 Returns the values from the source observable sequence until the other observable sequence produces a value.
 
 #### Arguments
-1. `other` *(`Observable`)*: Observable sequence that terminates propagation of elements of the source sequence.
+1. `other` *(`Observable` | `Promise`)*: Observable sequence or Promise that terminates propagation of elements of the source sequence.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.    
@@ -8306,14 +8471,92 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/takeuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/takeuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/takeuntil.js)
+
+* * *
+
+### <a id="rxobservableprototypetakeuntilwithtimeendtime-scheduler"></a>`Rx.Observable.prototype.takeUntil(other)`
+<a href="#rxobservableprototypetakeuntilwithtimeendtime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js "View in source") 
+
+Returns the values from the source observable sequence until the other observable sequence produces a value.
+
+#### Arguments
+1. `endTime` *(`Date` | `Number`)*: Time to stop taking elements from the source sequence. If this value is less than or equal to the current time, the result stream will complete immediately.
+2. [`scheduler`] *(`Scheduler`)*: Scheduler to run the timer on.
+
+#### Returns
+*(`Observable`)*: An observable sequence with the elements taken until the specified end time.   
+
+#### Example
+```js
+var source = Rx.Observable.timer(0, 1000)
+    .takeUntilWithTime(5000);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Next: 4
+// => Completed 
+```
+
+### Location
+
+File:
+- [`/src/core/observable/takeuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntilwithtime.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/takeuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/takeuntilwithtime.js)
 
 * * *
 
 ### <a id="rxobservableprototypetakewhilepredicate-thisarg"></a>`Rx.Observable.prototype.takeWhile(predicate, [thisArg])`
-<a href="#rxobservableprototypetakewhilepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4481-L4501 "View in source") 
+<a href="#rxobservableprototypetakewhilepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takewhile.js "View in source") 
 
 Returns elements from an observable sequence as long as a specified condition is true.
 
@@ -8350,19 +8593,39 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/takewhile.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takewhile.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/takewhile.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/takewhile.js)
 
 * * *
 
 ### <a id="rxobservableprototypethrottleduetime-scheduler"></a>`Rx.Observable.prototype.throttle(dueTime, [scheduler])`
-<a href="#rxobservableprototypethrottleduetime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4481-L4501 "View in source") 
+<a href="#rxobservableprototypethrottleduetime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js "View in source") 
 
 Ignores values from an observable sequence which are followed by another value before dueTime.
 
 #### Arguments
-1. `dueTime` *(Number)*: Duration of the throttle period for each value (specified as an integer denoting milliseconds).
+1. `dueTime` *(`Number`)*: Duration of the throttle period for each value (specified as an integer denoting milliseconds).
 2. `[scheduler=Rx.Scheduler.timeout]` *(`Any`)*: Scheduler to run the throttle timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
@@ -8405,19 +8668,38 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/throttle.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.time.js`
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/throttle.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/throttle.js)
 
 * * *
 
 ### <a id="rxobservableprototypethrottlewithselectorthrottleselector"></a>`Rx.Observable.prototype.throttleWithSelector(throttleSelector)`
-<a href="#rxobservableprototypethrottlewithselectorthrottleselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L973-L1018 "View in source") 
+<a href="#rxobservableprototypethrottlewithselectorthrottleselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js "View in source") 
 
 Ignores values from an observable sequence which are followed by another value before dueTime.
 
 #### Arguments
-1. `dueTime` *(Number)*: Selector function to retrieve a sequence indicating the throttle duration for each given element.
+1. `dueTime` *(`Number`)*: Selector function to retrieve a sequence indicating the throttle duration for each given element.
 
 #### Returns
 *(`Observable`)*: The throttled sequence. 
@@ -8458,19 +8740,35 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/throttlewithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/throttlewithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/throttlewithselector.js)
 
 * * *
 
 ### <a id="rxobservableprototypetimeintervalscheduler"></a>`Rx.Observable.prototype.timeInterval([scheduler])`
-<a href="#rxobservableprototypetimeintervalscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L531-L545 "View in source") 
+<a href="#rxobservableprototypetimeintervalscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeinterval.js "View in source") 
 
 Records the time interval between consecutive values in an observable sequence.
 
 #### Arguments
-1. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler used to compute time intervals. If not specified, the timeout scheduler is used.
+1. `[scheduler=Rx.Observable.timeout]` *(`Scheduler`)*: Scheduler used to compute time intervals. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: An observable sequence with time interval information on values.
@@ -8501,21 +8799,37 @@ var subscription = source.subscribe(
 // => Completed    
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/timeinterval.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeinterval.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/timeinterval.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/timeinterval.js)
 
 * * *
 
 ### <a id="rxobservableprototypetimeoutduetime-other-scheduler"></a>`Rx.Observable.prototype.timeout(dueTime, [other], [scheduler])`
-<a href="#rxobservableprototypetimeoutduetime-other-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L633-L687 "View in source") 
+<a href="#rxobservableprototypetimeoutduetime-other-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeout.js "View in source") 
 
 Returns the source observable sequence or the other observable sequence if dueTime elapses.
 
 #### Arguments
 1. `dueTime` *(Date | Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
-2. `[other]` *(`Observable`)*: Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
-3. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
+2. `[other]` *(`Observable`)*: Sequence or Promise to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
+3. `[scheduler=Rx.Observable.timeout]` *(`Scheduler`)*: Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: An observable sequence with time interval information on values.
@@ -8561,21 +8875,37 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/timeout.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeout.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/timeout.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/timeout.js)
 
 * * *
 
 ### <a id="rxobservableprototypetimeoutwithselectorfirsttimeout-timeoutdurationselector-other"></a>`Rx.Observable.prototype.timeoutwithselector([firstTimeout], timeoutDurationSelector, [other])`
-<a href="#rxobservableprototypetimeoutwithselectorfirsttimeout-timeoutdurationselector-other">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L633-L687 "View in source") 
+<a href="#rxobservableprototypetimeoutwithselectorfirsttimeout-timeoutdurationselector-other">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeoutwithselector.js "View in source") 
 
 Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
 
 #### Arguments
 1. `[firstTimeout=Rx.Observable.never()]` *(`Observable`)*: Observable sequence that represents the timeout for the first element. If not provided, this defaults to `Rx.Observable.never()`.
 2. `timeoutDurationSelector` *(`Function`)*: Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
-3. `[other=Rx.Observable.throw]` *(Scheduler)*:Sequence to return in case of a timeout. If not provided, this is set to `Observable.throw`
+3. `[other=Rx.Observable.throw]` *(`Scheduler`)*:Sequence to return in case of a timeout. If not provided, this is set to `Observable.throw`
 
 #### Returns
 *(`Observable`)*: The source sequence switching to the other sequence in case of a timeout.
@@ -8683,19 +9013,35 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/timeoutwithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeoutwithselector.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/timeoutwithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/timeoutwithselector.js)
 
 * * *
 
 ### <a id="rxobservableprototypetimestampscheduler"></a>`Rx.Observable.prototype.timestamp([scheduler])`
-<a href="#rxobservableprototypetimestampscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L559-L567 "View in source") 
+<a href="#rxobservableprototypetimestampscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timestamp.js "View in source") 
 
 Records the timestamp for each value in an observable sequence.
 
 #### Arguments
-1. `[scheduler=Rx.Observable.timeout]` *(Scheduler)*: Scheduler used to compute timestamps. If not specified, the timeout scheduler is used.
+1. `[scheduler=Rx.Observable.timeout]` *(`Scheduler`)*: Scheduler used to compute timestamps. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: An observable sequence with timestamp information on values.
@@ -8726,14 +9072,30 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/timestamp.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timestamp.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/timestamp.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/timestamp.js)
 
 * * *
 
 ### <a id="rxobservableprototypetoarray"></a>`Rx.Observable.prototype.toArray()`
-<a href="#rxobservableprototypetoarray">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2610-L2617 "View in source") 
+<a href="#rxobservableprototypetoarray">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toarray.js "View in source") 
 
 Creates a list from an observable sequence.
 
@@ -8761,14 +9123,34 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/toarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toarray.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/toarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/toarray.js)
 
 * * *
 
 ### <a id="rxobservableprototypewherepredicate-thisarg"></a>`Rx.Observable.prototype.where(predicate, [thisArg])`
-<a href="#rxobservableprototypewherepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") 
+<a href="#rxobservableprototypewherepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/where.js "View in source") 
 
 Filters the elements of an observable sequence based on a predicate.  This is an alias for the `filter` method.
 
@@ -8806,14 +9188,34 @@ var subscription = source.subscribe(
 // => Completed    
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/where.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/where.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/where.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/where.js)
 
 * * *
 
 ### <a id="rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector"></a>`Rx.Observable.prototype.window([windowOpenings], [windowBoundaries], windowClosingSelector)`
-<a href="#rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js#L4513-L4530 "View in source") 
+<a href="#rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/window.js "View in source") 
 
 Projects each element of an observable sequence into zero or more windows.
 
@@ -8912,21 +9314,30 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
 File:
-- /src/core/observable/window.js
-
-Requirements
-- rx.js | rx.compat.js
+- [`/src/core/observable/window.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/window.js)
 
 Dist:
-- rx.coincidence.js
+- [`rx.coincidence.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Coincidence`](http://www.nuget.org/packages/RxJS-Main/)
+
+Unit Tests:
+- [`/tests/observable/window.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/window.js)
 
 * * *
 
 ### <a id="rxobservableprototypewindowwithcountcount-skip"></a>`Rx.Observable.prototype.windowWithCount(count, [skip])`
-<a href="#rxobservableprototypewindowwithcountcount-skip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4050-L4099 "View in source") 
+<a href="#rxobservableprototypewindowwithcountcount-skip">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithcount.js "View in source") 
 
 Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
 
@@ -8984,28 +9395,38 @@ var subscription = source.subscribe(
 // => Next: 6 
 // => Completed 
 ```
-#### Location
+### Location
 
 File:
-- /src/core/observable/windowwithcount.js
-
-Requirements
-- rx.js | rx.compat.js
+- [`/src/core/observable/windowwithcount.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithcount.js)
 
 Dist:
-- rx.time.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+
+Unit Tests:
+- [`/tests/observable/windowwithcount.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/windowwithcount.js)
 
 * * *
 
 ### <a id="rxobservableprototypewindowwithtimetimespan-timeshift--scheduler"></a>`Rx.Observable.prototype.windowWithTime(timeSpan, [timeShift | scheduler])`
-<a href="#rxobservableprototypewindowwithtimetimespan-timeshift--scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L311-L399 "View in source") 
+<a href="#rxobservableprototypewindowwithtimetimespan-timeshift--scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithtime.js "View in source") 
 
 Projects each element of an observable sequence into zero or more buffers which are produced based on timing information.
 
 #### Arguments
-1. `timeSpan` *(Number)*: Length of each buffer (specified as an integer denoting milliseconds).
-2. `[timeShift]` *(Number)*: Interval between creation of consecutive buffers (specified as an integer denoting milliseconds).
-3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
+1. `timeSpan` *(`Number`)*: Length of each buffer (specified as an integer denoting milliseconds).
+2. `[timeShift]` *(`Number`)*: Interval between creation of consecutive buffers (specified as an integer denoting milliseconds).
+3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: An observable sequence of buffers. 
@@ -9082,29 +9503,37 @@ var subscription = source.subscribe(
 // => Child Next: 1,2,3,4,5,6
 // => Child Completed 
 ```
-#### Location
+### Location
 
 File:
-- /src/core/observable/windowwithtime.js
-
-Requirements
-- rx.js | rx.compat.js
+- [`/src/core/observable/windowwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithtime.js)
 
 Dist:
-- rx.time.js
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
 
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/windowwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/windowwithtime.js)
 
 * * *
 
 ### <a id="rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler"></a>`Rx.Observable.prototype.windowWithTimeOrCount(timeSpan, count, [scheduler])`
-<a href="#rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L413-L469 "View in source") 
+<a href="#rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithtimeorcount.js "View in source") 
 
 Projects each element of an observable sequence into a window that is completed when either it's full or a given amount of time has elapsed.
 
 #### Arguments
-1. `timeSpan` *(Number)*: Maximum time length of a window.
-2. `count` *(Number)*: Maximum element count of a window.
-3. `[scheduler=Rx.Scheduler.timeout]` *(Scheduler)*: Scheduler to run windows timers on. If not specified, the timeout scheduler is used.
+1. `timeSpan` *(`Number`)*: Maximum time length of a window.
+2. `count` *(`Number`)*: Maximum element count of a window.
+3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run windows timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
 *(`Observable`)*: An observable sequence of windows. 
@@ -9133,28 +9562,37 @@ var subscription = source.subscribe(
 // => Next: 6,7,8 
 // => Completed 
 ```
-#### Location
+### Location
 
 File:
-- /src/core/observable/windowwithtimeorcount.js
-
-Requirements
-- rx.js | rx.compat.js
+- [`/src/core/observable/windowwithtimeorcount.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithtimeorcount.js)
 
 Dist:
-- rx.time.js
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
+
+Unit Tests:
+- [`/tests/observable/windowwithtimeorcount.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/windowwithtimeorcount.js)
 
 * * *
 
 ### <a id="rxobservableprototypezipargs-resultselector"></a>`Rx.Observable.prototype.zip(...args, [resultSelector])`
-<a href="#rxobservableprototypezipargs-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4513-L4530 "View in source") 
+<a href="#rxobservableprototypezipargs-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zipproto.js "View in source") 
 
-Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
+Merges the specified observable sequences or Promises into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
 
 The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the sources.
 
 #### Arguments
-1. `args` *(Arguments | Array)*: Arguments or an array of observable sequences.
+1. `args` *(`Arguments` | `Array`)*: Arguments or an array of observable sequences.
 2. `[resultSelector]` *(`Any`)*: Function to invoke for each series of elements at corresponding indexes in the sources, used only if the first parameter is not an array.
 
 #### Returns
@@ -9216,16 +9654,28 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
-#### Location
+### Location
 
 File:
-- /src/core/observable/zipproto.js
-
-Requirements
-- none
+- [`/src/core/observable/zipproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zipproto.js)
 
 Dist:
-- rx.js
-- rx.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/zipproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/zipproto.js)
 
 * * *
