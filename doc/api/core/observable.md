@@ -139,6 +139,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`skipLast`](#rxobservableprototypeskiplastcount)
 - [`skipLastWithTime`](#rxobservableprototypeskiplastwithtimeduration)
 - [`skipUntil`](#rxobservableprototypeskipuntilother)
+- [`skipUntilWithTime`](#rxobservableprototypeskipuntilstarttime-scheduler)
 - [`skipWhile`](#rxobservableprototypeskipwhilepredicate-thisarg)
 - [`some`](#rxobservableprototypesomepredicate-thisarg)
 - [`startWith`](#rxobservableprototypestartwithscheduler-args)
@@ -4978,7 +4979,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxobservableprototypeflatmplatestaselector-thisArg"></a>`Rx.Observable.prototype.flatMapLatest(selector, [thisArg])`
-<a href="#rxobservableprototypeflatmplatestaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
+<a href="#rxobservableprototypeflatmplatestaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/flatmaplatest.js "View in source") 
 
 This is an alias for the `selectSwitch` method.
 
@@ -5017,9 +5018,29 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/flatmaplatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/flatmaplatest.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/flatmaplatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/flatmaplatest.js)
 
 * * *
 
@@ -6900,7 +6921,7 @@ function createObserver(tag) {
 * * *
 
 ### <a id="rxobservableprototypesharereplay-buffersize-window-scheduler"></a>`Rx.Observable.prototype.shareReplay([bufferSize], [window], [scheduler])`
-<a href="#rxobservableprototypesharereplay-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") 
+<a href="#rxobservableprototypesharereplay-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sharereplay.js "View in source") 
 
 Returns an observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
 
@@ -6934,7 +6955,7 @@ published.subscribe(createObserver('SourceB'));
 // completed. Notice that no side effects result from this subscription, 
 // because the notifications are cached and replayed. 
 Rx.Observable
-    .returnValue(true)
+    .return(true)
     .delay(6000)
     .flatMap(published)
     .subscribe(createObserver('SourceC'));
@@ -6972,14 +6993,34 @@ function createObserver(tag) {
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.binding.js
+File:
+- [`/src/core/observable/sharereplay.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sharereplay.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/sharereplay.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/sharereplay.js)
 
 * * *
 
 ### <a id="rxobservableprototyperetryretrycount"></a>`Rx.Observable.prototype.retry([retryCount])`
-<a href="#rxobservableprototyperetryretrycount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3908-L3910 "View in source") 
+<a href="#rxobservableprototyperetryretrycount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/retry.js "View in source") 
 
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
@@ -7018,14 +7059,34 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/retry.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/retry.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/retry.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/retry.js)
 
 * * *
 
 ### <a id="rxobservableprototypesampleinterval--sampleobservable"></a>`Rx.Observable.prototype.sample(interval | sampleObservable)`
-<a href="#rxobservableprototypesampleinterval--sampleobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3908-L3910 "View in source") 
+<a href="#rxobservableprototypesampleinterval--sampleobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sample.js "View in source") 
 
 Samples the observable sequence at each interval.
 
@@ -7080,14 +7141,34 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/sample.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sample.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.time.js`
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/sample.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/sample.js)
 
 * * *
 
 ### <a id="rxobservableprototypescanseed-accumulator"></a>`Rx.Observable.prototype.scan([seed], accumulator)`
-<a href="#rxobservableprototypescanseed-accumulator">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3294-L3946 "View in source") 
+<a href="#rxobservableprototypescanseed-accumulator">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js "View in source") 
 
 Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
 
@@ -7150,14 +7231,34 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/scan.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/scan.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/scan.js)
 
 * * *
 
 ### <a id="rxobservableprototypeselectselector-thisarg"></a>`Rx.Observable.prototype.select(selector, [thisArg])`
-<a href="#rxobservableprototypeselectselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
+<a href="#rxobservableprototypeselectselector-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/select.js "View in source") 
 
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `map` method.
 
@@ -7174,7 +7275,7 @@ Projects each element of an observable sequence into a new form by incorporating
 #### Example
 ```js
 var source = Rx.Observable.range(1, 3)
-    .map(function (x, idx, obs) {
+    .select(function (x, idx, obs) {
         return x * x;
     });
 
@@ -7195,9 +7296,29 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/select.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/select.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/select.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/select.js)
 
 * * *
 
@@ -7307,9 +7428,9 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableprototypeselectswitchaselector-thisArg"></a>`Rx.Observable.prototype.selectSwitch(selector, [thisArg])`
-<a href="#rxobservableprototypeselectswitchaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
+<a href="#rxobservableprototypeselectswitchaselector-thisArg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectswitch.js "View in source") 
 
-This is an alias for the `selectSwitch` method.
+This is an alias for the `flatMapLatest` method.
 
  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
 
@@ -7327,7 +7448,7 @@ This is an alias for the `selectSwitch` method.
 ```js
 var source = Rx.Observable
     .range(1, 2)
-    .flatMapLatest(function (x) {
+    .selectSwitch(function (x) {
         return Rx.Observable.range(x, 2);    
     });
 
@@ -7346,19 +7467,39 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/selectswitch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectswitch.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/selectswitch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectswitch.js)
 
 * * *
 
 ## <a id="rxobservableprototypesequenceequalsecond-comparer"></a>`Rx.Observable.prototype.sequenceEqual(second, [comparer])`
-<a href="#rxobservableprototypesequenceequalsecond-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4311-L4326 "View in source") 
+<a href="#rxobservableprototypesequenceequalsecond-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sequenceequal.js "View in source") 
 
 Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
 
 #### Arguments
-1. `second` *(`Observable`)*:  Second observable sequence or array to compare.
+1. `second` *(`Observable` | `Promise` | `Array`)*:  Second observable sequence, Promise or array to compare.
 2. `[comparer]` *(`Function`)*: Comparer used to compare elements of both sequences.
  
 #### Returns
@@ -7386,14 +7527,30 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.aggregates.js
+File:
+- [`/src/core/observable/sequenceequal.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sequenceequal.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/sequenceequal.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/sequenceequal.js)
 
 * * *
 
 ### <a id="rxobservableprototypesinglepredicate-thisarg"></a>`Rx.Observable.prototype.single([predicate], [thisArg])`
-<a href="#rxobservableprototypesinglepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L524-L529 "View in source") 
+<a href="#rxobservableprototypesinglepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/single.js "View in source") 
 
 Returns the only element of an observable sequence that satisfies the condition in the optional predicate, and reports an exception if there is not exactly one element in the observable sequence.
  
@@ -7480,14 +7637,30 @@ var subscription = source.subscribe(
 // => Error: Error: Sequence contains more than one element'
 ```
 
-#### Location
+### Location
 
-- rx.aggregates.js
+File:
+- [`/src/core/observable/single.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/single.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/single.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/single.js)
 
 * * *
 
 ### <a id="rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg"></a>`Rx.Observable.prototype.singleOrDefault(predicate, [defaultValue], [thisArg])`
-<a href="#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L577-L582 "View in source") 
+<a href="#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/singleordefault.js "View in source") 
 
 Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
 
@@ -7524,7 +7697,7 @@ var subscription = source.subscribe(
 
 /* With a predicate */
 var source = Rx.Observable.range(0, 10)
-    .single(function (x, idx, obs) { return x ===  1; }, 0);
+    .singleOrDefault(function (x, idx, obs) { return x ===  1; }, 0);
 
 var subscription = source.subscribe(
     function (x) {
@@ -7541,14 +7714,30 @@ var subscription = source.subscribe(
 // => Completed  
 ```
 
-#### Location
+### Location
 
-- rx.aggregates.js
+File:
+- [`/src/core/observable/singleordefault.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/singleordefault.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/singleordefault.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/singleordefault.js)
 
 * * *
 
 ### <a id="rxobservableprototypeskipcount"></a>`Rx.Observable.prototype.skip(count)`
-<a href="#rxobservableprototypeskipcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4386-L4401 "View in source") 
+<a href="#rxobservableprototypeskipcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skip.js "View in source") 
 
 Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
 
@@ -7579,14 +7768,34 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/skip.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skip.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/skip.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/skip.js)
 
 * * *
 
 ### <a id="rxobservableprototypeskiplastcount"></a>`Rx.Observable.prototype.skipLast(count)`
-<a href="#rxobservableprototypeskiplastcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3958-L3969 "View in source") 
+<a href="#rxobservableprototypeskiplastcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplast.js "View in source") 
 
 Bypasses a specified number of elements at the end of an observable sequence.
 
@@ -7619,14 +7828,34 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/skiplast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplast.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/skiplast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/skiplast.js)
 
 * * *
 
 ### <a id="rxobservableprototypeskiplastwithtimeduration"></a>`Rx.Observable.prototype.skipLastWithTime(duration)`
-<a href="#rxobservableprototypeskiplastwithtimeduration">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L1035-L1054 "View in source") 
+<a href="#rxobservableprototypeskiplastwithtimeduration">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplastwithtime.js "View in source") 
 
 Bypasses a specified number of elements at the end of an observable sequence.
 
@@ -7663,19 +7892,39 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.time.js
+File:
+- [`/src/core/observable/skiplastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplastwithtime.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.time.js`
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/skiplastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/skiplastwithtime.js)
 
 * * *
 
 ### <a id="rxobservableprototypeskipuntilother"></a>`Rx.Observable.prototype.skipUntil(other)`
-<a href="#rxobservableprototypeskipuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3429-L3454 "View in source") 
+<a href="#rxobservableprototypeskipuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js "View in source") 
 
 Returns the values from the source observable sequence only after the other observable sequence produces a value.
 
 #### Arguments
-1. `other` *(`Observable`)*: The observable sequence that triggers propagation of elements of the source sequence.
+1. `other` *(`Observable` | `Promise`)*: The observable sequence or Promise that triggers propagation of elements of the source sequence.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.    
@@ -7702,14 +7951,97 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/skipuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/skipuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/skipuntil.js)
+
+* * *
+
+### <a id="rxobservableprototypeskipuntilstarttime-scheduler"></a>`Rx.Observable.prototype.skipUntilWithTime(startTime, [scheduler])`
+<a href="#rxobservableprototypeskipuntilstarttime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js "View in source") 
+
+Skips elements from the observable source sequence until the specified start time, using the specified scheduler to run timers.
+
+Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the start time.
+
+#### Arguments
+1. `startTime` *(`Date` | `Number`)*: Time to start taking elements from the source sequence. If this value is less than or equal to current time, no elements will be skipped.
+2. [`scheduler = Rx.Scheduler.timeout`] *(`Scheduler`)*: Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
+
+#### Returns
+*(`Observable`)*: An observable sequence with the elements skipped until the specified start time.   
+
+#### Example
+```js
+// Using relative time
+var source = Rx.Observable.timer(0, 1000)
+    .skipUntilWithTime(5000);
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 6
+// => Next: 7
+// => Next: 8
+// => Completed 
+```
+
+### Location
+
+File:
+- [`/src/core/observable/skipuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntilwithtime.js)
+
+Dist:
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.time.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Time/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/skipuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/skipuntilwithtime.js)
 
 * * *
 
 ### <a id="rxobservableprototypeskipwhilepredicate-thisarg"></a>`Rx.Observable.prototype.skipWhile([predicate], [thisArg])`
-<a href="#rxobservableprototypeskipwhilepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4414-L4432 "View in source") 
+<a href="#rxobservableprototypeskipwhilepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipwhile.js "View in source") 
 
 Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
 
@@ -7746,14 +8078,34 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/skipwhile.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipwhile.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/skipwhile.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/skipwhile.js)
 
 * * *
 
 ### <a id="rxobservableprototypesomepredicate-thisarg"></a>`Rx.Observable.prototype.some([predicate], [thisArg])`
-<a href="#rxobservableprototypesomepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L144-L157 "View in source") 
+<a href="#rxobservableprototypesomepredicate-thisarg">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/any.js "View in source") 
 
 Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence.  There is an alias to this method called `any`.
 
@@ -7788,14 +8140,30 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.aggregates.js
+File:
+- [`/src/core/observable/any.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/any.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/any.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/any.js)
 
 * * *
 
 ### <a id="rxobservableprototypestartwithscheduler-args"></a>`Rx.Observable.prototype.startWith([scheduler] ...args)`
-<a href="#rxobservableprototypestartwithscheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3980-L3990 "View in source") 
+<a href="#rxobservableprototypestartwithscheduler-args">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startwith.js "View in source") 
 
 Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
 
@@ -7829,9 +8197,29 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/startwith.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startwith.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/startwith.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/startwith.js)
 
 * * *
 
@@ -8439,13 +8827,13 @@ Unit Tests:
 ### <a id="rxobservableprototypetakeuntilother"></a>`Rx.Observable.prototype.takeUntil(other)`
 <a href="#rxobservableprototypetakeuntilother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js "View in source") 
 
-Returns the values from the source observable sequence until the other observable sequence produces a value.
+Returns the values from the source observable sequence until the other observable sequence or Promise produces a value.
 
 #### Arguments
 1. `other` *(`Observable` | `Promise`)*: Observable sequence or Promise that terminates propagation of elements of the source sequence.
 
 #### Returns
-*(`Observable`)*: An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.    
+*(`Observable`)*: An observable sequence containing the elements of the source sequence up to the point the other sequence or Promise interrupted further propagation.    
 
 #### Example
 ```js
