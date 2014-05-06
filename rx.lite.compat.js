@@ -2532,37 +2532,35 @@
     });
   };
 
-    /**
-     * Returns the values from the source observable sequence only after the other observable sequence produces a value.
-     * @param {Observable} other The observable sequence that triggers propagation of elements of the source sequence.
-     * @returns {Observable} An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.    
-     */
-    observableProto.skipUntil = function (other) {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            var isOpen = false;
-            var disposables = new CompositeDisposable(source.subscribe(function (left) {
-                if (isOpen) {
-                    observer.onNext(left);
-                }
-            }, observer.onError.bind(observer), function () {
-                if (isOpen) {
-                    observer.onCompleted();
-                }
-            }));
+  /**
+   * Returns the values from the source observable sequence only after the other observable sequence produces a value.
+   * @param {Observable | Promise} other The observable sequence or Promise that triggers propagation of elements of the source sequence.
+   * @returns {Observable} An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.    
+   */
+  observableProto.skipUntil = function (other) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var isOpen = false;
+      var disposables = new CompositeDisposable(source.subscribe(function (left) {
+        isOpen && observer.onNext(left);
+      }, observer.onError.bind(observer), function () {
+        isOpen && observer.onCompleted();
+      }));
 
-            var rightSubscription = new SingleAssignmentDisposable();
-            disposables.add(rightSubscription);
-            rightSubscription.setDisposable(other.subscribe(function () {
-                isOpen = true;
-                rightSubscription.dispose();
-            }, observer.onError.bind(observer), function () {
-                rightSubscription.dispose();
-            }));
+      isPromise(other) && (other = observableFromPromise(other));
 
-            return disposables;
-        });
-    };
+      var rightSubscription = new SingleAssignmentDisposable();
+      disposables.add(rightSubscription);
+      rightSubscription.setDisposable(other.subscribe(function () {
+        isOpen = true;
+        rightSubscription.dispose();
+      }, observer.onError.bind(observer), function () {
+        rightSubscription.dispose();
+      }));
+
+      return disposables;
+    });
+  };
 
     /**
      * Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -4648,31 +4646,33 @@
         });
     };
 
-    /**
-     *  Skips elements from the observable source sequence until the specified start time, using the specified scheduler to run timers.
-     *  Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the start time>.
-     *  
-     * @examples
-     *  1 - res = source.skipUntilWithTime(new Date(), [optional scheduler]);         
-     * @param startTime Time to start taking elements from the source sequence. If this value is less than or equal to Date(), no elements will be skipped.
-     * @param scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
-     * @returns {Observable} An observable sequence with the elements skipped until the specified start time. 
-     */
-    observableProto.skipUntilWithTime = function (startTime, scheduler) {
-        scheduler || (scheduler = timeoutScheduler);
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            var open = false,
-                t = scheduler.scheduleWithAbsolute(startTime, function () { open = true; }),
-                d = source.subscribe(function (x) {
-                    if (open) {
-                        observer.onNext(x);
-                    }
-                }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+  /**
+   *  Skips elements from the observable source sequence until the specified start time, using the specified scheduler to run timers.
+   *  Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the start time.
+   *  
+   * @examples
+   *  1 - res = source.skipUntilWithTime(new Date(), [optional scheduler]);   
+   *  2 - res = source.skipUntilWithTime(5000, [optional scheduler]);           
+   * @param startTime Time to start taking elements from the source sequence. If this value is less than or equal to Date(), no elements will be skipped.
+   * @param scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
+   * @returns {Observable} An observable sequence with the elements skipped until the specified start time. 
+   */
+  observableProto.skipUntilWithTime = function (startTime, scheduler) {
+    scheduler || (scheduler = timeoutScheduler);
+    var source = this, schedulerMethod = startTime instanceof Date ?
+      'scheduleWithAbsolute' :
+      'scheduleWithRelative';
+    return new AnonymousObservable(function (observer) {
+      var open = false;
 
-            return new CompositeDisposable(t, d);
-        });
-    };
+      return new CompositeDisposable(
+        scheduler[schedulerMethod](startTime, function () { open = true; }),
+        source.subscribe(
+          function (x) { open && observer.onNext(x); }, 
+          observer.onError.bind(observer),
+          observer.onCompleted.bind(observer)));
+    });
+  };
 
   /**
    *  Takes elements for the specified duration until the specified end time, using the specified scheduler to run timers.

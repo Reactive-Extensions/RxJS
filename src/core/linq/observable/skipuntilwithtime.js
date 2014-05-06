@@ -20,8 +20,8 @@
       return new CompositeDisposable(
         scheduler[schedulerMethod](startTime, function () { open = true; }),
         source.subscribe(
-          function (x) { open && observer.onNext(x); }), 
+          function (x) { open && observer.onNext(x); }, 
           observer.onError.bind(observer),
-          observer.onCompleted.bind(observer));
+          observer.onCompleted.bind(observer)));
     });
   };
