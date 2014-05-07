@@ -943,9 +943,9 @@ Dist:
 
 Prerequisites:
 - If using rx.async.js | rx.async.compat.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
-- rx.lite.js | rx.lite.compat.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx`](https://www.npmjs.org/package/rx).lite.js | rx.lite.compat.js
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -1185,9 +1185,9 @@ Dist:
 
 Prerequisites:
 - If using rx.async.js | rx.async.compat.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
-- rx.lite.js | rx.lite.compat.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx`](https://www.npmjs.org/package/rx).lite.js | rx.lite.compat.js
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -1331,9 +1331,9 @@ Dist:
 
 Prerequisites:
 - If using rx.async.js | rx.async.compat.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
-- rx.lite.js | rx.lite.compat.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx`](https://www.npmjs.org/package/rx).lite.js | rx.lite.compat.js
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -1416,9 +1416,9 @@ Dist:
 
 Prerequisites:
 - If using rx.async.js | rx.async.compat.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
-- rx.lite.js | rx.lite.compat.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx`](https://www.npmjs.org/package/rx).lite.js | rx.lite.compat.js
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -1552,14 +1552,14 @@ Dist:
 - [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
 
 Prerequisites:
-- rx.time.js
-- rx.js | rx.compat.js
+- [`rx`](https://www.npmjs.org/package/rx).time.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Time
+- [`rx`](https://www.npmjs.org/package/rx)JS-Time
 
 Unit Tests:
 - [/tests/observable/generatewithabsolutetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/generatewithabsolutetime.js)
@@ -1622,14 +1622,14 @@ Dist:
 
 Prerequisites:
 - if rx.time.js
-    - rx.js | rx.compat.js
-- rx.lite.js | rx.lite.compat.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx`](https://www.npmjs.org/package/rx).lite.js | rx.lite.compat.js
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Time
+- [`rx`](https://www.npmjs.org/package/rx)JS-Time
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
@@ -1709,7 +1709,7 @@ Dist:
 - [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
 
 Prerequisites:
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
@@ -1771,14 +1771,14 @@ Dist:
 
 Prerequisites:
 - if rx.time.js
-    - rx.js | rx.compat.js
-- rx.lite.js | rx.lite.compat.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx`](https://www.npmjs.org/package/rx).lite.js | rx.lite.compat.js
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Time
+- [`rx`](https://www.npmjs.org/package/rx)JS-Time
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
@@ -2196,8 +2196,8 @@ Dist:
 
 Prerequisites:
 - If using rx.async.js | rx.async.compat.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -2256,8 +2256,8 @@ Dist:
 
 Prerequisites:
 - If using rx.async.js | rx.async.compat.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -2378,15 +2378,15 @@ Dist:
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- rx.time.js
-    - rx.js | rx.compat.js
-- rx.lite.js | rx.lite.compat.js
+- [`rx`](https://www.npmjs.org/package/rx).time.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx`](https://www.npmjs.org/package/rx).lite.js | rx.lite.compat.js
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Time
+- [`rx`](https://www.npmjs.org/package/rx)JS-Time
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
@@ -2442,15 +2442,15 @@ Dist:
 - [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
 
 Prerequisites:
-- rx.async.js | rx.async.compat.js
-- rx.js | rx.compat.js
-- rx.binding.js
+- [`rx`](https://www.npmjs.org/package/rx).async.js | rx.async.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-Binding
+- [`rx`](https://www.npmjs.org/package/rx)JS-Binding
 
 Unit Tests:
 - [/tests/observable/toasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/toasync.js)
@@ -2531,7 +2531,7 @@ Dist:
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
 
 Prerequisites:
-- rx.js | rx.compat.js
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -2589,14 +2589,14 @@ Dist:
 - [rx.joinpatterns.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js)
 
 Prerequisites:
-- rx.joinpatterns.js
+- [`rx`](https://www.npmjs.org/package/rx).joinpatterns.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-JoinPatterns
+- [`rx`](https://www.npmjs.org/package/rx)JS-JoinPatterns
 
 Unit Tests:
 - [/tests/observable/when.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/when.js)
@@ -2652,7 +2652,7 @@ Dist:
 - [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
 Prerequisites:
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
@@ -2746,7 +2746,7 @@ Dist:
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
@@ -2811,7 +2811,7 @@ Dist:
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
@@ -2891,7 +2891,7 @@ Dist:
 - [rx.aggregates.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
 
 Prerequisites:
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
@@ -2948,7 +2948,7 @@ Dist:
 - [rx.aggregates.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
 
 Prerequisites:
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
@@ -2997,7 +2997,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3038,7 +3038,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.joinpatterns.js
+- [`rx`](https://www.npmjs.org/package/rx).joinpatterns.js
 
 * * *
 
@@ -3094,7 +3094,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -3135,7 +3135,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3197,7 +3197,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3298,7 +3298,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.coincidence.js
+- [`rx`](https://www.npmjs.org/package/rx).coincidence.js
 
 * * *
 
@@ -3361,7 +3361,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3424,7 +3424,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.time.js
+- [`rx`](https://www.npmjs.org/package/rx).time.js
 
 * * *
 
@@ -3466,7 +3466,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.time.js
+- [`rx`](https://www.npmjs.org/package/rx).time.js
 
 * * *
 
@@ -3524,7 +3524,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3574,7 +3574,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3613,7 +3613,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3656,7 +3656,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3711,7 +3711,7 @@ function createObserver(tag) {
 
 #### Location
 
-- rx.binding.js
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
 * * *
 
@@ -3770,7 +3770,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -3817,14 +3817,14 @@ Dist:
 
 Prerequisites:
 - If using rx.backpressure.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-BackPressure
+- [`RxJS-BackPressure`](http://www.nuget.org/packages/RxJS-BackPressure/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
@@ -3885,7 +3885,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -3938,7 +3938,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -3996,7 +3996,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.time.js
+- [`rx`](https://www.npmjs.org/package/rx).time.js
 
 * * *
 
@@ -4070,7 +4070,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.time.js
+- [`rx`](https://www.npmjs.org/package/rx).time.js
 
 * * *
 
@@ -4107,7 +4107,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -4169,7 +4169,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -4231,7 +4231,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -4314,7 +4314,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -4354,7 +4354,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 
 * * *
 
@@ -4408,7 +4408,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -4464,7 +4464,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -4504,7 +4504,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -4547,7 +4547,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 
 * * *
 
@@ -4592,7 +4592,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -4636,7 +4636,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -4704,7 +4704,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -4772,7 +4772,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -4849,7 +4849,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -4910,7 +4910,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -4974,7 +4974,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -5082,7 +5082,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 
 * * *
 
@@ -5144,7 +5144,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -5211,7 +5211,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -5270,7 +5270,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -5303,7 +5303,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
@@ -5356,7 +5356,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -5414,7 +5414,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.coincidence.js
+- [`rx`](https://www.npmjs.org/package/rx).coincidence.js
 
 * * *
 
@@ -5493,7 +5493,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -5574,7 +5574,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 
 * * *
 
@@ -5632,7 +5632,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 
 * * *
 
@@ -5673,7 +5673,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.experimental.js
+- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 
 * * *
 
@@ -5718,12 +5718,12 @@ var subscription = source.subscribe(
 
 #### Location
 
-- rx.js
+- [`rx`](https://www.npmjs.org/package/rx).js
 
 * * *
 
 ### <a id="rxobservableprototypemaxcomparer"></a>`Rx.Observable.prototype.max([comparer])`
-<a href="#rxobservableprototypemaxcomparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L297-L301 "View in source") 
+<a href="#rxobservableprototypemaxcomparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/max.js "View in source") 
 
 Returns the maximum value in an observable sequence according to the specified comparer.
 
@@ -5781,14 +5781,30 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.aggregates.js
+File:
+- [`/src/core/observable/max.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/max.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/max.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/max.js)
 
 * * *
 
 ### <a id="rxobservableprototypemaxbykeyselector-comparer"></a>`Rx.Observable.prototype.maxBy(keySelector, [comparer])`
-<a href="#rxobservableprototypemaxbykeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L282-L285 "View in source") 
+<a href="#rxobservableprototypemaxbykeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/maxby.js "View in source") 
 
 Returns the maximum value in an observable sequence according to the specified comparer.
 
@@ -5820,14 +5836,30 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.aggregates.js
+File:
+- [`/src/core/observable/maxby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/maxby.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/maxby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/maxby.js)
 
 * * *
 
 ### <a id="rxobservableprototypemergemaxconcurrent--other"></a>`Rx.Observable.prototype.merge(maxConcurrent | other)`
-<a href="#rxobservableprototypemergemaxconcurrent--other">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3265-L3307 "View in source") 
+<a href="#rxobservableprototypemergemaxconcurrent--other">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeproto.js "View in source") 
 
 Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.
 Or merges two observable sequences into a single observable sequence.
@@ -5898,14 +5930,34 @@ var subscription = source.subscribe(
 // => Completed     
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/mergeproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeproto.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/mergeproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/mergeproto.js)
 
 * * *
 
 ### <a id="rxobservableprototypemergeobservable"></a>`Rx.Observable.prototype.mergeAll()`
-<a href="#rxobservableprototypemergeobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3347-L3373 "View in source") 
+<a href="#rxobservableprototypemergeobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeobservable.js "View in source") 
 
 Merges an observable sequence of observable sequences into an observable sequence.
 
@@ -5941,14 +5993,34 @@ var subscription = source.subscribe(
 // => Completed     
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/mergeobservable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeobservable.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/mergeobservable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/mergeobservable.js)
 
 * * *
 
 ### <a id="rxobservableprototypemincomparer"></a>`Rx.Observable.prototype.min([comparer])`
-<a href="#rxobservableprototypemincomparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L265-L269 "View in source") 
+<a href="#rxobservableprototypemincomparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/min.js "View in source") 
 
 Returns the minimum element in an observable sequence according to the optional comparer else a default greater than less than check.
 
@@ -6006,14 +6078,31 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.aggregates.js
+File:
+- [`/src/core/observable/min.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/min.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- If using [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+  - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/min.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/min.js)
 
 * * *
 
 ### <a id="rxobservableprototypeminbykeyselector-comparer"></a>`Rx.Observable.prototype.minBy(keySelector, [comparer])`
-<a href="#rxobservableprototypeminbykeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L249-L254 "View in source") 
+<a href="#rxobservableprototypeminbykeyselector-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/minby.js "View in source") 
 
 Returns the elements in an observable sequence with the minimum key value according to the specified comparer.
 
@@ -6028,7 +6117,7 @@ Returns the elements in an observable sequence with the minimum key value accord
 ```js
 /* Without comparer */
 var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8,1])
-    .maxBy(function (x) { return x; });
+    .minBy(function (x) { return x; });
 
 var subscription = source.subscribe(
     function (x) {
@@ -6045,14 +6134,31 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.aggregates.js
+File:
+- [`/src/core/observable/minby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/minby.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- If using [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+  - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/min.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/min.js)
 
 * * *
 
 ### <a id="rxobservableprototypemulticastsubject--subjectselector-selector"></a>`Rx.Observable.prototype.multicast(subject | subjectSelector, [selector])`
-<a href="#rxobservableprototypemulticastsubject--subjectselector-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L63-L71 "View in source") 
+<a href="#rxobservableprototypemulticastsubject--subjectselector-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/multicast.js "View in source") 
 
 Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
 subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
@@ -6100,14 +6206,34 @@ subscription.dispose();
 // => Completed   
 ```
 
-#### Location
+### Location
 
-- rx.binding.js
+File:
+- [`/src/core/observable/multicast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/multicast.js)
+
+Dist:
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+  - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/multicast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/multicast.js)
 
 * * *
 
 ### <a id="rxobservableprototypeobserveonscheduler"></a>`Rx.Observable.prototype.observeOn(scheduler)`
-<a href="#rxobservableprototypeobserveonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2683-L2688 "View in source") 
+<a href="#rxobservableprototypeobserveonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js "View in source") 
 
 Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
 
@@ -6140,19 +6266,39 @@ var subscription = source.subscribe(
 // => Completed   
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/return.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) 
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/return.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/return.js)
 
 * * *
 
 ### <a id="rxobservableprototypeonerrorresumenextsecond"></a>`Rx.Observable.prototype.onErrorResumeNext(second)`
-<a href="#rxobservableprototypeonerrorresumenextsecond">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3382-L3387 "View in source") 
+<a href="#rxobservableprototypeonerrorresumenextsecond">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js "View in source") 
 
-Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
+Continues an observable sequence that is terminated normally or by an exception with the next observable sequence or Promise.
 
 #### Arguments
-1. `second` *(`Observable`)*:  Second observable sequence used to produce results after the first sequence terminates.
+1. `second` *(`Observable` | `Promise`)*:  Second observable sequence used to produce results after the first sequence terminates.
 
 #### Returns
 *(`Observable`)*: An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
@@ -6177,9 +6323,29 @@ var subscription = source.subscribe(
 // => Completed   
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/onerrorresumenext.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) 
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/onerrorresumenext.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/onerrorresumenext.js)
 
 * * *
 
@@ -6216,6 +6382,7 @@ pauser.onNext(true);
 // To pause the flow at any point
 pauser.onNext(false);
 ```
+
 ### Location
 
 File:
@@ -6227,15 +6394,15 @@ Dist:
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- If using rx.backpressure.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
+- If using `rx.backpressure.js`
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-BackPressure
+- [`RxJS-BackPressure`](http://www.nuget.org/packages/RxJS-BackPressure/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
@@ -6244,7 +6411,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableprototypepausablepauser"></a>`Rx.Observable.prototype.pausable(pauser)`
-<a href="#rxobservableprototypepausablepauser">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausable.js "View in source") 
+<a href="#rxobservableprototypepausablepauser">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausablebuffered.js "View in source") 
 
 Pauses the underlying observable sequence based upon the observable sequence which yields true/false.  Note that this only works on hot observables.
 
@@ -6290,15 +6457,15 @@ Dist:
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- If using rx.backpressure.js
-    - rx.js | rx.compat.js
-    - rx.binding.js
+- If using `rx.backpressure.js`
+    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- RxJS-BackPressure
+- [`RxJS-BackPressure`](http://www.nuget.org/packages/RxJS-BackPressure/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
@@ -6307,7 +6474,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableprototypepluckproperty"></a>`Rx.Observable.prototype.pluck(property)`
-<a href="#rxobservableprototypepluckproperty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L4335-L4337 "View in source") 
+<a href="#rxobservableprototypepluckproperty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/pluck.js "View in source") 
 
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
@@ -6344,14 +6511,31 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/pluck.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/pluck.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) 
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+
+Unit Tests:
+- [`/tests/observable/pluck.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/pluck.js)
 
 * * *
 
 ### <a id="rxobservableprototypepublishselector"></a>`Rx.Observable.prototype.publish([selector])`
-<a href="#rxobservableprototypepublishselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") 
+<a href="#rxobservableprototypepublishselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
 
@@ -6370,7 +6554,7 @@ var interval = Rx.Observable.interval(1000);
 
 var source = interval
     .take(2)
-    .doAction(function (x) { 
+    .do(function (x) { 
         console.log('Side effect');
     });
  
@@ -6439,14 +6623,34 @@ function createObserver(tag) {
 // => Completed    
 ```
 
-#### Location
+### Location
 
-- rx.binding.js
+File:
+- [`/src/core/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
+
+Dist:
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.binding.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publish.js)
 
 * * *
 
 ### <a id="rxobservableprototypeshare"></a>`Rx.Observable.prototype.share()`
-<a href="#rxobservableprototypeshare">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L84-L90 "View in source") 
+<a href="#rxobservableprototypeshare">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js "View in source") 
 
 Returns an observable sequence that shares a single subscription to the underlying sequence. 
 
@@ -6498,7 +6702,7 @@ var interval = Rx.Observable.interval(1000);
 
 var source = interval
     .take(2)
-    .doAction(
+    .do(
         function (x) { 
             console.log('Side effect');
         });
@@ -6535,14 +6739,34 @@ function createObserver(tag) {
 // => Completed    
 ```
 
-#### Location
+### Location
 
-- rx.binding.js
+File:
+- [`/src/core/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
+
+Dist:
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.binding.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publish.js)
 
 * * *
 
 ### <a id="rxobservableprototypepublishlatestselector"></a>`Rx.Observable.prototype.publishLatest([selector])`
-<a href="#rxobservableprototypepublishlatestselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L103-L109 "View in source") 
+<a href="#rxobservableprototypepublishlatestselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlatest.js "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
 
@@ -6592,14 +6816,34 @@ function createObserver(tag) {
 // => Completed    
 ```
 
-#### Location
+### Location
 
-- rx.binding.js
+File:
+- [`/src/core/observable/publishlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlatest.js)
+
+Dist:
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.binding.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/publishlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publishlatest.js)
 
 * * *
 
 ### <a id="rxobservableprototypepublishvalueselector"></a>`Rx.Observable.prototype.publishValue([selector])`
-<a href="#rxobservableprototypepublishvalueselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L123-L129 "View in source") 
+<a href="#rxobservableprototypepublishvalueselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
    
@@ -6653,14 +6897,34 @@ function createObserver(tag) {
 // => Completed     
 ```
 
-#### Location
+### Location
 
-- rx.binding.js
+File:
+- [`/src/core/observable/publishvalue.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js)
+
+Dist:
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.binding.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/publishvalue.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publishvalue.js)
 
 * * *
 
-### <a id="rxobservableprototypesharevalue"></a>`Rx.Observable.prototype.shareValue()`
-<a href="#rxobservableprototypesharevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L123-L129 "View in source") 
+### <a id="rxobservableprototypesharevaluevalue"></a>`Rx.Observable.prototype.shareValue(value)`
+<a href="#rxobservableprototypesharevaluevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js "View in source") 
 
 Returns an observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
    
@@ -6709,14 +6973,34 @@ function createObserver(tag) {
 // => Completed     
 ```
 
-#### Location
+### Location
 
-- rx.binding.js
+File:
+- [`/src/core/observable/publishvalue.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js)
+
+Dist:
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.binding.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/publishvalue.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publishvalue.js)
 
 * * *
 
 ### <a id="connectableobservableprototyperefcount"></a>`ConnectableObservable.prototype.refCount()`
-<a href="#connectableobservableprototyperefcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L510-L528 "View in source") 
+<a href="#connectableobservableprototyperefcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js "View in source") 
 
 Returns an observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
    
@@ -6760,15 +7044,33 @@ function createObserver(tag) {
 // => Completed 
 // => Completed     
 ```
+### Location
 
-#### Location
+File:
+- [`/src/core/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
 
-- rx.binding.js
+Dist:
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.binding.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+
+Unit Tests:
+- [`/tests/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publish.js)
 
 * * *
 
 ### <a id="rxobservableprototypereduceaccumulator-seed"></a>`Rx.Observable.prototype.reduce(accumulator, [seed])`
-<a href="#rxobservableprototypereduceaccumulator-seed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js#L126-L133 "View in source") 
+<a href="#rxobservableprototypereduceaccumulator-seed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/reduce.js "View in source") 
 
 Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
 
@@ -6803,14 +7105,30 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/reduce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/reduce.js)
+
+Dist:
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
+
+Unit Tests:
+- [`/tests/observable/reduce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/reduce.js)
 
 * * *
 
 ### <a id="rxobservableprototyperepeatrepeatcount"></a>`Rx.Observable.prototype.repeat(repeatCount)`
-<a href="#rxobservableprototyperepeatrepeatcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3893-L3895 "View in source") 
+<a href="#rxobservableprototyperepeatrepeatcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeatproto.js "View in source") 
 
 Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
  
@@ -6845,14 +7163,34 @@ var subscription = source.subscribe(
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.js
+File:
+- [`/src/core/observable/repeatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeatproto.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/observable/repeatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/repeatproto.js)
 
 * * *
 
 ### <a id="rxobservableprototypereplayselector-buffersize-window-scheduler"></a>`Rx.Observable.prototype.replay([selector], [bufferSize], [window], [scheduler])`
-<a href="#rxobservableprototypereplayselector-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js#L147-L153 "View in source") 
+<a href="#rxobservableprototypereplayselector-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
 
@@ -6873,7 +7211,7 @@ var interval = Rx.Observable.interval(1000);
 
 var source = interval
     .take(2)
-    .doAction(function (x) { 
+    .do(function (x) { 
         console.log('Side effect');
     });
  
@@ -6914,9 +7252,28 @@ function createObserver(tag) {
 // => Completed 
 ```
 
-#### Location
+### Location
 
-- rx.binding.js
+File:
+- [`/src/core/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
+
+Dist:
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- If using `rx.binding.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+
+Unit Tests:
+- [`/tests/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publish.js)
 
 * * *
 
@@ -6999,20 +7356,19 @@ File:
 - [`/src/core/observable/sharereplay.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sharereplay.js)
 
 Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- None
+- If using `rx.binding.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
 
 Unit Tests:
 - [`/tests/observable/sharereplay.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/sharereplay.js)
@@ -7416,7 +7772,7 @@ Dist:
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
-- rx
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
@@ -7910,8 +8266,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
 
 Unit Tests:
 - [`/tests/observable/skiplastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/skiplastwithtime.js)
@@ -8455,7 +8810,7 @@ Dist:
 - [rx.aggregates.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
 
 Prerequisites:
-- rx.aggregates.js
+- [`rx`](https://www.npmjs.org/package/rx).aggregates.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
