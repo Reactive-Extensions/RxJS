@@ -20,8 +20,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\..\rx.backpressure.js" target="content\Scripts\rx.backpressure.js" />
-    <file src="..\..\rx.backpressure.min.js" target="content\Scripts\rx.backpressure.min.js" /> 
+    <file src="..\..\dist\rx.backpressure.js" target="content\Scripts\rx.backpressure.js" />
+    <file src="..\..\dist\rx.backpressure.min.js" target="content\Scripts\rx.backpressure.min.js" /> 
     <file src="..\..\ts\rx.backpressure.d.ts" target="content\Scripts\rx.backpressure.d.ts" />
     <file src="..\..\ts\rx.backpressure-lite.d.ts" target="content\Scripts\rx.backpressure-lite.d.ts" />
   </files>

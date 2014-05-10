@@ -1,0 +1,106 @@
+html{
+  margin:0px;
+  padding:0px;
+}
+
+body{
+  background: black;
+  font-family: consolas, courier;
+  color: WhiteSmoke;
+  margin:0px;
+  padding:0px;
+  overflow:hidden;
+}
+
+
+#title {
+  text-align:center;
+  font-size:38px;
+  color: Yellow;
+}
+
+#updatefield {
+  font-size: 24px;
+  display: -ms-flexbox;
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+}
+
+.infotitle {
+  padding-left: 1.5em;
+  color: LightGreen;
+}
+
+.info{
+  padding-left: .5em;
+  width:4em;
+}
+
+.enemy{
+  position: absolute;
+  margin: 0px;
+  font-size: 30px;
+  -webkit-transition: font-size 1s linear;
+  -moz-transition: font-size 1s linear;
+  -ms-transition: font-size 1s linear;
+  transition: font-size 1s linear;
+}
+
+#playfield{
+  height: 75%;
+  border: solid 1px #a8a8a8;
+  border-bottom: solid 5px Green;
+  background-image: linear-gradient(bottom, rgb(39,54,105) 17%, rgb(1,5,54) 46%);
+  background-image: -o-linear-gradient(bottom, rgb(39,54,105) 17%, rgb(1,5,54) 46%);
+  background-image: -ms-linear-gradient(bottom, rgb(39,54,105) 17%, rgb(1,5,54) 46%);
+  background-image: -moz-linear-gradient(bottom, rgb(39,54,105) 17%, rgb(1,5,54) 46%);
+  background-image: -webkit-linear-gradient(bottom, rgb(39,54,105) 17%, rgb(1,5,54) 46%);
+}
+
+.rotate{
+  -webkit-transform: rotate(90deg);
+  -moz-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  -o-transform: rotate(90deg);
+  transform: rotate(90deg);
+  rotate(90deg);
+}
+
+.instructions{
+  text-align:center;
+  font-size: 18px;
+}
+
+#modalmessages{
+  opacity: 0;
+  height: 100%;
+  width: 100%;
+  background: #333377;
+
+  /* flexbox */
+  display: -ms-flexbox;
+  -ms-flex-pack: center;
+  -ms-flex-align:center;
+
+  /* Box display */
+  display: -webkit-box;
+  display: -moz-box;
+  display: box;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  box-pack:center;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  box-align: center;
+
+  /* Transition */
+  -ms-transition: opacity .5s linear;  
+  -webkit-transition: opacity .5s linear;
+  -moz-transition: opacity .5s linear;
+  transition: opacity .5s linear;
+}
+
+#message{
+  font-size: 45px;
+}

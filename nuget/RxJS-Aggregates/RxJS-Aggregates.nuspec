@@ -19,8 +19,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\..\rx.aggregates.js" target="content\Scripts\rx.aggregates.js" />
-    <file src="..\..\rx.aggregates.min.js" target="content\Scripts\rx.aggregates.min.js" />
+    <file src="..\..\dist\rx.aggregates.js" target="content\Scripts\rx.aggregates.js" />
+    <file src="..\..\dist\rx.aggregates.min.js" target="content\Scripts\rx.aggregates.min.js" />
     <file src="..\..\ts\rx.aggregates.d.ts" target="content\Scripts\rx.aggregates.d.ts" />
   </files>
 </package>

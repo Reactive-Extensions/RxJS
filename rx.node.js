@@ -1,14 +1,14 @@
 var Rx = require('./rx');
-require('./rx.aggregates');
-require('./rx.backpressure');
-require('./rx.async');
-require('./rx.binding');
-require('./rx.coincidence');
-require('./rx.experimental');
-require('./rx.joinpatterns');
-require('./rx.time');
-require('./rx.virtualtime');
-require('./rx.testing');
+require('./dist/rx.aggregates');
+require('./dist/rx.backpressure');
+require('./dist/rx.async');
+require('./dist/rx.binding');
+require('./dist/rx.coincidence');
+require('./dist/rx.experimental');
+require('./dist/rx.joinpatterns');
+require('./dist/rx.time');
+require('./dist/rx.virtualtime');
+require('./dist/rx.testing');
 
 // Add specific Node functions
 var EventEmitter = require('events').EventEmitter,
@@ -67,14 +67,15 @@ Rx.Node = {
    * @returns {EventEmitter} An EventEmitter which emits the given eventName for each onNext call in addition to 'error' and 'end' events.  
    *   You must call publish in order to invoke the subscription on the Observable sequuence.
    */
-  toEventEmitter: function (observable, eventName) {
+  toEventEmitter: function (observable, eventName, selector) {
     var e = new EventEmitter();
+    selector || (selector = function (x) { return x; });
 
     // Used to publish the events from the observable
     e.publish = function () {
       e.subscription = observable.subscribe(
         function (x) {
-          e.emit(eventName, x);
+          e.emit(eventName, selector(x));
         }, 
         function (err) {
           e.emit('error', err);

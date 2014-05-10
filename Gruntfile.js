@@ -167,7 +167,7 @@ var browsers = [{
                   'src/core/exports.js',
                   'src/core/outro.js'
               ],
-              dest: 'rx.compat.js'
+              dest: 'dist/rx.compat.js'
           },
           modern: {
               src: [
@@ -292,7 +292,7 @@ var browsers = [{
                   'src/core/exports.js',
                   'src/core/outro.js'
               ],
-              dest: 'rx.js'
+              dest: 'dist/rx.js'
           },
           lite: {
               src: [
@@ -454,7 +454,7 @@ var browsers = [{
                   'src/core/exports.js',
                   'src/core/outro.js'
               ],
-              dest: 'rx.lite.js'
+              dest: 'dist/rx.lite.js'
           },
           litecompat: {
               src: [
@@ -618,7 +618,7 @@ var browsers = [{
                   'src/core/exports.js',
                   'src/core/outro.js'
               ],
-              dest: 'rx.lite.compat.js'
+              dest: 'dist/rx.lite.compat.js'
           },
           backpressure: {
               src: [
@@ -637,7 +637,7 @@ var browsers = [{
 
                   'src/core/suboutro.js'                    
               ],
-              dest: 'rx.backpressure.js'
+              dest: 'dist/rx.backpressure.js'
           },
           aggregates: {
               src: [
@@ -678,7 +678,7 @@ var browsers = [{
                   'src/core/linq/observable/findindex.js', // _findvalue, where
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.aggregates.js'
+              dest: 'dist/rx.aggregates.js'
           },
           asyncCompat: {
               src: [
@@ -694,7 +694,7 @@ var browsers = [{
                   'src/core/linq/observable/startasync.js',
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.async.compat.js'
+              dest: 'dist/rx.async.compat.js'
           },
           asyncModern: {
               src: [
@@ -710,7 +710,7 @@ var browsers = [{
                   'src/core/linq/observable/startasync.js',
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.async.js'
+              dest: 'dist/rx.async.js'
           },
           binding: {
               src: [
@@ -731,7 +731,7 @@ var browsers = [{
                   'src/core/linq/connectableobservable.js',
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.binding.js'
+              dest: 'dist/rx.binding.js'
           },
           coincidence: {
               src: [
@@ -747,7 +747,7 @@ var browsers = [{
                   'src/core/linq/observable/partition.js',
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.coincidence.js'
+              dest: 'dist/rx.coincidence.js'
           },
           experimental: {
               src: [
@@ -768,7 +768,7 @@ var browsers = [{
                   'src/core/linq/observable/manyselect.js', // ImmediateScheduler, CurrentThreadScheduler, select, do, observeOn
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.experimental.js'
+              dest: 'dist/rx.experimental.js'
           },
           joinpatterns: {
               src: [
@@ -785,7 +785,7 @@ var browsers = [{
                   'src/core/linq/observable/when.js', // CompositeDisposable
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.joinpatterns.js'
+              dest: 'dist/rx.joinpatterns.js'
           },
           testing: {
               src: [
@@ -802,7 +802,7 @@ var browsers = [{
                   'src/core/testing/testscheduler.js',
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.testing.js'
+              dest: 'dist/rx.testing.js'
           },
           time: {
               src: [
@@ -840,7 +840,7 @@ var browsers = [{
                   'src/core/linq/observable/takeuntilwithtime.js',
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.time.js'
+              dest: 'dist/rx.time.js'
           },
           virtualtime: {
               src: [
@@ -851,69 +851,69 @@ var browsers = [{
                   'src/core/concurrency/historicalscheduler.js',
                   'src/core/suboutro.js'
               ],
-              dest: 'rx.virtualtime.js'
+              dest: 'dist/rx.virtualtime.js'
           }
       },
       uglify: {
           basic: {
               src: ['<banner>', 'rx.compat.js'],
-              dest: 'rx.compat.min.js'
+              dest: 'dist/rx.compat.min.js'
           },
           modern: {
               src: ['<banner>', 'rx.js'],
-              dest: 'rx.min.js'
+              dest: 'dist/rx.min.js'
           },
           lite: {
               src: ['<banner>', 'rx.lite.js'],
-              dest: 'rx.lite.min.js'
+              dest: 'dist/rx.lite.min.js'
           },
           litecompat: {
               src: ['<banner>', 'rx.lite.compat.js'],
-              dest: 'rx.lite.compat.min.js'
+              dest: 'dist/rx.lite.compat.min.js'
           },
           backpressure: {
               src: ['<banner>', 'rx.backpressure.js'],
-              dest: 'rx.backpressure.min.js'
+              dest: 'dist/rx.backpressure.min.js'
           },            
           aggregates: {
               src: ['<banner>', 'rx.aggregates.js'],
-              dest: 'rx.aggregates.min.js'
+              dest: 'dist/rx.aggregates.min.js'
           },
           asyncCompat: {
               src: ['<banner>', 'rx.async.compat.js'],
-              dest: 'rx.async.compat.min.js'
+              dest: 'dist/rx.async.compat.min.js'
           },
           asyncModern: {
               src: ['<banner>', 'rx.async.js'],
-              dest: 'rx.async.min.js'
+              dest: 'dist/rx.async.min.js'
           },
           binding: {
               src: ['<banner>', 'rx.binding.js'],
-              dest: 'rx.binding.min.js'
+              dest: 'dist/rx.binding.min.js'
           },
           coincidence: {
               src: ['<banner>', 'rx.coincidence.js'],
-              dest: 'rx.coincidence.min.js'
+              dest: 'dist/rx.coincidence.min.js'
           },
           experimental: {
               src: ['<banner>', 'rx.experimental.js'],
-              dest: 'rx.experimental.min.js'
+              dest: 'dist/rx.experimental.min.js'
           },
           joinpatterns: {
               src: ['<banner>', 'rx.joinpatterns.js'],
-              dest: 'rx.joinpatterns.min.js'
+              dest: 'dist/rx.joinpatterns.min.js'
           },
           testing: {
               src: ['<banner>', 'rx.testing.js'],
-              dest: 'rx.testing.min.js'
+              dest: 'dist/rx.testing.min.js'
           },
           time: {
               src: ['<banner>', 'rx.time.js'],
-              dest: 'rx.time.min.js'
+              dest: 'dist/rx.time.min.js'
           },
           virtualtime: {
               src: ['<banner>', 'rx.virtualtime.js'],
-              dest: 'rx.virtualtime.min.js'
+              dest: 'dist/rx.virtualtime.min.js'
           }
       },
       qunit: {
