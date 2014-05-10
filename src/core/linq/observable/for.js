@@ -6,5 +6,5 @@
      * @returns {Observable} An observable sequence from the concatenated observable sequences.  
      */ 
     Observable['for'] = Observable.forIn = function (sources, resultSelector) {
-        return enumerableForEach(sources, resultSelector).concat();
+        return enumerableFor(sources, resultSelector).concat();
     };

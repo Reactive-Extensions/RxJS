@@ -1,13 +1,4 @@
-var Rx = require('./rx');
-require('./dist/rx.aggregates');
-require('./dist/rx.backpressure');
-require('./dist/rx.async');
-require('./dist/rx.binding');
-require('./dist/rx.coincidence');
-require('./dist/rx.experimental');
-require('./dist/rx.joinpatterns');
-require('./dist/rx.time');
-require('./dist/rx.virtualtime');
+var Rx = require('./rx.all');
 require('./dist/rx.testing');
 
 // Add specific Node functions

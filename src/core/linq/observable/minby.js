@@ -8,7 +8,7 @@
      * @returns {Observable} An observable sequence containing a list of zero or more elements that have a minimum key value.
      */  
     observableProto.minBy = function (keySelector, comparer) {
-        comparer || (comparer = subComparer);
+        comparer || (comparer = defaultSubComparer);
         return extremaBy(this, keySelector, function (x, y) {
             return comparer(x, y) * -1;
         });

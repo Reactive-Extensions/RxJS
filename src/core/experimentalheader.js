@@ -11,7 +11,7 @@
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     Enumerator = Rx.internals.Enumerator,
     Enumerable = Rx.internals.Enumerable,
-    enumerableForEach = Enumerable.forEach,
+    enumerableFor = Enumerable.forEach,
     immediateScheduler = Rx.Scheduler.immediate,
     currentThreadScheduler = Rx.Scheduler.currentThread,
     slice = Array.prototype.slice,

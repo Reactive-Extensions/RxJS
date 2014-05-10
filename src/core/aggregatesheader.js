@@ -7,7 +7,7 @@
     helpers = Rx.helpers,
     defaultComparer = helpers.defaultComparer,
     identity = helpers.identity,
-    subComparer = helpers.defaultSubComparer,
+    defaultSubComparer = helpers.defaultSubComparer,
     isPromise = helpers.isPromise,
     observableFromPromise = Observable.fromPromise;
 

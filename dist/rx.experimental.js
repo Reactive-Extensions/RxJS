@@ -46,7 +46,7 @@
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     Enumerator = Rx.internals.Enumerator,
     Enumerable = Rx.internals.Enumerable,
-    enumerableForEach = Enumerable.forEach,
+    enumerableFor = Enumerable.forEach,
     immediateScheduler = Rx.Scheduler.immediate,
     currentThreadScheduler = Rx.Scheduler.currentThread,
     slice = Array.prototype.slice,
@@ -130,7 +130,7 @@
      * @returns {Observable} An observable sequence from the concatenated observable sequences.  
      */ 
     Observable['for'] = Observable.forIn = function (sources, resultSelector) {
-        return enumerableForEach(sources, resultSelector).concat();
+        return enumerableFor(sources, resultSelector).concat();
     };
 
    /**

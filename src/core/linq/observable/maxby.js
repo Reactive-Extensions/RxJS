@@ -8,6 +8,6 @@
      * @returns {Observable} An observable sequence containing a list of zero or more elements that have a maximum key value.
      */
     observableProto.maxBy = function (keySelector, comparer) {
-        comparer || (comparer = subComparer);
+        comparer || (comparer = defaultSubComparer);
         return extremaBy(this, keySelector, comparer);
     };

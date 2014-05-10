@@ -42,7 +42,7 @@
     helpers = Rx.helpers,
     defaultComparer = helpers.defaultComparer,
     identity = helpers.identity,
-    subComparer = helpers.defaultSubComparer,
+    defaultSubComparer = helpers.defaultSubComparer,
     isPromise = helpers.isPromise,
     observableFromPromise = Observable.fromPromise;
 
@@ -263,7 +263,7 @@
      * @returns {Observable} An observable sequence containing a list of zero or more elements that have a minimum key value.
      */  
     observableProto.minBy = function (keySelector, comparer) {
-        comparer || (comparer = subComparer);
+        comparer || (comparer = defaultSubComparer);
         return extremaBy(this, keySelector, function (x, y) {
             return comparer(x, y) * -1;
         });
@@ -293,7 +293,7 @@
      * @returns {Observable} An observable sequence containing a list of zero or more elements that have a maximum key value.
      */
     observableProto.maxBy = function (keySelector, comparer) {
-        comparer || (comparer = subComparer);
+        comparer || (comparer = defaultSubComparer);
         return extremaBy(this, keySelector, comparer);
     };
 
