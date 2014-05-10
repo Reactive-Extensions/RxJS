@@ -246,6 +246,7 @@ There are a number of ways to get started with RxJS. The files are available on 
 
     npm install rx
     npm install -g rx
+    WARNING: 'npm install rxjs' will install an old, out of date, 3rd party version of Rx.
 
 ### Using with Node.js and Ringo.js
 
