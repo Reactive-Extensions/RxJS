@@ -1,67 +1,122 @@
 QUnit.module('Finally');
 
 var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  TestScheduler = Rx.TestScheduler,
+  onNext = Rx.ReactiveTest.onNext,
+  onError = Rx.ReactiveTest.onError,
+  onCompleted = Rx.ReactiveTest.onCompleted,
+  subscribe = Rx.ReactiveTest.subscribe;
 
-test('Finally_OnlyCalledOnce_Empty', function () {
-    var d, invokeCount, someObservable;
-    invokeCount = 0;
-    someObservable = Rx.Observable.empty().finallyAction(function () {
-        return invokeCount++;
+test('Finally calls finally before throwing', function () {
+  var invoked = false;
+
+  var someObservable = Rx.Observable.throwException(new Error()).finallyAction(function () {
+    invoked = true;
+  });
+
+  throws(function () {
+    someObservable.subscribe();
+  });
+
+  ok(invoked);
+});
+
+test('Finally only called once on empty', function () {
+  var invokeCount = 0;
+  
+  var someObservable = Rx.Observable.empty().finallyAction(function () {
+    invokeCount++;
+  });
+  
+  var d = someObservable.subscribe();
+  
+  d.dispose();
+  d.dispose();
+  
+  equal(1, invokeCount);
+});
+
+test('finally called with empty', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1), 
+    onCompleted(250)
+  );
+  
+  var invoked = false;
+
+  var results = scheduler.startWithCreate(function () {
+    return xs.finallyAction(function () {
+      invoked = true;
     });
-    d = someObservable.subscribe();
-    d.dispose();
-    d.dispose();
-    equal(1, invokeCount);
+  }).messages;
+
+  results.assertEqual(
+    onCompleted(250)
+  );
+  
+  xs.subscriptions.assertEqual(
+    subscribe(200, 250)
+  );
+  
+  ok(invoked);
 });
 
-test('Finally_Empty', function () {
-    var invoked, results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onCompleted(250));
-    invoked = false;
-    results = scheduler.startWithCreate(function () {
-        return xs.finallyAction(function () {
-            return invoked = true;
-        });
-    }).messages;
-    equal(1, results.length);
-    ok(results[0].value.kind === 'C' && results[0].time === 250);
-    ok(invoked);
+test('Finally called with single value', function () {
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1), 
+    onNext(210, 2), 
+    onCompleted(250)
+  );
+  
+  var invoked = false;
+  
+  var results = scheduler.startWithCreate(function () {
+    return xs.finallyAction(function () {
+      invoked = true;
+    });
+  }).messages;
+
+  results.assertEqual(
+    onNext(210, 2),
+    onCompleted(250)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 250)
+  );  
+
+  ok(invoked);
 });
 
-test('Finally_Return', function () {
-    var invoked, results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onCompleted(250));
-    invoked = false;
-    results = scheduler.startWithCreate(function () {
-        return xs.finallyAction(function () {
-            return invoked = true;
-        });
-    }).messages;
-    equal(2, results.length);
-    ok(results[0].value.kind === 'N' && results[0].time === 210 && results[0].value.value === 2);
-    ok(results[1].value.kind === 'C' && results[1].time === 250);
-    ok(invoked);
-});
+test('Finally on throws', function () {
+  var ex = new Error('ex');
 
-test('Finally_Throw', function () {
-    var ex, invoked, results, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onError(250, ex));
-    invoked = false;
-    results = scheduler.startWithCreate(function () {
-        return xs.finallyAction(function () {
-            return invoked = true;
-        });
-    }).messages;
-    equal(1, results.length);
-    ok(results[0].value.kind === 'E' && results[0].time === 250 && results[0].value.exception === ex);
-    ok(invoked);
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1), 
+    onError(250, ex)
+  );
+  
+  var invoked = false;
+  
+  var results = scheduler.startWithCreate(function () {
+    return xs.finallyAction(function () {
+      invoked = true;
+    });
+  }).messages;
+
+  results.assertEqual(
+    onError(250, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 250)
+  );  
+
+  ok(invoked);
 });
