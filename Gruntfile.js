@@ -1080,7 +1080,6 @@ var browsers = [{
                   'src/core/linq/observable/sharereplay.js', // multicast, ReplaySubject, Reference counted
                   'src/core/linq/connectableobservable.js',
 
-
                   // Time operators
                   'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
                   'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
@@ -1131,6 +1130,47 @@ var browsers = [{
                   'src/core/outro.js'
               ],
               dest: 'dist/rx.lite.compat.js'
+          },
+          liteextras: {
+            src: [
+              'src/core/license.js',
+              'src/core/subintro.js', 
+              'src/core/liteextrasheader.js',             
+
+              'src/core/disposables/scheduleddisposable.js',
+              'src/core/checkedobserver.js',
+              'src/core/observeonobserver.js',
+              'src/core/observer-extras',
+
+              // Concurrency
+              'src/core/linq/observable/observeon.js', // ObserveOnObserver
+              'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
+
+              // Creation
+              'src/core/linq/observable/using.js',
+
+              // Multiple
+              'src/core/linq/observable/ambproto.js',
+              'src/core/linq/observable/amb.js',              
+              'src/core/linq/observable/onerrorresumenextproto.js',
+              'src/core/linq/observable/onerrorresumenext.js',
+
+              // Single
+              'src/core/linq/observable/bufferwithcount.js',
+              'src/core/linq/observable/windowwithcount.js',
+
+              // Standard Query Operators
+              'src/core/linq/observable/defaultifempty.js',
+              'src/core/linq/observable/distinct.js',
+              'src/core/linq/observable/groupby.js',
+              'src/core/linq/observable/groupbyuntil.js',              
+              'src/core/linq/observable/pluck.js',
+
+              'src/core/linq/groupedobservable.js',
+
+              'src/core/suboutro.js'  
+            ],
+            dest: 'dist/rx.lite.extras.js'
           },
           backpressure: {
               src: [
@@ -1391,6 +1431,10 @@ var browsers = [{
           src: ['<banner>', 'dist/rx.lite.compat.js'],
           dest: 'dist/rx.lite.compat.min.js'
         },
+        liteextras: {
+          src: ['<banner>', 'dist/rx.lite.extras.js'],
+          dest: 'dist/rx.lite.extras.min.js'
+        },
         backpressure: {
           src: ['<banner>', 'dist/rx.backpressure.js'],
           dest: 'dist/rx.backpressure.min.js'
@@ -1441,10 +1485,13 @@ var browsers = [{
       },
       jshint: {
         all: [
+          'rx.all.js',
+          'rx.all.compat.js',
           'rx.js',
           'rx.compat.js',
           'rx.lite.js',
           'rx.lite.compat.js',
+          'rx.lite.extras.js',
           'rx.aggregates.js',
           'rx.async.js',
           'rx.async.compat.js',
@@ -1472,39 +1519,39 @@ var browsers = [{
         }
       },
       connect: {
-          server: {
-              options: {
-                      base: 'tests',
-                      port: 9999
-              }
+        server: {
+          options: {
+            base: 'tests',
+            port: 9999
           }
+        }
       },
       'saucelabs-qunit': {
-          all: {
-              options: {
-                  urls: [
-                      'http://127.0.0.1:9999/rx.aggregates.html',
-                      'http://127.0.0.1:9999/rx.async.html',
-                      'http://127.0.0.1:9999/rx.async.compat.html',
-                      'http://127.0.0.1:9999/rx.binding.html',
-                      'http://127.0.0.1:9999/rx.coincidence.html',
-                      'http://127.0.0.1:9999/rx.experimental.html',
-                      'http://127.0.0.1:9999/rx.experimental.html',
-                      'http://127.0.0.1:9999/rx.html',
-                      'http://127.0.0.1:9999/rx.modern.html',
-                      'http://127.0.0.1:9999/rx.lite.html',
-                      'http://127.0.0.1:9999/rx.lite.compat.html',
-                      'http://127.0.0.1:9999/rx.joinpatterns.html',
-                      'http://127.0.0.1:9999/rx.time.html',
-                      'http://127.0.0.1:9999/rx.virtualtime.html',
-                  ],
-                  tunnelTimeout: 5,
-                  build: process.env.TRAVIS_JOB_ID,
-                  concurrency: 3,
-                  browsers: browsers,
-                  testname: "qunit tests"
-              }
+        all: {
+          options: {
+            urls: [
+              'http://127.0.0.1:9999/rx.aggregates.html',
+              'http://127.0.0.1:9999/rx.async.html',
+              'http://127.0.0.1:9999/rx.async.compat.html',
+              'http://127.0.0.1:9999/rx.binding.html',
+              'http://127.0.0.1:9999/rx.coincidence.html',
+              'http://127.0.0.1:9999/rx.experimental.html',
+              'http://127.0.0.1:9999/rx.experimental.html',
+              'http://127.0.0.1:9999/rx.html',
+              'http://127.0.0.1:9999/rx.modern.html',
+              'http://127.0.0.1:9999/rx.lite.html',
+              'http://127.0.0.1:9999/rx.lite.compat.html',
+              'http://127.0.0.1:9999/rx.joinpatterns.html',
+              'http://127.0.0.1:9999/rx.time.html',
+              'http://127.0.0.1:9999/rx.virtualtime.html'
+            ],
+            tunnelTimeout: 5,
+            build: process.env.TRAVIS_JOB_ID,
+            concurrency: 3,
+            browsers: browsers,
+            testname: "qunit tests"
           }
+        }
       }
   });
 
@@ -1641,6 +1688,7 @@ var browsers = [{
     'concat:virtualtime',
     'concat:lite',
     'concat:litecompat',
+    'concat:liteextras',
 
     'uglify:all',
     'uglify:allcompat',
@@ -1659,6 +1707,7 @@ var browsers = [{
     'uglify:virtualtime',
     'uglify:lite',
     'uglify:litecompat',
+    'uglify:liteextras',
 
     'qunit'
   ]);
