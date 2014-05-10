@@ -7,6 +7,22 @@ var Observable = Rx.Observable,
   onCompleted = Rx.ReactiveTest.onCompleted,
   subscribe = Rx.ReactiveTest.subscribe;
 
+test('Finally has orders of effects', function () {
+  var results = [];
+  function noop () {}
+  
+  var someObservable = Rx.Observable.empty().finallyAction(function () {
+    results.push('invoked');
+  });
+  
+  var d = someObservable.subscribe(noop, noop, function () {
+    results.push('completed');
+  });
+  
+  equal(results[0], 'completed');
+  equal(results[1], 'invoked');
+});
+
 test('Finally calls finally before throwing', function () {
   var invoked = false;
 
