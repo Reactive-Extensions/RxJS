@@ -1061,7 +1061,7 @@ Unit Tests:
 ### <a id="rxobservablefromeventpatternaddhander-removehandler-selector"></a>`Rx.Observable.fromEventPattern(addHandler, removeHandler, [selector])`
 <a href="#rxobservablefromeventpatternaddhander-removehandler-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js "View in source") 
 
-Creates an observable sequence by using teh addHandler and removeHandler functions to add and remove the handlers, with an optional selector function to project the event arguments.
+Creates an observable sequence by using the addHandler and removeHandler functions to add and remove the handlers, with an optional selector function to project the event arguments.
 
 #### Arguments
 1. `addHandler` *(`Function`)*: The DOMElement, NodeList or EventEmitter to attach a listener.
