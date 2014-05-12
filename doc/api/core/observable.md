@@ -5551,7 +5551,7 @@ var subscription = source.subscribe(
 // => Next: 9
 // => Completed  
 
-/* Without predicate */
+/* With predicate */
 var source = Rx.Observable.range(0, 10)
     .lastOrDefault(function (x, idx, obs) {
         return x % 2 === 0;
