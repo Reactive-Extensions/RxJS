@@ -65,7 +65,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`catch | catchException`](#rxobservableprototypecatchsecond--handler)
 - [`combineLatest`](#rxobservableprototypecombinelatestargs-resultselector)
 - [`concat`](#rxobservableprototypeconcatargs)
-- [`concatAll`](#rxobservableprototypeconcatallargs)
+- [`concatAll`](#rxobservableprototypeconcatall)
 - [`connect`](#connectableobservableprototypeconnect)
 - [`contains`](#rxobservableprototypecontainsvalue-comparer)
 - [`controlled`](#rxobservableprototypecontrolledenablequeue)
@@ -3617,8 +3617,8 @@ var subscription = source.subscribe(
 
 * * *
 
-### <a id="rxobservableprototypeconcatallargs"></a>`Rx.Observable.prototype.concatAll()`
-<a href="#rxobservableprototypeconcatallargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3223-L3227 "View in source") 
+### <a id="rxobservableprototypeconcatall"></a>`Rx.Observable.prototype.concatAll()`
+<a href="#rxobservableprototypeconcatall">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L3223-L3227 "View in source") 
 
 Concatenates a sequence of observable sequences into a single observable sequence.
 
