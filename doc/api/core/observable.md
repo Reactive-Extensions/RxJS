@@ -105,7 +105,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`max`](#rxobservableprototypemaxcomparer)
 - [`maxBy`](#rxobservableprototypemaxbykeyselector-comparer)
 - [`merge`](#rxobservableprototypemergemaxconcurrent--other)
-- [`mergeAll`](#rxobservableprototypemergeobservable)
+- [`mergeAll`](#rxobservableprototypemergeall)
 - [`min`](#rxobservableprototypemincomparer)
 - [`minBy`](#rxobservableprototypeminbykeyselector-comparer)
 - [`multicast`](#rxobservableprototypemulticastsubject--subjectselector-selector)
@@ -5956,8 +5956,8 @@ Unit Tests:
 
 * * *
 
-### <a id="rxobservableprototypemergeobservable"></a>`Rx.Observable.prototype.mergeAll()`
-<a href="#rxobservableprototypemergeobservable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeobservable.js "View in source") 
+### <a id="rxobservableprototypemergeall"></a>`Rx.Observable.prototype.mergeAll()`
+<a href="#rxobservableprototypemergeall">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeobservable.js "View in source") 
 
 Merges an observable sequence of observable sequences into an observable sequence.
 
