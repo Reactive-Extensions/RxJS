@@ -120,7 +120,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`publishLast`](#rxobservableprototypepublishlatestselector)
 - [`publishValue`](#rxobservableprototypepublishvalueselector)
 - [`share`](#rxobservableprototypeshare)
-- [`shareReplay`](#rxobservableprototypesharereplay-buffersize-window-scheduler)
+- [`shareReplay`](#rxobservableprototypesharereplay)
 - [`shareValue`](#rxobservableprototypesharevalue)
 - [`refCount`](#connectableobservableprototyperefcount)
 - [`reduce`](#rxobservableprototypereduceaccumulator-seed)
@@ -6923,8 +6923,8 @@ Unit Tests:
 
 * * *
 
-### <a id="rxobservableprototypesharevaluevalue"></a>`Rx.Observable.prototype.shareValue(value)`
-<a href="#rxobservableprototypesharevaluevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js "View in source") 
+### <a id="rxobservableprototypesharevalue"></a>`Rx.Observable.prototype.shareValue(value)`
+<a href="#rxobservableprototypesharevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js "View in source") 
 
 Returns an observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
    
@@ -7277,8 +7277,8 @@ Unit Tests:
 
 * * *
 
-### <a id="rxobservableprototypesharereplay-buffersize-window-scheduler"></a>`Rx.Observable.prototype.shareReplay([bufferSize], [window], [scheduler])`
-<a href="#rxobservableprototypesharereplay-buffersize-window-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sharereplay.js "View in source") 
+### <a id="rxobservableprototypesharereplay"></a>`Rx.Observable.prototype.shareReplay([bufferSize], [window], [scheduler])`
+<a href="#rxobservableprototypesharereplay">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sharereplay.js "View in source") 
 
 Returns an observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
 
