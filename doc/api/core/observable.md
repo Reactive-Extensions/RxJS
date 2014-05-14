@@ -1001,7 +1001,7 @@ input.trigger('click');
 Using in Node.js with using an `EventEmitter` with a selector function (which is not required).
 
 ```js
-var EventEmtiter = require('events').EventEmitter,
+var EventEmitter = require('events').EventEmitter,
     Rx = require('rx');
 
 var eventEmitter = new EventEmitter();
