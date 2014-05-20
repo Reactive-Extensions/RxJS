@@ -1168,8 +1168,7 @@ var browsers = [{
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
-              'src/core/linq/observable/groupbyuntil.js',              
-              'src/core/linq/observable/pluck.js',
+              'src/core/linq/observable/groupbyuntil.js',
 
               'src/core/linq/groupedobservable.js',
 

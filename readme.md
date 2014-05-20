@@ -89,9 +89,9 @@ Sure, there are a lot of libraries to get started with RxJS?  Confused on where 
 
 This set of libraries include:
 
-- [`rx.complete.js`](doc/libraries/rx.complete.md) - complete version of RxJS with all operators, minus the testing operators, and comes with a compat file for older browsers.  
+- [`rx.all.js`](doc/libraries/rx.complete.md) - complete version of RxJS with all operators, minus the testing operators, and comes with a compat file for older browsers.  
 - [`rx.lite.js`](doc/libraries/rx.lite.md) - lite version with event bindings, creation, time and standard query operators with a compat file for older browsers.  For most operations, this is the file you'll want to use unless you want the full power of RxJS.
-- [`rx.lite.extras.js`]((doc/libraries/rx.lite.extras.md))
+- [`rx.lite.extras.js`]((doc/libraries/rx.lite.extras.md)) - the operators missing from rx.lite.js that can be found in rx.js.
 - [`rx.js`](doc/libraries/rx.md) - core library for ES5 compliant browsers and runtimes plus compatibility for older browsers.
 - [`rx.aggregates.js`](doc/libraries/rx.aggregates.md) - aggregation event processing query operations
 - [`rx.async.js`](doc/libraries/rx.async.md) - async operations such as events, callbacks and promises plus a compat file for older browsers.

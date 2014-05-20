@@ -1,0 +1,209 @@
+# RxJS Complete Module #
+
+The Reactive Extensions for JavaScript's complete functionality is in the complete RxJS file which has many core components including the Schedulers, Disposables, Observable and Observer, but omits any testing capabilities.
+
+This comes with both [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js) which is for use in modern development environments such as > IE9 and server-side environments such as Node.js.  We also have [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js) which has backwards compatibility to browsers which do not support all required ES5 features.
+
+## Details ##
+
+Files:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete/)
+
+File Dependencies:
+- None
+
+NPM Dependencies:
+- None
+
+NuGet Dependencies:
+- None
+
+## Included Observable Operators ##
+
+### `Observable Methods`
+- [`amb`]((../api/core/observable.md#rxobservableambargs)
+- [`case | switchCase`]((../api/core/observable.md#rxobservablecaseselector-sources-elsesourcescheduler)
+- [`catch | catchException`]((../api/core/observable.md#rxobservablecatchargs)
+- [`concat`]((../api/core/observable.md#rxobservableconcatargs)
+- [`create | createWithDisposable`]((../api/core/observable.md#rxobservablecreatesubscribe)
+- [`defer`]((../api/core/observable.md#rxobservabledeferobservablefactory)
+- [`empty`]((../api/core/observable.md#rxobservableemptyscheduler)
+- [`for | forIn`]((../api/core/observable.md#rxobservableforsources-resultselector)
+- [`forkJoin`]((../api/core/observable.md#rxobservableforkjoinargs)
+- [`fromArray`]((../api/core/observable.md#rxobservablefromarrayarray-scheduler)
+- [`fromCallback`]((../api/core/observable.md#rxobservablefromcallbackfunc-scheduler-context-selector)
+- [`fromEvent`]((../api/core/observable.md#rxobservablefromeventelement-eventname-selector)
+- [`fromEventPattern`]((../api/core/observable.md#rxobservablefromeventpatternaddhandler-removehandler-selector)
+- [`fromIterable`]((../api/core/observable.md#rxobservablefromiterableiterable-scheduler)
+- [`fromNodeCallback`]((../api/core/observable.md#rxobservablefromnodecallbackfunc-scheduler-context-selector)
+- [`fromPromise`]((../api/core/observable.md#rxobservablefrompromisepromise)
+- [`generate`]((../api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
+- [`generateWithAbsoluteTime`]((../api/core/observable.md#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
+- [`generateWithRelativeTime`]((../api/core/observable.md#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
+- [`if | ifThen`]((../api/core/observable.md#rxobservableifcondition-thensource-elsesource)
+- [`interval`]((../api/core/observable.md#rxobservableintervalperiod-scheduler)
+- [`merge`]((../api/core/observable.md#rxobservablemergescheduler-args)
+- [`never`]((../api/core/observable.md#rxobservablenever)
+- [`onErrorResumeNext`]((../api/core/observable.md#rxobservableonerrorresumenextargs)
+- [`range`]((../api/core/observable.md#rxobservablerangestart-count-scheduler)
+- [`repeat`]((../api/core/observable.md#rxobservablerepeatvalue-repeatcount-scheduler)
+- [`return | returnValue`]((../api/core/observable.md#rxobservablereturnvalue-scheduler)
+- [`start`]((../api/core/observable.md#rxobservablestartfunc-scheduler-context)
+- [`startAsync`]((../api/core/observable.md#rxobservablestartasyncfunctionasync)
+- [`throw | throwException`]((../api/core/observable.md#rxobservablethrowexception-scheduler)
+- [`timer`]((../api/core/observable.md#rxobservabletimerduetime-period-scheduler)
+- [`toAsync`]((../api/core/observable.md#rxobservabletoasyncfunc-scheduler-context)
+- [`using`]((../api/core/observable.md#rxobservableusingresourcefactory-observablefactory)
+- [`when`]((../api/core/observable.md#rxobservablewhenargs)
+- [`while | whileDo`]((../api/core/observable.md#rxobservablewhilecondition-source)
+- [`zip`]((../api/core/observable.md#rxobservablezipargs)
+- [`zipArray`]((../api/core/observable.md#rxobservableziparrayargs)
+
+### `Observable Instance Methods`
+- [`aggregate`]((../api/core/observable.md#rxobservableprototypeaggregateseed-accumulator)
+- [`all`]((../api/core/observable.md#rxobservableprototypeallpredicate-thisarg)
+- [`amb`]((../api/core/observable.md#rxobservableprototypeambrightsource)
+- [`and`]((../api/core/observable.md#rxobservableprototypeandrightsource)
+- [`any`]((../api/core/observable.md#rxobservableprototypeanypredicate-thisarg)
+- [`asObservable`]((../api/core/observable.md#rxobservableprototypeasobservable)
+- [`average`]((../api/core/observable.md#rxobservableprototypeaverageselector)
+- [`buffer`]((../api/core/observable.md#rxobservableprototypebufferbufferopenings-bufferboundaries-bufferclosingselector)
+- [`bufferWithCount`]((../api/core/observable.md#rxobservableprototypebufferwithcountcount-skip)
+- [`bufferWithTime`]((../api/core/observable.md#rxobservableprototypebufferwithtimetimespan-timeshift--scheduler-scheduler)
+- [`bufferWithTimeOrCount`]((../api/core/observable.md#rxobservableprototypebufferwithtimeorcounttimespan-count-scheduler)
+- [`catch | catchException`]((../api/core/observable.md#rxobservableprototypecatchsecond--handler)
+- [`combineLatest`]((../api/core/observable.md#rxobservableprototypecombinelatestargs-resultselector)
+- [`concat`]((../api/core/observable.md#rxobservableprototypeconcatargs)
+- [`concatAll`]((../api/core/observable.md#rxobservableprototypeconcatall)
+- [`connect`]((../api/core/observable.md#connectableobservableprototypeconnect)
+- [`contains`]((../api/core/observable.md#rxobservableprototypecontainsvalue-comparer)
+- [`controlled`]((../api/core/observable.md#rxobservableprototypecontrolledenablequeue)
+- [`count`]((../api/core/observable.md#rxobservableprototypecountpredicate)
+- [`defaultIfEmpty`]((../api/core/observable.md#rxobservableprototypedefaultifemptydefaultvalue)
+- [`delay`]((../api/core/observable.md#rxobservableprototypedelayduetime-scheduler)
+- [`delayWithSelector`]((../api/core/observable.md#rxobservabledelaywithselectordelaysubscriptiondelay-delaydurationselector)
+- [`dematerialize`]((../api/core/observable.md#rxobservableprototypedematerialize)
+- [`distinct`]((../api/core/observable.md#rxobservableprototypedistinctkeyselector-keyserializer)
+- [`distinctUntilChanged`]((../api/core/observable.md#rxobservableprototypedistinctuntilchangedkeyselector-comparer)
+- [`do | doAction`]((../api/core/observable.md#rxobservableprototypedoobserver--onnext-onerror-oncompleted)
+- [`doWhile`]((../api/core/observable.md#rxobservableprototypedowhilecondition-source)
+- [`elementAt`]((../api/core/observable.md#rxobservableprototypeelementatindex)
+- [`elementAtOrDefault`]((../api/core/observable.md#rxobservableprototypeelementatordefaultindex-defaultvalue)
+- [`every`]((../api/core/observable.md#rxobservableprototypeeverypredicate-thisarg)
+- [`expand`]((../api/core/observable.md#rxobservableprototypeexpandselector-scheduler)
+- [`filter`]((../api/core/observable.md#rxobservableprototypefilterpredicate-thisarg)
+- [`finally | finallyAction`]((../api/core/observable.md#rxobservableprototypefinallyaction)
+- [`find`]((../api/core/observable.md#rxobservableprototypefindpredicate-thisarg)
+- [`findIndex`]((../api/core/observable.md#rxobservableprototypefindindexpredicate-thisarg)
+- [`first`]((../api/core/observable.md#rxobservableprototypefirstpredicate-thisarg)
+- [`firstOrDefault`]((../api/core/observable.md#rxobservableprototypefirstordefaultpredicate-defaultvalue-thisarg)
+- [`flatMap`]((../api/core/observable.md#rxobservableprototypeflatmapselector-resultselector)
+- [`flatMapLatest`]((../api/core/observable.md#rxobservableprototypeflatmaplatestselector-thisarg)
+- [`forkJoin`]((../api/core/observable.md#rxobservableprototypeforkjoinsecond-resultselector)
+- [`groupBy`]((../api/core/observable.md#rxobservableprototypegroupbykeyselector-elementselector-keyserializer)
+- [`groupByUntil`]((../api/core/observable.md#rxobservableprototypegroupbyuntilkeyselector-elementselector-durationselector-keyserializer)
+- [`groupJoin`]((../api/core/observable.md#rxobservableprototypegroupjoinright-leftdurationselector-rightdurationselector-resultselector)
+- [`ignoreElements`]((../api/core/observable.md#rxobservableprototypeignoreelements)
+- [`isEmpty`]((../api/core/observable.md#rxobservableprototypeisempty)
+- [`join`]((../api/core/observable.md#rxobservableprototypejoinright-leftdurationselector-rightdurationselector-resultselector)
+- [`last`]((../api/core/observable.md#rxobservableprototypelastpredicate-thisarg)
+- [`lastOrDefault`]((../api/core/observable.md#rxobservableprototypelastordefaultpredicate-defaultvalue-thisarg)
+- [`let | letBind`]((../api/core/observable.md#rxobservableprototypeletfunc)
+- [`manySelect`]((../api/core/observable.md#rxobservableprototypemanyselectselector-scheduler)
+- [`map`]((../api/core/observable.md#rxobservableprototypemapselector-thisarg)
+- [`max`]((../api/core/observable.md#rxobservableprototypemaxcomparer)
+- [`maxBy`]((../api/core/observable.md#rxobservableprototypemaxbykeyselector-comparer)
+- [`merge`]((../api/core/observable.md#rxobservableprototypemergemaxconcurrent--other)
+- [`mergeAll`]((../api/core/observable.md#rxobservableprototypemergeall)
+- [`min`]((../api/core/observable.md#rxobservableprototypemincomparer)
+- [`minBy`]((../api/core/observable.md#rxobservableprototypeminbykeyselector-comparer)
+- [`multicast`]((../api/core/observable.md#rxobservableprototypemulticastsubject--subjectselector-selector)
+- [`observeOn`]((../api/core/observable.md#rxobservableprototypeobserveonscheduler)
+- [`onErrorResumeNext`]((../api/core/observable.md#rxobservableprototypeonerrorresumenextsecond)
+- [`pairwise`]((../api/core/observable.md#rxobservableprototypepairwise)
+- [`partition`]((../api/core/observable.md#rxobservableprototypepartitionpredicate-thisarg)
+- [`pausable`]((../api/core/observable.md#rxobservableprototypepausablepauser)
+- [`pausableBuffered`]((../api/core/observable.md#rxobservableprototypepausablebufferedpauser)
+- [`pluck`]((../api/core/observable.md#rxobservableprototypepluckproperty)
+- [`publish`]((../api/core/observable.md#rxobservableprototypepublishselector)
+- [`publishLast`]((../api/core/observable.md#rxobservableprototypepublishlatestselector)
+- [`publishValue`]((../api/core/observable.md#rxobservableprototypepublishvalueselector)
+- [`share`]((../api/core/observable.md#rxobservableprototypeshare)
+- [`shareReplay`]((../api/core/observable.md#rxobservableprototypesharereplay)
+- [`shareValue`]((../api/core/observable.md#rxobservableprototypesharevalue)
+- [`refCount`]((../api/core/observable.md#connectableobservableprototyperefcount)
+- [`reduce`]((../api/core/observable.md#rxobservableprototypereduceaccumulator-seed)
+- [`repeat`]((../api/core/observable.md#rxobservableprototyperepeatrepeatcount)
+- [`replay`]((../api/core/observable.md#rxobservableprototypereplayselector-buffersize-window-scheduler)
+- [`retry`]((../api/core/observable.md#rxobservableprototyperetryretrycount)
+- [`sample`]((../api/core/observable.md#rxobservableprototypesampleinterval--sampleobservable)
+- [`scan`]((../api/core/observable.md#rxobservableprototypescanseed-accumulator)
+- [`select`]((../api/core/observable.md#rxobservableprototypeselectselector-thisarg)
+- [`selectMany`]((../api/core/observable.md#rxobservableprototypeselectmanyselector-resultselector)
+- [`selectSwitch`]((../api/core/observable.md#rxobservableprototypeselectswitchselector-thisarg)
+- [`sequenceEqual`]((../api/core/observable.md#rxobservableprototypesequenceequalsecond-comparer)
+- [`single`]((../api/core/observable.md#rxobservableprototypesinglepredicate-thisarg)
+- [`singleOrDefault`]((../api/core/observable.md#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg)
+- [`skip`]((../api/core/observable.md#rxobservableprototypeskipcount)
+- [`skipLast`]((../api/core/observable.md#rxobservableprototypeskiplastcount)
+- [`skipLastWithTime`]((../api/core/observable.md#rxobservableprototypeskiplastwithtimeduration)
+- [`skipUntil`]((../api/core/observable.md#rxobservableprototypeskipuntilother)
+- [`skipUntilWithTime`]((../api/core/observable.md#rxobservableprototypeskipuntilstarttime-scheduler)
+- [`skipWhile`]((../api/core/observable.md#rxobservableprototypeskipwhilepredicate-thisarg)
+- [`some`]((../api/core/observable.md#rxobservableprototypesomepredicate-thisarg)
+- [`startWith`]((../api/core/observable.md#rxobservableprototypestartwithscheduler-args)
+- [`subscribe`]((../api/core/observable.md#rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted)
+- [`subscribeOn`]((../api/core/observable.md#rxobservableprototypesubscribeonscheduler)
+- [`sum`]((../api/core/observable.md#rxobservableprototypesumkeyselector-thisarg)
+- [`switch | switchLatest`]((../api/core/observable.md#rxobservableprototypeswitch)
+- [`take`]((../api/core/observable.md#rxobservableprototypetakecount-scheduler)
+- [`takeLast`]((../api/core/observable.md#rxobservableprototypetakelastcount)
+- [`takeLastBuffer`]((../api/core/observable.md#rxobservableprototypetakelastbuffercount)
+- [`takeLastBufferWithTime`]((../api/core/observable.md#rxobservableprototypetakelastbufferwithtimeduration-scheduler)
+- [`takeLastWithTime`]((../api/core/observable.md#rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler)
+- [`takeUntil`]((../api/core/observable.md#rxobservableprototypetakeuntilother)
+- [`takeUntilWithTime`]((../api/core/observable.md#rxobservableprototypetakeuntilwithtimeendtime-scheduler)
+- [`takeWhile`]((../api/core/observable.md#rxobservableprototypetakewhilepredicate-thisarg)
+- [`throttle`]((../api/core/observable.md#rxobservableprototypethrottleduetime-scheduler)
+- [`throttleWithSelector`]((../api/core/observable.md#rxobservableprototypethrottlewithselectorthrottleselector)
+- [`timeInterval`]((../api/core/observable.md#rxobservableprototypetimeintervalscheduler)
+- [`timeout`]((../api/core/observable.md#rxobservableprototypetimeoutduetime-other-scheduler)
+- [`timeoutWithSelector`]((../api/core/observable.md#rxobservableprototypetimeoutwithselectorfirsttimeout-timeoutdurationselector-other)
+- [`timestamp`]((../api/core/observable.md#rxobservableprototypetimestampscheduler)
+- [`toArray`]((../api/core/observable.md#rxobservableprototypetoarray)
+- [`where`]((../api/core/observable.md#rxobservableprototypewherepredicate-thisarg)
+- [`window`]((../api/core/observable.md#rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector)
+- [`windowWithCount`]((../api/core/observable.md#rxobservableprototypewindowwithcountcount-skip)
+- [`windowWithTime`]((../api/core/observable.md#rxobservableprototypewindowwithtimetimespan-timeshift--scheduler)
+- [`windowWithTimeOrCount`]((../api/core/observable.md#rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler)
+- [`zip`]((../api/core/observable.md#rxobservableprototypezipargs-resultselector)
+## Included Classes ##
+
+### Core Objects
+
+- [`Rx.Observer`](../api/core/observable.md../api/core/observable.mdapi/core/observer.md)
+- [`Rx.Notification`](../api/core/observable.md../api/core/observable.mdapi/core/notification.md)
+
+### Subjects
+
+- [`Rx.AsyncSubject`](../api/core/observable.md../api/core/observable.mdapi/subjects/asyncsubject.md)
+- [`Rx.Subject`](../api/core/observable.md../api/core/observable.mdapi/subjects/subject.md)
+
+### Schedulers
+
+- [`Rx.Scheduler`](../api/core/observable.md../api/core/observable.mdapi/schedulers/scheduler.md)
+
+### Disposables
+
+- [`Rx.CompositeDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/compositedisposable.md)
+- [`Rx.Disposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/disposable.md)
+- [`Rx.RefCountDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/refcountdisposable.md)
+- [`Rx.SerialDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/serialdisposable.md)
+- [`Rx.SingleAssignmentDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/singleassignmentdisposable.md)
