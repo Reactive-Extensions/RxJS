@@ -85,20 +85,24 @@ The only difference is that we can handle the errors inline with our subscriptio
 
 ## Batteries Included ##
 
+Sure, there are a lot of libraries to get started with RxJS?  Confused on where to get started?  Start out with the complete set of operators with [`rx.complete.js`](doc/libraries/rx.complete.md), then you can reduce it to the number of operators that you really need, and perhaps stick with something as small as [`rx.lite.js`](doc/libraries/rx.lite.md).
+
 This set of libraries include:
 
-- [rx.lite.js](doc/libraries/rx.lite.md) - lite version with event bindings, creation, time and standard query operators with a compat file for older browsers.  For most operations, this is the file you'll want to use unless you want the full power of RxJS.
-- [rx.js](doc/libraries/rx.md) - core library for ES5 compliant browsers and runtimes plus compatibility for older browsers.
-- [rx.aggregates.js](doc/libraries/rx.aggregates.md) - aggregation event processing query operations
-- [rx.async.js](doc/libraries/rx.async.md) - async operations such as events, callbacks and promises plus a compat file for older browsers.
-- [rx.backpressure.js](doc/libraries/rx.backpressure.md) - backpressure operators such as pause/resume and controlled.
-- [rx.binding.js](doc/libraries/rx.binding.md) - binding operators including multicast, publish, publishLast, publishValue, and replay
-- [rx.coincidence.js](doc/libraries/rx.coincidence.md) - reactive coincidence join event processing query operations
-- [rx.experimental.js](doc/libraries/rx.experimental.md) - experimental operators including imperative operators and forkJoin
-- [rx.joinpatterns.js](doc/libraries/rx.joinpatterns.md) - join patterns event processing query operations
-- [rx.testing.js](doc/libraries/rx.testing.md) - used to write unit tests for complex event processing queries
-- [rx.time.js](doc/libraries/rx.time.md) - time-based event processing query operations
-- [rx.virtualtime.js](doc/libraries/rx.virtualtime.md) - virtual-time-based schedulers
+- [`rx.complete.js`](doc/libraries/rx.complete.md) - complete version of RxJS with all operators, minus the testing operators, and comes with a compat file for older browsers.  
+- [`rx.lite.js`](doc/libraries/rx.lite.md) - lite version with event bindings, creation, time and standard query operators with a compat file for older browsers.  For most operations, this is the file you'll want to use unless you want the full power of RxJS.
+- [`rx.lite.extras.js`]((doc/libraries/rx.lite.extras.md))
+- [`rx.js`](doc/libraries/rx.md) - core library for ES5 compliant browsers and runtimes plus compatibility for older browsers.
+- [`rx.aggregates.js`](doc/libraries/rx.aggregates.md) - aggregation event processing query operations
+- [`rx.async.js`](doc/libraries/rx.async.md) - async operations such as events, callbacks and promises plus a compat file for older browsers.
+- [`rx.backpressure.js`](doc/libraries/rx.backpressure.md) - backpressure operators such as pause/resume and controlled.
+- [`rx.binding.js`](doc/libraries/rx.binding.md) - binding operators including multicast, publish, publishLast, publishValue, and replay
+- [`rx.coincidence.js`](doc/libraries/rx.coincidence.md) - reactive coincidence join event processing query operations
+- [`rx.experimental.js`](doc/libraries/rx.experimental.md) - experimental operators including imperative operators and forkJoin
+- [`rx.joinpatterns.js`](doc/libraries/rx.joinpatterns.md) - join patterns event processing query operations
+- [`rx.testing.js`](doc/libraries/rx.testing.md) - used to write unit tests for complex event processing queries
+- [`rx.time.js`](doc/libraries/rx.time.md) - time-based event processing query operations
+- [`rx.virtualtime.j`s](doc/libraries/rx.virtualtime.md) - virtual-time-based schedulers
 
 ## Why RxJS? ##
 
@@ -210,14 +214,14 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
 
 - Presentations
-    - [Don't Cross the Streams - Cascadia.js 2012](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams)
-    - [Curing Your Asynchronous Blues - Strange Loop 2013](https://github.com/Reactive-Extensions/StrangeLoop2013)
+    - Don't Cross the Streams - Cascadia.js 2012 [slides/demos](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams) | [video](http://www.youtube.com/watch?v=FqBq4uoiG0M)
+    - Curing Your Asynchronous Blues - Strange Loop 2013 [slides/demos](https://github.com/Reactive-Extensions/StrangeLoop2013) | [video](http://www.infoq.com/presentations/rx-event-processing)
+    - Streaming and event-based programming using FRP and RxJS - FutureJS 2014 [slides/demos](https://github.com/Reactive-Extensions/FutureJS) | [video](https://www.youtube.com/watch?v=zlERo_JMGCw)
 
 - Videos
     - [Hello RxJS - Channel 9](http://channel9.msdn.com/Blogs/Charles/Introducing-RxJS-Reactive-Extensions-for-JavaScript)
     - [MIX 2011](http://channel9.msdn.com/events/MIX/MIX11/HTM07)
     - [RxJS Today and Tomorrow - Channel 9](http://channel9.msdn.com/Blogs/Charles/Matthew-Podwysocki-and-Bart-J-F-De-Smet-RxJS-Today-and-Tomorrow)
-    - [Cascadia.js 2012 - Matthew Podwysocki](http://www.youtube.com/watch?v=FqBq4uoiG0M)
     - [Reactive Extensions Videos on Channel 9](http://channel9.msdn.com/Tags/reactive+extensions)
     - [Asynchronous JavaScript at Netflix - Netflix JavaScript Talks - Jafar Husain](https://www.youtube.com/watch?v=XRYN2xt11Ek)
     - [Asynchronous JavaScript at Netflix - MountainWest JavaScript 2014 - Jafar Husain](https://www.youtube.com/watch?v=XE692Clb5LU)
@@ -266,6 +270,8 @@ There are a number of ways to get started with RxJS. The files are available on 
 
 ### Install individual packages via [NuGet](http://nuget.org/):
 
+    Install-Package RxJS-Complete
+    Install-Package RxJS-Lite
     Install-Package RxJS-Main
     Install-Package RxJS-Aggregates
     Install-Package RxJS-Async
@@ -279,7 +285,14 @@ There are a number of ways to get started with RxJS. The files are available on 
 
 ### In a Browser:
 
+    <!-- Just the core RxJS -->
     <script src="rx.js"></script>
+
+    <!-- Or all of RxJS minus testing -->
+    <script src="rx.complete.js"></script>   
+
+    <!-- Or keeping it lite -->
+    <script src="rx.lite.js"></script>       
 
 ### Along with a number of our extras for RxJS:
 

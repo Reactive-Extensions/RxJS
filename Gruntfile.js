@@ -889,6 +889,7 @@ var browsers = [{
 
                   // Standard Query Operators
                   'src/core/linq/observable/select.js',
+                  'src/core/linq/observable/pluck.js',
                   'src/core/linq/observable/selectmany.js',
                   'src/core/linq/observable/selectswitch.js',
                   'src/core/linq/observable/skip.js',
@@ -962,6 +963,9 @@ var browsers = [{
                   'src/core/subjects/anonymoussubject.js',
                   'src/core/subjects/behaviorsubject.js',
                   'src/core/subjects/replaysubject.js',
+
+                  // Perf operators
+                  //'src/core/linq/observable/select-perf.js',
 
                   'src/core/exports.js',
                   'src/core/outro.js'
@@ -1052,6 +1056,7 @@ var browsers = [{
 
                   // Standard Query Operators
                   'src/core/linq/observable/select.js',
+                  'src/core/linq/observable/pluck.js',
                   'src/core/linq/observable/selectmany.js',
                   'src/core/linq/observable/selectswitch.js',
                   'src/core/linq/observable/skip.js',
