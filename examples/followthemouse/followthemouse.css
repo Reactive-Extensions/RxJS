@@ -1,0 +1,38 @@
+body {
+  background-color: #ffffff;
+  padding: 10px;
+  font-family: sans-serif;
+}
+
+.block {
+  border: 1px solid black;
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+li {
+  padding: 5px;
+}
+
+.contrastBlock {
+  background-color: #000000;
+  border: 1px solid #666666;
+  color: #ffffff;
+  padding: 10px;
+}
+
+.fixedBlock {
+  border: 1px solid black;
+  font-family: Courier New, Andale Mono, monospace
+  padding: 10px;
+  background-color: #ffffff;
+}
+
+label { 
+  display: block;
+  padding: 5px; 
+}
+fieldset {
+  border-style: solid;
+  border-width: 3px;
+}
