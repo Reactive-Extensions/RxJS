@@ -33,7 +33,7 @@
         disposableCreate = Rx.Disposable.create,
         disposableEmpty = Rx.Disposable.empty,
         timeoutScheduler = Rx.Scheduler.timeout,
-        inherits = Rx.Internals.inherits,
+        inherits = Rx.internals.inherits,
         splice = Array.prototype.splice;
 
     var sub = 'subscribe',
