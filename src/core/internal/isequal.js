@@ -138,7 +138,7 @@
   }
 
   function isFunction(value) {
-    return typeof value == 'function';
+    return typeof value == 'function' || false;
   }
 
   // fallback for older versions of Chrome and Safari
