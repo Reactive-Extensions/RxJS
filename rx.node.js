@@ -1,4 +1,4 @@
-var Rx = require('./rx.all');
+var Rx = require('./dist/rx.all');
 require('./dist/rx.testing');
 
 // Add specific Node functions
