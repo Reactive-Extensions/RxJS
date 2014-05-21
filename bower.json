@@ -1,6 +1,6 @@
 {
   "name": "rxjs",
-  "version": "2.2.21",
+  "version": "2.2.22",
   "main": [
     "rx.js",
     "rx.compat.js",    
