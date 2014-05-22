@@ -197,6 +197,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [IRC #reactivex](http://webchat.freenode.net/#reactivex)
     - [JabbR rx](https://jabbr.net/#/rooms/rx)
     - [StackOverflow rxjs](http://stackoverflow.com/questions/tagged/rxjs)
+    - [Google Group rxjs](https://groups.google.com/forum/#!forum/rxjs)
 
 - Required Reading
     - [Reactive Manifesto](http://www.reactivemanifesto.org/)
