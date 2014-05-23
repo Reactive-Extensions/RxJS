@@ -3720,10 +3720,11 @@ source.concatMap(Promise.resolve(42));
 
 #### Example
 ```js
-var source = Rx.Observable
-    .range(1, 2)
-    .concatMap(function (x) {
-        return Rx.Observable.range(x, 2);    
+var source = Rx.Observable.range(0, 5)
+    .concatMap(function (x, i) {
+        return Rx.Observable
+            .interval(100)
+            .take(x).map(function() { return i; }); 
     });
 
 var subscription = source.subscribe(
@@ -7958,10 +7959,11 @@ source.selectConcat(Promise.resolve(42));
 
 #### Example
 ```js
-var source = Rx.Observable
-    .range(1, 2)
-    .selectConcat(function (x) {
-        return Rx.Observable.range(x, 2);    
+var source = Rx.Observable.range(0, 5)
+    .selectConcat(function (x, i) {
+        return Rx.Observable
+            .interval(100)
+            .take(x).map(function() { return i; }); 
     });
 
 var subscription = source.subscribe(
