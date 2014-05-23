@@ -66,6 +66,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`combineLatest`](#rxobservableprototypecombinelatestargs-resultselector)
 - [`concat`](#rxobservableprototypeconcatargs)
 - [`concatAll`](#rxobservableprototypeconcatall)
+- [`concatMap`](#rxobservableprototypeconcatmapselector-resultselector)
 - [`connect`](#connectableobservableprototypeconnect)
 - [`contains`](#rxobservableprototypecontainsvalue-comparer)
 - [`controlled`](#rxobservableprototypecontrolledenablequeue)
@@ -130,6 +131,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`sample`](#rxobservableprototypesampleinterval--sampleobservable)
 - [`scan`](#rxobservableprototypescanseed-accumulator)
 - [`select`](#rxobservableprototypeselectselector-thisarg)
+- [`selectConcat`](#rxobservableprototypeselectconcatselector-resultselector)
 - [`selectMany`](#rxobservableprototypeselectmanyselector-resultselector)
 - [`selectSwitch`](#rxobservableprototypeselectswitchselector-thisarg)
 - [`sequenceEqual`](#rxobservableprototypesequenceequalsecond-comparer)
@@ -3000,7 +3002,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -3138,7 +3140,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -3200,7 +3202,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -3364,7 +3366,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -3527,7 +3529,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -3577,7 +3579,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -3616,7 +3618,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -3659,7 +3661,141 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+File:
+- [/src/core/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatobservable.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete/)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [/tests/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatobservable.js)
+
+* * *
+
+### <a id="rxobservableprototypeconcatmapselector-resultselector"></a>`Rx.Observable.prototype.concatMap(selector, [resultSelector])`
+<a href="#rxobservableprototypeconcatmapselector-resultselector">#</a> [&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatmap.js "View in source") 
+
+This is an alias for the `selectConcat` method.  This can be one of the following:
+
+Projects each element of an observable sequence to an observable sequence and concatenates the resulting observable sequences or Promises into one observable sequence.
+
+```js
+source.concatMap(function (x, i) { return Rx.Observable.range(0, x); });
+source.concatMap(function (x, i) { return Promise.resolve(x + 1}; });
+```
+
+Projects each element of an observable sequence or Promise to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and concatenates the results into one observable sequence.
+
+```js
+source.concatMap(function (x, i) { return Rx.Observable.range(0, x); }, function (x, y, i) { return x + y + i; });
+source.concatMap(function (x, i) { return Promise.resolve(x + i); }, function (x, y, i) { return x + y + i; });
+```
+
+Projects each element of the source observable sequence to the other observable sequence or Promise and merges the resulting observable sequences into one observable sequence.
+ 
+ ```js
+source.concatMap(Rx.Observable.fromArray([1,2,3]));
+source.concatMap(Promise.resolve(42));
+ ```
+
+#### Arguments
+1. `selector` *(`Function`)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
+2. `[resultSelector]` *(`Function`)*: A transform function to apply to each element of the intermediate sequence.
+ 
+#### Returns
+*(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
+
+#### Example
+```js
+var source = Rx.Observable
+    .range(1, 2)
+    .concatMap(function (x) {
+        return Rx.Observable.range(x, 2);    
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1 
+// => Next: 2 
+// => Next: 2 
+// => Next: 3 
+// => Next: 3 
+// => Next: 3 
+// => Next: 4 
+// => Next: 4 
+// => Next: 4 
+// => Next: 4 
+// => Completed 
+
+/* Using a promise */
+var source = Rx.Observable.fromArray([1,2,3,4])
+    .concatMap(function (x, i) {
+        return Promise.resolve(x + i);
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 4
+// => Next: 4 
+// => Next: 4 
+// => Next: 4 
+// => Completed    
+```
+
+### Location
+
+File:
+- [/src/core/observable/concatmap.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatmap.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete/)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [/tests/observable/concatmap.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatmap.js)
 
 * * *
 
@@ -3941,7 +4077,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -4110,7 +4246,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -4172,7 +4308,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -4234,7 +4370,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -4317,7 +4453,7 @@ var subscription = source.subscribe(
 ```
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -4595,7 +4731,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -4639,7 +4775,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -4977,7 +5113,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -5147,7 +5283,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -5214,7 +5350,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -5273,7 +5409,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -5306,7 +5442,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -5721,7 +5857,7 @@ var subscription = source.subscribe(
 
 #### Location
 
-- [`rx`](https://www.npmjs.org/package/rx).js
+- [`rx`](https://www.npmjs.org/package/rx)
 
 * * *
 
@@ -7682,7 +7818,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableprototypeselectmanyselector-resultselector"></a>`Rx.Observable.prototype.selectMany(selector, [resultSelector])`
-<a href="#rxobservableprototypeselectmanyselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L4311-L4326 "View in source") 
+<a href="#rxobservableprototypeselectmanyselector-resultselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js "View in source") 
 
 One of the following:
 
@@ -7778,11 +7914,124 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete/)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [/tests/observable/selectmany.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js)
+
+* * *
+
+### <a id="rxobservableprototypeselectconcatselector-resultselector"></a>`Rx.Observable.prototype.selectConcat(selector, [resultSelector])`
+<a href="#rxobservableprototypeselectconcatselector-resultselector">#</a> [&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatmap.js "View in source") 
+
+This is an alias for the `concatMap` method.  This can be one of the following:
+
+Projects each element of an observable sequence to an observable sequence and concatenates the resulting observable sequences or Promises into one observable sequence.
+
+```js
+source.selectConcat(function (x, i) { return Rx.Observable.range(0, x); });
+source.selectConcat(function (x, i) { return Promise.resolve(x + 1}; });
+```
+
+Projects each element of an observable sequence or Promise to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and concatenates the results into one observable sequence.
+
+```js
+source.selectConcat(function (x, i) { return Rx.Observable.range(0, x); }, function (x, y, i) { return x + y + i; });
+source.selectConcat(function (x, i) { return Promise.resolve(x + i); }, function (x, y, i) { return x + y + i; });
+```
+
+Projects each element of the source observable sequence to the other observable sequence or Promise and merges the resulting observable sequences into one observable sequence.
+ 
+ ```js
+source.selectConcat(Rx.Observable.fromArray([1,2,3]));
+source.selectConcat(Promise.resolve(42));
+ ```
+
+#### Arguments
+1. `selector` *(`Function`)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
+2. `[resultSelector]` *(`Function`)*: A transform function to apply to each element of the intermediate sequence.
+ 
+#### Returns
+*(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
+
+#### Example
+```js
+var source = Rx.Observable
+    .range(1, 2)
+    .selectConcat(function (x) {
+        return Rx.Observable.range(x, 2);    
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 1 
+// => Next: 2 
+// => Next: 2 
+// => Next: 3 
+// => Next: 3 
+// => Next: 3 
+// => Next: 4 
+// => Next: 4 
+// => Next: 4 
+// => Next: 4 
+// => Completed 
+
+/* Using a promise */
+var source = Rx.Observable.fromArray([1,2,3,4])
+    .selectConcat(function (x, i) {
+        return Promise.resolve(x + i);
+    });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Next: 4
+// => Next: 4 
+// => Next: 4 
+// => Next: 4 
+// => Completed    
+```
+
+### Location
+
+File:
+- [/src/core/observable/concatmap.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatmap.js)
+
+Dist:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete/)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [/tests/observable/concatmap.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatmap.js)
 
 * * *
 
