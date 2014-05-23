@@ -143,6 +143,7 @@ var browsers = [{
               'src/core/linq/observable/windowwithcount.js',
 
               // Standard query operators
+              'src/core/linq/observable/concatmap.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
@@ -399,6 +400,7 @@ var browsers = [{
               'src/core/linq/observable/windowwithcount.js',
 
               // Standard query operators
+              'src/core/linq/observable/concatmap.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
@@ -655,6 +657,7 @@ var browsers = [{
               'src/core/linq/observable/windowwithcount.js',
 
               // Standard query operators
+              'src/core/linq/observable/concatmap.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
@@ -780,6 +783,7 @@ var browsers = [{
               'src/core/linq/observable/windowwithcount.js',
 
               // Standard query operators
+              'src/core/linq/observable/concatmap.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
@@ -888,6 +892,7 @@ var browsers = [{
                   'src/core/linq/observable/takelastbuffer.js',
 
                   // Standard Query Operators
+                  'src/core/linq/observable/concatmap.js',
                   'src/core/linq/observable/select.js',
                   'src/core/linq/observable/pluck.js',
                   'src/core/linq/observable/selectmany.js',
@@ -1055,6 +1060,7 @@ var browsers = [{
                   'src/core/linq/observable/takelastbuffer.js',
 
                   // Standard Query Operators
+                  'src/core/linq/observable/concatmap.js',
                   'src/core/linq/observable/select.js',
                   'src/core/linq/observable/pluck.js',
                   'src/core/linq/observable/selectmany.js',

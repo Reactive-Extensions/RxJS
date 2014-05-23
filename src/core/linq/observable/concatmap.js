@@ -1,11 +1,11 @@
-    function selectMany(selector) {
-      return this.select(function (x, i) {
+    function concatMap(selector) {
+      return this.map(function (x, i) {
         var result = selector(x, i);
         return isPromise(result) ? observableFromPromise(result) : result;
-      }).mergeObservable();
+      }).concatAll();
     }
 
-    function selectManyObserver(onNext, onError, onCompleted) {
+    function concatMapObserver(onNext, onError, onCompleted) {
       var source = this;
       return new AnonymousObservable(function (observer) {
         var index = 0;
@@ -22,7 +22,7 @@
             observer.onNext(onCompleted());
             observer.onCompleted();
           });
-      }).mergeAll();
+      }).concatAll();
     }
 
     /**
@@ -44,21 +44,21 @@
      * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
      * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
      */
-    observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector) {
+    observableProto.selectConcat = observableProto.concatMap = function (selector, resultSelector) {
       if (resultSelector) {
-          return this.selectMany(function (x, i) {
+          return this.concatMap(function (x, i) {
             var selectorResult = selector(x, i),
               result = isPromise(selectorResult) ? observableFromPromise(selectorResult) : selectorResult;
 
-            return result.select(function (y) {
+            return result.map(function (y) {
               return resultSelector(x, y, i);
             });
           });
       }
       if (typeof selector === 'function') {
-        return selectMany.call(this, selector);
+        return concatMap.call(this, selector);
       }
-      return selectMany.call(this, function () {
+      return concatMap.call(this, function () {
         return selector;
       });
     };
