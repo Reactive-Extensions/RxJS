@@ -303,15 +303,19 @@ File:
 - [`/src/core/observable/case.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
 Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- If using `rx.expermental.js` 
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
@@ -358,6 +362,8 @@ File:
 - [`/src/core/observable/catch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/catch.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
@@ -370,6 +376,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
@@ -440,6 +447,8 @@ File:
 - [`/src/core/observable/concat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
@@ -452,6 +461,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
@@ -534,6 +544,8 @@ File:
 - [`/src/core/observable/create.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
@@ -546,6 +558,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
@@ -613,18 +626,21 @@ File:
 - [`/src/core/observable/defer.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- None
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
@@ -668,18 +684,21 @@ File:
 - [/src/core/observable/empty.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/empty.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- <None>
+- None
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
@@ -760,15 +779,19 @@ File:
 - [/src/core/observable/for.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/for.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
 Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- If using `rx.expermental.js` 
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
@@ -818,15 +841,18 @@ File:
 - [`/src/core/observable/forkjoin.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/forkjoin.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
 Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- If using `rx.experimental.js` - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
@@ -875,6 +901,8 @@ File:
 - [`/src/core/observable/fromarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
@@ -887,6 +915,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
@@ -941,21 +970,23 @@ File:
 - [`/src/core/observable/fromcallback.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js)
 
 Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
 - [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
 - [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- If using rx.async.js | rx.async.compat.js
+- If using `rx.async.js` | `rx.async.compat.js`
     - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
     - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx`](https://www.npmjs.org/package/rx).lite.js | rx.lite.compat.js
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
@@ -1046,7 +1077,7 @@ Dist:
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:
-- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js) | [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
+- If using [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js) | [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
     - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
     - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
 
@@ -1054,6 +1085,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
 - [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 

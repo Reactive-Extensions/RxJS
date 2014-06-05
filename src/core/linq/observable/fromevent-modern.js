@@ -53,8 +53,8 @@
   Observable.fromEvent = function (element, eventName, selector) {
     if (ember) {
       return fromEventPattern(
-        function (h) { Ember.addListener(element, eventName); },
-        function (h) { Ember.removeListener(element, eventName); },
+        function (h) { Ember.addListener(element, eventName, h); },
+        function (h) { Ember.removeListener(element, eventName, h); },
         selector);
     }    
     if (jq) {
