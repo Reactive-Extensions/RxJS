@@ -27,7 +27,7 @@
             return root.Rx;
         });
     } else if (typeof module === 'object' && module && module.exports === freeExports) {
-        module.exports = factory(root, module.exports, require('./rx'));
+        module.exports = factory(root, module.exports, require('./rx.all'));
     } else {
         root.Rx = factory(root, {}, root.Rx);
     }
