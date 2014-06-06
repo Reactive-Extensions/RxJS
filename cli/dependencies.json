@@ -1,0 +1,18 @@
+{
+  "operators": [
+    { 
+      "selectmany": {
+        "source": "src/core/linq/observable/selectmany.js",
+        "dependsOn": [
+          { "select": "src/core/linq/observable/select.js" },
+          { "mergeobservable": "src/core/linq/observable/mergeobservable.js"}
+        ]
+      }
+    }
+  ],
+  "aliases": [
+    {"flatmap":"selectmany"},
+    {"map":"select"},
+    {"filter":"where"}
+  ]
+}
