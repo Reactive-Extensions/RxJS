@@ -8,7 +8,7 @@ Promises have been gaining momentum within the JavaScript community and is on tr
 
 Many asynchronous methods in Node.js and the many JavaScript APIs are written in such a way that it has a callback as the last parameter. These standard callbacks are executed with the data passed to it once it is available.  We can use the [`Rx.Observable.fromCallback`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromcallbackfunc-scheduler-context) to wrap these kinds of callbacks.  Note that this does not cover the Node.js style of callbacks where the `Error` parameter is first.  For that operation, we provide the [`Rx.Observable.fromNodeCallback`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromnodecallbackfunc-scheduler-context) which we will cover below.
 
-In the following example, we will convert the Node.js [`fs.exists`]http://nodejs.org/api/fs.html#fs_fs_exists_path_callback) function.  This function takes a path and returns a `true` or `false` value whether the file exists, in this case we will check if 'file.txt' exists.  The arguments returned when wrapped in `Rx.Observable.fromCallback` will return an array containing the arguments passed to the callback.
+In the following example, we will convert the Node.js [`fs.exists`](http://nodejs.org/api/fs.html#fs_fs_exists_path_callback) function.  This function takes a path and returns a `true` or `false` value whether the file exists, in this case we will check if 'file.txt' exists.  The arguments returned when wrapped in `Rx.Observable.fromCallback` will return an array containing the arguments passed to the callback.
 
 ```js
 var Rx = require('rx'),
