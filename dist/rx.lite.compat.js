@@ -32,6 +32,8 @@
   // Defaults
   var noop = Rx.helpers.noop = function () { },
     identity = Rx.helpers.identity = function (x) { return x; },
+    pluck = Rx.helpers.pluck = function (property) { return function (x) { return x[property]; }; },
+    just = Rx.helpers.just = function (value) { return function () { return value; }; },    
     defaultNow = Rx.helpers.defaultNow = (function () { return !!Date.now ? Date.now : function () { return +new Date; }; }()),
     defaultComparer = Rx.helpers.defaultComparer = function (x, y) { return isEqual(x, y); },
     defaultSubComparer = Rx.helpers.defaultSubComparer = function (x, y) { return x > y ? 1 : (x < y ? -1 : 0); },
