@@ -1,6 +1,17 @@
 {
   "operators": [
     { 
+      "all": {
+        "source": "src/core/linq/observable/all.js",
+        "dependsOn": [
+          { "where": "src/core/linq/observable/where.js" },
+          { "any": "src/core/linq/observable/any.js" }
+        ]
+      },
+      "amb": {
+        "source": "src/core/linq/observable/amb.js",
+        "dependsOn": []
+      },
       "selectmany": {
         "source": "src/core/linq/observable/selectmany.js",
         "dependsOn": [
@@ -11,6 +22,8 @@
     }
   ],
   "aliases": [
+    {"every":"all"},
+    {"some":"any"},
     {"flatmap":"selectmany"},
     {"map":"select"},
     {"filter":"where"}
