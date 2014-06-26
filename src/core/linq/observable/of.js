@@ -5,7 +5,9 @@
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
   Observable.of = function () {
-    return observableFromArray(arguments);
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return observableFromArray(args);
   };
 
   /**
@@ -15,6 +17,8 @@
    * @param {Scheduler} scheduler A scheduler to use for scheduling the arguments.
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
-  Observable.ofWithScheduler = function (scheduler) {
-    return observableFromArray(slice.call(arguments, 1), scheduler);
+  var observableOf = Observable.ofWithScheduler = function (scheduler) {
+    var len = arguments.length - 1, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i + 1]; }
+    return observableFromArray(args, scheduler);
   };
