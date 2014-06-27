@@ -520,9 +520,9 @@ var source = Rx.Observable.create(function (observer) {
     observer.onCompleted();
 
     // Note that this is optional, you do not have to return this if you require no cleanup
-    return function () {
+    return Rx.Disposable.create(function () {
         console.log('disposed');
-    };
+    });
 });
 
 var subscription = source.subscribe(
