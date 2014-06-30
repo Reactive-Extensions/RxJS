@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
-[![dependency Status](https://david-dm.org/Reactive-Extensions/RxJS/status.png?theme=shields.io)](https://david-dm.org/Reactive-Extensions/RxJS#info=dependencies)
-[![devDependency Status](https://david-dm.org/Reactive-Extensions/RxJS/dev-status.png?theme=shields.io)](https://david-dm.org/Reactive-Extensions/RxJS#info=devDependencies)
-[![NPM version](https://badge.fury.io/js/rx.png)](http://badge.fury.io/js/rx)
+[![NPM version](http://img.shields.io/npm/v/rx.svg)](http://img.shields.io/npm/v/rx.svg)
+[![Downloads](http://img.shields.io/npm/dm/rx.svg)](https://npmjs.org/package/rx)
+[![Coverage Status](https://coveralls.io/repos/Reactive-Extensions/RxJS/badge.png)](https://coveralls.io/r/Reactive-Extensions/RxJS)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 [![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Reactive-Extensions/rxjs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
