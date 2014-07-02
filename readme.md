@@ -259,7 +259,7 @@ There are a number of ways to get started with RxJS. The files are available on 
 
 ### Installing with [Bower](http://bower.io/)
 
-    bower install rxjs
+    bower install Rx
 
 ### Installing with [Jam](http://jamjs.org/)
 
