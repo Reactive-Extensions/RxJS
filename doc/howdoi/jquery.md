@@ -140,7 +140,7 @@ When viewed in its entirety, it will look like this where we call `flatMap` or `
 ```js
 var block = $('#block');
 
-$('#go').toObservable('click).flatMap(function () {
+$('#go').toObservable('click').flatMap(function () {
     var animate = Rx.Observable.fromCallback(block.animate.bind(block));
 
     return animate({
