@@ -263,7 +263,7 @@ var source = Rx.Observable.range(0, 5);
 
 var subscription = Rx.Node.writeToStream(source, process.stdout, 'utf8');
 
-// => 012
+// => 01234
 ```
 
 ### Location
