@@ -2080,25 +2080,21 @@
       }
 
       function s(observer) {
-        var autoDetachObserver = new AutoDetachObserver(observer);
-        if (currentThreadScheduler.scheduleRequired()) {
-          currentThreadScheduler.schedule(function () {
-            try {
-              autoDetachObserver.setDisposable(fixSubscriber(subscribe(autoDetachObserver)));
-            } catch (e) {
-              if (!autoDetachObserver.fail(e)) {
-                throw e;
-              } 
-            }
-          });
-        } else {
+        var setDisposable = function () {
           try {
             autoDetachObserver.setDisposable(fixSubscriber(subscribe(autoDetachObserver)));
           } catch (e) {
             if (!autoDetachObserver.fail(e)) {
               throw e;
-            }
+            } 
           }
+        };
+
+        var autoDetachObserver = new AutoDetachObserver(observer);
+        if (currentThreadScheduler.scheduleRequired()) {
+          currentThreadScheduler.schedule(setDisposable);
+        } else {
+          setDisposable();
         }
 
         return autoDetachObserver;

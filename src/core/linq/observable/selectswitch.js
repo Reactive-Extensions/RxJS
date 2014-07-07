@@ -6,6 +6,6 @@
      * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences 
      *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
      */
-    observableProto.selectSwitch = observableProto.flatMapLatest = function (selector, thisArg) {
+    observableProto.selectSwitch = observableProto.flatMapLatest = observableProto.switchMap = function (selector, thisArg) {
         return this.select(selector, thisArg).switchLatest();
     };

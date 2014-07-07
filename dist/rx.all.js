@@ -3932,7 +3932,7 @@
      * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences 
      *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
      */
-    observableProto.selectSwitch = observableProto.flatMapLatest = function (selector, thisArg) {
+    observableProto.selectSwitch = observableProto.flatMapLatest = observableProto.switchMap = function (selector, thisArg) {
         return this.select(selector, thisArg).switchLatest();
     };
 
@@ -8405,6 +8405,134 @@
     });
   };
 
+  /*
+   * Performs a debounce waiting for the first to finish before subscribing to another observable.
+   * Observables that come in between subscriptions will be dropped on the floor.
+   * @returns {Observable} A debounced observable with only the results that happen when subscribed.
+   */
+  observableProto.debounce = function () {
+    var sources = this;
+    return new AnonymousObservable(function (observer) {
+      var hasCurrent = false,
+        isStopped = true,
+        innerId = 0,
+        m = new SingleAssignmentDisposable(),
+        g = new CompositeDisposable();
+
+      g.add(m);
+
+      m.setDisposable(sources.subscribe(
+        function (innerSource) {
+
+          var currentId = innerId++,
+            innerSubscription = new SingleAssignmentDisposable();
+          g.add(innerSubscription);
+
+          // Check if Promise or Observable
+          if (isPromise(innerSource)) {
+              innerSource = observableFromPromise(innerSource);
+          }          
+
+          innerSubscription.setDisposable(innerSource.subscribe(
+            function (x) {
+              if (!hasCurrent) {
+                hasCurrent = true;
+                observer.onNext(x);
+              }
+            },
+            observer.onError.bind(observer),
+            function () {
+              g.remove(innerSubscription);
+              if (hasCurrent && innerId === currentId) {
+                hasCurrent = false;
+              }
+
+              if (!hasCurrent && isStopped && g.length === 1) {
+                observer.onCompleted();
+              }
+            }))
+
+        }, 
+        observer.onError.bind(observer),
+        function () {
+          isStopped = true;
+          if (g.length === 1 && !hasCurrent) {
+            observer.onCompleted();
+          }
+        }));
+      return g;
+    });
+  };
+  /*
+   * Performs a debounce waiting for the first to finish before subscribing to another observable.
+   * Observables that come in between subscriptions will be dropped on the floor.
+   * @param {Function} selector Selector to invoke for every item in the current subscription.
+   * @param {Any} [thisArg] An optional context to invoke with the selector parameter.
+   * @returns {Observable} A debounced observable with only the results that happen when subscribed.
+   */
+  observableProto.debounceMap = function (selector, thisArg) {
+    var sources = this;
+    return new AnonymousObservable(function (observer) {
+      var index = 0,
+        hasCurrent = false,
+        isStopped = true,
+        innerId = 0,
+        m = new SingleAssignmentDisposable(),
+        g = new CompositeDisposable();
+
+      g.add(m);
+
+      m.setDisposable(sources.subscribe(
+        function (innerSource) {
+
+          var currentId = innerId++,
+            innerSubscription = new SingleAssignmentDisposable();
+          g.add(innerSubscription);
+
+          // Check if Promise or Observable
+          if (isPromise(innerSource)) {
+              innerSource = observableFromPromise(innerSource);
+          }          
+
+          innerSubscription.setDisposable(innerSource.subscribe(
+            function (x) {
+              if (!hasCurrent) {
+                hasCurrent = true;
+
+                var result;
+                try {
+                  result = selector.call(thisArg, x, index++, innerSource);
+                } catch (e) {
+                  observer.onError(e);
+                  return;
+                }
+
+                observer.onNext(result);
+              }
+            },
+            observer.onError.bind(observer),
+            function () {
+              g.remove(innerSubscription);
+              if (hasCurrent && innerId === currentId) {
+                hasCurrent = false;
+              }
+
+              if (!hasCurrent && isStopped && g.length === 1) {
+                observer.onCompleted();
+              }
+            }))
+
+        }, 
+        observer.onError.bind(observer),
+        function () {
+          isStopped = true;
+          if (g.length === 1 && !hasCurrent) {
+            observer.onCompleted();
+          }
+        }));
+      return g;
+    });
+  };
     /** Provides a set of extension methods for virtual time scheduling. */
     Rx.VirtualTimeScheduler = (function (_super) {
 
@@ -8714,25 +8842,21 @@
       }
 
       function s(observer) {
-        var autoDetachObserver = new AutoDetachObserver(observer);
-        if (currentThreadScheduler.scheduleRequired()) {
-          currentThreadScheduler.schedule(function () {
-            try {
-              autoDetachObserver.setDisposable(fixSubscriber(subscribe(autoDetachObserver)));
-            } catch (e) {
-              if (!autoDetachObserver.fail(e)) {
-                throw e;
-              } 
-            }
-          });
-        } else {
+        var setDisposable = function () {
           try {
             autoDetachObserver.setDisposable(fixSubscriber(subscribe(autoDetachObserver)));
           } catch (e) {
             if (!autoDetachObserver.fail(e)) {
               throw e;
-            }
+            } 
           }
+        };
+
+        var autoDetachObserver = new AutoDetachObserver(observer);
+        if (currentThreadScheduler.scheduleRequired()) {
+          currentThreadScheduler.schedule(setDisposable);
+        } else {
+          setDisposable();
         }
 
         return autoDetachObserver;
