@@ -6,11 +6,13 @@ The [jQuery](http://jquery.com) project and RxJS play very well together as libr
 
 Getting started with the bindings is easy.  Each method is enumerated on the main page from the jQuery method to its RxJS counterpart.
 
-	<div id="results"></div>
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="rx.js"></script>
-	<script src="rx.binding.js"></script>
-	<script src="rx.jquery.js"></script>
+```html
+<div id="results"></div>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="rx.js"></script>
+<script src="rx.binding.js"></script>
+<script src="rx.jquery.js"></script>
+```
 
 Now we can start using the bindings!  For example, we can listen to a `click` event and then by using `flatMap` or `selectMap` we can animate by calling `animateAsObservable`.  Finally, we can subscribe to cause the side effect and nothing more.
 
@@ -37,11 +39,13 @@ Using RxJS with jQuery to bind to an event using plain old RxJS is easy.  For ex
 
 First, we'll reference the files we need.
 
-	<div id="results"></div>
-	<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-	<script src="rx.js"></script>
-	<script src="rx.async.js"></script>
-	<script src="rx.binding.js"></script>
+```html
+<div id="results"></div>
+<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+<script src="rx.js"></script>
+<script src="rx.async.js"></script>
+<script src="rx.binding.js"></script>
+```
 
 ```js
 var observable = Rx.Observable.fromEvent(
