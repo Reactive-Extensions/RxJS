@@ -213,6 +213,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Learn RxJS](http://reactive-extensions.github.io/learnrx/)
     - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
+    - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
 
 - Presentations
     - Don't Cross the Streams - Cascadia.js 2012 [slides/demos](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams) | [video](http://www.youtube.com/watch?v=FqBq4uoiG0M)
