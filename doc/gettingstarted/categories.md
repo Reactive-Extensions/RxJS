@@ -53,7 +53,7 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypemergeobservable">mergeObservable</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablerepeatvalue-repeatcount-scheduler">repeat</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototyperepeatrepeatcount">prototype.repeat</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.m#rxobservableambargs">zip</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablezipargs">zip</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypezipargs-resultselector">prototype.zip</a></li>
    </ol>
    </td>
