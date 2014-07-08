@@ -103,6 +103,10 @@ Converting your existing code from other libraries can be easy.  Many of the con
 
 This section contains the reference documentation for the Reactive Extensions class library.
 
+### Helpers
+
+- [`Rx.helpers`](api/core/readme.md)
+
 ### Core Objects
 
 - [`Rx.Observable`](api/core/observable.md)

@@ -38,6 +38,8 @@ NuGet Dependencies:
 - [`generate`](../api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler)
 - [`merge`](../api/core/observable.md#rxobservablemergescheduler-args)
 - [`never`](../api/core/observable.md#rxobservablenever)
+- [`of`](#rxobservableofargs)
+- [`ofWithScheduler`](#rxobservablewithschedulerscheduler-args)
 - [`onErrorResumeNext`](../api/core/observable.md#rxobservableonerrorresumenextargs)
 - [`range`](../api/core/observable.md#rxobservablerangestart-count-scheduler)
 - [`repeat`](../api/core/observable.md#rxobservablerepeatvalue-repeatcount-scheduler)

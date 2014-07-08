@@ -3,56 +3,32 @@
    * Observables that come in between subscriptions will be dropped on the floor.
    * @returns {Observable} A debounced observable with only the results that happen when subscribed.
    */
-  observableProto.debounce = function () {
+  observableProto.exclusive = function () {
     var sources = this;
     return new AnonymousObservable(function (observer) {
       var hasCurrent = false,
         isStopped = true,
-        innerId = 0,
         m = new SingleAssignmentDisposable(),
         g = new CompositeDisposable();
 
-      g.add(m);
+      if (!hasCurrent) {
+        hasCurrent = true;
 
-      m.setDisposable(sources.subscribe(
-        function (innerSource) {
+        m.setDisposable(sources.subscribe(
+          function (innerSource) {
 
-          var currentId = innerId++,
-            innerSubscription = new SingleAssignmentDisposable();
-          g.add(innerSubscription);
+            // Check if Promise or Observable
+            isPromise(innerSource) && (innerSource = observableFromPromise(innerSource))
 
-          // Check if Promise or Observable
-          if (isPromise(innerSource)) {
-              innerSource = observableFromPromise(innerSource);
-          }          
+            var innerSubscription = new SingleAssignmentDisposable();
 
-          innerSubscription.setDisposable(innerSource.subscribe(
-            function (x) {
-              if (!hasCurrent) {
-                hasCurrent = true;
-                observer.onNext(x);
-              }
-            },
-            observer.onError.bind(observer),
-            function () {
-              g.remove(innerSubscription);
-              if (hasCurrent && innerId === currentId) {
-                hasCurrent = false;
-              }
+          },
+          observer.onError.bind(observer),
+          function () {
+            hasCurrent = false;
+          }));        
+      }
 
-              if (!hasCurrent && isStopped && g.length === 1) {
-                observer.onCompleted();
-              }
-            }))
-
-        }, 
-        observer.onError.bind(observer),
-        function () {
-          isStopped = true;
-          if (g.length === 1 && !hasCurrent) {
-            observer.onCompleted();
-          }
-        }));
-      return g;
+      return m;
     });
   };

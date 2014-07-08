@@ -51,6 +51,8 @@ NuGet Dependencies:
 - [`interval`]((../api/core/observable.md#rxobservableintervalperiod-scheduler)
 - [`merge`]((../api/core/observable.md#rxobservablemergescheduler-args)
 - [`never`]((../api/core/observable.md#rxobservablenever)
+- [`of`](#rxobservableofargs)
+- [`ofWithScheduler`](#rxobservablewithschedulerscheduler-args)
 - [`onErrorResumeNext`]((../api/core/observable.md#rxobservableonerrorresumenextargs)
 - [`range`]((../api/core/observable.md#rxobservablerangestart-count-scheduler)
 - [`repeat`]((../api/core/observable.md#rxobservablerepeatvalue-repeatcount-scheduler)
