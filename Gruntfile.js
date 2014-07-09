@@ -312,6 +312,7 @@ var browsers = [{
               'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
               'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
               'src/core/linq/observable/replay.js', // multicast, ReplaySubject
+              'src/core/linq/observable/sharereplay.js',
               'src/core/linq/observable/replayWhileObserved.js', // multicast, ReplaySubject, Reference counted
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/behaviorsubject.js',
@@ -574,6 +575,7 @@ var browsers = [{
               'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
               'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
               'src/core/linq/observable/replay.js', // multicast, ReplaySubject
+              'src/core/linq/observable/sharereplay.js',
               'src/core/linq/observable/replayWhileObserved.js', // multicast, ReplaySubject, Reference counted
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/behaviorsubject.js',
@@ -1036,6 +1038,7 @@ var browsers = [{
               'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
               'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
               'src/core/linq/observable/replay.js', // multicast, ReplaySubject
+              'src/core/linq/observable/sharereplay.js',
               'src/core/linq/connectableobservable.js',
 
               // Time operators
@@ -1205,6 +1208,7 @@ var browsers = [{
               'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
               'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
               'src/core/linq/observable/replay.js', // multicast, ReplaySubject
+              'src/core/linq/observable/sharereplay.js',
               'src/core/linq/connectableobservable.js',
 
               // Time operators
@@ -1407,6 +1411,7 @@ var browsers = [{
               'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
               'src/core/linq/observable/replay.js', // multicast, ReplaySubject
               'src/core/linq/observable/replayWhileObserved.js', // multicast, ReplaySubject, Reference counted
+              'src/core/linq/observable/sharereplay.js',
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',

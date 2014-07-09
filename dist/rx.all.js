@@ -2412,26 +2412,26 @@
         return observableReturn(value, scheduler).repeat(repeatCount);
     };
 
-    /**
-     *  Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
-     *  There is an alias called 'returnValue' for browsers <IE9.
-     *  
-     * @example
-     *  var res = Rx.Observable.return(42);
-     *  var res = Rx.Observable.return(42, Rx.Scheduler.timeout);
-     * @param {Mixed} value Single element in the resulting observable sequence.
-     * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
-     * @returns {Observable} An observable sequence containing the single specified element.
-     */
-    var observableReturn = Observable['return'] = Observable.returnValue = function (value, scheduler) {
-        scheduler || (scheduler = immediateScheduler);
-        return new AnonymousObservable(function (observer) {
-            return scheduler.schedule(function () {
-                observer.onNext(value);
-                observer.onCompleted();
-            });
-        });
-    };
+  /**
+   *  Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
+   *  There is an alias called 'just', and 'returnValue' for browsers <IE9.
+   *  
+   * @example
+   *  var res = Rx.Observable.return(42);
+   *  var res = Rx.Observable.return(42, Rx.Scheduler.timeout);
+   * @param {Mixed} value Single element in the resulting observable sequence.
+   * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
+   * @returns {Observable} An observable sequence containing the single specified element.
+   */
+  var observableReturn = Observable['return'] = Observable.returnValue = Observable.just = function (value, scheduler) {
+    scheduler || (scheduler = immediateScheduler);
+    return new AnonymousObservable(function (observer) {
+      return scheduler.schedule(function () {
+        observer.onNext(value);
+        observer.onCompleted();
+      });
+    });
+  };
 
     /**
      *  Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
@@ -5501,6 +5501,25 @@
             }, selector);
     };
 
+  /**
+   * Returns an observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
+   * This operator is a specialization of replay which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
+   * 
+   * @example
+   * var res = source.shareReplay(3);
+   * var res = source.shareReplay(3, 500);
+   * var res = source.shareReplay(3, 500, scheduler);
+   * 
+
+   * @param bufferSize [Optional] Maximum element count of the replay buffer.
+   * @param window [Optional] Maximum time length of the replay buffer.
+   * @param scheduler [Optional] Scheduler where connected observers within the selector function will be invoked on.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+   */
+  observableProto.shareReplay = function (bufferSize, window, scheduler) {
+    return this.replay(null, bufferSize, window, scheduler).refCount();
+  };
+
     /**
      * Returns an observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
      * This operator is a specialization of replay which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
@@ -8405,134 +8424,6 @@
     });
   };
 
-  /*
-   * Performs a debounce waiting for the first to finish before subscribing to another observable.
-   * Observables that come in between subscriptions will be dropped on the floor.
-   * @returns {Observable} A debounced observable with only the results that happen when subscribed.
-   */
-  observableProto.debounce = function () {
-    var sources = this;
-    return new AnonymousObservable(function (observer) {
-      var hasCurrent = false,
-        isStopped = true,
-        innerId = 0,
-        m = new SingleAssignmentDisposable(),
-        g = new CompositeDisposable();
-
-      g.add(m);
-
-      m.setDisposable(sources.subscribe(
-        function (innerSource) {
-
-          var currentId = innerId++,
-            innerSubscription = new SingleAssignmentDisposable();
-          g.add(innerSubscription);
-
-          // Check if Promise or Observable
-          if (isPromise(innerSource)) {
-              innerSource = observableFromPromise(innerSource);
-          }          
-
-          innerSubscription.setDisposable(innerSource.subscribe(
-            function (x) {
-              if (!hasCurrent) {
-                hasCurrent = true;
-                observer.onNext(x);
-              }
-            },
-            observer.onError.bind(observer),
-            function () {
-              g.remove(innerSubscription);
-              if (hasCurrent && innerId === currentId) {
-                hasCurrent = false;
-              }
-
-              if (!hasCurrent && isStopped && g.length === 1) {
-                observer.onCompleted();
-              }
-            }))
-
-        }, 
-        observer.onError.bind(observer),
-        function () {
-          isStopped = true;
-          if (g.length === 1 && !hasCurrent) {
-            observer.onCompleted();
-          }
-        }));
-      return g;
-    });
-  };
-  /*
-   * Performs a debounce waiting for the first to finish before subscribing to another observable.
-   * Observables that come in between subscriptions will be dropped on the floor.
-   * @param {Function} selector Selector to invoke for every item in the current subscription.
-   * @param {Any} [thisArg] An optional context to invoke with the selector parameter.
-   * @returns {Observable} A debounced observable with only the results that happen when subscribed.
-   */
-  observableProto.debounceMap = function (selector, thisArg) {
-    var sources = this;
-    return new AnonymousObservable(function (observer) {
-      var index = 0,
-        hasCurrent = false,
-        isStopped = true,
-        innerId = 0,
-        m = new SingleAssignmentDisposable(),
-        g = new CompositeDisposable();
-
-      g.add(m);
-
-      m.setDisposable(sources.subscribe(
-        function (innerSource) {
-
-          var currentId = innerId++,
-            innerSubscription = new SingleAssignmentDisposable();
-          g.add(innerSubscription);
-
-          // Check if Promise or Observable
-          if (isPromise(innerSource)) {
-              innerSource = observableFromPromise(innerSource);
-          }          
-
-          innerSubscription.setDisposable(innerSource.subscribe(
-            function (x) {
-              if (!hasCurrent) {
-                hasCurrent = true;
-
-                var result;
-                try {
-                  result = selector.call(thisArg, x, index++, innerSource);
-                } catch (e) {
-                  observer.onError(e);
-                  return;
-                }
-
-                observer.onNext(result);
-              }
-            },
-            observer.onError.bind(observer),
-            function () {
-              g.remove(innerSubscription);
-              if (hasCurrent && innerId === currentId) {
-                hasCurrent = false;
-              }
-
-              if (!hasCurrent && isStopped && g.length === 1) {
-                observer.onCompleted();
-              }
-            }))
-
-        }, 
-        observer.onError.bind(observer),
-        function () {
-          isStopped = true;
-          if (g.length === 1 && !hasCurrent) {
-            observer.onCompleted();
-          }
-        }));
-      return g;
-    });
-  };
     /** Provides a set of extension methods for virtual time scheduling. */
     Rx.VirtualTimeScheduler = (function (_super) {
 
