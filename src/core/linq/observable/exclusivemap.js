@@ -19,16 +19,16 @@
       m.setDisposable(sources.subscribe(
         function (innerSource) {
 
+          if (!hasCurrent) {
+            hasCurrent = true;          
+
             innerSubscription = new SingleAssignmentDisposable();
-          g.add(innerSubscription);
+            g.add(innerSubscription);
 
-          isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));      
+            isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));      
 
-          innerSubscription.setDisposable(innerSource.subscribe(
-            function (x) {
-              if (!hasCurrent) {
-                hasCurrent = true;
-
+            innerSubscription.setDisposable(innerSource.subscribe(
+              function (x) {
                 var result;
                 try {
                   result = selector.call(thisArg, x, index++, innerSource);
@@ -38,18 +38,17 @@
                 }
 
                 observer.onNext(result);
-              }
-            },
-            observer.onError.bind(observer),
-            function () {
-              g.remove(innerSubscription);
-              hasCurrent = false;
+              },
+              observer.onError.bind(observer),
+              function () {
+                g.remove(innerSubscription);
+                hasCurrent = false;
 
-              if (isStopped && g.length === 1) {
-                observer.onCompleted();
-              }
-            }))
-
+                if (isStopped && g.length === 1) {
+                  observer.onCompleted();
+                }
+              }));
+          }
         }, 
         observer.onError.bind(observer),
         function () {

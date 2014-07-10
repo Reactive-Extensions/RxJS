@@ -382,8 +382,8 @@ var browsers = [{
               'src/core/linq/observable/takeuntilwithtime.js', 
 
               // Experimental Flattening
-              'src/core/linq/observable/debounce.js',
-              'src/core/linq/observable/debouncemap.js',
+              'src/core/linq/observable/exclusive.js',
+              'src/core/linq/observable/exclusivemap.js',
 
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
@@ -644,8 +644,8 @@ var browsers = [{
               'src/core/linq/observable/takeuntilwithtime.js',              
 
               // Experimental Flattening
-              'src/core/linq/observable/debounce.js',
-              'src/core/linq/observable/debouncemap.js',
+              'src/core/linq/observable/exclusive.js',
+              'src/core/linq/observable/exclusivemap.js',
 
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
@@ -779,8 +779,8 @@ var browsers = [{
               'src/core/linq/observable/where.js',
 
               // Experimental Flattening
-              'src/core/linq/observable/debounce.js',
-              'src/core/linq/observable/debouncemap.js',
+              'src/core/linq/observable/exclusive.js',
+              'src/core/linq/observable/exclusivemap.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -910,8 +910,8 @@ var browsers = [{
               'src/core/linq/observable/where.js',
 
               // Experimental Flattening
-              'src/core/linq/observable/debounce.js',
-              'src/core/linq/observable/debouncemap.js',              
+              'src/core/linq/observable/exclusive.js',
+              'src/core/linq/observable/exclusivemap.js',              
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -1077,8 +1077,8 @@ var browsers = [{
               'src/core/linq/observable/partition.js',  
 
               // Experimental Flattening
-              'src/core/linq/observable/debounce.js',
-              'src/core/linq/observable/debouncemap.js',
+              'src/core/linq/observable/exclusive.js',
+              'src/core/linq/observable/exclusivemap.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -1247,8 +1247,8 @@ var browsers = [{
               'src/core/linq/observable/partition.js',  
 
               // Experimental Flattening
-              'src/core/linq/observable/debounce.js',
-              'src/core/linq/observable/debouncemap.js',                                
+              'src/core/linq/observable/exclusive.js',
+              'src/core/linq/observable/exclusivemap.js',                                
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',

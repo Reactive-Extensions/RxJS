@@ -32,16 +32,16 @@
                 if (isStopped && g.length === 1) {
                   observer.onCompleted();
                 }
-            ));
+            }));
           }
-      },
-      observer.onError.bind(observer),
-      function () {
-        isStopped = true;
-        if (!hasCurrent && g.length === 1) { 
-          observer.onCompleted();
-        }
-      }));
+        },
+        observer.onError.bind(observer),
+        function () {
+          isStopped = true;
+          if (!hasCurrent && g.length === 1) { 
+            observer.onCompleted();
+          }
+        }));
 
       return g;
     });
