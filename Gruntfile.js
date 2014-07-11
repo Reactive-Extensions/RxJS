@@ -1042,6 +1042,7 @@ var browsers = [{
               // Time operators
               'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
+              'src/core/linq/observable/_observabletimerdateandperiod.js',
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
               'src/core/linq/observable/timer-lite.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
               'src/core/linq/observable/delay-lite.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
@@ -1212,6 +1213,7 @@ var browsers = [{
               // Time operators
               'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
+              'src/core/linq/observable/_observabletimerdateandperiod.js',
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
               'src/core/linq/observable/timer-lite.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
               'src/core/linq/observable/delay-lite.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
