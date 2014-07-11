@@ -45,15 +45,15 @@ But the best news of all is that you already know how to program like this.  Tak
 var source = getStockData();
 
 source
-    .filter(function (quote) {
-        return quote.price > 30;
-    })
-    .map(function (quote) {
-        return quote.price;
-    })
-    .forEach(function (price) {
-        console.log('Prices higher than $30: $' + price);
-    });
+  .filter(function (quote) {
+      return quote.price > 30;
+  })
+  .map(function (quote) {
+      return quote.price;
+  })
+  .forEach(function (price) {
+    console.log('Prices higher than $30: $' + price);
+  });
 ```
 
 Now what if this data were to come as some sort of event, for example a stream, such as as a WebSocket, then we could pretty much write the same query to iterate our data, with very little change.
@@ -63,19 +63,19 @@ Now what if this data were to come as some sort of event, for example a stream, 
 var source = getAsyncStockData();
 
 var subscription = source
-    .filter(function (quote) {
-        return quote.price > 30;
-    })
-    .map(function (quote) {
-        return quote.price;
-    })
-    .subscribe(
-        function (price) {
-            console.log('Prices higher than $30: $' + price);
-        },
-        function (err) {
-            console.log('Something went wrong: ' + err.message);
-        });
+  .filter(function (quote) {
+    return quote.price > 30;
+  })
+  .map(function (quote) {
+    return quote.price;
+  })
+  .subscribe(
+    function (price) {
+      console.log('Prices higher than $30: $' + price);
+    },
+    function (err) {
+      console.log('Something went wrong: ' + err.message);
+    });
 
 /* When we're done */
 subscription.dispose();
@@ -111,10 +111,10 @@ One question you may ask yourself, is why RxJS?  What about Promises?  Promises 
 To give you an idea about rich composition, we can create an autocompletion service which takes the user input from a text input and then query a service, making sure not to flood the service with calls for every key stroke, but instead allow to go at a more natural pace.
 
 First, we'll reference the JavaScript files, including jQuery, although RxJS has no dependencies on jQuery...
-
-    <script src="http://code.jquery.com/jquery.js"></script>
-    <script src="rx.lite.js"></script>
-
+```html
+<script src="http://code.jquery.com/jquery.js"></script>
+<script src="rx.lite.js"></script>
+```
 Next, we'll get the user input from an input, listening to the keyup event by using the `Rx.Observable.fromEvent` method.  This will either use the event binding from [jQuery](http://jquery.com), [Zepto](http://zeptojs.com/), [AngularJS](https://angularjs.org/) and [Ember.js](http://emberjs.com/) if available, and if not, falls back to the native event binding.  This gives you consistent ways of thinking of events depending on your framework, so there are no surprises.
 
 ```js
@@ -214,6 +214,13 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
     - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
+    - [Reactive Programming and MVC](http://aaronstacy.com/writings/reactive-programming-and-mvc/)
+
+- Examples
+    - [React RxJS Autocomplete](https://github.com/eliseumds/react-autocomplete)
+    - [React RxJS TODO MVC](https://github.com/fdecampredon/react-rxjs-todomvc)
+    - [Ninya.io - Angular + RxJS + rx.angular.js](https://github.com/ninya-io/ninya.io) - [Site](http://stackwho.herokuapp.com/)
+    - [Reactive Trader](https://github.com/AdaptiveConsulting/ReactiveTrader) - [Site](https://reactivetrader.azurewebsites.net/)
 
 - Presentations
     - Don't Cross the Streams - Cascadia.js 2012 [slides/demos](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams) | [video](http://www.youtube.com/watch?v=FqBq4uoiG0M)
@@ -230,10 +237,12 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Adding Even More Fun to Functional Programming With RXJS - Ryan Anklam](https://www.youtube.com/watch?v=8EExNfm0gt4)
 
 - Reference Material
+    - [RxJS GitBook](http://xgrommx.github.io/rx-book/)
     - [Intro to Rx](http://introtorx.com/)
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
     - [Rx Design Guidelines](http://go.microsoft.com/fwlink/?LinkID=205219)
     - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
+
 
 - Books
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
@@ -245,22 +254,29 @@ There are a number of ways to get started with RxJS. The files are available on 
 
 ### Download the Source
 
-    git clone https://github.com/Reactive-Extensions/rxjs.git
-    cd ./rxjs
+```bash
+git clone https://github.com/Reactive-Extensions/rxjs.git
+cd ./rxjs
+```
 
 ### Installing with [NPM](https://npmjs.org/)
 
-    npm install rx
-    npm install -g rx
-    WARNING: 'npm install rxjs' will install an old, out of date, 3rd party version of Rx.
+```bash`
+npm install rx
+npm install -g rx
+```
 
 ### Using with Node.js and Ringo.js
 
-    var Rx = require('rx');
+```js
+var Rx = require('rx');
+```
 
 ### Installing with [Bower](http://bower.io/)
 
-    bower install rxjs
+```bash
+bower install rxjs
+```
 
 ### Installing with [Jam](http://jamjs.org/)
 
@@ -287,27 +303,31 @@ There are a number of ways to get started with RxJS. The files are available on 
 
 ### In a Browser:
 
-    <!-- Just the core RxJS -->
-    <script src="rx.js"></script>
+```html
+<!-- Just the core RxJS -->
+<script src="rx.js"></script>
 
-    <!-- Or all of RxJS minus testing -->
-    <script src="rx.complete.js"></script>   
+<!-- Or all of RxJS minus testing -->
+<script src="rx.complete.js"></script>   
 
-    <!-- Or keeping it lite -->
-    <script src="rx.lite.js"></script>       
+<!-- Or keeping it lite -->
+<script src="rx.lite.js"></script>       
+```
 
 ### Along with a number of our extras for RxJS:
 
-    <script src="rx.aggregates.js"></script>
-    <script src="rx.async.js"></script>
-    <script src="rx.backpressure.js"></script>
-    <script src="rx.binding.js"></script>
-    <script src="rx.coincidencejs"></script>
-    <script src="rx.experimental.js"></script>
-    <script src="rx.joinpatterns.js"></script>
-    <script src="rx.time.js"></script>
-    <script src="rx.virtualtime.js"></script>
-    <script src="rx.testing.js"></script>
+```html
+<script src="rx.aggregates.js"></script>
+<script src="rx.async.js"></script>
+<script src="rx.backpressure.js"></script>
+<script src="rx.binding.js"></script>
+<script src="rx.coincidencejs"></script>
+<script src="rx.experimental.js"></script>
+<script src="rx.joinpatterns.js"></script>
+<script src="rx.time.js"></script>
+<script src="rx.virtualtime.js"></script>
+<script src="rx.testing.js"></script>
+```
 
 ### Using RxJS with an AMD loader such as Require.js
 
@@ -350,7 +370,7 @@ You can contribute by reviewing and sending feedback on code checkins, suggestin
 
 Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.
 Microsoft Open Technologies would like to thank its contributors, a list
-of whom are at http://rx.codeplex.com/wikipage?title=Contributors.
+of whom are at https://github.com/Reactive-Extensions/RxJS/wiki/Contributors.
 
 Licensed under the Apache License, Version 2.0 (the "License"); you
 may not use this file except in compliance with the License. You may
