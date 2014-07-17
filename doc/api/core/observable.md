@@ -7677,7 +7677,8 @@ Unit Tests:
 ### <a id="rxobservableprototyperetryretrycount"></a>`Rx.Observable.prototype.retry([retryCount])`
 <a href="#rxobservableprototyperetryretrycount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/retry.js "View in source") 
 
-Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+Repeats the source observable sequence the specified number of times or until it successfully terminates. If the retry count is not specified, it retries indefinitely.
+Note if you encounter an error and want it to retry once, then you must use .retry(2).
 
 #### Arguments
 1. `[retryCount]` *(`Number`)*:  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
@@ -7732,6 +7733,7 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete/)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
