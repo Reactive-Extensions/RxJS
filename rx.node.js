@@ -120,7 +120,7 @@ Rx.Node = {
   writeToStream: function (observable, stream, encoding) {
     return observable.subscribe(
       function (x) {
-        stream.write(String(x), encoding);
+        stream.write(x, encoding);
       },
       function (err) {
         stream.emit('error', err);
