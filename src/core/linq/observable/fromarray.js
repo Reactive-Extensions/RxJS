@@ -8,7 +8,7 @@
    * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
    */
   var observableFromArray = Observable.fromArray = function (array, scheduler) {
-    scheduler || (scheduler = currentThreadScheduler);
+    notDefined(scheduler) && (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
       var count = 0, len = array.length;
       return scheduler.scheduleRecursive(function (self) {

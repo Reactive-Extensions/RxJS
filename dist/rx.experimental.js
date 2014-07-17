@@ -54,8 +54,10 @@
     Observer = Rx.Observer,
     inherits = Rx.internals.inherits,
     addProperties = Rx.internals.addProperties,
-    noop = Rx.helpers.noop,
-    isPromise = Rx.helpers.isPromise,
+    helpers = Rx.helpers,
+    noop = helpers.noop,
+    isPromise = helpers.isPromise,
+    notDefined = helpers.notDefined,
     observableFromPromise = Observable.fromPromise;
 
   // Utilities
@@ -174,6 +176,7 @@
    */
   Observable['case'] = Observable.switchCase = function (selector, sources, defaultSourceOrScheduler) {
     return observableDefer(function () {
+      isPromise(defaultSourceOrScheduler) && (defaultSourceOrScheduler = observableFromPromise(defaultSourceOrScheduler));
       defaultSourceOrScheduler || (defaultSourceOrScheduler = observableEmpty());
 
       typeof defaultSourceOrScheduler.now === 'function' && (defaultSourceOrScheduler = observableEmpty(defaultSourceOrScheduler));
@@ -185,69 +188,69 @@
     });
   };
 
-     /**
-     *  Expands an observable sequence by recursively invoking selector.
-     *  
-     * @param {Function} selector Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
-     * @param {Scheduler} [scheduler] Scheduler on which to perform the expansion. If not provided, this defaults to the current thread scheduler.
-     * @returns {Observable} An observable sequence containing all the elements produced by the recursive expansion.
-     */
-    observableProto.expand = function (selector, scheduler) {
-        scheduler || (scheduler = immediateScheduler);
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            var q = [],
-                m = new SerialDisposable(),
-                d = new CompositeDisposable(m),
-                activeCount = 0,
-                isAcquired = false;
+   /**
+   *  Expands an observable sequence by recursively invoking selector.
+   *  
+   * @param {Function} selector Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
+   * @param {Scheduler} [scheduler] Scheduler on which to perform the expansion. If not provided, this defaults to the current thread scheduler.
+   * @returns {Observable} An observable sequence containing all the elements produced by the recursive expansion.
+   */
+  observableProto.expand = function (selector, scheduler) {
+    notDefined(scheduler) && (scheduler = immediateScheduler);
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var q = [],
+        m = new SerialDisposable(),
+        d = new CompositeDisposable(m),
+        activeCount = 0,
+        isAcquired = false;
 
-            var ensureActive = function () {
-                var isOwner = false;
-                if (q.length > 0) {
-                    isOwner = !isAcquired;
-                    isAcquired = true;
-                }
-                if (isOwner) {
-                    m.setDisposable(scheduler.scheduleRecursive(function (self) {
-                        var work;
-                        if (q.length > 0) {
-                            work = q.shift();
-                        } else {
-                            isAcquired = false;
-                            return;
-                        }
-                        var m1 = new SingleAssignmentDisposable();
-                        d.add(m1);
-                        m1.setDisposable(work.subscribe(function (x) {
-                            observer.onNext(x);
-                            var result = null;
-                            try {
-                                result = selector(x);
-                            } catch (e) {
-                                observer.onError(e);
-                            }
-                            q.push(result);
-                            activeCount++;
-                            ensureActive();
-                        }, observer.onError.bind(observer), function () {
-                            d.remove(m1);
-                            activeCount--;
-                            if (activeCount === 0) {
-                                observer.onCompleted();
-                            }
-                        }));
-                        self();
-                    }));
-                }
-            };
+      var ensureActive = function () {
+        var isOwner = false;
+        if (q.length > 0) {
+            isOwner = !isAcquired;
+            isAcquired = true;
+        }
+        if (isOwner) {
+          m.setDisposable(scheduler.scheduleRecursive(function (self) {
+            var work;
+            if (q.length > 0) {
+              work = q.shift();
+            } else {
+              isAcquired = false;
+              return;
+            }
+            var m1 = new SingleAssignmentDisposable();
+            d.add(m1);
+            m1.setDisposable(work.subscribe(function (x) {
+              observer.onNext(x);
+              var result = null;
+              try {
+                result = selector(x);
+              } catch (e) {
+                observer.onError(e);
+              }
+              q.push(result);
+              activeCount++;
+              ensureActive();
+            }, observer.onError.bind(observer), function () {
+              d.remove(m1);
+              activeCount--;
+              if (activeCount === 0) {
+                observer.onCompleted();
+              }
+            }));
+            self();
+          }));
+        }
+      };
 
-            q.push(source);
-            activeCount++;
-            ensureActive();
-            return d;
-        });
-    };
+      q.push(source);
+      activeCount++;
+      ensureActive();
+      return d;
+    });
+  };
 
    /**
    *  Runs all observable sequences in parallel and collect their last elements.
@@ -390,82 +393,73 @@
     });
   };
 
-    /**
-     * Comonadic bind operator.
-     * @param {Function} selector A transform function to apply to each element.
-     * @param {Object} scheduler Scheduler used to execute the operation. If not specified, defaults to the ImmediateScheduler.
-     * @returns {Observable} An observable sequence which results from the comonadic bind operation.
-     */
-    observableProto.manySelect = function (selector, scheduler) {
-        scheduler || (scheduler = immediateScheduler);
-        var source = this;
-        return observableDefer(function () {
-            var chain;
+  /**
+   * Comonadic bind operator.
+   * @param {Function} selector A transform function to apply to each element.
+   * @param {Object} scheduler Scheduler used to execute the operation. If not specified, defaults to the ImmediateScheduler.
+   * @returns {Observable} An observable sequence which results from the comonadic bind operation.
+   */
+  observableProto.manySelect = function (selector, scheduler) {
+    notDefined(scheduler) && (scheduler = immediateScheduler);
+    var source = this;
+    return observableDefer(function () {
+      var chain;
 
-            return source
-                .select(
-                    function (x) {
-                        var curr = new ChainObservable(x);
-                        if (chain) {
-                            chain.onNext(x);
-                        }
-                        chain = curr;
+      return source
+        .map(function (x) {
+          var curr = new ChainObservable(x);
 
-                        return curr;
-                    })
-                .doAction(
-                    noop,
-                    function (e) {
-                        if (chain) {
-                            chain.onError(e);
-                        }
-                    },
-                    function () {
-                        if (chain) {
-                            chain.onCompleted();
-                        }
-                    })
-                .observeOn(scheduler)
-                .select(function (x, i, o) { return selector(x, i, o); });
-        });
-    };
+          chain && chain.onNext(x);
+          chain = curr;
 
-    var ChainObservable = (function (_super) {
+          return curr;
+        })
+        .doAction(
+          noop,
+          function (e) { chain && chain.onError(e); },
+          function () { chain && chain.onCompleted(); }
+        )
+        .observeOn(scheduler)
+        .map(selector);
+    });
+  };
 
-        function subscribe (observer) {
-            var self = this, g = new CompositeDisposable();
-            g.add(currentThreadScheduler.schedule(function () {
-                observer.onNext(self.head);
-                g.add(self.tail.mergeObservable().subscribe(observer));
-            }));
+  var ChainObservable = (function (__super__) {
 
-            return g;
-        }
+    function subscribe (observer) {
+      var self = this, g = new CompositeDisposable();
+      g.add(currentThreadScheduler.schedule(function () {
+        observer.onNext(self.head);
+        g.add(self.tail.mergeObservable().subscribe(observer));
+      }));
 
-        inherits(ChainObservable, _super);
+      return g;
+    }
 
-        function ChainObservable(head) {
-            _super.call(this, subscribe);
-            this.head = head;
-            this.tail = new AsyncSubject();
-        }
+    inherits(ChainObservable, __super__);
 
-        addProperties(ChainObservable.prototype, Observer, {
-            onCompleted: function () {
-                this.onNext(Observable.empty());
-            },
-            onError: function (e) {
-                this.onNext(Observable.throwException(e));
-            },
-            onNext: function (v) {
-                this.tail.onNext(v);
-                this.tail.onCompleted();
-            }
-        });
+    function ChainObservable(head) {
+      __super__.call(this, subscribe);
+      this.head = head;
+      this.tail = new AsyncSubject();
+    }
 
-        return ChainObservable;
+    addProperties(ChainObservable.prototype, Observer, {
+      onCompleted: function () {
+        this.onNext(Observable.empty());
+      },
+      onError: function (e) {
+        this.onNext(Observable.throwException(e));
+      },
+      onNext: function (v) {
+        this.tail.onNext(v);
+        this.tail.onCompleted();
+      }
+    });
 
-    }(Observable));
+    return ChainObservable;
+
+  }(Observable));
 
     return Rx;
 }));

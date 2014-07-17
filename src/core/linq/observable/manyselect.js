@@ -1,76 +1,67 @@
-    /**
-     * Comonadic bind operator.
-     * @param {Function} selector A transform function to apply to each element.
-     * @param {Object} scheduler Scheduler used to execute the operation. If not specified, defaults to the ImmediateScheduler.
-     * @returns {Observable} An observable sequence which results from the comonadic bind operation.
-     */
-    observableProto.manySelect = function (selector, scheduler) {
-        scheduler || (scheduler = immediateScheduler);
-        var source = this;
-        return observableDefer(function () {
-            var chain;
+  /**
+   * Comonadic bind operator.
+   * @param {Function} selector A transform function to apply to each element.
+   * @param {Object} scheduler Scheduler used to execute the operation. If not specified, defaults to the ImmediateScheduler.
+   * @returns {Observable} An observable sequence which results from the comonadic bind operation.
+   */
+  observableProto.manySelect = function (selector, scheduler) {
+    notDefined(scheduler) && (scheduler = immediateScheduler);
+    var source = this;
+    return observableDefer(function () {
+      var chain;
 
-            return source
-                .select(
-                    function (x) {
-                        var curr = new ChainObservable(x);
-                        if (chain) {
-                            chain.onNext(x);
-                        }
-                        chain = curr;
+      return source
+        .map(function (x) {
+          var curr = new ChainObservable(x);
 
-                        return curr;
-                    })
-                .doAction(
-                    noop,
-                    function (e) {
-                        if (chain) {
-                            chain.onError(e);
-                        }
-                    },
-                    function () {
-                        if (chain) {
-                            chain.onCompleted();
-                        }
-                    })
-                .observeOn(scheduler)
-                .select(function (x, i, o) { return selector(x, i, o); });
-        });
-    };
+          chain && chain.onNext(x);
+          chain = curr;
 
-    var ChainObservable = (function (_super) {
+          return curr;
+        })
+        .doAction(
+          noop,
+          function (e) { chain && chain.onError(e); },
+          function () { chain && chain.onCompleted(); }
+        )
+        .observeOn(scheduler)
+        .map(selector);
+    });
+  };
 
-        function subscribe (observer) {
-            var self = this, g = new CompositeDisposable();
-            g.add(currentThreadScheduler.schedule(function () {
-                observer.onNext(self.head);
-                g.add(self.tail.mergeObservable().subscribe(observer));
-            }));
+  var ChainObservable = (function (__super__) {
 
-            return g;
-        }
+    function subscribe (observer) {
+      var self = this, g = new CompositeDisposable();
+      g.add(currentThreadScheduler.schedule(function () {
+        observer.onNext(self.head);
+        g.add(self.tail.mergeObservable().subscribe(observer));
+      }));
 
-        inherits(ChainObservable, _super);
+      return g;
+    }
 
-        function ChainObservable(head) {
-            _super.call(this, subscribe);
-            this.head = head;
-            this.tail = new AsyncSubject();
-        }
+    inherits(ChainObservable, __super__);
 
-        addProperties(ChainObservable.prototype, Observer, {
-            onCompleted: function () {
-                this.onNext(Observable.empty());
-            },
-            onError: function (e) {
-                this.onNext(Observable.throwException(e));
-            },
-            onNext: function (v) {
-                this.tail.onNext(v);
-                this.tail.onCompleted();
-            }
-        });
+    function ChainObservable(head) {
+      __super__.call(this, subscribe);
+      this.head = head;
+      this.tail = new AsyncSubject();
+    }
 
-        return ChainObservable;
+    addProperties(ChainObservable.prototype, Observer, {
+      onCompleted: function () {
+        this.onNext(Observable.empty());
+      },
+      onError: function (e) {
+        this.onNext(Observable.throwException(e));
+      },
+      onNext: function (v) {
+        this.tail.onNext(v);
+        this.tail.onCompleted();
+      }
+    });
 
-    }(Observable));
+    return ChainObservable;
+
+  }(Observable));

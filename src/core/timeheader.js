@@ -15,5 +15,7 @@
     Subject = Rx.Subject,
     addRef = Rx.internals.addRef,
     normalizeTime = Rx.Scheduler.normalize,
-    isPromise = Rx.helpers.isPromise,
-    observableFromPromise = Observable.fromPromise;
+    helpers = Rx.helpers,
+    isPromise = helpers.isPromise,
+    observableFromPromise = Observable.fromPromise,
+    notDefined = helpers.notDefined;

@@ -19,8 +19,10 @@
     Observer = Rx.Observer,
     inherits = Rx.internals.inherits,
     addProperties = Rx.internals.addProperties,
-    noop = Rx.helpers.noop,
-    isPromise = Rx.helpers.isPromise,
+    helpers = Rx.helpers,
+    noop = helpers.noop,
+    isPromise = helpers.isPromise,
+    notDefined = helpers.notDefined,
     observableFromPromise = Observable.fromPromise;
 
   // Utilities

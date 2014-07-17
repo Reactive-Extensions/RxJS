@@ -10,7 +10,7 @@
    * @returns {Observable} An observable sequence with the elements skipped until the specified start time. 
    */
   observableProto.skipUntilWithTime = function (startTime, scheduler) {
-    scheduler || (scheduler = timeoutScheduler);
+    notDefined(scheduler) && (scheduler = timeoutScheduler);
     var source = this, schedulerMethod = startTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
