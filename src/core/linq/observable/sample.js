@@ -36,7 +36,7 @@
    * @returns {Observable} Sampled observable sequence.
    */
   observableProto.sample = function (intervalOrSampler, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return typeof intervalOrSampler === 'number' ?
       sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
       sampleObservable(this, intervalOrSampler);

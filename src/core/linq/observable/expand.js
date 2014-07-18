@@ -6,7 +6,7 @@
    * @returns {Observable} An observable sequence containing all the elements produced by the recursive expansion.
    */
   observableProto.expand = function (selector, scheduler) {
-    notDefined(scheduler) && (scheduler = immediateScheduler);
+    isScheduler(scheduler) || (scheduler = immediateScheduler);
     var source = this;
     return new AnonymousObservable(function (observer) {
       var q = [],

@@ -9,7 +9,7 @@
    * @returns {Observable} An observable sequence with the elements taken until the specified end time.
    */
   observableProto.takeUntilWithTime = function (endTime, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this, schedulerMethod = endTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';

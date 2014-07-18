@@ -13,7 +13,7 @@
    */
   observableProto.takeLastBufferWithTime = function (duration, scheduler) {
     var source = this;
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var q = [];
 

@@ -10,6 +10,6 @@
    * @returns {Observable} The throttled sequence.
    */
   observableProto.throttle = function (dueTime, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return this.throttleWithSelector(function () { return observableTimer(dueTime, scheduler); })
   };

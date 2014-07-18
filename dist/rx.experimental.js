@@ -57,7 +57,7 @@
     helpers = Rx.helpers,
     noop = helpers.noop,
     isPromise = helpers.isPromise,
-    notDefined = helpers.notDefined,
+    isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise;
 
   // Utilities
@@ -196,7 +196,7 @@
    * @returns {Observable} An observable sequence containing all the elements produced by the recursive expansion.
    */
   observableProto.expand = function (selector, scheduler) {
-    notDefined(scheduler) && (scheduler = immediateScheduler);
+    isScheduler(scheduler) || (scheduler = immediateScheduler);
     var source = this;
     return new AnonymousObservable(function (observer) {
       var q = [],
@@ -400,7 +400,7 @@
    * @returns {Observable} An observable sequence which results from the comonadic bind operation.
    */
   observableProto.manySelect = function (selector, scheduler) {
-    notDefined(scheduler) && (scheduler = immediateScheduler);
+    isScheduler(scheduler) || (scheduler = immediateScheduler);
     var source = this;
     return observableDefer(function () {
       var chain;

@@ -8,7 +8,7 @@
    * @returns {Observable} An observable sequence with no elements.
    */
   var observableEmpty = Observable.empty = function (scheduler) {
-    notDefined(scheduler) && (scheduler = immediateScheduler);
+    isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
       return scheduler.schedule(function () {
         observer.onCompleted();

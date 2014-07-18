@@ -14,7 +14,7 @@
    */
   var observableTimer = Observable.timer = function (dueTime, periodOrScheduler, scheduler) {
     var period;
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     if (typeof periodOrScheduler === 'number') {
       period = periodOrScheduler;
     } else if (typeof periodOrScheduler === 'object' && typeof periodOrScheduler.now === 'function') {

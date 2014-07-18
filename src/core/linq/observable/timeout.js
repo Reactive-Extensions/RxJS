@@ -16,7 +16,7 @@
    */
   observableProto.timeout = function (dueTime, other, scheduler) {
     other || (other = observableThrow(new Error('Timeout')));
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     
     var source = this, schedulerMethod = dueTime instanceof Date ?
       'scheduleWithAbsolute' :

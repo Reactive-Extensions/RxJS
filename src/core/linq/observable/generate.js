@@ -12,7 +12,7 @@
    * @returns {Observable} The generated sequence.
    */
   Observable.generate = function (initialState, condition, iterate, resultSelector, scheduler) {
-    notDefined(scheduler) && (scheduler = currentThreadScheduler);
+    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
       var first = true, state = initialState;
       return scheduler.scheduleRecursive(function (self) {

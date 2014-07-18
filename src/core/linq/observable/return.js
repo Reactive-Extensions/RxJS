@@ -10,7 +10,7 @@
    * @returns {Observable} An observable sequence containing the single specified element.
    */
   var observableReturn = Observable['return'] = Observable.returnValue = Observable.just = function (value, scheduler) {
-    scheduler || (scheduler = immediateScheduler);
+    isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
       return scheduler.schedule(function () {
         observer.onNext(value);

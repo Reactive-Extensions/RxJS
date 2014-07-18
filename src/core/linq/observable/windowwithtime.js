@@ -14,7 +14,7 @@
     var source = this, timeShift;
 
     notDefined(timeShiftOrScheduler) && (timeShift = timeSpan);
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     if (typeof timeShiftOrScheduler === 'number') {
       timeShift = timeShiftOrScheduler;
     } else if (typeof timeShiftOrScheduler === 'object') {

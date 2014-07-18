@@ -10,7 +10,7 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delay = function (dueTime, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this;  
     return new AnonymousObservable(function (observer) {
       var active = false,

@@ -5,7 +5,7 @@
    * @returns {Observable} An observable sequence which results from the comonadic bind operation.
    */
   observableProto.manySelect = function (selector, scheduler) {
-    notDefined(scheduler) && (scheduler = immediateScheduler);
+    isScheduler(scheduler) || (scheduler = immediateScheduler);
     var source = this;
     return observableDefer(function () {
       var chain;

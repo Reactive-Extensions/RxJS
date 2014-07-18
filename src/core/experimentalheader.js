@@ -22,7 +22,7 @@
     helpers = Rx.helpers,
     noop = helpers.noop,
     isPromise = helpers.isPromise,
-    notDefined = helpers.notDefined,
+    isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise;
 
   // Utilities

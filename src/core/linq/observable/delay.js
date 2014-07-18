@@ -83,7 +83,7 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delay = function (dueTime, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return dueTime instanceof Date ?
       observableDelayDate(this, dueTime.getTime(), scheduler) :
       observableDelayTimeSpan(this, dueTime, scheduler);

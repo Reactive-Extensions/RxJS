@@ -52,6 +52,7 @@
     normalizeTime = Rx.Scheduler.normalize,
     helpers = Rx.helpers,
     isPromise = helpers.isPromise,
+    isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise,
     notDefined = helpers.notDefined;
 
@@ -119,7 +120,7 @@
    * @returns {Observable} An observable sequence that produces a value after each period.
    */
   var observableinterval = Observable.interval = function (period, scheduler) {
-    return observableTimerTimeSpanAndPeriod(period, period, notDefined(scheduler) ? timeoutScheduler : scheduler);
+    return observableTimerTimeSpanAndPeriod(period, period, isScheduler(scheduler) ? scheduler : timeoutScheduler);
   };
 
   /**
@@ -143,7 +144,7 @@
    */
   var observableTimer = Observable.timer = function (dueTime, periodOrScheduler, scheduler) {
     var period;
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'number') {
       period = periodOrScheduler;
     } else if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'object') {
@@ -246,7 +247,7 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delay = function (dueTime, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return dueTime instanceof Date ?
       observableDelayDate(this, dueTime.getTime(), scheduler) :
       observableDelayTimeSpan(this, dueTime, scheduler);
@@ -264,7 +265,7 @@
    * @returns {Observable} The throttled sequence.
    */
   observableProto.throttle = function (dueTime, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return this.throttleWithSelector(function () { return observableTimer(dueTime, scheduler); })
   };
 
@@ -284,7 +285,7 @@
     var source = this, timeShift;
 
     notDefined(timeShiftOrScheduler) && (timeShift = timeSpan);
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     if (typeof timeShiftOrScheduler === 'number') {
       timeShift = timeShiftOrScheduler;
     } else if (typeof timeShiftOrScheduler === 'object') {
@@ -377,7 +378,7 @@
    */
   observableProto.windowWithTimeOrCount = function (timeSpan, count, scheduler) {
     var source = this;
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var createTimer,
         groupDisposable,
@@ -477,7 +478,7 @@
    */
   observableProto.timeInterval = function (scheduler) {
     var source = this;
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return observableDefer(function () {
       var last = scheduler.now();
       return source.map(function (x) {
@@ -499,7 +500,7 @@
    * @returns {Observable} An observable sequence with timestamp information on values.
    */
   observableProto.timestamp = function (scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return this.map(function (x) {
       return { value: x, timestamp: scheduler.now() };
     });
@@ -543,7 +544,7 @@
    * @returns {Observable} Sampled observable sequence.
    */
   observableProto.sample = function (intervalOrSampler, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return typeof intervalOrSampler === 'number' ?
       sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
       sampleObservable(this, intervalOrSampler);
@@ -567,7 +568,7 @@
    */
   observableProto.timeout = function (dueTime, other, scheduler) {
     other || (other = observableThrow(new Error('Timeout')));
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     
     var source = this, schedulerMethod = dueTime instanceof Date ?
       'scheduleWithAbsolute' :
@@ -635,7 +636,7 @@
    * @returns {Observable} The generated sequence.
    */
   Observable.generateWithAbsoluteTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false,
@@ -689,7 +690,7 @@
    * @returns {Observable} The generated sequence.
    */
   Observable.generateWithRelativeTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false,
@@ -735,7 +736,7 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delaySubscription = function (dueTime, scheduler) {
-    return this.delayWithSelector(observableTimer(dueTime, notDefined(scheduler) ? timeoutScheduler : scheduler), observableEmpty);
+    return this.delayWithSelector(observableTimer(dueTime, isScheduler(scheduler) ? scheduler : timeoutScheduler), observableEmpty);
   };
 
     /**
@@ -953,7 +954,7 @@
    * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
    */
   observableProto.skipLastWithTime = function (duration, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this;
     return new AnonymousObservable(function (observer) {
       var q = [];
@@ -1006,7 +1007,7 @@
    */
   observableProto.takeLastBufferWithTime = function (duration, scheduler) {
     var source = this;
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var q = [];
 
@@ -1046,7 +1047,7 @@
    */
   observableProto.takeWithTime = function (duration, scheduler) {
     var source = this;
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       return new CompositeDisposable(scheduler.scheduleWithRelative(duration, observer.onCompleted.bind(observer)), source.subscribe(observer));
     });
@@ -1070,7 +1071,7 @@
    */
   observableProto.skipWithTime = function (duration, scheduler) {
     var source = this;
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var open = false;
       return new CompositeDisposable(
@@ -1091,7 +1092,7 @@
    * @returns {Observable} An observable sequence with the elements skipped until the specified start time. 
    */
   observableProto.skipUntilWithTime = function (startTime, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this, schedulerMethod = startTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
@@ -1118,7 +1119,7 @@
    * @returns {Observable} An observable sequence with the elements taken until the specified end time.
    */
   observableProto.takeUntilWithTime = function (endTime, scheduler) {
-    notDefined(scheduler) && (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this, schedulerMethod = endTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
