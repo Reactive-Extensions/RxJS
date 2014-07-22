@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
-[![NPM version](http://img.shields.io/npm/v/rx.svg)](http://img.shields.io/npm/v/rx.svg)
+[![GitHub version](http://img.shields.io/github/tag/reactive-extensions/rxjs.svg)](https://github.com/Reactive-Extensions/RxJS)
+[![NPM version](http://img.shields.io/npm/v/rx.svg)](https://npmjs.org/package/rx)
 [![Downloads](http://img.shields.io/npm/dm/rx.svg)](https://npmjs.org/package/rx)
-[![Coverage Status](https://coveralls.io/repos/Reactive-Extensions/RxJS/badge.png)](https://coveralls.io/r/Reactive-Extensions/RxJS)
+[![NuGet](http://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/Reactive-Extensions/rxjs/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
 
 **[The Need to go Reactive](#the-need-to-go-reactive)** |
 **[About the Reactive Extensions](#about-the-reactive-extensions)** |
