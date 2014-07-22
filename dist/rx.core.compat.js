@@ -52,14 +52,13 @@
   function checkDisposed() { if (this.isDisposed) { throw new Error(objectDisposed); } }
 
   // Shim in iterator support
-  var $iterator$ = (typeof Symbol === 'object' && Symbol.iterator) ||
+  var $iterator$ = (typeof Symbol === 'function' && Symbol.iterator) ||
     '_es6shim_iterator_';
-  // Firefox ships a partial implementation using the name @@iterator.
-  // https://bugzilla.mozilla.org/show_bug.cgi?id=907077#c14
-  // So use that name if we detect it.
+  // Bug for mozilla version
   if (root.Set && typeof new root.Set()['@@iterator'] === 'function') {
     $iterator$ = '@@iterator';
   }
+  
   var doneEnumerator = { done: true, value: undefined };
 
   /** `Object#toString` result shortcuts */
@@ -1523,8 +1522,6 @@
       this.kind = kind;
     }
 
-    var NotificationPrototype = Notification.prototype;
-
     /**
      * Invokes the delegate corresponding to the notification or the observer's method corresponding to the notification and returns the produced result.
      * 
@@ -1534,7 +1531,7 @@
      * @param {Function} onCompleted Delegate to invoke for an OnCompleted notification.
      * @returns {Any} Result produced by the observation.
      */
-    NotificationPrototype.accept = function (observerOrOnNext, onError, onCompleted) {
+    Notification.prototype.accept = function (observerOrOnNext, onError, onCompleted) {
       return observerOrOnNext && typeof observerOrOnNext === 'object' ?
         this._acceptObservable(observerOrOnNext) :
         this._accept(observerOrOnNext, onError, onCompleted);
@@ -1547,9 +1544,9 @@
      * @param {Scheduler} [scheduler] Scheduler to send out the notification calls on.
      * @returns {Observable} The observable sequence that surfaces the behavior of the notification upon subscription.
      */
-    NotificationPrototype.toObservable = function (scheduler) {
+    Notification.prototype.toObservable = function (scheduler) {
       var notification = this;
-      scheduler || (scheduler = immediateScheduler);
+      isScheduler(scheduler) || (scheduler = immediateScheduler);
       return new AnonymousObservable(function (observer) {
         return scheduler.schedule(function () {
           notification._acceptObservable(observer);

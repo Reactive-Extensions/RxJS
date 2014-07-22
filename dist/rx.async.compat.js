@@ -33,164 +33,161 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
     
-    // Aliases
-    var Observable = Rx.Observable,
-    	observableProto = Observable.prototype,
-      observableFromPromise = Observable.fromPromise,
-      observableThrow = Observable.throwException,
-      AnonymousObservable = Rx.AnonymousObservable,
-      AsyncSubject = Rx.AsyncSubject,
-      disposableCreate = Rx.Disposable.create,
-      CompositeDisposable= Rx.CompositeDisposable,
-      immediateScheduler = Rx.Scheduler.immediate,
-      timeoutScheduler = Rx.Scheduler.timeout,
-      slice = Array.prototype.slice;
+  // Aliases
+  var Observable = Rx.Observable,
+    observableProto = Observable.prototype,
+    observableFromPromise = Observable.fromPromise,
+    observableThrow = Observable.throwException,
+    AnonymousObservable = Rx.AnonymousObservable,
+    AsyncSubject = Rx.AsyncSubject,
+    disposableCreate = Rx.Disposable.create,
+    CompositeDisposable= Rx.CompositeDisposable,
+    immediateScheduler = Rx.Scheduler.immediate,
+    timeoutScheduler = Rx.Scheduler.timeout,
+    isScheduler = Rx.helpers.isScheduler,
+    slice = Array.prototype.slice;
 
-    /**
-     * Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
-     * 
-     * @example
-     * var res = Rx.Observable.start(function () { console.log('hello'); });
-     * var res = Rx.Observable.start(function () { console.log('hello'); }, Rx.Scheduler.timeout);
-     * var res = Rx.Observable.start(function () { this.log('hello'); }, Rx.Scheduler.timeout, console);
-     * 
-     * @param {Function} func Function to run asynchronously.
-     * @param {Scheduler} [scheduler]  Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
-     * @param [context]  The context for the func parameter to be executed.  If not specified, defaults to undefined.
-     * @returns {Observable} An observable sequence exposing the function's result value, or an exception.
-     * 
-     * Remarks
-     * * The function is called immediately, not during the subscription of the resulting sequence.
-     * * Multiple subscriptions to the resulting sequence can observe the function's result.  
-     */
-    Observable.start = function (func, scheduler, context) {
-        return observableToAsync(func, scheduler, context)();
+  /**
+   * Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
+   * 
+   * @example
+   * var res = Rx.Observable.start(function () { console.log('hello'); });
+   * var res = Rx.Observable.start(function () { console.log('hello'); }, Rx.Scheduler.timeout);
+   * var res = Rx.Observable.start(function () { this.log('hello'); }, Rx.Scheduler.timeout, console);
+   * 
+   * @param {Function} func Function to run asynchronously.
+   * @param {Scheduler} [scheduler]  Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
+   * @param [context]  The context for the func parameter to be executed.  If not specified, defaults to undefined.
+   * @returns {Observable} An observable sequence exposing the function's result value, or an exception.
+   * 
+   * Remarks
+   * * The function is called immediately, not during the subscription of the resulting sequence.
+   * * Multiple subscriptions to the resulting sequence can observe the function's result.  
+   */
+  Observable.start = function (func, context, scheduler) {
+    return observableToAsync(func, context, scheduler)();
+  };
+
+  /**
+   * Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
+   * 
+   * @example
+   * var res = Rx.Observable.toAsync(function (x, y) { return x + y; })(4, 3);
+   * var res = Rx.Observable.toAsync(function (x, y) { return x + y; }, Rx.Scheduler.timeout)(4, 3);
+   * var res = Rx.Observable.toAsync(function (x) { this.log(x); }, Rx.Scheduler.timeout, console)('hello');
+   * 
+   * @param {Function} function Function to convert to an asynchronous function.
+   * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
+   * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+   * @returns {Function} Asynchronous function.
+   */
+  var observableToAsync = Observable.toAsync = function (func, context, scheduler) {
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    return function () {
+      var args = arguments, 
+        subject = new AsyncSubject();
+
+      scheduler.schedule(function () {
+        var result;
+        try {
+          result = func.apply(context, args);
+        } catch (e) {
+          subject.onError(e);
+          return;
+        }
+        subject.onNext(result);
+        subject.onCompleted();
+      });
+      return subject.asObservable();
     };
+  };
 
-    /**
-     * Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
-     * 
-     * @example
-     * var res = Rx.Observable.toAsync(function (x, y) { return x + y; })(4, 3);
-     * var res = Rx.Observable.toAsync(function (x, y) { return x + y; }, Rx.Scheduler.timeout)(4, 3);
-     * var res = Rx.Observable.toAsync(function (x) { this.log(x); }, Rx.Scheduler.timeout, console)('hello');
-     * 
-     * @param {Function} function Function to convert to an asynchronous function.
-     * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
-     * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
-     * @returns {Function} Asynchronous function.
-     */
-    var observableToAsync = Observable.toAsync = function (func, scheduler, context) {
-        scheduler || (scheduler = timeoutScheduler);
-        return function () {
-            var args = arguments, 
-                subject = new AsyncSubject();
+  /**
+   * Converts a callback function to an observable sequence. 
+   * 
+   * @param {Function} function Function with a callback as the last parameter to convert to an Observable sequence.
+   * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+   * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
+   * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
+   */
+  Observable.fromCallback = function (func, context, selector) {
+    return function () {
+      var args = slice.call(arguments, 0);
 
-            scheduler.schedule(function () {
-                var result;
-                try {
-                    result = func.apply(context, args);
-                } catch (e) {
-                    subject.onError(e);
-                    return;
-                }
-                subject.onNext(result);
-                subject.onCompleted();
-            });
-            return subject.asObservable();
-        };
+      return new AnonymousObservable(function (observer) {
+        function handler(e) {
+          var results = e;
+          
+          if (selector) {
+            try {
+              results = selector(arguments);
+            } catch (err) {
+              observer.onError(err);
+              return;
+            }
+
+            observer.onNext(results);
+          } else {
+            if (results.length <= 1) { 
+              observer.onNext.apply(observer, results);
+            } else {
+              observer.onNext(results);
+            }
+          }
+          
+          observer.onCompleted();
+        }
+
+        args.push(handler);
+        func.apply(context, args);
+      });
     };
+  };
 
-    /**
-     * Converts a callback function to an observable sequence. 
-     * 
-     * @param {Function} function Function with a callback as the last parameter to convert to an Observable sequence.
-     * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
-     * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
-     * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
-     * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
-     */
-    Observable.fromCallback = function (func, scheduler, context, selector) {
-        scheduler || (scheduler = immediateScheduler);
-        return function () {
-            var args = slice.call(arguments, 0);
+  /**
+   * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
+   * @param {Function} func The function to call
+   * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+   * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.     
+   * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
+   */
+  Observable.fromNodeCallback = function (func, context, selector) {
+    return function () {
+      var args = slice.call(arguments, 0);
 
-            return new AnonymousObservable(function (observer) {
-                return scheduler.schedule(function () {
-                    function handler(e) {
-                        var results = e;
-                        
-                        if (selector) {
-                            try {
-                                results = selector(arguments);
-                            } catch (err) {
-                                observer.onError(err);
-                                return;
-                            }
-                        } else {
-                            if (results.length === 1) {
-                                results = results[0];
-                            }
-                        }
+      return new AnonymousObservable(function (observer) {
+        function handler(err) {
+          if (err) {
+            observer.onError(err);
+            return;
+          }
 
-                        observer.onNext(results);
-                        observer.onCompleted();
-                    }
+          var results = slice.call(arguments, 1);
+          
+          if (selector) {
+            try {
+              results = selector(results);
+            } catch (e) {
+              observer.onError(e);
+              return;
+            }
+            observer.onNext(results);
+          } else {
+            if (results.length <= 1) { 
+              observer.onNext.apply(observer, results);
+            } else {
+              observer.onNext(results);
+            }
+          }
 
-                    args.push(handler);
-                    func.apply(context, args);
-                });
-            });
-        };
+          observer.onCompleted();
+        }
+
+        args.push(handler);
+        func.apply(context, args);
+      });
     };
-
-    /**
-     * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
-     * @param {Function} func The function to call
-     * @param {Scheduler} [scheduler] Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
-     * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
-     * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.     
-     * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
-     */
-    Observable.fromNodeCallback = function (func, scheduler, context, selector) {
-        scheduler || (scheduler = immediateScheduler);
-        return function () {
-            var args = slice.call(arguments, 0);
-
-            return new AnonymousObservable(function (observer) {
-                return scheduler.schedule(function () {
-                    
-                    function handler(err) {
-                        if (err) {
-                            observer.onError(err);
-                            return;
-                        }
-
-                        var results = slice.call(arguments, 1);
-                        
-                        if (selector) {
-                            try {
-                                results = selector(results);
-                            } catch (e) {
-                                observer.onError(e);
-                                return;
-                            }
-                        } else {
-                            if (results.length === 1) {
-                                results = results[0];
-                            }
-                        }
-
-                        observer.onNext(results);
-                        observer.onCompleted();
-                    }
-
-                    args.push(handler);
-                    func.apply(context, args);
-                });
-            });
-        };
-    };
+  };
 
   function fixEvent(event) {
     var stopPropagation = function () {

@@ -7,7 +7,7 @@
    */
   Observable.fromNodeCallback = function (func, context, selector) {
     return function () {
-      var args = arguments;
+      var args = slice.call(arguments, 0);
 
       return new AnonymousObservable(function (observer) {
         function handler(err) {
@@ -25,11 +25,15 @@
               observer.onError(e);
               return;
             }
+            observer.onNext(results);
           } else {
-            if (results.length === 1) { results = results[0]; }
+            if (results.length <= 1) { 
+              observer.onNext.apply(observer, results);
+            } else {
+              observer.onNext(results);
+            }
           }
 
-          observer.onNext(results);
           observer.onCompleted();
         }
 

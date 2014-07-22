@@ -1,20 +1,36 @@
-  var $iterator$ = (typeof Symbol === 'object' && Symbol.iterator) ||
-    '_es6shim_iterator_';
-  if (root.Set && typeof new root.Set()['@@iterator'] === 'function') {
-    $iterator$ = '@@iterator';
+  var maxSafeInteger = Math.pow(2, 53) - 1;
+
+  function numberIsFinite(value) {
+    return typeof value === 'number' && root.isFinite(value);
+  }
+
+  function isNan(n) {
+    return n !== n;
   }
 
   function isIterable(o) {
-    o[$iterator$] !== undefined;
+    return o[$iterator$] !== undefined;
+  }
+
+  function sign(value) {
+    var number = +value;
+    if (number === 0) { return number; }
+    if (isNaN(number)) { return number; }
+    return number < 0 ? -1 : 1;
   }
 
   function toLength(o) {
-    var len = +o.length >> 0;
-    return len <=0 ? 0 : len;
+    var len = +o.length;
+    if (isNaN(len)) { return 0; }
+    if (len === 0 || !numberIsFinite(len)) { return len; }
+    len = sign(len) * Math.floor(Math.abs(len));        
+    if (len <= 0) { return 0; }
+    if (len > maxSafeInteger) { return maxSafeInteger; }
+    return len;
   }
 
   function isCallable(f) {
-    return typeof f === 'function';
+    return Object.prototype.toString.call(f) === '[object Function]' && typeof f === 'function';
   }
 
   /**
@@ -31,7 +47,7 @@
     if (mapFn && !isCallable(mapFn)) {
       throw new Error('mapFn when provided must be a function');
     }
-    isScheduler || (scheduler = currentThreadScheduler);
+    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
       var list = Object(iterable),
         objIsIterable = isIterable(list),
