@@ -24,6 +24,6 @@
      *  @param selector Selector that will be invoked with available values from the source sequences, in the same order of the sequences in the pattern.
      *  @return Plan that produces the projected values, to be fed (with other plans) to the when operator.
      */
-    Pattern.prototype.then = function (selector) {
+    Pattern.prototype.thenDo = function (selector) {
         return new Plan(this, selector);
     };

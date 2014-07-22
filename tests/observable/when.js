@@ -20,7 +20,7 @@ test('Then1', function () {
     );
     
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.then(function (a) {
+        return Observable.when(xs.thenDo(function (a) {
             return a;
         }));
     });
@@ -41,7 +41,7 @@ test('Then1Error', function () {
     );
     
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.then(function (a) {
+        return Observable.when(xs.thenDo(function (a) {
             return a;
         }));
     });
@@ -62,7 +62,7 @@ test('Then1Throws', function () {
     );
 
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.then(function (a) {
+        return Observable.when(xs.thenDo(function (a) {
             throw ex;
         }));
     });
@@ -83,7 +83,7 @@ test('And2', function () {
     }
 
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).then(function (a, b) {
+        return Observable.when(obs[0].and(obs[1]).thenDo(function (a, b) {
             return a + b;
         }));
     });
@@ -112,7 +112,7 @@ test('And2Error', function () {
         }
 
         var results = scheduler.startWithCreate(function () {
-            return Observable.when(obs[0].and(obs[1]).then(function (a, b) {
+            return Observable.when(obs[0].and(obs[1]).thenDo(function (a, b) {
                 return a + b;
             }));
         });
@@ -136,7 +136,7 @@ test('Then2Throws', function () {
     }
     
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).then(function (a, b) {
+        return Observable.when(obs[0].and(obs[1]).thenDo(function (a, b) {
             throw ex;
         }));
     });
@@ -156,7 +156,7 @@ test('And3', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).then(function (a, b, c) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).thenDo(function (a, b, c) {
             return a + b + c;
         }));
     });
@@ -185,7 +185,7 @@ test('And3Error', function () {
         }
 
         var results = scheduler.startWithCreate(function () {
-            return Observable.when(obs[0].and(obs[1]).and(obs[2]).then(function (a, b, c) {
+            return Observable.when(obs[0].and(obs[1]).and(obs[2]).thenDo(function (a, b, c) {
                 return a + b + c;
             }));
         });
@@ -209,7 +209,7 @@ test('Then3Throws', function () {
     }
     
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).then(function (a, b, c) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).thenDo(function (a, b, c) {
             throw ex;
         }));
     });
@@ -228,7 +228,7 @@ test('And4', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).then(function (a, b, c, d) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).thenDo(function (a, b, c, d) {
             return a + b + c + d;
         }));
     });
@@ -251,7 +251,7 @@ test('And4Error', function () {
         }
 
         results = scheduler.startWithCreate(function () {
-            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).then(function (a, b, c, d) {
+            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).thenDo(function (a, b, c, d) {
                 return a + b + c + d;
             }));
         });
@@ -269,7 +269,7 @@ test('Then4Throws', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).then(function (a, b, c, d) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).thenDo(function (a, b, c, d) {
             throw ex;
         }));
     });
@@ -285,7 +285,7 @@ test('And5', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).then(function (a, b, c, d, e) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).thenDo(function (a, b, c, d, e) {
             return a + b + c + d + e;
         }));
     });
@@ -308,7 +308,7 @@ test('And5Error', function () {
         }
 
         results = scheduler.startWithCreate(function () {
-            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).then(function (a, b, c, d, e) {
+            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).thenDo(function (a, b, c, d, e) {
                 return a + b + c + d + e;
             }));
         });
@@ -326,7 +326,7 @@ test('Then5Throws', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).then(function (a, b, c, d, e) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).thenDo(function (a, b, c, d, e) {
             throw ex;
         }));
     });
@@ -342,7 +342,7 @@ test('And6', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).then(function (a, b, c, d, e, f) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).thenDo(function (a, b, c, d, e, f) {
             return a + b + c + d + e + f;
         }));
     });
@@ -365,7 +365,7 @@ test('And6Error', function () {
         }
 
         results = scheduler.startWithCreate(function () {
-            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).then(function (a, b, c, d, e, f) {
+            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).thenDo(function (a, b, c, d, e, f) {
                 return a + b + c + d + e + f;
             }));
         });
@@ -383,7 +383,7 @@ test('Then6Throws', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).then(function () {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).thenDo(function () {
             throw ex;
         }));
     });
@@ -399,7 +399,7 @@ test('And7', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).then(function (a, b, c, d, e, f, g) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).thenDo(function (a, b, c, d, e, f, g) {
             return a + b + c + d + e + f + g;
         }));
     });
@@ -422,7 +422,7 @@ test('And7Error', function () {
         }
 
         results = scheduler.startWithCreate(function () {
-            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).then(function (a, b, c, d, e, f, g) {
+            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).thenDo(function (a, b, c, d, e, f, g) {
                 return a + b + c + d + e + f + g;
             }));
         });
@@ -440,7 +440,7 @@ test('Then7Throws', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).then(function () {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).thenDo(function () {
             throw ex;
         }));
     });
@@ -456,7 +456,7 @@ test('And8', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).then(function (a, b, c, d, e, f, g, h) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).thenDo(function (a, b, c, d, e, f, g, h) {
             return a + b + c + d + e + f + g + h;
         }));
     });
@@ -479,7 +479,7 @@ test('And8Error', function () {
         }
 
         results = scheduler.startWithCreate(function () {
-            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).then(function (a, b, c, d, e, f, g, h) {
+            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).thenDo(function (a, b, c, d, e, f, g, h) {
                 return a + b + c + d + e + f + g + h;
             }));
         });
@@ -497,7 +497,7 @@ test('Then8Throws', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).then(function () {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).thenDo(function () {
             throw ex;
         }));
     });
@@ -513,7 +513,7 @@ test('And9', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).and(obs[8]).then(function (a, b, c, d, e, f, g, h, _i) {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).and(obs[8]).thenDo(function (a, b, c, d, e, f, g, h, _i) {
             return a + b + c + d + e + f + g + h + _i;
         }));
     });
@@ -536,7 +536,7 @@ test('And9Error', function () {
         }
 
         results = scheduler.startWithCreate(function () {
-            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).and(obs[8]).then(function (a, b, c, d, e, f, g, h, _i) {
+            return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).and(obs[8]).thenDo(function (a, b, c, d, e, f, g, h, _i) {
                 return a + b + c + d + e + f + g + h + _i;
             }));
         });
@@ -554,7 +554,7 @@ test('Then9Throws', function () {
         obs.push(scheduler.createHotObservable(onNext(210, 1), onCompleted(220)));
     }
     results = scheduler.startWithCreate(function () {
-        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).and(obs[8]).then(function () {
+        return Observable.when(obs[0].and(obs[1]).and(obs[2]).and(obs[3]).and(obs[4]).and(obs[5]).and(obs[6]).and(obs[7]).and(obs[8]).thenDo(function () {
             throw ex;
         }));
     });
@@ -579,7 +579,7 @@ test('WhenMultipleDataSymmetric', function () {
     );
     
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.and(ys).then(function (x, y) {
+        return Observable.when(xs.and(ys).thenDo(function (x, y) {
             return x + y;
         }));
     });
@@ -609,7 +609,7 @@ test('WhenMultipleDataAsymmetric', function () {
     );
     
     var results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.and(ys).then(function (x, y) {
+        return Observable.when(xs.and(ys).thenDo(function (x, y) {
             return x + y;
         }));
     });
@@ -627,7 +627,7 @@ test('WhenEmptyEmpty', function () {
     xs = scheduler.createHotObservable(onCompleted(240));
     ys = scheduler.createHotObservable(onCompleted(270));
     results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.and(ys).then(function (x, y) {
+        return Observable.when(xs.and(ys).thenDo(function (x, y) {
             return x + y;
         }));
     });
@@ -640,7 +640,7 @@ test('WhenNeverNever', function () {
     xs = Observable.never();
     ys = Observable.never();
     results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.and(ys).then(function (x, y) {
+        return Observable.when(xs.and(ys).thenDo(function (x, y) {
             return x + y;
         }));
     });
@@ -654,7 +654,7 @@ test('WhenThrowNonEmpty', function () {
     xs = scheduler.createHotObservable(onError(240, ex));
     ys = scheduler.createHotObservable(onCompleted(270));
     results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.and(ys).then(function (x, y) {
+        return Observable.when(xs.and(ys).thenDo(function (x, y) {
             return x + y;
         }));
     });
@@ -668,11 +668,11 @@ test('ComplicatedWhen', function () {
     ys = scheduler.createHotObservable(onNext(240, 4), onNext(250, 5), onNext(260, 6), onCompleted(270));
     zs = scheduler.createHotObservable(onNext(220, 7), onNext(230, 8), onNext(240, 9), onCompleted(300));
     results = scheduler.startWithCreate(function () {
-        return Observable.when(xs.and(ys).then(function (x, y) {
+        return Observable.when(xs.and(ys).thenDo(function (x, y) {
             return x + y;
-        }), xs.and(zs).then(function (x, z) {
+        }), xs.and(zs).thenDo(function (x, z) {
             return x * z;
-        }), ys.and(zs).then(function (y, z) {
+        }), ys.and(zs).thenDo(function (y, z) {
             return y - z;
         }));
     });

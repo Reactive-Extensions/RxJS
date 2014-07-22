@@ -4,6 +4,6 @@
      *  @param selector Selector that will be invoked for values in the source sequence.
      *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator. 
      */    
-    observableProto.then = function (selector) {
-        return new Pattern([this]).then(selector);
+    observableProto.thenDo = function (selector) {
+        return new Pattern([this]).thenDo(selector);
     };

@@ -7234,7 +7234,7 @@
      *  @param selector Selector that will be invoked with available values from the source sequences, in the same order of the sequences in the pattern.
      *  @return Plan that produces the projected values, to be fed (with other plans) to the when operator.
      */
-    Pattern.prototype.then = function (selector) {
+    Pattern.prototype.thenDo = function (selector) {
         return new Plan(this, selector);
     };
 
@@ -7439,8 +7439,8 @@
      *  @param selector Selector that will be invoked for values in the source sequence.
      *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator. 
      */    
-    observableProto.then = function (selector) {
-        return new Pattern([this]).then(selector);
+    observableProto.thenDo = function (selector) {
+        return new Pattern([this]).thenDo(selector);
     };
 
     /**
