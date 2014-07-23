@@ -1,0 +1,55 @@
+### `Rx.Observable.empty([scheduler])`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/empty.js "View in source") 
+
+Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
+
+#### Arguments
+1. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to send the termination call on.
+
+#### Returns
+*(`Observable`)*: An observable sequence with no elements.
+
+#### Example
+```js
+var source = Rx.Observable.empty();
+
+var subscription = source.subscribe(
+    function (x) {
+        console.log('Next: ' + x);
+    },
+    function (err) {
+        console.log('Error: ' + err);   
+    },
+    function () {
+        console.log('Completed');   
+    });
+
+// => Completed
+```
+
+### Location
+
+File:
+- [/src/core/observable/empty.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/empty.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [/tests/observable/empty.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/empty.js)
