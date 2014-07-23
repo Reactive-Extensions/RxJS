@@ -41,7 +41,7 @@
     defaultSubComparer = Rx.helpers.defaultSubComparer = function (x, y) { return x > y ? 1 : (x < y ? -1 : 0); },
     defaultKeySerializer = Rx.helpers.defaultKeySerializer = function (x) { return x.toString(); },
     defaultError = Rx.helpers.defaultError = function (err) { throw err; },
-    isPromise = Rx.helpers.isPromise = function (p) { return !!p && typeof p.then === 'function' && p.then !== Rx.Observable.prototype.then; },
+    isPromise = Rx.helpers.isPromise = function (p) { return !!p && typeof p.then === 'function'; },
     asArray = Rx.helpers.asArray = function () { return Array.prototype.slice.call(arguments); },
     not = Rx.helpers.not = function (a) { return !a; };
 
@@ -7398,14 +7398,14 @@
     } else if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'object') {
       scheduler = periodOrScheduler;
     }
-    if (dueTime instanceof Date && notDefined(period)) {
+    if (dueTime instanceof Date && period === undefined) {
       return observableTimerDate(dueTime.getTime(), scheduler);
     }
     if (dueTime instanceof Date && period !== undefined) {
       period = periodOrScheduler;
       return observableTimerDateAndPeriod(dueTime.getTime(), period, scheduler);
     }
-    return notDefined(period) ?
+    return period === undefined ?
       observableTimerTimeSpan(dueTime, scheduler) :
       observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
   };
@@ -7532,7 +7532,7 @@
   observableProto.windowWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
     var source = this, timeShift;
 
-    notDefined(timeShiftOrScheduler) && (timeShift = timeSpan);
+    timeShiftOrScheduler == null && (timeShift = timeSpan);
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     if (typeof timeShiftOrScheduler === 'number') {
       timeShift = timeShiftOrScheduler;

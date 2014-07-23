@@ -1,4 +1,4 @@
-# RxJS <sup>v2.2</sup>
+# RxJS <sup>v2.3</sup>
 
 Reactive Extensions (Rx) is a library for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators.
 
@@ -33,13 +33,13 @@ To put it more concretely, if you know how to program against Arrays using the A
  </thead>
  <tbody>
   <tr><td><pre><code>getDataFromLocalMemory()
-  .filter (function (s) { return s != null; })
-  .map( function (s) { return s + 'transformed'; })
-  .forEach(function (s) { console.log('next => '' + it); })</code></pre></td>
+  .filter (s => s != null)
+  .map(s => s + 'transformed')
+  .forEach(s => console.log('next => '' + it))</code></pre></td>
   <td><pre><code>getDataFromNetwork()
-  .filter (function (s) { return s != null; })
-  .map( function (s) { return s + 'transformed'; })
-  .subscribe(function (s) { console.log('next => '' + it); })</code></pre></td></tr>
+  .filter (s => s != null)
+  .map(s => s + 'transformed')
+  .subscribe(s => console.log('next => '' + it))</code></pre></td></tr>
  </tbody>
 </table></center>
 

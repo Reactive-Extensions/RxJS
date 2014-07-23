@@ -25,14 +25,14 @@
     } else if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'object') {
       scheduler = periodOrScheduler;
     }
-    if (dueTime instanceof Date && notDefined(period)) {
+    if (dueTime instanceof Date && period === undefined) {
       return observableTimerDate(dueTime.getTime(), scheduler);
     }
     if (dueTime instanceof Date && period !== undefined) {
       period = periodOrScheduler;
       return observableTimerDateAndPeriod(dueTime.getTime(), period, scheduler);
     }
-    return notDefined(period) ?
+    return period === undefined ?
       observableTimerTimeSpan(dueTime, scheduler) :
       observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
   };
