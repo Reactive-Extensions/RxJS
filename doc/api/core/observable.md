@@ -28,24 +28,25 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`generateWithRelativeTime`](operators/generatewithrelativetime.md)
 - [`if | ifThen`](operators/if.md)
 - [`interval`](operators/interval.md)
+- [`just`](operators/return.md)
 - [`merge`](operators/merge.md)
 - [`never`](operators/never.md)
 - [`of`](operators/of.md)
 - [`ofWithScheduler`](operators/ofwithscheduler.md)
-- [`onErrorResumeNext`](#rxobservableonerrorresumenextargs)
-- [`range`](#rxobservablerangestart-count-scheduler)
-- [`repeat`](#rxobservablerepeatvalue-repeatcount-scheduler)
-- [`return | returnValue`](#rxobservablereturnvalue-scheduler)
-- [`start`](#rxobservablestartfunc-scheduler-context)
-- [`startAsync`](#rxobservablestartasyncfunctionasync)
-- [`throw | throwException`](#rxobservablethrowexception-scheduler)
-- [`timer`](#rxobservabletimerduetime-period-scheduler)
-- [`toAsync`](#rxobservabletoasyncfunc-scheduler-context)
-- [`using`](#rxobservableusingresourcefactory-observablefactory)
-- [`when`](#rxobservablewhenargs)
-- [`while | whileDo`](#rxobservablewhilecondition-source)
-- [`zip`](#rxobservablezipargs)
-- [`zipArray`](#rxobservableziparrayargs)
+- [`onErrorResumeNext`](operators/onerrorresumenext.md)
+- [`range`](operators/range.md)
+- [`repeat`](operators/repeat.md)
+- [`return | returnValue`](operators/return.md)
+- [`start`](operators/start.md)
+- [`startAsync`](operators/startasync.md)
+- [`throw | throwException`](operators/throw.md)
+- [`timer`](operators/timer.md)
+- [`toAsync`](operators/toasync.md)
+- [`using`](operators/using.md)
+- [`when`](operators/when.md)
+- [`while | whileDo`](operators/while.md)
+- [`zip`](operators/zip.md)
+- [`zipArray`](operators/ziparray.md)
 
 <!-- div -->
 
@@ -53,1047 +54,126 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 <!-- div -->
 
 ## `Observable Instance Methods`
-- [`aggregate`](#rxobservableprototypeaggregateseed-accumulator)
-- [`all`](#rxobservableprototypeallpredicate-thisarg)
-- [`amb`](#rxobservableprototypeambrightsource)
-- [`and`](#rxobservableprototypeandrightsource)
-- [`any`](#rxobservableprototypeanypredicate-thisarg)
-- [`asObservable`](#rxobservableprototypeasobservable)
-- [`average`](#rxobservableprototypeaverageselector)
-- [`buffer`](#rxobservableprototypebufferbufferopenings-bufferboundaries-bufferclosingselector)
-- [`bufferWithCount`](#rxobservableprototypebufferwithcountcount-skip)
-- [`bufferWithTime`](#rxobservableprototypebufferwithtimetimespan-timeshift--scheduler-scheduler)
-- [`bufferWithTimeOrCount`](#rxobservableprototypebufferwithtimeorcounttimespan-count-scheduler)
-- [`catch | catchException`](#rxobservableprototypecatchsecond--handler)
-- [`combineLatest`](#rxobservableprototypecombinelatestargs-resultselector)
-- [`concat`](#rxobservableprototypeconcatargs)
-- [`concatAll`](#rxobservableprototypeconcatall)
-- [`concatMap`](#rxobservableprototypeconcatmapselector-resultselector)
-- [`connect`](#connectableobservableprototypeconnect)
-- [`contains`](#rxobservableprototypecontainsvalue-comparer)
-- [`controlled`](#rxobservableprototypecontrolledenablequeue)
-- [`count`](#rxobservableprototypecountpredicate)
-- [`defaultIfEmpty`](#rxobservableprototypedefaultifemptydefaultvalue)
-- [`delay`](#rxobservableprototypedelayduetime-scheduler)
-- [`delayWithSelector`](#rxobservabledelaywithselectordelaysubscriptiondelay-delaydurationselector)
-- [`dematerialize`](#rxobservableprototypedematerialize)
-- [`distinct`](#rxobservableprototypedistinctkeyselector-keyserializer)
-- [`distinctUntilChanged`](#rxobservableprototypedistinctuntilchangedkeyselector-comparer)
-- [`do | doAction`](#rxobservableprototypedoobserver--onnext-onerror-oncompleted)
-- [`doWhile`](#rxobservableprototypedowhilecondition-source)
-- [`elementAt`](#rxobservableprototypeelementatindex)
-- [`elementAtOrDefault`](#rxobservableprototypeelementatordefaultindex-defaultvalue)
-- [`every`](#rxobservableprototypeeverypredicate-thisarg)
-- [`expand`](#rxobservableprototypeexpandselector-scheduler)
-- [`filter`](#rxobservableprototypefilterpredicate-thisarg)
-- [`finally | finallyAction`](#rxobservableprototypefinallyaction)
-- [`find`](#rxobservableprototypefindpredicate-thisarg)
-- [`findIndex`](#rxobservableprototypefindindexpredicate-thisarg)
-- [`first`](#rxobservableprototypefirstpredicate-thisarg)
-- [`firstOrDefault`](#rxobservableprototypefirstordefaultpredicate-defaultvalue-thisarg)
-- [`flatMap`](#rxobservableprototypeflatmapselector-resultselector)
-- [`flatMapLatest`](#rxobservableprototypeflatmaplatestselector-thisarg)
-- [`forkJoin`](#rxobservableprototypeforkjoinsecond-resultselector)
-- [`groupBy`](#rxobservableprototypegroupbykeyselector-elementselector-keyserializer)
-- [`groupByUntil`](#rxobservableprototypegroupbyuntilkeyselector-elementselector-durationselector-keyserializer)
-- [`groupJoin`](#rxobservableprototypegroupjoinright-leftdurationselector-rightdurationselector-resultselector)
-- [`ignoreElements`](#rxobservableprototypeignoreelements)
-- [`isEmpty`](#rxobservableprototypeisempty)
-- [`join`](#rxobservableprototypejoinright-leftdurationselector-rightdurationselector-resultselector)
-- [`last`](#rxobservableprototypelastpredicate-thisarg)
-- [`lastOrDefault`](#rxobservableprototypelastordefaultpredicate-defaultvalue-thisarg)
-- [`let | letBind`](#rxobservableprototypeletfunc)
-- [`manySelect`](#rxobservableprototypemanyselectselector-scheduler)
-- [`map`](#rxobservableprototypemapselector-thisarg)
-- [`max`](#rxobservableprototypemaxcomparer)
-- [`maxBy`](#rxobservableprototypemaxbykeyselector-comparer)
-- [`merge`](#rxobservableprototypemergemaxconcurrent--other)
-- [`mergeAll`](#rxobservableprototypemergeall)
-- [`min`](#rxobservableprototypemincomparer)
-- [`minBy`](#rxobservableprototypeminbykeyselector-comparer)
-- [`multicast`](#rxobservableprototypemulticastsubject--subjectselector-selector)
-- [`observeOn`](#rxobservableprototypeobserveonscheduler)
-- [`onErrorResumeNext`](#rxobservableprototypeonerrorresumenextsecond)
-- [`pairwise`](#rxobservableprototypepairwise)
-- [`partition`](#rxobservableprototypepartitionpredicate-thisarg)
-- [`pausable`](#rxobservableprototypepausablepauser)
-- [`pausableBuffered`](#rxobservableprototypepausablebufferedpauser)
-- [`pluck`](#rxobservableprototypepluckproperty)
-- [`publish`](#rxobservableprototypepublishselector)
-- [`publishLast`](#rxobservableprototypepublishlatestselector)
-- [`publishValue`](#rxobservableprototypepublishvalueselector)
-- [`share`](#rxobservableprototypeshare)
-- [`shareReplay`](#rxobservableprototypesharereplay)
-- [`shareValue`](#rxobservableprototypesharevalue)
-- [`refCount`](#connectableobservableprototyperefcount)
-- [`reduce`](#rxobservableprototypereduceaccumulator-seed)
-- [`repeat`](#rxobservableprototyperepeatrepeatcount)
-- [`replay`](#rxobservableprototypereplayselector-buffersize-window-scheduler)
-- [`retry`](#rxobservableprototyperetryretrycount)
-- [`sample`](#rxobservableprototypesampleinterval--sampleobservable)
-- [`scan`](#rxobservableprototypescanseed-accumulator)
-- [`select`](#rxobservableprototypeselectselector-thisarg)
-- [`selectConcat`](#rxobservableprototypeselectconcatselector-resultselector)
-- [`selectMany`](#rxobservableprototypeselectmanyselector-resultselector)
-- [`selectSwitch`](#rxobservableprototypeselectswitchselector-thisarg)
-- [`sequenceEqual`](#rxobservableprototypesequenceequalsecond-comparer)
-- [`single`](#rxobservableprototypesinglepredicate-thisarg)
-- [`singleOrDefault`](#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg)
-- [`skip`](#rxobservableprototypeskipcount)
-- [`skipLast`](#rxobservableprototypeskiplastcount)
-- [`skipLastWithTime`](#rxobservableprototypeskiplastwithtimeduration)
-- [`skipUntil`](#rxobservableprototypeskipuntilother)
-- [`skipUntilWithTime`](#rxobservableprototypeskipuntilstarttime-scheduler)
-- [`skipWhile`](#rxobservableprototypeskipwhilepredicate-thisarg)
-- [`some`](#rxobservableprototypesomepredicate-thisarg)
-- [`startWith`](#rxobservableprototypestartwithscheduler-args)
-- [`subscribe`](#rxobservableprototypesubscribeobserver--onnext-onerror-oncompleted)
-- [`subscribeOn`](#rxobservableprototypesubscribeonscheduler)
-- [`sum`](#rxobservableprototypesumkeyselector-thisarg)
-- [`switch | switchLatest`](#rxobservableprototypeswitch)
-- [`take`](#rxobservableprototypetakecount-scheduler)
-- [`takeLast`](#rxobservableprototypetakelastcount)
-- [`takeLastBuffer`](#rxobservableprototypetakelastbuffercount)
-- [`takeLastBufferWithTime`](#rxobservableprototypetakelastbufferwithtimeduration-scheduler)
-- [`takeLastWithTime`](#rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler)
-- [`takeUntil`](#rxobservableprototypetakeuntilother)
-- [`takeUntilWithTime`](#rxobservableprototypetakeuntilwithtimeendtime-scheduler)
-- [`takeWhile`](#rxobservableprototypetakewhilepredicate-thisarg)
-- [`throttle`](#rxobservableprototypethrottleduetime-scheduler)
-- [`throttleWithSelector`](#rxobservableprototypethrottlewithselectorthrottleselector)
-- [`timeInterval`](#rxobservableprototypetimeintervalscheduler)
-- [`timeout`](#rxobservableprototypetimeoutduetime-other-scheduler)
-- [`timeoutWithSelector`](#rxobservableprototypetimeoutwithselectorfirsttimeout-timeoutdurationselector-other)
-- [`timestamp`](#rxobservableprototypetimestampscheduler)
-- [`toArray`](#rxobservableprototypetoarray)
-- [`where`](#rxobservableprototypewherepredicate-thisarg)
-- [`window`](#rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector)
-- [`windowWithCount`](#rxobservableprototypewindowwithcountcount-skip)
-- [`windowWithTime`](#rxobservableprototypewindowwithtimetimespan-timeshift--scheduler)
-- [`windowWithTimeOrCount`](#rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler)
-- [`zip`](#rxobservableprototypezipargs-resultselector)
-
-## _Observable Methods_ ##
-
-
-
-### <a id="rxobservableonerrorresumenextargs"></a>`Rx.Observable.onErrorResumeNext(...args)`
-<a href="#rxobservableonerrorresumenextargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js "View in source") 
-
-Continues an observable sequence that is terminated normally or by an exception with the next observable sequence or Promise.
-
-### Arguments
-1. `args` *(Array|arguments)*: Observable sequences to concatenate.
-
-#### Returns
-*(`Observable`)*: An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally. 
-
-#### Example
-```js
-var source1 = Rx.Observable.throw(new Error('error 1'));
-var source2 = Rx.Observable.throw(new Error('error 2'));
-var source3 = Rx.Observable.return(42);
-
-var source = Rx.Observable.onErrorResumeNext(source1, source2, source3);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/onerrorresumenext.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-
-Unit Tests:
-- [/tests/observable/onerrorresumenext.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/onerrorresumenext.js)
-
-* * *
-
-### <a id="rxobservablerangestart-count-scheduler"></a>`Rx.Observable.range(start, count, [scheduler])`
-<a href="#rxobservablerangestart-count-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js "View in source") 
-
-Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
-
-### Arguments
-1. `start` *(`Number`)*: The value of the first integer in the sequence.
-2. `count` *(`Number`)*: The number of sequential integers to generate.
-3. `[scheduler=Rx.Scheduler.currentThread]` *(`Scheduler`)*: Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
-
-#### Returns
-*(`Observable`)*: An observable sequence that contains a range of sequential integral numbers. 
-
-#### Example
-```js
-var source = Rx.Observable.range(0, 3);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 0 
-// => Next: 1
-// => Next: 2 
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/range.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/range.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/range.js)
-
-* * *
-
-### <a id="rxobservablerepeatvalue-repeatcount-scheduler"></a>`Rx.Observable.repeat(value, [repeatCount], [scheduler])`
-<a href="#rxobservablerepeatvalue-repeatcount-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeat.js "View in source") 
-
-Generates an observable sequence that repeats the given element the specified number of times, using the specified scheduler to send out observer messages.
-
-### Arguments
-1. `value` *(`Any`)*: Element to repeat.
-2. `[repeatCount=-1]` *(`Number`)*:Number of times to repeat the element. If not specified, repeats indefinitely.
-3. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to run the producer loop on. If not specified, defaults to Scheduler.immediate.
-
-#### Returns
-*(`Observable`)*: An observable sequence that repeats the given element the specified number of times.
-
-#### Example
-```js
-var source = Rx.Observable.repeat(42, 3);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-//=> Next: 42 
-// => Next: 42
-// => Next: 42
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/repeat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeat.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/repeat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/repeat.js)
-
-* * *
-
-### <a id="rxobservablereturnvalue-scheduler"></a>`Rx.Observable.return(value, [scheduler])`
-<a href="#rxobservablereturnvalue-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js "View in source") 
-
-Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
-There is an alias called `returnValue` for browsers <IE9.
-
-### Arguments
-1. `value` *(`Any`)*: Single element in the resulting observable sequence.
-2. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
-
-#### Returns
-*(`Observable`)*: An observable sequence that repeats the given element the specified number of times.
-
-#### Example
-```js
-var source = Rx.Observable.return(42);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42 
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/return.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/return.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/return.js)
-
-* * *
-
-### <a id="rxobservablestartfunc-scheduler-context"></a>`Rx.Observable.start(func, [scheduler], [context])`
-<a href="#rxobservablestartfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/start.js "View in source") 
-
-Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
-
-### Arguments
-1. `func` *(`Function`)*: Function to run asynchronously.
-2. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
-3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
-
-#### Returns
-*(`Observable`)*: An observable sequence exposing the function's result value, or an exception.
-
-#### Example
-```js
-var context = { value: 42 };
-
-var source = Rx.Observable.start(
-    function () {
-        return this.value; 
-    }, 
-    Rx.Scheduler.timeout, 
-    context
-);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42 
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/start.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/start.js)
-
-Dist:
-- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using rx.async.js | rx.async.compat.js
-    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/start.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/start.js)
-
-* * *
-
-### <a id="rxobservablestartasyncfunctionasync"></a>`Rx.Observable.startAsync(functionAsync)`
-<a href="#rxobservablestartasyncfunctionasync">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startasync.js "View in source") 
-
-Invokes the asynchronous function, surfacing the result through an observable sequence.
-
-### Arguments
-1. `functionAsync` *(`Function`)*: Asynchronous function which returns a Promise to run.
-
-#### Returns
-*(`Observable`)*: An observable sequence exposing the function's Promises's value or error.
-
-#### Example
-```js
-var source = Rx.Observable.startAsync(function () { 
-    return RSVP.Promise.resolve(42);
-});
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42 
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/startasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startasync.js)
-
-Dist:
-- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using rx.async.js | rx.async.compat.js
-    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/startasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/startasync.js)
-
-* * *
-
-### <a id="rxobservablethrowexception-scheduler"></a>`Rx.Observable.throw(exception, [scheduler])`
-<a href="#rxobservablethrowexception-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") 
-
-Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
-There is an alias to this method called `throwException` for browsers <IE9.
-
-### Arguments
-1. `dueTime` *(`Any`)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
-2. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to send the exceptional termination call on. If not specified, defaults to the immediate scheduler.
-
-#### Returns
-*(`Observable`)*: The observable sequence that terminates exceptionally with the specified exception object.
-   
-#### Example
-```js
-var source = Rx.Observable.return(42)
-    .selectMany(Rx.Observable.throw(new Error('error!')));
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Error: Error: error!
-```
-
-### Location
-
-File:
-- [/src/core/observable/throw.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throw.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/throw.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/throw.js)
-
-* * *
-
-### <a id="rxobservabletimerduetime-period-scheduler"></a>`Rx.Observable.timer(dueTime, [period], [scheduler])`
-<a href="#rxobservabletimerduetime-period-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timer.js "View in source") 
-
-Returns an observable sequence that produces a value after dueTime has elapsed and then after each period.  Note for `rx.lite.js`, only 
-relative time is supported.
-
-### Arguments
-1. `dueTime` *(Date|Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
-2. `[period|scheduler=Rx.Scheduler.timeout]` *(Number|Scheduler)*: Period to produce subsequent values (specified as an integer denoting milliseconds), or the scheduler to run the timer on. If not specified, the resulting timer is not recurring.
-3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the timer on. If not specified, the timeout scheduler is used.
-
-#### Returns
-*(`Observable`)*: An observable sequence that produces a value after due time has elapsed and then each period.
-
-#### Example
-```js
-var source = Rx.Observable.timer(200, 100)
-    .pluck('interval')
-    .take(3);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 200
-// => Next: 100
-// => Next: 100
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/timer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timer.js)
-- [/src/core/observable/timer-lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timer-lite.js)
-
-Dist:
-- [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- [`rx`](https://www.npmjs.org/package/rx).time.js
-    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js) | rx.lite.compat.js
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`rx`](https://www.npmjs.org/package/rx)JS-Time
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/timer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/timer.js)
-- [/tests/observable/timer-lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/timer-lite.js)
-
-* * *
-
-### <a id="rxobservabletoasyncfunc-scheduler-context"></a>`Rx.Observable.toAsync(func, [scheduler], [context])`
-<a href="#rxobservabletoasyncfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toasync.js "View in source") 
-
-Converts the function into an asynchronous function. Each invocation of the resulting asynchronous function causes an invocation of the original synchronous function on the specified scheduler.
-
-### Arguments
-1. `func` *(`Function`)*: Function to convert to an asynchronous function.
-2. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the function on. If not specified, defaults to Scheduler.timeout.
-3. `[context]` *(`Any`)*: The context for the func parameter to be executed.  If not specified, defaults to undefined.
-
-#### Returns
-*(`Function`)*: Asynchronous function.
-
-#### Example
-```js
-var func = Rx.Observable.toAsync(function (x, y) {
-    return x + y;
-});
-
-// Execute function with 3 and 4
-var source = func(3, 4);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 7
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/toasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toasync.js)
-
-Dist:
-- [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [`rx.async.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.compat.js)
-
-Prerequisites:
-- [`rx`](https://www.npmjs.org/package/rx).async.js | rx.async.compat.js
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`rx`](https://www.npmjs.org/package/rx)JS-Binding
-
-Unit Tests:
-- [/tests/observable/toasync.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/toasync.js)
-
-* * *
-
-### <a id="rxobservableusingresourcefactory-observablefactory"></a>`Rx.Observable.using(resourceFactory, observableFactory)`
-<a href="#rxobservableusingresourcefactory-observablefactory">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/using.js "View in source") 
-
- Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
-
-### Arguments
-1. `resourceFactory` *(`Function`)*: Factory function to obtain a resource object.
-2. `observableFactory` *(`Scheduler`)*: Factory function to obtain an observable sequence that depends on the obtained resource.
-
-#### Returns
-*(`Function`)*: An observable sequence whose lifetime controls the lifetime of the dependent resource object.
-
-#### Example
-```js
-/* Using an AsyncSubject as a resource which supports the .dispose method */
-function DisposableResource(value) {
-    this.value = null;
-    this.disposed = false;
-}
-
-DisposableResource.prototype.getValue = function () {
-    if (this.disposed) {
-        throw new Error('Object is disposed');
-    }
-    return this.value;
-};
-
-DisposableResource.prototype.dispose = function () {
-    if (!this.disposed) {
-        this.disposed = true;
-        this.value = null;
-    }
-    console.log('Disposed');
-};
-
-var source = Rx.Observable.using(
-    function () { return new DisposableResource(42); },
-    function (resource) {
-        var subject = new AsyncSubject();
-        s.onNext(resource.getValue());
-        s.onCompleted();
-        return subject;
-    }
-);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42
-// => Completed 
-
-subscription.dispose();
-
-// => Disposed
-```
-
-### Location
-
-File:
-- [/src/core/observable/using.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/using.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-
-Unit Tests:
-- [/tests/observable/using.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/using.js)
-
-* * *
-
-### <a id="rxobservablewhenargs"></a>`Rx.Observable.when(...args)`
-<a href="#rxobservablewhenargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/when.js "View in source") 
-
-A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.
-
-### Arguments
-1. `args` *(arguments|Array)*: A series of plans (specified as an Array of as a series of arguments) created by use of the then operator on patterns.
-
-#### Returns
-*(`Observable`)*: Observable sequence with the results form matching several patterns. 
-
-#### Example
-```js
-// Fire each plan when both are ready
-var source = Rx.Observable.when(
-  Rx.Observable.timer(100).and(Rx.Observable.timer(500)).then(function (x, y) { return 'first'; }),
-  Rx.Observable.timer(400).and(Rx.Observable.timer(300)).then(function (x, y) { return 'second'; })
-);
-
-var subscription = source.subscribe(
-  function (x) {
-      console.log('Next: ' + x);
-  },
-  function (err) {
-      console.log('Error: ' + err);   
-  },
-  function () {
-      console.log('Completed');   
-  });
-
-
-// => Next: second
-// => Next: first
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/when.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/when.js)
-
-Dist:
-- [rx.joinpatterns.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js)
-
-Prerequisites:
-- [`rx`](https://www.npmjs.org/package/rx).joinpatterns.js
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`rx`](https://www.npmjs.org/package/rx)JS-JoinPatterns
-
-Unit Tests:
-- [/tests/observable/when.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/when.js)
-
-* * *
-
-### <a id="rxobservablewhilecondition-source"></a>`Rx.Observable.while(condition, source)`
-<a href="#rxobservablewhilecondition-source">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/while.js "View in source") 
-
-Repeats source as long as condition holds emulating a while loop.  There is an alias for this method called 'whileDo' for browsers <IE9.
-
-### Arguments
-1. `condition` *(`Function`)*: The condition which determines if the source will be repeated.
-2. `source` *(`Observable`)*: The observable sequence that will be run if the condition function returns true.
-
-#### Returns
-*(`Observable`)*: An observable sequence which is repeated as long as the condition holds. 
-
-#### Example
-```js
-var i = 0;
-
-// Repeat until condition no longer holds
-var source = Rx.Observable.while(
-    function () { ++i < 3 },
-    Rx.Observable.return(42)
-);
-
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42
-// => Next: 42
-// => Next: 42
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/while.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/while.js)
-
-Dist:
-- [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
-
-Prerequisites:
-- [`rx`](https://www.npmjs.org/package/rx).experimental.js
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
-
-Unit Tests:
-- [/tests/observable/while.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/while.js)
-
-* * *
-
-### <a id="rxobservablezipargs"></a>`Rx.Observable.zip(...args)`
-<a href="#rxobservablezipargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zip.js "View in source") 
-
-Merges the specified observable sequences or Promises into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
-
-#### Arguments
-1. `args` *(Array|arguments)*: Observable sources.
-
-#### Returns
-*(`Observable`)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function.
-
-#### Example
-```js
-/* Using arguments */
-var range = Rx.Observable.range(0, 5);
-
-var source = Observable.zip(
-    range,
-    range.skip(1), 
-    range.skip(2), 
-    function (s1, s2, s3) {
-        return s1 + ':' + s2 + ':' + s3;
-    }
-);
-    
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 0:1:2
-// => Next: 1:2:3
-// => Next: 2:3:4
-// => Completed
-
-/* Using promises and Observables */
-var range = Rx.Observable.range(0, 5);
-
-var source = Observable.zip(
-    RSVP.Promise.resolve(0),
-    RSVP.Promise.resolve(1),
-    Rx.Observable.return(2)
-    function (s1, s2, s3) {
-        return s1 + ':' + s2 + ':' + s3;
-    }
-);
-    
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 0:1:2
-// => Completed
-```
-
-### Location
-
-File:
-- [/src/core/observable/zip.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zip.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- [`rx`](https://www.npmjs.org/package/rx).experimental.js
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/zip.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/zip.js)
-
-* * *
-
-### <a id="rxobservableziparrayargs"></a>`Rx.Observable.zipArray(...args)`
-<a href="#rxobservableprototypeziparrayargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparray.js "View in source") 
-
-Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-
-#### Arguments
-1. `args` *(Arguments | Array)*: Observable sources.
-
-#### Returns
-*(`Observable`)*: An observable sequence containing lists of elements at corresponding indexes.
-
-#### Example
-```js
-var range = Rx.Observable.range(0, 5);
-
-var source = Rx.Observable.zipArray(
-    range,
-    range.skip(1), 
-    range.skip(2)
-);
-    
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 0,1,2 
-// => Next: 1,2,3 
-// => Next: 2,3,4 
-// => Completed 
-```
-
-### Location
-
-File:
-- [/src/core/observable/zip.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparay.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- [`rx`](https://www.npmjs.org/package/rx).experimental.js
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/ziparay.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/ziparay.js)
-
-* * *
+- [`aggregate`](operators/aggregate.md)
+- [`all`](operators/all.md)
+- [`amb`](operators/ambproto.md)
+- [`and`](operators/and.md)
+- [`any`](operators/any.md)
+- [`asObservable`](operators/asobservable.md)
+- [`average`](operators/average.md)
+- [`buffer`](operators/buffer.md)
+- [`bufferWithCount`](operators/bufferwithcount.md)
+- [`bufferWithTime`](operators/bufferwithtime.md)
+- [`bufferWithTimeOrCount`](operators/bufferwithtimeorcount.md)
+- [`catch | catchException`](operators/catchproto.md)
+- [`combineLatest`](operators/combinelatest.md)
+- [`concat`](operators/concatproto.md)
+- [`concatAll`](operators/concatall.md)
+- [`concatMap`](operators/concatmap.md)
+- [`connect`](operators/connect.md)
+- [`contains`](operators/contains.md)
+- [`controlled`](operators/controlled.md)
+- [`count`](operators/count.md)
+- [`defaultIfEmpty`](operators/defaultifempty.md)
+- [`delay`](operators/delay.md)
+- [`delayWithSelector`](operators/delaywithselector.md)
+- [`dematerialize`](operators/dematerialize.md)
+- [`distinct`](operators/distinct.md)
+- [`distinctUntilChanged`](operators/distinctuntilchanged.md)
+- [`do | doAction`](operators/do.md)
+- [`doWhile`](operators/dowhile.md)
+- [`elementAt`](operators/elementat.md)
+- [`elementAtOrDefault`](operators/elementatordefault.md)
+- [`every`](operators/all.md)
+- [`expand`](operators/expand.md)
+- [`filter`](operators/where.md)
+- [`finally | finallyAction`](operators/finally.md)
+- [`find`](operators/find.md)
+- [`findIndex`](operators/findindex.md)
+- [`first`](operators/first.md)
+- [`firstOrDefault`](operators/firstordefault.md)
+- [`flatMap`](operators/selectmany.md)
+- [`flatMapLatest`](operators/flatmaplatest.md)
+- [`forkJoin`](operators/forkjoinproto.md)
+- [`groupBy`](operators/groupby.md)
+- [`groupByUntil`](operators/groupbyuntil.md)
+- [`groupJoin`](operators/groupjoin.md)
+- [`ignoreElements`](operators/ignoreelements.md)
+- [`isEmpty`](operators/isempty.md)
+- [`join`](operators/join.md)
+- [`last`](operators/last.md)
+- [`lastOrDefault`](operators/lastordefault.md)
+- [`let | letBind`](operators/let.md)
+- [`manySelect`](operators/manyselect.md)
+- [`map`](operators/select.md)
+- [`max`](operators/max.md)
+- [`maxBy`](operators/maxby.md)
+- [`merge`](operators/mergeproto.md)
+- [`mergeAll`](operators/mergeall.md)
+- [`min`](operators/min.md)
+- [`minBy`](operators/minby.md)
+- [`multicast`](operators/multicast.md)
+- [`observeOn`](operators/observeon.md)
+- [`onErrorResumeNext`](operators/onerrorresumenextproto.md)
+- [`pairwise`](operators/pairwise.md)
+- [`partition`](operators/partition.md)
+- [`pausable`](operators/pausable.md)
+- [`pausableBuffered`](operators/pausablebuffered.md)
+- [`pluck`](operators/pluck.md)
+- [`publish`](operators/publish.md)
+- [`publishLast`](operators/publishlast.md)
+- [`publishValue`](operators/publishvalue.md)
+- [`share`](operators/share.md)
+- [`shareReplay`](operators/sharereplay.md)
+- [`shareValue`](operators/sharevalue.md)
+- [`refCount`](operators/refcount.md)
+- [`reduce`](operators/reduce.md)
+- [`repeat`](operators/repeatproto.md)
+- [`replay`](operators/replay.md)
+- [`retry`](operators/retry.md)
+- [`sample`](operators/sample.md)
+- [`scan`](operators/scan.md)
+- [`select`](operators/select.md)
+- [`selectConcat`](operators/concatmap.md)
+- [`selectMany`](operators/selectmany.md)
+- [`selectSwitch`](operators/flatmaplatest.md)
+- [`sequenceEqual`](operators/sequenceequal.md)
+- [`single`](operators/single.md)
+- [`singleOrDefault`](operators/singleordefault.md)
+- [`skip`](operators/skip.md)
+- [`skipLast`](operators/skiplast.md)
+- [`skipLastWithTime`](operators/skiplastwithtime.md)
+- [`skipUntil`](operators/skipuntil.md)
+- [`skipUntilWithTime`](operators/skipuntilwithtime.md)
+- [`skipWhile`](operators/skipwhile.md)
+- [`some`](operators/any.md)
+- [`startWith`](operators/startwith.md)
+- [`subscribe`](operators/subscribe.md)
+- [`subscribeOn`](operators/subscribeon.md)
+- [`sum`](operators/sum.md)
+- [`switch | switchLatest`](operators/switch.md)
+- [`take`](operators/take.md)
+- [`takeLast`](operators/takelast.md)
+- [`takeLastBuffer`](operators/takelastbuffer.md)
+- [`takeLastBufferWithTime`](operators/takelastbufferwithtime.md)
+- [`takeLastWithTime`](operators/takelastwithtime.md)
+- [`takeUntil`](operators/takeuntil.md)
+- [`takeUntilWithTime`](operators/takeuntilwithtime.md)
+- [`takeWhile`](operators/takewhile.md)
+- [`tap`](operators/do.md)
+- [`throttle`](operators/throttle.md)
+- [`throttleWithSelector`](operators/throttlewithselector.md)
+- [`timeInterval`](operators/timeinterval.md)
+- [`timeout`](operators/timeout.md)
+- [`timeoutWithSelector`](operators/timeoutwithselector.md)
+- [`timestamp`](operators/timestamp.md)
+- [`toArray`](operators/toarray.md)
+- [`where`](operators/where.md)
+- [`window`](operators/window.md)
+- [`windowWithCount`](operators/windowwithcount.md)
+- [`windowWithTime`](operators/windowwithtime.md)
+- [`windowWithTimeOrCount`](operators/windowwithtimeorcount.md)
+- [`zip`](operators/zipproto.md)
 
 ## _Observable Instance Methods_ ##
 
