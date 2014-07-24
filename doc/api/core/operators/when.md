@@ -37,10 +37,12 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/when.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/when.js)
+- [`/src/core/observable/when.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/when.js)
 
 Dist:
-- [rx.joinpatterns.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js)
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
+- [`rx.joinpatterns.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js)
 
 Prerequisites:
 - [`rx`](https://www.npmjs.org/package/rx).joinpatterns.js
@@ -50,7 +52,8 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- [`rx`](https://www.npmjs.org/package/rx)JS-JoinPatterns
+- [`RxJS-All`](http://www.nuget.org/packages/RxJS-All)
+- [`RxJS-JoinPatterns`](http://www.nuget.org/packages/RxJS-JoinPatterns)
 
 Unit Tests:
-- [/tests/observable/when.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/when.js)
+- [`/tests/observable/when.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/when.js)
