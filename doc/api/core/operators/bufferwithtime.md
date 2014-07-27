@@ -58,12 +58,12 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/bufferwithtime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithtime.js)
+- [`/src/core/observable/bufferwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithtime.js)
 
 Dist:
-- [rx.all.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
-- [rx.all.compat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
-- [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.compat.js)
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
 
 Prerequisites:
 - [`rx`](https://www.npmjs.org/package/rx).time.js
@@ -79,4 +79,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/bufferwithtime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/bufferwithtime.js)
+- [`/tests/observable/bufferwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/bufferwithtime.js)

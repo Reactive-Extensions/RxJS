@@ -413,7 +413,7 @@
 
           return curr;
         })
-        .doAction(
+        .tap(
           noop,
           function (e) { chain && chain.onError(e); },
           function () { chain && chain.onCompleted(); }

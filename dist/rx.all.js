@@ -3245,62 +3245,62 @@
         });
     };
 
-    /**
-     *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
-     *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
-     *  
-     * @example
-     *  var res = observable.doAction(observer);
-     *  var res = observable.doAction(onNext);
-     *  var res = observable.doAction(onNext, onError);
-     *  var res = observable.doAction(onNext, onError, onCompleted);
-     * @param {Mixed} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
-     * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-     * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-     * @returns {Observable} The source sequence with the side-effecting behavior applied.   
-     */
-    observableProto['do'] = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
-        var source = this, onNextFunc;
-        if (typeof observerOrOnNext === 'function') {
-            onNextFunc = observerOrOnNext;
-        } else {
-            onNextFunc = observerOrOnNext.onNext.bind(observerOrOnNext);
-            onError = observerOrOnNext.onError.bind(observerOrOnNext);
-            onCompleted = observerOrOnNext.onCompleted.bind(observerOrOnNext);
+  /**
+   *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
+   *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
+   *  
+   * @example
+   *  var res = observable.do(observer);
+   *  var res = observable.do(onNext);
+   *  var res = observable.do(onNext, onError);
+   *  var res = observable.do(onNext, onError, onCompleted);
+   * @param {Function | Observer} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
+   * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+   * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+   * @returns {Observable} The source sequence with the side-effecting behavior applied.   
+   */
+  observableProto['do'] = observableProto.doAction = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
+    var source = this, onNextFunc;
+    if (typeof observerOrOnNext === 'function') {
+      onNextFunc = observerOrOnNext;
+    } else {
+      onNextFunc = observerOrOnNext.onNext.bind(observerOrOnNext);
+      onError = observerOrOnNext.onError.bind(observerOrOnNext);
+      onCompleted = observerOrOnNext.onCompleted.bind(observerOrOnNext);
+    }
+    return new AnonymousObservable(function (observer) {
+      return source.subscribe(function (x) {
+        try {
+          onNextFunc(x);
+        } catch (e) {
+          observer.onError(e);
         }
-        return new AnonymousObservable(function (observer) {
-            return source.subscribe(function (x) {
-                try {
-                    onNextFunc(x);
-                } catch (e) {
-                    observer.onError(e);
-                }
-                observer.onNext(x);
-            }, function (exception) {
-                if (!onError) {
-                    observer.onError(exception);
-                } else {
-                    try {
-                        onError(exception);
-                    } catch (e) {
-                        observer.onError(e);
-                    }
-                    observer.onError(exception);
-                }
-            }, function () {
-                if (!onCompleted) {
-                    observer.onCompleted();
-                } else {
-                    try {
-                        onCompleted();
-                    } catch (e) {
-                        observer.onError(e);
-                    }
-                    observer.onCompleted();
-                }
-            });
-        });
-    };
+        observer.onNext(x);
+      }, function (err) {
+        if (!onError) {
+          observer.onError(err);
+        } else {
+          try {
+            onError(err);
+          } catch (e) {
+            observer.onError(e);
+          }
+          observer.onError(err);
+        }
+      }, function () {
+        if (!onCompleted) {
+          observer.onCompleted();
+        } else {
+          try {
+            onCompleted();
+          } catch (e) {
+            observer.onError(e);
+          }
+          observer.onCompleted();
+        }
+      });
+    });
+  };
 
   /**
    *  Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.
@@ -3680,64 +3680,74 @@
         });
     };
 
-    /**
-     *  Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer.
-     *  Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
-     * 
-     * @example
-     *  var res = obs = xs.distinct();
-     *  2 - obs = xs.distinct(function (x) { return x.id; });
-     *  2 - obs = xs.distinct(function (x) { return x.id; }, function (x) { return x.toString(); });  
-     * @param {Function} [keySelector]  A function to compute the comparison key for each element.
-     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
-     * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
-     */
-   observableProto.distinct = function (keySelector, keySerializer) {
-        var source = this;
-        keySelector || (keySelector = identity);
-        keySerializer || (keySerializer = defaultKeySerializer);
-        return new AnonymousObservable(function (observer) {
-            var hashSet = {};
-            return source.subscribe(function (x) {
-                var key, serializedKey, otherKey, hasMatch = false;
-                try {
-                    key = keySelector(x);
-                    serializedKey = keySerializer(key);
-                } catch (exception) {
-                    observer.onError(exception);
-                    return;
-                }
-                for (otherKey in hashSet) {
-                    if (serializedKey === otherKey) {
-                        hasMatch = true;
-                        break;
-                    }
-                }
-                if (!hasMatch) {
-                    hashSet[serializedKey] = null;
-                    observer.onNext(x);
-                }
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+  // Swap out for Array.findIndex
+  function arrayIndexOfComparer(array, item, comparer) {
+    for (var i = 0, len = array.length; i < len; i++) {
+      if (comparer(array[i], item)) { return i; }
+    }
+    return -1;
+  }
 
-    /**
-     *  Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
-     *  
-     * @example
-     *  var res = observable.groupBy(function (x) { return x.id; });
-     *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
-     *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; }, function (x) { return x.toString(); });
-     * @param {Function} keySelector A function to extract the key for each element.
-     * @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
-     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
-     * @returns {Observable} A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
-     */
-    observableProto.groupBy = function (keySelector, elementSelector, keySerializer) {
-        return this.groupByUntil(keySelector, elementSelector, function () {
-            return observableNever();
-        }, keySerializer);
-    };
+  function HashSet(comparer) {
+    this.comparer = comparer;
+    this.set = [];
+  }
+  HashSet.prototype.push = function(value) {
+    var retValue = arrayIndexOfComparer(this.set, value, this.comparer) === -1;
+    retValue && this.set.push(value);
+    return retValue;
+  };
+
+  /**
+   *  Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer.
+   *  Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
+   * 
+   * @example
+   *  var res = obs = xs.distinct();
+   *  2 - obs = xs.distinct(function (x) { return x.id; });
+   *  2 - obs = xs.distinct(function (x) { return x.id; }, function (a,b) { return a === b; });  
+   * @param {Function} [keySelector]  A function to compute the comparison key for each element.
+   * @param {Function} [comparer]  Used to compare items in the collection.
+   * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
+   */
+  observableProto.distinct = function (keySelector, comparer) {
+    var source = this;
+    comparer || (comparer = defaultComparer);
+    return new AnonymousObservable(function (observer) {
+      var hashSet = new HashSet(comparer);
+      return source.subscribe(function (x) {
+        var key = x;
+
+        if (keySelector) {
+          try {
+            key = keySelector(x);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }            
+        }
+        hashSet.push(key) && observer.onNext(x);
+      }, 
+      observer.onError.bind(observer), 
+      observer.onCompleted.bind(observer));
+    });
+  };
+
+  /**
+   *  Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
+   *  
+   * @example
+   *  var res = observable.groupBy(function (x) { return x.id; });
+   *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
+   *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; }, function (x) { return x.toString(); });
+   * @param {Function} keySelector A function to extract the key for each element.
+   * @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
+   * @param {Function} [comparer] Used to determine whether the objects are equal.
+   * @returns {Observable} A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
+   */
+  observableProto.groupBy = function (keySelector, elementSelector, comparer) {
+    return this.groupByUntil(keySelector, elementSelector, observableNever, comparer);
+  };
 
     /**
      *  Groups the elements of an observable sequence according to a specified key selector function.
@@ -3750,102 +3760,109 @@
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); }, function (x) { return x.toString(); });
      * @param {Function} keySelector A function to extract the key for each element.
      * @param {Function} durationSelector A function to signal the expiration of a group.
-     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
+     * @param {Function} [comparer] Used to compare objects. When not specified, the default comparer is used.
      * @returns {Observable} 
      *  A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
      *  If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
      *      
      */
-    observableProto.groupByUntil = function (keySelector, elementSelector, durationSelector, keySerializer) {
-        var source = this;
-        elementSelector || (elementSelector = identity);
-        keySerializer || (keySerializer = defaultKeySerializer);
-        return new AnonymousObservable(function (observer) {
-            var map = {},
-                groupDisposable = new CompositeDisposable(),
-                refCountDisposable = new RefCountDisposable(groupDisposable);
-            groupDisposable.add(source.subscribe(function (x) {
-                var duration, durationGroup, element, fireNewMapEntry, group, key, serializedKey, md, writer, w;
-                try {
-                    key = keySelector(x);
-                    serializedKey = keySerializer(key);
-                } catch (e) {
-                    for (w in map) {
-                        map[w].onError(e);
-                    }
-                    observer.onError(e);
-                    return;
+    observableProto.groupByUntil = function (keySelector, elementSelector, durationSelector, comparer) {
+      var source = this;
+      elementSelector || (elementSelector = identity);
+      comparer || (comparer = defaultComparer);
+      return new AnonymousObservable(function (observer) {
+        var map = new Dictionary(),
+          groupDisposable = new CompositeDisposable(),
+          refCountDisposable = new RefCountDisposable(groupDisposable);
+
+        groupDisposable.add(source.subscribe(function (x) {
+          var key, i, len, items;
+          try {
+            key = keySelector(x);
+          } catch (e) {
+            items = map.getValues();
+            for (i = 0, len = items.length; i < len; i++) {
+              items[i].onError(e);
+            }
+            observer.onError(e);
+            return;
+          }
+
+          var fireNewMapEntry = false,
+            writer = map.tryGetValue(key);
+          if (!writer) {
+            writer = new Subject();
+            map.set(key, writer);
+            fireNewMapEntry = true;
+          }
+
+          if (fireNewMapEntry) {
+            var group = new GroupedObservable(key, writer, refCountDisposable),
+              durationGroup = new GroupedObservable(key, writer);
+            try {
+              duration = durationSelector(durationGroup);
+            } catch (e) {
+              items = map.getValues();
+              for (i = 0, len = items.length; i < len; i++) {
+                items[i].onError(e);
+              }
+              observer.onError(e);
+              return;
+            }
+
+            observer.onNext(group);
+            
+            var md = new SingleAssignmentDisposable();
+            groupDisposable.add(md);
+            
+            var expire = function () {
+              map.remove(key) && writer.onCompleted();
+              groupDisposable.remove(md);
+            };
+
+            md.setDisposable(duration.take(1).subscribe(
+              noop, 
+              function (exn) {
+                items = map.getValues();
+                for (i = 0, len = items.length; i < len; i++) {
+                  items[i].onError(exn);
                 }
-                fireNewMapEntry = false;
-                try {
-                    writer = map[serializedKey];
-                    if (!writer) {
-                        writer = new Subject();
-                        map[serializedKey] = writer;
-                        fireNewMapEntry = true;
-                    }
-                } catch (e) {
-                    for (w in map) {
-                        map[w].onError(e);
-                    }
-                    observer.onError(e);
-                    return;
-                }
-                if (fireNewMapEntry) {
-                    group = new GroupedObservable(key, writer, refCountDisposable);
-                    durationGroup = new GroupedObservable(key, writer);
-                    try {
-                        duration = durationSelector(durationGroup);
-                    } catch (e) {
-                        for (w in map) {
-                            map[w].onError(e);
-                        }
-                        observer.onError(e);
-                        return;
-                    }
-                    observer.onNext(group);
-                    md = new SingleAssignmentDisposable();
-                    groupDisposable.add(md);
-                    var expire = function  () {
-                        if (serializedKey in map) {
-                            delete map[serializedKey];
-                            writer.onCompleted();
-                        }
-                        groupDisposable.remove(md);
-                    };
-                    md.setDisposable(duration.take(1).subscribe(noop, function (exn) {
-                        for (w in map) {
-                            map[w].onError(exn);
-                        }
-                        observer.onError(exn);
-                    }, function () {
-                        expire();
-                    }));
-                }
-                try {
-                    element = elementSelector(x);
-                } catch (e) {
-                    for (w in map) {
-                        map[w].onError(e);
-                    }
-                    observer.onError(e);
-                    return;
-                }
-                writer.onNext(element);
-            }, function (ex) {
-                for (var w in map) {
-                    map[w].onError(ex);
-                }
-                observer.onError(ex);
-            }, function () {
-                for (var w in map) {
-                    map[w].onCompleted();
-                }
-                observer.onCompleted();
-            }));
-            return refCountDisposable;
-        });
-    };
+                observer.onError(exn);
+              }, 
+              expire)
+            );
+          }
+
+          var element;
+          try {
+            element = elementSelector(x);
+          } catch (e) {
+            items = map.getValues();
+            for (i = 0, len = items.length; i < len; i++) {
+              items[i].onError(e);
+            }
+            observer.onError(e);
+            return;
+          }
+
+          writer.onNext(element);
+      }, function (ex) {
+        var items = map.getValues();
+        for(var i = 0, len = items.length; i < len; i++) {
+          items[i].onError(ex);
+        }
+        observer.onError(ex);
+      }, function () {
+        var items = map.getValues();
+        for(var i = 0, len = items.length; i < len; i++) {
+          items[i].onCompleted();
+        }
+        observer.onCompleted();
+      }));
+
+      return refCountDisposable;
+    });
+  };
 
     /**
      *  Projects each element of an observable sequence into a new form by incorporating the element's index.
@@ -5816,354 +5833,288 @@
         return ReplaySubject;
     }(Observable));
 
-    /** @private */
-    var ConnectableObservable = Rx.ConnectableObservable = (function (_super) {
-        inherits(ConnectableObservable, _super);
+  var ConnectableObservable = Rx.ConnectableObservable = (function (__super__) {
+    inherits(ConnectableObservable, __super__);
 
-        /**
-         * @constructor
-         * @private
-         */
-        function ConnectableObservable(source, subject) {
-            var state = {
-                subject: subject,
-                source: source.asObservable(),
-                hasSubscription: false,
-                subscription: null
-            };
+    function ConnectableObservable(source, subject) {
+      var hasSubscription = false, subscription;
 
-            this.connect = function () {
-                if (!state.hasSubscription) {
-                    state.hasSubscription = true;
-                    state.subscription = new CompositeDisposable(state.source.subscribe(state.subject), disposableCreate(function () {
-                        state.hasSubscription = false;
-                    }));
-                }
-                return state.subscription;
-            };
-
-            function subscribe(observer) {
-                return state.subject.subscribe(observer);
-            }
-
-            _super.call(this, subscribe);
+      this.connect = function () {
+        if (!hasSubscription) {
+          hasSubscription = true;
+          subscription = new CompositeDisposable(source.subscribe(subject), disposableCreate(function () {
+            hasSubscription = false;
+          }));
         }
+        return subscription;
+      };
 
-        /**
-         * @private
-         * @memberOf ConnectableObservable
-         */
-        ConnectableObservable.prototype.connect = function () { return this.connect(); };
+      __super__.call(this, subject.subscribe.bind(subject));
+    }
+    
+    ConnectableObservable.prototype.refCount = function () {
+      var connectableSubscription, count = 0, source = this;
+      return new AnonymousObservable(function (observer) {
+          var shouldConnect = ++count === 1,
+            subscription = source.subscribe(observer);
+          shouldConnect && (connectableSubscription = source.connect());
+          return function () {
+            subscription.dispose();
+            --count === 0 && connectableSubscription.dispose();
+          };
+      });
+    };
 
-        /**
-         * @private
-         * @memberOf ConnectableObservable
-         */        
-        ConnectableObservable.prototype.refCount = function () {
-            var connectableSubscription = null, count = 0, source = this;
-            return new AnonymousObservable(function (observer) {
-                var shouldConnect, subscription;
-                count++;
-                shouldConnect = count === 1;
-                subscription = source.subscribe(observer);
-                if (shouldConnect) {
-                    connectableSubscription = source.connect();
-                }
-                return disposableCreate(function () {
-                    subscription.dispose();
-                    count--;
-                    if (count === 0) {
-                        connectableSubscription.dispose();
-                    }
-                });
-            });
-        };
-
-        return ConnectableObservable;
-    }(Observable));
-
-    // Real Dictionary
-    var primes = [1, 3, 7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749, 65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593, 16777213, 33554393, 67108859, 134217689, 268435399, 536870909, 1073741789, 2147483647];
-    var noSuchkey = "no such key";
-    var duplicatekey = "duplicate key";
+    return ConnectableObservable;
+  }(Observable));
+  
+  var Dictionary = (function () {
+    
+    var primes = [1, 3, 7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749, 65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593, 16777213, 33554393, 67108859, 134217689, 268435399, 536870909, 1073741789, 2147483647],
+      noSuchkey = "no such key",
+      duplicatekey = "duplicate key";
 
     function isPrime(candidate) {
-        if (candidate & 1 === 0) {
-            return candidate === 2;
-        }
-        var num1 = Math.sqrt(candidate),
-            num2 = 3;
-        while (num2 <= num1) {
-            if (candidate % num2 === 0) {
-                return false;
-            }
-            num2 += 2;
-        }
-        return true;
+      if (candidate & 1 === 0) { return candidate === 2; }
+      var num1 = Math.sqrt(candidate),
+        num2 = 3;
+      while (num2 <= num1) {
+        if (candidate % num2 === 0) { return false; }
+        num2 += 2;
+      }
+      return true;
     }
 
     function getPrime(min) {
-        var index, num, candidate;
-        for (index = 0; index < primes.length; ++index) {
-            num = primes[index];
-            if (num >= min) {
-                return num;
-            }
-        }
-        candidate = min | 1;
-        while (candidate < primes[primes.length - 1]) {
-            if (isPrime(candidate)) {
-                return candidate;
-            }
-            candidate += 2;
-        }
-        return min;
+      var index, num, candidate;
+      for (index = 0; index < primes.length; ++index) {
+        num = primes[index];
+        if (num >= min) { return num; }
+      }
+      candidate = min | 1;
+      while (candidate < primes[primes.length - 1]) {
+        if (isPrime(candidate)) { return candidate; }
+        candidate += 2;
+      }
+      return min;
     }
 
     function stringHashFn(str) {
-        var hash = 757602046;
-        if (!str.length) {
-            return hash;
-        }
-        for (var i = 0, len = str.length; i < len; i++) {
-            var character = str.charCodeAt(i);
-            hash = ((hash<<5)-hash)+character;
-            hash = hash & hash;
-        }
-        return hash;
+      var hash = 757602046;
+      if (!str.length) { return hash; }
+      for (var i = 0, len = str.length; i < len; i++) {
+        var character = str.charCodeAt(i);
+        hash = ((hash<<5)-hash)+character;
+        hash = hash & hash;
+      }
+      return hash;
     }
 
     function numberHashFn(key) {
-        var c2 = 0x27d4eb2d; 
-        key = (key ^ 61) ^ (key >>> 16);
-        key = key + (key << 3);
-        key = key ^ (key >>> 4);
-        key = key * c2;
-        key = key ^ (key >>> 15);
-        return key;
+      var c2 = 0x27d4eb2d; 
+      key = (key ^ 61) ^ (key >>> 16);
+      key = key + (key << 3);
+      key = key ^ (key >>> 4);
+      key = key * c2;
+      key = key ^ (key >>> 15);
+      return key;
     }
 
     var getHashCode = (function () {
-        var uniqueIdCounter = 0;
+      var uniqueIdCounter = 0;
 
-        return function (obj) {
-            if (obj == null) { 
-                throw new Error(noSuchkey);
-            }
+      return function (obj) {
+        if (obj == null) { throw new Error(noSuchkey); }
 
-            // Check for built-ins before tacking on our own for any object
-            if (typeof obj === 'string') {
-                return stringHashFn(obj);
-            }
+        // Check for built-ins before tacking on our own for any object
+        if (typeof obj === 'string') { return stringHashFn(obj); }
+        if (typeof obj === 'number') { return numberHashFn(obj); }
+        if (typeof obj === 'boolean') { return obj === true ? 1 : 0; }
+        if (obj instanceof Date) { return numberHashFn(obj.valueOf()); }
+        if (obj instanceof RegExp) { return stringHashFn(obj.toString()); }
+        if (typeof obj.valueOf === 'function') {
+          // Hack check for valueOf
+          var valueOf = obj.valueOf();
+          if (typeof valueOf === 'number') { return numberHashFn(valueOf); }
+          if (typeof obj === 'string') { return stringHashFn(valueOf); }
+        }
+        if (obj.getHashCode) { return obj.getHashCode(); }
 
-            if (typeof obj === 'number') {
-                return numberHashFn(obj);
-            }
-
-            if (typeof obj === 'boolean') {
-                return obj === true ? 1 : 0;
-            }
-
-            if (obj instanceof Date) {
-                return obj.getTime();
-            }
-
-            if (obj.getHashCode) {
-                return obj.getHashCode();
-            }
-
-            var id = 17 * uniqueIdCounter++;
-            obj.getHashCode = function () { return id; };
-            return id;
-        };
-    } ());
+        var id = 17 * uniqueIdCounter++;
+        obj.getHashCode = function () { return id; };
+        return id;
+      };
+    }());
 
     function newEntry() {
-        return { key: null, value: null, next: 0, hashCode: 0 };
+      return { key: null, value: null, next: 0, hashCode: 0 };
     }
 
-    // Dictionary implementation
+    function Dictionary(capacity, comparer) {
+      if (capacity < 0) { throw new Error('out of range'); }
+      if (capacity > 0) { this._initialize(capacity); }
+      
+      this.comparer = comparer || defaultComparer;
+      this.freeCount = 0;
+      this.size = 0;
+      this.freeList = -1;
+    }
 
-    var Dictionary = function (capacity, comparer) {
-        if (capacity < 0) {
-            throw new Error('out of range')
-        }
-        if (capacity > 0) {
-            this._initialize(capacity);
-        }
-        
-        this.comparer = comparer || defaultComparer;
-        this.freeCount = 0;
-        this.size = 0;
-        this.freeList = -1;
+    var dictionaryProto = Dictionary.prototype;
+
+    dictionaryProto._initialize = function (capacity) {
+      var prime = getPrime(capacity), i;
+      this.buckets = new Array(prime);
+      this.entries = new Array(prime);
+      for (i = 0; i < prime; i++) {
+        this.buckets[i] = -1;
+        this.entries[i] = newEntry();
+      }
+      this.freeList = -1;
     };
 
-    Dictionary.prototype._initialize = function (capacity) {
-        var prime = getPrime(capacity), i;
-        this.buckets = new Array(prime);
-        this.entries = new Array(prime);
-        for (i = 0; i < prime; i++) {
-            this.buckets[i] = -1;
-            this.entries[i] = newEntry();
+    dictionaryProto.add = function (key, value) {
+      return this._insert(key, value, true);
+    };
+
+    dictionaryProto._insert = function (key, value, add) {
+      if (!this.buckets) { this._initialize(0); }
+      var index3,
+        num = getHashCode(key) & 2147483647,
+        index1 = num % this.buckets.length;
+      for (var index2 = this.buckets[index1]; index2 >= 0; index2 = this.entries[index2].next) {
+        if (this.entries[index2].hashCode === num && this.comparer(this.entries[index2].key, key)) {
+          if (add) { throw new Error(duplicatekey); }
+          this.entries[index2].value = value;
+          return;
         }
-        this.freeList = -1;
-    };
-    Dictionary.prototype.count = function () {
-        return this.size;
-    };
-    Dictionary.prototype.add = function (key, value) {
-        return this._insert(key, value, true);
-    };
-    Dictionary.prototype._insert = function (key, value, add) {
-        if (!this.buckets) {
-            this._initialize(0);
+      }
+      if (this.freeCount > 0) {
+        index3 = this.freeList;
+        this.freeList = this.entries[index3].next;
+        --this.freeCount;
+      } else {
+        if (this.size === this.entries.length) {
+          this._resize();
+          index1 = num % this.buckets.length;
         }
-        var index3;
+        index3 = this.size;
+        ++this.size;
+      }
+      this.entries[index3].hashCode = num;
+      this.entries[index3].next = this.buckets[index1];
+      this.entries[index3].key = key;
+      this.entries[index3].value = value;
+      this.buckets[index1] = index3;
+    };
+
+    dictionaryProto._resize = function () {
+      var prime = getPrime(this.size * 2),
+        numArray = new Array(prime);
+      for (index = 0; index < numArray.length; ++index) {  numArray[index] = -1; }
+      var entryArray = new Array(prime);
+      for (index = 0; index < this.size; ++index) { entryArray[index] = this.entries[index]; }
+      for (var index = this.size; index < prime; ++index) { entryArray[index] = newEntry(); }
+      for (var index1 = 0; index1 < this.size; ++index1) {
+        var index2 = entryArray[index1].hashCode % prime;
+        entryArray[index1].next = numArray[index2];
+        numArray[index2] = index1;
+      }
+      this.buckets = numArray;
+      this.entries = entryArray;
+    };
+
+    dictionaryProto.remove = function (key) {
+      if (this.buckets) {
+        var num = getHashCode(key) & 2147483647,
+          index1 = num % this.buckets.length,
+          index2 = -1;
+        for (var index3 = this.buckets[index1]; index3 >= 0; index3 = this.entries[index3].next) {
+          if (this.entries[index3].hashCode === num && this.comparer(this.entries[index3].key, key)) {
+            if (index2 < 0) {
+              this.buckets[index1] = this.entries[index3].next;
+            } else {
+              this.entries[index2].next = this.entries[index3].next;
+            }
+            this.entries[index3].hashCode = -1;
+            this.entries[index3].next = this.freeList;
+            this.entries[index3].key = null;
+            this.entries[index3].value = null;
+            this.freeList = index3;
+            ++this.freeCount;
+            return true;
+          } else {
+            index2 = index3;
+          }
+        }
+      }
+      return false;
+    };
+
+    dictionaryProto.clear = function () {
+      var index, len;
+      if (this.size <= 0) { return; }
+      for (index = 0, len = this.buckets.length; index < len; ++index) {
+        this.buckets[index] = -1;
+      }
+      for (index = 0; index < this.size; ++index) {
+        this.entries[index] = newEntry();
+      }
+      this.freeList = -1;
+      this.size = 0;
+    };
+
+    dictionaryProto._findEntry = function (key) {
+      if (this.buckets) {
         var num = getHashCode(key) & 2147483647;
-        var index1 = num % this.buckets.length;
-        for (var index2 = this.buckets[index1]; index2 >= 0; index2 = this.entries[index2].next) {
-            if (this.entries[index2].hashCode === num && this.comparer(this.entries[index2].key, key)) {
-                if (add) {
-                    throw new Error(duplicatekey);
-                }
-                this.entries[index2].value = value;
-                return;
-            }
+        for (var index = this.buckets[num % this.buckets.length]; index >= 0; index = this.entries[index].next) {
+          if (this.entries[index].hashCode === num && this.comparer(this.entries[index].key, key)) {
+            return index;
+          }
         }
-        if (this.freeCount > 0) {
-            index3 = this.freeList;
-            this.freeList = this.entries[index3].next;
-            --this.freeCount;
-        } else {
-            if (this.size === this.entries.length) {
-                this._resize();
-                index1 = num % this.buckets.length;
-            }
-            index3 = this.size;
-            ++this.size;
-        }
-        this.entries[index3].hashCode = num;
-        this.entries[index3].next = this.buckets[index1];
-        this.entries[index3].key = key;
-        this.entries[index3].value = value;
-        this.buckets[index1] = index3;
+      }
+      return -1;
     };
 
-    Dictionary.prototype._resize = function () {
-        var prime = getPrime(this.size * 2),
-            numArray = new Array(prime);
-        for (index = 0; index < numArray.length; ++index) {
-            numArray[index] = -1;
-        }
-        var entryArray = new Array(prime);
-        for (index = 0; index < this.size; ++index) {
-            entryArray[index] = this.entries[index];
-        }
-        for (var index = this.size; index < prime; ++index) {
-            entryArray[index] = newEntry();
-        }
-        for (var index1 = 0; index1 < this.size; ++index1) {
-            var index2 = entryArray[index1].hashCode % prime;
-            entryArray[index1].next = numArray[index2];
-            numArray[index2] = index1;
-        }
-        this.buckets = numArray;
-        this.entries = entryArray;
+    dictionaryProto.count = function () {
+      return this.size - this.freeCount;
     };
 
-    Dictionary.prototype.remove = function (key) {
-        if (this.buckets) {
-            var num = getHashCode(key) & 2147483647;
-            var index1 = num % this.buckets.length;
-            var index2 = -1;
-            for (var index3 = this.buckets[index1]; index3 >= 0; index3 = this.entries[index3].next) {
-                if (this.entries[index3].hashCode === num && this.comparer(this.entries[index3].key, key)) {
-                    if (index2 < 0) {
-                        this.buckets[index1] = this.entries[index3].next;
-                    } else {
-                        this.entries[index2].next = this.entries[index3].next;
-                    }
-                    this.entries[index3].hashCode = -1;
-                    this.entries[index3].next = this.freeList;
-                    this.entries[index3].key = null;
-                    this.entries[index3].value = null;
-                    this.freeList = index3;
-                    ++this.freeCount;
-                    return true;
-                } else {
-                    index2 = index3;
-                }
-            }
-        }
-        return false;
+    dictionaryProto.tryGetValue = function (key) {
+      var entry = this._findEntry(key);
+      return entry >= 0 ?
+        this.entries[entry].value :
+        undefined;
     };
 
-    Dictionary.prototype.clear = function () {
-        var index, len;
-        if (this.size <= 0) {
-            return;
+    dictionaryProto.getValues = function () {
+      var index = 0, results = [];
+      if (this.entries) {
+        for (var index1 = 0; index1 < this.size; index1++) {
+          if (this.entries[index1].hashCode >= 0) {
+            results[index++] = this.entries[index1].value;
+          }
         }
-        for (index = 0, len = this.buckets.length; index < len; ++index) {
-            this.buckets[index] = -1;
-        }
-        for (index = 0; index < this.size; ++index) {
-            this.entries[index] = newEntry();
-        }
-        this.freeList = -1;
-        this.size = 0;
+      }
+      return results;
     };
 
-    Dictionary.prototype._findEntry = function (key) {
-        if (this.buckets) {
-            var num = getHashCode(key) & 2147483647;
-            for (var index = this.buckets[num % this.buckets.length]; index >= 0; index = this.entries[index].next) {
-                if (this.entries[index].hashCode === num && this.comparer(this.entries[index].key, key)) {
-                    return index;
-                }
-            }
-        }
-        return -1;
+    dictionaryProto.get = function (key) {
+      var entry = this._findEntry(key);
+      if (entry >= 0) { return this.entries[entry].value; }
+      throw new Error(noSuchkey);
     };
 
-    Dictionary.prototype.count = function () {
-        return this.size - this.freeCount;
+    dictionaryProto.set = function (key, value) {
+      this._insert(key, value, false);
     };
 
-    Dictionary.prototype.tryGetValue = function (key) {
-        var entry = this._findEntry(key);
-        if (entry >= 0) {
-            return this.entries[entry].value;
-        }
-        return undefined;
+    dictionaryProto.containskey = function (key) {
+      return this._findEntry(key) >= 0;
     };
 
-    Dictionary.prototype.getValues = function () {
-        var index = 0, results = [];
-        if (this.entries) {
-            for (var index1 = 0; index1 < this.size; index1++) {
-                if (this.entries[index1].hashCode >= 0) {
-                    results[index++] = this.entries[index1].value;
-                }
-            }
-        }
-        return results;
-    };
-
-    Dictionary.prototype.get = function (key) {
-        var entry = this._findEntry(key);
-        if (entry >= 0) {
-            return this.entries[entry].value;
-        }
-        throw new Error(noSuchkey);
-    };
-
-    Dictionary.prototype.set = function (key, value) {
-        this._insert(key, value, false);
-    };
-
-    Dictionary.prototype.containskey = function (key) {
-        return this._findEntry(key) >= 0;
-    };
+    return Dictionary;
+  }()); 
 
     /**
      *  Correlates the elements of two sequences based on overlapping durations.
@@ -6900,7 +6851,7 @@
 
           return curr;
         })
-        .doAction(
+        .tap(
           noop,
           function (e) { chain && chain.onError(e); },
           function () { chain && chain.onCompleted(); }

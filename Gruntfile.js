@@ -81,7 +81,6 @@ var browsers = [{
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
-              'src/core/linq/groupedobservable.js',
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
@@ -129,7 +128,6 @@ var browsers = [{
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
-              'src/core/linq/groupedobservable.js',
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
@@ -243,7 +241,7 @@ var browsers = [{
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
-              'src/core/linq/observable/groupbyuntil.js',
+              'src/core/linq/observable/groupbyuntil.js',              
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
@@ -505,7 +503,7 @@ var browsers = [{
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
-              'src/core/linq/observable/groupbyuntil.js',
+              'src/core/linq/observable/groupbyuntil.js',                
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
@@ -766,8 +764,6 @@ var browsers = [{
               'src/core/linq/observable/concatmap.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
-              'src/core/linq/observable/groupby.js',
-              'src/core/linq/observable/groupbyuntil.js',
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
@@ -784,7 +780,6 @@ var browsers = [{
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
-              'src/core/linq/groupedobservable.js',
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
@@ -897,8 +892,6 @@ var browsers = [{
               'src/core/linq/observable/concatmap.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
-              'src/core/linq/observable/groupby.js',
-              'src/core/linq/observable/groupbyuntil.js',
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
@@ -915,7 +908,6 @@ var browsers = [{
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
-              'src/core/linq/groupedobservable.js',
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
@@ -1297,10 +1289,6 @@ var browsers = [{
               // Standard Query Operators
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
-              'src/core/linq/observable/groupby.js',
-              'src/core/linq/observable/groupbyuntil.js',
-
-              'src/core/linq/groupedobservable.js',
 
               'src/core/suboutro.js'  
             ],
@@ -1420,20 +1408,23 @@ var browsers = [{
             dest: 'dist/rx.binding.js'
           },
           coincidence: {
-              src: [
-                  'src/core/license.js',
-                  'src/core/subintro.js',
-                  'src/core/coincidenceheader.js',
-                  'src/core/internal/dictionary.js',
-                  'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
-                  'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
-                  'src/core/linq/observable/buffer.js', // window, selectMany, toArray
-                  'src/core/linq/observable/window.js', // CompositeDisposable, RefCountDisposable, Subject, SingleAssignmentDisposable
-                  'src/core/linq/observable/pairwise.js',
-                  'src/core/linq/observable/partition.js',
-                  'src/core/suboutro.js'
-              ],
-              dest: 'dist/rx.coincidence.js'
+            src: [
+              'src/core/license.js',
+              'src/core/subintro.js',
+              'src/core/coincidenceheader.js',
+              'src/core/internal/dictionary.js',
+              'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
+              'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
+              'src/core/linq/observable/buffer.js', // window, selectMany, toArray
+              'src/core/linq/observable/window.js', // CompositeDisposable, RefCountDisposable, Subject, SingleAssignmentDisposable
+              'src/core/linq/observable/pairwise.js',
+              'src/core/linq/observable/partition.js',
+              'src/core/linq/observable/groupby.js',
+              'src/core/linq/observable/groupbyuntil.js',
+              'src/core/linq/groupedobservable.js',               
+              'src/core/suboutro.js'
+            ],
+            dest: 'dist/rx.coincidence.js'
           },
           experimental: {
             src: [

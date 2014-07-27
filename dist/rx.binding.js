@@ -491,71 +491,39 @@
         return ReplaySubject;
     }(Observable));
 
-    /** @private */
-    var ConnectableObservable = Rx.ConnectableObservable = (function (_super) {
-        inherits(ConnectableObservable, _super);
+  var ConnectableObservable = Rx.ConnectableObservable = (function (__super__) {
+    inherits(ConnectableObservable, __super__);
 
-        /**
-         * @constructor
-         * @private
-         */
-        function ConnectableObservable(source, subject) {
-            var state = {
-                subject: subject,
-                source: source.asObservable(),
-                hasSubscription: false,
-                subscription: null
-            };
+    function ConnectableObservable(source, subject) {
+      var hasSubscription = false, subscription;
 
-            this.connect = function () {
-                if (!state.hasSubscription) {
-                    state.hasSubscription = true;
-                    state.subscription = new CompositeDisposable(state.source.subscribe(state.subject), disposableCreate(function () {
-                        state.hasSubscription = false;
-                    }));
-                }
-                return state.subscription;
-            };
-
-            function subscribe(observer) {
-                return state.subject.subscribe(observer);
-            }
-
-            _super.call(this, subscribe);
+      this.connect = function () {
+        if (!hasSubscription) {
+          hasSubscription = true;
+          subscription = new CompositeDisposable(source.subscribe(subject), disposableCreate(function () {
+            hasSubscription = false;
+          }));
         }
+        return subscription;
+      };
 
-        /**
-         * @private
-         * @memberOf ConnectableObservable
-         */
-        ConnectableObservable.prototype.connect = function () { return this.connect(); };
+      __super__.call(this, subject.subscribe.bind(subject));
+    }
+    
+    ConnectableObservable.prototype.refCount = function () {
+      var connectableSubscription, count = 0, source = this;
+      return new AnonymousObservable(function (observer) {
+          var shouldConnect = ++count === 1,
+            subscription = source.subscribe(observer);
+          shouldConnect && (connectableSubscription = source.connect());
+          return function () {
+            subscription.dispose();
+            --count === 0 && connectableSubscription.dispose();
+          };
+      });
+    };
 
-        /**
-         * @private
-         * @memberOf ConnectableObservable
-         */        
-        ConnectableObservable.prototype.refCount = function () {
-            var connectableSubscription = null, count = 0, source = this;
-            return new AnonymousObservable(function (observer) {
-                var shouldConnect, subscription;
-                count++;
-                shouldConnect = count === 1;
-                subscription = source.subscribe(observer);
-                if (shouldConnect) {
-                    connectableSubscription = source.connect();
-                }
-                return disposableCreate(function () {
-                    subscription.dispose();
-                    count--;
-                    if (count === 0) {
-                        connectableSubscription.dispose();
-                    }
-                });
-            });
-        };
-
-        return ConnectableObservable;
-    }(Observable));
-
+    return ConnectableObservable;
+  }(Observable));
     return Rx;
 }));

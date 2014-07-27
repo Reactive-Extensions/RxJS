@@ -1,4 +1,5 @@
 ### `Rx.Observable.while(condition, source)`
+### `Rx.Observable.whileDo(condition, source)` *DEPRECATED*
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/while.js "View in source") 
 
 Repeats source as long as condition holds emulating a while loop.  There is an alias for this method called 'whileDo' for browsers <IE9.
@@ -41,13 +42,12 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/while.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/while.js)
+- [`/src/core/observable/while.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/while.js)
 
 Dist:
 - [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
 Prerequisites:
-- [`rx`](https://www.npmjs.org/package/rx).experimental.js
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
@@ -57,4 +57,4 @@ NuGet Packages:
 - [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
-- [/tests/observable/while.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/while.js)
+- [`/tests/observable/while.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/while.js)

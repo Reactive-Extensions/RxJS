@@ -3245,62 +3245,62 @@
         });
     };
 
-    /**
-     *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
-     *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
-     *  
-     * @example
-     *  var res = observable.doAction(observer);
-     *  var res = observable.doAction(onNext);
-     *  var res = observable.doAction(onNext, onError);
-     *  var res = observable.doAction(onNext, onError, onCompleted);
-     * @param {Mixed} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
-     * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-     * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-     * @returns {Observable} The source sequence with the side-effecting behavior applied.   
-     */
-    observableProto['do'] = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
-        var source = this, onNextFunc;
-        if (typeof observerOrOnNext === 'function') {
-            onNextFunc = observerOrOnNext;
-        } else {
-            onNextFunc = observerOrOnNext.onNext.bind(observerOrOnNext);
-            onError = observerOrOnNext.onError.bind(observerOrOnNext);
-            onCompleted = observerOrOnNext.onCompleted.bind(observerOrOnNext);
+  /**
+   *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
+   *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
+   *  
+   * @example
+   *  var res = observable.do(observer);
+   *  var res = observable.do(onNext);
+   *  var res = observable.do(onNext, onError);
+   *  var res = observable.do(onNext, onError, onCompleted);
+   * @param {Function | Observer} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
+   * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+   * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+   * @returns {Observable} The source sequence with the side-effecting behavior applied.   
+   */
+  observableProto['do'] = observableProto.doAction = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
+    var source = this, onNextFunc;
+    if (typeof observerOrOnNext === 'function') {
+      onNextFunc = observerOrOnNext;
+    } else {
+      onNextFunc = observerOrOnNext.onNext.bind(observerOrOnNext);
+      onError = observerOrOnNext.onError.bind(observerOrOnNext);
+      onCompleted = observerOrOnNext.onCompleted.bind(observerOrOnNext);
+    }
+    return new AnonymousObservable(function (observer) {
+      return source.subscribe(function (x) {
+        try {
+          onNextFunc(x);
+        } catch (e) {
+          observer.onError(e);
         }
-        return new AnonymousObservable(function (observer) {
-            return source.subscribe(function (x) {
-                try {
-                    onNextFunc(x);
-                } catch (e) {
-                    observer.onError(e);
-                }
-                observer.onNext(x);
-            }, function (exception) {
-                if (!onError) {
-                    observer.onError(exception);
-                } else {
-                    try {
-                        onError(exception);
-                    } catch (e) {
-                        observer.onError(e);
-                    }
-                    observer.onError(exception);
-                }
-            }, function () {
-                if (!onCompleted) {
-                    observer.onCompleted();
-                } else {
-                    try {
-                        onCompleted();
-                    } catch (e) {
-                        observer.onError(e);
-                    }
-                    observer.onCompleted();
-                }
-            });
-        });
-    };
+        observer.onNext(x);
+      }, function (err) {
+        if (!onError) {
+          observer.onError(err);
+        } else {
+          try {
+            onError(err);
+          } catch (e) {
+            observer.onError(e);
+          }
+          observer.onError(err);
+        }
+      }, function () {
+        if (!onCompleted) {
+          observer.onCompleted();
+        } else {
+          try {
+            onCompleted();
+          } catch (e) {
+            observer.onError(e);
+          }
+          observer.onCompleted();
+        }
+      });
+    });
+  };
 
   /**
    *  Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.
@@ -3680,172 +3680,58 @@
         });
     };
 
-    /**
-     *  Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer.
-     *  Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
-     * 
-     * @example
-     *  var res = obs = xs.distinct();
-     *  2 - obs = xs.distinct(function (x) { return x.id; });
-     *  2 - obs = xs.distinct(function (x) { return x.id; }, function (x) { return x.toString(); });  
-     * @param {Function} [keySelector]  A function to compute the comparison key for each element.
-     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
-     * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
-     */
-   observableProto.distinct = function (keySelector, keySerializer) {
-        var source = this;
-        keySelector || (keySelector = identity);
-        keySerializer || (keySerializer = defaultKeySerializer);
-        return new AnonymousObservable(function (observer) {
-            var hashSet = {};
-            return source.subscribe(function (x) {
-                var key, serializedKey, otherKey, hasMatch = false;
-                try {
-                    key = keySelector(x);
-                    serializedKey = keySerializer(key);
-                } catch (exception) {
-                    observer.onError(exception);
-                    return;
-                }
-                for (otherKey in hashSet) {
-                    if (serializedKey === otherKey) {
-                        hasMatch = true;
-                        break;
-                    }
-                }
-                if (!hasMatch) {
-                    hashSet[serializedKey] = null;
-                    observer.onNext(x);
-                }
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+  // Swap out for Array.findIndex
+  function arrayIndexOfComparer(array, item, comparer) {
+    for (var i = 0, len = array.length; i < len; i++) {
+      if (comparer(array[i], item)) { return i; }
+    }
+    return -1;
+  }
 
-    /**
-     *  Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
-     *  
-     * @example
-     *  var res = observable.groupBy(function (x) { return x.id; });
-     *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
-     *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; }, function (x) { return x.toString(); });
-     * @param {Function} keySelector A function to extract the key for each element.
-     * @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
-     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
-     * @returns {Observable} A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
-     */
-    observableProto.groupBy = function (keySelector, elementSelector, keySerializer) {
-        return this.groupByUntil(keySelector, elementSelector, function () {
-            return observableNever();
-        }, keySerializer);
-    };
+  function HashSet(comparer) {
+    this.comparer = comparer;
+    this.set = [];
+  }
+  HashSet.prototype.push = function(value) {
+    var retValue = arrayIndexOfComparer(this.set, value, this.comparer) === -1;
+    retValue && this.set.push(value);
+    return retValue;
+  };
 
-    /**
-     *  Groups the elements of an observable sequence according to a specified key selector function.
-     *  A duration selector function is used to control the lifetime of groups. When a group expires, it receives an OnCompleted notification. When a new element with the same
-     *  key value as a reclaimed group occurs, the group will be reborn with a new lifetime request.
-     *  
-     * @example
-     *  var res = observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
-     *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); });
-     *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); }, function (x) { return x.toString(); });
-     * @param {Function} keySelector A function to extract the key for each element.
-     * @param {Function} durationSelector A function to signal the expiration of a group.
-     * @param {Function} [keySerializer]  Used to serialize the given object into a string for object comparison.
-     * @returns {Observable} 
-     *  A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
-     *  If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
-     *      
-     */
-    observableProto.groupByUntil = function (keySelector, elementSelector, durationSelector, keySerializer) {
-        var source = this;
-        elementSelector || (elementSelector = identity);
-        keySerializer || (keySerializer = defaultKeySerializer);
-        return new AnonymousObservable(function (observer) {
-            var map = {},
-                groupDisposable = new CompositeDisposable(),
-                refCountDisposable = new RefCountDisposable(groupDisposable);
-            groupDisposable.add(source.subscribe(function (x) {
-                var duration, durationGroup, element, fireNewMapEntry, group, key, serializedKey, md, writer, w;
-                try {
-                    key = keySelector(x);
-                    serializedKey = keySerializer(key);
-                } catch (e) {
-                    for (w in map) {
-                        map[w].onError(e);
-                    }
-                    observer.onError(e);
-                    return;
-                }
-                fireNewMapEntry = false;
-                try {
-                    writer = map[serializedKey];
-                    if (!writer) {
-                        writer = new Subject();
-                        map[serializedKey] = writer;
-                        fireNewMapEntry = true;
-                    }
-                } catch (e) {
-                    for (w in map) {
-                        map[w].onError(e);
-                    }
-                    observer.onError(e);
-                    return;
-                }
-                if (fireNewMapEntry) {
-                    group = new GroupedObservable(key, writer, refCountDisposable);
-                    durationGroup = new GroupedObservable(key, writer);
-                    try {
-                        duration = durationSelector(durationGroup);
-                    } catch (e) {
-                        for (w in map) {
-                            map[w].onError(e);
-                        }
-                        observer.onError(e);
-                        return;
-                    }
-                    observer.onNext(group);
-                    md = new SingleAssignmentDisposable();
-                    groupDisposable.add(md);
-                    var expire = function  () {
-                        if (serializedKey in map) {
-                            delete map[serializedKey];
-                            writer.onCompleted();
-                        }
-                        groupDisposable.remove(md);
-                    };
-                    md.setDisposable(duration.take(1).subscribe(noop, function (exn) {
-                        for (w in map) {
-                            map[w].onError(exn);
-                        }
-                        observer.onError(exn);
-                    }, function () {
-                        expire();
-                    }));
-                }
-                try {
-                    element = elementSelector(x);
-                } catch (e) {
-                    for (w in map) {
-                        map[w].onError(e);
-                    }
-                    observer.onError(e);
-                    return;
-                }
-                writer.onNext(element);
-            }, function (ex) {
-                for (var w in map) {
-                    map[w].onError(ex);
-                }
-                observer.onError(ex);
-            }, function () {
-                for (var w in map) {
-                    map[w].onCompleted();
-                }
-                observer.onCompleted();
-            }));
-            return refCountDisposable;
-        });
-    };
+  /**
+   *  Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer.
+   *  Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
+   * 
+   * @example
+   *  var res = obs = xs.distinct();
+   *  2 - obs = xs.distinct(function (x) { return x.id; });
+   *  2 - obs = xs.distinct(function (x) { return x.id; }, function (a,b) { return a === b; });  
+   * @param {Function} [keySelector]  A function to compute the comparison key for each element.
+   * @param {Function} [comparer]  Used to compare items in the collection.
+   * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
+   */
+  observableProto.distinct = function (keySelector, comparer) {
+    var source = this;
+    comparer || (comparer = defaultComparer);
+    return new AnonymousObservable(function (observer) {
+      var hashSet = new HashSet(comparer);
+      return source.subscribe(function (x) {
+        var key = x;
+
+        if (keySelector) {
+          try {
+            key = keySelector(x);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }            
+        }
+        hashSet.push(key) && observer.onNext(x);
+      }, 
+      observer.onError.bind(observer), 
+      observer.onCompleted.bind(observer));
+    });
+  };
 
     /**
      *  Projects each element of an observable sequence into a new form by incorporating the element's index.
@@ -4318,31 +4204,6 @@
 
         return AutoDetachObserver;
     }(AbstractObserver));
-
-    /** @private */
-    var GroupedObservable = (function (_super) {
-        inherits(GroupedObservable, _super);
-
-        function subscribe(observer) {
-            return this.underlyingObservable.subscribe(observer);
-        }
-
-        /** 
-         * @constructor
-         * @private
-         */
-        function GroupedObservable(key, underlyingObservable, mergedDisposable) {
-            _super.call(this, subscribe);
-            this.key = key;
-            this.underlyingObservable = !mergedDisposable ?
-                underlyingObservable :
-                new AnonymousObservable(function (observer) {
-                    return new CompositeDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
-                });
-        }
-
-        return GroupedObservable;
-    }(Observable));
 
     /** @private */
     var InnerSubscription = function (subject, observer) {

@@ -2883,62 +2883,62 @@
         });
     };
 
-    /**
-     *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
-     *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
-     *  
-     * @example
-     *  var res = observable.doAction(observer);
-     *  var res = observable.doAction(onNext);
-     *  var res = observable.doAction(onNext, onError);
-     *  var res = observable.doAction(onNext, onError, onCompleted);
-     * @param {Mixed} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
-     * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-     * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-     * @returns {Observable} The source sequence with the side-effecting behavior applied.   
-     */
-    observableProto['do'] = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
-        var source = this, onNextFunc;
-        if (typeof observerOrOnNext === 'function') {
-            onNextFunc = observerOrOnNext;
-        } else {
-            onNextFunc = observerOrOnNext.onNext.bind(observerOrOnNext);
-            onError = observerOrOnNext.onError.bind(observerOrOnNext);
-            onCompleted = observerOrOnNext.onCompleted.bind(observerOrOnNext);
+  /**
+   *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
+   *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
+   *  
+   * @example
+   *  var res = observable.do(observer);
+   *  var res = observable.do(onNext);
+   *  var res = observable.do(onNext, onError);
+   *  var res = observable.do(onNext, onError, onCompleted);
+   * @param {Function | Observer} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
+   * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+   * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+   * @returns {Observable} The source sequence with the side-effecting behavior applied.   
+   */
+  observableProto['do'] = observableProto.doAction = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
+    var source = this, onNextFunc;
+    if (typeof observerOrOnNext === 'function') {
+      onNextFunc = observerOrOnNext;
+    } else {
+      onNextFunc = observerOrOnNext.onNext.bind(observerOrOnNext);
+      onError = observerOrOnNext.onError.bind(observerOrOnNext);
+      onCompleted = observerOrOnNext.onCompleted.bind(observerOrOnNext);
+    }
+    return new AnonymousObservable(function (observer) {
+      return source.subscribe(function (x) {
+        try {
+          onNextFunc(x);
+        } catch (e) {
+          observer.onError(e);
         }
-        return new AnonymousObservable(function (observer) {
-            return source.subscribe(function (x) {
-                try {
-                    onNextFunc(x);
-                } catch (e) {
-                    observer.onError(e);
-                }
-                observer.onNext(x);
-            }, function (exception) {
-                if (!onError) {
-                    observer.onError(exception);
-                } else {
-                    try {
-                        onError(exception);
-                    } catch (e) {
-                        observer.onError(e);
-                    }
-                    observer.onError(exception);
-                }
-            }, function () {
-                if (!onCompleted) {
-                    observer.onCompleted();
-                } else {
-                    try {
-                        onCompleted();
-                    } catch (e) {
-                        observer.onError(e);
-                    }
-                    observer.onCompleted();
-                }
-            });
-        });
-    };
+        observer.onNext(x);
+      }, function (err) {
+        if (!onError) {
+          observer.onError(err);
+        } else {
+          try {
+            onError(err);
+          } catch (e) {
+            observer.onError(e);
+          }
+          observer.onError(err);
+        }
+      }, function () {
+        if (!onCompleted) {
+          observer.onCompleted();
+        } else {
+          try {
+            onCompleted();
+          } catch (e) {
+            observer.onError(e);
+          }
+          observer.onCompleted();
+        }
+      });
+    });
+  };
 
   /**
    *  Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.
@@ -3982,72 +3982,40 @@
     return this.replay(null, bufferSize, window, scheduler).refCount();
   };
 
-    /** @private */
-    var ConnectableObservable = Rx.ConnectableObservable = (function (_super) {
-        inherits(ConnectableObservable, _super);
+  var ConnectableObservable = Rx.ConnectableObservable = (function (__super__) {
+    inherits(ConnectableObservable, __super__);
 
-        /**
-         * @constructor
-         * @private
-         */
-        function ConnectableObservable(source, subject) {
-            var state = {
-                subject: subject,
-                source: source.asObservable(),
-                hasSubscription: false,
-                subscription: null
-            };
+    function ConnectableObservable(source, subject) {
+      var hasSubscription = false, subscription;
 
-            this.connect = function () {
-                if (!state.hasSubscription) {
-                    state.hasSubscription = true;
-                    state.subscription = new CompositeDisposable(state.source.subscribe(state.subject), disposableCreate(function () {
-                        state.hasSubscription = false;
-                    }));
-                }
-                return state.subscription;
-            };
-
-            function subscribe(observer) {
-                return state.subject.subscribe(observer);
-            }
-
-            _super.call(this, subscribe);
+      this.connect = function () {
+        if (!hasSubscription) {
+          hasSubscription = true;
+          subscription = new CompositeDisposable(source.subscribe(subject), disposableCreate(function () {
+            hasSubscription = false;
+          }));
         }
+        return subscription;
+      };
 
-        /**
-         * @private
-         * @memberOf ConnectableObservable
-         */
-        ConnectableObservable.prototype.connect = function () { return this.connect(); };
+      __super__.call(this, subject.subscribe.bind(subject));
+    }
+    
+    ConnectableObservable.prototype.refCount = function () {
+      var connectableSubscription, count = 0, source = this;
+      return new AnonymousObservable(function (observer) {
+          var shouldConnect = ++count === 1,
+            subscription = source.subscribe(observer);
+          shouldConnect && (connectableSubscription = source.connect());
+          return function () {
+            subscription.dispose();
+            --count === 0 && connectableSubscription.dispose();
+          };
+      });
+    };
 
-        /**
-         * @private
-         * @memberOf ConnectableObservable
-         */        
-        ConnectableObservable.prototype.refCount = function () {
-            var connectableSubscription = null, count = 0, source = this;
-            return new AnonymousObservable(function (observer) {
-                var shouldConnect, subscription;
-                count++;
-                shouldConnect = count === 1;
-                subscription = source.subscribe(observer);
-                if (shouldConnect) {
-                    connectableSubscription = source.connect();
-                }
-                return disposableCreate(function () {
-                    subscription.dispose();
-                    count--;
-                    if (count === 0) {
-                        connectableSubscription.dispose();
-                    }
-                });
-            });
-        };
-
-        return ConnectableObservable;
-    }(Observable));
-
+    return ConnectableObservable;
+  }(Observable));
     function observableTimerTimeSpan(dueTime, scheduler) {
         var d = normalizeTime(dueTime);
         return new AnonymousObservable(function (observer) {

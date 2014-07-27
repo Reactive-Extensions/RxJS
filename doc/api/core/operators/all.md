@@ -1,7 +1,8 @@
 ### `Rx.Observable.prototype.all(predicate, [thisArg])`
+### `Rx.Observable.prototype.every(predicate, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/all.js "View in source") 
 
-Determines whether all elements of an observable sequence satisfy a condition.  There is an alias for this method called `every`.
+Determines whether all elements of an observable sequence satisfy a condition.  
 
 #### Arguments
 1. `predicate` *(`Function`)*: A function to test each element for a condition.
