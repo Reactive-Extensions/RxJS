@@ -1,4 +1,4 @@
-### `Rx.Observable.prototype.groupByUntil(keySelector, [elementSelector], durationSelector, [keySerializer])`
+### `Rx.Observable.prototype.groupByUntil(keySelector, [elementSelector], durationSelector, [comparer])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/groupbyuntil.js "View in source") 
 
 Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
@@ -7,7 +7,7 @@ Groups the elements of an observable sequence according to a specified key selec
 1. `keySelector` *(`Function`)*: A function to extract the key for each element.
 2. `[elementSelector]` *(`Function`)*: A function to map each source element to an element in an observable group.
 3. `durationSelector` *(`Function`)*: A function to signal the expiration of a group.
-4. `[keySerializer]` *(`Any`)*: Used to serialize the given object into a string for object comparison.
+4. `[comparer]` *(`Any`)*: Used to compare objects. If not specified, the default comparer is used.
 
 #### Returns
 *(`Observable`)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.  
