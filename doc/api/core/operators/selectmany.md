@@ -1,28 +1,28 @@
-### `Rx.Observable.prototype.concatMap(selector, [resultSelector])`
-### `Rx.Observable.prototype.selectConcat(selector, [resultSelector])`
-[&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js "View in source") 
+### `Rx.Observable.prototype.flatMap(selector, [resultSelector])`
+### `Rx.Observable.prototype.selectMany(selector, [resultSelector])`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js "View in source") 
 
-This is an alias for the `selectConcat` method.  This can be one of the following:
+One of the following:
 
-Projects each element of an observable sequence to an observable sequence and concatenates the resulting observable sequences or Promises into one observable sequence.
+Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences or Promises into one observable sequence.
 
 ```js
-source.concatMap(function (x, i) { return Rx.Observable.range(0, x); });
-source.concatMap(function (x, i) { return Promise.resolve(x + 1}; });
+source.selectMany(function (x, i) { return Rx.Observable.range(0, x); });
+source.selectMany(function (x, i) { return Promise.resolve(x + 1}; });
 ```
 
-Projects each element of an observable sequence or Promise to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and concatenates the results into one observable sequence.
+Projects each element of an observable sequence or Promise to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
 
 ```js
-source.concatMap(function (x, i) { return Rx.Observable.range(0, x); }, function (x, y, i) { return x + y + i; });
-source.concatMap(function (x, i) { return Promise.resolve(x + i); }, function (x, y, i) { return x + y + i; });
+source.selectMany(function (x, i) { return Rx.Observable.range(0, x); }, function (x, y, i) { return x + y + i; });
+source.selectMany(function (x, i) { return Promise.resolve(x + i); }, function (x, y, i) { return x + y + i; });
 ```
 
 Projects each element of the source observable sequence to the other observable sequence or Promise and merges the resulting observable sequences into one observable sequence.
  
  ```js
-source.concatMap(Rx.Observable.fromArray([1,2,3]));
-source.concatMap(Promise.resolve(42));
+source.selectMany(Rx.Observable.fromArray([1,2,3]));
+source.selectMany(Promise.resolve(42));
  ```
 
 #### Arguments
@@ -34,11 +34,10 @@ source.concatMap(Promise.resolve(42));
 
 #### Example
 ```js
-var source = Rx.Observable.range(0, 5)
-    .concatMap(function (x, i) {
-        return Rx.Observable
-            .interval(100)
-            .take(x).map(function() { return i; }); 
+var source = Rx.Observable
+    .range(1, 2)
+    .selectMany(function (x) {
+        return Rx.Observable.range(x, 2);    
     });
 
 var subscription = source.subscribe(
@@ -56,17 +55,11 @@ var subscription = source.subscribe(
 // => Next: 2 
 // => Next: 2 
 // => Next: 3 
-// => Next: 3 
-// => Next: 3 
-// => Next: 4 
-// => Next: 4 
-// => Next: 4 
-// => Next: 4 
 // => Completed 
 
 /* Using a promise */
 var source = Rx.Observable.fromArray([1,2,3,4])
-    .concatMap(function (x, i) {
+    .selectMany(function (x, i) {
         return Promise.resolve(x + i);
     });
 
@@ -91,7 +84,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/concatmap.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js)
+- [`/src/core/linq/observable/selectmany.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectmany.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -105,9 +98,11 @@ NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete/)
+- [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/concatmap.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatmap.js)
+- [`/tests/observable/selectmany.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js)
+
+* * *
