@@ -41,7 +41,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/start.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/start.js)
+- [/src/core/linq/observable/start.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/start.js)
 
 Dist:
 - [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)

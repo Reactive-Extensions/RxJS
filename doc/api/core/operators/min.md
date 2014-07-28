@@ -60,7 +60,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/min.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/min.js)
+- [`/src/core/linq/observable/min.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/min.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

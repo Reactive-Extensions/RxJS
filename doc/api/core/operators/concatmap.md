@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.concatMap(selector, [resultSelector])`
-[&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatmap.js "View in source") 
+[&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js "View in source") 
 
 This is an alias for the `selectConcat` method.  This can be one of the following:
 
@@ -90,7 +90,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/concatmap.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatmap.js)
+- [`/src/core/linq/observable/concatmap.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

@@ -34,7 +34,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/return.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js)
+- [/src/core/linq/observable/return.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

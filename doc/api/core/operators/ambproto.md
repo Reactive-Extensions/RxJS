@@ -34,7 +34,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/ambproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ambproto.js)
+- [/src/core/linq/observable/ambproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ambproto.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

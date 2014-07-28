@@ -35,7 +35,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/zip.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparay.js)
+- [`/src/core/linq/observable/zip.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparay.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

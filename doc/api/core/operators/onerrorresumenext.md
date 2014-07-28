@@ -35,7 +35,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/onerrorresumenext.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js)
+- [/src/core/linq/observable/onerrorresumenext.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

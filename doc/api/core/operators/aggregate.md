@@ -55,7 +55,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/aggregate.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/aggregate.js)
+- [`/src/core/linq/observable/aggregate.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/aggregate.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

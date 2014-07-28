@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.dematerialize()`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/dematerialize.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/dematerialize.js "View in source") 
 
 Dematerializes the explicit notification values of an observable sequence as implicit notifications.
 
@@ -32,7 +32,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/dematerialize.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/dematerialize.js)
+- [`/src/core/linq/observable/dematerialize.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/dematerialize.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

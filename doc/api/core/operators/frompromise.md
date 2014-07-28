@@ -57,7 +57,7 @@ var subscription1 = source1.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/frompromise.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js)
+- [/src/core/linq/observable/frompromise.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js)
 
 Dist:
 - [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)

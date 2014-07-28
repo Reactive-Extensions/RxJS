@@ -38,8 +38,8 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/timer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timer.js)
-- [/src/core/observable/timer-lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timer-lite.js)
+- [/src/core/linq/observable/timer.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timer.js)
+- [/src/core/linq/observable/timer-lite.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timer-lite.js)
 
 Dist:
 - [rx.all.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

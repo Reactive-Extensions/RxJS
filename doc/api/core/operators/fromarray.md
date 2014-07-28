@@ -36,7 +36,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/fromarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js)
+- [`/src/core/linq/observable/fromarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

@@ -74,7 +74,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/last.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/last.js)
+- [`/src/core/linq/observable/last.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/last.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.distinct([keySelector], [keySerializer])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/distinct.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/distinct.js "View in source") 
 
 Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
 
@@ -57,7 +57,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/distinct.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/distinct.js)
+- [`/src/core/linq/observable/distinct.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/distinct.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

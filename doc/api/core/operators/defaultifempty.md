@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.defaultIfEmpty([defaultValue])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/defaultifempty.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defaultifempty.js "View in source") 
 
 Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
 
@@ -48,7 +48,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/defaultifempty.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/defaultifempty.js)
+- [`/src/core/linq/observable/defaultifempty.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defaultifempty.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

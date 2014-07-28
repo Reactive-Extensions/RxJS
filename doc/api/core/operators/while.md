@@ -42,7 +42,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/while.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/while.js)
+- [`/src/core/linq/observable/while.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/while.js)
 
 Dist:
 - [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)

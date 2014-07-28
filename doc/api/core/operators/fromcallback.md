@@ -40,7 +40,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/fromcallback.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js)
+- [`/src/core/linq/observable/fromcallback.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

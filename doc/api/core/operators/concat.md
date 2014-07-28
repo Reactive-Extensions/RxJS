@@ -57,7 +57,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/concat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js)
+- [`/src/core/linq/observable/concat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concat.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

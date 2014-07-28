@@ -115,7 +115,7 @@ e.emit('data', 'foo', 'bar');
 ### Location
 
 File:
-- [/src/core/observable/fromeventpattern.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js)
+- [/src/core/linq/observable/fromeventpattern.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js)
 
 Dist:
 - [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)

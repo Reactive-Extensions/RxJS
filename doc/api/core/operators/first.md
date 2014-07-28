@@ -72,7 +72,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/first.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/first.js)
+- [`/src/core/linq/observable/first.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/first.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

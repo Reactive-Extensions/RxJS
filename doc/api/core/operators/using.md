@@ -65,7 +65,7 @@ subscription.dispose();
 ### Location
 
 File:
-- [`/src/core/observable/using.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/using.js)
+- [`/src/core/linq/observable/using.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/using.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

@@ -178,975 +178,8 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 
 ## _Observable Instance Methods_ ##
 
-### <a id="rxobservableprototypemulticastsubject--subjectselector-selector"></a>`Rx.Observable.prototype.multicast(subject | subjectSelector, [selector])`
-<a href="#rxobservableprototypemulticastsubject--subjectselector-selector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/multicast.js "View in source") 
 
-Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
-subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
-invocation. For specializations with fixed subject types, see `publish`, `share`, `publishValue`, `shareValue`, `publishLast`, `replay`, and `shareReplay`.
 
-#### Arguments
-1. `subjectSelector` *(`Function`)*:  Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
-1. `subject` *(Subject)*: Subject to push source elements into.
-2. `[selector]` *(`Function`)*: Optional selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if `subjectSelector` is provided.
-
-#### Returns
-*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
- 
-#### Example
-```js
-var subject = new Rx.Subject();
-var source = Rx.Observable.range(0, 3)
-    .multicast(subject);
-
-var observer = Rx.Observer.create(    
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    }
-);
-
-var subscription = source.subscribe(observer);
-subject.subscribe(observer);
-
-var connected = source.connect();
-
-subscription.dispose();
-
-// => Next: 0 
-// => Next: 0 
-// => Next: 1 
-// => Next: 1 
-// => Next: 2 
-// => Next: 2 
-// => Completed   
-```
-
-### Location
-
-File:
-- [`/src/core/observable/multicast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/multicast.js)
-
-Dist:
-- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-  - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [`/tests/observable/multicast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/multicast.js)
-
-* * *
-
-### <a id="rxobservableprototypeobserveonscheduler"></a>`Rx.Observable.prototype.observeOn(scheduler)`
-<a href="#rxobservableprototypeobserveonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js "View in source") 
-
-Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
-
-This only invokes observer callbacks on a scheduler. In case the subscription and/or unsubscription actions have side-effects that require to be run on a scheduler, use subscribeOn.
-
-#### Arguments
-1. `scheduler` *(`Scheduler`)*:  Scheduler to notify observers on.
-
-#### Returns
-*(`Observable`)*: The source sequence whose observations happen on the specified scheduler. 
- 
-#### Example
-```js
-/* Change from immediate scheduler to timeout */
-var source = Rx.Observable.return(42, Rx.Scheduler.immediate)
-    .observeOn(Rx.Scheduler.timeout);
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42
-// => Completed   
-```
-
-### Location
-
-File:
-- [`/src/core/observable/return.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) 
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- None
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [`/tests/observable/return.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/return.js)
-
-* * *
-
-### <a id="rxobservableprototypeonerrorresumenextsecond"></a>`Rx.Observable.prototype.onErrorResumeNext(second)`
-<a href="#rxobservableprototypeonerrorresumenextsecond">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js "View in source") 
-
-Continues an observable sequence that is terminated normally or by an exception with the next observable sequence or Promise.
-
-#### Arguments
-1. `second` *(`Observable` | `Promise`)*:  Second observable sequence used to produce results after the first sequence terminates.
-
-#### Returns
-*(`Observable`)*: An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
-
-#### Example
-```js
-var source = Rx.Observable.throw(new Error())
-    .onErrorResumeNext(Rx.Observable.return(42));
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 42
-// => Completed   
-```
-
-### Location
-
-File:
-- [`/src/core/observable/onerrorresumenext.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) 
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- None
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [`/tests/observable/onerrorresumenext.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/onerrorresumenext.js)
-
-* * *
-
-### <a id="rxobservableprototypepausablepauser"></a>`Rx.Observable.prototype.pausable(pauser)`
-<a href="#rxobservableprototypepausablepauser">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausable.js "View in source") 
-
-Pauses the underlying observable sequence based upon the observable sequence which yields true/false.  Note that this only works on hot observables.
-
-#### Arguments
-1. `pauser` *(Rx.Subject)*: The observable sequence used to pause the underlying sequence.
-
-#### Returns
-*(`Observable`)*: The observable sequence which is paused based upon the pauser.
-
-#### Example
-```js
-var pauser = new Rx.Subject();
-var source = Rx.Observable.fromEvent(document, 'mousemove').pausable(pauser);
-    
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x.toString());
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// To begin the flow
-pauser.onNext(true);
-
-// To pause the flow at any point
-pauser.onNext(false);
-```
-
-### Location
-
-File:
-- [/src/core/backpressure/pausable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausable.js)
-
-Dist:
-- [rx.backpressure.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.backpressure.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using `rx.backpressure.js`
-    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-BackPressure`](http://www.nuget.org/packages/RxJS-BackPressure/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/pausable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/pausable.js)
-
-* * *
-
-### <a id="rxobservableprototypepausablebufferedpauser"></a>`Rx.Observable.prototype.pausableBuffered(pauser)`
-<a href="#rxobservableprototypepausablebufferedpauser">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausablebuffered.js "View in source") 
-
-Pauses the underlying observable sequence based upon the observable sequence which yields true/false, and yields the values that were buffered while paused. Note that this only works on hot observables.
-
-#### Arguments
-1. `pauser` *(Rx.Subject)*: The observable sequence used to pause the underlying sequence.
-
-#### Returns
-*(`Observable`)*: The observable sequence which is paused based upon the pauser.
-
-#### Example
-```js
-var pauser = new Rx.Subject();
-var source = Rx.Observable.interval(1000).pausableBuffered(pauser);
-    
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x.toString());
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// To begin the flow
-pauser.onNext(true);
-
-// To pause the flow at any point
-pauser.onNext(false);
-
-// Resume the flow which empties the queue from when you last paused
-pauser.onNext(true);
-```
-### Location
-
-File:
-- [/src/core/backpressure/pausablebuffered.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/pausablebuffered.js)
-
-Dist:
-- [rx.backpressure.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.backpressure.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using `rx.backpressure.js`
-    - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-BackPressure`](http://www.nuget.org/packages/RxJS-BackPressure/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [/tests/observable/pausablebuffered.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/pausablebuffered.js)
-
-* * *
-
-### <a id="rxobservableprototypepluckproperty"></a>`Rx.Observable.prototype.pluck(property)`
-<a href="#rxobservableprototypepluckproperty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/pluck.js "View in source") 
-
-Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
-
-#### Arguments
-1. `property` *(`String`)*: The property to pluck.
- 
-#### Returns
-*(`Observable`)*: Returns a new Observable sequence of property values.
-
-#### Example
-```js
-var source = Rx.Observable
-    .fromArray([
-        { value: 0 },
-        { value: 1 },
-        { value: 2 }
-    ])
-    .pluck('value');
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 0
-// => Next: 1
-// => Next: 2
-// => Completed 
-```
-
-### Location
-
-File:
-- [`/src/core/observable/pluck.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/pluck.js)
-
-Dist:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) 
-- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-Prerequisites:
-- None
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-
-Unit Tests:
-- [`/tests/observable/pluck.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/pluck.js)
-
-* * *
-
-### <a id="rxobservableprototypepublishselector"></a>`Rx.Observable.prototype.publish([selector])`
-<a href="#rxobservableprototypepublishselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js "View in source") 
-
-Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
-
-This operator is a specialization of `multicast` using a regular `Rx.Subject`.
-
-#### Arguments
-1. `[selector]` *(`Function`)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
-  
-#### Returns
-*(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-   
-#### Example
-```js
-/* Without publish */
-var interval = Rx.Observable.interval(1000);
-
-var source = interval
-    .take(2)
-    .do(function (x) { 
-        console.log('Side effect');
-    });
- 
-source.subscribe(createObserver('SourceA'));
-source.subscribe(createObserver('SourceB'));
- 
-function createObserver(tag) {
-    return Rx.Observer.create(
-        function (x) {
-            console.log('Next: ' + tag + x);
-        },
-        function (err) {
-            console.log('Error: ' + err);   
-        },
-        function () {
-            console.log('Completed');   
-        });
-}
-
-// => Side effect
-// => Next: SourceA0 
-// => Side effect
-// => Next: SourceB0 
-// => Side effect
-// => Next: SourceA1 
-// => Completed
-// => Side effect
-// => Next: SourceB1 
-// => Completed  
-
-/* With publish */
-var interval = Rx.Observable.interval(1000);
-
-var source = interval
-    .take(2)
-    .doAction(function (x) { 
-        console.log('Side effect');
-    });
- 
-var published = source.publish();
- 
-published.subscribe(createObserver('SourceA'));
-published.subscribe(createObserver('SourceB'));
- 
-var connection = published.connect();
-
-function createObserver(tag) {
-    return Rx.Observer.create(
-        function (x) {
-            console.log('Next: ' + tag + x);
-        },
-        function (err) {
-            console.log('Error: ' + err);   
-        },
-        function () {
-            console.log('Completed');   
-        });
-}
-
-// => Side effect 
-// => Next: SourceA0 
-// => Next: SourceB0 
-// => Side effect 
-// => Next: SourceA1 
-// => Next: SourceB1
-// => Completed    
-```
-
-### Location
-
-File:
-- [`/src/core/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
-
-Dist:
-- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using `rx.binding.js`
-  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [`/tests/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publish.js)
-
-* * *
-
-### <a id="rxobservableprototypeshare"></a>`Rx.Observable.prototype.share()`
-<a href="#rxobservableprototypeshare">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js "View in source") 
-
-Returns an observable sequence that shares a single subscription to the underlying sequence. 
-
-This operator is a specialization of `publish` which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-
-#### Returns
-*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
-   
-#### Example
-```js
-/* Without share */
-var interval = Rx.Observable.interval(1000);
-
-var source = interval
-    .take(2)
-    .doAction(function (x) { 
-        console.log('Side effect');
-    });
- 
-source.subscribe(createObserver('SourceA'));
-source.subscribe(createObserver('SourceB'));
- 
-function createObserver(tag) {
-    return Rx.Observer.create(
-        function (x) {
-            console.log('Next: ' + tag + x);
-        },
-        function (err) {
-            console.log('Error: ' + err);   
-        },
-        function () {
-            console.log('Completed');   
-        });
-}
-
-// => Side effect
-// => Next: SourceA0 
-// => Side effect
-// => Next: SourceB0 
-// => Side effect
-// => Next: SourceA1 
-// => Completed
-// => Side effect
-// => Next: SourceB1 
-// => Completed  
-
-/* With share */
-var interval = Rx.Observable.interval(1000);
-
-var source = interval
-    .take(2)
-    .do(
-        function (x) { 
-            console.log('Side effect');
-        });
- 
-var published = source.share();
- 
-// When the number of observers subscribed to published observable goes from 
-// 0 to 1, we connect to the underlying observable sequence.
-published.subscribe(createObserver('SourceA'));
-// When the second subscriber is added, no additional subscriptions are added to the
-// underlying observable sequence. As a result the operations that result in side 
-// effects are not repeated per subscriber.
-published.subscribe(createObserver('SourceB'));
-
-function createObserver(tag) {
-    return Rx.Observer.create(
-        function (x) {
-            console.log('Next: ' + tag + x);
-        },
-        function (err) {
-            console.log('Error: ' + err);   
-        },
-        function () {
-            console.log('Completed');   
-        });
-}
-
-// => Side effect 
-// => Next: SourceA0 
-// => Next: SourceB0 
-// => Side effect 
-// => Next: SourceA1 
-// => Next: SourceB1
-// => Completed    
-```
-
-### Location
-
-File:
-- [`/src/core/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
-
-Dist:
-- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using `rx.binding.js`
-  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [`/tests/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publish.js)
-
-* * *
-
-### <a id="rxobservableprototypepublishlatestselector"></a>`Rx.Observable.prototype.publishLatest([selector])`
-<a href="#rxobservableprototypepublishlatestselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlatest.js "View in source") 
-
-Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
-
-This operator is a specialization of `multicast` using a `Rx.AsyncSubject`.
-
-#### Arguments
-1. `[selector]` *(`Function`)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
-
-#### Returns
-*(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
- 
-#### Example
-```js
-var interval = Rx.Observable.interval(1000);
-
-var source = interval
-    .take(2)
-    .doAction(function (x) { 
-        console.log('Side effect');
-    });
- 
-var published = source.publishLatest();
- 
-published.subscribe(createObserver('SourceA'));
-published.subscribe(createObserver('SourceB'));
- 
-var connection = published.connect();
-
-function createObserver(tag) {
-    return Rx.Observer.create(
-        function (x) {
-            console.log('Next: ' + tag + x);
-        },
-        function (err) {
-            console.log('Error: ' + err);   
-        },
-        function () {
-            console.log('Completed');   
-        });
-}
-
-// => Side effect
-// => Side effect
-// => Next: SourceA1 
-// => Completed
-// => Next: SourceB1 
-// => Completed    
-```
-
-### Location
-
-File:
-- [`/src/core/observable/publishlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlatest.js)
-
-Dist:
-- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using `rx.binding.js`
-  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [`/tests/observable/publishlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publishlatest.js)
-
-* * *
-
-### <a id="rxobservableprototypepublishvalueselector"></a>`Rx.Observable.prototype.publishValue([selector])`
-<a href="#rxobservableprototypepublishvalueselector">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js "View in source") 
-
-Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
-   
-This operator is a specialization of `multicast` using a `Rx.BehaviorSubject`.
-
-#### Arguments
-1. `[selector]` *(`Function`)*: Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
- 
-#### Returns
-*(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
- 
-#### Example
-```js
-var interval = Rx.Observable.interval(1000);
-
-var source = interval
-    .take(2)
-    .doAction(function (x) { 
-        console.log('Side effect');
-    });
- 
-var published = source.publishValue(42);
- 
-published.subscribe(createObserver('SourceA'));
-published.subscribe(createObserver('SourceB'));
- 
-var connection = published.connect();
-
-function createObserver(tag) {
-    return Rx.Observer.create(
-        function (x) {
-            console.log('Next: ' + tag + x);
-        },
-        function (err) {
-            console.log('Error: ' + err);   
-        },
-        function () {
-            console.log('Completed');   
-        });
-}
-
-// => Next: SourceA42 
-// => Next: SourceB42 
-// => Side effect
-// => Next: SourceA0 
-// => Next: SourceB0 
-// => Side effect
-// => Next: SourceA1 
-// => Next: SourceB1 
-// => Completed 
-// => Completed     
-```
-
-### Location
-
-File:
-- [`/src/core/observable/publishvalue.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js)
-
-Dist:
-- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using `rx.binding.js`
-  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [`/tests/observable/publishvalue.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publishvalue.js)
-
-* * *
-
-### <a id="rxobservableprototypesharevalue"></a>`Rx.Observable.prototype.shareValue(value)`
-<a href="#rxobservableprototypesharevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js "View in source") 
-
-Returns an observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
-   
-This operator is a specialization of `publishValue` which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-
-#### Returns
-*(`Observable`)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
- 
-#### Example
-```js
-var interval = Rx.Observable.interval(1000);
-
-var source = interval
-    .take(2)
-    .doAction(function (x) { 
-        console.log('Side effect');
-    });
- 
-var published = source.shareValue(42);
- 
-published.subscribe(createObserver('SourceA'));
-published.subscribe(createObserver('SourceB'));
-
-function createObserver(tag) {
-    return Rx.Observer.create(
-        function (x) {
-            console.log('Next: ' + tag + x);
-        },
-        function (err) {
-            console.log('Error: ' + err);   
-        },
-        function () {
-            console.log('Completed');   
-        });
-}
-
-// => Next: SourceA42 
-// => Next: SourceB42 
-// => Side effect
-// => Next: SourceA0 
-// => Next: SourceB0 
-// => Side effect
-// => Next: SourceA1 
-// => Next: SourceB1 
-// => Completed 
-// => Completed     
-```
-
-### Location
-
-File:
-- [`/src/core/observable/publishvalue.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishvalue.js)
-
-Dist:
-- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using `rx.binding.js`
-  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
-
-Unit Tests:
-- [`/tests/observable/publishvalue.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publishvalue.js)
-
-* * *
-
-### <a id="connectableobservableprototyperefcount"></a>`ConnectableObservable.prototype.refCount()`
-<a href="#connectableobservableprototyperefcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js "View in source") 
-
-Returns an observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
-   
-#### Returns
-*(`Observable`)*: An observable sequence that stays connected to the source as long as there is at least one subscription to the observable sequence.
- 
-#### Example
-```js
-var interval = Rx.Observable.interval(1000);
-
-var source = interval
-    .take(2)
-    .doAction(function (x) { 
-        console.log('Side effect');
-    });
- 
-var published = source.publish().refCount();
- 
-published.subscribe(createObserver('SourceA'));
-published.subscribe(createObserver('SourceB'));
-
-function createObserver(tag) {
-    return Rx.Observer.create(
-        function (x) {
-            console.log('Next: ' + tag + x);
-        },
-        function (err) {
-            console.log('Error: ' + err);   
-        },
-        function () {
-            console.log('Completed');   
-        });
-}
-
-// => Side effect
-// => Next: SourceA0 
-// => Next: SourceB0 
-// => Side effect
-// => Next: SourceA1 
-// => Next: SourceB1 
-// => Completed 
-// => Completed     
-```
-### Location
-
-File:
-- [`/src/core/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
-
-Dist:
-- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-Prerequisites:
-- If using `rx.binding.js`
-  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
-
-Unit Tests:
-- [`/tests/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publish.js)
-
-* * *
-
-### <a id="rxobservableprototypereduceaccumulator-seed"></a>`Rx.Observable.prototype.reduce(accumulator, [seed])`
-<a href="#rxobservableprototypereduceaccumulator-seed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/reduce.js "View in source") 
-
-Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
-
-For aggregation behavior with incremental intermediate results, see the `scan` method.
-
-#### Arguments
-1. `accumulator` *(`Function`)*:  An accumulator function to be invoked on each element.
-2. `[seed]` *(`Any`)*: The initial accumulator value.
- 
-#### Returns
-*(`Observable`)*: An observable sequence containing a single element with the final accumulator value.
-
-#### Example
-```js
-var source = Rx.Observable.range(1, 3)
-    .reduce(function (acc, x) {
-        return acc * x;
-    }, 1)
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);   
-    },
-    function () {
-        console.log('Completed');   
-    });
-
-// => Next: 6
-// => Completed 
-```
-
-### Location
-
-File:
-- [`/src/core/observable/reduce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/reduce.js)
-
-Dist:
-- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
-
-Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
-
-NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
-
-NuGet Packages:
-- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
-
-Unit Tests:
-- [`/tests/observable/reduce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/reduce.js)
-
-* * *
 
 ### <a id="rxobservableprototyperepeatrepeatcount"></a>`Rx.Observable.prototype.repeat(repeatCount)`
 <a href="#rxobservableprototyperepeatrepeatcount">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeatproto.js "View in source") 
@@ -1187,7 +220,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/repeatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeatproto.js)
+- [`/src/core/linq/observable/repeatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeatproto.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -1276,7 +309,7 @@ function createObserver(tag) {
 ### Location
 
 File:
-- [`/src/core/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
+- [`/src/core/linq/observable/publish.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publish.js)
 
 Dist:
 - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
@@ -1374,7 +407,7 @@ function createObserver(tag) {
 ### Location
 
 File:
-- [`/src/core/observable/sharereplay.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sharereplay.js)
+- [`/src/core/linq/observable/sharereplay.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sharereplay.js)
 
 Dist:
 - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
@@ -1440,7 +473,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/retry.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/retry.js)
+- [`/src/core/linq/observable/retry.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/retry.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -1523,7 +556,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/sample.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sample.js)
+- [`/src/core/linq/observable/sample.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sample.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -1613,7 +646,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/scan.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js)
+- [`/src/core/linq/observable/scan.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -1678,7 +711,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/select.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/select.js)
+- [`/src/core/linq/observable/select.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/select.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -1786,7 +819,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/selectmany.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/selectmany.js)
+- [/src/core/linq/observable/selectmany.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectmany.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -1808,7 +841,7 @@ Unit Tests:
 * * *
 
 ### <a id="rxobservableprototypeselectconcatselector-resultselector"></a>`Rx.Observable.prototype.selectConcat(selector, [resultSelector])`
-<a href="#rxobservableprototypeselectconcatselector-resultselector">#</a> [&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatmap.js "View in source") 
+<a href="#rxobservableprototypeselectconcatselector-resultselector">#</a> [&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js "View in source") 
 
 This is an alias for the `concatMap` method.  This can be one of the following:
 
@@ -1899,7 +932,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/concatmap.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatmap.js)
+- [/src/core/linq/observable/concatmap.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -1963,7 +996,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/selectswitch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectswitch.js)
+- [`/src/core/linq/observable/selectswitch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectswitch.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -2023,7 +1056,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/sequenceequal.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sequenceequal.js)
+- [`/src/core/linq/observable/sequenceequal.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sequenceequal.js)
 
 Dist:
 - [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
@@ -2133,7 +1166,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/single.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/single.js)
+- [`/src/core/linq/observable/single.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/single.js)
 
 Dist:
 - [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
@@ -2210,7 +1243,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/singleordefault.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/singleordefault.js)
+- [`/src/core/linq/observable/singleordefault.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/singleordefault.js)
 
 Dist:
 - [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
@@ -2264,7 +1297,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/skip.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skip.js)
+- [`/src/core/linq/observable/skip.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skip.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -2324,7 +1357,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/skiplast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplast.js)
+- [`/src/core/linq/observable/skiplast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplast.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -2388,7 +1421,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/skiplastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplastwithtime.js)
+- [`/src/core/linq/observable/skiplastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplastwithtime.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -2446,7 +1479,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/skipuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js)
+- [`/src/core/linq/observable/skipuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -2509,7 +1542,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/skipuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntilwithtime.js)
+- [`/src/core/linq/observable/skipuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntilwithtime.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -2573,7 +1606,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/skipwhile.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipwhile.js)
+- [`/src/core/linq/observable/skipwhile.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipwhile.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -2635,7 +1668,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/any.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/any.js)
+- [`/src/core/linq/observable/any.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/any.js)
 
 Dist:
 - [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
@@ -2692,7 +1725,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/startwith.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startwith.js)
+- [`/src/core/linq/observable/startwith.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/startwith.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -2856,7 +1889,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/subscribeon.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/subscribeon.js)
+- [`/src/core/linq/observable/subscribeon.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/subscribeon.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -2941,7 +1974,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/sum.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sum.js)
+- [/src/core/linq/observable/sum.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sum.js)
 
 Dist:
 - [rx.aggregates.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.aggregates.js)
@@ -2997,7 +2030,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/switchlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switchlatest.js)
+- [`/src/core/linq/observable/switchlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switchlatest.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -3057,7 +2090,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/take.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/take.js)
+- [`/src/core/linq/observable/take.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/take.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -3118,7 +2151,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/takelast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelast.js)
+- [`/src/core/linq/observable/takelast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelast.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -3175,7 +2208,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/takelastbuffer.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastbuffer.js)
+- [`/src/core/linq/observable/takelastbuffer.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastbuffer.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -3237,7 +2270,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/takelastbufferwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastbufferwithtime.js)
+- [`/src/core/linq/observable/takelastbufferwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastbufferwithtime.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -3297,7 +2330,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/takelastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastwithtime.js)
+- [`/src/core/linq/observable/takelastwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastwithtime.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -3354,7 +2387,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/takeuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js)
+- [`/src/core/linq/observable/takeuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -3416,7 +2449,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/takeuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntilwithtime.js)
+- [`/src/core/linq/observable/takeuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntilwithtime.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -3476,7 +2509,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/takewhile.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takewhile.js)
+- [`/src/core/linq/observable/takewhile.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takewhile.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -3551,7 +2584,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/throttle.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js)
+- [`/src/core/linq/observable/throttle.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -3623,7 +2656,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/throttlewithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js)
+- [`/src/core/linq/observable/throttlewithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -3682,7 +2715,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/timeinterval.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeinterval.js)
+- [`/src/core/linq/observable/timeinterval.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeinterval.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -3758,7 +2791,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/timeout.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeout.js)
+- [`/src/core/linq/observable/timeout.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeout.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -3896,7 +2929,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/timeoutwithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeoutwithselector.js)
+- [`/src/core/linq/observable/timeoutwithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeoutwithselector.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -3955,7 +2988,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/timestamp.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timestamp.js)
+- [`/src/core/linq/observable/timestamp.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timestamp.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -4006,7 +3039,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/toarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toarray.js)
+- [`/src/core/linq/observable/toarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toarray.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -4071,7 +3104,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/where.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/where.js)
+- [`/src/core/linq/observable/where.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/where.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -4197,7 +3230,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/window.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/window.js)
+- [`/src/core/linq/observable/window.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/window.js)
 
 Dist:
 - [`rx.coincidence.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.coincidence.js)
@@ -4278,7 +3311,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/windowwithcount.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithcount.js)
+- [`/src/core/linq/observable/windowwithcount.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithcount.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -4386,7 +3419,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/windowwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithtime.js)
+- [`/src/core/linq/observable/windowwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithtime.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -4445,7 +3478,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/windowwithtimeorcount.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithtimeorcount.js)
+- [`/src/core/linq/observable/windowwithtimeorcount.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/windowwithtimeorcount.js)
 
 Dist:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
@@ -4537,7 +3570,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/zipproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zipproto.js)
+- [`/src/core/linq/observable/zipproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zipproto.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

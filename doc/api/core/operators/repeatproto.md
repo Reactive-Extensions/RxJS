@@ -1,17 +1,18 @@
-### `Rx.Observable.prototype.mergeAll()`
-### `Rx.Observable.prototype.mergeObservable()` *DEPRECATED*
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeobservable.js "View in source") 
+### `Rx.Observable.prototype.repeat(repeatCount)`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeatproto.js "View in source") 
 
-Merges an observable sequence of observable sequences into an observable sequence.
-
-#### Returns
-*(`Observable`)*: The observable sequence that merges the elements of the inner sequences. 
+Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
  
+#### Arguments
+1. `repeatCount` *(`Number`)*:  Number of times to repeat the sequence. If not provided, repeats the sequence indefinitely.
+ 
+#### Returns
+*(`Observable`)*: The observable sequence producing the elements of the given sequence repeatedly.  
+
 #### Example
 ```js
-var source = Rx.Observable.range(0, 3)
-    .map(function (x) { return Rx.Observable.range(x, 3); })
-    .mergeAll();
+var source = Rx.Observable.range(1, 3)
+    .repeat(2);
 
 var subscription = source.subscribe(
     function (x) {
@@ -24,27 +25,24 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: 0 
-// => Next: 1 
 // => Next: 1 
 // => Next: 2 
-// => Next: 2 
+// => Next: 3 
+// => Next: 1 
 // => Next: 2 
 // => Next: 3 
-// => Next: 3 
-// => Next: 4 
-// => Completed     
+// => Completed 
 ```
 
 ### Location
 
 File:
-- [`/src/core/linq/observable/mergeobservable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeobservable.js)
+- [`/src/core/linq/observable/repeatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/repeatproto.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
 - [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) 
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
@@ -61,4 +59,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/mergeobservable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/mergeobservable.js)
+- [`/tests/observable/repeatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/repeatproto.js)

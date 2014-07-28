@@ -1,20 +1,23 @@
-### `Rx.Observable.prototype.maxBy(keySelector, [comparer])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/maxby.js "View in source") 
+### `Rx.Observable.prototype.reduce(accumulator, [seed])`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/reduce.js "View in source") 
 
-Returns the maximum value in an observable sequence according to the specified comparer.
+Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
+
+For aggregation behavior with incremental intermediate results, see the `scan` method.
 
 #### Arguments
-1. `keySelector` *(`Function`)*: Key selector function.
-2. `[comparer]` *(`Function`)*:  Comparer used to compare elements.
+1. `accumulator` *(`Function`)*:  An accumulator function to be invoked on each element.
+2. `[seed]` *(`Any`)*: The initial accumulator value.
  
 #### Returns
-*(`Observable`)*: An observable sequence containing a list of zero or more elements that have a maximum key value.
- 
+*(`Observable`)*: An observable sequence containing a single element with the final accumulator value.
+
 #### Example
 ```js
-/* Without comparer */
-var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8,9])
-    .maxBy(function (x) { return x; });
+var source = Rx.Observable.range(1, 3)
+    .reduce(function (acc, x) {
+        return acc * x;
+    }, 1)
 
 var subscription = source.subscribe(
     function (x) {
@@ -27,14 +30,14 @@ var subscription = source.subscribe(
         console.log('Completed');   
     });
 
-// => Next: 9,9
+// => Next: 6
 // => Completed 
 ```
 
 ### Location
 
 File:
-- [`/src/core/linq/observable/maxby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/maxby.js)
+- [`/src/core/linq/observable/reduce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/reduce.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -52,4 +55,4 @@ NuGet Packages:
 - [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
 
 Unit Tests:
-- [`/tests/observable/maxby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/maxby.js)
+- [`/tests/observable/reduce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/reduce.js)

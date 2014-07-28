@@ -128,7 +128,7 @@ Rx.Observable.from({length: 5}, function(v, k) { return k; }).subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/from.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/from.js)
+- [`/src/core/linq/observable/from.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/from.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

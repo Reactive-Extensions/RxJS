@@ -36,7 +36,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/manyselect.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/manyselect.js)
+- [`/src/core/linq/observable/manyselect.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/manyselect.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

@@ -58,7 +58,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/bufferwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithtime.js)
+- [`/src/core/linq/observable/bufferwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithtime.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

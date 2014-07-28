@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.concatAll()`
 ### `Rx.Observable.prototype.concatObservable()` *DEPRECATED*
-[&#x24C8;](/src/core/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatobservable.js "View in source") 
+[&#x24C8;](/src/core/linq/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatobservable.js "View in source") 
 
 Concatenates a sequence of observable sequences or promises into a single observable sequence.
 
@@ -39,7 +39,7 @@ var subscription = source.subscribe(
 #### Location
 
 File:
-- [/src/core/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/concatobservable.js)
+- [/src/core/linq/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatobservable.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

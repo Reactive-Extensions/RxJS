@@ -52,7 +52,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/count.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/count.js)
+- [`/src/core/linq/observable/count.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/count.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

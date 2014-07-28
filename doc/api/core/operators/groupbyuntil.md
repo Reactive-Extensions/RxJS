@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.groupByUntil(keySelector, [elementSelector], durationSelector, [comparer])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/groupbyuntil.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupbyuntil.js "View in source") 
 
 Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
 
@@ -62,7 +62,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/groupby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/groupby.js)
+- [`/src/core/linq/observable/groupby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupby.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

@@ -37,7 +37,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/interval.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/interval.js)
+- [/src/core/linq/observable/interval.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/interval.js)
 
 Dist:
 - [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)

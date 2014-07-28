@@ -63,7 +63,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/findindex.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/findindex.js)
+- [`/src/core/linq/observable/findindex.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/findindex.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)

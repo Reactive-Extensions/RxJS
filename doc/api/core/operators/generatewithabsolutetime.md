@@ -45,7 +45,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/generatewithabsolutetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generatewithabsolutetime.js)
+- [/src/core/linq/observable/generatewithabsolutetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generatewithabsolutetime.js)
 
 Dist:
 - [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)

@@ -45,7 +45,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/combinelatestproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/combinelatestproto.js)
+- [`/src/core/linq/observable/combinelatestproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/combinelatestproto.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

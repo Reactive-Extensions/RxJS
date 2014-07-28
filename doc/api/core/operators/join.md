@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.join(right, leftDurationSelector, rightDurationSelector, resultSelector)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/join.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/join.js "View in source") 
 
 Correlates the elements of two sequences based on overlapping durations.
 
@@ -53,7 +53,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/join.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/join.js)
+- [`/src/core/linq/observable/join.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/join.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

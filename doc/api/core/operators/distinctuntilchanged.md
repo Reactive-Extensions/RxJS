@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.distinctUntilChanged([keySelector], [comparer])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/distinctuntilchanged.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/distinctuntilchanged.js "View in source") 
 
 Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
 
@@ -57,7 +57,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/distinctuntilchanged.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/distinctuntilchanged.js)
+- [`/src/core/linq/observable/distinctuntilchanged.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/distinctuntilchanged.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

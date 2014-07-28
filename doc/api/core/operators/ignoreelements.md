@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.ignoreElements()`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/ignoreelements.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ignoreelements.js "View in source") 
 
 Ignores all elements in an observable sequence leaving only the termination messages.
 
@@ -28,7 +28,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/ignoreelements.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/ignoreelements.js)
+- [`/src/core/linq/observable/ignoreelements.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ignoreelements.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.groupJoin(right, leftDurationSelector, rightDurationSelector, resultSelector)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/groupjoin.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupjoin.js "View in source") 
 
 Correlates the elements of two sequences based on overlapping durations, and groups the results.
 
@@ -54,7 +54,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/groupjoin.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable/groupjoin.js)
+- [`/src/core/linq/observable/groupjoin.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupjoin.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

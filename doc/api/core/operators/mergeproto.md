@@ -73,7 +73,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/observable/mergeproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeproto.js)
+- [`/src/core/linq/observable/mergeproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeproto.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

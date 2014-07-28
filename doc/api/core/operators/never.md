@@ -26,7 +26,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/observable/never.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.js)
+- [/src/core/linq/observable/never.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
