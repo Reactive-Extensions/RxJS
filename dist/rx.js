@@ -3500,9 +3500,7 @@
         q.push(x);
         q.length > count && q.shift();
       }, observer.onError.bind(observer), function () {
-        for(var i = 0, len = q.length; i < len; i++) {
-          observer.onNext(q[i]);
-        }
+        while(q.length > 0) { observer.onNext(q.shift()); }
         observer.onCompleted();
       });
     });
