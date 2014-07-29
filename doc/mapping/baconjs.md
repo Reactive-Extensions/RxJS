@@ -78,6 +78,10 @@ e.emit('data', 'foo', 'bar');
 
 ### Querying Streams ###
 
+Querying streams is a fundamental piece of both RxJS and Bacon.js, such as `map`, `filter` and so forth.
+
+#### Bacon.js ####
+
 Event Streams support higher ordered functions much as RxJS does such as `map`, `filter` and more, although supports a more Underscore/Lo-Dash style than the callback selector style found in RxJS.
 
 ```js
@@ -88,4 +92,54 @@ var minus = $("#minus").asEventStream("click").map(-1);
 var both = plus.merge(minus);
 
 both.onValue (function (x) { /* returns 1 or -1 */ });
+```
+
+#### RxJS ####
+
+Observables support basic usage of the `map` function in which we can get values.
+
+```js
+var plus = Rx.Observable.fromEvent($("#plus"), "click").map(function () { return 1; });
+var minus = Rx.Observable.fromEvent($("#minus"), "click").map(function () { return -1; });
+
+// Combine both into one
+var both = plus.merge(minus);
+
+both.subscribe (function (x) { /* returns 1 or -1 */ });
+```
+
+In addition, RxJS has helpers to extract property values through the `pluck` operator such as:
+
+```js
+var values = Rx.Observable.from(
+	{ name: 'Matt'},
+	{ name: 'Erik',
+	{ name: Bart });
+
+values.pluck('name').subscribe(function (x) { /* returns the name */ });
+```
+
+We also have helper functions in `Rx.helpers` that can help you pluck values using `pluck`, or just return values by using `just`.  Using pluck, we could still use `map` and use the `pluck` helper.
+
+```js
+var pluck = Rx.helpers.pluck;
+var values = Rx.Observable.from(
+	{ name: 'Matt'},
+	{ name: 'Erik',
+	{ name: Bart });
+
+values.map(pluck('name')).subscribe(function (x) { /* returns the name */ });
+```
+
+Knowing this, we could rewrite the top example as the following:
+
+```js
+var just = Rx.helpers.just;
+var plus = Rx.Observable.fromEvent($("#plus"), "click").map(just(1));
+var minus = Rx.Observable.fromEvent($("#minus"), "click").map(just(-1));
+
+// Combine both into one
+var both = plus.merge(minus);
+
+both.subscribe (function (x) { /* returns 1 or -1 */ });
 ```
