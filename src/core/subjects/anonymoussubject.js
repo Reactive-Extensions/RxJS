@@ -1,44 +1,23 @@
-    /** @private */
-    var AnonymousSubject = (function (_super) {
-        inherits(AnonymousSubject, _super);
+  var AnonymousSubject = Rx.AnonymousSubject = (function (__super__) {
+    inherits(AnonymousSubject, __super__);
 
-        function subscribe(observer) {
-            return this.observable.subscribe(observer);
-        }
+    function AnonymousSubject(observer, observable) {
+      this.observer = observer;
+      this.observable = observable;      
+      __super__.call(this, this.observable.subscribe.bind(this.observable));
+    }
 
-        /**
-         * @private
-         * @constructor
-         */
-        function AnonymousSubject(observer, observable) {
-            _super.call(this, subscribe);
-            this.observer = observer;
-            this.observable = observable;
-        }
+    addProperties(AnonymousSubject.prototype, Observer, {
+      onCompleted: function () {
+        this.observer.onCompleted();
+      },            
+      onError: function (exception) {
+        this.observer.onError(exception);
+      },            
+      onNext: function (value) {
+        this.observer.onNext(value);
+      }
+    });
 
-        addProperties(AnonymousSubject.prototype, Observer, {
-            /**
-             * @private
-             * @memberOf AnonymousSubject#
-            */
-            onCompleted: function () {
-                this.observer.onCompleted();
-            },
-            /**
-             * @private
-             * @memberOf AnonymousSubject#
-            */            
-            onError: function (exception) {
-                this.observer.onError(exception);
-            },
-            /**
-             * @private
-             * @memberOf AnonymousSubject#
-            */            
-            onNext: function (value) {
-                this.observer.onNext(value);
-            }
-        });
-
-        return AnonymousSubject;
-    }(Observable));
+    return AnonymousSubject;
+  }(Observable));
