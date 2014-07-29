@@ -48,7 +48,7 @@ body{
 }
 
 #playfield{
-  height: 75%;
+  height: 350px;
   border: solid 1px #a8a8a8;
   border-bottom: solid 5px Green;
   background-image: linear-gradient(bottom, rgb(39,54,105) 17%, rgb(1,5,54) 46%);
@@ -64,7 +64,7 @@ body{
   -ms-transform: rotate(90deg);
   -o-transform: rotate(90deg);
   transform: rotate(90deg);
-  rotate(90deg);
+  /*rotate(90deg); */
 }
 
 .instructions{

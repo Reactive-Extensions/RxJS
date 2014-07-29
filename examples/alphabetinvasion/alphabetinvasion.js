@@ -87,9 +87,11 @@
                 }
             });
 
-            var hs = window.localStorage.getItem(HIGH_SCORE_STORAGE_KEY);
-            if (hs !== null) {
-                this.highScore.innerText = hs;
+            if (window.localStorage) {
+                var hs = window.localStorage.getItem(HIGH_SCORE_STORAGE_KEY);
+                if (hs !== null) {
+                    this.highScore.innerText = hs;
+                }
             }
         };
 
@@ -305,7 +307,9 @@
 
             if (newScore > parseInt(this.highScore.innerText)) {
                 this.highScore.innerText = newScore;
-                window.localStorage.setItem(HIGH_SCORE_STORAGE_KEY, newScore);
+                if (window.localStorage){
+                    window.localStorage.setItem(HIGH_SCORE_STORAGE_KEY, newScore);
+                }  
             }
         };
 

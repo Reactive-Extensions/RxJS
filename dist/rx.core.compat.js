@@ -1284,7 +1284,7 @@
     
     currentScheduler.scheduleRequired = function () { return !queue; };
     currentScheduler.ensureTrampoline = function (action) {
-        if (!queue) { this.schedule(action); } else { action(); }
+      if (!queue) { this.schedule(action); } else { action(); }
     };
 
     return currentScheduler;
