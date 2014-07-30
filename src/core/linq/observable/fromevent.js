@@ -87,7 +87,7 @@
     var disposables = new CompositeDisposable();
 
     // Asume NodeList
-    if (typeof el.item === 'function' && typeof el.length === 'number') {
+    if (Object.prototype.toString.call(el) === '[object NodeList]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
