@@ -1,0 +1,26 @@
+/* Originally from https://github.com/DanGorst/frp-with-bacon */
+h1 {
+  font-family: 'Helvetica';
+  font-size: 32px;
+}
+
+h3 {
+  font-family: 'Helvetica';
+  font-size: 20px;
+}
+
+text {
+  font-family: 'Helvetica';
+  font-size: 16px;
+}
+
+.axis path, .axis line {
+    fill: none;
+    stroke: #777;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: 'Helvetica';
+    font-size: 14px;
+}
