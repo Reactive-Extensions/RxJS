@@ -208,6 +208,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
 
 - Tutorials
+    - [2 minute introduction to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877) 
     - [Learn RxJS](http://reactive-extensions.github.io/learnrx/)
     - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
