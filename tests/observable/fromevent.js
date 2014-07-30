@@ -46,31 +46,6 @@ test('Event_1', function () {
     equal(element.removeEventListenerCalled, true);
 });
 
-function FakeNodeList(arr) {
-    this.arr = arr;
-    this.length = arr.length;
-}
-FakeNodeList.prototype.item = function (index) {
-    return this.arr[index];
-}
-
-test('Event_2', function () {
-    var elements = new FakeNodeList([new FakeDOMStandardElement('foo')]);
-
-    var d = Observable.fromEvent(elements, 'someEvent')
-        .subscribe(function (x) {
-            equal(x, 42);
-        });
-
-    elements.item(0).trigger('someEvent', 42);
-    equal(elements.item(0).addEventListenerCalled, true);
-    equal(elements.item(0).removeEventListenerCalled, false);    
-
-    d.dispose();
-
-    equal(elements.item(0).removeEventListenerCalled, true);    
-});
-
 /** Fake DOM Element */
 function FakeEventEmitter() {
     this.listeners = {};
