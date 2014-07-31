@@ -3,13 +3,11 @@
 
     // Fix subscriber to check for undefined or function returned to decorate as Disposable
     function fixSubscriber(subscriber) {
-      if (typeof subscriber === 'undefined') {
-        subscriber = disposableEmpty;
-      } else if (typeof subscriber === 'function') {
-        subscriber = disposableCreate(subscriber);
-      }
+      if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
 
-      return subscriber;
+      return typeof subscriber === 'function' ?
+        disposableCreate(subscriber) :
+        disposableEmpty;
     }
 
     function AnonymousObservable(subscribe) {

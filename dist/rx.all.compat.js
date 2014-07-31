@@ -2258,20 +2258,20 @@
     });
   };
 
-    /**
-     *  Creates an observable sequence from a specified subscribe method implementation.
-     *  
-     * @example
-     *  var res = Rx.Observable.create(function (observer) { return function () { } );
-     *  var res = Rx.Observable.create(function (observer) { return Rx.Disposable.empty; } ); 
-     *  var res = Rx.Observable.create(function (observer) { } ); 
-     *  
-     * @param {Function} subscribe Implementation of the resulting observable sequence's subscribe method, returning a function that will be wrapped in a Disposable.
-     * @returns {Observable} The observable sequence with the specified implementation for the Subscribe method.
-     */
-    Observable.create = Observable.createWithDisposable = function (subscribe) {
-        return new AnonymousObservable(subscribe);
-    };
+  /**
+   *  Creates an observable sequence from a specified subscribe method implementation.
+   *  
+   * @example
+   *  var res = Rx.Observable.create(function (observer) { return function () { } );
+   *  var res = Rx.Observable.create(function (observer) { return Rx.Disposable.empty; } ); 
+   *  var res = Rx.Observable.create(function (observer) { } ); 
+   *  
+   * @param {Function} subscribe Implementation of the resulting observable sequence's subscribe method, returning a function that will be wrapped in a Disposable.
+   * @returns {Observable} The observable sequence with the specified implementation for the Subscribe method.
+   */
+  Observable.create = Observable.createWithDisposable = function (subscribe) {
+    return new AnonymousObservable(subscribe);
+  };
 
   /**
    *  Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
@@ -8943,13 +8943,11 @@
 
     // Fix subscriber to check for undefined or function returned to decorate as Disposable
     function fixSubscriber(subscriber) {
-      if (typeof subscriber === 'undefined') {
-        subscriber = disposableEmpty;
-      } else if (typeof subscriber === 'function') {
-        subscriber = disposableCreate(subscriber);
-      }
+      if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
 
-      return subscriber;
+      return typeof subscriber === 'function' ?
+        disposableCreate(subscriber) :
+        disposableEmpty;
     }
 
     function AnonymousObservable(subscribe) {
