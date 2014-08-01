@@ -44,99 +44,6 @@ var browsers = [{
               '*/'
       },
       concat: {
-          core: {
-            src: [
-              'src/core/license.js',
-              'src/core/intro.js',
-              'src/core/basicheader-modern.js',
-              'src/core/enumeratorheader.js',
-
-              'src/core/internal/isequal.js',
-              'src/core/internal/util.js',
-              'src/core/internal/priorityqueue.js',
-              'src/core/disposables/compositedisposable.js',
-              'src/core/disposables/disposable.js',
-              'src/core/disposables/booleandisposable.js',
-              'src/core/disposables/singleassignmentdisposable.js',
-              'src/core/disposables/serialdisposable.js',
-              'src/core/disposables/refcountdisposable.js',
-              'src/core/disposables/scheduleddisposable.js',
-              'src/core/concurrency/scheduleditem.js',
-              'src/core/concurrency/scheduler.js',
-              'src/core/concurrency/scheduleperiodicrecursive.js',
-              'src/core/concurrency/immediatescheduler.js',
-              'src/core/concurrency/currentthreadscheduler.js',
-              'src/core/concurrency/timeoutscheduler.js',
-              'src/core/concurrency/catchscheduler.js',
-              'src/core/notification.js',
-              'src/core/internal/enumerator.js',
-              'src/core/internal/enumerable.js',
-              'src/core/observer.js',
-              'src/core/abstractobserver.js',
-              'src/core/anonymousobserver.js',
-              'src/core/checkedobserver.js',
-              'src/core/scheduledobserver.js',
-              'src/core/observeonobserver.js',
-              'src/core/observable.js',
-
-              'src/core/anonymousobservable.js',
-              'src/core/autodetachobserver.js',
-              'src/core/subjects/innersubscription.js',
-              'src/core/subjects/subject.js',
-              'src/core/subjects/asyncsubject.js',
-              'src/core/subjects/anonymoussubject.js',
-              'src/core/exports.js',
-              'src/core/outro.js'            
-            ],
-            dest: 'dist/rx.core.js'
-          },
-          corecompat: {
-            src: [
-              'src/core/license.js',
-              'src/core/intro.js',
-              'src/core/basicheader.js',
-              'src/core/enumeratorheader.js',
-
-              'src/core/internal/isequal.js',
-              'src/core/internal/util.js',
-              'src/core/internal/polyfills.js',
-              'src/core/internal/priorityqueue.js',
-              'src/core/disposables/compositedisposable.js',
-              'src/core/disposables/disposable.js',
-              'src/core/disposables/booleandisposable.js',
-              'src/core/disposables/singleassignmentdisposable.js',
-              'src/core/disposables/serialdisposable.js',
-              'src/core/disposables/refcountdisposable.js',
-              'src/core/disposables/scheduleddisposable.js',
-              'src/core/concurrency/scheduleditem.js',
-              'src/core/concurrency/scheduler.js',
-              'src/core/concurrency/scheduleperiodicrecursive.js',
-              'src/core/concurrency/immediatescheduler.js',
-              'src/core/concurrency/currentthreadscheduler.js',
-              'src/core/concurrency/timeoutscheduler.js',
-              'src/core/concurrency/catchscheduler.js',
-              'src/core/notification.js',
-              'src/core/internal/enumerator.js',
-              'src/core/internal/enumerable.js',
-              'src/core/observer.js',
-              'src/core/abstractobserver.js',
-              'src/core/anonymousobserver.js',
-              'src/core/checkedobserver.js',
-              'src/core/scheduledobserver.js',
-              'src/core/observeonobserver.js',
-              'src/core/observable.js',            
-
-              'src/core/anonymousobservable.js',
-              'src/core/autodetachobserver.js',
-              'src/core/subjects/innersubscription.js',
-              'src/core/subjects/subject.js',
-              'src/core/subjects/asyncsubject.js',
-              'src/core/subjects/anonymoussubject.js',
-              'src/core/exports.js',
-              'src/core/outro.js'            
-            ],
-            dest: 'dist/rx.core.compat.js'            
-          },
           all: {
             src: [
               'src/core/license.js',
@@ -957,7 +864,6 @@ var browsers = [{
               'src/core/linq/observable/empty.js',
               'src/core/linq/observable/from.js',
               'src/core/linq/observable/fromarray.js',
-              'src/core/linq/observable/generate.js',
               'src/core/linq/observable/never.js',
               'src/core/linq/observable/of.js',
               'src/core/linq/observable/range.js',
@@ -997,7 +903,6 @@ var browsers = [{
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
               'src/core/linq/observable/takelast.js',
-              'src/core/linq/observable/takelastbuffer.js',
 
               // Standard Query Operators
               'src/core/linq/observable/concatmap.js',
@@ -1032,29 +937,25 @@ var browsers = [{
               'src/core/linq/connectableobservable.js',
 
               // Time operators
+              'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+              'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
               'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
-              'src/core/linq/observable/_observabletimerdateandperiod.js',
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
-              'src/core/linq/observable/timer-lite.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
-              'src/core/linq/observable/delay-lite.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
+              'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
+              'src/core/linq/observable/delay.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
               'src/core/linq/observable/throttle.js', // AnonymousObservable, SerialDisposable, timeoutScheduler, SingleAssignmentDisposable, CompositeDisposable
-              'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-              'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
               'src/core/linq/observable/delaywithselector.js',
               'src/core/linq/observable/timeoutwithselector.js',
               'src/core/linq/observable/throttlewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
-              'src/core/linq/observable/takelastbufferwithtime.js',
               'src/core/linq/observable/takewithtime.js',
               'src/core/linq/observable/skipwithtime.js',
-              'src/core/linq/observable/skipuntilwithtime.js',
-              'src/core/linq/observable/takeuntilwithtime.js',
 
               // Backpressure operators
               'src/core/backpressure/pausable.js',
@@ -1127,8 +1028,7 @@ var browsers = [{
               'src/core/linq/observable/defer.js',
               'src/core/linq/observable/empty.js',
               'src/core/linq/observable/from.js',
-              'src/core/linq/observable/fromarray.js',
-              'src/core/linq/observable/generate.js',
+              'src/core/linq/observable/fromarray.js',   
               'src/core/linq/observable/never.js',
               'src/core/linq/observable/of.js',
               'src/core/linq/observable/range.js',
@@ -1168,7 +1068,6 @@ var browsers = [{
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
               'src/core/linq/observable/takelast.js',
-              'src/core/linq/observable/takelastbuffer.js',
 
               // Standard Query Operators
               'src/core/linq/observable/concatmap.js',
@@ -1203,29 +1102,25 @@ var browsers = [{
               'src/core/linq/connectableobservable.js',
 
               // Time operators
+              'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+              'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
               'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
-              'src/core/linq/observable/_observabletimerdateandperiod.js',
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
-              'src/core/linq/observable/timer-lite.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
-              'src/core/linq/observable/delay-lite.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
+              'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
+              'src/core/linq/observable/delay.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
               'src/core/linq/observable/throttle.js', // AnonymousObservable, SerialDisposable, timeoutScheduler, SingleAssignmentDisposable, CompositeDisposable
-              'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-              'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
               'src/core/linq/observable/delaywithselector.js',
               'src/core/linq/observable/timeoutwithselector.js',
               'src/core/linq/observable/throttlewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
-              'src/core/linq/observable/takelastbufferwithtime.js',
               'src/core/linq/observable/takewithtime.js',
               'src/core/linq/observable/skipwithtime.js',
-              'src/core/linq/observable/skipuntilwithtime.js',
-              'src/core/linq/observable/takeuntilwithtime.js',
 
               // Backpressure operators
               'src/core/backpressure/pausable.js',
@@ -1233,8 +1128,6 @@ var browsers = [{
               'src/core/backpressure/controlled.js',
               'src/core/backpressure/controlledobservable.js',
               'src/core/backpressure/controlledsubject.js',
-              //'src/core/backpressure/windowed.js',
-              //'src/core/backpressure/windowedobservable.js',
 
               // Coincidence Operators
               'src/core/linq/observable/pairwise.js',
@@ -1274,6 +1167,7 @@ var browsers = [{
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
 
               // Creation
+              'src/core/linq/observable/generate.js',
               'src/core/linq/observable/using.js',
 
               // Multiple
@@ -1285,6 +1179,7 @@ var browsers = [{
               // Single
               'src/core/linq/observable/bufferwithcount.js',
               'src/core/linq/observable/windowwithcount.js',
+              'src/core/linq/observable/takelastbuffer.js',
 
               // Standard Query Operators
               'src/core/linq/observable/defaultifempty.js',
@@ -1806,8 +1701,6 @@ var browsers = [{
 
   // Default task
   grunt.registerTask('default', [
-    'concat:core',
-    'concat:corecompat',
     'concat:all',
     'concat:allcompat',
     'concat:basic',
@@ -1827,8 +1720,6 @@ var browsers = [{
     'concat:litecompat',
     'concat:liteextras',
 
-    'uglify:core',
-    'uglify:corecompat',
     'uglify:all',
     'uglify:allcompat',
     'uglify:basic',

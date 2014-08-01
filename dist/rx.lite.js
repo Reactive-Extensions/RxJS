@@ -2003,49 +2003,6 @@
     });
   };
 
-  /**
-   *  Generates an observable sequence by running a state-driven loop producing the sequence's elements, using the specified scheduler to send out observer messages.
-   *  
-   * @example
-   *  var res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; });
-   *  var res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; }, Rx.Scheduler.timeout);
-   * @param {Mixed} initialState Initial state.
-   * @param {Function} condition Condition to terminate generation (upon returning false).
-   * @param {Function} iterate Iteration step function.
-   * @param {Function} resultSelector Selector function for results produced in the sequence.
-   * @param {Scheduler} [scheduler] Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.currentThread.
-   * @returns {Observable} The generated sequence.
-   */
-  Observable.generate = function (initialState, condition, iterate, resultSelector, scheduler) {
-    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      var first = true, state = initialState;
-      return scheduler.scheduleRecursive(function (self) {
-        var hasResult, result;
-        try {
-          if (first) {
-            first = false;
-          } else {
-            state = iterate(state);
-          }
-          hasResult = condition(state);
-          if (hasResult) {
-            result = resultSelector(state);
-          }
-        } catch (exception) {
-          observer.onError(exception);
-          return;
-        }
-        if (hasResult) {
-          observer.onNext(result);
-          self();
-        } else {
-          observer.onCompleted();
-        }
-      });
-    });
-  };
-
     /**
      *  Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins).
      * @returns {Observable} An observable sequence whose observers will never get called.
@@ -3026,29 +2983,6 @@
     });
   };
 
-  /**
-   *  Returns an array with the specified number of contiguous elements from the end of an observable sequence.
-   *  
-   * @description
-   *  This operator accumulates a buffer with a length enough to store count elements. Upon completion of the
-   *  source sequence, this buffer is produced on the result sequence.       
-   * @param {Number} count Number of elements to take from the end of the source sequence.
-   * @returns {Observable} An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
-   */
-  observableProto.takeLastBuffer = function (count) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
-      var q = [];
-      return source.subscribe(function (x) {
-        q.push(x);
-        q.length > count && q.shift();
-      }, observer.onError.bind(observer), function () {
-        observer.onNext(q);
-        observer.onCompleted();
-      });
-    });
-  };
-
     function concatMap(selector) {
       return this.map(function (x, i) {
         var result = selector(x, i);
@@ -3833,6 +3767,34 @@
 
     return ConnectableObservable;
   }(Observable));
+    function observableTimerDate(dueTime, scheduler) {
+        return new AnonymousObservable(function (observer) {
+            return scheduler.scheduleWithAbsolute(dueTime, function () {
+                observer.onNext(0);
+                observer.onCompleted();
+            });
+        });
+    }
+
+  function observableTimerDateAndPeriod(dueTime, period, scheduler) {
+    var p = normalizeTime(period);
+    return new AnonymousObservable(function (observer) {
+      var count = 0, d = dueTime;
+      return scheduler.scheduleRecursiveWithAbsolute(d, function (self) {
+        var now;
+        if (p > 0) {
+          now = scheduler.now();
+          d = d + p;
+          if (d <= now) {
+            d = now + p;
+          }
+        }
+        observer.onNext(count++);
+        self(d);
+      });
+    });
+  }
+
     function observableTimerTimeSpan(dueTime, scheduler) {
         var d = normalizeTime(dueTime);
         return new AnonymousObservable(function (observer) {
@@ -3857,25 +3819,6 @@
     });
   }
 
-  function observableTimerDateAndPeriod(dueTime, period, scheduler) {
-    var p = normalizeTime(period);
-    return new AnonymousObservable(function (observer) {
-      var count = 0, d = dueTime;
-      return scheduler.scheduleRecursiveWithAbsolute(d, function (self) {
-        var now;
-        if (p > 0) {
-          now = scheduler.now();
-          d = d + p;
-          if (d <= now) {
-            d = now + p;
-          }
-        }
-        observer.onNext(count++);
-        self(d);
-      });
-    });
-  }
-
   /**
    *  Returns an observable sequence that produces a value after each period.
    *  
@@ -3895,12 +3838,17 @@
    *  Returns an observable sequence that produces a value after dueTime has elapsed and then after each period.
    *  
    * @example
-   *  var res = Rx.Observable.timer(5000);
-   *  var res = Rx.Observable.timer(5000, 1000);
-   *  var res = Rx.Observable.timer(5000, Rx.Scheduler.timeout);
-   *  var res = Rx.Observable.timer(5000, 1000, Rx.Scheduler.timeout);
+   *  1 - res = Rx.Observable.timer(new Date());
+   *  2 - res = Rx.Observable.timer(new Date(), 1000);
+   *  3 - res = Rx.Observable.timer(new Date(), Rx.Scheduler.timeout);
+   *  4 - res = Rx.Observable.timer(new Date(), 1000, Rx.Scheduler.timeout);
    *  
-   * @param {Number} dueTime Relative time (specified as an integer denoting milliseconds) at which to produce the first value.
+   *  5 - res = Rx.Observable.timer(5000);
+   *  6 - res = Rx.Observable.timer(5000, 1000);
+   *  7 - res = Rx.Observable.timer(5000, Rx.Scheduler.timeout);
+   *  8 - res = Rx.Observable.timer(5000, 1000, Rx.Scheduler.timeout);
+   *  
+   * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
    * @param {Mixed} [periodOrScheduler]  Period to produce subsequent values (specified as an integer denoting milliseconds), or the scheduler to run the timer on. If not specified, the resulting timer is not recurring.
    * @param {Scheduler} [scheduler]  Scheduler to run the timer on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence that produces a value after due time has elapsed and then each period.
@@ -3908,30 +3856,24 @@
   var observableTimer = Observable.timer = function (dueTime, periodOrScheduler, scheduler) {
     var period;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    if (typeof periodOrScheduler === 'number') {
+    if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'number') {
       period = periodOrScheduler;
-    } else if (typeof periodOrScheduler === 'object' && typeof periodOrScheduler.now === 'function') {
+    } else if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'object') {
       scheduler = periodOrScheduler;
     }
-    return notDefined(period) ?
+    if (dueTime instanceof Date && period === undefined) {
+      return observableTimerDate(dueTime.getTime(), scheduler);
+    }
+    if (dueTime instanceof Date && period !== undefined) {
+      period = periodOrScheduler;
+      return observableTimerDateAndPeriod(dueTime.getTime(), period, scheduler);
+    }
+    return period === undefined ?
       observableTimerTimeSpan(dueTime, scheduler) :
       observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
   };
 
-  /**
-   *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
-   *  
-   * @example
-   *  var res = Rx.Observable.delay(5000);
-   *  var res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
-   * @memberOf Observable#
-   * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
-   * @param {Scheduler} [scheduler] Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
-   * @returns {Observable} Time-shifted sequence.
-   */
-  observableProto.delay = function (dueTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this;  
+  function observableDelayTimeSpan(source, dueTime, scheduler) {
     return new AnonymousObservable(function (observer) {
       var active = false,
         cancelable = new SerialDisposable(),
@@ -3959,9 +3901,9 @@
             cancelable.setDisposable(d);
             d.setDisposable(scheduler.scheduleRecursiveWithRelative(dueTime, function (self) {
               var e, recurseDueTime, result, shouldRecurse;
-
-              if (exception !== null) { return; }
-
+              if (exception !== null) {
+                return;
+              }
               running = true;
               do {
                 result = null;
@@ -3972,7 +3914,6 @@
                   result.accept(observer);
                 }
               } while (result !== null);
-              
               shouldRecurse = false;
               recurseDueTime = 0;
               if (q.length > 0) {
@@ -3994,6 +3935,33 @@
       });
       return new CompositeDisposable(subscription, cancelable);
     });
+  }
+
+  function observableDelayDate(source, dueTime, scheduler) {
+    return observableDefer(function () {
+      return observableDelayTimeSpan(source, dueTime - scheduler.now(), scheduler);
+    });
+  }
+
+  /**
+   *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
+   *  
+   * @example
+   *  1 - res = Rx.Observable.delay(new Date());
+   *  2 - res = Rx.Observable.delay(new Date(), Rx.Scheduler.timeout);
+   *  
+   *  3 - res = Rx.Observable.delay(5000);
+   *  4 - res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
+   * @memberOf Observable#
+   * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
+   * @param {Scheduler} [scheduler] Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
+   * @returns {Observable} Time-shifted sequence.
+   */
+  observableProto.delay = function (dueTime, scheduler) {
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    return dueTime instanceof Date ?
+      observableDelayDate(this, dueTime.getTime(), scheduler) :
+      observableDelayTimeSpan(this, dueTime, scheduler);
   };
 
   /**
@@ -4010,29 +3978,6 @@
   observableProto.throttle = function (dueTime, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return this.throttleWithSelector(function () { return observableTimer(dueTime, scheduler); })
-  };
-
-  /**
-   *  Records the time interval between consecutive values in an observable sequence.
-   *  
-   * @example
-   *  1 - res = source.timeInterval();
-   *  2 - res = source.timeInterval(Rx.Scheduler.timeout);
-   *      
-   * @param [scheduler]  Scheduler used to compute time intervals. If not specified, the timeout scheduler is used.
-   * @returns {Observable} An observable sequence with time interval information on values.
-   */
-  observableProto.timeInterval = function (scheduler) {
-    var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return observableDefer(function () {
-      var last = scheduler.now();
-      return source.map(function (x) {
-        var now = scheduler.now(), span = now - last;
-        last = now;
-        return { value: x, interval: span };
-      });
-    });
   };
 
   /**
@@ -4159,60 +4104,6 @@
         }
       }));
       return new CompositeDisposable(subscription, timer);
-    });
-  };
-
-  /**
-   *  Generates an observable sequence by iterating a state from an initial state until the condition fails.
-   * 
-   * @example 
-   *  res = source.generateWithRelativeTime(0, 
-   *      function (x) { return return true; }, 
-   *      function (x) { return x + 1; }, 
-   *      function (x) { return x; }, 
-   *      function (x) { return 500; }
-   *  );
-   *      
-   * @param {Mixed} initialState Initial state.
-   * @param {Function} condition Condition to terminate generation (upon returning false).
-   * @param {Function} iterate Iteration step function.
-   * @param {Function} resultSelector Selector function for results produced in the sequence.
-   * @param {Function} timeSelector Time selector function to control the speed of values being produced each iteration, returning integer values denoting milliseconds.
-   * @param {Scheduler} [scheduler]  Scheduler on which to run the generator loop. If not specified, the timeout scheduler is used.
-   * @returns {Observable} The generated sequence.
-   */
-  Observable.generateWithRelativeTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
-      var first = true,
-        hasResult = false,
-        result,
-        state = initialState,
-        time;
-      return scheduler.scheduleRecursiveWithRelative(0, function (self) {
-        hasResult && observer.onNext(result);
-
-        try {
-          if (first) {
-            first = false;
-          } else {
-            state = iterate(state);
-          }
-          hasResult = condition(state);
-          if (hasResult) {
-            result = resultSelector(state);
-            time = timeSelector(state);
-          }
-        } catch (e) {
-          observer.onError(e);
-          return;
-        }
-        if (hasResult) {
-          self(time);
-        } else {
-          observer.onCompleted();
-        }
-      });
     });
   };
 
@@ -4506,46 +4397,6 @@
   };
 
   /**
-   *  Returns an array with the elements within the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
-   *  
-   * @example
-   *  1 - res = source.takeLastBufferWithTime(5000, [optional scheduler]); 
-   * @description
-   *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
-   *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
-   *  result sequence. This causes elements to be delayed with duration.   
-   * @param {Number} duration Duration for taking elements from the end of the sequence.
-   * @param {Scheduler} scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
-   * @returns {Observable} An observable sequence containing a single array with the elements taken during the specified duration from the end of the source sequence.
-   */
-  observableProto.takeLastBufferWithTime = function (duration, scheduler) {
-    var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
-      var q = [];
-
-      return source.subscribe(function (x) {
-        var now = scheduler.now();
-        q.push({ interval: now, value: x });
-        while (q.length > 0 && now - q[0].interval >= duration) {
-          q.shift();
-        }
-      }, observer.onError.bind(observer), function () {
-        var now = scheduler.now(), res = [];
-        while (q.length > 0) {
-          var next = q.shift();
-          if (now - next.interval <= duration) {
-            res.push(next.value);
-          }
-        }
-
-        observer.onNext(res);
-        observer.onCompleted();
-      });
-    });
-  };
-
-  /**
    *  Takes elements for the specified duration from the start of the observable source sequence, using the specified scheduler to run timers.
    *  
    * @example
@@ -4590,56 +4441,6 @@
       return new CompositeDisposable(
         scheduler.scheduleWithRelative(duration, function () { open = true; }), 
         source.subscribe(function (x) { open && observer.onNext(x); }, observer.onError.bind(observer), observer.onCompleted.bind(observer)));
-    });
-  };
-
-  /**
-   *  Skips elements from the observable source sequence until the specified start time, using the specified scheduler to run timers.
-   *  Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the start time.
-   *  
-   * @examples
-   *  1 - res = source.skipUntilWithTime(new Date(), [optional scheduler]);   
-   *  2 - res = source.skipUntilWithTime(5000, [optional scheduler]);           
-   * @param startTime Time to start taking elements from the source sequence. If this value is less than or equal to Date(), no elements will be skipped.
-   * @param scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
-   * @returns {Observable} An observable sequence with the elements skipped until the specified start time. 
-   */
-  observableProto.skipUntilWithTime = function (startTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this, schedulerMethod = startTime instanceof Date ?
-      'scheduleWithAbsolute' :
-      'scheduleWithRelative';
-    return new AnonymousObservable(function (observer) {
-      var open = false;
-
-      return new CompositeDisposable(
-        scheduler[schedulerMethod](startTime, function () { open = true; }),
-        source.subscribe(
-          function (x) { open && observer.onNext(x); }, 
-          observer.onError.bind(observer),
-          observer.onCompleted.bind(observer)));
-    });
-  };
-
-  /**
-   *  Takes elements for the specified duration until the specified end time, using the specified scheduler to run timers.
-   *  
-   * @example
-   *  1 - res = source.takeUntilWithTime(new Date(), [optional scheduler]);
-   *  2 - res = source.takeUntilWithTime(5000, [optional scheduler]);   
-   * @param {Number | Date} endTime Time to stop taking elements from the source sequence. If this value is less than or equal to new Date(), the result stream will complete immediately.
-   * @param {Scheduler} scheduler Scheduler to run the timer on.
-   * @returns {Observable} An observable sequence with the elements taken until the specified end time.
-   */
-  observableProto.takeUntilWithTime = function (endTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this, schedulerMethod = endTime instanceof Date ?
-      'scheduleWithAbsolute' :
-      'scheduleWithRelative';
-    return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(scheduler[schedulerMethod](endTime, function () {
-        observer.onCompleted();
-      }),  source.subscribe(observer));
     });
   };
 

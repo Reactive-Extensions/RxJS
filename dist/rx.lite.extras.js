@@ -55,6 +55,7 @@
     isPromise = helpers.isPromise,
     inherits = internals.inherits,
     noop = helpers.noop,
+    isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise,   
     slice = Array.prototype.slice;
 
@@ -202,6 +203,49 @@
             return d;
         });
     };
+
+  /**
+   *  Generates an observable sequence by running a state-driven loop producing the sequence's elements, using the specified scheduler to send out observer messages.
+   *  
+   * @example
+   *  var res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; });
+   *  var res = Rx.Observable.generate(0, function (x) { return x < 10; }, function (x) { return x + 1; }, function (x) { return x; }, Rx.Scheduler.timeout);
+   * @param {Mixed} initialState Initial state.
+   * @param {Function} condition Condition to terminate generation (upon returning false).
+   * @param {Function} iterate Iteration step function.
+   * @param {Function} resultSelector Selector function for results produced in the sequence.
+   * @param {Scheduler} [scheduler] Scheduler on which to run the generator loop. If not provided, defaults to Scheduler.currentThread.
+   * @returns {Observable} The generated sequence.
+   */
+  Observable.generate = function (initialState, condition, iterate, resultSelector, scheduler) {
+    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
+    return new AnonymousObservable(function (observer) {
+      var first = true, state = initialState;
+      return scheduler.scheduleRecursive(function (self) {
+        var hasResult, result;
+        try {
+          if (first) {
+            first = false;
+          } else {
+            state = iterate(state);
+          }
+          hasResult = condition(state);
+          if (hasResult) {
+            result = resultSelector(state);
+          }
+        } catch (exception) {
+          observer.onError(exception);
+          return;
+        }
+        if (hasResult) {
+          observer.onNext(result);
+          self();
+        } else {
+          observer.onCompleted();
+        }
+      });
+    });
+  };
 
   /**
    *  Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
@@ -438,6 +482,29 @@
             return refCountDisposable;
         });
     };
+
+  /**
+   *  Returns an array with the specified number of contiguous elements from the end of an observable sequence.
+   *  
+   * @description
+   *  This operator accumulates a buffer with a length enough to store count elements. Upon completion of the
+   *  source sequence, this buffer is produced on the result sequence.       
+   * @param {Number} count Number of elements to take from the end of the source sequence.
+   * @returns {Observable} An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
+   */
+  observableProto.takeLastBuffer = function (count) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var q = [];
+      return source.subscribe(function (x) {
+        q.push(x);
+        q.length > count && q.shift();
+      }, observer.onError.bind(observer), function () {
+        observer.onNext(q);
+        observer.onCompleted();
+      });
+    });
+  };
 
     /**
      *  Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
