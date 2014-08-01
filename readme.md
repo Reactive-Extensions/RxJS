@@ -289,7 +289,7 @@ bower install rxjs
 
 ### Install individual packages via [NuGet](http://nuget.org/):
 
-    Install-Package RxJS-Complete
+    Install-Package RxJS-All
     Install-Package RxJS-Lite
     Install-Package RxJS-Main
     Install-Package RxJS-Aggregates
