@@ -97,7 +97,7 @@ var source = Rx.Observable.fromEventPattern(
 );
 
 var subscription = source.subscribe(
-    function (x) {
+    function (result) {
         console.log('Next: ' + result);
     },
     function (err) {
