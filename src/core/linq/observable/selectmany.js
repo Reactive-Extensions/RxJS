@@ -1,28 +1,8 @@
-    function selectMany(selector, thisArg) {
-      return this.select(function (x, i) {
+    function flatMap(source, selector, thisArg) {
+      return source.map(function (x, i) {
         var result = selector.call(thisArg, x, i);
         return isPromise(result) ? observableFromPromise(result) : result;
       }).mergeObservable();
-    }
-
-    function selectManyObserver(onNext, onError, onCompleted) {
-      var source = this;
-      return new AnonymousObservable(function (observer) {
-        var index = 0;
-
-        return source.subscribe(
-          function (x) {
-            observer.onNext(onNext(x, index++));
-          },
-          function (err) {
-            observer.onNext(onError(err));
-            observer.completed();
-          }, 
-          function () {
-            observer.onNext(onCompleted());
-            observer.onCompleted();
-          });
-      }).mergeAll();
     }
 
     /**
@@ -47,19 +27,16 @@
      */
     observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector, thisArg) {
       if (resultSelector) {
-          return this.selectMany(function (x, i) {
+          return this.flatMap(function (x, i) {
             var selectorResult = selector(x, i),
               result = isPromise(selectorResult) ? observableFromPromise(selectorResult) : selectorResult;
 
-            return result.select(function (y) {
+            return result.map(function (y) {
               return resultSelector(x, y, i);
             });
           }, thisArg);
       }
-      if (typeof selector === 'function') {
-        return selectMany.call(this, selector, thisArg);
-      }
-      return selectMany.call(this, function () {
-        return selector;
-      }, thisArg);
+      return typeof selector === 'function' ?
+        flatMap(this, selector, thisArg) :
+        flatMap(this, function () { return selector; });
     };
