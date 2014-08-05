@@ -121,7 +121,7 @@
    
   
   // Hardcoded because require was supressing Marionette detection
-  var marionette = true; // root.Backbone.Marionette;
+  var marionette = true; // !!root.Backbone.Marionette;
 
   Observable.fromEvent = function (element, eventName, selector) {
     if (marionette) {
