@@ -118,12 +118,13 @@
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
    * @returns {Observable} An observable sequence of events from the specified element and the specified event.
    */
-   
   
-  // Hardcoded because require was supressing Marionette detection
-  var marionette = true; // !!root.Backbone && !!root.Backbone.Marionette;
+  
 
   Observable.fromEvent = function (element, eventName, selector) {
+    // TODO: other libs are detected outside of this method but AMD was not loading Marionette first
+    var marionette = !!root.Backbone && !!root.Backbone.Marionette;
+    
     if (marionette) {
       return fromEventPattern(
         function (h) { element.on(eventName, h); },
