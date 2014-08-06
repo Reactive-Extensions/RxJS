@@ -12,6 +12,10 @@ var Observable = Rx.Observable,
   disposed = Rx.ReactiveTest.disposed,
   isEqual = Rx.internals.isEqual;
 
+function throwError(err) {
+  throw err;
+}
+
 test('SelectMany_Triple_Identity', function () {
   var scheduler = new TestScheduler();
 
@@ -230,7 +234,7 @@ test('SelectMany_Triple_InnersWithTiming3', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return ysn; },
       function (ex) { return yse; },
       function () { return ysc; }
@@ -289,16 +293,16 @@ test('SelectMany_Triple_Error_Identity', function () {
       onNext(302, 2),
       onNext(303, 3),
       onNext(304, 4),
-      onError(305, ex)
+      onError(305, err)
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.just(x, scheduler); },
       function (ex1) { return Observable.throwException(ex1, scheduler); },
       function () { return Observable.empty(scheduler); }
     )
-  );
+  });
 
   res.messages.assertEqual(
     onNext(301, 0),
@@ -306,7 +310,7 @@ test('SelectMany_Triple_Error_Identity', function () {
     onNext(303, 2),
     onNext(304, 3),
     onNext(305, 4),
-    onError(306, ex)
+    onError(306, err)
   );
 
   xs.subscriptions.assertEqual(
@@ -327,7 +331,7 @@ test('SelectMany_Triple_SelectMany', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
       function (ex) { return Observable.throwException(ex, scheduler); },
       function () { return Observable.empty(scheduler); }
@@ -366,12 +370,12 @@ test('SelectMany_Triple_Concat', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.just(x, scheduler); },
       function (ex) { return Observable.throwException(ex, scheduler); },
       function () { return Observable.range(1, 3, scheduler); }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(301, 0),
@@ -403,12 +407,12 @@ test('SelectMany_Triple_Catch', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.just(x, scheduler); },
       function (ex) { return Observable.range(1, 3, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(301, 0),
@@ -438,12 +442,12 @@ test('SelectMany_Triple_Error_Catch', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.just(x, scheduler); },
       function (ex) { return Observable.range(1, 3, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(301, 0),
@@ -475,12 +479,12 @@ test('SelectMany_Triple_All', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
       function (ex) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(302, 1),
@@ -508,21 +512,21 @@ test('SelectMany_Triple_Error_All', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-      onNext(300, 0),
-      onNext(301, 1),
-      onNext(302, 2),
-      onNext(303, 3),
-      onNext(304, 4),
-      onError(305, new Error())
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onError(305, new Error())
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
       function (ex) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(302, 1),
@@ -558,13 +562,12 @@ test('SelectMany_Triple_All_Dispose', function () {
   );
 
   var res = scheduler.startWithDispose(function () {
-    return xs.selectManyObserver
-      function (x) { return Observable.repeat(x, x, scheduler),
-      function (ex) { return Observable.repeat(0, 2, scheduler),
-      function () { return Observable.repeat(-1, 2, scheduler)
-    ),
-    307
-  );
+    return xs.selectManyObserver(
+      function (x) { return Observable.repeat(x, x, scheduler); },
+      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function () { return Observable.repeat(-1, 2, scheduler); }
+    );
+  }, 307);
 
   res.messages.assertEqual(
     onNext(302, 1),
@@ -597,13 +600,12 @@ test('SelectMany_Triple_All_Dispose_Before_First', function () {
   );
 
   var res = scheduler.startWithDispose(function () {
-    xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
       function (ex) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
-    ),
-    304
-  );
+    );
+  }, 304);
 
   res.messages.assertEqual(
     onNext(302, 1),
@@ -630,12 +632,12 @@ test('SelectMany_Triple_OnNextThrow', function () {
   var err = new Error();
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
-      function (x) { throw err; },
-      function (ex1) { Observable.repeat(0, 2, scheduler); },
+    return xs.selectManyObserver(
+      function (x) { return throwError(err); },
+      function (ex1) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onError(300, err)
@@ -662,12 +664,12 @@ test('SelectMany_Triple_OnErrorThrow', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
-      function (ex1) { throw err },
+      function (ex1) { throw err; },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(302, 1),
@@ -697,12 +699,12 @@ test('SelectMany_Triple_OnCompletedThrow', function () {
   var err = new Error();
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
-      function (ex1) { Observable.repeat(0, 2, scheduler); },
+      function (ex1) { return Observable.repeat(0, 2, scheduler); },
       function () { throw err; }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(302, 1),
@@ -719,37 +721,37 @@ test('SelectMany_Triple_OnCompletedThrow', function () {
 
 
 test('SelectManyWithIndex_Triple_Identity', function () {
-    var scheduler = new TestScheduler();
+  var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(
-      onNext(300, 0),
-      onNext(301, 1),
-      onNext(302, 2),
-      onNext(303, 3),
-      onNext(304, 4),
-      onCompleted(305)
-    );
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
+  );
 
-    var res = scheduler.startWithCreate(function () {
-      return xs.selectManyObserver
-        function (x, _) { return Observable.just(x, scheduler); },
-        function (ex) { return Observable.throwException(ex, scheduler); },
-        function () { return Observable.empty(scheduler); }
-      );
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return Observable.just(x, scheduler); },
+      function (ex) { return Observable.throwException(ex, scheduler); },
+      function () { return Observable.empty(scheduler); }
     );
+  });
 
-    res.messages.assertEqual(
-      onNext(301, 0),
-      onNext(302, 1),
-      onNext(303, 2),
-      onNext(304, 3),
-      onNext(305, 4),
-      onCompleted(306)
-    );
+  res.messages.assertEqual(
+    onNext(301, 0),
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(305, 4),
+    onCompleted(306)
+  );
 
-    xs.subscriptions.assertEqual(
-      subscribe(200, 305)
-    );
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
 });
 
 
@@ -783,12 +785,12 @@ test('SelectManyWithIndex_Triple_InnersWithTiming1', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x, _) { return  ysn; },
       function (ex) { return yse; },
       function () { return ysc; }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(310, 10),
@@ -861,12 +863,12 @@ test('SelectManyWithIndex_Triple_InnersWithTiming2', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-      return xs.selectManyObserver
-        function (x, _) { return ysn; },
-        function (ex) { return yse; },
-        function () { return ysc; }
-      );
-  );
+    return xs.selectManyObserver(
+      function (x, _) { return ysn; },
+      function (ex) { return yse; },
+      function () { return ysc; }
+    );
+  });
 
   res.messages.assertEqual(
     onNext(310, 10),
@@ -939,12 +941,12 @@ test('SelectManyWithIndex_Triple_InnersWithTiming3', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
+    return xs.selectManyObserver(
       function (x, _) { return ysn; },
       function (ex) { return yse; },
       function () { return ysc; }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(310, 10),
@@ -1002,12 +1004,12 @@ test('SelectManyWithIndex_Triple_Error_Identity', function () {
   );
 
   var res = scheduler.startWithCreate(function () {
-    return xs.selectManyObserver
-      function (x, _) { return  Observable.just(x, scheduler); },
-      function (ex1) { Observable.throwException(ex1, scheduler); },
+    return xs.selectManyObserver(
+      function (x, _) { return Observable.just(x, scheduler); },
+      function (ex1) { return Observable.throwException(ex1, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
-  );
+  });
 
   res.messages.assertEqual(
     onNext(301, 0),
@@ -1015,7 +1017,7 @@ test('SelectManyWithIndex_Triple_Error_Identity', function () {
     onNext(303, 2),
     onNext(304, 3),
     onNext(305, 4),
-    onError(306, ex)
+    onError(306, err)
   );
 
   xs.subscriptions.assertEqual(
@@ -1024,423 +1026,404 @@ test('SelectManyWithIndex_Triple_Error_Identity', function () {
 });
 
 
-test('SelectManyWithIndex_Triple_SelectMany()
-{
+test('SelectManyWithIndex_Triple_SelectMany', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return Observable.repeat(x, x, scheduler); },
+      function (ex) { return Observable.throwException(ex, scheduler); },
+      function () { return Observable.empty(scheduler); }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(304, 2),
+    onNext(305, 4),
+    onNext(305, 3),
+    onNext(306, 4),
+    onNext(306, 3),
+    onNext(307, 4),
+    onNext(308, 4),
+    onCompleted(308)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
+});
+
+test('SelectManyWithIndex_Triple_Concat', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return  Observable.just(x, scheduler); },
+      function (ex) { return Observable.throwException(ex, scheduler); },
+      function () { return Observable.range(1, 3, scheduler); }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(301, 0),
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(305, 4),
+    onNext(306, 1),
+    onNext(307, 2),
+    onNext(308, 3),
+    onCompleted(309)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
+});
+
+test('SelectManyWithIndex_Triple_Catch', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return  Observable.just(x, scheduler); },
+      function (ex) { return Observable.range(1, 3, scheduler); },
+      function () { return Observable.empty(scheduler); }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(301, 0),
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(305, 4),
+    onCompleted(306)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
+});
+
+test('SelectManyWithIndex_Triple_Error_Catch', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onError(305, new Error())
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return  Observable.just(x, scheduler); },
+      function (ex) { return Observable.range(1, 3, scheduler); },
+      function () { return Observable.empty(scheduler); }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(301, 0),
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(305, 4),
+    onNext(306, 1),
+    onNext(307, 2),
+    onNext(308, 3),
+    onCompleted(309)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
+});
+
+
+test('SelectManyWithIndex_Triple_All', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+        function (x, _) { return Observable.repeat(x, x, scheduler); },
+        function (ex) { return Observable.repeat(0, 2, scheduler); },
+        function () { return Observable.repeat(-1, 2, scheduler); }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(304, 2),
+    onNext(305, 4),
+    onNext(305, 3),
+    onNext(306, -1),
+    onNext(306, 4),
+    onNext(306, 3),
+    onNext(307, -1),
+    onNext(307, 4),
+    onNext(308, 4),
+    onCompleted(308)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
+});
+
+
+test('SelectManyWithIndex_Triple_Error_All', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onError(305, new Error())
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return Observable.repeat(x, x, scheduler); },
+      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function () { return Observable.repeat(-1, 2, scheduler); }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(304, 2),
+    onNext(305, 4),
+    onNext(305, 3),
+    onNext(306, 0),
+    onNext(306, 4),
+    onNext(306, 3),
+    onNext(307, 0),
+    onNext(307, 4),
+    onNext(308, 4),
+    onCompleted(308)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
+});
+
+test('SelectManyWithIndex_Triple_All_Dispose', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
+  );
+
+  var res = scheduler.startWithDispose(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return Observable.repeat(x, x, scheduler); },
+      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function () { return Observable.repeat(-1, 2, scheduler); }
+    );
+  }, 307);
+
+  res.messages.assertEqual(
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(304, 2),
+    onNext(305, 4),
+    onNext(305, 3),
+    onNext(306, -1),
+    onNext(306, 4),
+    onNext(306, 3)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
+});
+
+
+test('SelectManyWithIndex_Triple_All_Dispose_Before_First', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
+  );
+
+  var res = scheduler.startWithDispose(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return Observable.repeat(x, x, scheduler); },
+      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function () { return Observable.repeat(-1, 2, scheduler); }
+    );
+  }, 304);
+
+  res.messages.assertEqual(
+    onNext(302, 1),
+    onNext(303, 2)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 304)
+  );
+});
+
+test('SelectManyWithIndex_Triple_onNextThrow', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
+  );
+
+  var err = new Error();
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { throw err; },
+      function (ex1) { Observable.repeat(0, 2, scheduler); },
+      function () { return Observable.repeat(-1, 2, scheduler); }
+    );
+  });
+
+  res.messages.assertEqual(
+    onError(300, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 300)
+  );
+});
+
+
+test('SelectManyWithIndex_Triple_OnErrorThrow', function () {
+  var scheduler = new TestScheduler();
+
+  var err = new Error();
+
+  var xs = scheduler.createHotObservable(
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onError(305, new Error())
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return Observable.repeat(x, x, scheduler); },
+      function (ex1) { throw err; },
+      function () { return Observable.repeat(-1, 2, scheduler); }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(304, 2),
+    onError(305, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 305)
+  );
+});
+
+
+test('SelectManyWithIndex_Triple_OnCompletedThrow', function () {
     var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onCompleted(305)
+  var xs = scheduler.createHotObservable(
+      onNext(300, 0),
+      onNext(301, 1),
+      onNext(302, 2),
+      onNext(303, 3),
+      onNext(304, 4),
+      onCompleted(305)
+  );
+
+  var err = new Error();
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.selectManyObserver(
+      function (x, _) { return Observable.repeat(x, x, scheduler); },
+      function (ex1) { return Observable.repeat(0, 2, scheduler); },
+      function () { throw err; }
     );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.repeat(x, x, scheduler),
-            function (ex) { return Observable.throwException(ex, scheduler),
-            function () { return Observable.empty(scheduler)
-        )
-    );
-
-    res.messages.assertEqual(
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(304, 2),
-        onNext(305, 4),
-        onNext(305, 3),
-        onNext(306, 4),
-        onNext(306, 3),
-        onNext(307, 4),
-        onNext(308, 4),
-        onCompleted(308)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
-
-
-
-test('SelectManyWithIndex_Triple_Concat()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onCompleted(305)
-    );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.just(x, scheduler),
-            function (ex) { return Observable.throwException(ex, scheduler),
-            function () { return Observable.range(1, 3, scheduler)
-        )
-    );
-
-    res.messages.assertEqual(
-        onNext(301, 0),
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(305, 4),
-        onNext(306, 1),
-        onNext(307, 2),
-        onNext(308, 3),
-        onCompleted(309)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_Catch()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onCompleted(305)
-    );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.just(x, scheduler),
-            function (ex) { return Observable.range(1, 3, scheduler),
-            function () { return Observable.empty(scheduler)
-        )
-    );
-
-    res.messages.assertEqual(
-        onNext(301, 0),
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(305, 4),
-        onCompleted(306)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_Error_Catch()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onError(305, new Error())
-    );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.just(x, scheduler),
-            function (ex) { return Observable.range(1, 3, scheduler),
-            function () { return Observable.empty(scheduler)
-        )
-    );
-
-    res.messages.assertEqual(
-        onNext(301, 0),
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(305, 4),
-        onNext(306, 1),
-        onNext(307, 2),
-        onNext(308, 3),
-        onCompleted(309)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_All()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onCompleted(305)
-    );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.repeat(x, x, scheduler),
-            function (ex) { return Observable.repeat(0, 2, scheduler),
-            function () { return Observable.repeat(-1, 2, scheduler)
-        )
-    );
-
-    res.messages.assertEqual(
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(304, 2),
-        onNext(305, 4),
-        onNext(305, 3),
-        onNext(306, -1),
-        onNext(306, 4),
-        onNext(306, 3),
-        onNext(307, -1),
-        onNext(307, 4),
-        onNext(308, 4),
-        onCompleted(308)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_Error_All()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onError(305, new Error())
-    );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.repeat(x, x, scheduler),
-            function (ex) { return Observable.repeat(0, 2, scheduler),
-            function () { return Observable.repeat(-1, 2, scheduler)
-        )
-    );
-
-    res.messages.assertEqual(
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(304, 2),
-        onNext(305, 4),
-        onNext(305, 3),
-        onNext(306, 0),
-        onNext(306, 4),
-        onNext(306, 3),
-        onNext(307, 0),
-        onNext(307, 4),
-        onNext(308, 4),
-        onCompleted(308)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_All_Dispose()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onCompleted(305)
-    );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.repeat(x, x, scheduler),
-            function (ex) { return Observable.repeat(0, 2, scheduler),
-            function () { return Observable.repeat(-1, 2, scheduler)
-        ),
-        307
-    );
-
-    res.messages.assertEqual(
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(304, 2),
-        onNext(305, 4),
-        onNext(305, 3),
-        onNext(306, -1),
-        onNext(306, 4),
-        onNext(306, 3)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_All_Dispose_Before_First()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onCompleted(305)
-    );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.repeat(x, x, scheduler),
-            function (ex) { return Observable.repeat(0, 2, scheduler),
-            function () { return Observable.repeat(-1, 2, scheduler)
-        ),
-        304
-    );
-
-    res.messages.assertEqual(
-        onNext(302, 1),
-        onNext(303, 2)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 304)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_onNextThrow()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onCompleted(305)
-    );
-
-    var err = new Error();
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Throw<IObservable>(ex),
-            function (ex1) { Observable.repeat(0, 2, scheduler),
-            function () { return Observable.repeat(-1, 2, scheduler)
-        )
-    );
-
-    res.messages.assertEqual(
-        onError(300, ex)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 300)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_OnErrorThrow()
-{
-    var scheduler = new TestScheduler();
-
-    var err = new Error();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onError(305, new Error())
-    );
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.repeat(x, x, scheduler),
-            function (ex1) { Throw<IObservable>(ex),
-            function () { return Observable.repeat(-1, 2, scheduler)
-        )
-    );
-
-    res.messages.assertEqual(
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(304, 2),
-        onError(305, ex)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
-
-
-test('SelectManyWithIndex_Triple_OnCompletedThrow()
-{
-    var scheduler = new TestScheduler();
-
-    var xs = scheduler.createHotObservable(
-        onNext(300, 0),
-        onNext(301, 1),
-        onNext(302, 2),
-        onNext(303, 3),
-        onNext(304, 4),
-        onCompleted(305)
-    );
-
-    var err = new Error();
-
-    var res = scheduler.startWithCreate(function () {
-        xs.selectManyObserver
-            function (x, _) { return  Observable.repeat(x, x, scheduler),
-            function (ex1) { Observable.repeat(0, 2, scheduler),
-            function () { return Throw<IObservable>(ex)
-        )
-    );
-
-    res.messages.assertEqual(
-        onNext(302, 1),
-        onNext(303, 2),
-        onNext(304, 3),
-        onNext(304, 2),
-        onError(305, ex)
-    );
-
-    xs.subscriptions.assertEqual(
-        subscribe(200, 305)
-    );
-}
+  });
+
+  res.messages.assertEqual(
+      onNext(302, 1),
+      onNext(303, 2),
+      onNext(304, 3),
+      onNext(304, 2),
+      onError(305, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+      subscribe(200, 305)
+  );
+});
