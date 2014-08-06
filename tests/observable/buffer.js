@@ -10,23 +10,6 @@ var Observable = Rx.Observable,
     subscribed = Rx.ReactiveTest.subscribed,
     disposed = Rx.ReactiveTest.disposed;        
 
-function defaultEqualityComparer (x, y) {
-    return Rx.Internals.isEqual(x, y);
-}
-
-function sequenceEqual(arr1, arr2, comparer) {
-    comparer || (comparer = defaultEqualityComparer);
-    if (arr1.length !== arr2.length) {
-        return false;
-    }
-    for (var i = 0, len = arr1.length; i < len; i++) {
-        if (!comparer(arr1[i], arr2[i])) {
-            return false;
-        }
-    }
-    return true;
-}
-
 test('Buffer_Boundaries_Simple', function () {
     var scheduler = new TestScheduler();
 
@@ -54,17 +37,17 @@ test('Buffer_Boundaries_Simple', function () {
     );
 
     var res = scheduler.startWithCreate(function () {
-        return xs.buffer(ys)
+      return xs.buffer(ys)
     });
 
     res.messages.assertEqual(
-        onNext(255, function (b) { return sequenceEqual(b, [3]); }),
-        onNext(330, function (b) { return sequenceEqual(b, [4, 5]); }),
-        onNext(350, function (b) { return sequenceEqual(b, [6]); }),
-        onNext(400, function (b) { return sequenceEqual(b, [ ]); }),
-        onNext(500, function (b) { return sequenceEqual(b, [7, 8, 9]); }),
-        onNext(590, function (b) { return sequenceEqual(b, [10]); }),
-        onCompleted(590)
+      onNext(255, [3]),
+      onNext(330, [4, 5]),
+      onNext(350, [6]),
+      onNext(400, [ ]),
+      onNext(500, [7, 8, 9]),
+      onNext(590, [10]),
+      onCompleted(590)
     );
 
     xs.subscriptions.assertEqual(
@@ -105,10 +88,10 @@ test('Buffer_Boundaries_onCompletedBoundaries', function () {
     });
 
     res.messages.assertEqual(
-        onNext(255, function (b) { return sequenceEqual(b, [3]); }),
-        onNext(330, function (b) { return sequenceEqual(b, [4, 5]); }),
-        onNext(350, function (b) { return sequenceEqual(b, [6]); }),
-        onNext(400, function (b) { return sequenceEqual(b, []); }),
+        onNext(255, [3]),
+        onNext(330, [4, 5]),
+        onNext(350, [6]),
+        onNext(400, []),
         onCompleted(400)
     );
 
@@ -122,26 +105,26 @@ test('Buffer_Boundaries_onCompletedBoundaries', function () {
 });
 
 test('Buffer_Boundaries_onErrorSource', function () {
-    var ex = 'ex';
+    var ex = new Error();
 
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-            onNext(90, 1),
-            onNext(180, 2),
-            onNext(250, 3),
-            onNext(260, 4),
-            onNext(310, 5),
-            onNext(340, 6),
-            onNext(380, 7),
-            onError(400, ex)
+      onNext(90, 1),
+      onNext(180, 2),
+      onNext(250, 3),
+      onNext(260, 4),
+      onNext(310, 5),
+      onNext(340, 6),
+      onNext(380, 7),
+      onError(400, ex)
     );
 
     var ys = scheduler.createHotObservable(
-            onNext(255, true),
-            onNext(330, true),
-            onNext(350, true),
-            onCompleted(500)
+      onNext(255, true),
+      onNext(330, true),
+      onNext(350, true),
+      onCompleted(500)
     );
 
     var res = scheduler.startWithCreate(function () {
@@ -149,9 +132,9 @@ test('Buffer_Boundaries_onErrorSource', function () {
     });
 
     res.messages.assertEqual(
-        onNext(255, function (b) { return sequenceEqual(b, [3]); }),
-        onNext(330, function (b) { return sequenceEqual(b, [4, 5]); }),
-        onNext(350, function (b) { return sequenceEqual(b, [6]); }),
+        onNext(255, [3]),
+        onNext(330, [4, 5]),
+        onNext(350, [6]),
         onError(400, ex)
     );
 
@@ -165,29 +148,29 @@ test('Buffer_Boundaries_onErrorSource', function () {
 });
 
 test('Buffer_Boundaries_onErrorBoundaries', function () {
-    var ex = 'ex';
+    var ex = new Error();
 
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-            onNext(90, 1),
-            onNext(180, 2),
-            onNext(250, 3),
-            onNext(260, 4),
-            onNext(310, 5),
-            onNext(340, 6),
-            onNext(410, 7),
-            onNext(420, 8),
-            onNext(470, 9),
-            onNext(550, 10),
-            onCompleted(590)
+      onNext(90, 1),
+      onNext(180, 2),
+      onNext(250, 3),
+      onNext(260, 4),
+      onNext(310, 5),
+      onNext(340, 6),
+      onNext(410, 7),
+      onNext(420, 8),
+      onNext(470, 9),
+      onNext(550, 10),
+      onCompleted(590)
     );
 
     var ys = scheduler.createHotObservable(
-            onNext(255, true),
-            onNext(330, true),
-            onNext(350, true),
-            onError(400, ex)
+      onNext(255, true),
+      onNext(330, true),
+      onNext(350, true),
+      onError(400, ex)
     );
 
     var res = scheduler.startWithCreate(function () {
@@ -195,18 +178,18 @@ test('Buffer_Boundaries_onErrorBoundaries', function () {
     });
 
     res.messages.assertEqual(
-        onNext(255, function (b) { return sequenceEqual(b, [3]); }),
-        onNext(330, function (b) { return sequenceEqual(b, [4, 5]); }),
-        onNext(350, function (b) { return sequenceEqual(b, [6]); }),
-        onError(400, ex)
+      onNext(255, [3]),
+      onNext(330, [4, 5]),
+      onNext(350, [6]),
+      onError(400, ex)
     );
 
     xs.subscriptions.assertEqual(
-        subscribe(200, 400)
+      subscribe(200, 400)
     );
 
     ys.subscriptions.assertEqual(
-        subscribe(200, 400)
+      subscribe(200, 400)
     );
 });
 
@@ -214,17 +197,17 @@ test('Buffer_Closings_Basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-        onNext(90, 1),
-        onNext(180, 2),
-        onNext(250, 3),
-        onNext(260, 4),
-        onNext(310, 5),
-        onNext(340, 6),
-        onNext(410, 7),
-        onNext(420, 8),
-        onNext(470, 9),
-        onNext(550, 10),
-        onCompleted(590)
+      onNext(90, 1),
+      onNext(180, 2),
+      onNext(250, 3),
+      onNext(260, 4),
+      onNext(310, 5),
+      onNext(340, 6),
+      onNext(410, 7),
+      onNext(420, 8),
+      onNext(470, 9),
+      onNext(550, 10),
+      onCompleted(590)
     );
 
     var window = 1;
@@ -234,9 +217,9 @@ test('Buffer_Closings_Basic', function () {
     });
 
     res.messages.assertEqual(
-        onNext(300, function (b) { return sequenceEqual(b, [ 3, 4 ]); }),
-        onNext(500, function (b) { return sequenceEqual(b, [ 5, 6, 7, 8, 9 ]); }),
-        onNext(590, function (b) { return sequenceEqual(b, [ 10 ]); }),
+        onNext(300, [ 3, 4 ]),
+        onNext(500, [ 5, 6, 7, 8, 9 ]),
+        onNext(590, [ 10 ]),
         onCompleted(590)
     );
 
@@ -288,10 +271,10 @@ test('Buffer_Closings_InnerSubscriptions', function () {
     });
 
     res.messages.assertEqual(
-        onNext(300, function (b) { return sequenceEqual(b, [3, 4 ]); }),
-        onNext(400, function (b) { return sequenceEqual(b, [5, 6 ]); }),
-        onNext(500, function (b) { return sequenceEqual(b, [7, 8, 9 ]); }),
-        onNext(590, function (b) { return sequenceEqual(b, [10 ]); }),
+        onNext(300, [3, 4 ]),
+        onNext(400, [5, 6 ]),
+        onNext(500, [7, 8, 9 ]),
+        onNext(590, [10 ]),
         onCompleted(590)
     );
 
@@ -340,9 +323,9 @@ test('Buffer_Closings_Empty', function () {
     });
 
     res.messages.assertEqual(
-        onNext(300, function (l) { return sequenceEqual(l, [3, 4 ]); }),
-        onNext(500, function (l) { return sequenceEqual(l, [5, 6, 7, 8, 9 ]); }),
-        onNext(590, function (l) { return sequenceEqual(l, [10 ]); }),
+        onNext(300, [3, 4]),
+        onNext(500, [5, 6, 7, 8, 9]),
+        onNext(590, [10]),
         onCompleted(590)
     );
 
@@ -378,7 +361,7 @@ test('Buffer_Closings_Dispose', function () {
     );
 
     res.messages.assertEqual(
-        onNext(300, function (l) { return sequenceEqual(l, [ 3, 4 ]); })
+        onNext(300, [ 3, 4 ])
     );
 
     xs.subscriptions.assertEqual(
@@ -412,8 +395,8 @@ test('Buffer_Closings_Error', function () {
     });
 
     res.messages.assertEqual(
-        onNext(300, function (l) { return sequenceEqual([ 3, 4 ]); }),
-        onNext(500, function (l) { return sequenceEqual([ 5, 6, 7, 8, 9 ]); }),
+        onNext(300, [ 3, 4 ]),
+        onNext(500, [ 5, 6, 7, 8, 9 ]),
         onError(590, ex)
     );
 
@@ -517,10 +500,10 @@ test('Buffer_OpeningClosings_Basic', function () {
     });
 
     res.messages.assertEqual(
-        onNext(305, function (b) { return sequenceEqual(b, [4 ]); }),
-        onNext(400, function (b) { return sequenceEqual(b, [ ]); }),
-        onNext(430, function (b) { return sequenceEqual(b, [6, 7, 8]); }),
-        onNext(490, function (b) { return sequenceEqual(b, [7, 8, 9]); }),
+        onNext(305, [4 ]),
+        onNext(400, [ ]),
+        onNext(430, [6, 7, 8]),
+        onNext(490, [7, 8, 9]),
         onCompleted(900)
     );
 

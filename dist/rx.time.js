@@ -1004,7 +1004,7 @@
         while (q.length > 0) {
           var next = q.shift();
           if (now - next.interval <= duration) {
-            observer.onNext(next);
+            observer.onNext(next.value);
           }
         }
 

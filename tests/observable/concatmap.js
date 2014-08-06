@@ -145,269 +145,269 @@ asyncTest('ConcatMap_ResultSelector_Error_Task', function () {
 });
 
 test('ConcatMap_Then_Complete_Complete', function () {
-    var scheduler = new TestScheduler();
+  var scheduler = new TestScheduler();
 
-    var xs = scheduler.createColdObservable(
-        onNext(100, 4), 
-        onNext(200, 2), 
-        onNext(300, 3), 
-        onNext(400, 1), 
-        onCompleted(500));
-
-    var ys = scheduler.createColdObservable(
-        onNext(50, "foo"), 
-        onNext(100, "bar"), 
-        onNext(150, "baz"), 
-        onNext(200, "qux"), 
-        onCompleted(250));
-
-    var results = scheduler.startWithDispose(function () {
-        return xs.concatMap(ys);
-    }, 2000);
-
-    results.messages.assertEqual(
-        onNext(350, "foo"), 
-        onNext(400, "bar"), 
-        onNext(450, "baz"),  
-        onNext(500, "qux"), 
-        onNext(600, "foo"),  
-        onNext(650, "bar"), 
-        onNext(700, "baz"),
-        onNext(750, "qux"), 
-        onNext(850, "foo"),
-        onNext(900, "bar"), 
-        onNext(950, "baz"),
-        onNext(1000, "qux"),
-        onNext(1100, "foo"),
-        onNext(1150, "bar"),
-        onNext(1200, "baz"),
-        onNext(1250, "qux"),
-        onCompleted(1300));
-    
-    xs.subscriptions.assertEqual(subscribe(200, 700));
-    
-    ys.subscriptions.assertEqual(
-        subscribe(300, 550), 
-        subscribe(550, 800), 
-        subscribe(800, 1050),
-        subscribe(1050, 1300));
-});
-
-test('ConcatMap_Then_Complete_Complete_2', function () {
-    var scheduler = new TestScheduler();
-    
-    var xs = scheduler.createColdObservable(
-      onNext(100, 4), 
-      onNext(200, 2), 
-      onNext(300, 3), 
-      onNext(400, 1), 
-      onCompleted(700));
-    
-    var ys = scheduler.createColdObservable(
-      onNext(50, "foo"), 
-      onNext(100, "bar"), 
-      onNext(150, "baz"), 
-      onNext(200, "qux"), 
-      onCompleted(250));
-    
-    var results = scheduler.startWithDispose(function () {
-        return xs.concatMap(ys);
-    }, 2000);
-
-    results.messages.assertEqual(
-      onNext(350, "foo"), 
-      onNext(400, "bar"), 
-      onNext(450, "baz"), 
-      onNext(500, "qux"), 
-      onNext(600, "foo"), 
-      onNext(650, "bar"), 
-      onNext(700, "baz"), 
-      onNext(750, "qux"), 
-      onNext(850, "foo"), 
-      onNext(900, "bar"), 
-      onNext(950, "baz"), 
-      onNext(1000, "qux"), 
-      onNext(1100, "foo"), 
-      onNext(1150, "bar"), 
-      onNext(1200, "baz"), 
-      onNext(1250, "qux"), 
-      onCompleted(1300));
-    
-    xs.subscriptions.assertEqual(subscribe(200, 900));
-    
-    ys.subscriptions.assertEqual(
-      subscribe(300, 550), 
-      subscribe(550, 800), 
-      subscribe(800, 1050), 
-      subscribe(1050, 1300));
-});
-
-test('ConcatMap_Then_Never_Complete', function () {
-    var scheduler = new TestScheduler();
-    
-    var xs = scheduler.createColdObservable(
-      onNext(100, 4), 
-      onNext(200, 2), 
-      onNext(300, 3), 
-      onNext(400, 1), 
-      onNext(500, 5), 
-      onNext(700, 0));
-    
-    var ys = scheduler.createColdObservable(
-      onNext(50, "foo"), 
-      onNext(100, "bar"), 
-      onNext(150, "baz"), 
-      onNext(200, "qux"), 
-      onCompleted(250));
-    
-    var results = scheduler.startWithDispose(function () {
-        return xs.concatMap(ys);
-    }, 2000);
-
-    results.messages.assertEqual(
-      onNext(350, "foo"), 
-      onNext(400, "bar"), 
-      onNext(450, "baz"), 
-      onNext(500, "qux"), 
-      onNext(600, "foo"), 
-      onNext(650, "bar"), 
-      onNext(700, "baz"), 
-      onNext(750, "qux"), 
-      onNext(850, "foo"), 
-      onNext(900, "bar"), 
-      onNext(950, "baz"), 
-      onNext(1000, "qux"), 
-      onNext(1100, "foo"), 
-      onNext(1150, "bar"), 
-      onNext(1200, "baz"), 
-      onNext(1250, "qux"),
-      onNext(1350, "foo"), 
-      onNext(1400, "bar"), 
-      onNext(1450, "baz"), 
-      onNext(1500, "qux"),
-      onNext(1600, "foo"), 
-      onNext(1650, "bar"), 
-      onNext(1700, "baz"), 
-      onNext(1750, "qux"));
-    
-    xs.subscriptions.assertEqual(subscribe(200, 2000));
-    
-    ys.subscriptions.assertEqual(
-      subscribe(300, 550), 
-      subscribe(550, 800), 
-      subscribe(800, 1050), 
-      subscribe(1050, 1300),
-      subscribe(1300, 1550), 
-      subscribe(1550, 1800));
-});
-
-test('ConcatMap_Then_Complete_Never', function () {
-    var scheduler = new TestScheduler();
-    
-    var xs = scheduler.createColdObservable(
+  var xs = scheduler.createColdObservable(
       onNext(100, 4), 
       onNext(200, 2), 
       onNext(300, 3), 
       onNext(400, 1), 
       onCompleted(500));
-    
-    var ys = scheduler.createColdObservable(
-      onNext(50, "foo"), 
-      onNext(100, "bar"), 
-      onNext(150, "baz"), 
-      onNext(200, "qux"));
-    
-    var results = scheduler.startWithCreate(function () {
-      return xs.concatMap(ys);
-    });
-    
-    results.messages.assertEqual(
-      onNext(350, "foo"), 
-      onNext(400, "bar"), 
-      onNext(450, "baz"), 
-      onNext(500, "qux")
-    );
-    
-    xs.subscriptions.assertEqual(subscribe(200, 700));
-    
-    ys.subscriptions.assertEqual(
-      subscribe(300, 1000));
-});
 
-test('ConcatMap_Then_Complete_Error', function () {
-    var ex = new Error('ex');
-    
-    var scheduler = new TestScheduler();
-    
-    var xs = scheduler.createColdObservable(
-      onNext(100, 4), 
-      onNext(200, 2), 
-      onNext(300, 3), 
-      onNext(400, 1), 
-      onCompleted(500));
-    
-    var ys = scheduler.createColdObservable(
-      onNext(50, "foo"), 
-      onNext(100, "bar"), 
-      onNext(150, "baz"), 
-      onNext(200, "qux"), 
-      onError(300, ex));
-    
-    var results = scheduler.startWithCreate(function () {
-        return xs.concatMap(ys);
-    });
-
-    results.messages.assertEqual(
-      onNext(350, "foo"), 
-      onNext(400, "bar"), 
-      onNext(450, "baz"), 
-      onNext(500, "qux"),  
-      onError(600, ex));
-    
-    xs.subscriptions.assertEqual(
-      subscribe(200, 600));
-    
-    ys.subscriptions.assertEqual(
-      subscribe(300, 600));
-});
-
-test('ConcatMap_Then_Error_Complete', function () {
-    var ex = new Error('ex');
-
-    var scheduler = new TestScheduler();
-    
-    var xs = scheduler.createColdObservable(
-      onNext(100, 4), 
-      onNext(200, 2), 
-      onNext(300, 3), 
-      onNext(400, 1), 
-      onError(500, ex));
-    
-    var ys = scheduler.createColdObservable(
+  var ys = scheduler.createColdObservable(
       onNext(50, "foo"), 
       onNext(100, "bar"), 
       onNext(150, "baz"), 
       onNext(200, "qux"), 
       onCompleted(250));
-    
-    var results = scheduler.startWithCreate(function () {
+
+  var results = scheduler.startWithDispose(function () {
       return xs.concatMap(ys);
-    });
-    
-    results.messages.assertEqual(
+  }, 2000);
+
+  results.messages.assertEqual(
       onNext(350, "foo"), 
       onNext(400, "bar"), 
       onNext(450, "baz"),  
       onNext(500, "qux"), 
-      onNext(600, "foo"), 
+      onNext(600, "foo"),  
       onNext(650, "bar"), 
-      onError(700, ex));
-    
-    xs.subscriptions.assertEqual(subscribe(200, 700));
-    
-    ys.subscriptions.assertEqual(
+      onNext(700, "baz"),
+      onNext(750, "qux"), 
+      onNext(850, "foo"),
+      onNext(900, "bar"), 
+      onNext(950, "baz"),
+      onNext(1000, "qux"),
+      onNext(1100, "foo"),
+      onNext(1150, "bar"),
+      onNext(1200, "baz"),
+      onNext(1250, "qux"),
+      onCompleted(1300));
+  
+  xs.subscriptions.assertEqual(subscribe(200, 700));
+  
+  ys.subscriptions.assertEqual(
       subscribe(300, 550), 
-      subscribe(550, 700));
+      subscribe(550, 800), 
+      subscribe(800, 1050),
+      subscribe(1050, 1300));
+});
+
+test('ConcatMap_Then_Complete_Complete_2', function () {
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createColdObservable(
+    onNext(100, 4), 
+    onNext(200, 2), 
+    onNext(300, 3), 
+    onNext(400, 1), 
+    onCompleted(700));
+  
+  var ys = scheduler.createColdObservable(
+    onNext(50, "foo"), 
+    onNext(100, "bar"), 
+    onNext(150, "baz"), 
+    onNext(200, "qux"), 
+    onCompleted(250));
+  
+  var results = scheduler.startWithDispose(function () {
+      return xs.concatMap(ys);
+  }, 2000);
+
+  results.messages.assertEqual(
+    onNext(350, "foo"), 
+    onNext(400, "bar"), 
+    onNext(450, "baz"), 
+    onNext(500, "qux"), 
+    onNext(600, "foo"), 
+    onNext(650, "bar"), 
+    onNext(700, "baz"), 
+    onNext(750, "qux"), 
+    onNext(850, "foo"), 
+    onNext(900, "bar"), 
+    onNext(950, "baz"), 
+    onNext(1000, "qux"), 
+    onNext(1100, "foo"), 
+    onNext(1150, "bar"), 
+    onNext(1200, "baz"), 
+    onNext(1250, "qux"), 
+    onCompleted(1300));
+  
+  xs.subscriptions.assertEqual(subscribe(200, 900));
+  
+  ys.subscriptions.assertEqual(
+    subscribe(300, 550), 
+    subscribe(550, 800), 
+    subscribe(800, 1050), 
+    subscribe(1050, 1300));
+});
+
+test('ConcatMap_Then_Never_Complete', function () {
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createColdObservable(
+    onNext(100, 4), 
+    onNext(200, 2), 
+    onNext(300, 3), 
+    onNext(400, 1), 
+    onNext(500, 5), 
+    onNext(700, 0));
+  
+  var ys = scheduler.createColdObservable(
+    onNext(50, "foo"), 
+    onNext(100, "bar"), 
+    onNext(150, "baz"), 
+    onNext(200, "qux"), 
+    onCompleted(250));
+  
+  var results = scheduler.startWithDispose(function () {
+      return xs.concatMap(ys);
+  }, 2000);
+
+  results.messages.assertEqual(
+    onNext(350, "foo"), 
+    onNext(400, "bar"), 
+    onNext(450, "baz"), 
+    onNext(500, "qux"), 
+    onNext(600, "foo"), 
+    onNext(650, "bar"), 
+    onNext(700, "baz"), 
+    onNext(750, "qux"), 
+    onNext(850, "foo"), 
+    onNext(900, "bar"), 
+    onNext(950, "baz"), 
+    onNext(1000, "qux"), 
+    onNext(1100, "foo"), 
+    onNext(1150, "bar"), 
+    onNext(1200, "baz"), 
+    onNext(1250, "qux"),
+    onNext(1350, "foo"), 
+    onNext(1400, "bar"), 
+    onNext(1450, "baz"), 
+    onNext(1500, "qux"),
+    onNext(1600, "foo"), 
+    onNext(1650, "bar"), 
+    onNext(1700, "baz"), 
+    onNext(1750, "qux"));
+  
+  xs.subscriptions.assertEqual(subscribe(200, 2000));
+  
+  ys.subscriptions.assertEqual(
+    subscribe(300, 550), 
+    subscribe(550, 800), 
+    subscribe(800, 1050), 
+    subscribe(1050, 1300),
+    subscribe(1300, 1550), 
+    subscribe(1550, 1800));
+});
+
+test('ConcatMap_Then_Complete_Never', function () {
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createColdObservable(
+    onNext(100, 4), 
+    onNext(200, 2), 
+    onNext(300, 3), 
+    onNext(400, 1), 
+    onCompleted(500));
+  
+  var ys = scheduler.createColdObservable(
+    onNext(50, "foo"), 
+    onNext(100, "bar"), 
+    onNext(150, "baz"), 
+    onNext(200, "qux"));
+  
+  var results = scheduler.startWithCreate(function () {
+    return xs.concatMap(ys);
+  });
+  
+  results.messages.assertEqual(
+    onNext(350, "foo"), 
+    onNext(400, "bar"), 
+    onNext(450, "baz"), 
+    onNext(500, "qux")
+  );
+  
+  xs.subscriptions.assertEqual(subscribe(200, 700));
+  
+  ys.subscriptions.assertEqual(
+    subscribe(300, 1000));
+});
+
+test('ConcatMap_Then_Complete_Error', function () {
+  var ex = new Error('ex');
+  
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createColdObservable(
+    onNext(100, 4), 
+    onNext(200, 2), 
+    onNext(300, 3), 
+    onNext(400, 1), 
+    onCompleted(500));
+  
+  var ys = scheduler.createColdObservable(
+    onNext(50, "foo"), 
+    onNext(100, "bar"), 
+    onNext(150, "baz"), 
+    onNext(200, "qux"), 
+    onError(300, ex));
+  
+  var results = scheduler.startWithCreate(function () {
+      return xs.concatMap(ys);
+  });
+
+  results.messages.assertEqual(
+    onNext(350, "foo"), 
+    onNext(400, "bar"), 
+    onNext(450, "baz"), 
+    onNext(500, "qux"),  
+    onError(600, ex));
+  
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600));
+  
+  ys.subscriptions.assertEqual(
+    subscribe(300, 600));
+});
+
+test('ConcatMap_Then_Error_Complete', function () {
+  var ex = new Error('ex');
+
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createColdObservable(
+    onNext(100, 4), 
+    onNext(200, 2), 
+    onNext(300, 3), 
+    onNext(400, 1), 
+    onError(500, ex));
+  
+  var ys = scheduler.createColdObservable(
+    onNext(50, "foo"), 
+    onNext(100, "bar"), 
+    onNext(150, "baz"), 
+    onNext(200, "qux"), 
+    onCompleted(250));
+  
+  var results = scheduler.startWithCreate(function () {
+    return xs.concatMap(ys);
+  });
+  
+  results.messages.assertEqual(
+    onNext(350, "foo"), 
+    onNext(400, "bar"), 
+    onNext(450, "baz"),  
+    onNext(500, "qux"), 
+    onNext(600, "foo"), 
+    onNext(650, "bar"), 
+    onError(700, ex));
+  
+  xs.subscriptions.assertEqual(subscribe(200, 700));
+  
+  ys.subscriptions.assertEqual(
+    subscribe(300, 550), 
+    subscribe(550, 700));
 });
 
 test('ConcatMap_Then_Error_Error', function () {
@@ -547,7 +547,7 @@ test('ConcatMap_Complete_InnerNotComplete', function () {
     onNext(940, 202), 
     onNext(950, 203));
   
-  xs.subscriptions.assertEqual(subscribe(200, 1000));
+  xs.subscriptions.assertEqual(subscribe(200, 900));
   
   xs.messages[2].value.value.subscriptions.assertEqual(subscribe(300, 760));
   xs.messages[3].value.value.subscriptions.assertEqual(subscribe(760, 1000));
@@ -557,170 +557,170 @@ test('ConcatMap_Complete_InnerNotComplete', function () {
 });
 
 test('ConcatMap_Complete_OuterNotComplete', function () {
-    var scheduler = new TestScheduler();
-    
-    var xs = scheduler.createHotObservable(
-      onNext(5, scheduler.createColdObservable(onError(1, new Error('ex1')))), 
-      onNext(105, scheduler.createColdObservable(onError(1, new Error('ex2')))), 
-      onNext(300, scheduler.createColdObservable(
-        onNext(10, 102), 
-        onNext(90, 103), 
-        onNext(110, 104), 
-        onNext(190, 105), 
-        onNext(440, 106), 
-        onCompleted(460))), 
-      onNext(400, scheduler.createColdObservable(
-        onNext(180, 202), 
-        onNext(190, 203), 
-        onCompleted(205))), 
-      onNext(550, scheduler.createColdObservable(
-        onNext(10, 301), 
-        onNext(50, 302), 
-        onNext(70, 303), 
-        onNext(260, 304), 
-        onNext(310, 305), 
-        onCompleted(410))), 
-      onNext(750, scheduler.createColdObservable(onCompleted(40))), 
-      onNext(850, scheduler.createColdObservable(
-        onNext(80, 401), 
-        onNext(90, 402), 
-        onCompleted(100))));
-    
-    var results = scheduler.startWithCreate(function () {
-      return xs.concatMap(function (x) {
-        return x;
-      });
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createHotObservable(
+    onNext(5, scheduler.createColdObservable(onError(1, new Error('ex1')))), 
+    onNext(105, scheduler.createColdObservable(onError(1, new Error('ex2')))), 
+    onNext(300, scheduler.createColdObservable(
+      onNext(10, 102), 
+      onNext(90, 103), 
+      onNext(110, 104), 
+      onNext(190, 105), 
+      onNext(440, 106), 
+      onCompleted(460))), 
+    onNext(400, scheduler.createColdObservable(
+      onNext(180, 202), 
+      onNext(190, 203), 
+      onCompleted(205))), 
+    onNext(550, scheduler.createColdObservable(
+      onNext(10, 301), 
+      onNext(50, 302), 
+      onNext(70, 303), 
+      onNext(260, 304), 
+      onNext(310, 305), 
+      onCompleted(410))), 
+    onNext(750, scheduler.createColdObservable(onCompleted(40))), 
+    onNext(850, scheduler.createColdObservable(
+      onNext(80, 401), 
+      onNext(90, 402), 
+      onCompleted(100))));
+  
+  var results = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) {
+      return x;
     });
-    
-    results.messages.assertEqual(
-      onNext(310, 102), 
-      onNext(390, 103), 
-      onNext(410, 104), 
-      onNext(490, 105),   
-      onNext(740, 106), 
-      onNext(940, 202), 
-      onNext(950, 203), 
-      onNext(975, 401));
-    
-    xs.subscriptions.assertEqual(subscribe(200, 1000));
-    xs.messages[2].value.value.subscriptions.assertEqual(subscribe(300, 760));
-    xs.messages[3].value.value.subscriptions.assertEqual(subscribe(760, 965));
-    xs.messages[4].value.value.subscriptions.assertEqual(subscribe(965, 1000));
-    xs.messages[5].value.value.subscriptions.assertEqual();
-    xs.messages[6].value.value.subscriptions.assertEqual();
+  });
+  
+  results.messages.assertEqual(
+    onNext(310, 102), 
+    onNext(390, 103), 
+    onNext(410, 104), 
+    onNext(490, 105),   
+    onNext(740, 106), 
+    onNext(940, 202), 
+    onNext(950, 203), 
+    onNext(975, 301));
+  
+  xs.subscriptions.assertEqual(subscribe(200, 1000));
+  xs.messages[2].value.value.subscriptions.assertEqual(subscribe(300, 760));
+  xs.messages[3].value.value.subscriptions.assertEqual(subscribe(760, 965));
+  xs.messages[4].value.value.subscriptions.assertEqual(subscribe(965, 1000));
+  xs.messages[5].value.value.subscriptions.assertEqual();
+  xs.messages[6].value.value.subscriptions.assertEqual();
 });
 
 test('ConcatMap_Error_Outer', function () {
-    var ex = new Error('ex');
+  var ex = new Error('ex');
 
-    var scheduler = new TestScheduler();
-    
-    var xs = scheduler.createHotObservable(
-      onNext(5, scheduler.createColdObservable(onError(1, new Error('ex1')))), 
-      onNext(105, scheduler.createColdObservable(onError(1, new Error('ex2')))), 
-      onNext(300, scheduler.createColdObservable(
-        onNext(10, 102), 
-        onNext(90, 103), 
-        onNext(110, 104), 
-        onNext(190, 105), 
-        onNext(440, 106), 
-        onCompleted(460))), 
-      onNext(400, scheduler.createColdObservable(
-        onNext(180, 202), 
-        onNext(190, 203), 
-        onCompleted(205))), 
-      onNext(550, scheduler.createColdObservable(
-        onNext(10, 301), 
-        onNext(50, 302), 
-        onNext(70, 303), 
-        onNext(260, 304), 
-        onNext(310, 305), 
-        onCompleted(410))), 
-      onNext(750, scheduler.createColdObservable(onCompleted(40))), 
-      onNext(850, scheduler.createColdObservable(
-        onNext(80, 401), 
-        onNext(90, 402), 
-        onCompleted(100))), 
-      onError(900, ex));
-    
-    var results = scheduler.startWithCreate(function () {
-      return xs.concatMap(function (x) {
-        return x;
-      });
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createHotObservable(
+    onNext(5, scheduler.createColdObservable(onError(1, new Error('ex1')))), 
+    onNext(105, scheduler.createColdObservable(onError(1, new Error('ex2')))), 
+    onNext(300, scheduler.createColdObservable(
+      onNext(10, 102), 
+      onNext(90, 103), 
+      onNext(110, 104), 
+      onNext(190, 105), 
+      onNext(440, 106), 
+      onCompleted(460))), 
+    onNext(400, scheduler.createColdObservable(
+      onNext(180, 202), 
+      onNext(190, 203), 
+      onCompleted(205))), 
+    onNext(550, scheduler.createColdObservable(
+      onNext(10, 301), 
+      onNext(50, 302), 
+      onNext(70, 303), 
+      onNext(260, 304), 
+      onNext(310, 305), 
+      onCompleted(410))), 
+    onNext(750, scheduler.createColdObservable(onCompleted(40))), 
+    onNext(850, scheduler.createColdObservable(
+      onNext(80, 401), 
+      onNext(90, 402), 
+      onCompleted(100))), 
+    onError(900, ex));
+  
+  var results = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) {
+      return x;
     });
-    
-    results.messages.assertEqual(
-      onNext(310, 102), 
-      onNext(390, 103), 
-      onNext(410, 104), 
-      onNext(490, 105), 
-      onNext(740, 106), 
-      onError(900, ex));
+  });
+  
+  results.messages.assertEqual(
+    onNext(310, 102), 
+    onNext(390, 103), 
+    onNext(410, 104), 
+    onNext(490, 105), 
+    onNext(740, 106), 
+    onError(900, ex));
 
-    xs.subscriptions.assertEqual(subscribe(200, 605));
-    
-    xs.messages[2].value.value.subscriptions.assertEqual(subscribe(300, 760));
-    xs.messages[3].value.value.subscriptions.assertEqual(subscribe(760, 900));
-    xs.messages[4].value.value.subscriptions.assertEqual();
-    xs.messages[5].value.value.subscriptions.assertEqual();
-    xs.messages[6].value.value.subscriptions.assertEqual();
+  xs.subscriptions.assertEqual(subscribe(200, 900));
+  
+  xs.messages[2].value.value.subscriptions.assertEqual(subscribe(300, 760));
+  xs.messages[3].value.value.subscriptions.assertEqual(subscribe(760, 900));
+  xs.messages[4].value.value.subscriptions.assertEqual();
+  xs.messages[5].value.value.subscriptions.assertEqual();
+  xs.messages[6].value.value.subscriptions.assertEqual();
 });
 
 test('ConcatMap_Error_Inner', function () {
-    var ex = new Error('ex');
-    
-    var scheduler = new TestScheduler();
-    
-    var xs = scheduler.createHotObservable(
-      onNext(5, scheduler.createColdObservable(onError(1, new Error('ex1')))), 
-      onNext(105, scheduler.createColdObservable(onError(1, new Error('ex2')))), 
-      onNext(300, scheduler.createColdObservable(
-        onNext(10, 102), 
-        onNext(90, 103), 
-        onNext(110, 104), 
-        onNext(190, 105), 
-        onNext(440, 106), 
-        onError(460, ex))), 
-      onNext(400, scheduler.createColdObservable(
-        onNext(180, 202), 
-        onNext(190, 203), 
-        onCompleted(205))), 
-      onNext(550, scheduler.createColdObservable(
-        onNext(10, 301), 
-        onNext(50, 302), 
-        onNext(70, 303), 
-        onNext(260, 304), 
-        onNext(310, 305), 
-        onCompleted(410))), 
-      onNext(750, scheduler.createColdObservable(onCompleted(40))), 
-      onNext(850, scheduler.createColdObservable(
-        onNext(80, 401), 
-        onNext(90, 402), 
-        onCompleted(100))), 
-      onCompleted(900));
-    
-    var results = scheduler.startWithCreate(function () {
-      return xs.concatMap(function (x) {
-        return x;
-      });
+  var ex = new Error('ex');
+  
+  var scheduler = new TestScheduler();
+  
+  var xs = scheduler.createHotObservable(
+    onNext(5, scheduler.createColdObservable(onError(1, new Error('ex1')))), 
+    onNext(105, scheduler.createColdObservable(onError(1, new Error('ex2')))), 
+    onNext(300, scheduler.createColdObservable(
+      onNext(10, 102), 
+      onNext(90, 103), 
+      onNext(110, 104), 
+      onNext(190, 105), 
+      onNext(440, 106), 
+      onError(460, ex))), 
+    onNext(400, scheduler.createColdObservable(
+      onNext(180, 202), 
+      onNext(190, 203), 
+      onCompleted(205))), 
+    onNext(550, scheduler.createColdObservable(
+      onNext(10, 301), 
+      onNext(50, 302), 
+      onNext(70, 303), 
+      onNext(260, 304), 
+      onNext(310, 305), 
+      onCompleted(410))), 
+    onNext(750, scheduler.createColdObservable(onCompleted(40))), 
+    onNext(850, scheduler.createColdObservable(
+      onNext(80, 401), 
+      onNext(90, 402), 
+      onCompleted(100))), 
+    onCompleted(900));
+  
+  var results = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) {
+      return x;
     });
-    
-    results.messages.assertEqual(
-      onNext(310, 102), 
-      onNext(390, 103), 
-      onNext(410, 104), 
-      onNext(490, 105), 
+  });
+  
+  results.messages.assertEqual(
+    onNext(310, 102), 
+    onNext(390, 103), 
+    onNext(410, 104), 
+    onNext(490, 105), 
 
-      onNext(740, 106), 
-      onError(760, ex));
-    
-    xs.subscriptions.assertEqual(subscribe(200, 760));
-    
-    xs.messages[2].value.value.subscriptions.assertEqual(subscribe(300, 760));
-    xs.messages[3].value.value.subscriptions.assertEqual();
-    xs.messages[4].value.value.subscriptions.assertEqual();
-    xs.messages[5].value.value.subscriptions.assertEqual();
-    xs.messages[6].value.value.subscriptions.assertEqual();
+    onNext(740, 106), 
+    onError(760, ex));
+  
+  xs.subscriptions.assertEqual(subscribe(200, 760));
+  
+  xs.messages[2].value.value.subscriptions.assertEqual(subscribe(300, 760));
+  xs.messages[3].value.value.subscriptions.assertEqual();
+  xs.messages[4].value.value.subscriptions.assertEqual();
+  xs.messages[5].value.value.subscriptions.assertEqual();
+  xs.messages[6].value.value.subscriptions.assertEqual();
 });
 
 test('ConcatMap_Dispose', function () {
@@ -755,9 +755,9 @@ test('ConcatMap_Dispose', function () {
     onCompleted(900));
   
   var results = scheduler.startWithDispose(function () {
-      return xs.concatMap(function (x) {
-          return x;
-      });
+    return xs.concatMap(function (x) {
+      return x;
+    });
   }, 700);
 
   results.messages.assertEqual(

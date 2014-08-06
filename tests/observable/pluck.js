@@ -31,10 +31,10 @@ test('Pluck_Completed', function () {
     });
 
     results.messages.assertEqual(
-        onNext(210, 3), 
-        onNext(240, 4), 
-        onNext(290, 5), 
-        onNext(350, 6), 
+        onNext(210, 2), 
+        onNext(240, 3), 
+        onNext(290, 4), 
+        onNext(350, 5), 
         onCompleted(400)
     );
     

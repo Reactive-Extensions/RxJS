@@ -2,12 +2,14 @@
     inherits(ConnectableObservable, __super__);
 
     function ConnectableObservable(source, subject) {
-      var hasSubscription = false, subscription;
+      var hasSubscription = false, 
+        subscription,
+        sourceObservable = source.asObservable();
 
       this.connect = function () {
         if (!hasSubscription) {
           hasSubscription = true;
-          subscription = new CompositeDisposable(source.subscribe(subject), disposableCreate(function () {
+          subscription = new CompositeDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
             hasSubscription = false;
           }));
         }

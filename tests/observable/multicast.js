@@ -1,38 +1,64 @@
 QUnit.module('Multicast');
 
 var TestScheduler = Rx.TestScheduler,
-    Observable = Rx.Observable,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    Subject = Rx.Subject,
-    created = Rx.ReactiveTest.created,
-    disposed = Rx.ReactiveTest.disposed,
-    subscribed = Rx.ReactiveTest.subscribed,
-    inherits = Rx.internals.inherits;
+  Observable = Rx.Observable,
+  onNext = Rx.ReactiveTest.onNext,
+  onError = Rx.ReactiveTest.onError,
+  onCompleted = Rx.ReactiveTest.onCompleted,
+  subscribe = Rx.ReactiveTest.subscribe,
+  Subject = Rx.Subject,
+  created = Rx.ReactiveTest.created,
+  disposed = Rx.ReactiveTest.disposed,
+  subscribed = Rx.ReactiveTest.subscribed,
+  inherits = Rx.internals.inherits;
 
 test('Multicast_Hot_1', function () {
-    var c, d1, d2, o, s, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(40, 0), onNext(90, 1), onNext(150, 2), onNext(210, 3), onNext(240, 4), onNext(270, 5), onNext(330, 6), onNext(340, 7), onCompleted(390));
-    s = new Subject();
-    o = scheduler.createObserver();
-    scheduler.scheduleAbsolute(50,function () {
-        c = xs.multicast(s);
-    });
-    scheduler.scheduleAbsolute(100, function () {
-        d1 = c.subscribe(o);
-    });
-    scheduler.scheduleAbsolute(200, function () {
-        d2 = c.connect();
-    });
-    scheduler.scheduleAbsolute(300, function () {
-        d1.dispose();
-    });
-    scheduler.start();
-    o.messages.assertEqual(onNext(210, 3), onNext(240, 4), onNext(270, 5));
-    xs.subscriptions.assertEqual(subscribe(200, 390));
+
+  var scheduler = new TestScheduler();
+  
+  var s = new Subject();
+
+  var xs = scheduler.createHotObservable(
+    onNext(40, 0), 
+    onNext(90, 1), 
+    onNext(150, 2), 
+    onNext(210, 3), 
+    onNext(240, 4), 
+    onNext(270, 5), 
+    onNext(330, 6), 
+    onNext(340, 7), 
+    onCompleted(390));
+  
+  var c;
+  var o = scheduler.createObserver();
+  var d1;
+  var d2;
+
+  scheduler.scheduleAbsolute(50,function () {
+    c = xs.multicast(s);
+  });
+  
+  scheduler.scheduleAbsolute(100, function () {
+    d1 = c.subscribe(o);
+  });
+  
+  scheduler.scheduleAbsolute(200, function () {
+    d2 = c.connect();
+  });
+
+  scheduler.scheduleAbsolute(300, function () {
+    d1.dispose();
+  });
+  
+  scheduler.start();
+  
+  o.messages.assertEqual(
+    onNext(210, 3), 
+    onNext(240, 4), 
+    onNext(270, 5)
+  );
+  
+  xs.subscriptions.assertEqual(subscribe(200, 390));
 });
 
 test('Multicast_Hot_2', function () {

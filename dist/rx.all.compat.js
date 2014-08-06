@@ -82,9 +82,9 @@
     propertyIsEnumerable = objectProto.propertyIsEnumerable;
 
   try {
-      suportNodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
+    suportNodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
   } catch(e) {
-      suportNodeClass = true;
+    suportNodeClass = true;
   }
 
   var shadowedProps = [
@@ -729,62 +729,56 @@
      */
     var disposableEmpty = Disposable.empty = { dispose: noop };
 
-    var BooleanDisposable = (function () {
-        function BooleanDisposable (isSingle) {
-            this.isSingle = isSingle;
-            this.isDisposed = false;
-            this.current = null;
-        }
+  var BooleanDisposable = (function () {
+    function BooleanDisposable (isSingle) {
+      this.isSingle = isSingle;
+      this.isDisposed = false;
+      this.current = null;
+    }
 
-        var booleanDisposablePrototype = BooleanDisposable.prototype;
+    var booleanDisposablePrototype = BooleanDisposable.prototype;
 
-        /**
-         * Gets the underlying disposable.
-         * @return The underlying disposable.
-         */
-        booleanDisposablePrototype.getDisposable = function () {
-            return this.current;
-        };
+    /**
+     * Gets the underlying disposable.
+     * @return The underlying disposable.
+     */
+    booleanDisposablePrototype.getDisposable = function () {
+      return this.current;
+    };
 
-        /**
-         * Sets the underlying disposable.
-         * @param {Disposable} value The new underlying disposable.
-         */  
-        booleanDisposablePrototype.setDisposable = function (value) {
-            if (this.current && this.isSingle) {
-                throw new Error('Disposable has already been assigned');
-            }
+    /**
+     * Sets the underlying disposable.
+     * @param {Disposable} value The new underlying disposable.
+     */  
+    booleanDisposablePrototype.setDisposable = function (value) {
+      if (this.current && this.isSingle) {
+        throw new Error('Disposable has already been assigned');
+      }
 
-            var shouldDispose = this.isDisposed, old;
-            if (!shouldDispose) {
-                old = this.current;
-                this.current = value;
-            }
-            if (old) {
-                old.dispose();
-            }
-            if (shouldDispose && value) {
-                value.dispose();
-            }
-        };
+      var shouldDispose = this.isDisposed, old;
+      if (!shouldDispose) {
+        old = this.current;
+        this.current = value;
+      }
+      old && old.dispose();
+      shouldDispose && value && value.dispose();
+    };
 
-        /** 
-         * Disposes the underlying disposable as well as all future replacements.
-         */
-        booleanDisposablePrototype.dispose = function () {
-            var old;
-            if (!this.isDisposed) {
-                this.isDisposed = true;
-                old = this.current;
-                this.current = null;
-            }
-            if (old) {
-                old.dispose();
-            }
-        };
+    /** 
+     * Disposes the underlying disposable as well as all future replacements.
+     */
+    booleanDisposablePrototype.dispose = function () {
+      var old;
+      if (!this.isDisposed) {
+        this.isDisposed = true;
+        old = this.current;
+        this.current = null;
+      }
+      old && old.dispose();
+    };
 
-        return BooleanDisposable;
-    }());
+    return BooleanDisposable;
+  }());
 
     /**
      * Represents a disposable resource which only allows a single assignment of its underlying disposable resource.
@@ -5541,32 +5535,32 @@
 
         return ControlledSubject;
     }(Observable));
-    /**
-     * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
-     * subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
-     * invocation. For specializations with fixed subject types, see Publish, PublishLast, and Replay.
-     * 
-     * @example
-     * 1 - res = source.multicast(observable);
-     * 2 - res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
-     * 
-     * @param {Function|Subject} subjectOrSubjectSelector 
-     * Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
-     * Or:
-     * Subject to push source elements into.
-     * 
-     * @param {Function} [selector] Optional selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if <paramref name="subjectOrSubjectSelector" is a factory function.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-     */
-    observableProto.multicast = function (subjectOrSubjectSelector, selector) {
-        var source = this;
-        return typeof subjectOrSubjectSelector === 'function' ?
-            new AnonymousObservable(function (observer) {
-                var connectable = source.multicast(subjectOrSubjectSelector());
-                return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
-            }) :
-            new ConnectableObservable(source, subjectOrSubjectSelector);
-    };
+  /**
+   * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
+   * subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
+   * invocation. For specializations with fixed subject types, see Publish, PublishLast, and Replay.
+   * 
+   * @example
+   * 1 - res = source.multicast(observable);
+   * 2 - res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
+   * 
+   * @param {Function|Subject} subjectOrSubjectSelector 
+   * Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
+   * Or:
+   * Subject to push source elements into.
+   * 
+   * @param {Function} [selector] Optional selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if <paramref name="subjectOrSubjectSelector" is a factory function.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   */
+  observableProto.multicast = function (subjectOrSubjectSelector, selector) {
+    var source = this;
+    return typeof subjectOrSubjectSelector === 'function' ?
+      new AnonymousObservable(function (observer) {
+          var connectable = source.multicast(subjectOrSubjectSelector());
+          return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
+      }) :
+      new ConnectableObservable(source, subjectOrSubjectSelector);
+  };
 
     /**
      * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
@@ -5981,12 +5975,14 @@
     inherits(ConnectableObservable, __super__);
 
     function ConnectableObservable(source, subject) {
-      var hasSubscription = false, subscription;
+      var hasSubscription = false, 
+        subscription,
+        sourceObservable = source.asObservable();
 
       this.connect = function () {
         if (!hasSubscription) {
           hasSubscription = true;
-          subscription = new CompositeDisposable(source.subscribe(subject), disposableCreate(function () {
+          subscription = new CompositeDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
             hasSubscription = false;
           }));
         }
@@ -8347,7 +8343,7 @@
         while (q.length > 0) {
           var next = q.shift();
           if (now - next.interval <= duration) {
-            observer.onNext(next);
+            observer.onNext(next.value);
           }
         }
 
