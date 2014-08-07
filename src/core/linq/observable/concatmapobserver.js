@@ -1,18 +1,39 @@
-  observableProto.concatMapObserver = function(onNext, onError, onCompleted) {
+  observableProto.concatMapObserver = function(onNext, onError, onCompleted, thisArg) {
     var source = this;
     return new AnonymousObservable(function (observer) {
       var index = 0;
 
       return source.subscribe(
         function (x) {
-          observer.onNext(onNext(x, index++));
+          var result;
+          try {
+            result = onNext.call(thisArg, x, index++);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
         },
         function (err) {
-          observer.onNext(onError(err));
-          observer.completed();
+          var result;
+          try {
+            result = onError.call(thisArg, err);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
+          observer.onCompleted();
         }, 
         function () {
-          observer.onNext(onCompleted());
+          var result;
+          try {
+            result = onCompleted.call(thisArg);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }          
+          observer.onNext(result);
           observer.onCompleted();
         });
     }).concatAll();

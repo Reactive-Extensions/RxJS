@@ -3625,6 +3625,46 @@
         concatMap(this, function () { return selector; });
     };
 
+  observableProto.concatMapObserver = function(onNext, onError, onCompleted, thisArg) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var index = 0;
+
+      return source.subscribe(
+        function (x) {
+          var result;
+          try {
+            result = onNext.call(thisArg, x, index++);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
+        },
+        function (err) {
+          var result;
+          try {
+            result = onError.call(thisArg, err);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
+          observer.onCompleted();
+        }, 
+        function () {
+          var result;
+          try {
+            result = onCompleted.call(thisArg);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }          
+          observer.onNext(result);
+          observer.onCompleted();
+        });
+    }).concatAll();
+  };
     /**
      *  Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
      *  
@@ -3739,6 +3779,46 @@
         return this.select(function (x) { return x[property]; });
     };
 
+  observableProto.flatMapObserver = observableProto.selectManyObserver = function (onNext, onError, onCompleted, thisArg) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var index = 0;
+
+      return source.subscribe(
+        function (x) {
+          var result;
+          try {
+            result = onNext.call(thisArg, x, index++);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
+        },
+        function (err) {
+          var result;
+          try {
+            result = onError.call(thisArg, err);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
+          observer.onCompleted();
+        }, 
+        function () {
+          var result;
+          try {
+            result = onCompleted.call(thisArg);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }          
+          observer.onNext(result);
+          observer.onCompleted();
+        });
+    }).mergeAll();
+  };
     function flatMap(source, selector, thisArg) {
       return source.map(function (x, i) {
         var result = selector.call(thisArg, x, i);

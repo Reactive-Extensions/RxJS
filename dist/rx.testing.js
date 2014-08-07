@@ -195,7 +195,7 @@
    * @returns {String} String representation of the current Subscription value.
    */
   Subscription.prototype.toString = function () {
-    return '(' + this.subscribe + ', ' + this.unsubscribe === Number.MAX_VALUE ? 'Infinite' : this.unsubscribe + ')';
+    return '(' + this.subscribe + ', ' + (this.unsubscribe === Number.MAX_VALUE ? 'Infinite' : this.unsubscribe) + ')';
   };
 
     /** @private */

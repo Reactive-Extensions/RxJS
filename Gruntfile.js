@@ -145,6 +145,7 @@ var browsers = [{
 
               // Standard query operators
               'src/core/linq/observable/concatmap.js',
+              'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
@@ -408,6 +409,7 @@ var browsers = [{
 
               // Standard query operators
               'src/core/linq/observable/concatmap.js',
+              'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
@@ -415,6 +417,7 @@ var browsers = [{
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
+              'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
               'src/core/linq/observable/skipwhile.js',
@@ -670,11 +673,13 @@ var browsers = [{
 
               // Standard query operators
               'src/core/linq/observable/concatmap.js',
+              'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
+              'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
               'src/core/linq/observable/skipwhile.js',
@@ -798,10 +803,12 @@ var browsers = [{
 
               // Standard query operators
               'src/core/linq/observable/concatmap.js',
+              'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
+              'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
@@ -967,10 +974,6 @@ var browsers = [{
               //'src/core/backpressure/windowed.js',
               //'src/core/backpressure/windowedobservable.js',
 
-              // Coincidence Operators
-              'src/core/linq/observable/pairwise.js',
-              'src/core/linq/observable/partition.js',  
-
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
               'src/core/linq/observable/exclusivemap.js',
@@ -1129,10 +1132,6 @@ var browsers = [{
               'src/core/backpressure/controlled.js',
               'src/core/backpressure/controlledobservable.js',
               'src/core/backpressure/controlledsubject.js',
-
-              // Coincidence Operators
-              'src/core/linq/observable/pairwise.js',
-              'src/core/linq/observable/partition.js',  
 
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
