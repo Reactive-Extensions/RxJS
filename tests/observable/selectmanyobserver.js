@@ -676,7 +676,7 @@ test('SelectMany_Triple_OnErrorThrow', function () {
     onNext(303, 2),
     onNext(304, 3),
     onNext(304, 2),
-    onError(305, ex)
+    onError(305, err)
   );
 
   xs.subscriptions.assertEqual(
@@ -1325,7 +1325,7 @@ test('SelectManyWithIndex_Triple_All_Dispose_Before_First', function () {
   );
 });
 
-test('SelectManyWithIndex_Triple_onNextThrow', function () {
+test('SelectManyWithIndex_Triple_OnNextThrow', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -1348,7 +1348,7 @@ test('SelectManyWithIndex_Triple_onNextThrow', function () {
   });
 
   res.messages.assertEqual(
-    onError(300, ex)
+    onError(300, err)
   );
 
   xs.subscriptions.assertEqual(
@@ -1384,7 +1384,7 @@ test('SelectManyWithIndex_Triple_OnErrorThrow', function () {
     onNext(303, 2),
     onNext(304, 3),
     onNext(304, 2),
-    onError(305, ex)
+    onError(305, err)
   );
 
   xs.subscriptions.assertEqual(
@@ -1397,12 +1397,12 @@ test('SelectManyWithIndex_Triple_OnCompletedThrow', function () {
     var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-      onNext(300, 0),
-      onNext(301, 1),
-      onNext(302, 2),
-      onNext(303, 3),
-      onNext(304, 4),
-      onCompleted(305)
+    onNext(300, 0),
+    onNext(301, 1),
+    onNext(302, 2),
+    onNext(303, 3),
+    onNext(304, 4),
+    onCompleted(305)
   );
 
   var err = new Error();
@@ -1416,14 +1416,14 @@ test('SelectManyWithIndex_Triple_OnCompletedThrow', function () {
   });
 
   res.messages.assertEqual(
-      onNext(302, 1),
-      onNext(303, 2),
-      onNext(304, 3),
-      onNext(304, 2),
-      onError(305, ex)
+    onNext(302, 1),
+    onNext(303, 2),
+    onNext(304, 3),
+    onNext(304, 2),
+    onError(305, err)
   );
 
   xs.subscriptions.assertEqual(
-      subscribe(200, 305)
+    subscribe(200, 305)
   );
 });

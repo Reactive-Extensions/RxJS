@@ -5,14 +5,35 @@
 
       return source.subscribe(
         function (x) {
-          observer.onNext(onNext.call(thisArg, x, index++));
+          var result;
+          try {
+            result = onNext.call(thisArg, x, index++);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
         },
         function (err) {
-          observer.onNext(onError.call(thisArg, err));
+          var result;
+          try {
+            result = onError.call(thisArg, err);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
           observer.onCompleted();
         }, 
         function () {
-          observer.onNext(onCompleted.call(thisArg));
+          var result;
+          try {
+            result = onCompleted.call(thisArg);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }          
+          observer.onNext(result);
           observer.onCompleted();
         });
     }).mergeAll();
