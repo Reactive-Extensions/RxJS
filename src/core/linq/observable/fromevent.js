@@ -106,6 +106,10 @@
 
   // Check for ember
   var ember = !!root.Ember && typeof root.Ember.addListener === 'function';
+  
+  // Check for Backbone.Marionette. Note if using AMD add Marionette as a dependency of rxjs
+  // for proper loading order!
+  var marionette = !!root.Backbone && !!root.Backbone.Marionette;
 
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
@@ -122,8 +126,6 @@
   
 
   Observable.fromEvent = function (element, eventName, selector) {
-    // TODO: other libs are detected outside of this method but AMD was not loading Marionette first
-    var marionette = !!root.Backbone && !!root.Backbone.Marionette;
     
     if (marionette) {
       return fromEventPattern(
