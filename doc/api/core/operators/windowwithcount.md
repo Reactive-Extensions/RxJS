@@ -4,8 +4,8 @@
 Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
 
 #### Arguments
-1. `count` *(`Function`)*: Length of each buffer.
-2. `[skip]` *(`Function`)*: Number of elements to skip between creation of consecutive windows. If not provided, defaults to the count.
+1. `count` *(`Number`)*: Length of each buffer.
+2. `[skip]` *(`Number`)*: Number of elements to skip between creation of consecutive windows. If not provided, defaults to the count.
 
 #### Returns
 *(`Observable`)*: An observable sequence of windows. 
