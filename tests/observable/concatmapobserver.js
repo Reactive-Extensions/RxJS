@@ -572,12 +572,8 @@ test('ConcatMap_Triple_All_Dispose', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
-    onNext(305, 4),
     onNext(305, 3),
-    onNext(306, -1),
-    onNext(306, 4),
     onNext(306, 3)
   );
 
@@ -674,7 +670,6 @@ test('ConcatMap_Triple_OnErrorThrow', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
     onError(305, err)
   );
@@ -709,7 +704,6 @@ test('ConcatMap_Triple_OnCompletedThrow', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
     onError(305, err)
   );
@@ -1280,12 +1274,8 @@ test('ConcatMapWithIndex_Triple_All_Dispose', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
-    onNext(305, 4),
     onNext(305, 3),
-    onNext(306, -1),
-    onNext(306, 4),
     onNext(306, 3)
   );
 
@@ -1382,7 +1372,6 @@ test('ConcatMapWithIndex_Triple_OnErrorThrow', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
     onError(305, err)
   );
@@ -1418,7 +1407,6 @@ test('ConcatMapWithIndex_Triple_OnCompletedThrow', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
     onError(305, err)
   );
