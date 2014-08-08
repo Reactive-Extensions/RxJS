@@ -31,6 +31,7 @@ var subscription = source.subscribe(
 // => Next: 1,2 
 // => Next: 3,4 
 // => Next: 5,6 
+// => Next: 
 // => Completed 
 
 /* Using a skip */
@@ -55,6 +56,7 @@ var subscription = source.subscribe(
 // => Next: 4,5 
 // => Next: 5,6 
 // => Next: 6 
+// => Next: 
 // => Completed 
 ```
 ### Location
