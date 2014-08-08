@@ -1,14 +1,14 @@
 ### `Rx.Observable.prototype.distinctUntilChanged([keySelector], [comparer])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/distinctuntilchanged.js "View in source") 
 
-Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large. 
+Returns an observable sequence that contains only distinct contiguous elements according to the keySelector and the comparer.
 
 #### Arguments
-1. `[keySelector]` *(`Function`)*: A function to compute the comparison key for each element.
+1. `[keySelector]` *(`Function`)*: A function to compute the comparison key for each element. If not provided, it projects the value.
 2. `[comparer]` *(`Function`)*: Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
 
 #### Returns
-*(`Observable`)*: An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
+*(`Observable`)*: An observable sequence only containing the distinct contiguous elements, based on a computed key value, from the source sequence.
 
 #### Example
 ```js
