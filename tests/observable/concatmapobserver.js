@@ -341,12 +341,12 @@ test('ConcatMap_Triple_ConcatMap', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
-    onNext(305, 2),
-    onNext(306, 4),
+    onNext(304, 2),
+    onNext(305, 3),
+    onNext(306, 3),
     onNext(307, 3),
     onNext(308, 4),
-    onNext(309, 3),
+    onNext(309, 4),
     onNext(310, 4),
     onNext(311, 4),
     onCompleted(312)
@@ -489,16 +489,16 @@ test('ConcatMap_Triple_All', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
-    onNext(305, 4),
+    onNext(305, 3),
     onNext(306, 3),
-    onNext(307, -1),
+    onNext(307, 3),
     onNext(308, 4),
-    onNext(309, 3),
-    onNext(310, -1),
+    onNext(309, 4),
+    onNext(310, 4),
     onNext(311, 4),
-    onNext(312, 4),
+    onNext(312, -1),
+    onNext(313, -1),
     onCompleted(313)
   );
 
@@ -531,16 +531,16 @@ test('ConcatMap_Triple_Error_All', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
-    onNext(305, 2),
-    onNext(306, 4),
+    onNext(304, 2),
+    onNext(305, 3),
+    onNext(306, 3),
     onNext(307, 3),
-    onNext(308, 0),
+    onNext(308, 4),
     onNext(309, 4),
-    onNext(310, 3),
-    onNext(311, 0),
-    onNext(312, 4),
-    onNext(313, 4),
+    onNext(310, 4),
+    onNext(311, 4),
+    onNext(312, 0),
+    onNext(313, 0),
     onCompleted(313)
   );
 
@@ -794,22 +794,22 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming1', function () {
 
   res.messages.assertEqual(
     onNext(310, 10),
-    onNext(311, 10),
-    onNext(312, 10),
-    onNext(313, 10),
-    onNext(314, 10),
-    onNext(315, 42),
     onNext(320, 11),
-    onNext(321, 11),
-    onNext(322, 11),
-    onNext(323, 11),
-    onNext(324, 11),
     onNext(330, 12),
-    onNext(331, 12),
-    onNext(332, 12),
-    onNext(333, 12),
-    onNext(334, 12),
-    onCompleted(344)
+    onNext(350, 10),
+    onNext(360, 11),
+    onNext(370, 12),
+    onNext(390, 10),
+    onNext(400, 11),
+    onNext(410, 12),
+    onNext(430, 10),
+    onNext(440, 11),
+    onNext(450, 12),
+    onNext(470, 10),
+    onNext(480, 11),
+    onNext(490, 12),
+    onNext(510, 42),
+    onCompleted(520)
   );
 
   xs.subscriptions.assertEqual(
@@ -818,17 +818,17 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming1', function () {
 
   ysn.subscriptions.assertEqual(
     subscribe(300, 340),
-    subscribe(301, 341),
-    subscribe(302, 342),
-    subscribe(303, 343),
-    subscribe(304, 344)
+    subscribe(340, 380),
+    subscribe(380, 420),
+    subscribe(420, 460),
+    subscribe(460, 500)
   );
 
   yse.subscriptions.assertEqual(
   );
 
   ysc.subscriptions.assertEqual(
-    subscribe(305, 325)
+    subscribe(500, 520)
   );
 });
 
@@ -872,22 +872,22 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming2', function () {
 
   res.messages.assertEqual(
     onNext(310, 10),
-    onNext(311, 10),
-    onNext(312, 10),
-    onNext(313, 10),
-    onNext(314, 10),
-    onNext(315, 42),
     onNext(320, 11),
-    onNext(321, 11),
-    onNext(322, 11),
-    onNext(323, 11),
-    onNext(324, 11),
     onNext(330, 12),
-    onNext(331, 12),
-    onNext(332, 12),
-    onNext(333, 12),
-    onNext(334, 12),
-    onCompleted(355)
+    onNext(350, 10),
+    onNext(360, 11),
+    onNext(370, 12),
+    onNext(390, 10),
+    onNext(400, 11),
+    onNext(410, 12),
+    onNext(430, 10),
+    onNext(440, 11),
+    onNext(450, 12),
+    onNext(470, 10),
+    onNext(480, 11),
+    onNext(490, 12),
+    onNext(510, 42),
+    onCompleted(550)
   );
 
   xs.subscriptions.assertEqual(
@@ -896,17 +896,17 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming2', function () {
 
   ysn.subscriptions.assertEqual(
     subscribe(300, 340),
-    subscribe(301, 341),
-    subscribe(302, 342),
-    subscribe(303, 343),
-    subscribe(304, 344)
+    subscribe(340, 380),
+    subscribe(380, 420),
+    subscribe(420, 460),
+    subscribe(460, 500)
   );
 
   yse.subscriptions.assertEqual(
   );
 
   ysc.subscriptions.assertEqual(
-    subscribe(305, 355)
+    subscribe(500, 550)
   );
 });
 
@@ -1049,15 +1049,15 @@ test('ConcatMapWithIndex_Triple_ConcatMap', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
-    onNext(305, 4),
     onNext(305, 3),
-    onNext(306, 4),
     onNext(306, 3),
-    onNext(307, 4),
+    onNext(307, 3),
     onNext(308, 4),
-    onCompleted(308)
+    onNext(309, 4),
+    onNext(310, 4),
+    onNext(311, 4),
+    onCompleted(312)
   );
 
   xs.subscriptions.assertEqual(
@@ -1197,17 +1197,17 @@ test('ConcatMapWithIndex_Triple_All', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
-    onNext(305, 4),
     onNext(305, 3),
-    onNext(306, -1),
-    onNext(306, 4),
     onNext(306, 3),
-    onNext(307, -1),
-    onNext(307, 4),
+    onNext(307, 3),
     onNext(308, 4),
-    onCompleted(308)
+    onNext(309, 4),
+    onNext(310, 4),
+    onNext(311, 4),
+    onNext(312, -1),
+    onNext(313, -1),
+    onCompleted(313)
   );
 
   xs.subscriptions.assertEqual(
@@ -1239,17 +1239,17 @@ test('ConcatMapWithIndex_Triple_Error_All', function () {
   res.messages.assertEqual(
     onNext(302, 1),
     onNext(303, 2),
-    onNext(304, 3),
     onNext(304, 2),
-    onNext(305, 4),
     onNext(305, 3),
-    onNext(306, 0),
-    onNext(306, 4),
     onNext(306, 3),
-    onNext(307, 0),
-    onNext(307, 4),
+    onNext(307, 3),
     onNext(308, 4),
-    onCompleted(308)
+    onNext(309, 4),
+    onNext(310, 4),
+    onNext(311, 4),
+    onNext(312, 0),
+    onNext(313, 0),
+    onCompleted(313)
   );
 
   xs.subscriptions.assertEqual(
