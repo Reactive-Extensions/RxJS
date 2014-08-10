@@ -5,22 +5,21 @@ The Reactive Extensions for JavaScript supports a notion of virtual time, which 
 ## Details ##
 
 Files:
-- `rx.virtualtime.js`
+- [`rx.virtualtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.virtualtime.js)
 
 NPM Packages:
-- `rx`
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- `RxJS-VirtualTime`
+- [`RxJS-VirtualTime`](http://www.nuget.org/packages/RxJS-VirtualTime/)
 
 File Dependencies:
-- `rx.js` | `rx.compat.js` | `rx.lite.js` | `rx.lite.compat.js`
-
-NPM Dependencies:
-- <None>
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NuGet Dependencies:
-- RxJS-Main
+- [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 ## Included Classes ##
 

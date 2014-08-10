@@ -8,26 +8,25 @@ Files:
 - `rx.time.js`
 
 NPM Packages:
-- `rx`
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- `RxJS-Time`
+- [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
 
 File Dependencies:
-- `rx.js` | `rx.compat.js` | `rx.lite.js` | `rx.lite.compat.js`
-
-NPM Dependencies:
-- None
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NuGet Dependencies:
-- RxJS-Main
+- [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`generateWithAbsoluteTime`](../api/core/observable.md#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
-- [`generateWithRelativeTime`](../api/core/observable.md#rxobservablegeneratewithrelativetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler)
-- [`interval`](../api/core/observable.md#rxobservableintervalperiod-scheduler)
+- [`generateWithAbsoluteTime`](../api/core/operators/generatewithabsolutetime.md)
+- [`generateWithRelativeTime`](../api/core/operators/generatewithrelativetime.md)
+- [`interval`](../api/core/operators/generatewithrelativetime.md)
 - [`timer`](../api/core/observable.md#rxobservabletimerduetime-period-scheduler)
 
 
