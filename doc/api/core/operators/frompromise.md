@@ -17,7 +17,7 @@ var promise1 = new RSVP.Promise(function (resolve, reject) {
     resolve(42);
 });
 
-var source1 = Rx.Observable.fromPromise(promise);
+var source1 = Rx.Observable.fromPromise(promise1);
 
 var subscription1 = source1.subscribe(
     function (x) {
@@ -34,13 +34,13 @@ var subscription1 = source1.subscribe(
 // => Completed
 
 // Create a promise which rejects with an error
-var promise1 = new RSVP.Promise(function (resolve, reject) {
+var promise2 = new RSVP.Promise(function (resolve, reject) {
     reject(new Error('reason'));
 });
 
-var source1 = Rx.Observable.fromPromise(promise);
+var source2 = Rx.Observable.fromPromise(promise2);
 
-var subscription1 = source1.subscribe(
+var subscription2 = source2.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
