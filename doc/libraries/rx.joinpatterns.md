@@ -5,30 +5,29 @@ The Reactive Extensions for JavaScript also supports join calculus in that you c
 ## Details ##
 
 Files:
-- `rx.joinpatterns.js`
+- [`rx.joinpatterns.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.joinpatterns.js)
 
 NPM Packages:
-- `rx`
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- `RxJS-JoinPatterns`
+- [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
+- [`RxJS-JoinPatterns`](http://www.nuget.org/packages/RxJS-JoinPatterns/)
 
 File Dependencies:
-- `rx.js` | `rx.compat.js` | `rx.lite.js` | `rx.lite.compat.js`
-
-NPM Dependencies:
-- None
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NuGet Dependencies:
-- RxJS-Main
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`when`](../api/core/observable.md#rxobservablewhenargs)
+- [`when`](../api/core/operators/when.md)
 
 ### `Observable Instance Methods`
-- [`and`](../api/core/observable.md#rxobservableprototypeandrightsource)
+- [`and`](../api/core/operators/and.md)
 
 ### `Pattern Instance Methods`
-- [`then`](../api/core/observable.md##rxobservablewhenargs)
+- [`then`](../api/core/operators/thendo.md)

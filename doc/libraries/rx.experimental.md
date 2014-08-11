@@ -5,35 +5,34 @@ The Reactive Extensions for JavaScript has a number of operators that are consid
 ## Details ##
 
 Files:
-- `rx.experimental.js`
+- [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
 NPM Packages:
-- `rx`
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- `RxJS-Experimental`
+- [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
+- [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental/)
 
 File Dependencies:
-- `rx.js` | `rx.compat.js` | `rx.lite.js` | `rx.lite.compat.js`
-
-NPM Dependencies:
-- None
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NuGet Dependencies:
-- RxJS-Main
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`case | switchCase`](../api/core/observable.md#rxobservablecaseselector-sources-elsesourcescheduler)
-- [`for | forIn`](../api/core/observable.md#rxobservableforsources-resultselector)
-- [`forkJoin`](../api/core/observable.md#rxobservableforkjoinargs)
-- [`if | ifThen`](../api/core/observable.md#rxobservableifcondition-thensource-elsesource)
-- [`while | whileDo`](../api/core/observable.md#rxobservablewhilecondition-source)
+- [`case | switchCase`](../api/core/operators/case.md)
+- [`for | forIn`](../api/core/operators/for.md)
+- [`forkJoin`](../api/core/operators/forkjoin.md)
+- [`if | ifThen`](../api/core/operators/if.md)
+- [`while | whileDo`](../api/core/operators/while.md)
 
 ### `Observable Instance Methods`
-- [`doWhile`](../api/core/observable.md../api/core/observable.md`](../api/core/observable.md#rxobservableprototypedowhilecondition-source)
-- [`expand`](../api/core/observable.md#rxobservableprototypeexpandselector-scheduler)
-- [`forkJoin`](../api/core/observable.md#rxobservableprototypeforkjoinsecond-resultselector)
-- [`let | letBind`](../api/core/observable.md#rxobservableprototypeletfunc)
-- [`manySelect`](../api/core/observable.md#rxobservableprototypemanyselectselector-scheduler)
+- [`doWhile`](/api/core/operators/dowhile.md`)
+- [`expand`](../api/core/operators/expand.md)
+- [`forkJoin`](../api/core/operators/forkjoinproto.md)
+- [`let | letBind`](../api/core/operators/let.md)
+- [`manySelect`](../api/core/operators/manyselect.md)

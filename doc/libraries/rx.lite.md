@@ -7,23 +7,14 @@ This comes with both `rx.lite.js` which is for use in modern development environ
 ## Details ##
 
 Files:
-- `rx.lite.js`
-- `rx.lite.compat.js`
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:
 - `rx-lite`
 
 NuGet Packages:
 - [`RxJS-Lite`](https://www.nuget.org/packages/RxJS-Lite/)
-
-File Dependencies:
-- None
-
-NPM Dependencies:
-- None
-
-NuGet Dependencies:
-- None
 
 ## Included Observable Operators ##
 

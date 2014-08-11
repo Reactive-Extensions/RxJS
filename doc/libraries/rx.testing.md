@@ -5,24 +5,21 @@ The Reactive Extensions for JavaScript has a built-in mechanism for testing all 
 ## Details ##
 
 Files:
-- `rx.testing.js`
+- [`rx.testing.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.testing.js)
 
 NPM Packages:
-- `rx`
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- `RxJS-Time`
+- [`RxJS-Testing`](http://www.nuget.org/packages/RxJS-Testing/)
 
 File Dependencies:
-- `rx.js` | `rx.compat.js` | `rx.lite.js` | `rx.lite.compat.js`
-- `rx.virtualtime.js`
-
-NPM Dependencies:
-- None
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.virtualtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.virtualtime.js)`
 
 NuGet Dependencies:
-- RxJS-Main
-- RxJS-VirtualTime
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 ## Included Classes ##
 
