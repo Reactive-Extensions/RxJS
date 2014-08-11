@@ -3,10 +3,10 @@
 
 Creates an observable sequence by adding an event listener to the matching DOMElement, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter.
 
-Note that this uses the library approaches for jQuery, Zepto, AngularJS and Ember.js and falls back to native binding if not present.
+Note that this uses the library approaches for jQuery, Zepto, Backbone.Marionette, AngularJS and Ember.js and falls back to native binding if not present.
 
 #### Arguments
-1. `element` *(`Any`)*: The DOMElement, NodeList, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter to attach a listener.
+1. `element` *(`Any`)*: The DOMElement, NodeList, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter to attach a listener. For Backbone.Marionette this would be the application or an EventAggregator object.
 2. `eventName` *(`String`)*: The event name to attach the observable sequence.
 3. `[selector]` *(`Function`)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
 
