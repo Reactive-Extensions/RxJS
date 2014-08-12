@@ -31,7 +31,7 @@ NuGet Dependencies:
 - [`while | whileDo`](../api/core/operators/while.md)
 
 ### `Observable Instance Methods`
-- [`doWhile`](/api/core/operators/dowhile.md`)
+- [`doWhile`](/api/core/operators/dowhile.md)
 - [`expand`](../api/core/operators/expand.md)
 - [`forkJoin`](../api/core/operators/forkjoinproto.md)
 - [`let | letBind`](../api/core/operators/let.md)

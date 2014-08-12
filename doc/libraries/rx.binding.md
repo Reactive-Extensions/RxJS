@@ -5,32 +5,35 @@ The Reactive Extensions for JavaScript has a notion of hot and cold observables.
 ## Details ##
 
 Files:
-- `rx.binding.js`
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.binding.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 NPM Packages:
-- `rx`
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- `RxJS-Binding`
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 File Dependencies:
-- `rx.js` | `rx.compat.js`
-
-NPM Dependencies:
-- None
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 
 NuGet Dependencies:
-- RxJS-Main
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
 
 ## Included Observable Operators ##
 
 ### `Observable Instance Methods`
-- [`connect`](../api/core/observable.md#connectableobservableprototypeconnect)
-- [`publish`](../api/core/observable.md#rxobservableprototypepublishselector)
-- [`publishLast`](../api/core/observable.md#rxobservableprototypepublishlatestselector)
-- [`publishValue`](../api/core/observable.md#rxobservableprototypepublishvalueselector)
-- [`refCount`](../api/core/observable.md#connectableobservableprototyperefcount)
-- [`replay`](../api/core/observable.md#rxobservableprototypereplayselector-buffersize-window-scheduler)
+- [`connect`](../api/core/operators/connect.md)
+- [`publish`](../api/core/operators/publish.md)
+- [`publishLast`](../api/core/operators/publishlast.md)
+- [`publishValue`](../api/core/operators/publishvalue.md)
+- [`refCount`](../api/core/operators/reccount.md)
+- [`replay`](../api/core/operators/replay.md)
+- [`share`](../api/core/operators/share.md)
+- [`shareLast`](../api/core/operators/sharelast.md)
+- [`shareReplay`](../api/core/operators/sharereplay.md)
+- [`shareValue`](../api/core/operators/sharevalue.md)
 
 ## Included Classes ##
 

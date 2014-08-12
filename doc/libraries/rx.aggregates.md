@@ -5,50 +5,46 @@ The Reactive Extensions for JavaScript has a number of aggregation operators inc
 ## Details ##
 
 Files:
-- `rx.aggregates.js`
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.aggregates.js) 
 
 NPM Packages:
-- `rx`
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- `RxJS-Aggregates`
+- [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
 
 File Dependencies:
-- `rx.js` | `rx.compat.js` | `rx.lite.js` | `rx.lite.compat.js`
-
-NPM Dependencies:
-- None
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 NuGet Dependencies:
-- RxJS-Main
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/) | [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Main/)
 
 ## Included Observable Operators ##
 
 ### `Observable Instance Methods`
-- [`aggregate`](../api/core/observable.md#rxobservableprototypeaggregateseed-accumulator)
-- [`all`](../api/core/observable.md#rxobservableprototypeallpredicate-thisarg)
-- [`any`](../api/core/observable.md#rxobservableprototypeanypredicate-thisarg)
-- [`average`](../api/core/observable.md#rxobservableprototypeaverageselector)
-- [`contains`](../api/core/observable.md#rxobservableprototypecontainsvalue-comparer)
-- [`count`](../api/core/observable.md#rxobservableprototypecountpredicate)
-- [`elementAt`](../api/core/observable.md#rxobservableprototypeelementatindex)
-- [`elementAtOrDefault`](../api/core/observable.md#rxobservableprototypeelementatordefaultindex-defaultvalue)
-- [`every`](../api/core/observable.md#rxobservableprototypeeverypredicate-thisarg)
-- [`find`](../api/core/observable.md#rxobservableprototypefindpredicate-thisarg)
-- [`findIndex`](../api/core/observable.md#rxobservableprototypefindindexpredicate-thisarg)
-- [`first`](../api/core/observable.md#rxobservableprototypefirstpredicate-thisarg)
-- [`firstOrDefault`](../api/core/observable.md#rxobservableprototypefirstordefaultpredicate-defaultvalue-thisarg)
-- [`isEmpty`](../api/core/observable.md#rxobservableprototypeisempty)
-- [`last`](../api/core/observable.md#rxobservableprototypelastpredicate-thisarg)
-- [`lastOrDefault`](../api/core/observable.md#rxobservableprototypelastordefaultpredicate-defaultvalue-thisarg)
-- [`let | letBind`](../api/core/observable.md#rxobservableprototypeletfunc)
-- [`max`](../api/core/observable.md#rxobservableprototypemaxcomparer)
-- [`maxBy`](../api/core/observable.md#rxobservableprototypemaxbykeyselector-comparer)
-- [`min`](../api/core/observable.md#rxobservableprototypemincomparer)
-- [`minBy`](../api/core/observable.md#rxobservableprototypeminbykeyselector-comparer)
-- [`reduce`](../api/core/observable.md#rxobservableprototypereduceaccumulator-seed)
-- [`sequenceEqual`](../api/core/observable.md#rxobservableprototypesequenceequalsecond-comparer)
-- [`single`](../api/core/observable.md#rxobservableprototypesinglepredicate-thisarg)
-- [`singleOrDefault`](../api/core/observable.md#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg)
-- [`some`](../api/core/observable.md#rxobservableprototypesomepredicate-thisarg)
-- [`sum`](../api/core/observable.md#rxobservableprototypesumkeyselector-thisarg)
+- [`aggregate`](../api/core/operators/aggregate.md)
+- [`all`](../api/core/operators/all.md)
+- [`any`](../api/core/operators/any.md)
+- [`average`](../api/core/operators/average.md)
+- [`contains`](../api/core/operators/contains.md)
+- [`count`](../api/core/operators/count.md)
+- [`elementAt`](../api/core/operators/elementat.md)
+- [`elementAtOrDefault`](../api/core/operators/elementatordefault.md)
+- [`every`](../api/core/operators/all.md)
+- [`find`](../api/core/operators/find.md)
+- [`findIndex`](../api/core/operators/findindex.md)
+- [`first`](../api/core/operators/first.md)
+- [`firstOrDefault`](../api/core/operators/firstordefault.md)
+- [`isEmpty`](../api/core/operators/isempty.md)
+- [`last`](../api/core/operators/last.md)
+- [`lastOrDefault`](../api/core/operators/lastordefault.md)
+- [`max`](../api/core/operators/max.md)
+- [`maxBy`](../api/core/operators/maxby.md)
+- [`min`](../api/core/operators/min.md)
+- [`minBy`](../api/core/operators/minby.md)
+- [`reduce`](../api/core/operators/reduce.md)
+- [`sequenceEqual`](../api/core/operators/sequenceequal.md)
+- [`single`](../api/core/operators/single.md)
+- [`singleOrDefault`](../api/core/operators/singleordefault.md)
+- [`some`](../api/core/operators/any.md)
+- [`sum`](../api/core/operators/sum.md)

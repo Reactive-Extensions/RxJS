@@ -5,29 +5,28 @@ The Reactive Extensions for JavaScript provides support backpressure for situati
 ## Details ##
 
 Files:
-- `rx.backpressure.js`
+- [`rx.backpressure.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.backpressure.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 NPM Packages:
-- `rx`
+- [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
-- `RxJS-BackPressure`
+- [`RxJS-BackPressure`](http://www.nuget.org/packages/RxJS-Backpressure/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 File Dependencies:
-- `rx.js` | `rx.compat.js`
-- `rx.binding.js`
-
-NPM Dependencies:
-- None
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.binding.js)
 
 NuGet Dependencies:
-- RxJS-Main
-- RxJS-Binding
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Binding`](http://www.nuget.org/packages/RxJS-Binding/)
 
 ## Included Observable Operators ##
 
 ### `Observable Instance Methods`
-- [`controlled`](../api/core/observable.md#rxobservableprototypecontrolledenablequeue)
-- [`pausable`](../api/core/observable.md#rxobservableprototypepausablepauser)
-- [`pausableBuffered`](../api/core/observable.md#rxobservableprototypepausablebufferedpauser)
+- [`controlled`](../api/core/operators/controlled.md)
+- [`pausable`](../api/core/operators/pausable.md)
+- [`pausableBuffered`](../api/core/operators/pausablebuffered.md)
 
