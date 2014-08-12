@@ -1,5 +1,5 @@
-### `Rx.Observable.prototype.publishLatest([selector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlatest.js "View in source") 
+### `Rx.Observable.prototype.publishLast([selector])`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlast.js "View in source") 
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
 
@@ -21,7 +21,7 @@ var source = interval
         console.log('Side effect');
     });
  
-var published = source.publishLatest();
+var published = source.publishLast();
  
 published.subscribe(createObserver('SourceA'));
 published.subscribe(createObserver('SourceB'));
@@ -52,7 +52,7 @@ function createObserver(tag) {
 ### Location
 
 File:
-- [`/src/core/linq/observable/publishlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlatest.js)
+- [`/src/core/linq/observable/publishlast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlast.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -74,4 +74,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/publishlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publishlatest.js)
+- [`/tests/observable/publishlast.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/publishlast.js)
