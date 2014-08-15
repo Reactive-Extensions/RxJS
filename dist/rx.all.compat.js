@@ -5134,13 +5134,6 @@
   }
 
   function createListener (element, name, handler) {
-    // Node.js specific
-    if (element.addListener) {
-      element.addListener(name, handler);
-      return disposableCreate(function () {
-        element.removeListener(name, handler);
-      });
-    }
     // Standards compliant
     if (element.addEventListener) {
       element.addEventListener(name, handler, false);
@@ -5210,6 +5203,14 @@
    * @returns {Observable} An observable sequence of events from the specified element and the specified event.
    */
   Observable.fromEvent = function (element, eventName, selector) {
+    // Node.js specific
+    if (element.addListener) {
+      return fromEventPattern(
+        function (h) { element.addListener(eventName, h); },
+        function (h) { element.removeListener(eventName, h); },
+        selector);
+    } 
+
     // Use only if non-native events are allowed
     if (!Rx.config.useNativeEvents) {
       if (marionette) {
