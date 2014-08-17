@@ -35,7 +35,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/switchlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switchlatest.js)
+- [`/src/core/linq/observable/switch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switch.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -56,6 +56,6 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/switchlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/switchlatest.js)
+- [`/tests/observable/switch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/switch.js)
 
 * * *
