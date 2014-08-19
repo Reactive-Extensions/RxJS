@@ -38,6 +38,6 @@
     "dist/rx.time.js",
     "dist/rx.time.min.js",   
     "dist/rx.virtualtime.js",
-    "dist/rx.virtualtime.min.js",                                                
+    "dist/rx.virtualtime.min.js"                                                
   ]
 }
