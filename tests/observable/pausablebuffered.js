@@ -147,3 +147,40 @@ test('paused_error', function () {
     onError(230, err)
   );  
 });
+
+test('paused_skip_initial_elements', function(){
+  var subscription;
+
+  var scheduler = new TestScheduler();
+
+  var controller = new Subject();
+
+  var results = scheduler.createObserver();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(230, 2),
+    onNext(270, 3),
+    onCompleted(400)
+  );
+
+  scheduler.scheduleAbsolute(200, function () {
+    subscription = xs.pausableBuffered(controller).subscribe(results);
+    controller.onNext(false);
+  });
+
+  scheduler.scheduleAbsolute(280, function () {
+    controller.onNext(true);
+  });
+
+  scheduler.scheduleAbsolute(1000, function () {
+      subscription.dispose();
+  });
+
+  scheduler.start();
+  results.messages.assertEqual(
+    onNext(280, 2),
+    onNext(280, 3),
+    onCompleted(400)
+  );
+});
