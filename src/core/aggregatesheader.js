@@ -5,6 +5,7 @@
     AnonymousObservable = Rx.AnonymousObservable,
     isEqual = Rx.internals.isEqual,
     helpers = Rx.helpers,
+    not = helpers.not,
     defaultComparer = helpers.defaultComparer,
     identity = helpers.identity,
     defaultSubComparer = helpers.defaultSubComparer,

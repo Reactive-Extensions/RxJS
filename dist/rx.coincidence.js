@@ -298,247 +298,221 @@
     return Dictionary;
   }()); 
 
-    /**
-     *  Correlates the elements of two sequences based on overlapping durations.
-     *  
-     *  @param {Observable} right The right observable sequence to join elements for.
-     *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
-     *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
-     *  @param {Function} resultSelector A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters passed to the function correspond with the elements from the left and right source sequences for which overlap occurs.
-     *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
-     */    
-    observableProto.join = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
-        var left = this;
-        return new AnonymousObservable(function (observer) {
-            var group = new CompositeDisposable(),
-            leftDone = false,
-            leftId = 0,
-            leftMap = new Dictionary(),
-            rightDone = false,
-            rightId = 0,
-            rightMap = new Dictionary();
-            group.add(left.subscribe(function (value) {
-                var duration,
-                expire,
-                id = leftId++,
-                md = new SingleAssignmentDisposable(),
-                result,
-                values;
-                leftMap.add(id, value);
-                group.add(md);
-                expire = function () {
-                    if (leftMap.remove(id) && leftMap.count() === 0 && leftDone) {
-                        observer.onCompleted();
-                    }
-                    return group.remove(md);
-                };
-                try {
-                    duration = leftDurationSelector(value);
-                } catch (e) {
-                    observer.onError(e);
-                    return;
-                }
-                md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
-                values = rightMap.getValues();
-                for (var i = 0; i < values.length; i++) {
-                    try {
-                        result = resultSelector(value, values[i]);
-                    } catch (exception) {
-                        observer.onError(exception);
-                        return;
-                    }
-                    observer.onNext(result);
-                }
-            }, observer.onError.bind(observer), function () {
-                leftDone = true;
-                if (rightDone || leftMap.count() === 0) {
-                    observer.onCompleted();
-                }
-            }));
-            group.add(right.subscribe(function (value) {
-                var duration,
-                expire,
-                id = rightId++,
-                md = new SingleAssignmentDisposable(),
-                result,
-                values;
-                rightMap.add(id, value);
-                group.add(md);
-                expire = function () {
-                    if (rightMap.remove(id) && rightMap.count() === 0 && rightDone) {
-                        observer.onCompleted();
-                    }
-                    return group.remove(md);
-                };
-                try {
-                    duration = rightDurationSelector(value);
-                } catch (exception) {
-                    observer.onError(exception);
-                    return;
-                }
-                md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
-                values = leftMap.getValues();
-                for (var i = 0; i < values.length; i++) {
-                    try {
-                        result = resultSelector(values[i], value);
-                    } catch (exception) {
-                        observer.onError(exception);
-                        return;
-                    }
-                    observer.onNext(result);
-                }
-            }, observer.onError.bind(observer), function () {
-                rightDone = true;
-                if (leftDone || rightMap.count() === 0) {
-                    observer.onCompleted();
-                }
-            }));
-            return group;
-        });
-    };
+  /**
+   *  Correlates the elements of two sequences based on overlapping durations.
+   *  
+   *  @param {Observable} right The right observable sequence to join elements for.
+   *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+   *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+   *  @param {Function} resultSelector A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters passed to the function correspond with the elements from the left and right source sequences for which overlap occurs.
+   *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+   */    
+  observableProto.join = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
+    var left = this;
+    return new AnonymousObservable(function (observer) {
+      var group = new CompositeDisposable();
+      var leftDone = false, rightDone = false;
+      var leftId = 0, rightId = 0;
+      var leftMap = new Dictionary(), rightMap = new Dictionary();
 
-    /**
-     *  Correlates the elements of two sequences based on overlapping durations, and groups the results.
-     *  
-     *  @param {Observable} right The right observable sequence to join elements for.
-     *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
-     *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
-     *  @param {Function} resultSelector A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. The first parameter passed to the function is an element of the left sequence. The second parameter passed to the function is an observable sequence with elements from the right sequence that overlap with the left sequence's element.
-     *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
-     */    
-    observableProto.groupJoin = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
-        var left = this;
-        return new AnonymousObservable(function (observer) {
-            var nothing = function () {};
-            var group = new CompositeDisposable();
-            var r = new RefCountDisposable(group);
-            var leftMap = new Dictionary();
-            var rightMap = new Dictionary();
-            var leftID = 0;
-            var rightID = 0;
+      group.add(left.subscribe(
+        function (value) {
+          var id = leftId++;
+          var md = new SingleAssignmentDisposable();
 
-            group.add(left.subscribe(
-                function (value) {
-                    var s = new Subject();
-                    var id = leftID++;
-                    leftMap.add(id, s);
-                    var i, len, leftValues, rightValues;
+          leftMap.add(id, value);
+          group.add(md);
+          
+          var expire = function () {
+            leftMap.remove(id) && leftMap.count() === 0 && leftDone && observer.onCompleted();
+            group.remove(md);
+          };
+          
+          var duration;
+          try {
+            duration = leftDurationSelector(value);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
 
-                    var result;
-                    try {
-                        result = resultSelector(value, addRef(s, r));
-                    } catch (e) {
-                        leftValues = leftMap.getValues();
-                        for (i = 0, len = leftValues.length; i < len; i++) {
-                            leftValues[i].onError(e);
-                        }
-                        observer.onError(e);
-                        return;
-                    }
-                    observer.onNext(result);
+          md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), expire));
 
-                    rightValues = rightMap.getValues();
-                    for (i = 0, len = rightValues.length; i < len; i++) {
-                        s.onNext(rightValues[i]);
-                    }
+          rightMap.getValues().forEach(function (v) {
+            var result;
+            try {
+              result = resultSelector(value, v);
+            } catch (exn) {
+              observer.onError(exn);
+              return;
+            }
 
-                    var md = new SingleAssignmentDisposable();
-                    group.add(md);
+            observer.onNext(result);
+          });
+        }, 
+        observer.onError.bind(observer), 
+        function () {
+          leftDone = true;
+          (rightDone || leftMap.count() === 0) && observer.onCompleted();
+        })
+      );
 
-                    var expire = function () {
-                        if (leftMap.remove(id)) {
-                            s.onCompleted();
-                        }
-                            
-                        group.remove(md);
-                    };
+      group.add(right.subscribe(
+        function (value) {
+          var id = rightId++;
+          var md = new SingleAssignmentDisposable();
 
-                    var duration;
-                    try {
-                        duration = leftDurationSelector(value);
-                    } catch (e) {
-                        leftValues = leftMap.getValues();
-                        for (i = 0, len = leftMap.length; i < len; i++) {
-                            leftValues[i].onError(e);
-                        }
-                        observer.onError(e);
-                        return;
-                    }
+          rightMap.add(id, value);
+          group.add(md);
 
-                    md.setDisposable(duration.take(1).subscribe(
-                        nothing,
-                        function (e) {
-                            leftValues = leftMap.getValues();
-                            for (i = 0, len = leftValues.length; i < len; i++) {
-                                leftValues[i].onError(e);
-                            }
-                            observer.onError(e);
-                        },
-                        expire)
-                    );
-                },
-                function (e) {
-                    var leftValues = leftMap.getValues();
-                    for (var i = 0, len = leftValues.length; i < len; i++) {
-                        leftValues[i].onError(e);
-                    }
-                    observer.onError(e);
-                },
-                observer.onCompleted.bind(observer)));
+          var expire = function () {
+            rightMap.remove(id) && rightMap.count() === 0 && rightDone && observer.onCompleted();
+            group.remove(md);
+          };
 
-            group.add(right.subscribe(
-                function (value) {
-                    var leftValues, i, len;
-                    var id = rightID++;
-                    rightMap.add(id, value);
+          var duration;
+          try {
+            duration = rightDurationSelector(value);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
 
-                    var md = new SingleAssignmentDisposable();
-                    group.add(md);
+          md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), expire));
 
-                    var expire = function () {
-                        rightMap.remove(id);
-                        group.remove(md);
-                    };
+          leftMap.getValues().forEach(function (v) {
+            var result;
+            try {
+              result = resultSelector(v, value);
+            } catch(exn) {
+              observer.onError(exn);
+              return;
+            }
 
-                    var duration;
-                    try {
-                        duration = rightDurationSelector(value);
-                    } catch (e) {
-                        leftValues = leftMap.getValues();
-                        for (i = 0, len = leftMap.length; i < len; i++) {
-                            leftValues[i].onError(e);
-                        }
-                        observer.onError(e);
-                        return;
-                    }
-                    md.setDisposable(duration.take(1).subscribe(
-                        nothing,
-                        function (e) {
-                            leftValues = leftMap.getValues();
-                            for (i = 0, len = leftMap.length; i < len; i++) {
-                                leftValues[i].onError(e);
-                            }
-                            observer.onError(e);
-                        },
-                        expire)
-                    );
+            observer.onNext(result);
+          });
+        }, 
+        observer.onError.bind(observer), 
+        function () {
+          rightDone = true;
+          (leftDone || rightMap.count() === 0) && observer.onCompleted();
+        })
+      );
+      return group;
+    });
+  };
 
-                    leftValues = leftMap.getValues();
-                    for (i = 0, len = leftValues.length; i < len; i++) {
-                        leftValues[i].onNext(value);
-                    }
-                },
-                function (e) {
-                    var leftValues = leftMap.getValues();
-                    for (var i = 0, len = leftValues.length; i < len; i++) {
-                        leftValues[i].onError(e);
-                    }
-                    observer.onError(e);
-                }));
+  /**
+   *  Correlates the elements of two sequences based on overlapping durations, and groups the results.
+   *  
+   *  @param {Observable} right The right observable sequence to join elements for.
+   *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+   *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+   *  @param {Function} resultSelector A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. The first parameter passed to the function is an element of the left sequence. The second parameter passed to the function is an observable sequence with elements from the right sequence that overlap with the left sequence's element.
+   *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+   */    
+  observableProto.groupJoin = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
+    var left = this;
+    return new AnonymousObservable(function (observer) {
+      var group = new CompositeDisposable();
+      var r = new RefCountDisposable(group);
+      var leftMap = new Dictionary(), rightMap = new Dictionary();
+      var leftId = 0, rightId = 0;
 
-            return r;
-        });
-    };
+      function handleError(e) { return function (v) { v.onError(e); }; };
+
+      group.add(left.subscribe(
+        function (value) {
+          var s = new Subject();
+          var id = leftId++;
+          leftMap.add(id, s);
+
+          var result;
+          try {
+            result = resultSelector(value, addRef(s, r));
+          } catch (e) {
+            leftMap.getValues().forEach(handleError(e));
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
+
+          rightMap.getValues().forEach(function (v) { s.onNext(v); });
+
+          var md = new SingleAssignmentDisposable();
+          group.add(md);
+
+          var expire = function () {
+            leftMap.remove(id) && s.onCompleted();
+            group.remove(md);
+          };
+
+          var duration;
+          try {
+            duration = leftDurationSelector(value);
+          } catch (e) {
+            leftMap.getValues().forEach(handleError(e));
+            observer.onError(e);
+            return;
+          }
+
+          md.setDisposable(duration.take(1).subscribe(
+            noop,
+            function (e) {
+              leftMap.getValues().forEach(handleError(e));
+              observer.onError(e);
+            },
+            expire)
+          );
+        },
+        function (e) {
+          leftMap.getValues().forEach(handleError(e));
+          observer.onError(e);
+        },
+        observer.onCompleted.bind(observer))
+      );
+
+      group.add(right.subscribe(
+        function (value) {
+          var id = rightId++;
+          rightMap.add(id, value);
+
+          var md = new SingleAssignmentDisposable();
+          group.add(md);
+
+          var expire = function () {
+            rightMap.remove(id);
+            group.remove(md);
+          };
+
+          var duration;
+          try {
+            duration = rightDurationSelector(value);
+          } catch (e) {
+            leftMap.getValues().forEach(handleError(e));
+            observer.onError(e);
+            return;
+          }
+          md.setDisposable(duration.take(1).subscribe(
+            noop,
+            function (e) {
+              leftMap.getValues().forEach(handleError(e));
+              observer.onError(e);
+            },
+            expire)
+          );
+
+          leftMap.getValues().forEach(function (v) { v.onNext(value); });
+        },
+        function (e) {
+          leftMap.getValues().forEach(handleError(e));
+          observer.onError(e);
+        })
+      );
+
+      return r;
+    });
+  };
 
     /**
      *  Projects each element of an observable sequence into zero or more buffers.

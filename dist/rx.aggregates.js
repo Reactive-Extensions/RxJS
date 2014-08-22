@@ -40,6 +40,7 @@
     AnonymousObservable = Rx.AnonymousObservable,
     isEqual = Rx.internals.isEqual,
     helpers = Rx.helpers,
+    not = helpers.not,
     defaultComparer = helpers.defaultComparer,
     identity = helpers.identity,
     defaultSubComparer = helpers.defaultSubComparer,
@@ -176,15 +177,13 @@
             });
     };
 
-    /**
-     * Determines whether an observable sequence is empty.
-     *
-     * @memberOf Observable#
-     * @returns {Observable} An observable sequence containing a single element determining whether the source sequence is empty.
-     */
-    observableProto.isEmpty = function () {
-        return this.any().select(function (b) { return !b; });
-    };
+  /**
+   * Determines whether an observable sequence is empty.
+   * @returns {Observable} An observable sequence containing a single element determining whether the source sequence is empty.
+   */
+  observableProto.isEmpty = function () {
+    return this.any().map(not);
+  };
 
     /**
      * Determines whether all elements of an observable sequence satisfy a condition.

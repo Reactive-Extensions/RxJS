@@ -395,123 +395,156 @@
         return a;
     }
 
-    // Utilities
-    if (!Function.prototype.bind) {
-        Function.prototype.bind = function (that) {
-            var target = this,
-                args = slice.call(arguments, 1);
-            var bound = function () {
-                if (this instanceof bound) {
-                    function F() { }
-                    F.prototype = target.prototype;
-                    var self = new F();
-                    var result = target.apply(self, args.concat(slice.call(arguments)));
-                    if (Object(result) === result) {
-                        return result;
-                    }
-                    return self;
-                } else {
-                    return target.apply(that, args.concat(slice.call(arguments)));
-                }
-            };
-
-            return bound;
-        };
-    }
-
-    var boxedString = Object("a"),
-        splitString = boxedString[0] != "a" || !(0 in boxedString);
-    if (!Array.prototype.every) {
-        Array.prototype.every = function every(fun /*, thisp */) {
-            var object = Object(this),
-                self = splitString && {}.toString.call(this) == stringClass ?
-                    this.split("") :
-                    object,
-                length = self.length >>> 0,
-                thisp = arguments[1];
-
-            if ({}.toString.call(fun) != funcClass) {
-                throw new TypeError(fun + " is not a function");
-            }
-
-            for (var i = 0; i < length; i++) {
-                if (i in self && !fun.call(thisp, self[i], i, object)) {
-                    return false;
-                }
-            }
-            return true;
-        };
-    }
-
-    if (!Array.prototype.map) {
-        Array.prototype.map = function map(fun /*, thisp*/) {
-            var object = Object(this),
-                self = splitString && {}.toString.call(this) == stringClass ?
-                    this.split("") :
-                    object,
-                length = self.length >>> 0,
-                result = Array(length),
-                thisp = arguments[1];
-
-            if ({}.toString.call(fun) != funcClass) {
-                throw new TypeError(fun + " is not a function");
-            }
-
-            for (var i = 0; i < length; i++) {
-                if (i in self)
-                    result[i] = fun.call(thisp, self[i], i, object);
-            }
+  // Utilities
+  if (!Function.prototype.bind) {
+    Function.prototype.bind = function (that) {
+      var target = this,
+        args = slice.call(arguments, 1);
+      var bound = function () {
+        if (this instanceof bound) {
+          function F() { }
+          F.prototype = target.prototype;
+          var self = new F();
+          var result = target.apply(self, args.concat(slice.call(arguments)));
+          if (Object(result) === result) {
             return result;
-        };
+          }
+          return self;
+        } else {
+          return target.apply(that, args.concat(slice.call(arguments)));
+        }
+      };
+
+      return bound;
+    };
+  }
+
+if (!Array.prototype.forEach) {
+
+  Array.prototype.forEach = function (callback, thisArg) {
+    var T, k;
+
+    if (this == null) {
+      throw new TypeError(" this is null or not defined");
     }
 
-    if (!Array.prototype.filter) {
-        Array.prototype.filter = function (predicate) {
-            var results = [], item, t = new Object(this);
-            for (var i = 0, len = t.length >>> 0; i < len; i++) {
-                item = t[i];
-                if (i in t && predicate.call(arguments[1], item, i, t)) {
-                    results.push(item);
-                }
-            }
-            return results;
-        };
+    var O = Object(this);
+    var len = O.length >>> 0;
+
+    if (typeof callback !== "function") {
+      throw new TypeError(callback + " is not a function");
     }
 
-    if (!Array.isArray) {
-        Array.isArray = function (arg) {
-            return Object.prototype.toString.call(arg) == arrayClass;
-        };
+    if (arguments.length > 1) {
+      T = thisArg;
     }
 
-    if (!Array.prototype.indexOf) {
-        Array.prototype.indexOf = function indexOf(searchElement) {
-            var t = Object(this);
-            var len = t.length >>> 0;
-            if (len === 0) {
-                return -1;
-            }
-            var n = 0;
-            if (arguments.length > 1) {
-                n = Number(arguments[1]);
-                if (n !== n) {
-                    n = 0;
-                } else if (n !== 0 && n != Infinity && n !== -Infinity) {
-                    n = (n > 0 || -1) * Math.floor(Math.abs(n));
-                }
-            }
-            if (n >= len) {
-                return -1;
-            }
-            var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
-            for (; k < len; k++) {
-                if (k in t && t[k] === searchElement) {
-                    return k;
-                }
-            }
-            return -1;
-        };
+    k = 0;
+    while (k < len) {
+      var kValue;
+      if (k in O) {
+        kValue = O[k];
+        callback.call(T, kValue, k, O);
+      }
+      k++;
     }
+  };
+}
+
+  var boxedString = Object("a"),
+      splitString = boxedString[0] != "a" || !(0 in boxedString);
+  if (!Array.prototype.every) {
+    Array.prototype.every = function every(fun /*, thisp */) {
+      var object = Object(this),
+        self = splitString && {}.toString.call(this) == stringClass ?
+          this.split("") :
+          object,
+        length = self.length >>> 0,
+        thisp = arguments[1];
+
+      if ({}.toString.call(fun) != funcClass) {
+        throw new TypeError(fun + " is not a function");
+      }
+
+      for (var i = 0; i < length; i++) {
+        if (i in self && !fun.call(thisp, self[i], i, object)) {
+          return false;
+        }
+      }
+      return true;
+    };
+  }
+
+  if (!Array.prototype.map) {
+    Array.prototype.map = function map(fun /*, thisp*/) {
+      var object = Object(this),
+        self = splitString && {}.toString.call(this) == stringClass ?
+            this.split("") :
+            object,
+        length = self.length >>> 0,
+        result = Array(length),
+        thisp = arguments[1];
+
+      if ({}.toString.call(fun) != funcClass) {
+        throw new TypeError(fun + " is not a function");
+      }
+
+      for (var i = 0; i < length; i++) {
+        if (i in self) {
+          result[i] = fun.call(thisp, self[i], i, object);
+        }
+      }
+      return result;
+    };
+  }
+
+  if (!Array.prototype.filter) {
+    Array.prototype.filter = function (predicate) {
+      var results = [], item, t = new Object(this);
+      for (var i = 0, len = t.length >>> 0; i < len; i++) {
+        item = t[i];
+        if (i in t && predicate.call(arguments[1], item, i, t)) {
+          results.push(item);
+        }
+      }
+      return results;
+    };
+  }
+
+  if (!Array.isArray) {
+    Array.isArray = function (arg) {
+      return {}.toString.call(arg) == arrayClass;
+    };
+  }
+
+  if (!Array.prototype.indexOf) {
+    Array.prototype.indexOf = function indexOf(searchElement) {
+      var t = Object(this);
+      var len = t.length >>> 0;
+      if (len === 0) {
+        return -1;
+      }
+      var n = 0;
+      if (arguments.length > 1) {
+        n = Number(arguments[1]);
+        if (n !== n) {
+          n = 0;
+        } else if (n !== 0 && n != Infinity && n !== -Infinity) {
+          n = (n > 0 || -1) * Math.floor(Math.abs(n));
+        }
+      }
+      if (n >= len) {
+        return -1;
+      }
+      var k = n >= 0 ? n : Math.max(len - Math.abs(n), 0);
+      for (; k < len; k++) {
+        if (k in t && t[k] === searchElement) {
+          return k;
+        }
+      }
+      return -1;
+    };
+  }
 
     // Collections
     var IndexedItem = function (id, value) {
@@ -4416,15 +4449,13 @@
             });
     };
 
-    /**
-     * Determines whether an observable sequence is empty.
-     *
-     * @memberOf Observable#
-     * @returns {Observable} An observable sequence containing a single element determining whether the source sequence is empty.
-     */
-    observableProto.isEmpty = function () {
-        return this.any().select(function (b) { return !b; });
-    };
+  /**
+   * Determines whether an observable sequence is empty.
+   * @returns {Observable} An observable sequence containing a single element determining whether the source sequence is empty.
+   */
+  observableProto.isEmpty = function () {
+    return this.any().map(not);
+  };
 
     /**
      * Determines whether all elements of an observable sequence satisfy a condition.
@@ -5408,7 +5439,7 @@
     inherits(PausableBufferedObservable, _super);
 
     function subscribe(observer) {
-      var q = [], previous = true;
+      var q = [], previousShouldFire;
       
       var subscription =  
         combineLatestSource(
@@ -5419,19 +5450,22 @@
           })
           .subscribe(
             function (results) {
-              if (results.shouldFire && previous) {
-                observer.onNext(results.data);
-              }
-              if (results.shouldFire && !previous) {
-                while (q.length > 0) {
-                  observer.onNext(q.shift());
+              if (previousShouldFire !== undefined && results.shouldFire != previousShouldFire) {
+                // change in shouldFire
+                if (results.shouldFire) {
+                  while (q.length > 0) {
+                    observer.onNext(q.shift());
+                  }
                 }
-                previous = true;
-              } else if (!results.shouldFire && !previous) {
-                q.push(results.data);
-              } else if (!results.shouldFire && previous) {
-                previous = false;
+              } else {
+                // new data
+                if (results.shouldFire) {
+                  observer.onNext(results.data);
+                } else {
+                  q.push(results.data);
+                }
               }
+              previousShouldFire = results.shouldFire;
 
             }, 
             function (err) {
@@ -6377,247 +6411,221 @@
     return Dictionary;
   }()); 
 
-    /**
-     *  Correlates the elements of two sequences based on overlapping durations.
-     *  
-     *  @param {Observable} right The right observable sequence to join elements for.
-     *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
-     *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
-     *  @param {Function} resultSelector A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters passed to the function correspond with the elements from the left and right source sequences for which overlap occurs.
-     *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
-     */    
-    observableProto.join = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
-        var left = this;
-        return new AnonymousObservable(function (observer) {
-            var group = new CompositeDisposable(),
-            leftDone = false,
-            leftId = 0,
-            leftMap = new Dictionary(),
-            rightDone = false,
-            rightId = 0,
-            rightMap = new Dictionary();
-            group.add(left.subscribe(function (value) {
-                var duration,
-                expire,
-                id = leftId++,
-                md = new SingleAssignmentDisposable(),
-                result,
-                values;
-                leftMap.add(id, value);
-                group.add(md);
-                expire = function () {
-                    if (leftMap.remove(id) && leftMap.count() === 0 && leftDone) {
-                        observer.onCompleted();
-                    }
-                    return group.remove(md);
-                };
-                try {
-                    duration = leftDurationSelector(value);
-                } catch (e) {
-                    observer.onError(e);
-                    return;
-                }
-                md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
-                values = rightMap.getValues();
-                for (var i = 0; i < values.length; i++) {
-                    try {
-                        result = resultSelector(value, values[i]);
-                    } catch (exception) {
-                        observer.onError(exception);
-                        return;
-                    }
-                    observer.onNext(result);
-                }
-            }, observer.onError.bind(observer), function () {
-                leftDone = true;
-                if (rightDone || leftMap.count() === 0) {
-                    observer.onCompleted();
-                }
-            }));
-            group.add(right.subscribe(function (value) {
-                var duration,
-                expire,
-                id = rightId++,
-                md = new SingleAssignmentDisposable(),
-                result,
-                values;
-                rightMap.add(id, value);
-                group.add(md);
-                expire = function () {
-                    if (rightMap.remove(id) && rightMap.count() === 0 && rightDone) {
-                        observer.onCompleted();
-                    }
-                    return group.remove(md);
-                };
-                try {
-                    duration = rightDurationSelector(value);
-                } catch (exception) {
-                    observer.onError(exception);
-                    return;
-                }
-                md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), function () { expire(); }));
-                values = leftMap.getValues();
-                for (var i = 0; i < values.length; i++) {
-                    try {
-                        result = resultSelector(values[i], value);
-                    } catch (exception) {
-                        observer.onError(exception);
-                        return;
-                    }
-                    observer.onNext(result);
-                }
-            }, observer.onError.bind(observer), function () {
-                rightDone = true;
-                if (leftDone || rightMap.count() === 0) {
-                    observer.onCompleted();
-                }
-            }));
-            return group;
-        });
-    };
+  /**
+   *  Correlates the elements of two sequences based on overlapping durations.
+   *  
+   *  @param {Observable} right The right observable sequence to join elements for.
+   *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+   *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+   *  @param {Function} resultSelector A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters passed to the function correspond with the elements from the left and right source sequences for which overlap occurs.
+   *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+   */    
+  observableProto.join = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
+    var left = this;
+    return new AnonymousObservable(function (observer) {
+      var group = new CompositeDisposable();
+      var leftDone = false, rightDone = false;
+      var leftId = 0, rightId = 0;
+      var leftMap = new Dictionary(), rightMap = new Dictionary();
 
-    /**
-     *  Correlates the elements of two sequences based on overlapping durations, and groups the results.
-     *  
-     *  @param {Observable} right The right observable sequence to join elements for.
-     *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
-     *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
-     *  @param {Function} resultSelector A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. The first parameter passed to the function is an element of the left sequence. The second parameter passed to the function is an observable sequence with elements from the right sequence that overlap with the left sequence's element.
-     *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
-     */    
-    observableProto.groupJoin = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
-        var left = this;
-        return new AnonymousObservable(function (observer) {
-            var nothing = function () {};
-            var group = new CompositeDisposable();
-            var r = new RefCountDisposable(group);
-            var leftMap = new Dictionary();
-            var rightMap = new Dictionary();
-            var leftID = 0;
-            var rightID = 0;
+      group.add(left.subscribe(
+        function (value) {
+          var id = leftId++;
+          var md = new SingleAssignmentDisposable();
 
-            group.add(left.subscribe(
-                function (value) {
-                    var s = new Subject();
-                    var id = leftID++;
-                    leftMap.add(id, s);
-                    var i, len, leftValues, rightValues;
+          leftMap.add(id, value);
+          group.add(md);
+          
+          var expire = function () {
+            leftMap.remove(id) && leftMap.count() === 0 && leftDone && observer.onCompleted();
+            group.remove(md);
+          };
+          
+          var duration;
+          try {
+            duration = leftDurationSelector(value);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
 
-                    var result;
-                    try {
-                        result = resultSelector(value, addRef(s, r));
-                    } catch (e) {
-                        leftValues = leftMap.getValues();
-                        for (i = 0, len = leftValues.length; i < len; i++) {
-                            leftValues[i].onError(e);
-                        }
-                        observer.onError(e);
-                        return;
-                    }
-                    observer.onNext(result);
+          md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), expire));
 
-                    rightValues = rightMap.getValues();
-                    for (i = 0, len = rightValues.length; i < len; i++) {
-                        s.onNext(rightValues[i]);
-                    }
+          rightMap.getValues().forEach(function (v) {
+            var result;
+            try {
+              result = resultSelector(value, v);
+            } catch (exn) {
+              observer.onError(exn);
+              return;
+            }
 
-                    var md = new SingleAssignmentDisposable();
-                    group.add(md);
+            observer.onNext(result);
+          });
+        }, 
+        observer.onError.bind(observer), 
+        function () {
+          leftDone = true;
+          (rightDone || leftMap.count() === 0) && observer.onCompleted();
+        })
+      );
 
-                    var expire = function () {
-                        if (leftMap.remove(id)) {
-                            s.onCompleted();
-                        }
-                            
-                        group.remove(md);
-                    };
+      group.add(right.subscribe(
+        function (value) {
+          var id = rightId++;
+          var md = new SingleAssignmentDisposable();
 
-                    var duration;
-                    try {
-                        duration = leftDurationSelector(value);
-                    } catch (e) {
-                        leftValues = leftMap.getValues();
-                        for (i = 0, len = leftMap.length; i < len; i++) {
-                            leftValues[i].onError(e);
-                        }
-                        observer.onError(e);
-                        return;
-                    }
+          rightMap.add(id, value);
+          group.add(md);
 
-                    md.setDisposable(duration.take(1).subscribe(
-                        nothing,
-                        function (e) {
-                            leftValues = leftMap.getValues();
-                            for (i = 0, len = leftValues.length; i < len; i++) {
-                                leftValues[i].onError(e);
-                            }
-                            observer.onError(e);
-                        },
-                        expire)
-                    );
-                },
-                function (e) {
-                    var leftValues = leftMap.getValues();
-                    for (var i = 0, len = leftValues.length; i < len; i++) {
-                        leftValues[i].onError(e);
-                    }
-                    observer.onError(e);
-                },
-                observer.onCompleted.bind(observer)));
+          var expire = function () {
+            rightMap.remove(id) && rightMap.count() === 0 && rightDone && observer.onCompleted();
+            group.remove(md);
+          };
 
-            group.add(right.subscribe(
-                function (value) {
-                    var leftValues, i, len;
-                    var id = rightID++;
-                    rightMap.add(id, value);
+          var duration;
+          try {
+            duration = rightDurationSelector(value);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
 
-                    var md = new SingleAssignmentDisposable();
-                    group.add(md);
+          md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), expire));
 
-                    var expire = function () {
-                        rightMap.remove(id);
-                        group.remove(md);
-                    };
+          leftMap.getValues().forEach(function (v) {
+            var result;
+            try {
+              result = resultSelector(v, value);
+            } catch(exn) {
+              observer.onError(exn);
+              return;
+            }
 
-                    var duration;
-                    try {
-                        duration = rightDurationSelector(value);
-                    } catch (e) {
-                        leftValues = leftMap.getValues();
-                        for (i = 0, len = leftMap.length; i < len; i++) {
-                            leftValues[i].onError(e);
-                        }
-                        observer.onError(e);
-                        return;
-                    }
-                    md.setDisposable(duration.take(1).subscribe(
-                        nothing,
-                        function (e) {
-                            leftValues = leftMap.getValues();
-                            for (i = 0, len = leftMap.length; i < len; i++) {
-                                leftValues[i].onError(e);
-                            }
-                            observer.onError(e);
-                        },
-                        expire)
-                    );
+            observer.onNext(result);
+          });
+        }, 
+        observer.onError.bind(observer), 
+        function () {
+          rightDone = true;
+          (leftDone || rightMap.count() === 0) && observer.onCompleted();
+        })
+      );
+      return group;
+    });
+  };
 
-                    leftValues = leftMap.getValues();
-                    for (i = 0, len = leftValues.length; i < len; i++) {
-                        leftValues[i].onNext(value);
-                    }
-                },
-                function (e) {
-                    var leftValues = leftMap.getValues();
-                    for (var i = 0, len = leftValues.length; i < len; i++) {
-                        leftValues[i].onError(e);
-                    }
-                    observer.onError(e);
-                }));
+  /**
+   *  Correlates the elements of two sequences based on overlapping durations, and groups the results.
+   *  
+   *  @param {Observable} right The right observable sequence to join elements for.
+   *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
+   *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
+   *  @param {Function} resultSelector A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. The first parameter passed to the function is an element of the left sequence. The second parameter passed to the function is an observable sequence with elements from the right sequence that overlap with the left sequence's element.
+   *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
+   */    
+  observableProto.groupJoin = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
+    var left = this;
+    return new AnonymousObservable(function (observer) {
+      var group = new CompositeDisposable();
+      var r = new RefCountDisposable(group);
+      var leftMap = new Dictionary(), rightMap = new Dictionary();
+      var leftId = 0, rightId = 0;
 
-            return r;
-        });
-    };
+      function handleError(e) { return function (v) { v.onError(e); }; };
+
+      group.add(left.subscribe(
+        function (value) {
+          var s = new Subject();
+          var id = leftId++;
+          leftMap.add(id, s);
+
+          var result;
+          try {
+            result = resultSelector(value, addRef(s, r));
+          } catch (e) {
+            leftMap.getValues().forEach(handleError(e));
+            observer.onError(e);
+            return;
+          }
+          observer.onNext(result);
+
+          rightMap.getValues().forEach(function (v) { s.onNext(v); });
+
+          var md = new SingleAssignmentDisposable();
+          group.add(md);
+
+          var expire = function () {
+            leftMap.remove(id) && s.onCompleted();
+            group.remove(md);
+          };
+
+          var duration;
+          try {
+            duration = leftDurationSelector(value);
+          } catch (e) {
+            leftMap.getValues().forEach(handleError(e));
+            observer.onError(e);
+            return;
+          }
+
+          md.setDisposable(duration.take(1).subscribe(
+            noop,
+            function (e) {
+              leftMap.getValues().forEach(handleError(e));
+              observer.onError(e);
+            },
+            expire)
+          );
+        },
+        function (e) {
+          leftMap.getValues().forEach(handleError(e));
+          observer.onError(e);
+        },
+        observer.onCompleted.bind(observer))
+      );
+
+      group.add(right.subscribe(
+        function (value) {
+          var id = rightId++;
+          rightMap.add(id, value);
+
+          var md = new SingleAssignmentDisposable();
+          group.add(md);
+
+          var expire = function () {
+            rightMap.remove(id);
+            group.remove(md);
+          };
+
+          var duration;
+          try {
+            duration = rightDurationSelector(value);
+          } catch (e) {
+            leftMap.getValues().forEach(handleError(e));
+            observer.onError(e);
+            return;
+          }
+          md.setDisposable(duration.take(1).subscribe(
+            noop,
+            function (e) {
+              leftMap.getValues().forEach(handleError(e));
+              observer.onError(e);
+            },
+            expire)
+          );
+
+          leftMap.getValues().forEach(function (v) { v.onNext(value); });
+        },
+        function (e) {
+          leftMap.getValues().forEach(handleError(e));
+          observer.onError(e);
+        })
+      );
+
+      return r;
+    });
+  };
 
     /**
      *  Projects each element of an observable sequence into zero or more buffers.
