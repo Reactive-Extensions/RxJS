@@ -1,9 +1,8 @@
-    function observableTimerTimeSpan(dueTime, scheduler) {
-        var d = normalizeTime(dueTime);
-        return new AnonymousObservable(function (observer) {
-            return scheduler.scheduleWithRelative(d, function () {
-                observer.onNext(0);
-                observer.onCompleted();
-            });
-        });
-    }
+  function observableTimerTimeSpan(dueTime, scheduler) {
+    return new AnonymousObservable(function (observer) {
+      return scheduler.scheduleWithRelative(normalizeTime(dueTime), function () {
+        observer.onNext(0);
+        observer.onCompleted();
+      });
+    });
+  }

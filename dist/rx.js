@@ -858,44 +858,6 @@
     var schedulerProto = Scheduler.prototype;
 
     /**
-     * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.       
-     * @param {Function} handler Handler that's run if an exception is caught. The exception will be rethrown if the handler returns false.
-     * @returns {Scheduler} Wrapper around the original scheduler, enforcing exception handling.
-     */        
-    schedulerProto.catchException = schedulerProto['catch'] = function (handler) {
-      return new CatchScheduler(this, handler);
-    };
-    
-    /**
-     * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.       
-     * @param {Number} period Period for running the work periodically.
-     * @param {Function} action Action to be executed.
-     * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
-     */        
-    schedulerProto.schedulePeriodic = function (period, action) {
-      return this.schedulePeriodicWithState(null, period, action);
-    };
-
-    /**
-     * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.       
-     * @param {Mixed} state Initial state passed to the action upon the first iteration.
-     * @param {Number} period Period for running the work periodically.
-     * @param {Function} action Action to be executed, potentially updating the state.
-     * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
-     */
-    schedulerProto.schedulePeriodicWithState = function (state, period, action) {
-      var s = state;
-      
-      var id = setInterval(function () {
-        s = action(s);
-      }, period);
-
-      return disposableCreate(function () {
-        clearInterval(id);
-      });
-    };
-
-    /**
      * Schedules an action to be executed.        
      * @param {Function} action Action to execute.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -955,6 +917,73 @@
     schedulerProto.scheduleWithAbsoluteAndState = function (state, dueTime, action) {
       return this._scheduleAbsolute(state, dueTime, action);
     };
+
+    /** Gets the current time according to the local machine's system clock. */
+    Scheduler.now = defaultNow;
+
+    /**
+     * Normalizes the specified TimeSpan value to a positive value.
+     * @param {Number} timeSpan The time span value to normalize.
+     * @returns {Number} The specified TimeSpan value if it is zero or positive; otherwise, 0
+     */   
+    Scheduler.normalize = function (timeSpan) {
+      timeSpan < 0 && (timeSpan = 0);
+      return timeSpan;
+    };
+
+    return Scheduler;
+  }());
+
+  var normalizeTime = Scheduler.normalize;
+  
+  (function (schedulerProto) {
+    function invokeRecImmediate(scheduler, pair) {
+      var state = pair.first, action = pair.second, group = new CompositeDisposable(),
+      recursiveAction = function (state1) {
+        action(state1, function (state2) {
+          var isAdded = false, isDone = false,
+          d = scheduler.scheduleWithState(state2, function (scheduler1, state3) {
+            if (isAdded) {
+              group.remove(d);
+            } else {
+              isDone = true;
+            }
+            recursiveAction(state3);
+            return disposableEmpty;
+          });
+          if (!isDone) {
+            group.add(d);
+            isAdded = true;
+          }
+        });
+      };
+      recursiveAction(state);
+      return group;
+    }
+
+    function invokeRecDate(scheduler, pair, method) {
+      var state = pair.first, action = pair.second, group = new CompositeDisposable(),
+      recursiveAction = function (state1) {
+        action(state1, function (state2, dueTime1) {
+          var isAdded = false, isDone = false,
+          d = scheduler[method].call(scheduler, state2, dueTime1, function (scheduler1, state3) {
+            if (isAdded) {
+              group.remove(d);
+            } else {
+              isDone = true;
+            }
+            recursiveAction(state3);
+            return disposableEmpty;
+          });
+          if (!isDone) {
+            group.add(d);
+            isAdded = true;
+          }
+        });
+      };
+      recursiveAction(state);
+      return group;
+    }
 
     function scheduleInnerRecursive(action, self) {
       action(function(dt) { self(action, dt); });
@@ -1024,26 +1053,51 @@
       return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
         return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
       });
-    };
+    };  
+  }(Scheduler.prototype));
 
-    /** Gets the current time according to the local machine's system clock. */
-    Scheduler.now = defaultNow;
+  (function (schedulerProto) {
+    /**
+     * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.       
+     * @param {Number} period Period for running the work periodically.
+     * @param {Function} action Action to be executed.
+     * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
+     */        
+    Scheduler.prototype.schedulePeriodic = function (period, action) {
+      return this.schedulePeriodicWithState(null, period, action);
+    };
 
     /**
-     * Normalizes the specified TimeSpan value to a positive value.
-     * @param {Number} timeSpan The time span value to normalize.
-     * @returns {Number} The specified TimeSpan value if it is zero or positive; otherwise, 0
-     */   
-    Scheduler.normalize = function (timeSpan) {
-      timeSpan < 0 && (timeSpan = 0);
-      return timeSpan;
+     * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.       
+     * @param {Mixed} state Initial state passed to the action upon the first iteration.
+     * @param {Number} period Period for running the work periodically.
+     * @param {Function} action Action to be executed, potentially updating the state.
+     * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
+     */
+    Scheduler.prototype.schedulePeriodicWithState = function (state, period, action) {
+      var s = state;
+      
+      var id = setInterval(function () {
+        s = action(s);
+      }, period);
+
+      return disposableCreate(function () {
+        clearInterval(id);
+      });
     };
-
-    return Scheduler;
-  }());
-
-  var normalizeTime = Scheduler.normalize;
+  }(Scheduler.prototype));
   
+  (function (schedulerProto) {
+    /**
+     * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.       
+     * @param {Function} handler Handler that's run if an exception is caught. The exception will be rethrown if the handler returns false.
+     * @returns {Scheduler} Wrapper around the original scheduler, enforcing exception handling.
+     */        
+    schedulerProto.catchError = schedulerProto['catch'] = function (handler) {
+      return new CatchScheduler(this, handler);
+    };
+  }(Scheduler.prototype)); 
+
     var SchedulePeriodicRecursive = Rx.internals.SchedulePeriodicRecursive = (function () {
         function tick(command, recurse) {
             recurse(0, this._period);

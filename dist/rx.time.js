@@ -56,27 +56,23 @@
     observableFromPromise = Observable.fromPromise,
     notDefined = helpers.notDefined;
 
-    function observableTimerDate(dueTime, scheduler) {
-        return new AnonymousObservable(function (observer) {
-            return scheduler.scheduleWithAbsolute(dueTime, function () {
-                observer.onNext(0);
-                observer.onCompleted();
-            });
-        });
-    }
+  function observableTimerDate(dueTime, scheduler) {
+    return new AnonymousObservable(function (observer) {
+      return scheduler.scheduleWithAbsolute(dueTime, function () {
+        observer.onNext(0);
+        observer.onCompleted();
+      });
+    });
+  }
 
   function observableTimerDateAndPeriod(dueTime, period, scheduler) {
-    var p = normalizeTime(period);
     return new AnonymousObservable(function (observer) {
-      var count = 0, d = dueTime;
+      var count = 0, d = dueTime, p = normalizeTime(period);
       return scheduler.scheduleRecursiveWithAbsolute(d, function (self) {
-        var now;
         if (p > 0) {
-          now = scheduler.now();
+          var now = scheduler.now();
           d = d + p;
-          if (d <= now) {
-            d = now + p;
-          }
+          d <= now && (d = now + p);
         }
         observer.onNext(count++);
         self(d);
@@ -84,28 +80,26 @@
     });
   }
 
-    function observableTimerTimeSpan(dueTime, scheduler) {
-        var d = normalizeTime(dueTime);
-        return new AnonymousObservable(function (observer) {
-            return scheduler.scheduleWithRelative(d, function () {
-                observer.onNext(0);
-                observer.onCompleted();
-            });
-        });
-    }
+  function observableTimerTimeSpan(dueTime, scheduler) {
+    return new AnonymousObservable(function (observer) {
+      return scheduler.scheduleWithRelative(normalizeTime(dueTime), function () {
+        observer.onNext(0);
+        observer.onCompleted();
+      });
+    });
+  }
 
   function observableTimerTimeSpanAndPeriod(dueTime, period, scheduler) {
-    if (dueTime === period) {
-      return new AnonymousObservable(function (observer) {
+    return dueTime === period ?
+      new AnonymousObservable(function (observer) {
         return scheduler.schedulePeriodicWithState(0, period, function (count) {
           observer.onNext(count);
           return count + 1;
         });
+      }) :
+      observableDefer(function () {
+        return observableTimerDateAndPeriod(scheduler.now() + dueTime, period, scheduler);
       });
-    }
-    return observableDefer(function () {
-      return observableTimerDateAndPeriod(scheduler.now() + dueTime, period, scheduler);
-    });
   }
 
   /**

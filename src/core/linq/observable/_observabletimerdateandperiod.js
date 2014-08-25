@@ -1,15 +1,11 @@
   function observableTimerDateAndPeriod(dueTime, period, scheduler) {
-    var p = normalizeTime(period);
     return new AnonymousObservable(function (observer) {
-      var count = 0, d = dueTime;
+      var count = 0, d = dueTime, p = normalizeTime(period);
       return scheduler.scheduleRecursiveWithAbsolute(d, function (self) {
-        var now;
         if (p > 0) {
-          now = scheduler.now();
+          var now = scheduler.now();
           d = d + p;
-          if (d <= now) {
-            d = now + p;
-          }
+          d <= now && (d = now + p);
         }
         observer.onNext(count++);
         self(d);

@@ -121,13 +121,13 @@ test('Scheduler_ScheduleWithTimeRecursive', function () {
 });
 
 test('Catch_Builtin_Swallow_Shallow', function () {
-    var swallow = Scheduler.immediate.catchException(function () { return true; });
+    var swallow = Scheduler.immediate.catchError(function () { return true; });
     swallow.schedule(function () { throw new Error('Should be swallowed'); });
     ok(true);
 });
 
 test('Catch_Builtin_Swallow_Recursive', function () {
-    var swallow = Scheduler.immediate.catchException(function () { return true; });
+    var swallow = Scheduler.immediate.catchError(function () { return true; });
     swallow.scheduleWithState(42, function (self, state) {
         return self.schedule(function () { new Error('Should be swallowed'); });
     });
@@ -188,13 +188,13 @@ var MyExceptionScheduler = (function () {
 test('Catch_Custom_Unhandled', function () {
     var err;
     var scheduler = new MyExceptionScheduler(function (ex) { err = ex; });
-    scheduler.catchException(function () { return true; }).schedule(function () {
+    scheduler.catchError(function () { return true; }).schedule(function () {
         throw new Error('Should be caught');
     });
     ok(!err);
 
     var ex1 = 'error';
-    scheduler.catchException(function () { return ex1 instanceof Error; }).schedule(function () {
+    scheduler.catchError(function () { return ex1 instanceof Error; }).schedule(function () {
         throw ex1;
     });
     equal(err, ex1);
@@ -203,7 +203,7 @@ test('Catch_Custom_Unhandled', function () {
 test('Catch_Custom_Periodic_Caught', function () {
     var err;
     var scheduler = new MyExceptionScheduler(function (ex) { err = ex; });
-    var catcher = scheduler.catchException(function () { return true; });
+    var catcher = scheduler.catchError(function () { return true; });
     catcher.schedulePeriodicWithState(42, 0, function () {
         throw new Error('Should be caught');
     });
@@ -215,7 +215,7 @@ test('Catch_Custom_Periodic_Uncaught1', function () {
     var ex = new Error('Error1');
     var err;
     var scheduler = new MyExceptionScheduler(function (e) { err = e; });
-    var catcher = scheduler.catchException(function (e) { return e instanceof String; });
+    var catcher = scheduler.catchError(function (e) { return e instanceof String; });
     catcher.schedulePeriodicWithState(42, 0, function () {
         throw ex;
     });
