@@ -1,76 +1,94 @@
-# `Rx.HistoricalScheduler` class #
+### `Rx.HistoricalScheduler` class
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/historicalscheduler.js "View in source") 
 
 Provides a virtual time scheduler that uses a `Date` for absolute time and time spans for relative time.  This inherits from the `Rx.VirtualTimeScheduler` class.
 
 ## Usage ##
 
-The following shows an example of using the `Rx.HistoricalScheduler`.  We'll add a `run` method which uses the `Rx.Scheduler.timeout` to send the data along.
+The following shows an example of using the `Rx.HistoricalScheduler`.  This shows creating a minute's worth of data from January 1st, 1970.
 
 ```js
-var scheduler = new Rx.HistoricalScheduler();
+// Initial data
+var initialDate = 0;
+var scheduler = new Rx.HistoricalScheduler(new Date(initialDate));
 
-/* Run through some old data over time with simulated time */
-scheduler.run = function () {
+// Yield unto this subject
+var s = new Rx.Subject();
 
-    var day = new Date(0), 
-        parent = this;
+// Some random data
+function getData(time) {
+  return Math.floor(Math.random() * (time + 1));
+}
 
-    Rx.Scheduler.timeout.scheduleRecursiveWithRelative(
-        1,
-        function (self) {
-            while (true) {
-                var next = parent.getNext();
-                if (next == null)  {
-                    return;
-                }
+// Enqueue 1 minute's worth of data
+while (initialDate <= 60000) {
 
-                if (day !== next.dueTime) {
-                    day = next.dueTime;
-                    self(1);
-                    return;
-                }
-                else {
-                    next.invoke();
-                }
-            }
-        }
-    );      
-};
+  (function (i) {
 
-// Get stock quotes from somewhere
-var quotes = getQuotes();
-
-var subject = new Rx.Subject();
-
-quotes.forEach(function (quote) {
-    scheduler.scheduleAbsolute(quote.date, function () {
-        subject.onNext(quote);
+    scheduler.scheduleWithAbsolute(i, function () {
+      s.onNext({ value: getData(i), date: new Date(i) });
     });
+
+  }(initialDate));
+
+  initialDate += 10000;
+}
+
+// Subscription set
+s.subscribe(function (x) { 
+  console.log('value: ', x.value); 
+  console.log('date: ', x.date.toGMTString()); 
 });
 
-// Subscribe to subject and listen
-subject.subscribe(function (quote) {
-    // Bind quote data to the server or do more analysis
-});
+// Run it
+scheduler.start();
 
-// Start pumping data
-scheduler.run();
+// => value: 0 
+// => date: Thu, 1 Jan 1970 00:00:00 UTC 
+// => value: 2013 
+// => date: Thu, 1 Jan 1970 00:00:10 UTC 
+// => value: 5896 
+// => date: Thu, 1 Jan 1970 00:00:20 UTC 
+// => value: 5415 
+// => date: Thu, 1 Jan 1970 00:00:30 UTC 
+// => value: 13411 
+// => date: Thu, 1 Jan 1970 00:00:40 UTC 
+// => value: 15518 
+// => date: Thu, 1 Jan 1970 00:00:50 UTC 
+// => value: 51076 
+// => date: Thu, 1 Jan 1970 00:01:00 UTC 
 ```
 
 ### Location
 
-- rx.virtualtime.js
+File:
+- [`/src/core/concurrency/historicalscheduler.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/historicalscheduler.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
+- [`rx.virutaltime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.virutaltime.js)
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
+- [`RxJS-VirtualTime`](http://www.nuget.org/packages/RxJS-VirtualTime/)
+
+Unit Tests:
+- [`/tests/concurrency/historicalscheduler.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/historicalscheduler.js)
 
 ## `HistoricalScheduler Constructor` ##
 - [`constructor`](#rxhistoricalschedulerinitialclock-comparer)
 
 ## Inherited Classes ##
-- [`Rx.HistoricalScheduler`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/virtualtimescheduler.md)
+- [`Rx.VirtualScheduler`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/virtualtimescheduler.md)
 
 ## _HistoricalScheduler Constructor_ ##
 
-### <a id="rxhistoricalschedulerinitialclock-comparer"></a>`Rx.HistoricalScheduler([initialClock], [comparer])`
-<a href="#rxhistoricalschedulerinitialclock-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/historicalscheduler.js#L12-L16 "View in source") 
+### `Rx.HistoricalScheduler([initialClock], [comparer])`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/historicalscheduler.js "View in source") 
 
 Creates a new historical scheduler with the specified initial clock value.
 
@@ -81,19 +99,13 @@ Creates a new historical scheduler with the specified initial clock value.
 #### Example
 ```js
 function comparer (x, y) {
-    if (x > y) { return 1; }
-    if (x < y) { return -1; }
-    return 0;
+  if (x > y) { return 1; }
+  if (x < y) { return -1; }
+  return 0;
 }
 
 var scheduler = new Rx.HistoricalScheduler(
-    new Date(0),  /* initial clock of 0 */
-    comparer      /* comparer for determining order */
+  new Date(0),  /* initial clock of 0 */
+  comparer      /* comparer for determining order */
 );  
 ```
-
-### Location
-
-- rx.virtualtime.js
-
-* * *
