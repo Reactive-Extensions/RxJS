@@ -23,8 +23,8 @@ There is an alias to this method `doAction` for browsers <IE9 and `tap` as well.
 /* Using a function */
 var source = Rx.Observable.range(0, 3)
     .do(
-        function (x) { console.log('Do Next: ' + x; ); },
-        function (err) { console.log('Do Error: ' + x; ); },
+        function (x) { console.log('Do Next:', x); },
+        function (err) { console.log('Do Error:', err); },
         function () { console.log('Do Completed'); }
     );
 
@@ -50,14 +50,13 @@ var subscription = source.subscribe(
 
 /* Using an observer */
 var observer = Rx.Observer.create(
-    function (x) { console.log('Do Next: ' + x; ); },
-    function (err) { console.log('Do Error: ' + x; ); },
+    function (x) { console.log('Do Next:', x); },
+    function (err) { console.log('Do Error:', err); },
     function () { console.log('Do Completed'); }
 );
 
 var source = Rx.Observable.range(0, 3)
     .do(observer);
-
 
 var subscription = source.subscribe(
     function (x) {
