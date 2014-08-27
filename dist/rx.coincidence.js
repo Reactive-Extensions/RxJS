@@ -709,19 +709,17 @@
       elementSelector || (elementSelector = identity);
       comparer || (comparer = defaultComparer);
       return new AnonymousObservable(function (observer) {
-        var map = new Dictionary(),
+        function handleError(e) { return function (item) { item.onError(e); }; }
+        var map = new Dictionary(0, comparer),
           groupDisposable = new CompositeDisposable(),
           refCountDisposable = new RefCountDisposable(groupDisposable);
 
         groupDisposable.add(source.subscribe(function (x) {
-          var key, i, len, items;
+          var key;
           try {
             key = keySelector(x);
           } catch (e) {
-            items = map.getValues();
-            for (i = 0, len = items.length; i < len; i++) {
-              items[i].onError(e);
-            }
+            map.getValues().forEach(handleError(e));
             observer.onError(e);
             return;
           }
@@ -740,10 +738,7 @@
             try {
               duration = durationSelector(durationGroup);
             } catch (e) {
-              items = map.getValues();
-              for (i = 0, len = items.length; i < len; i++) {
-                items[i].onError(e);
-              }
+              map.getValues().forEach(handleError(e));
               observer.onError(e);
               return;
             }
@@ -761,10 +756,7 @@
             md.setDisposable(duration.take(1).subscribe(
               noop, 
               function (exn) {
-                items = map.getValues();
-                for (i = 0, len = items.length; i < len; i++) {
-                  items[i].onError(exn);
-                }
+                map.getValues().forEach(handleError(exn));
                 observer.onError(exn);
               }, 
               expire)
@@ -775,26 +767,17 @@
           try {
             element = elementSelector(x);
           } catch (e) {
-            items = map.getValues();
-            for (i = 0, len = items.length; i < len; i++) {
-              items[i].onError(e);
-            }
+            map.getValues().forEach(handleError(e));
             observer.onError(e);
             return;
           }
 
           writer.onNext(element);
       }, function (ex) {
-        var items = map.getValues();
-        for(var i = 0, len = items.length; i < len; i++) {
-          items[i].onError(ex);
-        }
+        map.getValues().forEach(handleError(ex));
         observer.onError(ex);
       }, function () {
-        var items = map.getValues();
-        for(var i = 0, len = items.length; i < len; i++) {
-          items[i].onCompleted();
-        }
+        map.getValues().forEach(function (item) { item.onCompleted(); });
         observer.onCompleted();
       }));
 
