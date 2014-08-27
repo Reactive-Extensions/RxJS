@@ -1,4 +1,4 @@
-// ES6-shim 0.14.0 (c) 2013-2014 Paul Miller (http://paulmillr.com)
+// ES6-shim 0.16.0 (c) 2013-2014 Paul Miller (http://paulmillr.com)
 // ES6-shim may be freely distributed under the MIT license.
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
@@ -566,12 +566,14 @@
     defineProperties(Array, {
       from: function(iterable) {
         var mapFn = arguments.length > 1 ? arguments[1] : undefined;
-        var thisArg = arguments.length > 2 ? arguments[2] : undefined;
 
         var list = ES.ToObject(iterable, 'bad iterable');
-        if (mapFn !== undefined && !ES.IsCallable(mapFn)) {
+        if (arguments.length > 1 && !ES.IsCallable(mapFn)) {
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
+
+        var hasThisArg = arguments.length > 2;
+        var thisArg = hasThisArg ? arguments[2] : undefined;
 
         var usingIterator = ES.IsIterable(list);
         // does the spec really mean that Arrays should use ArrayIterator?
@@ -594,7 +596,7 @@
             value = list[i];
           }
           if (mapFn) {
-            result[i] = thisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
+            result[i] = hasThisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
           } else {
             result[i] = value;
           }
@@ -701,10 +703,8 @@
         }
         var thisArg = arguments[1];
         for (var i = 0, value; i < length; i++) {
-          if (i in list) {
-            value = list[i];
-            if (predicate.call(thisArg, value, i, list)) return value;
-          }
+          value = list[i];
+          if (predicate.call(thisArg, value, i, list)) { return value; }
         }
         return undefined;
       },
@@ -717,9 +717,7 @@
         }
         var thisArg = arguments[1];
         for (var i = 0; i < length; i++) {
-          if (i in list) {
-            if (predicate.call(thisArg, list[i], i, list)) return i;
-          }
+          if (predicate.call(thisArg, list[i], i, list)) { return i; }
         }
         return -1;
       },
@@ -813,10 +811,7 @@
             throw new TypeError('target must be an object');
           }
           return Array.prototype.reduce.call(arguments, function(target, source) {
-            if (!ES.TypeIsObject(source)) {
-              throw new TypeError('source must be an object');
-            }
-            return Object.keys(source).reduce(function(target, key) {
+            return Object.keys(Object(source)).reduce(function(target, key) {
               target[key] = source[key];
               return target;
             }, target);

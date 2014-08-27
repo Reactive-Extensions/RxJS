@@ -48,3 +48,7 @@ NuGet Dependencies:
 - [`singleOrDefault`](../api/core/operators/singleordefault.md)
 - [`some`](../api/core/operators/any.md)
 - [`sum`](../api/core/operators/sum.md)
+- [`toMap`](../api/core/operators/tomap.md)
+- [`toSet`](../api/core/operators/toset.md)
+- [`toWeakMap`](../api/core/operators/toweakmap.md)
+- [`toWeakSet`](../api/core/operators/toweakset.md)
