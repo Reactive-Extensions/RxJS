@@ -4,7 +4,7 @@
 Pauses the underlying observable sequence based upon the observable sequence which yields true/false.  Note that this only works on hot observables.
 
 #### Arguments
-1. `pauser` *(Rx.Subject)*: The observable sequence used to pause the underlying sequence.
+1. `pauser` *(`Observable`)*: The observable sequence used to pause the underlying sequence.
 
 #### Returns
 *(`Observable`)*: The observable sequence which is paused based upon the pauser.
@@ -26,10 +26,10 @@ var subscription = source.subscribe(
     });
 
 // To begin the flow
-pauser.onNext(true);
+pauser.onNext(true); // or source.resume();
 
 // To pause the flow at any point
-pauser.onNext(false);
+pauser.onNext(false);  // or source.pause();
 ```
 
 ### Location
