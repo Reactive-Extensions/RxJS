@@ -100,23 +100,14 @@
     function PausableBufferedObservable(source, subject) {
       this.source = source;
       this.subject = subject || new Subject();
-      this.isPaused = true;
       _super.call(this, subscribe);
     }
 
     PausableBufferedObservable.prototype.pause = function () {
-      if (this.isPaused === true){
-        return;
-      }
-      this.isPaused = true;
       this.subject.onNext(false);
     };
 
     PausableBufferedObservable.prototype.resume = function () {
-      if (this.isPaused === false){
-        return;
-      }
-      this.isPaused = false;
       this.subject.onNext(true);
     };
 
