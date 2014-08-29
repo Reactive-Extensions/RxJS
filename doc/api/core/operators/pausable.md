@@ -26,10 +26,10 @@ var subscription = source.subscribe(
     });
 
 // To begin the flow
-pauser.onNext(true);
+pauser.onNext(true); // or source.resume();
 
 // To pause the flow at any point
-pauser.onNext(false);
+pauser.onNext(false);  // or source.pause();
 ```
 
 ### Location
