@@ -134,7 +134,7 @@ test('paused_error', function () {
   });  
 
   scheduler.scheduleAbsolute(1000, function () {
-      subscription.dispose();
+    subscription.dispose();
   });
 
   scheduler.start();
@@ -143,4 +143,56 @@ test('paused_error', function () {
     onNext(210, 2),
     onError(230, err)
   );  
+});
+
+test('paused_with_observable_controller_and_pause_and_unpause', function(){
+  var subscription;
+
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.createObserver();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(270, 4),
+    onNext(301, 5),
+    onNext(350, 6),
+    onNext(450, 7),
+    onCompleted(500)
+  );
+
+  var controller = scheduler.createHotObservable(
+    onNext(201, true),
+    onNext(220, false),
+    onNext(250, true)
+  );
+
+  pausable = xs.pausable(controller);
+
+  scheduler.scheduleAbsolute(200, function () {
+    subscription = pausable.subscribe(results);
+  });
+
+  scheduler.scheduleAbsolute(300, function () {
+    pausable.pause();
+  });
+
+  scheduler.scheduleAbsolute(400, function () {
+    pausable.resume();
+  });
+
+  scheduler.scheduleAbsolute(1000, function () {
+    subscription.dispose();
+  });
+
+  scheduler.start();
+
+  results.messages.assertEqual(
+    onNext(210, 2),
+    onNext(270, 4),
+    onNext(450, 7),
+    onCompleted(500)
+  );
 });

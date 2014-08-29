@@ -7,7 +7,7 @@
         subscription = conn.subscribe(observer),
         connection = disposableEmpty;
 
-      var pausable = this.subject.distinctUntilChanged().subscribe(function (b) {
+      var pausable = this.pauser.distinctUntilChanged().subscribe(function (b) {
         if (b) {
           connection = conn.connect();
         } else {
@@ -19,18 +19,25 @@
       return new CompositeDisposable(subscription, connection, pausable);
     }
 
-    function PausableObservable(source, subject) {
+    function PausableObservable(source, pauser) {
       this.source = source;
-      this.subject = subject || new Subject();
+      this.controller = new Rx.Subject();
+
+      if (pauser && pauser.subscribe) {
+        this.pauser = this.controller.merge(pauser);
+      } else {
+        this.pauser = this.controller;
+      }
+
       _super.call(this, subscribe);
     }
 
     PausableObservable.prototype.pause = function () {
-      this.subject.onNext(false);
+      this.controller.onNext(false);
     };
 
     PausableObservable.prototype.resume = function () {
-      this.subject.onNext(true);
+      this.controller.onNext(true);
     };
 
     return PausableObservable;
