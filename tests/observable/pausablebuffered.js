@@ -241,3 +241,33 @@ test('paused_with_observable_controller_and_pause_and_unpause', function(){
     onCompleted(500)
   );
 });
+
+test('paused with immediate unpause', function(){
+  var subscription;
+
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.createObserver();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(210, 2),
+    onCompleted(500)
+  );
+
+  var controller = Rx.Observable.return(true);
+
+  var pausableBuffered = xs.pausableBuffered(controller);
+
+  scheduler.scheduleAbsolute(200, function () {
+    subscription = pausableBuffered.subscribe(results);
+  });
+
+  scheduler.start();
+
+  results.messages.assertEqual(
+    onNext(210, 2),
+    onCompleted(500)
+  );
+
+});

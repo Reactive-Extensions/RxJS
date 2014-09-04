@@ -21,7 +21,7 @@
 
     function PausableObservable(source, pauser) {
       this.source = source;
-      this.controller = new Rx.Subject();
+      this.controller = new Subject();
 
       if (pauser && pauser.subscribe) {
         this.pauser = this.controller.merge(pauser);
