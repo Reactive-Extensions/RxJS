@@ -52,7 +52,7 @@
       var subscription =  
         combineLatestSource(
           this.source,
-          this.pauser.distinctUntilChanged(),
+          this.pauser.distinctUntilChanged().startWith(false),
           function (data, shouldFire) {
             return { data: data, shouldFire: shouldFire };      
           })
@@ -91,14 +91,12 @@
               observer.onCompleted();              
             }
           );
-      this.pause();
-
       return subscription;      
     }
 
     function PausableBufferedObservable(source, pauser) {
       this.source = source;
-      this.controller = new Rx.Subject();
+      this.controller = new Subject();
 
       if (pauser && pauser.subscribe) {
         this.pauser = this.controller.merge(pauser);
