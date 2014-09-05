@@ -740,9 +740,9 @@ if (!Array.prototype.forEach) {
      */
     var disposableEmpty = Disposable.empty = { dispose: noop };
 
-  var BooleanDisposable = (function () {
-    function BooleanDisposable (isSingle) {
-      this.isSingle = isSingle;
+  var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable =  
+    SerialDisposable = Rx.SerialDisposable = (function () {
+    function BooleanDisposable () {
       this.isDisposed = false;
       this.current = null;
     }
@@ -762,10 +762,6 @@ if (!Array.prototype.forEach) {
      * @param {Disposable} value The new underlying disposable.
      */  
     booleanDisposablePrototype.setDisposable = function (value) {
-      if (this.current && this.isSingle) {
-        throw new Error('Disposable has already been assigned');
-      }
-
       var shouldDispose = this.isDisposed, old;
       if (!shouldDispose) {
         old = this.current;
@@ -790,34 +786,6 @@ if (!Array.prototype.forEach) {
 
     return BooleanDisposable;
   }());
-
-    /**
-     * Represents a disposable resource which only allows a single assignment of its underlying disposable resource.
-     * If an underlying disposable resource has already been set, future attempts to set the underlying disposable resource will throw an Error.
-     */
-    var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable = (function (super_) {
-        inherits(SingleAssignmentDisposable, super_);
-
-        function SingleAssignmentDisposable() {
-            super_.call(this, true);
-        }
-
-        return SingleAssignmentDisposable;
-    }(BooleanDisposable));
-
-    /**
-     * Represents a disposable resource whose underlying disposable resource can be replaced by another disposable resource, causing automatic disposal of the previous underlying disposable resource.
-     */
-    var SerialDisposable = Rx.SerialDisposable = (function (super_) {
-        inherits(SerialDisposable, super_);
-
-        function SerialDisposable() {
-            super_.call(this, false);
-        }
-
-        return SerialDisposable;
-    }(BooleanDisposable));
-
     /**
      * Represents a disposable resource that only disposes its underlying disposable resource when all dependent disposable objects have been disposed.
      */  

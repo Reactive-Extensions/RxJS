@@ -1,6 +1,6 @@
-  var BooleanDisposable = (function () {
-    function BooleanDisposable (isSingle) {
-      this.isSingle = isSingle;
+  var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable =  
+    SerialDisposable = Rx.SerialDisposable = (function () {
+    function BooleanDisposable () {
       this.isDisposed = false;
       this.current = null;
     }
@@ -20,10 +20,6 @@
      * @param {Disposable} value The new underlying disposable.
      */  
     booleanDisposablePrototype.setDisposable = function (value) {
-      if (this.current && this.isSingle) {
-        throw new Error('Disposable has already been assigned');
-      }
-
       var shouldDispose = this.isDisposed, old;
       if (!shouldDispose) {
         old = this.current;
