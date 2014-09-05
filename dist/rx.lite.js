@@ -551,27 +551,6 @@
   };
 
   /**
-   * Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
-   */   
-  CompositeDisposablePrototype.clear = function () {
-    var currentDisposables = this.disposables.slice(0);
-    this.disposables = [];
-    this.length = 0;
-    for (var i = 0, len = currentDisposables.length; i < len; i++) {
-      currentDisposables[i].dispose();
-    }
-  };
-
-  /**
-   * Determines whether the CompositeDisposable contains a specific disposable.    
-   * @param {Mixed} item Disposable to search for.
-   * @returns {Boolean} true if the disposable was found; otherwise, false.
-   */    
-  CompositeDisposablePrototype.contains = function (item) {
-    return this.disposables.indexOf(item) !== -1;
-  };
-
-  /**
    * Converts the existing CompositeDisposable to an array of disposables
    * @returns {Array} An array of disposable objects.
    */  
