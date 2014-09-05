@@ -4,20 +4,18 @@
    * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
    */
   var observableFromPromise = Observable.fromPromise = function (promise) {
-    return new AnonymousObservable(function (observer) {
+    return observableDefer(function () {
+      var subject = new Rx.AsyncSubject();
+
       promise.then(
         function (value) {
-          observer.onNext(value);
-          observer.onCompleted();
-        }, 
-        function (reason) {
-          observer.onError(reason);
-        });
+          if (!subject.isDisposed) {
+            subject.onNext(value);
+            subject.onCompleted();
+          }
+        },
+        subject.onError.bind(subject));
 
-      return function () {
-        if (promise && promise.abort) {
-          promise.abort();
-        }
-      }
+      return subject;
     });
   };

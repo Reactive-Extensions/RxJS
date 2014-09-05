@@ -641,96 +641,95 @@ if (!Array.prototype.forEach) {
         return false;
     };
     PriorityQueue.count = 0;
-    /**
-     * Represents a group of disposable resources that are disposed together.
-     * @constructor
-     */
-    var CompositeDisposable = Rx.CompositeDisposable = function () {
-        this.disposables = argsOrArray(arguments, 0);
-        this.isDisposed = false;
-        this.length = this.disposables.length;
-    };
+  /**
+   * Represents a group of disposable resources that are disposed together.
+   * @constructor
+   */
+  var CompositeDisposable = Rx.CompositeDisposable = function () {
+    this.disposables = argsOrArray(arguments, 0);
+    this.isDisposed = false;
+    this.length = this.disposables.length;
+  };
 
-    var CompositeDisposablePrototype = CompositeDisposable.prototype;
+  var CompositeDisposablePrototype = CompositeDisposable.prototype;
 
-    /**
-     * Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
-     * @param {Mixed} item Disposable to add.
-     */    
-    CompositeDisposablePrototype.add = function (item) {
-        if (this.isDisposed) {
-            item.dispose();
-        } else {
-            this.disposables.push(item);
-            this.length++;
-        }
-    };
+  /**
+   * Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
+   * @param {Mixed} item Disposable to add.
+   */    
+  CompositeDisposablePrototype.add = function (item) {
+    if (this.isDisposed) {
+      item.dispose();
+    } else {
+      this.disposables.push(item);
+      this.length++;
+    }
+  };
 
-    /**
-     * Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
-     * @param {Mixed} item Disposable to remove.
-     * @returns {Boolean} true if found; false otherwise.
-     */
-    CompositeDisposablePrototype.remove = function (item) {
-        var shouldDispose = false;
-        if (!this.isDisposed) {
-            var idx = this.disposables.indexOf(item);
-            if (idx !== -1) {
-                shouldDispose = true;
-                this.disposables.splice(idx, 1);
-                this.length--;
-                item.dispose();
-            }
+  /**
+   * Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
+   * @param {Mixed} item Disposable to remove.
+   * @returns {Boolean} true if found; false otherwise.
+   */
+  CompositeDisposablePrototype.remove = function (item) {
+    var shouldDispose = false;
+    if (!this.isDisposed) {
+      var idx = this.disposables.indexOf(item);
+      if (idx !== -1) {
+        shouldDispose = true;
+        this.disposables.splice(idx, 1);
+        this.length--;
+        item.dispose();
+      }
+    }
+    return shouldDispose;
+  };
 
-        }
-        return shouldDispose;
-    };
+  /**
+   *  Disposes all disposables in the group and removes them from the group.  
+   */
+  CompositeDisposablePrototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      var currentDisposables = this.disposables.slice(0);
+      this.disposables = [];
+      this.length = 0;
 
-    /**
-     *  Disposes all disposables in the group and removes them from the group.  
-     */
-    CompositeDisposablePrototype.dispose = function () {
-        if (!this.isDisposed) {
-            this.isDisposed = true;
-            var currentDisposables = this.disposables.slice(0);
-            this.disposables = [];
-            this.length = 0;
+      for (var i = 0, len = currentDisposables.length; i < len; i++) {
+        currentDisposables[i].dispose();
+      }
+    }
+  };
 
-            for (var i = 0, len = currentDisposables.length; i < len; i++) {
-                currentDisposables[i].dispose();
-            }
-        }
-    };
+  /**
+   * Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
+   */   
+  CompositeDisposablePrototype.clear = function () {
+    var currentDisposables = this.disposables.slice(0);
+    this.disposables = [];
+    this.length = 0;
+    for (var i = 0, len = currentDisposables.length; i < len; i++) {
+      currentDisposables[i].dispose();
+    }
+  };
 
-    /**
-     * Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
-     */   
-    CompositeDisposablePrototype.clear = function () {
-        var currentDisposables = this.disposables.slice(0);
-        this.disposables = [];
-        this.length = 0;
-        for (var i = 0, len = currentDisposables.length; i < len; i++) {
-            currentDisposables[i].dispose();
-        }
-    };
+  /**
+   * Determines whether the CompositeDisposable contains a specific disposable.    
+   * @param {Mixed} item Disposable to search for.
+   * @returns {Boolean} true if the disposable was found; otherwise, false.
+   */    
+  CompositeDisposablePrototype.contains = function (item) {
+    return this.disposables.indexOf(item) !== -1;
+  };
 
-    /**
-     * Determines whether the CompositeDisposable contains a specific disposable.    
-     * @param {Mixed} item Disposable to search for.
-     * @returns {Boolean} true if the disposable was found; otherwise, false.
-     */    
-    CompositeDisposablePrototype.contains = function (item) {
-        return this.disposables.indexOf(item) !== -1;
-    };
-
-    /**
-     * Converts the existing CompositeDisposable to an array of disposables
-     * @returns {Array} An array of disposable objects.
-     */  
-    CompositeDisposablePrototype.toArray = function () {
-        return this.disposables.slice(0);
-    };
-    
+  /**
+   * Converts the existing CompositeDisposable to an array of disposables
+   * @returns {Array} An array of disposable objects.
+   */  
+  CompositeDisposablePrototype.toArray = function () {
+    return this.disposables.slice(0);
+  };
+  
     /**
      * Provides a set of static methods for creating Disposables.
      *
@@ -2478,63 +2477,53 @@ if (!Array.prototype.forEach) {
         return this.merge(1);
     };
 
-    /**
-     * Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.
-     * Or merges two observable sequences into a single observable sequence.
-     * 
-     * @example
-     * 1 - merged = sources.merge(1);
-     * 2 - merged = source.merge(otherSource);  
-     * @param {Mixed} [maxConcurrentOrOther] Maximum number of inner observable sequences being subscribed to concurrently or the second observable sequence.
-     * @returns {Observable} The observable sequence that merges the elements of the inner sequences. 
-     */ 
-    observableProto.merge = function (maxConcurrentOrOther) {
-        if (typeof maxConcurrentOrOther !== 'number') {
-            return observableMerge(this, maxConcurrentOrOther);
+  /**
+   * Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.
+   * Or merges two observable sequences into a single observable sequence.
+   * 
+   * @example
+   * 1 - merged = sources.merge(1);
+   * 2 - merged = source.merge(otherSource);  
+   * @param {Mixed} [maxConcurrentOrOther] Maximum number of inner observable sequences being subscribed to concurrently or the second observable sequence.
+   * @returns {Observable} The observable sequence that merges the elements of the inner sequences. 
+   */ 
+  observableProto.merge = function (maxConcurrentOrOther) {
+    if (typeof maxConcurrentOrOther !== 'number') { return observableMerge(this, maxConcurrentOrOther); }
+    var sources = this;
+    return new AnonymousObservable(function (observer) {
+      var activeCount = 0, group = new CompositeDisposable(), isStopped = false, q = [];
+
+      function subscribe(xs) {
+        var subscription = new SingleAssignmentDisposable();
+        group.add(subscription);
+
+        // Check for promises support
+        isPromise(xs) && (xs = observableFromPromise(xs));
+
+        subscription.setDisposable(xs.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
+          group.remove(subscription);
+          if (q.length > 0) {
+            subscribe(q.shift());
+          } else {
+            activeCount--;
+            isStopped && activeCount === 0 && observer.onCompleted();
+          }
+        }));
+      }
+      group.add(sources.subscribe(function (innerSource) {
+        if (activeCount < maxConcurrentOrOther) {
+          activeCount++;
+          subscribe(innerSource);
+        } else {
+          q.push(innerSource);
         }
-        var sources = this;
-        return new AnonymousObservable(function (observer) {
-            var activeCount = 0,
-                group = new CompositeDisposable(),
-                isStopped = false,
-                q = [],
-                subscribe = function (xs) {
-                    var subscription = new SingleAssignmentDisposable();
-                    group.add(subscription);
-
-                    // Check for promises support
-                    if (isPromise(xs)) { xs = observableFromPromise(xs); }
-
-                    subscription.setDisposable(xs.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
-                        var s;
-                        group.remove(subscription);
-                        if (q.length > 0) {
-                            s = q.shift();
-                            subscribe(s);
-                        } else {
-                            activeCount--;
-                            if (isStopped && activeCount === 0) {
-                                observer.onCompleted();
-                            }
-                        }
-                    }));
-                };
-            group.add(sources.subscribe(function (innerSource) {
-                if (activeCount < maxConcurrentOrOther) {
-                    activeCount++;
-                    subscribe(innerSource);
-                } else {
-                    q.push(innerSource);
-                }
-            }, observer.onError.bind(observer), function () {
-                isStopped = true;
-                if (activeCount === 0) {
-                    observer.onCompleted();
-                }
-            }));
-            return group;
-        });
-    };
+      }, observer.onError.bind(observer), function () {
+        isStopped = true;
+        activeCount === 0 && observer.onCompleted();
+      }));
+      return group;
+    });
+  };
 
     /**
      * Merges all the observable sequences into a single observable sequence.  
@@ -3482,7 +3471,7 @@ if (!Array.prototype.forEach) {
 
         args.push(handler);
         func.apply(context, args);
-      });
+      }).publish().refCount();
     };
   };
 
@@ -3527,7 +3516,7 @@ if (!Array.prototype.forEach) {
 
         args.push(handler);
         func.apply(context, args);
-      });
+      }).publish().refCount();
     };
   };
 
@@ -3742,21 +3731,19 @@ if (!Array.prototype.forEach) {
    * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
    */
   var observableFromPromise = Observable.fromPromise = function (promise) {
-    return new AnonymousObservable(function (observer) {
+    return observableDefer(function () {
+      var subject = new Rx.AsyncSubject();
+
       promise.then(
         function (value) {
-          observer.onNext(value);
-          observer.onCompleted();
-        }, 
-        function (reason) {
-          observer.onError(reason);
-        });
+          if (!subject.isDisposed) {
+            subject.onNext(value);
+            subject.onCompleted();
+          }
+        },
+        subject.onError.bind(subject));
 
-      return function () {
-        if (promise && promise.abort) {
-          promise.abort();
-        }
-      }
+      return subject;
     });
   };
     /*
@@ -4678,7 +4665,7 @@ if (!Array.prototype.forEach) {
         subscription = conn.subscribe(observer),
         connection = disposableEmpty;
 
-      var pausable = this.subject.distinctUntilChanged().subscribe(function (b) {
+      var pausable = this.pauser.distinctUntilChanged().subscribe(function (b) {
         if (b) {
           connection = conn.connect();
         } else {
@@ -4690,27 +4677,25 @@ if (!Array.prototype.forEach) {
       return new CompositeDisposable(subscription, connection, pausable);
     }
 
-    function PausableObservable(source, subject) {
+    function PausableObservable(source, pauser) {
       this.source = source;
-      this.subject = subject || new Subject();
-      this.isPaused = true;
+      this.controller = new Subject();
+
+      if (pauser && pauser.subscribe) {
+        this.pauser = this.controller.merge(pauser);
+      } else {
+        this.pauser = this.controller;
+      }
+
       _super.call(this, subscribe);
     }
 
     PausableObservable.prototype.pause = function () {
-      if (this.isPaused === true){
-        return;
-      }
-      this.isPaused = true;
-      this.subject.onNext(false);
+      this.controller.onNext(false);
     };
 
     PausableObservable.prototype.resume = function () {
-      if (this.isPaused === false){
-        return;
-      }
-      this.isPaused = false;
-      this.subject.onNext(true);
+      this.controller.onNext(true);
     };
 
     return PausableObservable;
@@ -4782,7 +4767,7 @@ if (!Array.prototype.forEach) {
       var subscription =  
         combineLatestSource(
           this.source,
-          this.subject.distinctUntilChanged(), 
+          this.pauser.distinctUntilChanged().startWith(false),
           function (data, shouldFire) {
             return { data: data, shouldFire: shouldFire };      
           })
@@ -4821,33 +4806,28 @@ if (!Array.prototype.forEach) {
               observer.onCompleted();              
             }
           );
-
-      this.subject.onNext(false);
-
       return subscription;      
     }
 
-    function PausableBufferedObservable(source, subject) {
+    function PausableBufferedObservable(source, pauser) {
       this.source = source;
-      this.subject = subject || new Subject();
-      this.isPaused = true;
+      this.controller = new Subject();
+
+      if (pauser && pauser.subscribe) {
+        this.pauser = this.controller.merge(pauser);
+      } else {
+        this.pauser = this.controller;
+      }
+
       _super.call(this, subscribe);
     }
 
     PausableBufferedObservable.prototype.pause = function () {
-      if (this.isPaused === true){
-        return;
-      }
-      this.isPaused = true;
-      this.subject.onNext(false);
+      this.controller.onNext(false);
     };
 
     PausableBufferedObservable.prototype.resume = function () {
-      if (this.isPaused === false){
-        return;
-      }
-      this.isPaused = false;
-      this.subject.onNext(true);
+      this.controller.onNext(true);
     };
 
     return PausableBufferedObservable; 
@@ -5369,131 +5349,130 @@ if (!Array.prototype.forEach) {
         return Subject;
     }(Observable));
 
+  /**
+   *  Represents the result of an asynchronous operation.
+   *  The last value before the OnCompleted notification, or the error received through OnError, is sent to all subscribed observers.
+   */   
+  var AsyncSubject = Rx.AsyncSubject = (function (__super__) {
+
+    function subscribe(observer) {
+      checkDisposed.call(this);
+      
+      if (!this.isStopped) {
+        this.observers.push(observer);
+        return new InnerSubscription(this, observer);
+      }
+
+      var ex = this.exception,
+        hv = this.hasValue,
+        v = this.value;
+
+      if (ex) {
+        observer.onError(ex);
+      } else if (hv) {
+        observer.onNext(v);
+        observer.onCompleted();
+      } else {
+        observer.onCompleted();
+      }
+
+      return disposableEmpty;
+    }
+
+    inherits(AsyncSubject, __super__);
+
     /**
-     *  Represents the result of an asynchronous operation.
-     *  The last value before the OnCompleted notification, or the error received through OnError, is sent to all subscribed observers.
-     */   
-    var AsyncSubject = Rx.AsyncSubject = (function (_super) {
+     * Creates a subject that can only receive one value and that value is cached for all future observations.
+     * @constructor
+     */ 
+    function AsyncSubject() {
+      __super__.call(this, subscribe);
 
-        function subscribe(observer) {
-            checkDisposed.call(this);
-            
-            if (!this.isStopped) {
-                this.observers.push(observer);
-                return new InnerSubscription(this, observer);
+      this.isDisposed = false;
+      this.isStopped = false;
+      this.value = null;
+      this.hasValue = false;
+      this.observers = [];
+      this.exception = null;
+    }
+
+    addProperties(AsyncSubject.prototype, Observer, {
+      /**
+       * Indicates whether the subject has observers subscribed to it.
+       * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+       */         
+      hasObservers: function () {
+        checkDisposed.call(this);
+        return this.observers.length > 0;
+      },
+      /**
+       * Notifies all subscribed observers about the end of the sequence, also causing the last received value to be sent out (if any).
+       */ 
+      onCompleted: function () {
+        var o, i, len;
+        checkDisposed.call(this);
+        if (!this.isStopped) {
+          this.isStopped = true;
+          var os = this.observers.slice(0),
+            v = this.value,
+            hv = this.hasValue;
+
+          if (hv) {
+            for (i = 0, len = os.length; i < len; i++) {
+              o = os[i];
+              o.onNext(v);
+              o.onCompleted();
             }
-
-            var ex = this.exception,
-                hv = this.hasValue,
-                v = this.value;
-
-            if (ex) {
-                observer.onError(ex);
-            } else if (hv) {
-                observer.onNext(v);
-                observer.onCompleted();
-            } else {
-                observer.onCompleted();
+          } else {
+            for (i = 0, len = os.length; i < len; i++) {
+              os[i].onCompleted();
             }
+          }
 
-            return disposableEmpty;
+          this.observers = [];
         }
+      },
+      /**
+       * Notifies all subscribed observers about the error.
+       * @param {Mixed} error The Error to send to all observers.
+       */ 
+      onError: function (error) {
+        checkDisposed.call(this);
+        if (!this.isStopped) {
+          var os = this.observers.slice(0);
+          this.isStopped = true;
+          this.exception = error;
 
-        inherits(AsyncSubject, _super);
+          for (var i = 0, len = os.length; i < len; i++) {
+            os[i].onError(error);
+          }
 
-        /**
-         * Creates a subject that can only receive one value and that value is cached for all future observations.
-         * @constructor
-         */ 
-        function AsyncSubject() {
-            _super.call(this, subscribe);
-
-            this.isDisposed = false;
-            this.isStopped = false;
-            this.value = null;
-            this.hasValue = false;
-            this.observers = [];
-            this.exception = null;
+          this.observers = [];
         }
+      },
+      /**
+       * Sends a value to the subject. The last value received before successful termination will be sent to all subscribed and future observers.
+       * @param {Mixed} value The value to store in the subject.
+       */             
+      onNext: function (value) {
+        checkDisposed.call(this);
+        if (this.isStopped) { return; }
+        this.value = value;
+        this.hasValue = true;
+      },
+      /**
+       * Unsubscribe all observers and release resources.
+       */
+      dispose: function () {
+        this.isDisposed = true;
+        this.observers = null;
+        this.exception = null;
+        this.value = null;
+      }
+    });
 
-        addProperties(AsyncSubject.prototype, Observer, {
-            /**
-             * Indicates whether the subject has observers subscribed to it.
-             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-             */         
-            hasObservers: function () {
-                checkDisposed.call(this);
-                return this.observers.length > 0;
-            },
-            /**
-             * Notifies all subscribed observers about the end of the sequence, also causing the last received value to be sent out (if any).
-             */ 
-            onCompleted: function () {
-                var o, i, len;
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    this.isStopped = true;
-                    var os = this.observers.slice(0),
-                        v = this.value,
-                        hv = this.hasValue;
-
-                    if (hv) {
-                        for (i = 0, len = os.length; i < len; i++) {
-                            o = os[i];
-                            o.onNext(v);
-                            o.onCompleted();
-                        }
-                    } else {
-                        for (i = 0, len = os.length; i < len; i++) {
-                            os[i].onCompleted();
-                        }
-                    }
-
-                    this.observers = [];
-                }
-            },
-            /**
-             * Notifies all subscribed observers about the exception.
-             * @param {Mixed} error The exception to send to all observers.
-             */ 
-            onError: function (exception) {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    var os = this.observers.slice(0);
-                    this.isStopped = true;
-                    this.exception = exception;
-
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onError(exception);
-                    }
-
-                    this.observers = [];
-                }
-            },
-            /**
-             * Sends a value to the subject. The last value received before successful termination will be sent to all subscribed and future observers.
-             * @param {Mixed} value The value to store in the subject.
-             */             
-            onNext: function (value) {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    this.value = value;
-                    this.hasValue = true;
-                }
-            },
-            /**
-             * Unsubscribe all observers and release resources.
-             */
-            dispose: function () {
-                this.isDisposed = true;
-                this.observers = null;
-                this.exception = null;
-                this.value = null;
-            }
-        });
-
-        return AsyncSubject;
-    }(Observable));
+    return AsyncSubject;
+  }(Observable));
 
   var AnonymousSubject = Rx.AnonymousSubject = (function (__super__) {
     inherits(AnonymousSubject, __super__);
