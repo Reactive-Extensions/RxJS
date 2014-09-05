@@ -5006,7 +5006,7 @@ if (!Array.prototype.forEach) {
      * Converts the observable sequence to a WeakSet if it exists.
      * @returns {Observable} An observable sequence with a single value of a WeakSet containing the values from the observable sequence.
      */
-    observableProto.toSet = function () {
+    observableProto.toWeakSet = function () {
       return toSet(this, root.WeakSet);
     };
   }
@@ -5161,7 +5161,7 @@ if (!Array.prototype.forEach) {
 
         args.push(handler);
         func.apply(context, args);
-      }).publish().refCount();
+      }).publishLast().refCount();
     };
   };
 
@@ -5206,7 +5206,7 @@ if (!Array.prototype.forEach) {
 
         args.push(handler);
         func.apply(context, args);
-      }).publish().refCount();
+      }).publishLast().refCount();
     };
   };
 

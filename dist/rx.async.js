@@ -140,7 +140,7 @@
 
         args.push(handler);
         func.apply(context, args);
-      }).publish().refCount();
+      }).publishLast().refCount();
     };
   };
 
@@ -185,7 +185,7 @@
 
         args.push(handler);
         func.apply(context, args);
-      }).publish().refCount();
+      }).publishLast().refCount();
     };
   };
 

@@ -4855,7 +4855,7 @@
      * Converts the observable sequence to a WeakSet if it exists.
      * @returns {Observable} An observable sequence with a single value of a WeakSet containing the values from the observable sequence.
      */
-    observableProto.toSet = function () {
+    observableProto.toWeakSet = function () {
       return toSet(this, root.WeakSet);
     };
   }
@@ -5010,7 +5010,7 @@
 
         args.push(handler);
         func.apply(context, args);
-      }).publish().refCount();
+      }).publishLast().refCount();
     };
   };
 
@@ -5055,7 +5055,7 @@
 
         args.push(handler);
         func.apply(context, args);
-      }).publish().refCount();
+      }).publishLast().refCount();
     };
   };
 

@@ -3471,7 +3471,7 @@ if (!Array.prototype.forEach) {
 
         args.push(handler);
         func.apply(context, args);
-      }).publish().refCount();
+      }).publishLast().refCount();
     };
   };
 
@@ -3516,7 +3516,7 @@ if (!Array.prototype.forEach) {
 
         args.push(handler);
         func.apply(context, args);
-      }).publish().refCount();
+      }).publishLast().refCount();
     };
   };
 

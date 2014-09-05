@@ -16,7 +16,6 @@ if (!!window.Map) {
       });
       return arr;
     }
-
           
     test('toMap_Completed', function () {
       var scheduler = new TestScheduler();
