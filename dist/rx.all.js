@@ -395,101 +395,91 @@
         return a;
     }
 
-    // Collections
-    var IndexedItem = function (id, value) {
-        this.id = id;
-        this.value = value;
-    };
+  // Collections
+  function IndexedItem(id, value) {
+    this.id = id;
+    this.value = value;
+  }
 
-    IndexedItem.prototype.compareTo = function (other) {
-        var c = this.value.compareTo(other.value);
-        if (c === 0) {
-            c = this.id - other.id;
-        }
-        return c;
-    };
+  IndexedItem.prototype.compareTo = function (other) {
+    var c = this.value.compareTo(other.value);
+    c === 0 && (c = this.id - other.id);
+    return c;
+  };
 
-    // Priority Queue for Scheduling
-    var PriorityQueue = Rx.internals.PriorityQueue = function (capacity) {
-        this.items = new Array(capacity);
-        this.length = 0;
-    };
+  // Priority Queue for Scheduling
+  var PriorityQueue = Rx.internals.PriorityQueue = function (capacity) {
+    this.items = new Array(capacity);
+    this.length = 0;
+  };
 
-    var priorityProto = PriorityQueue.prototype;
-    priorityProto.isHigherPriority = function (left, right) {
-        return this.items[left].compareTo(this.items[right]) < 0;
-    };
+  var priorityProto = PriorityQueue.prototype;
+  priorityProto.isHigherPriority = function (left, right) {
+    return this.items[left].compareTo(this.items[right]) < 0;
+  };
 
-    priorityProto.percolate = function (index) {
-        if (index >= this.length || index < 0) {
-            return;
-        }
-        var parent = index - 1 >> 1;
-        if (parent < 0 || parent === index) {
-            return;
-        }
-        if (this.isHigherPriority(index, parent)) {
-            var temp = this.items[index];
-            this.items[index] = this.items[parent];
-            this.items[parent] = temp;
-            this.percolate(parent);
-        }
-    };
+  priorityProto.percolate = function (index) {
+    if (index >= this.length || index < 0) { return; }
+    var parent = index - 1 >> 1;
+    if (parent < 0 || parent === index) { return; }
+    if (this.isHigherPriority(index, parent)) {
+      var temp = this.items[index];
+      this.items[index] = this.items[parent];
+      this.items[parent] = temp;
+      this.percolate(parent);
+    }
+  };
 
-    priorityProto.heapify = function (index) {
-        if (index === undefined) {
-            index = 0;
-        }
-        if (index >= this.length || index < 0) {
-            return;
-        }
-        var left = 2 * index + 1,
-            right = 2 * index + 2,
-            first = index;
-        if (left < this.length && this.isHigherPriority(left, first)) {
-            first = left;
-        }
-        if (right < this.length && this.isHigherPriority(right, first)) {
-            first = right;
-        }
-        if (first !== index) {
-            var temp = this.items[index];
-            this.items[index] = this.items[first];
-            this.items[first] = temp;
-            this.heapify(first);
-        }
-    };
-    
-    priorityProto.peek = function () {  return this.items[0].value; };
+  priorityProto.heapify = function (index) {
+    +index || (index = 0);
+    if (index >= this.length || index < 0) { return; }
+    var left = 2 * index + 1,
+        right = 2 * index + 2,
+        first = index;
+    if (left < this.length && this.isHigherPriority(left, first)) {
+      first = left;
+    }
+    if (right < this.length && this.isHigherPriority(right, first)) {
+      first = right;
+    }
+    if (first !== index) {
+      var temp = this.items[index];
+      this.items[index] = this.items[first];
+      this.items[first] = temp;
+      this.heapify(first);
+    }
+  };
+  
+  priorityProto.peek = function () { return this.items[0].value; };
 
-    priorityProto.removeAt = function (index) {
-        this.items[index] = this.items[--this.length];
-        delete this.items[this.length];
-        this.heapify();
-    };
+  priorityProto.removeAt = function (index) {
+    this.items[index] = this.items[--this.length];
+    delete this.items[this.length];
+    this.heapify();
+  };
 
-    priorityProto.dequeue = function () {
-        var result = this.peek();
-        this.removeAt(0);
-        return result;
-    };
+  priorityProto.dequeue = function () {
+    var result = this.peek();
+    this.removeAt(0);
+    return result;
+  };
 
-    priorityProto.enqueue = function (item) {
-        var index = this.length++;
-        this.items[index] = new IndexedItem(PriorityQueue.count++, item);
-        this.percolate(index);
-    };
+  priorityProto.enqueue = function (item) {
+    var index = this.length++;
+    this.items[index] = new IndexedItem(PriorityQueue.count++, item);
+    this.percolate(index);
+  };
 
-    priorityProto.remove = function (item) {
-        for (var i = 0; i < this.length; i++) {
-            if (this.items[i].value === item) {
-                this.removeAt(i);
-                return true;
-            }
-        }
-        return false;
-    };
-    PriorityQueue.count = 0;
+  priorityProto.remove = function (item) {
+    for (var i = 0; i < this.length; i++) {
+      if (this.items[i].value === item) {
+        this.removeAt(i);
+        return true;
+      }
+    }
+    return false;
+  };
+  PriorityQueue.count = 0;
   /**
    * Represents a group of disposable resources that are disposed together.
    * @constructor
@@ -558,36 +548,36 @@
     return this.disposables.slice(0);
   };
   
-    /**
-     * Provides a set of static methods for creating Disposables.
-     *
-     * @constructor 
-     * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
-     */
-    var Disposable = Rx.Disposable = function (action) {
-        this.isDisposed = false;
-        this.action = action || noop;
-    };
+  /**
+   * Provides a set of static methods for creating Disposables.
+   *
+   * @constructor 
+   * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
+   */
+  var Disposable = Rx.Disposable = function (action) {
+    this.isDisposed = false;
+    this.action = action || noop;
+  };
 
-    /** Performs the task of cleaning up resources. */     
-    Disposable.prototype.dispose = function () {
-        if (!this.isDisposed) {
-            this.action();
-            this.isDisposed = true;
-        }
-    };
+  /** Performs the task of cleaning up resources. */     
+  Disposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.action();
+      this.isDisposed = true;
+    }
+  };
 
-    /**
-     * Creates a disposable object that invokes the specified action when disposed.
-     * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
-     * @return {Disposable} The disposable object that runs the given action upon disposal.
-     */
-    var disposableCreate = Disposable.create = function (action) { return new Disposable(action); };
+  /**
+   * Creates a disposable object that invokes the specified action when disposed.
+   * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
+   * @return {Disposable} The disposable object that runs the given action upon disposal.
+   */
+  var disposableCreate = Disposable.create = function (action) { return new Disposable(action); };
 
-    /** 
-     * Gets the disposable that does nothing when disposed. 
-     */
-    var disposableEmpty = Disposable.empty = { dispose: noop };
+  /** 
+   * Gets the disposable that does nothing when disposed. 
+   */
+  var disposableEmpty = Disposable.empty = { dispose: noop };
 
   var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable =  
     SerialDisposable = Rx.SerialDisposable = (function () {
@@ -2353,15 +2343,15 @@
     return observableFromArray(args, scheduler);
   };
 
-    /**
-     *  Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins).
-     * @returns {Observable} An observable sequence whose observers will never get called.
-     */
-    var observableNever = Observable.never = function () {
-        return new AnonymousObservable(function () {
-            return disposableEmpty;
-        });
-    };
+  /**
+   *  Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins).
+   * @returns {Observable} An observable sequence whose observers will never get called.
+   */
+  var observableNever = Observable.never = function () {
+    return new AnonymousObservable(function () {
+      return disposableEmpty;
+    });
+  };
 
   /**
    *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
@@ -2913,52 +2903,44 @@
     });
   };
 
-    /**
-     * Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-     * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
-     */
-    observableProto['switch'] = observableProto.switchLatest = function () {
-        var sources = this;
-        return new AnonymousObservable(function (observer) {
-            var hasLatest = false,
-                innerSubscription = new SerialDisposable(),
-                isStopped = false,
-                latest = 0,
-                subscription = sources.subscribe(function (innerSource) {
-                    var d = new SingleAssignmentDisposable(), id = ++latest;
-                    hasLatest = true;
-                    innerSubscription.setDisposable(d);
+  /**
+   * Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+   * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
+   */
+  observableProto['switch'] = observableProto.switchLatest = function () {
+    var sources = this;
+    return new AnonymousObservable(function (observer) {
+      var hasLatest = false,
+        innerSubscription = new SerialDisposable(),
+        isStopped = false,
+        latest = 0,
+        subscription = sources.subscribe(
+          function (innerSource) {
+            var d = new SingleAssignmentDisposable(), id = ++latest;
+            hasLatest = true;
+            innerSubscription.setDisposable(d);
 
-                    // Check if Promise or Observable
-                    if (isPromise(innerSource)) {
-                        innerSource = observableFromPromise(innerSource);
-                    }
+            // Check if Promise or Observable
+            isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
-                    d.setDisposable(innerSource.subscribe(function (x) {
-                        if (latest === id) {
-                            observer.onNext(x);
-                        }
-                    }, function (e) {
-                        if (latest === id) {
-                            observer.onError(e);
-                        }
-                    }, function () {
-                        if (latest === id) {
-                            hasLatest = false;
-                            if (isStopped) {
-                                observer.onCompleted();
-                            }
-                        }
-                    }));
-                }, observer.onError.bind(observer), function () {
-                    isStopped = true;
-                    if (!hasLatest) {
-                        observer.onCompleted();
-                    }
-                });
-            return new CompositeDisposable(subscription, innerSubscription);
-        });
-    };
+            d.setDisposable(innerSource.subscribe(
+              function (x) { latest === id && observer.onNext(x); }, 
+              function (e) { latest === id && observer.onError(e); }, 
+              function () {
+                if (latest === id) {
+                  hasLatest = false;
+                  isStopped && observer.onCompleted();
+                }
+              }));
+          }, 
+          observer.onError.bind(observer), 
+          function () {
+            isStopped = true;
+            !hasLatest && observer.onCompleted();
+          });
+      return new CompositeDisposable(subscription, innerSubscription);
+    });
+  };
 
   /**
    * Returns the values from the source observable sequence until the other observable sequence produces a value.
@@ -3123,16 +3105,13 @@
         });
     };
 
-    /**
-     *  Hides the identity of an observable sequence.
-     * @returns {Observable} An observable sequence that hides the identity of the source sequence.    
-     */
-    observableProto.asObservable = function () {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            return source.subscribe(observer);
-        });
-    };
+  /**
+   *  Hides the identity of an observable sequence.
+   * @returns {Observable} An observable sequence that hides the identity of the source sequence.    
+   */
+  observableProto.asObservable = function () {
+    return new AnonymousObservable(this.subscribe.bind(this));
+  };
 
   /**
    *  Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
@@ -3297,35 +3276,35 @@
     });
   };
 
-    /**
-     *  Ignores all elements in an observable sequence leaving only the termination messages.
-     * @returns {Observable} An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
-     */
-    observableProto.ignoreElements = function () {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            return source.subscribe(noop, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+  /**
+   *  Ignores all elements in an observable sequence leaving only the termination messages.
+   * @returns {Observable} An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
+   */
+  observableProto.ignoreElements = function () {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      return source.subscribe(noop, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    });
+  };
 
-    /**
-     *  Materializes the implicit notifications of an observable sequence as explicit notification values.
-     * @returns {Observable} An observable sequence containing the materialized notification values from the source sequence.
-     */    
-    observableProto.materialize = function () {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            return source.subscribe(function (value) {
-                observer.onNext(notificationCreateOnNext(value));
-            }, function (e) {
-                observer.onNext(notificationCreateOnError(e));
-                observer.onCompleted();
-            }, function () {
-                observer.onNext(notificationCreateOnCompleted());
-                observer.onCompleted();
-            });
-        });
-    };
+  /**
+   *  Materializes the implicit notifications of an observable sequence as explicit notification values.
+   * @returns {Observable} An observable sequence containing the materialized notification values from the source sequence.
+   */    
+  observableProto.materialize = function () {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      return source.subscribe(function (value) {
+        observer.onNext(notificationCreateOnNext(value));
+      }, function (e) {
+        observer.onNext(notificationCreateOnError(e));
+        observer.onCompleted();
+      }, function () {
+        observer.onNext(notificationCreateOnCompleted());
+        observer.onCompleted();
+      });
+    });
+  };
 
     /**
      *  Repeats the observable sequence a specified number of times. If the repeat count is not specified, the sequence repeats indefinitely.
@@ -3354,57 +3333,52 @@
     return enumerableRepeat(this, retryCount).catchException();
   };
 
-    /**
-     *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
-     *  For aggregation behavior with no intermediate results, see Observable.aggregate.
-     * @example
-     *  var res = source.scan(function (acc, x) { return acc + x; });
-     *  var res = source.scan(0, function (acc, x) { return acc + x; });
-     * @param {Mixed} [seed] The initial accumulator value.
-     * @param {Function} accumulator An accumulator function to be invoked on each element.
-     * @returns {Observable} An observable sequence containing the accumulated values.
-     */
-    observableProto.scan = function () {
-        var hasSeed = false, seed, accumulator, source = this;
-        if (arguments.length === 2) {
-            hasSeed = true;
-            seed = arguments[0];
-            accumulator = arguments[1];        
-        } else {
-            accumulator = arguments[0];
+  /**
+   *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
+   *  For aggregation behavior with no intermediate results, see Observable.aggregate.
+   * @example
+   *  var res = source.scan(function (acc, x) { return acc + x; });
+   *  var res = source.scan(0, function (acc, x) { return acc + x; });
+   * @param {Mixed} [seed] The initial accumulator value.
+   * @param {Function} accumulator An accumulator function to be invoked on each element.
+   * @returns {Observable} An observable sequence containing the accumulated values.
+   */
+  observableProto.scan = function () {
+    var hasSeed = false, seed, accumulator, source = this;
+    if (arguments.length === 2) {
+      hasSeed = true;
+      seed = arguments[0];
+      accumulator = arguments[1];        
+    } else {
+      accumulator = arguments[0];
+    }
+    return new AnonymousObservable(function (observer) {
+      var hasAccumulation, accumulation, hasValue;
+      return source.subscribe (
+        function (x) {
+          !hasValue && (hasValue = true);
+          try {
+            if (hasAccumulation) {
+              accumulation = accumulator(accumulation, x);
+            } else {
+              accumulation = hasSeed ? accumulator(seed, x) : x;
+              hasAccumulation = true;
+            }                    
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+
+          observer.onNext(accumulation);
+        },
+        observer.onError.bind(observer),
+        function () {
+          !hasValue && hasSeed && observer.onNext(seed);
+          observer.onCompleted();
         }
-        return new AnonymousObservable(function (observer) {
-            var hasAccumulation, accumulation, hasValue;
-            return source.subscribe (
-                function (x) {
-                    try {
-                        if (!hasValue) {
-                            hasValue = true;
-                        }
-     
-                        if (hasAccumulation) {
-                            accumulation = accumulator(accumulation, x);
-                        } else {
-                            accumulation = hasSeed ? accumulator(seed, x) : x;
-                            hasAccumulation = true;
-                        }                    
-                    } catch (e) {
-                        observer.onError(e);
-                        return;
-                    }
-     
-                    observer.onNext(accumulation);
-                },
-                observer.onError.bind(observer),
-                function () {
-                    if (!hasValue && hasSeed) {
-                        observer.onNext(seed);
-                    }
-                    observer.onCompleted();
-                }
-            );
-        });
-    };
+      );
+    });
+  };
 
     /**
      *  Bypasses a specified number of elements at the end of an observable sequence.
