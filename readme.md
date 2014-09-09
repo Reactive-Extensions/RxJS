@@ -197,23 +197,24 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [StackOverflow rxjs](http://stackoverflow.com/questions/tagged/rxjs)
     - [Google Group rxjs](https://groups.google.com/forum/#!forum/rxjs)
 
-- Required Reading
-    - [Reactive Manifesto](http://www.reactivemanifesto.org/)
-
-- Podcasts
-    - [.NET Rocks #907](http://dotnetrocks.com/default.aspx?showNum=907)
-    - [JavaScript Jabber #83](http://javascriptjabber.com/083-jsj-frp-and-rxjs-with-matthew-podwysocki/)
-
-- Articles
-    - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
-
 - Tutorials
+    - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
     - [2 minute introduction to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877) 
-    - [Learn RxJS](http://reactive-extensions.github.io/learnrx/)
+    - [Learn RxJS](https://github.com/jhusain/learnrx)
     - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
-    - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
     - [Reactive Programming and MVC](http://aaronstacy.com/writings/reactive-programming-and-mvc/)
+
+- Reference Material
+    - [Rx Marbles](http://rxmarbles.com/)
+    - [RxJS GitBook](http://xgrommx.github.io/rx-book/)
+    - [Intro to Rx](http://introtorx.com/)
+    - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
+    - [Rx Design Guidelines](http://go.microsoft.com/fwlink/?LinkID=205219)
+    - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
+
+- Required Reading
+    - [Reactive Manifesto](http://www.reactivemanifesto.org/)
 
 - Examples
     - [React RxJS Autocomplete](https://github.com/eliseumds/react-autocomplete)
@@ -225,6 +226,8 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - Don't Cross the Streams - Cascadia.js 2012 [slides/demos](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams) | [video](http://www.youtube.com/watch?v=FqBq4uoiG0M)
     - Curing Your Asynchronous Blues - Strange Loop 2013 [slides/demos](https://github.com/Reactive-Extensions/StrangeLoop2013) | [video](http://www.infoq.com/presentations/rx-event-processing)
     - Streaming and event-based programming using FRP and RxJS - FutureJS 2014 [slides/demos](https://github.com/Reactive-Extensions/FutureJS) | [video](https://www.youtube.com/watch?v=zlERo_JMGCw)
+    - [Tyrannosaurus Rx](http://yobriefca.se/presentations/tyrannosaurus-rx.pdf) - [James Hughes](http://twitter.com/kouphax)
+    - Taming Asynchronous Workflows with Functional Reactive Programming - EuroClojure - [Leonardo Borges](https://twitter.com/leonardo_borges) [slides](http://www.slideshare.net/borgesleonardo/functional-reactive-programming-compositional-event-systems) | [video](http://www.slideshare.net/borgesleonardo/functional-reactive-programming-compositional-event-systems)
 
 - Videos
     - [Hello RxJS - Channel 9](http://channel9.msdn.com/Blogs/Charles/Introducing-RxJS-Reactive-Extensions-for-JavaScript)
@@ -238,13 +241,12 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
     - [Reactive Angular - Devoxx France 2014 - Martin Gontovnikas](http://parleys.com/play/53677646e4b0593229b85841/chapter0/about)
     - [Reactive Game Programming for the Discerning Hipster - JSConf 2014 - Bodil Stokke](https://www.youtube.com/watch?v=x8mmAu7ZR9Y)
 
-- Reference Material
-    - [RxJS GitBook](http://xgrommx.github.io/rx-book/)
-    - [Intro to Rx](http://introtorx.com/)
-    - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
-    - [Rx Design Guidelines](http://go.microsoft.com/fwlink/?LinkID=205219)
-    - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
+- Podcasts
+    - [.NET Rocks #907](http://dotnetrocks.com/default.aspx?showNum=907)
+    - [JavaScript Jabber #83](http://javascriptjabber.com/083-jsj-frp-and-rxjs-with-matthew-podwysocki/)
 
+- Articles
+    - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
 
 - Books
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
