@@ -1,5 +1,4 @@
-  var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable =  
-    SerialDisposable = Rx.SerialDisposable = (function () {
+  var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable = (function () {
     function BooleanDisposable () {
       this.isDisposed = false;
       this.current = null;
@@ -44,3 +43,4 @@
 
     return BooleanDisposable;
   }());
+  var SerialDisposable = Rx.SerialDisposable = SingleAssignmentDisposable;
