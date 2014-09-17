@@ -358,7 +358,7 @@ The Reactive Extensions for JavaScript have no external dependencies any library
 - [Dojo 1.7+](https://github.com/Reactive-Extensions/RxJS-Dojo)
 - [ExtJS](https://github.com/Reactive-Extensions/RxJS-ExtJS)
 
-In addition, we have support for [common Node.js functions](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js) such as binding to callbacks and the `EventEmitter` class.
+In addition, we have support for [common Node.js functions](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/nodejs/nodejs.md) such as binding to callbacks and the `EventEmitter` class.
 
 ## Compatibility ##
 
