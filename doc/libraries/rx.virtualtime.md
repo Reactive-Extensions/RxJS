@@ -14,7 +14,7 @@ NuGet Packages:
 - [`RxJS-VirtualTime`](http://www.nuget.org/packages/RxJS-VirtualTime/)
 
 File Dependencies:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 NuGet Dependencies:
 - [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
@@ -25,5 +25,5 @@ NuGet Dependencies:
 
 ### Schedulers
 
-- [`Rx.HistoricalScheduler`](../api/core/observable.mdapi/schedulers/historicalscheduler.md)
-- [`Rx.VirtualTimeScheduler`](../api/core/observable.mdapi/schedulers/virtualtimescheduler.md)
+- [`Rx.HistoricalScheduler`](../api/schedulers/historicalscheduler.md)
+- [`Rx.VirtualTimeScheduler`](../api/schedulers/virtualtimescheduler.md)
