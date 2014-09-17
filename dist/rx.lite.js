@@ -977,6 +977,7 @@
   }(Scheduler.prototype));
 
   (function (schedulerProto) {
+
     /**
      * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.       
      * @param {Number} period Period for running the work periodically.
@@ -994,17 +995,19 @@
      * @param {Function} action Action to be executed, potentially updating the state.
      * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
      */
-    Scheduler.prototype.schedulePeriodicWithState = function (state, period, action) {
+    Scheduler.prototype.schedulePeriodicWithState = function(state, period, action) {
+      if (typeof root.setInterval === 'undefined') { throw new Error('Periodic scheduling not supported.'); }
       var s = state;
-      
-      var id = setInterval(function () {
+  
+      var id = root.setInterval(function () {
         s = action(s);
       }, period);
 
       return disposableCreate(function () {
-        clearInterval(id);
+        root.clearInterval(id);
       });
     };
+
   }(Scheduler.prototype));
   
   /**
