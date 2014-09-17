@@ -5,7 +5,7 @@ The Reactive Extensions for JavaScript, as it is a library that deals with event
 ## Details ##
 
 Files:
-- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+- [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.time.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -14,7 +14,7 @@ NuGet Packages:
 - [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
 
 File Dependencies:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 NuGet Dependencies:
 - [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
@@ -42,7 +42,7 @@ NuGet Dependencies:
 - [`throttleWithSelector`](../api/core/operators/throttlewithselector.md)
 - [`timeInterval`](../api/core/operators/timeinterval.md)
 - [`timeout`](../api/core/operators/timeout.md)
-- [`timeoutWithSelector`](../api/core/operators/timeoutwithselector)
+- [`timeoutWithSelector`](../api/core/operators/timeoutwithselector.md)
 - [`timestamp`](../api/core/operators/timestamp.md)
 - [`windowWithTime`](../api/core/operators/windowwithtime.md)
 - [`windowWithTimeOrCount`](../api/core/operators/windowwithtimeorcount.md)
