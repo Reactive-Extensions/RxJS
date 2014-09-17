@@ -43,7 +43,7 @@ NuGet Packages:
 ### `Observable Instance Methods`
 - [`amb`](../api/core/operators/ambproto.md)
 - [`asObservable`](../api/core/operators/asobservable.md)
-- [`bufferWithCount`](../api/core/operators/bufferiwthcount.md)
+- [`bufferWithCount`](../api/core/operators/bufferwithcount.md)
 - [`catch | catchException`](../api/core/operators/catch.md)
 - [`combineLatest`](../api/core/operators/combinelatest.md)
 - [`concat`](../api/core/operators/concatproto.md)
@@ -52,11 +52,11 @@ NuGet Packages:
 - [`distinct`](../api/core/operators/distinct.md)
 - [`distinctUntilChanged`](../api/core/operators/distinctuntilchanged.md)
 - [`do | doAction`](../api/core/operators/do.md)
-- [`filter`](../api/core/operators/filter.md)
+- [`filter`](../api/core/operators/where.md)
 - [`finally | finallyAction`](../api/core/operators/finally.md)
 - [`flatMap`](../api/core/operators/selectmany.md)
 - [`flatMapLatest`](../api/core/operators/flatmaplatest.md)
-- [`flatMapObserver`](../api/core/operators/selectmanyobserver.md)
+- [`flatMapObserver`](../api/core/operators/flatpmapobserver.md)
 - [`ignoreElements`](../api/core/operators/ignoreelements.md)
 - [`map`](../api/core/operators/select.md)
 - [`merge`](../api/core/operators/mergeproto.md)
@@ -69,7 +69,7 @@ NuGet Packages:
 - [`select`](../api/core/operators/select.md)
 - [`selectConcat`](../api/core/operators/concatmap.md)
 - [`selectMany`](../api/core/operators/selectmany.md)
-- [`selectManyObserver`](../api/core/operators/selectmanyobserver.md)
+- [`selectManyObserver`](../api/core/operators/flatpmapobserver.md)
 - [`selectSwitch`](../api/core/operators/flatmaplatest.md)
 - [`single`](../api/core/operators/single.md)
 - [`singleOrDefault`](../api/core/operators/singleordefault.md)
@@ -95,22 +95,22 @@ NuGet Packages:
 
 ### Core Objects
 
-- [`Rx.Observer`](../api/core/observable.md../api/core/observable.mdapi/core/observer.md)
-- [`Rx.Notification`](../api/core/observable.md../api/core/observable.mdapi/core/notification.md)
+- [`Rx.Observer`](../api/core/observer.md)
+- [`Rx.Notification`](../api/core/notification.md)
 
 ### Subjects
 
-- [`Rx.AsyncSubject`](../api/core/observable.md../api/core/observable.mdapi/subjects/asyncsubject.md)
-- [`Rx.Subject`](../api/core/observable.md../api/core/observable.mdapi/subjects/subject.md)
+- [`Rx.AsyncSubject`](../api/subjects/asyncsubject.md)
+- [`Rx.Subject`](../api/subjects/subject.md)
 
 ### Schedulers
 
-- [`Rx.Scheduler`](../api/core/observable.md../api/core/observable.mdapi/schedulers/scheduler.md)
+- [`Rx.Scheduler`](../api/schedulers/scheduler.md)
 
 ### Disposables
 
-- [`Rx.CompositeDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/compositedisposable.md)
-- [`Rx.Disposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/disposable.md)
-- [`Rx.RefCountDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/refcountdisposable.md)
-- [`Rx.SerialDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/serialdisposable.md)
-- [`Rx.SingleAssignmentDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/singleassignmentdisposable.md)
+- [`Rx.CompositeDisposable`](../api/disposables/compositedisposable.md)
+- [`Rx.Disposable`](../api/disposables/disposable.md)
+- [`Rx.RefCountDisposable`](../api/disposables/refcountdisposable.md)
+- [`Rx.SerialDisposable`](../api/disposables/serialdisposable.md)
+- [`Rx.SingleAssignmentDisposable`](../api/disposables/singleassignmentdisposable.md)
