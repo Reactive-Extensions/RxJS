@@ -3,10 +3,6 @@
   function main () {
     var dragTarget = document.getElementById('dragTarget');
 
-    var down = 'pointerdown',
-      up = 'pointerup',
-      move = 'pointermove';
-
     // Get the three major events
     var mouseup   = Rx.Observable.fromEvent(dragTarget, 'mouseup');
     var mousemove = Rx.Observable.fromEvent(document,   'mousemove');
