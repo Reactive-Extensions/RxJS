@@ -12,7 +12,22 @@
     defaultError = Rx.helpers.defaultError = function (err) { throw err; },
     isPromise = Rx.helpers.isPromise = function (p) { return !!p && typeof p.then === 'function'; },
     asArray = Rx.helpers.asArray = function () { return Array.prototype.slice.call(arguments); },
-    not = Rx.helpers.not = function (a) { return !a; };
+    not = Rx.helpers.not = function (a) { return !a; },
+    isFunction = Rx.helpers.isFunction = (function () {
+
+      var isFn = function (value) {
+        return typeof value == 'function' || false;
+      }
+
+      // fallback for older versions of Chrome and Safari
+      if (isFn(/x/)) {
+        isFn = function(value) {
+          return typeof value == 'function' && toString.call(value) == '[object Function]';
+        };
+      }    
+
+      return isFn;
+    }());
 
   // Errors
   var sequenceContainsNoElements = 'Sequence contains no elements.';

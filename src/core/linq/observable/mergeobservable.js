@@ -14,20 +14,16 @@
         var innerSubscription = new SingleAssignmentDisposable();
         group.add(innerSubscription);
 
-        // Check if Promise or Observable
-        if (isPromise(innerSource)) {
-            innerSource = observableFromPromise(innerSource);
-        }
+        // Check for promises support
+        isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
-        innerSubscription.setDisposable(innerSource.subscribe(function (x) {
-            observer.onNext(x);
-        }, observer.onError.bind(observer), function () {
-            group.remove(innerSubscription);
-            if (isStopped && group.length === 1) { observer.onCompleted(); }
+        innerSubscription.setDisposable(innerSource.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
+          group.remove(innerSubscription);
+          isStopped && group.length === 1 && observer.onCompleted();
         }));
       }, observer.onError.bind(observer), function () {
         isStopped = true;
-        if (group.length === 1) { observer.onCompleted(); }
+        group.length === 1 && observer.onCompleted();
       }));
       return group;
     });

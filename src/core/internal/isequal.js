@@ -135,18 +135,7 @@
     isArguments = function(value) {
       return (value && typeof value == 'object') ? hasOwnProperty.call(value, 'callee') : false;
     };
-  }
-
-  function isFunction(value) {
-    return typeof value == 'function' || false;
-  }
-
-  // fallback for older versions of Chrome and Safari
-  if (isFunction(/x/)) {
-    isFunction = function(value) {
-      return typeof value == 'function' && toString.call(value) == funcClass;
-    };
-  }        
+  }     
 
   var isEqual = Rx.internals.isEqual = function (x, y) {
     return deepEquals(x, y, [], []); 

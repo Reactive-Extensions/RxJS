@@ -19,8 +19,8 @@
     var source = this;
     return typeof subjectOrSubjectSelector === 'function' ?
       new AnonymousObservable(function (observer) {
-          var connectable = source.multicast(subjectOrSubjectSelector());
-          return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
+        var connectable = source.multicast(subjectOrSubjectSelector());
+        return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
       }) :
       new ConnectableObservable(source, subjectOrSubjectSelector);
   };

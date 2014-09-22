@@ -43,7 +43,22 @@
     defaultError = Rx.helpers.defaultError = function (err) { throw err; },
     isPromise = Rx.helpers.isPromise = function (p) { return !!p && typeof p.then === 'function'; },
     asArray = Rx.helpers.asArray = function () { return Array.prototype.slice.call(arguments); },
-    not = Rx.helpers.not = function (a) { return !a; };
+    not = Rx.helpers.not = function (a) { return !a; },
+    isFunction = Rx.helpers.isFunction = (function () {
+
+      var isFn = function (value) {
+        return typeof value == 'function' || false;
+      }
+
+      // fallback for older versions of Chrome and Safari
+      if (isFn(/x/)) {
+        isFn = function(value) {
+          return typeof value == 'function' && toString.call(value) == '[object Function]';
+        };
+      }    
+
+      return isFn;
+    }());    
 
   // Errors
   var sequenceContainsNoElements = 'Sequence contains no elements.';
@@ -198,18 +213,7 @@
     isArguments = function(value) {
       return (value && typeof value == 'object') ? hasOwnProperty.call(value, 'callee') : false;
     };
-  }
-
-  function isFunction(value) {
-    return typeof value == 'function' || false;
-  }
-
-  // fallback for older versions of Chrome and Safari
-  if (isFunction(/x/)) {
-    isFunction = function(value) {
-      return typeof value == 'function' && toString.call(value) == funcClass;
-    };
-  }        
+  }     
 
   var isEqual = Rx.internals.isEqual = function (x, y) {
     return deepEquals(x, y, [], []); 
@@ -1886,11 +1890,11 @@
         return CheckedObserver;
     }(Observer));
 
-  var ScheduledObserver = Rx.internals.ScheduledObserver = (function (_super) {
-    inherits(ScheduledObserver, _super);
+  var ScheduledObserver = Rx.internals.ScheduledObserver = (function (__super__) {
+    inherits(ScheduledObserver, __super__);
 
     function ScheduledObserver(scheduler, observer) {
-      _super.call(this);
+      __super__.call(this);
       this.scheduler = scheduler;
       this.observer = observer;
       this.isAcquired = false;
@@ -1906,10 +1910,10 @@
       });
     };
 
-    ScheduledObserver.prototype.error = function (exception) {
+    ScheduledObserver.prototype.error = function (err) {
       var self = this;
       this.queue.push(function () {
-        self.observer.onError(exception);
+        self.observer.onError(err);
       });
     };
 
@@ -1948,42 +1952,37 @@
     };
 
     ScheduledObserver.prototype.dispose = function () {
-      _super.prototype.dispose.call(this);
+      __super__.prototype.dispose.call(this);
       this.disposable.dispose();
     };
 
     return ScheduledObserver;
   }(AbstractObserver));
 
-    /** @private */
-    var ObserveOnObserver = (function (_super) {
-        inherits(ObserveOnObserver, _super);
+  var ObserveOnObserver = (function (__super__) {
+    inherits(ObserveOnObserver, __super__);
 
-        /** @private */ 
-        function ObserveOnObserver() {
-            _super.apply(this, arguments);
-        }
+    function ObserveOnObserver() {
+      __super__.apply(this, arguments);
+    }
 
-        /** @private */ 
-        ObserveOnObserver.prototype.next = function (value) {
-            _super.prototype.next.call(this, value);
-            this.ensureActive();
-        };
+    ObserveOnObserver.prototype.next = function (value) {
+      __super__.prototype.next.call(this, value);
+      this.ensureActive();
+    };
 
-        /** @private */ 
-        ObserveOnObserver.prototype.error = function (e) {
-            _super.prototype.error.call(this, e);
-            this.ensureActive();
-        };
+    ObserveOnObserver.prototype.error = function (e) {
+      __super__.prototype.error.call(this, e);
+      this.ensureActive();
+    };
 
-        /** @private */ 
-        ObserveOnObserver.prototype.completed = function () {
-            _super.prototype.completed.call(this);
-            this.ensureActive();
-        };
+    ObserveOnObserver.prototype.completed = function () {
+      __super__.prototype.completed.call(this);
+      this.ensureActive();
+    };
 
-        return ObserveOnObserver;
-    })(ScheduledObserver);
+    return ObserveOnObserver;
+  })(ScheduledObserver);
 
   var observableProto;
 
@@ -2023,21 +2022,21 @@
     return Observable;
   })();
 
-     /**
-     *  Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
-     * 
-     *  This only invokes observer callbacks on a scheduler. In case the subscription and/or unsubscription actions have side-effects
-     *  that require to be run on a scheduler, use subscribeOn.
-     *          
-     *  @param {Scheduler} scheduler Scheduler to notify observers on.
-     *  @returns {Observable} The source sequence whose observations happen on the specified scheduler.     
-     */
-    observableProto.observeOn = function (scheduler) {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            return source.subscribe(new ObserveOnObserver(scheduler, observer));
-        });
-    };
+   /**
+   *  Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
+   * 
+   *  This only invokes observer callbacks on a scheduler. In case the subscription and/or unsubscription actions have side-effects
+   *  that require to be run on a scheduler, use subscribeOn.
+   *          
+   *  @param {Scheduler} scheduler Scheduler to notify observers on.
+   *  @returns {Observable} The source sequence whose observations happen on the specified scheduler.     
+   */
+  observableProto.observeOn = function (scheduler) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      return source.subscribe(new ObserveOnObserver(scheduler, observer));
+    });
+  };
 
      /**
      *  Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler. This operation is not commonly used;
@@ -2834,20 +2833,16 @@
         var innerSubscription = new SingleAssignmentDisposable();
         group.add(innerSubscription);
 
-        // Check if Promise or Observable
-        if (isPromise(innerSource)) {
-            innerSource = observableFromPromise(innerSource);
-        }
+        // Check for promises support
+        isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
-        innerSubscription.setDisposable(innerSource.subscribe(function (x) {
-            observer.onNext(x);
-        }, observer.onError.bind(observer), function () {
-            group.remove(innerSubscription);
-            if (isStopped && group.length === 1) { observer.onCompleted(); }
+        innerSubscription.setDisposable(innerSource.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
+          group.remove(innerSubscription);
+          isStopped && group.length === 1 && observer.onCompleted();
         }));
       }, observer.onError.bind(observer), function () {
         isStopped = true;
-        if (group.length === 1) { observer.onCompleted(); }
+        group.length === 1 && observer.onCompleted();
       }));
       return group;
     });
@@ -2859,9 +2854,7 @@
    * @returns {Observable} An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
    */
   observableProto.onErrorResumeNext = function (second) {
-    if (!second) {
-      throw new Error('Second observable is required');
-    }
+    if (!second) { throw new Error('Second observable is required'); }
     return onErrorResumeNext([this, second]);
   };
 
@@ -2884,11 +2877,7 @@
           isPromise(current) && (current = observableFromPromise(current));
           d = new SingleAssignmentDisposable();
           subscription.setDisposable(d);
-          d.setDisposable(current.subscribe(observer.onNext.bind(observer), function () {
-              self();
-          }, function () {
-              self();
-          }));
+          d.setDisposable(current.subscribe(observer.onNext.bind(observer), self, self));
         } else {
           observer.onCompleted();
         }
@@ -3867,14 +3856,14 @@
         });
     };
 
-    /**
-     * Retrieves the value of a specified property from all elements in the Observable sequence.
-     * @param {String} property The property to pluck.
-     * @returns {Observable} Returns a new Observable sequence of property values.
-     */
-    observableProto.pluck = function (property) {
-        return this.select(function (x) { return x[property]; });
-    };
+  /**
+   * Retrieves the value of a specified property from all elements in the Observable sequence.
+   * @param {String} prop The property to pluck.
+   * @returns {Observable} Returns a new Observable sequence of property values.
+   */
+  observableProto.pluck = function (prop) {
+    return this.map(function (x) { return x[prop]; });
+  };
 
     function flatMap(source, selector, thisArg) {
       return source.map(function (x, i) {
@@ -4145,42 +4134,40 @@
     });
   };
 
-    function extremaBy(source, keySelector, comparer) {
-        return new AnonymousObservable(function (observer) {
-            var hasValue = false, lastKey = null, list = [];
-            return source.subscribe(function (x) {
-                var comparison, key;
-                try {
-                    key = keySelector(x);
-                } catch (ex) {
-                    observer.onError(ex);
-                    return;
-                }
-                comparison = 0;
-                if (!hasValue) {
-                    hasValue = true;
-                    lastKey = key;
-                } else {
-                    try {
-                        comparison = comparer(key, lastKey);
-                    } catch (ex1) {
-                        observer.onError(ex1);
-                        return;
-                    }
-                }
-                if (comparison > 0) {
-                    lastKey = key;
-                    list = [];
-                }
-                if (comparison >= 0) {
-                    list.push(x);
-                }
-            }, observer.onError.bind(observer), function () {
-                observer.onNext(list);
-                observer.onCompleted();
-            });
-        });
-    }
+  function extremaBy(source, keySelector, comparer) {
+    return new AnonymousObservable(function (observer) {
+      var hasValue = false, lastKey = null, list = [];
+      return source.subscribe(function (x) {
+        var comparison, key;
+        try {
+          key = keySelector(x);
+        } catch (ex) {
+          observer.onError(ex);
+          return;
+        }
+        comparison = 0;
+        if (!hasValue) {
+          hasValue = true;
+          lastKey = key;
+        } else {
+          try {
+            comparison = comparer(key, lastKey);
+          } catch (ex1) {
+            observer.onError(ex1);
+            return;
+          }
+        }
+        if (comparison > 0) {
+          lastKey = key;
+          list = [];
+        }
+        if (comparison >= 0) { list.push(x); }
+      }, observer.onError.bind(observer), function () {
+        observer.onNext(list);
+        observer.onCompleted();
+      });
+    });
+  }
 
     function firstOnly(x) {
         if (x.length === 0) {
@@ -5529,30 +5516,28 @@
     var source = this;
     return typeof subjectOrSubjectSelector === 'function' ?
       new AnonymousObservable(function (observer) {
-          var connectable = source.multicast(subjectOrSubjectSelector());
-          return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
+        var connectable = source.multicast(subjectOrSubjectSelector());
+        return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
       }) :
       new ConnectableObservable(source, subjectOrSubjectSelector);
   };
 
-    /**
-     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
-     * This operator is a specialization of Multicast using a regular Subject.
-     * 
-     * @example
-     * var resres = source.publish();
-     * var res = source.publish(function (x) { return x; });
-     * 
-     * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-     */
-    observableProto.publish = function (selector) {
-        return !selector ?
-            this.multicast(new Subject()) :
-            this.multicast(function () {
-                return new Subject();
-            }, selector);
-    };
+  /**
+   * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
+   * This operator is a specialization of Multicast using a regular Subject.
+   * 
+   * @example
+   * var resres = source.publish();
+   * var res = source.publish(function (x) { return x; });
+   * 
+   * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   */
+  observableProto.publish = function (selector) {
+    return selector && isFunction(selector) ?
+      this.multicast(function () { return new Subject(); }, selector) :
+      this.multicast(new Subject());
+  };
 
     /**
      * Returns an observable sequence that shares a single subscription to the underlying sequence.
@@ -5567,44 +5552,42 @@
         return this.publish(null).refCount();
     };
 
-    /**
-     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
-     * This operator is a specialization of Multicast using a AsyncSubject.
-     * 
-     * @example
-     * var res = source.publishLast();
-     * var res = source.publishLast(function (x) { return x; });
-     * 
-     * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-     */
-    observableProto.publishLast = function (selector) {
-        return !selector ?
-            this.multicast(new AsyncSubject()) :
-            this.multicast(function () {
-                return new AsyncSubject();
-            }, selector);
-    };
+  /**
+   * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
+   * This operator is a specialization of Multicast using a AsyncSubject.
+   * 
+   * @example
+   * var res = source.publishLast();
+   * var res = source.publishLast(function (x) { return x; });
+   * 
+   * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   */
+  observableProto.publishLast = function (selector) {
+    return selector && isFunction(selector) ?
+      this.multicast(function () { return new AsyncSubject(); }, selector) :
+      this.multicast(new AsyncSubject());
+  };
 
-    /**
-     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
-     * This operator is a specialization of Multicast using a BehaviorSubject.
-     * 
-     * @example
-     * var res = source.publishValue(42);
-     * var res = source.publishValue(function (x) { return x.select(function (y) { return y * y; }) }, 42);
-     * 
-     * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
-     * @param {Mixed} initialValue Initial value received by observers upon subscription.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-     */
-    observableProto.publishValue = function (initialValueOrSelector, initialValue) {
-        return arguments.length === 2 ?
-            this.multicast(function () {
-                return new BehaviorSubject(initialValue);
-            }, initialValueOrSelector) :
-            this.multicast(new BehaviorSubject(initialValueOrSelector));
-    };
+  /**
+   * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
+   * This operator is a specialization of Multicast using a BehaviorSubject.
+   * 
+   * @example
+   * var res = source.publishValue(42);
+   * var res = source.publishValue(function (x) { return x.select(function (y) { return y * y; }) }, 42);
+   * 
+   * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
+   * @param {Mixed} initialValue Initial value received by observers upon subscription.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   */
+  observableProto.publishValue = function (initialValueOrSelector, initialValue) {
+    return arguments.length === 2 ?
+      this.multicast(function () {
+        return new BehaviorSubject(initialValue);
+      }, initialValueOrSelector) :
+      this.multicast(new BehaviorSubject(initialValueOrSelector));
+  };
 
     /**
      * Returns an observable sequence that shares a single subscription to the underlying sequence and starts with an initialValue.
@@ -5682,112 +5665,105 @@
         }
     };
 
+  /**
+   *  Represents a value that changes over time.
+   *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
+   */
+  var BehaviorSubject = Rx.BehaviorSubject = (function (__super__) {
+    function subscribe(observer) {
+      checkDisposed.call(this);
+      if (!this.isStopped) {
+        this.observers.push(observer);
+        observer.onNext(this.value);
+        return new InnerSubscription(this, observer);
+      }
+      var ex = this.exception;
+      if (ex) {
+        observer.onError(ex);
+      } else {
+        observer.onCompleted();
+      }
+      return disposableEmpty;
+    }
+
+    inherits(BehaviorSubject, __super__);
+
     /**
-     *  Represents a value that changes over time.
-     *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
-     */
-    var BehaviorSubject = Rx.BehaviorSubject = (function (_super) {
-        function subscribe(observer) {
-            checkDisposed.call(this);
-            if (!this.isStopped) {
-                this.observers.push(observer);
-                observer.onNext(this.value);
-                return new InnerSubscription(this, observer);
-            }
-            var ex = this.exception;
-            if (ex) {
-                observer.onError(ex);
-            } else {
-                observer.onCompleted();
-            }
-            return disposableEmpty;
+     * @constructor
+     *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
+     *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
+     */       
+    function BehaviorSubject(value) {
+      __super__.call(this, subscribe);
+      this.value = value,
+      this.observers = [],
+      this.isDisposed = false,
+      this.isStopped = false,
+      this.exception = null;
+    }
+
+    addProperties(BehaviorSubject.prototype, Observer, {
+      /**
+       * Indicates whether the subject has observers subscribed to it.
+       * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+       */         
+      hasObservers: function () {
+        return this.observers.length > 0;
+      },
+      /**
+       * Notifies all subscribed observers about the end of the sequence.
+       */ 
+      onCompleted: function () {
+        checkDisposed.call(this);
+        if (this.isStopped) { return; }
+        this.isStopped = true;
+        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+          os[i].onCompleted();
         }
 
-        inherits(BehaviorSubject, _super);
+        this.observers = [];
+      },
+      /**
+       * Notifies all subscribed observers about the exception.
+       * @param {Mixed} error The exception to send to all observers.
+       */             
+      onError: function (error) {
+        checkDisposed.call(this);
+        if (this.isStopped) { return; }
+        this.isStopped = true;
+        this.exception = error;
 
-        /**
-         * @constructor
-         *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
-         *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
-         */       
-        function BehaviorSubject(value) {
-            _super.call(this, subscribe);
-
-            this.value = value,
-            this.observers = [],
-            this.isDisposed = false,
-            this.isStopped = false,
-            this.exception = null;
+        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+          os[i].onError(error);
         }
 
-        addProperties(BehaviorSubject.prototype, Observer, {
-            /**
-             * Indicates whether the subject has observers subscribed to it.
-             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-             */         
-            hasObservers: function () {
-                return this.observers.length > 0;
-            },
-            /**
-             * Notifies all subscribed observers about the end of the sequence.
-             */ 
-            onCompleted: function () {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    var os = this.observers.slice(0);
-                    this.isStopped = true;
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onCompleted();
-                    }
+        this.observers = [];
+      },
+      /**
+       * Notifies all subscribed observers about the arrival of the specified element in the sequence.
+       * @param {Mixed} value The value to send to all observers.
+       */              
+      onNext: function (value) {
+        checkDisposed.call(this);
+        if (this.isStopped) { return; }
+        this.value = value;
+        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+          os[i].onNext(value);
+        }
+      },
+      /**
+       * Unsubscribe all observers and release resources.
+       */            
+      dispose: function () {
+        this.isDisposed = true;
+        this.observers = null;
+        this.value = null;
+        this.exception = null;
+      }
+    });
 
-                    this.observers = [];
-                }
-            },
-            /**
-             * Notifies all subscribed observers about the exception.
-             * @param {Mixed} error The exception to send to all observers.
-             */             
-            onError: function (error) {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    var os = this.observers.slice(0);
-                    this.isStopped = true;
-                    this.exception = error;
-
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onError(error);
-                    }
-
-                    this.observers = [];
-                }
-            },
-            /**
-             * Notifies all subscribed observers about the arrival of the specified element in the sequence.
-             * @param {Mixed} value The value to send to all observers.
-             */              
-            onNext: function (value) {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    this.value = value;
-                    var os = this.observers.slice(0);
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onNext(value);
-                    }
-                }
-            },
-            /**
-             * Unsubscribe all observers and release resources.
-             */            
-            dispose: function () {
-                this.isDisposed = true;
-                this.observers = null;
-                this.value = null;
-                this.exception = null;
-            }
-        });
-
-        return BehaviorSubject;
-    }(Observable));
+    return BehaviorSubject;
+  }(Observable));
 
     /**
      * Represents an object that is both an observable sequence as well as an observer.
@@ -8921,30 +8897,25 @@
         return AutoDetachObserver;
     }(AbstractObserver));
 
-    /** @private */
-    var GroupedObservable = (function (_super) {
-        inherits(GroupedObservable, _super);
+  var GroupedObservable = (function (__super__) {
+    inherits(GroupedObservable, __super__);
 
-        function subscribe(observer) {
-            return this.underlyingObservable.subscribe(observer);
-        }
+    function subscribe(observer) {
+      return this.underlyingObservable.subscribe(observer);
+    }
 
-        /** 
-         * @constructor
-         * @private
-         */
-        function GroupedObservable(key, underlyingObservable, mergedDisposable) {
-            _super.call(this, subscribe);
-            this.key = key;
-            this.underlyingObservable = !mergedDisposable ?
-                underlyingObservable :
-                new AnonymousObservable(function (observer) {
-                    return new CompositeDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
-                });
-        }
+    function GroupedObservable(key, underlyingObservable, mergedDisposable) {
+      __super__.call(this, subscribe);
+      this.key = key;
+      this.underlyingObservable = !mergedDisposable ?
+        underlyingObservable :
+        new AnonymousObservable(function (observer) {
+          return new CompositeDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
+        });
+    }
 
-        return GroupedObservable;
-    }(Observable));
+    return GroupedObservable;
+  }(Observable));
 
     /**
      *  Represents an object that is both an observable sequence as well as an observer.

@@ -17,11 +17,7 @@
           isPromise(current) && (current = observableFromPromise(current));
           d = new SingleAssignmentDisposable();
           subscription.setDisposable(d);
-          d.setDisposable(current.subscribe(observer.onNext.bind(observer), function () {
-              self();
-          }, function () {
-              self();
-          }));
+          d.setDisposable(current.subscribe(observer.onNext.bind(observer), self, self));
         } else {
           observer.onCompleted();
         }

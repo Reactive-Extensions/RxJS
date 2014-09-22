@@ -4,8 +4,6 @@
    * @returns {Observable} An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
    */
   observableProto.onErrorResumeNext = function (second) {
-    if (!second) {
-      throw new Error('Second observable is required');
-    }
+    if (!second) { throw new Error('Second observable is required'); }
     return onErrorResumeNext([this, second]);
   };

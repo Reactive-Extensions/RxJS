@@ -33,27 +33,26 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
     
-    var Observable = Rx.Observable,
-        observableProto = Observable.prototype,
-        AnonymousObservable = Rx.AnonymousObservable,
-        Subject = Rx.Subject,
-        AsyncSubject = Rx.AsyncSubject,
-        Observer = Rx.Observer,
-        ScheduledObserver = Rx.internals.ScheduledObserver,
-        disposableCreate = Rx.Disposable.create,
-        disposableEmpty = Rx.Disposable.empty,
-        CompositeDisposable = Rx.CompositeDisposable,
-        currentThreadScheduler = Rx.Scheduler.currentThread,
-        inherits = Rx.internals.inherits,
-        addProperties = Rx.internals.addProperties;
+  var Observable = Rx.Observable,
+    observableProto = Observable.prototype,
+    AnonymousObservable = Rx.AnonymousObservable,
+    Subject = Rx.Subject,
+    AsyncSubject = Rx.AsyncSubject,
+    Observer = Rx.Observer,
+    ScheduledObserver = Rx.internals.ScheduledObserver,
+    disposableCreate = Rx.Disposable.create,
+    disposableEmpty = Rx.Disposable.empty,
+    CompositeDisposable = Rx.CompositeDisposable,
+    currentThreadScheduler = Rx.Scheduler.currentThread,
+    isFunction = Rx.helpers.isFunction,
+    inherits = Rx.internals.inherits,
+    addProperties = Rx.internals.addProperties;
 
-    // Utilities
-    var objectDisposed = 'Object has been disposed';
-    function checkDisposed() {
-        if (this.isDisposed) {
-            throw new Error(objectDisposed);
-        }
-    }
+  // Utilities
+  var objectDisposed = 'Object has been disposed';
+  function checkDisposed() {
+    if (this.isDisposed) { throw new Error(objectDisposed); }
+  }
 
   /**
    * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
@@ -76,30 +75,28 @@
     var source = this;
     return typeof subjectOrSubjectSelector === 'function' ?
       new AnonymousObservable(function (observer) {
-          var connectable = source.multicast(subjectOrSubjectSelector());
-          return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
+        var connectable = source.multicast(subjectOrSubjectSelector());
+        return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
       }) :
       new ConnectableObservable(source, subjectOrSubjectSelector);
   };
 
-    /**
-     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
-     * This operator is a specialization of Multicast using a regular Subject.
-     * 
-     * @example
-     * var resres = source.publish();
-     * var res = source.publish(function (x) { return x; });
-     * 
-     * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-     */
-    observableProto.publish = function (selector) {
-        return !selector ?
-            this.multicast(new Subject()) :
-            this.multicast(function () {
-                return new Subject();
-            }, selector);
-    };
+  /**
+   * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
+   * This operator is a specialization of Multicast using a regular Subject.
+   * 
+   * @example
+   * var resres = source.publish();
+   * var res = source.publish(function (x) { return x; });
+   * 
+   * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   */
+  observableProto.publish = function (selector) {
+    return selector && isFunction(selector) ?
+      this.multicast(function () { return new Subject(); }, selector) :
+      this.multicast(new Subject());
+  };
 
     /**
      * Returns an observable sequence that shares a single subscription to the underlying sequence.
@@ -114,44 +111,42 @@
         return this.publish(null).refCount();
     };
 
-    /**
-     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
-     * This operator is a specialization of Multicast using a AsyncSubject.
-     * 
-     * @example
-     * var res = source.publishLast();
-     * var res = source.publishLast(function (x) { return x; });
-     * 
-     * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-     */
-    observableProto.publishLast = function (selector) {
-        return !selector ?
-            this.multicast(new AsyncSubject()) :
-            this.multicast(function () {
-                return new AsyncSubject();
-            }, selector);
-    };
+  /**
+   * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
+   * This operator is a specialization of Multicast using a AsyncSubject.
+   * 
+   * @example
+   * var res = source.publishLast();
+   * var res = source.publishLast(function (x) { return x; });
+   * 
+   * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   */
+  observableProto.publishLast = function (selector) {
+    return selector && isFunction(selector) ?
+      this.multicast(function () { return new AsyncSubject(); }, selector) :
+      this.multicast(new AsyncSubject());
+  };
 
-    /**
-     * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
-     * This operator is a specialization of Multicast using a BehaviorSubject.
-     * 
-     * @example
-     * var res = source.publishValue(42);
-     * var res = source.publishValue(function (x) { return x.select(function (y) { return y * y; }) }, 42);
-     * 
-     * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
-     * @param {Mixed} initialValue Initial value received by observers upon subscription.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-     */
-    observableProto.publishValue = function (initialValueOrSelector, initialValue) {
-        return arguments.length === 2 ?
-            this.multicast(function () {
-                return new BehaviorSubject(initialValue);
-            }, initialValueOrSelector) :
-            this.multicast(new BehaviorSubject(initialValueOrSelector));
-    };
+  /**
+   * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
+   * This operator is a specialization of Multicast using a BehaviorSubject.
+   * 
+   * @example
+   * var res = source.publishValue(42);
+   * var res = source.publishValue(function (x) { return x.select(function (y) { return y * y; }) }, 42);
+   * 
+   * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
+   * @param {Mixed} initialValue Initial value received by observers upon subscription.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   */
+  observableProto.publishValue = function (initialValueOrSelector, initialValue) {
+    return arguments.length === 2 ?
+      this.multicast(function () {
+        return new BehaviorSubject(initialValue);
+      }, initialValueOrSelector) :
+      this.multicast(new BehaviorSubject(initialValueOrSelector));
+  };
 
     /**
      * Returns an observable sequence that shares a single subscription to the underlying sequence and starts with an initialValue.
@@ -229,112 +224,105 @@
         }
     };
 
+  /**
+   *  Represents a value that changes over time.
+   *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
+   */
+  var BehaviorSubject = Rx.BehaviorSubject = (function (__super__) {
+    function subscribe(observer) {
+      checkDisposed.call(this);
+      if (!this.isStopped) {
+        this.observers.push(observer);
+        observer.onNext(this.value);
+        return new InnerSubscription(this, observer);
+      }
+      var ex = this.exception;
+      if (ex) {
+        observer.onError(ex);
+      } else {
+        observer.onCompleted();
+      }
+      return disposableEmpty;
+    }
+
+    inherits(BehaviorSubject, __super__);
+
     /**
-     *  Represents a value that changes over time.
-     *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
-     */
-    var BehaviorSubject = Rx.BehaviorSubject = (function (_super) {
-        function subscribe(observer) {
-            checkDisposed.call(this);
-            if (!this.isStopped) {
-                this.observers.push(observer);
-                observer.onNext(this.value);
-                return new InnerSubscription(this, observer);
-            }
-            var ex = this.exception;
-            if (ex) {
-                observer.onError(ex);
-            } else {
-                observer.onCompleted();
-            }
-            return disposableEmpty;
+     * @constructor
+     *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
+     *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
+     */       
+    function BehaviorSubject(value) {
+      __super__.call(this, subscribe);
+      this.value = value,
+      this.observers = [],
+      this.isDisposed = false,
+      this.isStopped = false,
+      this.exception = null;
+    }
+
+    addProperties(BehaviorSubject.prototype, Observer, {
+      /**
+       * Indicates whether the subject has observers subscribed to it.
+       * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+       */         
+      hasObservers: function () {
+        return this.observers.length > 0;
+      },
+      /**
+       * Notifies all subscribed observers about the end of the sequence.
+       */ 
+      onCompleted: function () {
+        checkDisposed.call(this);
+        if (this.isStopped) { return; }
+        this.isStopped = true;
+        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+          os[i].onCompleted();
         }
 
-        inherits(BehaviorSubject, _super);
+        this.observers = [];
+      },
+      /**
+       * Notifies all subscribed observers about the exception.
+       * @param {Mixed} error The exception to send to all observers.
+       */             
+      onError: function (error) {
+        checkDisposed.call(this);
+        if (this.isStopped) { return; }
+        this.isStopped = true;
+        this.exception = error;
 
-        /**
-         * @constructor
-         *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
-         *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
-         */       
-        function BehaviorSubject(value) {
-            _super.call(this, subscribe);
-
-            this.value = value,
-            this.observers = [],
-            this.isDisposed = false,
-            this.isStopped = false,
-            this.exception = null;
+        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+          os[i].onError(error);
         }
 
-        addProperties(BehaviorSubject.prototype, Observer, {
-            /**
-             * Indicates whether the subject has observers subscribed to it.
-             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-             */         
-            hasObservers: function () {
-                return this.observers.length > 0;
-            },
-            /**
-             * Notifies all subscribed observers about the end of the sequence.
-             */ 
-            onCompleted: function () {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    var os = this.observers.slice(0);
-                    this.isStopped = true;
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onCompleted();
-                    }
+        this.observers = [];
+      },
+      /**
+       * Notifies all subscribed observers about the arrival of the specified element in the sequence.
+       * @param {Mixed} value The value to send to all observers.
+       */              
+      onNext: function (value) {
+        checkDisposed.call(this);
+        if (this.isStopped) { return; }
+        this.value = value;
+        for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
+          os[i].onNext(value);
+        }
+      },
+      /**
+       * Unsubscribe all observers and release resources.
+       */            
+      dispose: function () {
+        this.isDisposed = true;
+        this.observers = null;
+        this.value = null;
+        this.exception = null;
+      }
+    });
 
-                    this.observers = [];
-                }
-            },
-            /**
-             * Notifies all subscribed observers about the exception.
-             * @param {Mixed} error The exception to send to all observers.
-             */             
-            onError: function (error) {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    var os = this.observers.slice(0);
-                    this.isStopped = true;
-                    this.exception = error;
-
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onError(error);
-                    }
-
-                    this.observers = [];
-                }
-            },
-            /**
-             * Notifies all subscribed observers about the arrival of the specified element in the sequence.
-             * @param {Mixed} value The value to send to all observers.
-             */              
-            onNext: function (value) {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    this.value = value;
-                    var os = this.observers.slice(0);
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onNext(value);
-                    }
-                }
-            },
-            /**
-             * Unsubscribe all observers and release resources.
-             */            
-            dispose: function () {
-                this.isDisposed = true;
-                this.observers = null;
-                this.value = null;
-                this.exception = null;
-            }
-        });
-
-        return BehaviorSubject;
-    }(Observable));
+    return BehaviorSubject;
+  }(Observable));
 
     /**
      * Represents an object that is both an observable sequence as well as an observer.

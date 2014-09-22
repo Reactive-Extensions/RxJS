@@ -1,8 +1,8 @@
-  var ScheduledObserver = Rx.internals.ScheduledObserver = (function (_super) {
-    inherits(ScheduledObserver, _super);
+  var ScheduledObserver = Rx.internals.ScheduledObserver = (function (__super__) {
+    inherits(ScheduledObserver, __super__);
 
     function ScheduledObserver(scheduler, observer) {
-      _super.call(this);
+      __super__.call(this);
       this.scheduler = scheduler;
       this.observer = observer;
       this.isAcquired = false;
@@ -18,10 +18,10 @@
       });
     };
 
-    ScheduledObserver.prototype.error = function (exception) {
+    ScheduledObserver.prototype.error = function (err) {
       var self = this;
       this.queue.push(function () {
-        self.observer.onError(exception);
+        self.observer.onError(err);
       });
     };
 
@@ -60,7 +60,7 @@
     };
 
     ScheduledObserver.prototype.dispose = function () {
-      _super.prototype.dispose.call(this);
+      __super__.prototype.dispose.call(this);
       this.disposable.dispose();
     };
 
