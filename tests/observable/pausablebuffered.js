@@ -271,3 +271,46 @@ test('paused with immediate unpause', function(){
   );
 
 });
+
+test('paused with state change in subscriber', function(){
+  var subscription;
+
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.createObserver();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(250, 3),
+    onNext(270, 4),
+    onNext(330, 5),
+    onCompleted(500)
+  );
+
+  var controller = new Rx.Subject();
+
+  var pausableBuffered = xs.pausableBuffered(controller);
+
+  scheduler.scheduleAbsolute(200, function () {
+    subscription = pausableBuffered.subscribe(function(value){
+      results.onNext(value);
+      controller.onNext(false);
+      scheduler.scheduleRelative(100, function(){
+        controller.onNext(true);
+      });
+    }, results.onError.bind(results), results.onCompleted.bind(results));
+
+    controller.onNext(true);
+  });
+
+  scheduler.start();
+
+  results.messages.assertEqual(
+    onNext(210, 2),
+    onNext(310, 3),
+    onNext(310, 4),
+    onNext(410, 5),
+    onCompleted(500)
+  );
+});
