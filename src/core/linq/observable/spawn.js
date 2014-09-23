@@ -36,15 +36,13 @@
     var ctx = this;
 
     return function (done) {
-      var keys = Object.keys(obj);
-      var pending = keys.length;
-      var results = new obj.constructor();
-      var finished;
+      var keys = Object.keys(obj),
+          pending = keys.length,
+          results = new obj.constructor(),
+          finished;
 
       if (!pending) {
-        timeoutScheduler.schedule(function(){
-          done(null, results)
-        });
+        timeoutScheduler.schedule(function () { done(null, results); });
         return;
       }
 
@@ -53,7 +51,7 @@
       }
 
       function run(fn, key) {
-        if (finished) return;
+        if (finished) { return; }
         try {
           fn = toThunk(fn, ctx);
 
@@ -63,7 +61,7 @@
           }
 
           fn.call(ctx, function(err, res){
-            if (finished) return;
+            if (finished) { return; }
 
             if (err) {
               finished = true;
@@ -182,17 +180,17 @@
           try {
             ret.value.call(ctx, function(){
               if (called) { 
-                return 
-              };
+                return;
+              }
 
               called = true;
               next.apply(ctx, arguments);
             });
           } catch (e) {
-            timeoutScheduler.schedule(function(){
+            timeoutScheduler.schedule(function () {
               if (called) { 
-                return 
-              };
+                return;
+              }
 
               called = true;
               next.call(ctx, e);
@@ -202,7 +200,7 @@
         }
 
         // Not supported
-        next(new Error('Rx.spawn only supports a function, Promise, Observable, Object or Array.'));
+        next(new TypeError('Rx.spawn only supports a function, Promise, Observable, Object or Array.'));
       }
     }    
   };
@@ -213,7 +211,7 @@
    * @returns {Function} A function, when executed will continue the state machine.
    */
   Rx.denodify(fn) {
-    return function(){
+    return function (){
       var args = slice.call(arguments),
         results,
         called,
@@ -230,7 +228,7 @@
 
       fn.apply(this, args);
 
-      return function(fn){
+      return function (fn){
         callback = fn;
 
         if (results && !called) {

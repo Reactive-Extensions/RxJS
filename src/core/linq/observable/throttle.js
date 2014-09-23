@@ -11,5 +11,35 @@
    */
   observableProto.throttle = function (dueTime, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return this.throttleWithSelector(function () { return observableTimer(dueTime, scheduler); })
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var cancelable = new SerialDisposable(), hasvalue = false, value, id = 0;
+      var subscription = source.subscribe(
+        function (x) {
+          hasvalue = true;
+          value = x;
+          id++;
+          var currentId = id,
+            d = new SingleAssignmentDisposable();
+          cancelable.setDisposable(d);
+          d.setDisposable(scheduler.scheduleWithRelative(dueTime, function () {
+            hasValue && id === currentId && observer.onNext(value);
+            hasvalue = false;
+          }));
+        }, 
+        function (e) {
+          cancelable.dispose();
+          observer.onError(e);
+          hasvalue = false;
+          id++;
+        }, 
+        function () {
+          cancelable.dispose();
+          hasvalue && observer.onNext(value);
+          observer.onCompleted();
+          hasvalue = false;
+          id++;
+        });
+      return new CompositeDisposable(subscription, cancelable);
+    });
   };

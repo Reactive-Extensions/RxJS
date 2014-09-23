@@ -1,14 +1,5 @@
   /**
-   *  Returns the source observable sequence or the other observable sequence if dueTime elapses.
-   *  
-   * @example
-   *  1 - res = source.timeout(new Date()); // As a date
-   *  2 - res = source.timeout(5000); // 5 seconds
-   *  3 - res = source.timeout(new Date(), Rx.Observable.returnValue(42)); // As a date and timeout observable
-   *  4 - res = source.timeout(5000, Rx.Observable.returnValue(42)); // 5 seconds and timeout observable
-   *  5 - res = source.timeout(new Date(), Rx.Observable.returnValue(42), Rx.Scheduler.timeout); // As a date and timeout observable
-   *  6 - res = source.timeout(5000, Rx.Observable.returnValue(42), Rx.Scheduler.timeout); // 5 seconds and timeout observable
-   *      
+   *  Returns the source observable sequence or the other observable sequence if dueTime elapses.  
    * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
    * @param {Observable} [other]  Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
    * @param {Scheduler} [scheduler]  Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
@@ -31,7 +22,7 @@
 
       subscription.setDisposable(original);
 
-      var createTimer = function () {
+      function createTimer() {
         var myId = id;
         timer.setDisposable(scheduler[schedulerMethod](dueTime, function () {
           if (id === myId) {
@@ -39,7 +30,7 @@
             subscription.setDisposable(other.subscribe(observer));
           }
         }));
-      };
+      }
 
       createTimer();
       

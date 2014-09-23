@@ -10,7 +10,8 @@
   observableProto.throttleWithSelector = function (throttleDurationSelector) {
     var source = this;
     return new AnonymousObservable(function (observer) {
-      var value, hasValue = false, cancelable = new SerialDisposable(), id = 0, subscription = source.subscribe(function (x) {
+      var value, hasValue = false, cancelable = new SerialDisposable(), id = 0;
+      var subscription = source.subscribe(function (x) {
         var throttle;
         try {
           throttle = throttleDurationSelector(x);
@@ -18,21 +19,20 @@
           observer.onError(e);
           return;
         }
+
+        isPromise(throttle) && (throttle = observableFromPromise(throttle));
+
         hasValue = true;
         value = x;
         id++;
         var currentid = id, d = new SingleAssignmentDisposable();
         cancelable.setDisposable(d);
         d.setDisposable(throttle.subscribe(function () {
-          if (hasValue && id === currentid) {
-            observer.onNext(value);
-          }
+          hasValue && id === currentid && observer.onNext(value);
           hasValue = false;
           d.dispose();
         }, observer.onError.bind(observer), function () {
-          if (hasValue && id === currentid) {
-            observer.onNext(value);
-          }
+          hasValue && id === currentid && observer.onNext(value);
           hasValue = false;
           d.dispose();
         }));
@@ -43,9 +43,7 @@
         id++;
       }, function () {
         cancelable.dispose();
-        if (hasValue) {
-            observer.onNext(value);
-        }
+        hasValue && observer.onNext(value);
         observer.onCompleted();
         hasValue = false;
         id++;

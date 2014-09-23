@@ -1,25 +1,23 @@
   function sequenceEqualArray(first, second, comparer) {
-      return new AnonymousObservable(function (observer) {
-        var count = 0, len = second.length;
-        return first.subscribe(function (value) {
-          var equal = false;
-          try {
-            if (count < len) {
-              equal = comparer(value, second[count++]);
-            }
-          } catch (e) {
-            observer.onError(e);
-            return;
-          }
-          if (!equal) {
-            observer.onNext(false);
-            observer.onCompleted();
-          }
-        }, observer.onError.bind(observer), function () {
-          observer.onNext(count === len);
+    return new AnonymousObservable(function (observer) {
+      var count = 0, len = second.length;
+      return first.subscribe(function (value) {
+        var equal = false;
+        try {
+          count < len && (equal = comparer(value, second[count++]));
+        } catch (e) {
+          observer.onError(e);
+          return;
+        }
+        if (!equal) {
+          observer.onNext(false);
           observer.onCompleted();
-        });
+        }
+      }, observer.onError.bind(observer), function () {
+        observer.onNext(count === len);
+        observer.onCompleted();
       });
+    });
   }
 
   /**
@@ -45,17 +43,17 @@
       var subscription1 = first.subscribe(function (x) {
         var equal, v;
         if (qr.length > 0) {
-            v = qr.shift();
-            try {
-              equal = comparer(v, x);
-            } catch (e) {
-              observer.onError(e);
-              return;
-            }
-            if (!equal) {
-              observer.onNext(false);
-              observer.onCompleted();
-            }
+          v = qr.shift();
+          try {
+            equal = comparer(v, x);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          if (!equal) {
+            observer.onNext(false);
+            observer.onCompleted();
+          }
         } else if (doner) {
           observer.onNext(false);
           observer.onCompleted();
@@ -77,9 +75,9 @@
 
       isPromise(second) && (second = observableFromPromise(second));
       var subscription2 = second.subscribe(function (x) {
-        var equal, v;
+        var equal;
         if (ql.length > 0) {
-          v = ql.shift();
+          var v = ql.shift();
           try {
             equal = comparer(v, x);
           } catch (exception) {

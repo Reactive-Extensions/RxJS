@@ -966,8 +966,6 @@ var browsers = [{
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
               'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/timeoutwithselector.js',
-              'src/core/linq/observable/throttlewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
               'src/core/linq/observable/takewithtime.js',
@@ -1127,8 +1125,6 @@ var browsers = [{
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
               'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/timeoutwithselector.js',
-              'src/core/linq/observable/throttlewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
               'src/core/linq/observable/takewithtime.js',

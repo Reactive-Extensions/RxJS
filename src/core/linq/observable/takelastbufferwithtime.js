@@ -1,8 +1,5 @@
   /**
    *  Returns an array with the elements within the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
-   *  
-   * @example
-   *  1 - res = source.takeLastBufferWithTime(5000, [optional scheduler]); 
    * @description
    *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
    *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
@@ -16,7 +13,6 @@
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var q = [];
-
       return source.subscribe(function (x) {
         var now = scheduler.now();
         q.push({ interval: now, value: x });
@@ -27,11 +23,8 @@
         var now = scheduler.now(), res = [];
         while (q.length > 0) {
           var next = q.shift();
-          if (now - next.interval <= duration) {
-            res.push(next.value);
-          }
+          if (now - next.interval <= duration) { res.push(next.value); }
         }
-
         observer.onNext(res);
         observer.onCompleted();
       });
