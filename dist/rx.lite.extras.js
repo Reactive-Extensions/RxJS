@@ -177,27 +177,27 @@
     });
   };
 
-     /**
-     *  Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler. This operation is not commonly used;
-     *  see the remarks section for more information on the distinction between subscribeOn and observeOn.
+   /**
+   *  Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler. This operation is not commonly used;
+   *  see the remarks section for more information on the distinction between subscribeOn and observeOn.
 
-     *  This only performs the side-effects of subscription and unsubscription on the specified scheduler. In order to invoke observer
-     *  callbacks on a scheduler, use observeOn.
+   *  This only performs the side-effects of subscription and unsubscription on the specified scheduler. In order to invoke observer
+   *  callbacks on a scheduler, use observeOn.
 
-     *  @param {Scheduler} scheduler Scheduler to perform subscription and unsubscription actions on.
-     *  @returns {Observable} The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler.
-     */
-    observableProto.subscribeOn = function (scheduler) {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
-            d.setDisposable(m);
-            m.setDisposable(scheduler.schedule(function () {
-                d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
-            }));
-            return d;
-        });
-    };
+   *  @param {Scheduler} scheduler Scheduler to perform subscription and unsubscription actions on.
+   *  @returns {Observable} The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler.
+   */
+  observableProto.subscribeOn = function (scheduler) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
+      d.setDisposable(m);
+      m.setDisposable(scheduler.schedule(function () {
+        d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
+      }));
+      return d;
+    });
+  };
 
   /**
    *  Generates an observable sequence by running a state-driven loop producing the sequence's elements, using the specified scheduler to send out observer messages.
@@ -243,10 +243,7 @@
   };
 
   /**
-   *  Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
-   *  
-   * @example
-   *  var res = Rx.Observable.using(function () { return new AsyncSubject(); }, function (s) { return s; });
+   * Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
    * @param {Function} resourceFactory Factory function to obtain a resource object.
    * @param {Function} observableFactory Factory function to obtain an observable sequence that depends on the obtained resource.
    * @returns {Observable} An observable sequence whose lifetime controls the lifetime of the dependent resource object.
@@ -256,9 +253,7 @@
       var disposable = disposableEmpty, resource, source;
       try {
         resource = resourceFactory();
-        if (resource) {
-          disposable = resource;
-        }
+        resource && (disposable = resource);
         source = observableFactory(resource);
       } catch (exception) {
         return new CompositeDisposable(observableThrow(exception).subscribe(observer), disposable);

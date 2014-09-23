@@ -168,6 +168,7 @@
           .subscribe(
             function (results) {
               if (previousShouldFire !== undefined && results.shouldFire != previousShouldFire) {
+                previousShouldFire = results.shouldFire;
                 // change in shouldFire
                 if (results.shouldFire) {
                   while (q.length > 0) {
@@ -175,6 +176,7 @@
                   }
                 }
               } else {
+                previousShouldFire = results.shouldFire;
                 // new data
                 if (results.shouldFire) {
                   observer.onNext(results.data);
@@ -182,9 +184,7 @@
                   q.push(results.data);
                 }
               }
-              previousShouldFire = results.shouldFire;
-
-            }, 
+            },
             function (err) {
               // Empty buffer before sending error
               while (q.length > 0) {

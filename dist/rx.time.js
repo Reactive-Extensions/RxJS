@@ -119,18 +119,6 @@
 
   /**
    *  Returns an observable sequence that produces a value after dueTime has elapsed and then after each period.
-   *  
-   * @example
-   *  1 - res = Rx.Observable.timer(new Date());
-   *  2 - res = Rx.Observable.timer(new Date(), 1000);
-   *  3 - res = Rx.Observable.timer(new Date(), Rx.Scheduler.timeout);
-   *  4 - res = Rx.Observable.timer(new Date(), 1000, Rx.Scheduler.timeout);
-   *  
-   *  5 - res = Rx.Observable.timer(5000);
-   *  6 - res = Rx.Observable.timer(5000, 1000);
-   *  7 - res = Rx.Observable.timer(5000, Rx.Scheduler.timeout);
-   *  8 - res = Rx.Observable.timer(5000, 1000, Rx.Scheduler.timeout);
-   *  
    * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
    * @param {Mixed} [periodOrScheduler]  Period to produce subsequent values (specified as an integer denoting milliseconds), or the scheduler to run the timer on. If not specified, the resulting timer is not recurring.
    * @param {Scheduler} [scheduler]  Scheduler to run the timer on. If not specified, the timeout scheduler is used.
@@ -141,7 +129,7 @@
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'number') {
       period = periodOrScheduler;
-    } else if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'object') {
+    } else if (isScheduler(periodOrScheduler)) {
       scheduler = periodOrScheduler;
     }
     if (dueTime instanceof Date && period === undefined) {
@@ -260,7 +248,37 @@
    */
   observableProto.throttle = function (dueTime, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return this.throttleWithSelector(function () { return observableTimer(dueTime, scheduler); })
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var cancelable = new SerialDisposable(), hasvalue = false, value, id = 0;
+      var subscription = source.subscribe(
+        function (x) {
+          hasvalue = true;
+          value = x;
+          id++;
+          var currentId = id,
+            d = new SingleAssignmentDisposable();
+          cancelable.setDisposable(d);
+          d.setDisposable(scheduler.scheduleWithRelative(dueTime, function () {
+            hasValue && id === currentId && observer.onNext(value);
+            hasvalue = false;
+          }));
+        }, 
+        function (e) {
+          cancelable.dispose();
+          observer.onError(e);
+          hasvalue = false;
+          id++;
+        }, 
+        function () {
+          cancelable.dispose();
+          hasvalue && observer.onNext(value);
+          observer.onCompleted();
+          hasvalue = false;
+          id++;
+        });
+      return new CompositeDisposable(subscription, cancelable);
+    });
   };
 
   /**
@@ -545,16 +563,7 @@
   };
 
   /**
-   *  Returns the source observable sequence or the other observable sequence if dueTime elapses.
-   *  
-   * @example
-   *  1 - res = source.timeout(new Date()); // As a date
-   *  2 - res = source.timeout(5000); // 5 seconds
-   *  3 - res = source.timeout(new Date(), Rx.Observable.returnValue(42)); // As a date and timeout observable
-   *  4 - res = source.timeout(5000, Rx.Observable.returnValue(42)); // 5 seconds and timeout observable
-   *  5 - res = source.timeout(new Date(), Rx.Observable.returnValue(42), Rx.Scheduler.timeout); // As a date and timeout observable
-   *  6 - res = source.timeout(5000, Rx.Observable.returnValue(42), Rx.Scheduler.timeout); // 5 seconds and timeout observable
-   *      
+   *  Returns the source observable sequence or the other observable sequence if dueTime elapses.  
    * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
    * @param {Observable} [other]  Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
    * @param {Scheduler} [scheduler]  Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
@@ -577,7 +586,7 @@
 
       subscription.setDisposable(original);
 
-      var createTimer = function () {
+      function createTimer() {
         var myId = id;
         timer.setDisposable(scheduler[schedulerMethod](dueTime, function () {
           if (id === myId) {
@@ -585,7 +594,7 @@
             subscription.setDisposable(other.subscribe(observer));
           }
         }));
-      };
+      }
 
       createTimer();
       
@@ -798,83 +807,71 @@
 
     /**
      *  Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
-     *  
-     * @example
-     *  1 - res = source.timeoutWithSelector(Rx.Observable.timer(500)); 
-     *  2 - res = source.timeoutWithSelector(Rx.Observable.timer(500), function (x) { return Rx.Observable.timer(200); });
-     *  3 - res = source.timeoutWithSelector(Rx.Observable.timer(500), function (x) { return Rx.Observable.timer(200); }, Rx.Observable.returnValue(42));
-     *      
      * @param {Observable} [firstTimeout]  Observable sequence that represents the timeout for the first element. If not provided, this defaults to Observable.never().
      * @param {Function} [timeoutDurationSelector] Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
      * @param {Observable} [other]  Sequence to return in case of a timeout. If not provided, this is set to Observable.throwException(). 
      * @returns {Observable} The source sequence switching to the other sequence in case of a timeout.
      */
     observableProto.timeoutWithSelector = function (firstTimeout, timeoutdurationSelector, other) {
-        if (arguments.length === 1) {
-            timeoutdurationSelector = firstTimeout;
-            var firstTimeout = observableNever();
+      if (arguments.length === 1) {
+          timeoutdurationSelector = firstTimeout;
+          firstTimeout = observableNever();
+      }
+      other || (other = observableThrow(new Error('Timeout')));
+      var source = this;
+      return new AnonymousObservable(function (observer) {
+        var subscription = new SerialDisposable(), timer = new SerialDisposable(), original = new SingleAssignmentDisposable();
+
+        subscription.setDisposable(original);
+
+        var id = 0, switched = false;
+
+        function setTimer(timeout) {
+          var myId = id; 
+
+          function timerWins () {
+            return id === myId;
+          }
+
+          var d = new SingleAssignmentDisposable();
+          timer.setDisposable(d);
+          d.setDisposable(timeout.subscribe(function () {
+            timerWins() && subscription.setDisposable(other.subscribe(observer));
+            d.dispose();
+          }, function (e) {
+            timerWins() && observer.onError(e);
+          }, function () {
+            timerWins() && subscription.setDisposable(other.subscribe(observer));
+          }));
+        };
+
+        setTimer(firstTimeout);
+
+        function observerWins() {
+          var res = !switched;
+          if (res) { id++; }
+          return res;
         }
-        other || (other = observableThrow(new Error('Timeout')));
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            var subscription = new SerialDisposable(), timer = new SerialDisposable(), original = new SingleAssignmentDisposable();
 
-            subscription.setDisposable(original);
-
-            var id = 0, switched = false, setTimer = function (timeout) {
-                var myId = id, timerWins = function () {
-                    return id === myId;
-                };
-                var d = new SingleAssignmentDisposable();
-                timer.setDisposable(d);
-                d.setDisposable(timeout.subscribe(function () {
-                    if (timerWins()) {
-                        subscription.setDisposable(other.subscribe(observer));
-                    }
-                    d.dispose();
-                }, function (e) {
-                    if (timerWins()) {
-                        observer.onError(e);
-                    }
-                }, function () {
-                    if (timerWins()) {
-                        subscription.setDisposable(other.subscribe(observer));
-                    }
-                }));
-            };
-
-            setTimer(firstTimeout);
-            var observerWins = function () {
-                var res = !switched;
-                if (res) {
-                    id++;
-                }
-                return res;
-            };
-
-            original.setDisposable(source.subscribe(function (x) {
-                if (observerWins()) {
-                    observer.onNext(x);
-                    var timeout;
-                    try {
-                        timeout = timeoutdurationSelector(x);
-                    } catch (e) {
-                        observer.onError(e);
-                        return;
-                    }
-                    setTimer(timeout);
-                }
-            }, function (e) {
-                if (observerWins()) {
-                    observer.onError(e);
-                }
-            }, function () {
-                if (observerWins()) {
-                    observer.onCompleted();
-                }
-            }));
-            return new CompositeDisposable(subscription, timer);
-        });
+        original.setDisposable(source.subscribe(function (x) {
+          if (observerWins()) {
+            observer.onNext(x);
+            var timeout;
+            try {
+              timeout = timeoutdurationSelector(x);
+            } catch (e) {
+              observer.onError(e);
+              return;
+            }
+            setTimer(isPromise(timeout) ? observableFromPromise(timeout) : timeout);
+          }
+        }, function (e) {
+          observerWins() && observer.onError(e);
+        }, function () {
+          observerWins() && observer.onCompleted();
+        }));
+        return new CompositeDisposable(subscription, timer);
+      });
     };
 
   /**
@@ -889,7 +886,8 @@
   observableProto.throttleWithSelector = function (throttleDurationSelector) {
     var source = this;
     return new AnonymousObservable(function (observer) {
-      var value, hasValue = false, cancelable = new SerialDisposable(), id = 0, subscription = source.subscribe(function (x) {
+      var value, hasValue = false, cancelable = new SerialDisposable(), id = 0;
+      var subscription = source.subscribe(function (x) {
         var throttle;
         try {
           throttle = throttleDurationSelector(x);
@@ -897,21 +895,20 @@
           observer.onError(e);
           return;
         }
+
+        isPromise(throttle) && (throttle = observableFromPromise(throttle));
+
         hasValue = true;
         value = x;
         id++;
         var currentid = id, d = new SingleAssignmentDisposable();
         cancelable.setDisposable(d);
         d.setDisposable(throttle.subscribe(function () {
-          if (hasValue && id === currentid) {
-            observer.onNext(value);
-          }
+          hasValue && id === currentid && observer.onNext(value);
           hasValue = false;
           d.dispose();
         }, observer.onError.bind(observer), function () {
-          if (hasValue && id === currentid) {
-            observer.onNext(value);
-          }
+          hasValue && id === currentid && observer.onNext(value);
           hasValue = false;
           d.dispose();
         }));
@@ -922,9 +919,7 @@
         id++;
       }, function () {
         cancelable.dispose();
-        if (hasValue) {
-            observer.onNext(value);
-        }
+        hasValue && observer.onNext(value);
         observer.onCompleted();
         hasValue = false;
         id++;
@@ -970,9 +965,6 @@
 
   /**
    *  Returns elements within the specified duration from the end of the observable source sequence, using the specified schedulers to run timers and to drain the collected elements.
-   *  
-   * @example
-   *  1 - res = source.takeLastWithTime(5000, [optional timer scheduler], [optional loop scheduler]); 
    * @description
    *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
    *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
@@ -986,7 +978,6 @@
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var q = [];
-
       return source.subscribe(function (x) {
         var now = scheduler.now();
         q.push({ interval: now, value: x });
@@ -997,11 +988,8 @@
         var now = scheduler.now();
         while (q.length > 0) {
           var next = q.shift();
-          if (now - next.interval <= duration) {
-            observer.onNext(next.value);
-          }
+          if (now - next.interval <= duration) { observer.onNext(next.value); }
         }
-
         observer.onCompleted();
       });
     });    
@@ -1009,9 +997,6 @@
 
   /**
    *  Returns an array with the elements within the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
-   *  
-   * @example
-   *  1 - res = source.takeLastBufferWithTime(5000, [optional scheduler]); 
    * @description
    *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
    *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
@@ -1025,7 +1010,6 @@
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var q = [];
-
       return source.subscribe(function (x) {
         var now = scheduler.now();
         q.push({ interval: now, value: x });
@@ -1036,11 +1020,8 @@
         var now = scheduler.now(), res = [];
         while (q.length > 0) {
           var next = q.shift();
-          if (now - next.interval <= duration) {
-            res.push(next.value);
-          }
+          if (now - next.interval <= duration) { res.push(next.value); }
         }
-
         observer.onNext(res);
         observer.onCompleted();
       });
@@ -1100,10 +1081,10 @@
    *  Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the start time.
    *  
    * @examples
-   *  1 - res = source.skipUntilWithTime(new Date(), [optional scheduler]);   
-   *  2 - res = source.skipUntilWithTime(5000, [optional scheduler]);           
-   * @param startTime Time to start taking elements from the source sequence. If this value is less than or equal to Date(), no elements will be skipped.
-   * @param scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
+   *  1 - res = source.skipUntilWithTime(new Date(), [scheduler]);   
+   *  2 - res = source.skipUntilWithTime(5000, [scheduler]);           
+   * @param {Date|Number} startTime Time to start taking elements from the source sequence. If this value is less than or equal to Date(), no elements will be skipped.
+   * @param {Scheduler} [scheduler] Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
    * @returns {Observable} An observable sequence with the elements skipped until the specified start time. 
    */
   observableProto.skipUntilWithTime = function (startTime, scheduler) {
@@ -1124,13 +1105,9 @@
   };
 
   /**
-   *  Takes elements for the specified duration until the specified end time, using the specified scheduler to run timers.
-   *  
-   * @example
-   *  1 - res = source.takeUntilWithTime(new Date(), [optional scheduler]);
-   *  2 - res = source.takeUntilWithTime(5000, [optional scheduler]);   
+   *  Takes elements for the specified duration until the specified end time, using the specified scheduler to run timers.  
    * @param {Number | Date} endTime Time to stop taking elements from the source sequence. If this value is less than or equal to new Date(), the result stream will complete immediately.
-   * @param {Scheduler} scheduler Scheduler to run the timer on.
+   * @param {Scheduler} [scheduler] Scheduler to run the timer on.
    * @returns {Observable} An observable sequence with the elements taken until the specified end time.
    */
   observableProto.takeUntilWithTime = function (endTime, scheduler) {
@@ -1139,9 +1116,9 @@
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
     return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(scheduler[schedulerMethod](endTime, function () {
-        observer.onCompleted();
-      }),  source.subscribe(observer));
+      return new CompositeDisposable(
+        scheduler[schedulerMethod](endTime, observer.onCompleted.bind(observer)), 
+        source.subscribe(observer));
     });
   };
 

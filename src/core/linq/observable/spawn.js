@@ -210,7 +210,7 @@
    * @param {Function} A function with a callback such as fs.readFile
    * @returns {Function} A function, when executed will continue the state machine.
    */
-  Rx.denodify(fn) {
+  Rx.denodify = function (fn) {
     return function (){
       var args = slice.call(arguments),
         results,

@@ -14,6 +14,6 @@
       } catch (exception) {
         return new CompositeDisposable(observableThrow(exception).subscribe(observer), disposable);
       }
-      return new CompositeDisposable(source.subscribe(observer), resource);
+      return new CompositeDisposable(source.subscribe(observer), disposable);
     });
   };

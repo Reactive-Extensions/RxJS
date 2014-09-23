@@ -199,6 +199,7 @@ var browsers = [{
               'src/core/linq/observable/tomap.js',
 
               // Async operators
+              'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
@@ -466,6 +467,7 @@ var browsers = [{
               'src/core/linq/observable/tomap.js',
 
               // Async compat operators
+              'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
@@ -1260,6 +1262,7 @@ var browsers = [{
               'src/core/license.js',
               'src/core/asyncintro.js',
               'src/core/asyncheader.js',
+              'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
@@ -1276,6 +1279,7 @@ var browsers = [{
               'src/core/license.js',
               'src/core/asyncintro.js',
               'src/core/asyncheader.js',
+              'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable

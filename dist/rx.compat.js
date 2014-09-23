@@ -2189,27 +2189,27 @@ if (!Array.prototype.forEach) {
     });
   };
 
-     /**
-     *  Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler. This operation is not commonly used;
-     *  see the remarks section for more information on the distinction between subscribeOn and observeOn.
+   /**
+   *  Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler. This operation is not commonly used;
+   *  see the remarks section for more information on the distinction between subscribeOn and observeOn.
 
-     *  This only performs the side-effects of subscription and unsubscription on the specified scheduler. In order to invoke observer
-     *  callbacks on a scheduler, use observeOn.
+   *  This only performs the side-effects of subscription and unsubscription on the specified scheduler. In order to invoke observer
+   *  callbacks on a scheduler, use observeOn.
 
-     *  @param {Scheduler} scheduler Scheduler to perform subscription and unsubscription actions on.
-     *  @returns {Observable} The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler.
-     */
-    observableProto.subscribeOn = function (scheduler) {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
-            d.setDisposable(m);
-            m.setDisposable(scheduler.schedule(function () {
-                d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
-            }));
-            return d;
-        });
-    };
+   *  @param {Scheduler} scheduler Scheduler to perform subscription and unsubscription actions on.
+   *  @returns {Observable} The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler.
+   */
+  observableProto.subscribeOn = function (scheduler) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
+      d.setDisposable(m);
+      m.setDisposable(scheduler.schedule(function () {
+        d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
+      }));
+      return d;
+    });
+  };
 
   /**
    * Converts a Promise to an Observable sequence
@@ -2232,38 +2232,32 @@ if (!Array.prototype.forEach) {
       return subject;
     });
   };
-    /*
-     * Converts an existing observable sequence to an ES6 Compatible Promise
-     * @example
-     * var promise = Rx.Observable.return(42).toPromise(RSVP.Promise);
-     * 
-     * // With config
-     * Rx.config.Promise = RSVP.Promise;
-     * var promise = Rx.Observable.return(42).toPromise();
-     * @param {Function} [promiseCtor] The constructor of the promise. If not provided, it looks for it in Rx.config.Promise.
-     * @returns {Promise} An ES6 compatible promise with the last value from the observable sequence.
-     */
-    observableProto.toPromise = function (promiseCtor) {
-        promiseCtor || (promiseCtor = Rx.config.Promise);
-        if (!promiseCtor) {
-            throw new Error('Promise type not provided nor in Rx.config.Promise');
-        }
-        var source = this;
-        return new promiseCtor(function (resolve, reject) {
-            // No cancellation can be done
-            var value, hasValue = false;
-            source.subscribe(function (v) {
-                value = v;
-                hasValue = true;
-            }, function (err) {
-                reject(err);
-            }, function () {
-                if (hasValue) {
-                    resolve(value);
-                }
-            });
-        });
-    };
+  /*
+   * Converts an existing observable sequence to an ES6 Compatible Promise
+   * @example
+   * var promise = Rx.Observable.return(42).toPromise(RSVP.Promise);
+   * 
+   * // With config
+   * Rx.config.Promise = RSVP.Promise;
+   * var promise = Rx.Observable.return(42).toPromise();
+   * @param {Function} [promiseCtor] The constructor of the promise. If not provided, it looks for it in Rx.config.Promise.
+   * @returns {Promise} An ES6 compatible promise with the last value from the observable sequence.
+   */
+  observableProto.toPromise = function (promiseCtor) {
+    promiseCtor || (promiseCtor = Rx.config.Promise);
+    if (!promiseCtor) { throw new TypeError('Promise type not provided nor in Rx.config.Promise'); }
+    var source = this;
+    return new promiseCtor(function (resolve, reject) {
+      // No cancellation can be done
+      var value, hasValue = false;
+      source.subscribe(function (v) {
+        value = v;
+        hasValue = true;
+      }, reject, function () {
+        hasValue && resolve(value);
+      });
+    });
+  };
   /**
    * Creates a list from an observable sequence.
    * @returns An observable sequence containing a single element with a list containing all the elements of the source sequence.  
@@ -2593,16 +2587,12 @@ if (!Array.prototype.forEach) {
 
   /**
    *  Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
-   *  There is an alias to this method called 'throwException' for browsers <IE9.
-   *  
-   * @example
-   *  var res = Rx.Observable.throw(new Error('Error'));
-   *  var res = Rx.Observable.throw(new Error('Error'), Rx.Scheduler.timeout);
+   *  There is an alias to this method called 'throwError' for browsers <IE9.
    * @param {Mixed} exception An object used for the sequence's termination.
    * @param {Scheduler} scheduler Scheduler to send the exceptional termination call on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} The observable sequence that terminates exceptionally with the specified exception object.
    */
-  var observableThrow = Observable['throw'] = Observable.throwException = function (exception, scheduler) {
+  var observableThrow = Observable['throw'] = Observable.throwException = Observable.throwError = function (exception, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
       return scheduler.schedule(function () {
@@ -2612,10 +2602,7 @@ if (!Array.prototype.forEach) {
   };
 
   /**
-   *  Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
-   *  
-   * @example
-   *  var res = Rx.Observable.using(function () { return new AsyncSubject(); }, function (s) { return s; });
+   * Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
    * @param {Function} resourceFactory Factory function to obtain a resource object.
    * @param {Function} observableFactory Factory function to obtain an observable sequence that depends on the obtained resource.
    * @returns {Observable} An observable sequence whose lifetime controls the lifetime of the dependent resource object.
@@ -2625,9 +2612,7 @@ if (!Array.prototype.forEach) {
       var disposable = disposableEmpty, resource, source;
       try {
         resource = resourceFactory();
-        if (resource) {
-          disposable = resource;
-        }
+        resource && (disposable = resource);
         source = observableFactory(resource);
       } catch (exception) {
         return new CompositeDisposable(observableThrow(exception).subscribe(observer), disposable);
@@ -3544,54 +3529,47 @@ if (!Array.prototype.forEach) {
     });
   };
 
-    /**
-     *  Bypasses a specified number of elements at the end of an observable sequence.
-     * @description
-     *  This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are
-     *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.     
-     * @param count Number of elements to bypass at the end of the source sequence.
-     * @returns {Observable} An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
-     */
-    observableProto.skipLast = function (count) {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            var q = [];
-            return source.subscribe(function (x) {
-                q.push(x);
-                if (q.length > count) {
-                    observer.onNext(q.shift());
-                }
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+  /**
+   *  Bypasses a specified number of elements at the end of an observable sequence.
+   * @description
+   *  This operator accumulates a queue with a length enough to store the first `count` elements. As more elements are
+   *  received, elements are taken from the front of the queue and produced on the result sequence. This causes elements to be delayed.     
+   * @param count Number of elements to bypass at the end of the source sequence.
+   * @returns {Observable} An observable sequence containing the source sequence elements except for the bypassed ones at the end.   
+   */
+  observableProto.skipLast = function (count) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var q = [];
+      return source.subscribe(function (x) {
+        q.push(x);
+        q.length > count && observer.onNext(q.shift());
+      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    });
+  };
 
-    /**
-     *  Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
-     *  
-     *  var res = source.startWith(1, 2, 3);
-     *  var res = source.startWith(Rx.Scheduler.timeout, 1, 2, 3);
-     *  
-     * @memberOf Observable#
-     * @returns {Observable} The source sequence prepended with the specified values.  
-     */
-    observableProto.startWith = function () {
-        var values, scheduler, start = 0;
-        if (!!arguments.length && 'now' in Object(arguments[0])) {
-            scheduler = arguments[0];
-            start = 1;
-        } else {
-            scheduler = immediateScheduler;
-        }
-        values = slice.call(arguments, start);
-        return enumerableFor([observableFromArray(values, scheduler), this]).concat();
-    };
+  /**
+   *  Prepends a sequence of values to an observable sequence with an optional scheduler and an argument list of values to prepend.
+   *  @example
+   *  var res = source.startWith(1, 2, 3);
+   *  var res = source.startWith(Rx.Scheduler.timeout, 1, 2, 3);
+   * @param {Arguments} args The specified values to prepend to the observable sequence
+   * @returns {Observable} The source sequence prepended with the specified values.  
+   */
+  observableProto.startWith = function () {
+    var values, scheduler, start = 0;
+    if (!!arguments.length && isScheduler(arguments[0])) {
+      scheduler = arguments[0];
+      start = 1;
+    } else {
+      scheduler = immediateScheduler;
+    }
+    values = slice.call(arguments, start);
+    return enumerableFor([observableFromArray(values, scheduler), this]).concat();
+  };
 
   /**
    *  Returns a specified number of contiguous elements from the end of an observable sequence.
-   *  
-   * @example
-   *  var res = source.takeLast(5);
-   *  
    * @description
    *  This operator accumulates a buffer with a length enough to store elements count elements. Upon completion of
    *  the source sequence, this buffer is drained on the result sequence. This causes the elements to be delayed.
@@ -3996,133 +3974,118 @@ if (!Array.prototype.forEach) {
         });
     }).mergeAll();
   };
-    /**
-     *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then 
-     *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-     * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
-     * @param {Any} [thisArg] Object to use as this when executing callback.
-     * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences 
-     *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
-     */
-    observableProto.selectSwitch = observableProto.flatMapLatest = observableProto.switchMap = function (selector, thisArg) {
-        return this.select(selector, thisArg).switchLatest();
-    };
+  /**
+   *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then 
+   *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+   * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences 
+   *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
+   */
+  observableProto.selectSwitch = observableProto.flatMapLatest = observableProto.switchMap = function (selector, thisArg) {
+    return this.select(selector, thisArg).switchLatest();
+  };
 
-    /**
-     * Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
-     * @param {Number} count The number of elements to skip before returning the remaining elements.
-     * @returns {Observable} An observable sequence that contains the elements that occur after the specified index in the input sequence.   
-     */
-    observableProto.skip = function (count) {
-        if (count < 0) {
-            throw new Error(argumentOutOfRange);
+  /**
+   * Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
+   * @param {Number} count The number of elements to skip before returning the remaining elements.
+   * @returns {Observable} An observable sequence that contains the elements that occur after the specified index in the input sequence.   
+   */
+  observableProto.skip = function (count) {
+      if (count < 0) { throw new Error(argumentOutOfRange); }
+      var source = this;
+      return new AnonymousObservable(function (observer) {
+        var remaining = count;
+        return source.subscribe(function (x) {
+          if (remaining <= 0) {
+            observer.onNext(x);
+          } else {
+            remaining--;
+          }
+        }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      });
+  };
+
+  /**
+   *  Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
+   *  The element's index is used in the logic of the predicate function.
+   *  
+   *  var res = source.skipWhile(function (value) { return value < 10; });
+   *  var res = source.skipWhile(function (value, index) { return value < 10 || index < 10; });
+   * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+   * @param {Any} [thisArg] Object to use as this when executing callback.     
+   * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
+   */
+  observableProto.skipWhile = function (predicate, thisArg) {
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var i = 0, running = false;
+      return source.subscribe(function (x) {
+        if (!running) {
+          try {
+            running = !predicate.call(thisArg, x, i++, source);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
         }
-        var observable = this;
-        return new AnonymousObservable(function (observer) {
-            var remaining = count;
-            return observable.subscribe(function (x) {
-                if (remaining <= 0) {
-                    observer.onNext(x);
-                } else {
-                    remaining--;
-                }
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+        running && observer.onNext(x);
+      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    });
+  };
 
-    /**
-     *  Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
-     *  The element's index is used in the logic of the predicate function.
-     *  
-     *  var res = source.skipWhile(function (value) { return value < 10; });
-     *  var res = source.skipWhile(function (value, index) { return value < 10 || index < 10; });
-     * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
-     * @param {Any} [thisArg] Object to use as this when executing callback.     
-     * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
-     */
-    observableProto.skipWhile = function (predicate, thisArg) {
-        var source = this;
-        return new AnonymousObservable(function (observer) {
-            var i = 0, running = false;
-            return source.subscribe(function (x) {
-                if (!running) {
-                    try {
-                        running = !predicate.call(thisArg, x, i++, source);
-                    } catch (e) {
-                        observer.onError(e);
-                        return;
-                    }
-                }
-                if (running) {
-                    observer.onNext(x);
-                }
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+  /**
+   *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
+   *  
+   *  var res = source.take(5);
+   *  var res = source.take(0, Rx.Scheduler.timeout);
+   * @param {Number} count The number of elements to return.
+   * @param {Scheduler} [scheduler] Scheduler used to produce an OnCompleted message in case <paramref name="count count</paramref> is set to 0.
+   * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.  
+   */
+  observableProto.take = function (count, scheduler) {
+      if (count < 0) { throw new RangeError(argumentOutOfRange); }
+      if (count === 0) { return observableEmpty(scheduler); }
+      var observable = this;
+      return new AnonymousObservable(function (observer) {
+        var remaining = count;
+        return observable.subscribe(function (x) {
+          if (remaining-- > 0) {
+            observer.onNext(x);
+            remaining === 0 && observer.onCompleted();
+          }
+        }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      });
+  };
 
-    /**
-     *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
-     *  
-     *  var res = source.take(5);
-     *  var res = source.take(0, Rx.Scheduler.timeout);
-     * @param {Number} count The number of elements to return.
-     * @param {Scheduler} [scheduler] Scheduler used to produce an OnCompleted message in case <paramref name="count count</paramref> is set to 0.
-     * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.  
-     */
-    observableProto.take = function (count, scheduler) {
-        if (count < 0) {
-            throw new Error(argumentOutOfRange);
+  /**
+   *  Returns elements from an observable sequence as long as a specified condition is true.
+   *  The element's index is used in the logic of the predicate function.
+   * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+   * @param {Any} [thisArg] Object to use as this when executing callback.     
+   * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
+   */
+  observableProto.takeWhile = function (predicate, thisArg) {
+    var observable = this;
+    return new AnonymousObservable(function (observer) {
+      var i = 0, running = true;
+      return observable.subscribe(function (x) {
+        if (running) {
+          try {
+            running = predicate.call(thisArg, x, i++, observable);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          if (running) {
+            observer.onNext(x);
+          } else {
+            observer.onCompleted();
+          }
         }
-        if (count === 0) {
-            return observableEmpty(scheduler);
-        }
-        var observable = this;
-        return new AnonymousObservable(function (observer) {
-            var remaining = count;
-            return observable.subscribe(function (x) {
-                if (remaining > 0) {
-                    remaining--;
-                    observer.onNext(x);
-                    if (remaining === 0) {
-                        observer.onCompleted();
-                    }
-                }
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
-
-    /**
-     *  Returns elements from an observable sequence as long as a specified condition is true.
-     *  The element's index is used in the logic of the predicate function.
-     *  
-     * @example
-     *  var res = source.takeWhile(function (value) { return value < 10; });
-     *  var res = source.takeWhile(function (value, index) { return value < 10 || index < 10; });
-     * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
-     * @param {Any} [thisArg] Object to use as this when executing callback.     
-     * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
-     */
-    observableProto.takeWhile = function (predicate, thisArg) {
-        var observable = this;
-        return new AnonymousObservable(function (observer) {
-            var i = 0, running = true;
-            return observable.subscribe(function (x) {
-                if (running) {
-                    try {
-                        running = predicate.call(thisArg, x, i++, observable);
-                    } catch (e) {
-                        observer.onError(e);
-                        return;
-                    }
-                    if (running) {
-                        observer.onNext(x);
-                    } else {
-                        observer.onCompleted();
-                    }
-                }
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    });
+  };
 
     /**
      *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.

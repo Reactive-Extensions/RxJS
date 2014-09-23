@@ -9,6 +9,7 @@
     defaultComparer = helpers.defaultComparer,
     identity = helpers.identity,
     defaultSubComparer = helpers.defaultSubComparer,
+    isFunction = helpers.isFunction,
     isPromise = helpers.isPromise,
     observableFromPromise = Observable.fromPromise;
 

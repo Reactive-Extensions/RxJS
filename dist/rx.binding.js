@@ -98,18 +98,18 @@
       this.multicast(new Subject());
   };
 
-    /**
-     * Returns an observable sequence that shares a single subscription to the underlying sequence.
-     * This operator is a specialization of publish which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-     * 
-     * @example
-     * var res = source.share();
-     * 
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
-     */
-    observableProto.share = function () {
-        return this.publish(null).refCount();
-    };
+  /**
+   * Returns an observable sequence that shares a single subscription to the underlying sequence.
+   * This operator is a specialization of publish which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
+   * 
+   * @example
+   * var res = source.share();
+   * 
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+   */
+  observableProto.share = function () {
+    return this.publish().refCount();
+  };
 
   /**
    * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
@@ -148,20 +148,19 @@
       this.multicast(new BehaviorSubject(initialValueOrSelector));
   };
 
-    /**
-     * Returns an observable sequence that shares a single subscription to the underlying sequence and starts with an initialValue.
-     * This operator is a specialization of publishValue which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-     * 
-     * @example
-     * var res = source.shareValue(42);
-     * 
-     * @param {Mixed} initialValue Initial value received by observers upon subscription.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
-     */
-    observableProto.shareValue = function (initialValue) {
-        return this.publishValue(initialValue).
-            refCount();
-    };
+  /**
+   * Returns an observable sequence that shares a single subscription to the underlying sequence and starts with an initialValue.
+   * This operator is a specialization of publishValue which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
+   * 
+   * @example
+   * var res = source.shareValue(42);
+   * 
+   * @param {Mixed} initialValue Initial value received by observers upon subscription.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
+   */
+  observableProto.shareValue = function (initialValue) {
+    return this.publishValue(initialValue).refCount();
+  };
 
   /**
    * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
