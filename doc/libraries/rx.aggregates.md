@@ -50,5 +50,3 @@ NuGet Dependencies:
 - [`sum`](../api/core/operators/sum.md)
 - [`toMap`](../api/core/operators/tomap.md)
 - [`toSet`](../api/core/operators/toset.md)
-- [`toWeakMap`](../api/core/operators/toweakmap.md)
-- [`toWeakSet`](../api/core/operators/toweakset.md)

@@ -195,12 +195,8 @@ var browsers = [{
               'src/core/linq/observable/_findvalue.js',
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where
-              'src/core/linq/observable/_toset.js',
               'src/core/linq/observable/toset.js',
-              'src/core/linq/observable/toweakset.js',
-              'src/core/linq/observable/_tomap.js',
               'src/core/linq/observable/tomap.js',
-              'src/core/linq/observable/toweakmap.js',
 
               // Async operators
               'src/core/linq/observable/start.js', // toasync
@@ -466,12 +462,8 @@ var browsers = [{
               'src/core/linq/observable/_findvalue.js',
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where
-              'src/core/linq/observable/_toset.js',
               'src/core/linq/observable/toset.js',
-              'src/core/linq/observable/toweakset.js',
-              'src/core/linq/observable/_tomap.js',
               'src/core/linq/observable/tomap.js',
-              'src/core/linq/observable/toweakmap.js',
 
               // Async compat operators
               'src/core/linq/observable/start.js', // toasync
@@ -1261,12 +1253,8 @@ var browsers = [{
               'src/core/linq/observable/_findvalue.js',
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where
-              'src/core/linq/observable/_toset.js',
               'src/core/linq/observable/toset.js',
-              'src/core/linq/observable/toweakset.js',
-              'src/core/linq/observable/_tomap.js',
-              'src/core/linq/observable/tomap.js',
-              'src/core/linq/observable/toweakmap.js',              
+              'src/core/linq/observable/tomap.js',            
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.aggregates.js'

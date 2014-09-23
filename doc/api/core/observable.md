@@ -175,8 +175,6 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`toArray`](operators/toarray.md)
 - [`toMap`](operators/tomap.md)
 - [`toSet`](operators/toset.md)
-- [`toWeakMap`](operators/toweakmap.md)
-- [`toWeakSet`](operators/toweakset.md)
 - [`where`](operators/where.md)
 - [`window`](operators/window.md)
 - [`windowWithCount`](operators/windowwithcount.md)

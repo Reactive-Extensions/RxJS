@@ -695,69 +695,24 @@
         return findValue(this, predicate, thisArg, true);
     };
 
-  function toSet(source, type) {
-    return new AnonymousObservable(function (observer) {
-      var s = new type();
-      return source.subscribe(
-        s.add.bind(s),
-        observer.onError.bind(observer),
-        function () {
-          observer.onNext(s);
-          observer.onCompleted();
-        });
-    });
-  }
   if (!!root.Set) {
     /**
      * Converts the observable sequence to a Set if it exists.
      * @returns {Observable} An observable sequence with a single value of a Set containing the values from the observable sequence.
      */
     observableProto.toSet = function () {
-      return toSet(this, root.Set);
+      var source = this;
+      return new AnonymousObservable(function (observer) {
+        var s = new root.Set();
+        return source.subscribe(
+          s.add.bind(s),
+          observer.onError.bind(observer),
+          function () {
+            observer.onNext(s);
+            observer.onCompleted();
+          });
+      });
     };
-  }
-
-  if (!!root.WeakSet) {
-    /**
-     * Converts the observable sequence to a WeakSet if it exists.
-     * @returns {Observable} An observable sequence with a single value of a WeakSet containing the values from the observable sequence.
-     */
-    observableProto.toWeakSet = function () {
-      return toSet(this, root.WeakSet);
-    };
-  }
-
-  function toMap(source, type, keySelector, elementSelector) {
-    return new AnonymousObservable(function (observer) {
-      var m = new type();
-      return source.subscribe(
-        function (x) {
-          var key;
-          try {
-            key = keySelector(x);
-          } catch (e) {
-            observer.onError(e);
-            return;
-          }
-
-          var element = x;
-          if (elementSelector) {
-            try {
-              element = elementSelector(x);
-            } catch (e) {
-              observer.onError(e);
-              return;
-            }              
-          }
-
-          m.set(key, element);
-        },
-        observer.onError.bind(observer),
-        function () {
-          observer.onNext(m);
-          observer.onCompleted();
-        });
-    });
   }
 
   if (!!root.Map) {
@@ -768,19 +723,37 @@
     * @returns {Observable} An observable sequence with a single value of a Map containing the values from the observable sequence.
     */
     observableProto.toMap = function (keySelector, elementSelector) {
-      return toMap(this, root.Map, keySelector, elementSelector);
-    };
-  }
+      var source = this;
+      return new AnonymousObservable(function (observer) {
+        var m = new root.Map();
+        return source.subscribe(
+          function (x) {
+            var key;
+            try {
+              key = keySelector(x);
+            } catch (e) {
+              observer.onError(e);
+              return;
+            }
 
-  if (!!root.WeakMap) {
-    /**
-    * Converts the observable sequence to a WeakMap if it exists.
-    * @param {Function} keySelector A function which produces the key for the WeakMap
-    * @param {Function} [elementSelector] An optional function which produces the element for the WeakMap. If not present, defaults to the value from the observable sequence.
-    * @returns {Observable} An observable sequence with a single value of a WeakMap containing the values from the observable sequence.
-    */
-    observableProto.toWeakMap = function (keySelector, elementSelector) {
-      return toMap(this, root.WeakMap, keySelector, elementSelector);
+            var element = x;
+            if (elementSelector) {
+              try {
+                element = elementSelector(x);
+              } catch (e) {
+                observer.onError(e);
+                return;
+              }              
+            }
+
+            m.set(key, element);
+          },
+          observer.onError.bind(observer),
+          function () {
+            observer.onNext(m);
+            observer.onCompleted();
+          });
+      });
     };
   }
 
