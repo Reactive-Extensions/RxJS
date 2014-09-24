@@ -69,3 +69,25 @@ test('Throttle_Never', function () {
         subscribe(200, 1000)
     );
 });
+
+test('Throttle_All_Pass', function(){
+    var scheduler = new TestScheduler();
+    var xs = scheduler.createHotObservable(
+        onNext(210, 1),
+        onNext(300, 2),
+        onNext(351, 3),
+        onCompleted(400)
+    );
+
+    var results = scheduler.startWithCreate(function(){
+        return xs.throttle(50, scheduler);
+    });
+
+    results.messages.assertEqual(
+        onNext(260, 1),
+        onNext(350, 2),
+        onNext(400, 3),
+        onCompleted(400)
+    );
+
+});
