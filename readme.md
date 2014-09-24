@@ -3,6 +3,7 @@
 [![NPM version](http://img.shields.io/npm/v/rx.svg)](https://npmjs.org/package/rx)
 [![Downloads](http://img.shields.io/npm/dm/rx.svg)](https://npmjs.org/package/rx)
 [![NuGet](http://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
+[![Code Climate](https://codeclimate.com/github/Reactive-Extensions/RxJS/badges/gpa.svg)](https://codeclimate.com/github/Reactive-Extensions/RxJS)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 **[The Need to go Reactive](#the-need-to-go-reactive)** |
