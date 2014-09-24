@@ -8,7 +8,7 @@ Projects each element of an observable sequence to an observable sequence and me
 
 ```js
 source.selectMany(function (x, i) { return Rx.Observable.range(0, x); });
-source.selectMany(function (x, i) { return Promise.resolve(x + 1}; });
+source.selectMany(function (x, i) { return Promise.resolve(x + 1); });
 ```
 
 Projects each element of an observable sequence or Promise to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
