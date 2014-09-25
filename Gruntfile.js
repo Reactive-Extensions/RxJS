@@ -1425,85 +1425,135 @@ var browsers = [{
           }
       },
       uglify: {
-        core: {
-          src: ['<banner>', 'dist/rx.core.js'],
-          dest: 'dist/rx.core.min.js'          
-        },
-        corecompat: {
-          src: ['<banner>', 'dist/rx.core.compat.js'],
-          dest: 'dist/rx.core.compat.min.js'          
-        },           
+        options: {
+          banner:
+            '/* Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.*/'
+        },                   
         all: {
-          src: ['<banner>', 'dist/rx.all.js'],
-          dest: 'dist/rx.all.min.js'          
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.all.map'
+          },          
+          files: {'dist/rx.all.min.js': ['dist/rx.all.js'] }        
         },
         allcompat: {
-          src: ['<banner>', 'dist/rx.all.compat.js'],
-          dest: 'dist/rx.all.compat.min.js'          
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.all.compat.map'
+          },            
+          files: {'dist/rx.all.compat.min.js': ['dist/rx.all.compat.js'] }      
         },        
         basic: {
-          src: ['<banner>', 'dist/rx.compat.js'],
-          dest: 'dist/rx.compat.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.compat.map'
+          },            
+          files: {'dist/rx.compat.min.js': ['dist/rx.compat.js'] }
         },
         modern: {
-          src: ['<banner>', 'dist/rx.js'],
-          dest: 'dist/rx.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.map'
+          },            
+          files: {'dist/rx.min.js': ['dist/rx.js'] }
         },
         lite: {
-          src: ['<banner>', 'dist/rx.lite.js'],
-          dest: 'dist/rx.lite.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.lite.map'
+          },            
+          files: {'dist/rx.lite.min.js': ['dist/rx.lite.js'] }
         },
         litecompat: {
-          src: ['<banner>', 'dist/rx.lite.compat.js'],
-          dest: 'dist/rx.lite.compat.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.lite.compat.map'
+          },            
+          files: {'dist/rx.lite.compat.min.js': ['dist/rx.lite.compat.js'] }
         },
         liteextras: {
-          src: ['<banner>', 'dist/rx.lite.extras.js'],
-          dest: 'dist/rx.lite.extras.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.lite.extras.map'
+          },            
+          files: {'dist/rx.lite.extras.min.js': ['dist/rx.lite.extras.js'] }
         },
         backpressure: {
-          src: ['<banner>', 'dist/rx.backpressure.js'],
-          dest: 'dist/rx.backpressure.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.backpressure.map'
+          },            
+          files: {'dist/rx.backpressure.min.js': ['dist/rx.backpressure.js'] }
         },            
         aggregates: {
-          src: ['<banner>', 'dist/rx.aggregates.js'],
-          dest: 'dist/rx.aggregates.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.aggregates.map'
+          },            
+          files: {'dist/rx.aggregates.min.js': ['dist/rx.aggregates.js'] }
         },
         asyncCompat: {
-          src: ['<banner>', 'dist/rx.async.compat.js'],
-          dest: 'dist/rx.async.compat.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.async.compat.map'
+          },            
+          files: {'dist/rx.async.compat.min.js': ['dist/rx.async.compat.js'] }
         },
         asyncModern: {
-          src: ['<banner>', 'dist/rx.async.js'],
-          dest: 'dist/rx.async.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.async.map'
+          },            
+          files: {'dist/rx.async.min.js': ['dist/rx.async.js'] }
         },
         binding: {
-          src: ['<banner>', 'dist/rx.binding.js'],
-          dest: 'dist/rx.binding.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.binding.map'
+          },            
+          files: {'dist/rx.binding.min.js': ['dist/rx.binding.js'] }
         },
         coincidence: {
-          src: ['<banner>', 'dist/rx.coincidence.js'],
-          dest: 'dist/rx.coincidence.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.coincidence.map'
+          },            
+          files: {'dist/rx.coincidence.min.js': ['dist/rx.coincidence.js'] }
         },
         experimental: {
-          src: ['<banner>', 'dist/rx.experimental.js'],
-          dest: 'dist/rx.experimental.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.experimental.map'
+          },            
+          files: {'dist/rx.experimental.min.js': ['dist/rx.experimental.js'] }
         },
         joinpatterns: {
-          src: ['<banner>', 'dist/rx.joinpatterns.js'],
-          dest: 'dist/rx.joinpatterns.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.joinpatterns.map'
+          },            
+          files: {'dist/rx.joinpatterns.min.js': ['dist/rx.joinpatterns.js'] }
         },
         testing: {
-          src: ['<banner>', 'dist/rx.testing.js'],
-          dest: 'dist/rx.testing.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.testing.map'
+          },            
+          files: {'dist/rx.testing.min.js': ['dist/rx.testing.js'] }
         },
         time: {
-          src: ['<banner>', 'dist/rx.time.js'],
-          dest: 'dist/rx.time.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.time.map'
+          },            
+          files: {'dist/rx.time.min.js': ['dist/rx.time.js'] }
         },
         virtualtime: {
-          src: ['<banner>', 'dist/rx.virtualtime.js'],
-          dest: 'dist/rx.virtualtime.min.js'
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.virtualtime.map'
+          },            
+          files: {'dist/rx.virtualtime.min.js': ['dist/rx.virtualtime.js'] }
         }
       },
       qunit: {
