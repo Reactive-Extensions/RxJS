@@ -74,7 +74,9 @@
     $iterator$ = '@@iterator';
   }
   
-  var doneEnumerator = { done: true, value: undefined };
+  var doneEnumerator = Rx.doneEnumerator = { done: true, value: undefined };
+
+  Rx.iterator = $iterator$;
 
   /** `Object#toString` result shortcuts */
   var argsClass = '[object Arguments]',
@@ -357,47 +359,44 @@
 
     return result;
   }
-    var slice = Array.prototype.slice;
-    function argsOrArray(args, idx) {
-        return args.length === 1 && Array.isArray(args[idx]) ?
-            args[idx] :
-            slice.call(args);
+  var slice = Array.prototype.slice;
+  function argsOrArray(args, idx) {
+    return args.length === 1 && Array.isArray(args[idx]) ?
+      args[idx] :
+      slice.call(args);
+  }
+  var hasProp = {}.hasOwnProperty;
+
+  var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
+    function __() { this.constructor = child; }
+    __.prototype = parent.prototype;
+    child.prototype = new __();
+  };
+  
+  var addProperties = Rx.internals.addProperties = function (obj) {
+    var sources = slice.call(arguments, 1);
+    for (var i = 0, len = sources.length; i < len; i++) {
+      var source = sources[i];
+      for (var prop in source) {
+        obj[prop] = source[prop];
+      }
     }
-    var hasProp = {}.hasOwnProperty;
+  };
 
-    /** @private */
-    var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
-        function __() { this.constructor = child; }
-        __.prototype = parent.prototype;
-        child.prototype = new __();
-    };
+  // Rx Utils
+  var addRef = Rx.internals.addRef = function (xs, r) {
+    return new AnonymousObservable(function (observer) {
+      return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
+    });
+  };
 
-    /** @private */    
-    var addProperties = Rx.internals.addProperties = function (obj) {
-        var sources = slice.call(arguments, 1);
-        for (var i = 0, len = sources.length; i < len; i++) {
-            var source = sources[i];
-            for (var prop in source) {
-                obj[prop] = source[prop];
-            }
-        }
-    };
-
-    // Rx Utils
-    var addRef = Rx.internals.addRef = function (xs, r) {
-        return new AnonymousObservable(function (observer) {
-            return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
-        });
-    };
-
-    // Collection polyfills
-    function arrayInitialize(count, factory) {
-        var a = new Array(count);
-        for (var i = 0; i < count; i++) {
-            a[i] = factory();
-        }
-        return a;
+  function arrayInitialize(count, factory) {
+    var a = new Array(count);
+    for (var i = 0; i < count; i++) {
+      a[i] = factory();
     }
+    return a;
+  }
 
   // Utilities
   if (!Function.prototype.bind) {
@@ -1779,7 +1778,7 @@ if (!Array.prototype.forEach) {
     });
   };
 
-  var enumerableFor = Enumerable.forEach = function (source, selector, thisArg) {
+  var enumerableOf = Enumerable.of = function (source, selector, thisArg) {
     selector || (selector = identity);
     return new Enumerable(function () {
       var index = -1;
@@ -2744,18 +2743,14 @@ if (!Array.prototype.forEach) {
       observableCatch([this, handlerOrSecond]);
   };
 
-    /**
-     * Continues an observable sequence that is terminated by an exception with the next observable sequence.
-     * 
-     * @example
-     * 1 - res = Rx.Observable.catchException(xs, ys, zs);
-     * 2 - res = Rx.Observable.catchException([xs, ys, zs]);
-     * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
-     */
-    var observableCatch = Observable.catchException = Observable['catch'] = function () {
-        var items = argsOrArray(arguments, 0);
-        return enumerableFor(items).catchException();
-    };
+  /**
+   * Continues an observable sequence that is terminated by an exception with the next observable sequence.
+   * @param {Array | Arguments} args Arguments or an array to use as the next sequence if an error occurs.  
+   * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
+   */
+  var observableCatch = Observable.catchException = Observable['catch'] = function () {
+    return enumerableOf(argsOrArray(arguments, 0)).catchException();
+  };
 
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
@@ -2855,18 +2850,14 @@ if (!Array.prototype.forEach) {
         return observableConcat.apply(this, items);
     };
 
-    /**
-     * Concatenates all the observable sequences.
-     * 
-     * @example
-     * 1 - res = Rx.Observable.concat(xs, ys, zs);
-     * 2 - res = Rx.Observable.concat([xs, ys, zs]);
-     * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
-     */
-    var observableConcat = Observable.concat = function () {
-        var sources = argsOrArray(arguments, 0);
-        return enumerableFor(sources).concat();
-    };  
+  /**
+   * Concatenates all the observable sequences.
+   * @param {Array | Arguments} args Arguments or an array to concat to the observable sequence.
+   * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
+   */
+  var observableConcat = Observable.concat = function () {
+    return enumerableOf(argsOrArray(arguments, 0)).concat();
+  };  
 
     /**
      * Concatenates an observable sequence of observable sequences.
@@ -3565,7 +3556,7 @@ if (!Array.prototype.forEach) {
       scheduler = immediateScheduler;
     }
     values = slice.call(arguments, start);
-    return enumerableFor([observableFromArray(values, scheduler), this]).concat();
+    return enumerableOf([observableFromArray(values, scheduler), this]).concat();
   };
 
   /**

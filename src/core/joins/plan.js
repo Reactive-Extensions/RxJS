@@ -13,8 +13,8 @@
       var result;
       try {
         result = self.selector.apply(self, arguments);
-      } catch (exception) {
-        observer.onError(exception);
+      } catch (e) {
+        observer.onError(e);
         return;
       }
       observer.onNext(result);

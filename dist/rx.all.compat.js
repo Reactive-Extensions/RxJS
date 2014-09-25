@@ -74,7 +74,9 @@
     $iterator$ = '@@iterator';
   }
   
-  var doneEnumerator = { done: true, value: undefined };
+  var doneEnumerator = Rx.doneEnumerator = { done: true, value: undefined };
+
+  Rx.iterator = $iterator$;
 
   /** `Object#toString` result shortcuts */
   var argsClass = '[object Arguments]',
@@ -357,47 +359,44 @@
 
     return result;
   }
-    var slice = Array.prototype.slice;
-    function argsOrArray(args, idx) {
-        return args.length === 1 && Array.isArray(args[idx]) ?
-            args[idx] :
-            slice.call(args);
+  var slice = Array.prototype.slice;
+  function argsOrArray(args, idx) {
+    return args.length === 1 && Array.isArray(args[idx]) ?
+      args[idx] :
+      slice.call(args);
+  }
+  var hasProp = {}.hasOwnProperty;
+
+  var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
+    function __() { this.constructor = child; }
+    __.prototype = parent.prototype;
+    child.prototype = new __();
+  };
+  
+  var addProperties = Rx.internals.addProperties = function (obj) {
+    var sources = slice.call(arguments, 1);
+    for (var i = 0, len = sources.length; i < len; i++) {
+      var source = sources[i];
+      for (var prop in source) {
+        obj[prop] = source[prop];
+      }
     }
-    var hasProp = {}.hasOwnProperty;
+  };
 
-    /** @private */
-    var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
-        function __() { this.constructor = child; }
-        __.prototype = parent.prototype;
-        child.prototype = new __();
-    };
+  // Rx Utils
+  var addRef = Rx.internals.addRef = function (xs, r) {
+    return new AnonymousObservable(function (observer) {
+      return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
+    });
+  };
 
-    /** @private */    
-    var addProperties = Rx.internals.addProperties = function (obj) {
-        var sources = slice.call(arguments, 1);
-        for (var i = 0, len = sources.length; i < len; i++) {
-            var source = sources[i];
-            for (var prop in source) {
-                obj[prop] = source[prop];
-            }
-        }
-    };
-
-    // Rx Utils
-    var addRef = Rx.internals.addRef = function (xs, r) {
-        return new AnonymousObservable(function (observer) {
-            return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
-        });
-    };
-
-    // Collection polyfills
-    function arrayInitialize(count, factory) {
-        var a = new Array(count);
-        for (var i = 0; i < count; i++) {
-            a[i] = factory();
-        }
-        return a;
+  function arrayInitialize(count, factory) {
+    var a = new Array(count);
+    for (var i = 0; i < count; i++) {
+      a[i] = factory();
     }
+    return a;
+  }
 
   // Utilities
   if (!Function.prototype.bind) {
@@ -1779,7 +1778,7 @@ if (!Array.prototype.forEach) {
     });
   };
 
-  var enumerableFor = Enumerable.forEach = function (source, selector, thisArg) {
+  var enumerableOf = Enumerable.of = function (source, selector, thisArg) {
     selector || (selector = identity);
     return new Enumerable(function () {
       var index = -1;
@@ -2744,18 +2743,14 @@ if (!Array.prototype.forEach) {
       observableCatch([this, handlerOrSecond]);
   };
 
-    /**
-     * Continues an observable sequence that is terminated by an exception with the next observable sequence.
-     * 
-     * @example
-     * 1 - res = Rx.Observable.catchException(xs, ys, zs);
-     * 2 - res = Rx.Observable.catchException([xs, ys, zs]);
-     * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
-     */
-    var observableCatch = Observable.catchException = Observable['catch'] = function () {
-        var items = argsOrArray(arguments, 0);
-        return enumerableFor(items).catchException();
-    };
+  /**
+   * Continues an observable sequence that is terminated by an exception with the next observable sequence.
+   * @param {Array | Arguments} args Arguments or an array to use as the next sequence if an error occurs.  
+   * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
+   */
+  var observableCatch = Observable.catchException = Observable['catch'] = function () {
+    return enumerableOf(argsOrArray(arguments, 0)).catchException();
+  };
 
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
@@ -2855,18 +2850,14 @@ if (!Array.prototype.forEach) {
         return observableConcat.apply(this, items);
     };
 
-    /**
-     * Concatenates all the observable sequences.
-     * 
-     * @example
-     * 1 - res = Rx.Observable.concat(xs, ys, zs);
-     * 2 - res = Rx.Observable.concat([xs, ys, zs]);
-     * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
-     */
-    var observableConcat = Observable.concat = function () {
-        var sources = argsOrArray(arguments, 0);
-        return enumerableFor(sources).concat();
-    };  
+  /**
+   * Concatenates all the observable sequences.
+   * @param {Array | Arguments} args Arguments or an array to concat to the observable sequence.
+   * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
+   */
+  var observableConcat = Observable.concat = function () {
+    return enumerableOf(argsOrArray(arguments, 0)).concat();
+  };  
 
     /**
      * Concatenates an observable sequence of observable sequences.
@@ -3565,7 +3556,7 @@ if (!Array.prototype.forEach) {
       scheduler = immediateScheduler;
     }
     values = slice.call(arguments, start);
-    return enumerableFor([observableFromArray(values, scheduler), this]).concat();
+    return enumerableOf([observableFromArray(values, scheduler), this]).concat();
   };
 
   /**
@@ -7009,8 +7000,8 @@ if (!Array.prototype.forEach) {
    * @param {Function} resultSelector A function to apply to each item in the sources array to turn it into an observable sequence.
    * @returns {Observable} An observable sequence from the concatenated observable sequences.  
    */ 
-  Observable['for'] = Observable.forIn = function (sources, resultSelector) {
-    return enumerableFor(sources, resultSelector).concat();
+  Observable['for'] = Observable.forIn = function (sources, resultSelector, thisArg) {
+    return enumerableOf(sources, resultSelector, thisArg).concat();
   };
 
    /**
@@ -7339,110 +7330,59 @@ if (!Array.prototype.forEach) {
 
   }(Observable));
 
-    /** @private */
-    var Map = (function () {
+  /** @private */
+  var Map = root.Map || (function () {
 
-        /**
-         * @constructor
-         * @private
-         */
-        function Map() {
-            this.keys = [];
-            this.values = [];
-        }
-
-        /**
-         * @private
-         * @memberOf Map#
-         */
-        Map.prototype['delete'] = function (key) {
-            var i = this.keys.indexOf(key);
-            if (i !== -1) {
-                this.keys.splice(i, 1);
-                this.values.splice(i, 1);
-            }
-            return i !== -1;
-        };
-
-        /**
-         * @private
-         * @memberOf Map#
-         */
-        Map.prototype.get = function (key, fallback) {
-            var i = this.keys.indexOf(key);
-            return i !== -1 ? this.values[i] : fallback;
-        };
-
-        /**
-         * @private
-         * @memberOf Map#
-         */
-        Map.prototype.set = function (key, value) {
-            var i = this.keys.indexOf(key);
-            if (i !== -1) {
-                this.values[i] = value;
-            }
-            this.values[this.keys.push(key) - 1] = value;
-        };
-
-        /**
-         * @private
-         * @memberOf Map#
-         */
-        Map.prototype.size = function () { return this.keys.length; };
-
-        /**
-         * @private
-         * @memberOf Map#
-         */        
-        Map.prototype.has = function (key) {
-            return this.keys.indexOf(key) !== -1;
-        };
-
-        /**
-         * @private
-         * @memberOf Map#
-         */        
-        Map.prototype.getKeys = function () { return this.keys.slice(0); };
-
-        /**
-         * @private
-         * @memberOf Map#
-         */        
-        Map.prototype.getValues = function () { return this.values.slice(0); };
-
-        return Map;
-    }());
-
-    /**
-     * @constructor
-     * Represents a join pattern over observable sequences.
-     */
-    function Pattern(patterns) {
-        this.patterns = patterns;
+    function Map() {
+      this._keys = [];
+      this._values = [];
     }
 
-    /**
-     *  Creates a pattern that matches the current plan matches and when the specified observable sequences has an available value.
-     *  
-     *  @param other Observable sequence to match in addition to the current pattern.
-     *  @return Pattern object that matches when all observable sequences in the pattern have an available value.   
-     */ 
-    Pattern.prototype.and = function (other) {
-        var patterns = this.patterns.slice(0);
-        patterns.push(other);
-        return new Pattern(patterns);
+    Map.prototype.get = function (key) {
+      var i = this._keys.indexOf(key);
+      return i !== -1 ? this._values[i] : undefined;
     };
 
-    /**
-     *  Matches when all observable sequences in the pattern (specified using a chain of and operators) have an available value and projects the values.
-     *  
-     *  @param selector Selector that will be invoked with available values from the source sequences, in the same order of the sequences in the pattern.
-     *  @return Plan that produces the projected values, to be fed (with other plans) to the when operator.
-     */
-    Pattern.prototype.thenDo = function (selector) {
-        return new Plan(this, selector);
+    Map.prototype.set = function (key, value) {
+      var i = this._keys.indexOf(key);
+      i !== -1 && (this._values[i] = value);
+      this._values[this._keys.push(key) - 1] = value;
     };
+
+    Map.prototype.forEach = function (callback, thisArg) {
+      for (var i = 0, len = this._keys.length; i < len; i++) {
+        callback.call(thisArg, this._values[i], this._keys[i]);
+      }
+    };
+
+    return Map;
+  }());
+
+  /**
+   * @constructor
+   * Represents a join pattern over observable sequences.
+   */
+  function Pattern(patterns) {
+    this.patterns = patterns;
+  }
+
+  /**
+   *  Creates a pattern that matches the current plan matches and when the specified observable sequences has an available value.
+   *  @param other Observable sequence to match in addition to the current pattern.
+   *  @return {Pattern} Pattern object that matches when all observable sequences in the pattern have an available value.   
+   */ 
+  Pattern.prototype.and = function (other) {
+    return new Pattern(this.patterns.concat(other));
+  };
+
+  /**
+   *  Matches when all observable sequences in the pattern (specified using a chain of and operators) have an available value and projects the values.
+   *  @param {Function} selector Selector that will be invoked with available values from the source sequences, in the same order of the sequences in the pattern.
+   *  @return {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator.
+   */
+  Pattern.prototype.thenDo = function (selector) {
+    return new Plan(this, selector);
+  };
 
   function Plan(expression, selector) {
       this.expression = expression;
@@ -7459,8 +7399,8 @@ if (!Array.prototype.forEach) {
       var result;
       try {
         result = self.selector.apply(self, arguments);
-      } catch (exception) {
-        observer.onError(exception);
+      } catch (e) {
+        observer.onError(e);
         return;
       }
       observer.onNext(result);
@@ -7486,148 +7426,105 @@ if (!Array.prototype.forEach) {
     return entry;
   }
 
-    // Active Plan
-    function ActivePlan(joinObserverArray, onNext, onCompleted) {
-        var i, joinObserver;
-        this.joinObserverArray = joinObserverArray;
-        this.onNext = onNext;
-        this.onCompleted = onCompleted;
-        this.joinObservers = new Map();
-        for (i = 0; i < this.joinObserverArray.length; i++) {
-            joinObserver = this.joinObserverArray[i];
-            this.joinObservers.set(joinObserver, joinObserver);
+  function ActivePlan(joinObserverArray, onNext, onCompleted) {
+    this.joinObserverArray = joinObserverArray;
+    this.onNext = onNext;
+    this.onCompleted = onCompleted;
+    this.joinObservers = new Map();
+    for (var i = 0, len = this.joinObserverArray.length; i < len; i++) {
+      var joinObserver = this.joinObserverArray[i];
+      this.joinObservers.set(joinObserver, joinObserver);
+    }
+  }
+
+  ActivePlan.prototype.dequeue = function () {
+    this.joinObservers.forEach(function (v) { v.queue.shift(); });
+  };
+
+  ActivePlan.prototype.match = function () {
+    var i, len, hasValues = true;
+    for (i = 0, len = this.joinObserverArray.length; i < len; i++) {
+      if (this.joinObserverArray[i].queue.length === 0) {
+        hasValues = false;
+        break;
+      }
+    }
+    if (hasValues) {
+      var firstValues = [],
+          isCompleted = false;
+      for (i = 0, len = this.joinObserverArray.length; i < len; i++) {
+        firstValues.push(this.joinObserverArray[i].queue[0]);
+        this.joinObserverArray[i].queue[0].kind === 'C' && (isCompleted = true);
+      }
+      if (isCompleted) {
+        this.onCompleted();
+      } else {
+        this.dequeue();
+        var values = [];
+        for (i = 0, len = firstValues.length; i < firstValues.length; i++) {
+          values.push(firstValues[i].value);
         }
+        this.onNext.apply(this, values);
+      }
+    }
+  };
+
+  var JoinObserver = (function (__super__) {
+
+    inherits(JoinObserver, __super__);
+
+    function JoinObserver(source, onError) {
+      __super__.call(this);
+      this.source = source;
+      this.onError = onError;
+      this.queue = [];
+      this.activePlans = [];
+      this.subscription = new SingleAssignmentDisposable();
+      this.isDisposed = false;
     }
 
-    ActivePlan.prototype.dequeue = function () {
-        var values = this.joinObservers.getValues();
-        for (var i = 0, len = values.length; i < len; i++) {
-            values[i].queue.shift();
+    var JoinObserverPrototype = JoinObserver.prototype;
+
+    JoinObserverPrototype.next = function (notification) {
+      if (!this.isDisposed) {
+        if (notification.kind === 'E') {
+          this.onError(notification.exception);
+          return;
         }
+        this.queue.push(notification);
+        var activePlans = this.activePlans.slice(0);
+        for (var i = 0, len = activePlans.length; i < len; i++) {
+          activePlans[i].match();
+        }
+      }
     };
-    ActivePlan.prototype.match = function () {
-        var firstValues, i, len, isCompleted, values, hasValues = true;
-        for (i = 0, len = this.joinObserverArray.length; i < len; i++) {
-            if (this.joinObserverArray[i].queue.length === 0) {
-                hasValues = false;
-                break;
-            }
-        }
-        if (hasValues) {
-            firstValues = [];
-            isCompleted = false;
-            for (i = 0, len = this.joinObserverArray.length; i < len; i++) {
-                firstValues.push(this.joinObserverArray[i].queue[0]);
-                if (this.joinObserverArray[i].queue[0].kind === 'C') {
-                    isCompleted = true;
-                }
-            }
-            if (isCompleted) {
-                this.onCompleted();
-            } else {
-                this.dequeue();
-                values = [];
-                for (i = 0; i < firstValues.length; i++) {
-                    values.push(firstValues[i].value);
-                }
-                this.onNext.apply(this, values);
-            }
-        }
+     
+    JoinObserverPrototype.error = noop;
+    JoinObserverPrototype.completed = noop;
+
+    JoinObserverPrototype.addActivePlan = function (activePlan) {
+      this.activePlans.push(activePlan);
+    };
+  
+    JoinObserverPrototype.subscribe = function () {
+      this.subscription.setDisposable(this.source.materialize().subscribe(this));
+    };
+     
+    JoinObserverPrototype.removeActivePlan = function (activePlan) {
+      this.activePlans.splice(this.activePlans.indexOf(activePlan), 1);
+      this.activePlans.length === 0 && this.dispose();
     };
 
-    /** @private */
-    var JoinObserver = (function (_super) {
-
-        inherits(JoinObserver, _super);
-
-        /**
-         * @constructor
-         * @private
-         */
-        function JoinObserver(source, onError) {
-            _super.call(this);
-            this.source = source;
-            this.onError = onError;
-            this.queue = [];
-            this.activePlans = [];
-            this.subscription = new SingleAssignmentDisposable();
-            this.isDisposed = false;
-        }
-
-        var JoinObserverPrototype = JoinObserver.prototype;
-
-        /**
-         * @memberOf JoinObserver#
-         * @private
-         */
-        JoinObserverPrototype.next = function (notification) {
-            if (!this.isDisposed) {
-                if (notification.kind === 'E') {
-                    this.onError(notification.exception);
-                    return;
-                }
-                this.queue.push(notification);
-                var activePlans = this.activePlans.slice(0);
-                for (var i = 0, len = activePlans.length; i < len; i++) {
-                    activePlans[i].match();
-                }
-            }
-        };
-
-        /**
-         * @memberOf JoinObserver#
-         * @private
-         */        
-        JoinObserverPrototype.error = noop;
-
-        /**
-         * @memberOf JoinObserver#
-         * @private
-         */        
-        JoinObserverPrototype.completed = noop;
-
-        /**
-         * @memberOf JoinObserver#
-         * @private
-         */
-        JoinObserverPrototype.addActivePlan = function (activePlan) {
-            this.activePlans.push(activePlan);
-        };
-
-        /**
-         * @memberOf JoinObserver#
-         * @private
-         */        
-        JoinObserverPrototype.subscribe = function () {
-            this.subscription.setDisposable(this.source.materialize().subscribe(this));
-        };
-
-        /**
-         * @memberOf JoinObserver#
-         * @private
-         */        
-        JoinObserverPrototype.removeActivePlan = function (activePlan) {
-            var idx = this.activePlans.indexOf(activePlan);
-            this.activePlans.splice(idx, 1);
-            if (this.activePlans.length === 0) {
-                this.dispose();
-            }
-        };
-
-        /**
-         * @memberOf JoinObserver#
-         * @private
-         */        
-        JoinObserverPrototype.dispose = function () {
-            _super.prototype.dispose.call(this);
-            if (!this.isDisposed) {
-                this.isDisposed = true;
-                this.subscription.dispose();
-            }
-        };
-        
-        return JoinObserver;
-    } (AbstractObserver));
+    JoinObserverPrototype.dispose = function () {
+      __super__.prototype.dispose.call(this);
+      if (!this.isDisposed) {
+        this.isDisposed = true;
+        this.subscription.dispose();
+      }
+    };
+    
+    return JoinObserver;
+  } (AbstractObserver));
 
   /**
    *  Creates a pattern that matches when both observable sequences have an available value.
@@ -7649,52 +7546,45 @@ if (!Array.prototype.forEach) {
     return new Pattern([this]).thenDo(selector);
   };
 
-    /**
-     *  Joins together the results from several patterns.
-     *  
-     *  @param plans A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.
-     *  @returns {Observable} Observable sequence with the results form matching several patterns. 
-     */
-    Observable.when = function () {
-        var plans = argsOrArray(arguments, 0);
-        return new AnonymousObservable(function (observer) {
-            var activePlans = [],
-                externalSubscriptions = new Map(),
-                group,
-                i, len,
-                joinObserver,
-                joinValues,
-                outObserver;
-            outObserver = observerCreate(observer.onNext.bind(observer), function (exception) {
-                var values = externalSubscriptions.getValues();
-                for (var j = 0, jlen = values.length; j < jlen; j++) {
-                    values[j].onError(exception);
-                }
-                observer.onError(exception);
-            }, observer.onCompleted.bind(observer));
-            try {
-                for (i = 0, len = plans.length; i < len; i++) {
-                    activePlans.push(plans[i].activate(externalSubscriptions, outObserver, function (activePlan) {
-                        var idx = activePlans.indexOf(activePlan);
-                        activePlans.splice(idx, 1);
-                        if (activePlans.length === 0) {
-                            outObserver.onCompleted();
-                        }
-                    }));
-                }
-            } catch (e) {
-                observableThrow(e).subscribe(observer);
-            }
-            group = new CompositeDisposable();
-            joinValues = externalSubscriptions.getValues();
-            for (i = 0, len = joinValues.length; i < len; i++) {
-                joinObserver = joinValues[i];
-                joinObserver.subscribe();
-                group.add(joinObserver);
-            }
-            return group;
-        });
-    };
+  /**
+   *  Joins together the results from several patterns.
+   *  
+   *  @param plans A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.
+   *  @returns {Observable} Observable sequence with the results form matching several patterns. 
+   */
+  Observable.when = function () {
+    var plans = argsOrArray(arguments, 0);
+    return new AnonymousObservable(function (observer) {
+      var activePlans = [],
+          externalSubscriptions = new Map();
+      var outObserver = observerCreate(
+        observer.onNext.bind(observer), 
+        function (err) {
+          externalSubscriptions.forEach(function (v) { v.onError(err); });
+          observer.onError(err);
+        }, 
+        observer.onCompleted.bind(observer)
+      );
+      try {
+        for (var i = 0, len = plans.length; i < len; i++) {
+          activePlans.push(plans[i].activate(externalSubscriptions, outObserver, function (activePlan) {
+            var idx = activePlans.indexOf(activePlan);
+            activePlans.splice(idx, 1);
+            activePlans.length === 0 && observer.onCompleted();
+          }));
+        }
+      } catch (e) {
+        observableThrow(e).subscribe(observer);
+      }
+      var group = new CompositeDisposable();
+      externalSubscriptions.forEach(function (joinObserver) {
+        joinObserver.subscribe();
+        group.add(joinObserver);
+      });
+
+      return group;
+    });
+  };
 
   function observableTimerDate(dueTime, scheduler) {
     return new AnonymousObservable(function (observer) {

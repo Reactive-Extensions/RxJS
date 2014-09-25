@@ -6,4 +6,6 @@
     $iterator$ = '@@iterator';
   }
   
-  var doneEnumerator = { done: true, value: undefined };
+  var doneEnumerator = Rx.doneEnumerator = { done: true, value: undefined };
+
+  Rx.iterator = $iterator$;

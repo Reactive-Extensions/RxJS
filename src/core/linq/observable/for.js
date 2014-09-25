@@ -5,6 +5,6 @@
    * @param {Function} resultSelector A function to apply to each item in the sources array to turn it into an observable sequence.
    * @returns {Observable} An observable sequence from the concatenated observable sequences.  
    */ 
-  Observable['for'] = Observable.forIn = function (sources, resultSelector) {
-    return enumerableFor(sources, resultSelector).concat();
+  Observable['for'] = Observable.forIn = function (sources, resultSelector, thisArg) {
+    return enumerableOf(sources, resultSelector, thisArg).concat();
   };

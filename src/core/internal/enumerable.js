@@ -120,7 +120,7 @@
     });
   };
 
-  var enumerableFor = Enumerable.forEach = function (source, selector, thisArg) {
+  var enumerableOf = Enumerable.of = function (source, selector, thisArg) {
     selector || (selector = identity);
     return new Enumerable(function () {
       var index = -1;

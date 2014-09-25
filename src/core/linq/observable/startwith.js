@@ -15,5 +15,5 @@
       scheduler = immediateScheduler;
     }
     values = slice.call(arguments, start);
-    return enumerableFor([observableFromArray(values, scheduler), this]).concat();
+    return enumerableOf([observableFromArray(values, scheduler), this]).concat();
   };

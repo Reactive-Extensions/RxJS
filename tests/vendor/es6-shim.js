@@ -1,4 +1,4 @@
-// ES6-shim 0.16.0 (c) 2013-2014 Paul Miller (http://paulmillr.com)
+// ES6-shim 0.18.0 (c) 2013-2014 Paul Miller (http://paulmillr.com)
 // ES6-shim may be freely distributed under the MIT license.
 // For more details and documentation:
 // https://github.com/paulmillr/es6-shim/
@@ -63,22 +63,26 @@
     var _hasOwnProperty = Object.prototype.hasOwnProperty;
     var ArrayIterator; // make our implementation private
 
+    var defineProperty = function(object, name, value, force) {
+      if (!force && name in object) return;
+      if (supportsDescriptors) {
+        Object.defineProperty(object, name, {
+          configurable: true,
+          enumerable: false,
+          writable: true,
+          value: value
+        });
+      } else {
+        object[name] = value;
+      }
+    };
+
     // Define configurable, writable and non-enumerable props
     // if they don’t exist.
     var defineProperties = function(object, map) {
       Object.keys(map).forEach(function(name) {
         var method = map[name];
-        if (name in object) return;
-        if (supportsDescriptors) {
-          Object.defineProperty(object, name, {
-            configurable: true,
-            enumerable: false,
-            writable: true,
-            value: method
-          });
-        } else {
-          object[name] = method;
-        }
+        defineProperty(object, name, method, false);
       });
     };
 
@@ -112,6 +116,11 @@
       var o = {};
       o[$iterator$] = impl;
       defineProperties(prototype, o);
+      /* jshint notypeof: true */
+      if (!prototype[$iterator$] && typeof $iterator$ === 'symbol') {
+        // implementations are buggy when $iterator$ is a Symbol
+        prototype[$iterator$] = impl;
+      }
     };
 
     // taken directly from https://github.com/ljharb/is-arguments/blob/master/index.js
@@ -182,7 +191,7 @@
         var number = +value;
         if (Number.isNaN(number)) return 0;
         if (number === 0 || !Number.isFinite(number)) return number;
-        return Math.sign(number) * Math.floor(Math.abs(number));
+        return (number > 0 ? 1 : -1) * Math.floor(Math.abs(number));
       },
 
       ToLength: function(value) {
@@ -223,8 +232,8 @@
         return it;
       },
 
-      IteratorNext: function(it) {
-        var result = (arguments.length > 1) ? it.next(arguments[1]) : it.next();
+      IteratorNext: function (it) {
+        var result = arguments.length > 1 ? it.next(arguments[1]) : it.next();
         if (!ES.TypeIsObject(result)) {
           throw new TypeError('bad iterator');
         }
@@ -444,6 +453,13 @@
       }
     });
 
+    // Firefox 31 reports this function's length as 0
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1062484
+    if (String.fromCodePoint.length !== 1) {
+      var originalFromCodePoint = String.fromCodePoint;
+      defineProperty(String, 'fromCodePoint', function (_) { return originalFromCodePoint.apply(this, arguments); }, true);
+    }
+
     var StringShims = {
       // Fast repeat, uses the `Exponentiation by squaring` algorithm.
       // Perf: http://jsperf.com/string-repeat2/2
@@ -517,17 +533,14 @@
         '\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000\u2028',
         '\u2029\uFEFF'
       ].join('');
-      var trimBeginRegexp = new RegExp('^[' + ws + '][' + ws + ']*');
-      var trimEndRegexp = new RegExp('[' + ws + '][' + ws + ']*$');
+      var trimRegexp = new RegExp('(^[' + ws + ']+)|([' + ws + ']+$)', 'g');
       defineProperties(String.prototype, {
         trim: function() {
           if (this === undefined || this === null) {
             throw new TypeError("can't convert " + this + " to object");
           }
-          return String(this)
-            .replace(trimBeginRegexp, "")
-            .replace(trimEndRegexp, "");
-          }
+          return String(this).replace(trimRegexp, "");
+        }
       });
     }
 
@@ -563,12 +576,12 @@
       String.prototype.endsWith = StringShims.endsWith;
     }
 
-    defineProperties(Array, {
+    var ArrayShims = {
       from: function(iterable) {
         var mapFn = arguments.length > 1 ? arguments[1] : undefined;
 
         var list = ES.ToObject(iterable, 'bad iterable');
-        if (arguments.length > 1 && !ES.IsCallable(mapFn)) {
+        if (mapFn !== undefined && !ES.IsCallable(mapFn)) {
           throw new TypeError('Array.from: when provided, the second argument must be a function');
         }
 
@@ -579,26 +592,38 @@
         // does the spec really mean that Arrays should use ArrayIterator?
         // https://bugs.ecmascript.org/show_bug.cgi?id=2416
         //if (Array.isArray(list)) { usingIterator=false; }
-        var length = usingIterator ? 0 : ES.ToLength(list.length);
-        var result = ES.IsCallable(this) ? Object(usingIterator ? new this() : new this(length)) : new Array(length);
-        var it = usingIterator ? ES.GetIterator(list) : null;
-        var value;
 
-        for (var i = 0; usingIterator || (i < length); i++) {
-          if (usingIterator) {
-            value = ES.IteratorNext(it);
-            if (value.done) {
-              length = i;
-              break;
+        var length;
+        var result, i, value;
+        if (usingIterator) {
+          i = 0;
+          result = ES.IsCallable(this) ? Object(new this()) : [];
+          var it = usingIterator ? ES.GetIterator(list) : null;
+          var iterationValue;
+
+          do {
+            iterationValue = ES.IteratorNext(it);
+            if (!iterationValue.done) {
+              value = iterationValue.value;
+              if (mapFn) {
+                result[i] = hasThisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
+              } else {
+                result[i] = value;
+              }
+              i += 1;
             }
-            value = value.value;
-          } else {
+          } while (!iterationValue.done);
+          length = i;
+        } else {
+          length = ES.ToLength(list.length);
+          result = ES.IsCallable(this) ? Object(new this(length)) : new Array(length);
+          for (i = 0; i < length; ++i) {
             value = list[i];
-          }
-          if (mapFn) {
-            result[i] = hasThisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
-          } else {
-            result[i] = value;
+            if (mapFn) {
+              result[i] = hasThisArg ? mapFn.call(thisArg, value, i) : mapFn(value, i);
+            } else {
+              result[i] = value;
+            }
           }
         }
 
@@ -609,7 +634,21 @@
       of: function() {
         return Array.from(arguments);
       }
-    });
+    };
+    defineProperties(Array, ArrayShims);
+
+    var arrayFromSwallowsNegativeLengths = function () {
+      try {
+        return Array.from({ length: -1 }).length === 0;
+      } catch (e) {
+        return false;
+      }
+    };
+    // Fixes a Firefox bug in v32
+    // https://bugzilla.mozilla.org/show_bug.cgi?id=1063993
+    if (!arrayFromSwallowsNegativeLengths()) {
+      defineProperty(Array, 'from', ArrayShims.from, true);
+    }
 
     // Our ArrayIterator is private; see
     // https://github.com/paulmillr/es6-shim/issues/252
@@ -622,10 +661,10 @@
     defineProperties(ArrayIterator.prototype, {
       next: function() {
         var i = this.i, array = this.array;
-        if (i === undefined || this.kind === undefined) {
+        if (!(this instanceof ArrayIterator)) {
           throw new TypeError('Not an ArrayIterator');
         }
-        if (array!==undefined) {
+        if (array !== undefined) {
           var len = ES.ToLength(array.length);
           for (; i < len; i++) {
             var kind = this.kind;
@@ -647,7 +686,7 @@
     });
     addIterator(ArrayIterator.prototype);
 
-    defineProperties(Array.prototype, {
+    var ArrayPrototypeShims = {
       copyWithin: function(target, start) {
         var end = arguments[2]; // copyWithin.length must be 2
         var o = ES.ToObject(this);
@@ -695,7 +734,7 @@
         return O;
       },
 
-      find: function(predicate) {
+      find: function find(predicate) {
         var list = ES.ToObject(this);
         var length = ES.ToLength(list.length);
         if (!ES.IsCallable(predicate)) {
@@ -709,7 +748,7 @@
         return undefined;
       },
 
-      findIndex: function(predicate) {
+      findIndex: function findIndex(predicate) {
         var list = ES.ToObject(this);
         var length = ES.ToLength(list.length);
         if (!ES.IsCallable(predicate)) {
@@ -733,7 +772,8 @@
       entries: function() {
         return new ArrayIterator(this, "entry");
       }
-    });
+    };
+    defineProperties(Array.prototype, ArrayPrototypeShims);
     addIterator(Array.prototype, function() { return this.values(); });
     // Chrome defines keys/values/entries on Array, but doesn't give us
     // any way to identify its iterator.  So add our own shimmed field.
@@ -773,6 +813,17 @@
       }
 
     });
+
+    // Work around bugs in Array#find and Array#findIndex -- early
+    // implementations skipped holes in sparse arrays. (Note that the
+    // implementations of find/findIndex indirectly use shimmed
+    // methods of Number, so this test has to happen down here.)
+    if (![, 1].find(function(item, idx) { return idx === 0; })) {
+      defineProperty(Array.prototype, 'find', ArrayPrototypeShims.find, true);
+    }
+    if ([, 1].findIndex(function(item, idx) { return idx === 0; }) !== 0) {
+      defineProperty(Array.prototype, 'findIndex', ArrayPrototypeShims.findIndex, true);
+    }
 
     if (supportsDescriptors) {
       defineProperties(Object, {

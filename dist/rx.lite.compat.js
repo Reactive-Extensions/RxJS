@@ -74,7 +74,9 @@
     $iterator$ = '@@iterator';
   }
   
-  var doneEnumerator = { done: true, value: undefined };
+  var doneEnumerator = Rx.doneEnumerator = { done: true, value: undefined };
+
+  Rx.iterator = $iterator$;
 
   /** `Object#toString` result shortcuts */
   var argsClass = '[object Arguments]',
@@ -357,47 +359,44 @@
 
     return result;
   }
-    var slice = Array.prototype.slice;
-    function argsOrArray(args, idx) {
-        return args.length === 1 && Array.isArray(args[idx]) ?
-            args[idx] :
-            slice.call(args);
+  var slice = Array.prototype.slice;
+  function argsOrArray(args, idx) {
+    return args.length === 1 && Array.isArray(args[idx]) ?
+      args[idx] :
+      slice.call(args);
+  }
+  var hasProp = {}.hasOwnProperty;
+
+  var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
+    function __() { this.constructor = child; }
+    __.prototype = parent.prototype;
+    child.prototype = new __();
+  };
+  
+  var addProperties = Rx.internals.addProperties = function (obj) {
+    var sources = slice.call(arguments, 1);
+    for (var i = 0, len = sources.length; i < len; i++) {
+      var source = sources[i];
+      for (var prop in source) {
+        obj[prop] = source[prop];
+      }
     }
-    var hasProp = {}.hasOwnProperty;
+  };
 
-    /** @private */
-    var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
-        function __() { this.constructor = child; }
-        __.prototype = parent.prototype;
-        child.prototype = new __();
-    };
+  // Rx Utils
+  var addRef = Rx.internals.addRef = function (xs, r) {
+    return new AnonymousObservable(function (observer) {
+      return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
+    });
+  };
 
-    /** @private */    
-    var addProperties = Rx.internals.addProperties = function (obj) {
-        var sources = slice.call(arguments, 1);
-        for (var i = 0, len = sources.length; i < len; i++) {
-            var source = sources[i];
-            for (var prop in source) {
-                obj[prop] = source[prop];
-            }
-        }
-    };
-
-    // Rx Utils
-    var addRef = Rx.internals.addRef = function (xs, r) {
-        return new AnonymousObservable(function (observer) {
-            return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
-        });
-    };
-
-    // Collection polyfills
-    function arrayInitialize(count, factory) {
-        var a = new Array(count);
-        for (var i = 0; i < count; i++) {
-            a[i] = factory();
-        }
-        return a;
+  function arrayInitialize(count, factory) {
+    var a = new Array(count);
+    for (var i = 0; i < count; i++) {
+      a[i] = factory();
     }
+    return a;
+  }
 
   // Utilities
   if (!Function.prototype.bind) {
@@ -1670,7 +1669,7 @@ if (!Array.prototype.forEach) {
     });
   };
 
-  var enumerableFor = Enumerable.forEach = function (source, selector, thisArg) {
+  var enumerableOf = Enumerable.of = function (source, selector, thisArg) {
     selector || (selector = identity);
     return new Enumerable(function () {
       var index = -1;
@@ -2306,18 +2305,14 @@ if (!Array.prototype.forEach) {
       observableCatch([this, handlerOrSecond]);
   };
 
-    /**
-     * Continues an observable sequence that is terminated by an exception with the next observable sequence.
-     * 
-     * @example
-     * 1 - res = Rx.Observable.catchException(xs, ys, zs);
-     * 2 - res = Rx.Observable.catchException([xs, ys, zs]);
-     * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
-     */
-    var observableCatch = Observable.catchException = Observable['catch'] = function () {
-        var items = argsOrArray(arguments, 0);
-        return enumerableFor(items).catchException();
-    };
+  /**
+   * Continues an observable sequence that is terminated by an exception with the next observable sequence.
+   * @param {Array | Arguments} args Arguments or an array to use as the next sequence if an error occurs.  
+   * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
+   */
+  var observableCatch = Observable.catchException = Observable['catch'] = function () {
+    return enumerableOf(argsOrArray(arguments, 0)).catchException();
+  };
 
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
@@ -2417,18 +2412,14 @@ if (!Array.prototype.forEach) {
         return observableConcat.apply(this, items);
     };
 
-    /**
-     * Concatenates all the observable sequences.
-     * 
-     * @example
-     * 1 - res = Rx.Observable.concat(xs, ys, zs);
-     * 2 - res = Rx.Observable.concat([xs, ys, zs]);
-     * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
-     */
-    var observableConcat = Observable.concat = function () {
-        var sources = argsOrArray(arguments, 0);
-        return enumerableFor(sources).concat();
-    };  
+  /**
+   * Concatenates all the observable sequences.
+   * @param {Array | Arguments} args Arguments or an array to concat to the observable sequence.
+   * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order. 
+   */
+  var observableConcat = Observable.concat = function () {
+    return enumerableOf(argsOrArray(arguments, 0)).concat();
+  };  
 
     /**
      * Concatenates an observable sequence of observable sequences.
@@ -3068,7 +3059,7 @@ if (!Array.prototype.forEach) {
       scheduler = immediateScheduler;
     }
     values = slice.call(arguments, start);
-    return enumerableFor([observableFromArray(values, scheduler), this]).concat();
+    return enumerableOf([observableFromArray(values, scheduler), this]).concat();
   };
 
   /**
@@ -4231,199 +4222,6 @@ if (!Array.prototype.forEach) {
         }
       }));
       return new CompositeDisposable(subscription, timer);
-    });
-  };
-
-  /**
-   *  Time shifts the observable sequence by delaying the subscription.
-   *  
-   * @example
-   *  1 - res = source.delaySubscription(5000); // 5s
-   *  2 - res = source.delaySubscription(5000, Rx.Scheduler.timeout); // 5 seconds
-   *      
-   * @param {Number} dueTime Absolute or relative time to perform the subscription at.
-   * @param {Scheduler} [scheduler]  Scheduler to run the subscription delay timer on. If not specified, the timeout scheduler is used.
-   * @returns {Observable} Time-shifted sequence.
-   */
-  observableProto.delaySubscription = function (dueTime, scheduler) {
-    return this.delayWithSelector(observableTimer(dueTime, isScheduler(scheduler) ? scheduler : timeoutScheduler), observableEmpty);
-  };
-
-    /**
-     *  Time shifts the observable sequence based on a subscription delay and a delay selector function for each element.
-     *  
-     * @example
-     *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(5000); }); // with selector only
-     *  1 - res = source.delayWithSelector(Rx.Observable.timer(2000), function (x) { return Rx.Observable.timer(x); }); // with delay and selector
-     *
-     * @param {Observable} [subscriptionDelay]  Sequence indicating the delay for the subscription to the source. 
-     * @param {Function} delayDurationSelector Selector function to retrieve a sequence indicating the delay for each given element.
-     * @returns {Observable} Time-shifted sequence.
-     */
-    observableProto.delayWithSelector = function (subscriptionDelay, delayDurationSelector) {
-        var source = this, subDelay, selector;
-        if (typeof subscriptionDelay === 'function') {
-            selector = subscriptionDelay;
-        } else {
-            subDelay = subscriptionDelay;
-            selector = delayDurationSelector;
-        }
-        return new AnonymousObservable(function (observer) {
-            var delays = new CompositeDisposable(), atEnd = false, done = function () {
-                if (atEnd && delays.length === 0) {
-                    observer.onCompleted();
-                }
-            }, subscription = new SerialDisposable(), start = function () {
-                subscription.setDisposable(source.subscribe(function (x) {
-                    var delay;
-                    try {
-                        delay = selector(x);
-                    } catch (error) {
-                        observer.onError(error);
-                        return;
-                    }
-                    var d = new SingleAssignmentDisposable();
-                    delays.add(d);
-                    d.setDisposable(delay.subscribe(function () {
-                        observer.onNext(x);
-                        delays.remove(d);
-                        done();
-                    }, observer.onError.bind(observer), function () {
-                        observer.onNext(x);
-                        delays.remove(d);
-                        done();
-                    }));
-                }, observer.onError.bind(observer), function () {
-                    atEnd = true;
-                    subscription.dispose();
-                    done();
-                }));
-            };
-
-            if (!subDelay) {
-                start();
-            } else {
-                subscription.setDisposable(subDelay.subscribe(function () {
-                    start();
-                }, observer.onError.bind(observer), function () { start(); }));
-            }
-
-            return new CompositeDisposable(subscription, delays);
-        });
-    };
-
-  /**
-   *  Skips elements for the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
-   *  
-   *  1 - res = source.skipLastWithTime(5000);     
-   *  2 - res = source.skipLastWithTime(5000, scheduler); 
-   *      
-   * @description
-   *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
-   *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
-   *  result sequence. This causes elements to be delayed with duration.          
-   * @param {Number} duration Duration for skipping elements from the end of the sequence.
-   * @param {Scheduler} [scheduler]  Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout
-   * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
-   */
-  observableProto.skipLastWithTime = function (duration, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this;
-    return new AnonymousObservable(function (observer) {
-      var q = [];
-      return source.subscribe(function (x) {
-        var now = scheduler.now();
-        q.push({ interval: now, value: x });
-        while (q.length > 0 && now - q[0].interval >= duration) {
-          observer.onNext(q.shift().value);
-        }
-      }, observer.onError.bind(observer), function () {
-        var now = scheduler.now();
-        while (q.length > 0 && now - q[0].interval >= duration) {
-          observer.onNext(q.shift().value);
-        }
-        observer.onCompleted();
-      });
-    });
-  };
-
-  /**
-   *  Returns elements within the specified duration from the end of the observable source sequence, using the specified schedulers to run timers and to drain the collected elements.
-   * @description
-   *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
-   *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
-   *  result sequence. This causes elements to be delayed with duration.    
-   * @param {Number} duration Duration for taking elements from the end of the sequence.
-   * @param {Scheduler} [scheduler]  Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
-   * @returns {Observable} An observable sequence with the elements taken during the specified duration from the end of the source sequence.
-   */
-  observableProto.takeLastWithTime = function (duration, scheduler) {
-    var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
-      var q = [];
-      return source.subscribe(function (x) {
-        var now = scheduler.now();
-        q.push({ interval: now, value: x });
-        while (q.length > 0 && now - q[0].interval >= duration) {
-          q.shift();
-        }
-      }, observer.onError.bind(observer), function () {
-        var now = scheduler.now();
-        while (q.length > 0) {
-          var next = q.shift();
-          if (now - next.interval <= duration) { observer.onNext(next.value); }
-        }
-        observer.onCompleted();
-      });
-    });    
-  };
-
-  /**
-   *  Takes elements for the specified duration from the start of the observable source sequence, using the specified scheduler to run timers.
-   *  
-   * @example
-   *  1 - res = source.takeWithTime(5000,  [optional scheduler]); 
-   * @description
-   *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
-   *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
-   *  result sequence. This causes elements to be delayed with duration.    
-   * @param {Number} duration Duration for taking elements from the start of the sequence.
-   * @param {Scheduler} scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
-   * @returns {Observable} An observable sequence with the elements taken during the specified duration from the start of the source sequence.
-   */
-  observableProto.takeWithTime = function (duration, scheduler) {
-    var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, observer.onCompleted.bind(observer)), source.subscribe(observer));
-    });
-  };
-
-  /**
-   *  Skips elements for the specified duration from the start of the observable source sequence, using the specified scheduler to run timers.
-   *  
-   * @example
-   *  1 - res = source.skipWithTime(5000, [optional scheduler]); 
-   *  
-   * @description     
-   *  Specifying a zero value for duration doesn't guarantee no elements will be dropped from the start of the source sequence.
-   *  This is a side-effect of the asynchrony introduced by the scheduler, where the action that causes callbacks from the source sequence to be forwarded
-   *  may not execute immediately, despite the zero due time.
-   *  
-   *  Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the duration.      
-   * @param {Number} duration Duration for skipping elements from the start of the sequence.
-   * @param {Scheduler} scheduler Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
-   * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the start of the source sequence.
-   */
-  observableProto.skipWithTime = function (duration, scheduler) {
-    var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
-      var open = false;
-      return new CompositeDisposable(
-        scheduler.scheduleWithRelative(duration, function () { open = true; }), 
-        source.subscribe(function (x) { open && observer.onNext(x); }, observer.onError.bind(observer), observer.onCompleted.bind(observer)));
     });
   };
 

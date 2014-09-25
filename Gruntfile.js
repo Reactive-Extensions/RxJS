@@ -966,12 +966,6 @@ var browsers = [{
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-              'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
-              'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/skiplastwithtime.js',
-              'src/core/linq/observable/takelastwithtime.js',
-              'src/core/linq/observable/takewithtime.js',
-              'src/core/linq/observable/skipwithtime.js',
 
               // Backpressure operators
               'src/core/backpressure/pausable.js',
@@ -1125,12 +1119,6 @@ var browsers = [{
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-              'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
-              'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/skiplastwithtime.js',
-              'src/core/linq/observable/takelastwithtime.js',
-              'src/core/linq/observable/takewithtime.js',
-              'src/core/linq/observable/skipwithtime.js',
 
               // Backpressure operators
               'src/core/backpressure/pausable.js',

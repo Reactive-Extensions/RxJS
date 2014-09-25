@@ -46,7 +46,7 @@
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     Enumerator = Rx.internals.Enumerator,
     Enumerable = Rx.internals.Enumerable,
-    enumerableFor = Enumerable.forEach,
+    enumerableOf = Enumerable.of,
     immediateScheduler = Rx.Scheduler.immediate,
     currentThreadScheduler = Rx.Scheduler.currentThread,
     slice = Array.prototype.slice,
@@ -75,7 +75,9 @@
     $iterator$ = '@@iterator';
   }
   
-  var doneEnumerator = { done: true, value: undefined };
+  var doneEnumerator = Rx.doneEnumerator = { done: true, value: undefined };
+
+  Rx.iterator = $iterator$;
 
   function enumerableWhile(condition, source) {
     return new Enumerable(function () {
@@ -130,8 +132,8 @@
    * @param {Function} resultSelector A function to apply to each item in the sources array to turn it into an observable sequence.
    * @returns {Observable} An observable sequence from the concatenated observable sequences.  
    */ 
-  Observable['for'] = Observable.forIn = function (sources, resultSelector) {
-    return enumerableFor(sources, resultSelector).concat();
+  Observable['for'] = Observable.forIn = function (sources, resultSelector, thisArg) {
+    return enumerableOf(sources, resultSelector, thisArg).concat();
   };
 
    /**
