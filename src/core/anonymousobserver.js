@@ -1,8 +1,8 @@
   /**
    * Class to create an Observer instance from delegate-based implementations of the on* methods.
    */
-  var AnonymousObserver = Rx.AnonymousObserver = (function (_super) {
-    inherits(AnonymousObserver, _super);
+  var AnonymousObserver = Rx.AnonymousObserver = (function (__super__) {
+    inherits(AnonymousObserver, __super__);
 
     /**
      * Creates an observer from the specified OnNext, OnError, and OnCompleted actions.
@@ -10,11 +10,12 @@
      * @param {Any} onError Observer's OnError action implementation.
      * @param {Any} onCompleted Observer's OnCompleted action implementation.  
      */      
-    function AnonymousObserver(onNext, onError, onCompleted) {
-      _super.call(this);
+    function AnonymousObserver(onNext, onError, onCompleted, thisArg) {
+      __super__.call(this);
       this._onNext = onNext;
       this._onError = onError;
       this._onCompleted = onCompleted;
+      this._thisArg = thisArg;
     }
 
     /**
@@ -22,22 +23,22 @@
      * @param {Any} value Next element in the sequence.   
      */     
     AnonymousObserver.prototype.next = function (value) {
-      this._onNext(value);
+      this._onNext.call(this._thisArg, value);
     };
 
     /**
      * Calls the onError action.
      * @param {Any} error The error that has occurred.   
      */     
-    AnonymousObserver.prototype.error = function (exception) {
-      this._onError(exception);
+    AnonymousObserver.prototype.error = function (error) {
+      this._onError.call(this._thisArg, error);
     };
 
     /**
      *  Calls the onCompleted action.
      */        
     AnonymousObserver.prototype.completed = function () {
-      this._onCompleted();
+      this._onCompleted.call(this._thisArg);
     };
 
     return AnonymousObserver;

@@ -15,16 +15,15 @@
         freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
         moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
         freeGlobal = objectTypes[typeof global] && global;
-    
+
     if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
         root = freeGlobal;
     }
 
     // Because of build optimizers
     if (typeof define === 'function' && define.amd) {
-        define(['rx', 'exports'], function (Rx, exports) {
-            root.Rx = factory(root, exports, Rx);
-            return root.Rx;
+        define(['rx'], function (Rx, exports) {
+            return factory(root, exports, Rx);
         });
     } else if (typeof module === 'object' && module && module.exports === freeExports) {
         module.exports = factory(root, module.exports, require('./rx'));
@@ -32,7 +31,8 @@
         root.Rx = factory(root, {}, root.Rx);
     }
 }.call(this, function (root, exp, Rx, undefined) {
-    
+
+
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,

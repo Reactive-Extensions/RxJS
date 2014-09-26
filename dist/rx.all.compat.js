@@ -1798,20 +1798,15 @@ if (!Array.prototype.forEach) {
 
   /**
    *  Creates a notification callback from an observer.
-   *  
-   * @param observer Observer object.
    * @returns The action that forwards its input notification to the underlying observer.
    */
   Observer.prototype.toNotifier = function () {
     var observer = this;
-    return function (n) {
-      return n.accept(observer);
-    };
+    return function (n) { return n.accept(observer); };
   };
 
   /**
    *  Hides the identity of an observer.
-
    * @returns An observer that hides the identity of the specified observer. 
    */   
   Observer.prototype.asObserver = function () {
@@ -1821,26 +1816,22 @@ if (!Array.prototype.forEach) {
   /**
    *  Checks access to the observer for grammar violations. This includes checking for multiple OnError or OnCompleted calls, as well as reentrancy in any of the observer methods.
    *  If a violation is detected, an Error is thrown from the offending observer method call.
-   *  
    * @returns An observer that checks callbacks invocations against the observer grammar and, if the checks pass, forwards those to the specified observer.
    */    
   Observer.prototype.checked = function () { return new CheckedObserver(this); };
 
   /**
    *  Creates an observer from the specified OnNext, along with optional OnError, and OnCompleted actions.
-   *  
-   * @static
-   * @memberOf Observer
    * @param {Function} [onNext] Observer's OnNext action implementation.
    * @param {Function} [onError] Observer's OnError action implementation.
    * @param {Function} [onCompleted] Observer's OnCompleted action implementation.
    * @returns {Observer} The observer object implemented using the given actions.
    */
-  var observerCreate = Observer.create = function (onNext, onError, onCompleted) {
+  var observerCreate = Observer.create = function (onNext, onError, onCompleted, thisArg) {
     onNext || (onNext = noop);
     onError || (onError = defaultError);
     onCompleted || (onCompleted = noop);
-    return new AnonymousObserver(onNext, onError, onCompleted);
+    return new AnonymousObserver(onNext, onError, onCompleted, thisArg);
   };
 
   /**
@@ -1851,14 +1842,14 @@ if (!Array.prototype.forEach) {
    * @param {Function} handler Action that handles a notification.
    * @returns The observer object that invokes the specified handler using a notification corresponding to each message it receives.
    */
-  Observer.fromNotifier = function (handler) {
+  Observer.fromNotifier = function (handler, thisArg) {
     return new AnonymousObserver(function (x) {
       return handler(notificationCreateOnNext(x));
-    }, function (exception) {
-      return handler(notificationCreateOnError(exception));
+    }, function (e) {
+      return handler(notificationCreateOnError(e));
     }, function () {
       return handler(notificationCreateOnCompleted());
-    });
+    }, thisArg);
   };
 
   /**
@@ -1870,83 +1861,75 @@ if (!Array.prototype.forEach) {
     return new ObserveOnObserver(scheduler, this);
   };
   
+  /**
+   * Abstract base class for implementations of the Observer class.
+   * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages. 
+   */
+  var AbstractObserver = Rx.internals.AbstractObserver = (function (__super__) {
+    inherits(AbstractObserver, __super__);
+
     /**
-     * Abstract base class for implementations of the Observer class.
-     * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages. 
+     * Creates a new observer in a non-stopped state.
      */
-    var AbstractObserver = Rx.internals.AbstractObserver = (function (_super) {
-        inherits(AbstractObserver, _super);
+    function AbstractObserver() {
+      this.isStopped = false;
+      __super__.call(this);
+    }
 
-        /**
-         * Creates a new observer in a non-stopped state.
-         *
-         * @constructor
-         */
-        function AbstractObserver() {
-            this.isStopped = false;
-            _super.call(this);
-        }
+    /**
+     * Notifies the observer of a new element in the sequence.
+     * @param {Any} value Next element in the sequence. 
+     */
+    AbstractObserver.prototype.onNext = function (value) {
+      if (!this.isStopped) { this.next(value); }
+    };
 
-        /**
-         * Notifies the observer of a new element in the sequence.
-         *  
-         * @memberOf AbstractObserver
-         * @param {Any} value Next element in the sequence. 
-         */
-        AbstractObserver.prototype.onNext = function (value) {
-            if (!this.isStopped) {
-                this.next(value);
-            }
-        };
+    /**
+     * Notifies the observer that an exception has occurred.
+     * @param {Any} error The error that has occurred.     
+     */    
+    AbstractObserver.prototype.onError = function (error) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.error(error);
+      }
+    };
 
-        /**
-         * Notifies the observer that an exception has occurred.
-         * 
-         * @memberOf AbstractObserver
-         * @param {Any} error The error that has occurred.     
-         */    
-        AbstractObserver.prototype.onError = function (error) {
-            if (!this.isStopped) {
-                this.isStopped = true;
-                this.error(error);
-            }
-        };
+    /**
+     * Notifies the observer of the end of the sequence.
+     */    
+    AbstractObserver.prototype.onCompleted = function () {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.completed();
+      }
+    };
 
-        /**
-         * Notifies the observer of the end of the sequence.
-         */    
-        AbstractObserver.prototype.onCompleted = function () {
-            if (!this.isStopped) {
-                this.isStopped = true;
-                this.completed();
-            }
-        };
+    /**
+     * Disposes the observer, causing it to transition to the stopped state.
+     */
+    AbstractObserver.prototype.dispose = function () {
+      this.isStopped = true;
+    };
 
-        /**
-         * Disposes the observer, causing it to transition to the stopped state.
-         */
-        AbstractObserver.prototype.dispose = function () {
-            this.isStopped = true;
-        };
+    AbstractObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.error(e);
+        return true;
+      }
 
-        AbstractObserver.prototype.fail = function (e) {
-            if (!this.isStopped) {
-                this.isStopped = true;
-                this.error(e);
-                return true;
-            }
+      return false;
+    };
 
-            return false;
-        };
-
-        return AbstractObserver;
-    }(Observer));
+    return AbstractObserver;
+  }(Observer));
 
   /**
    * Class to create an Observer instance from delegate-based implementations of the on* methods.
    */
-  var AnonymousObserver = Rx.AnonymousObserver = (function (_super) {
-    inherits(AnonymousObserver, _super);
+  var AnonymousObserver = Rx.AnonymousObserver = (function (__super__) {
+    inherits(AnonymousObserver, __super__);
 
     /**
      * Creates an observer from the specified OnNext, OnError, and OnCompleted actions.
@@ -1954,11 +1937,12 @@ if (!Array.prototype.forEach) {
      * @param {Any} onError Observer's OnError action implementation.
      * @param {Any} onCompleted Observer's OnCompleted action implementation.  
      */      
-    function AnonymousObserver(onNext, onError, onCompleted) {
-      _super.call(this);
+    function AnonymousObserver(onNext, onError, onCompleted, thisArg) {
+      __super__.call(this);
       this._onNext = onNext;
       this._onError = onError;
       this._onCompleted = onCompleted;
+      this._thisArg = thisArg;
     }
 
     /**
@@ -1966,22 +1950,22 @@ if (!Array.prototype.forEach) {
      * @param {Any} value Next element in the sequence.   
      */     
     AnonymousObserver.prototype.next = function (value) {
-      this._onNext(value);
+      this._onNext.call(this._thisArg, value);
     };
 
     /**
      * Calls the onError action.
      * @param {Any} error The error that has occurred.   
      */     
-    AnonymousObserver.prototype.error = function (exception) {
-      this._onError(exception);
+    AnonymousObserver.prototype.error = function (error) {
+      this._onError.call(this._thisArg, error);
     };
 
     /**
      *  Calls the onCompleted action.
      */        
     AnonymousObserver.prototype.completed = function () {
-      this._onCompleted();
+      this._onCompleted.call(this._thisArg);
     };
 
     return AnonymousObserver;
@@ -2149,24 +2133,47 @@ if (!Array.prototype.forEach) {
 
     /**
      *  Subscribes an observer to the observable sequence.
-     *  
-     * @example
-     *  1 - source.subscribe();
-     *  2 - source.subscribe(observer);
-     *  3 - source.subscribe(function (x) { console.log(x); });
-     *  4 - source.subscribe(function (x) { console.log(x); }, function (err) { console.log(err); });
-     *  5 - source.subscribe(function (x) { console.log(x); }, function (err) { console.log(err); }, function () { console.log('done'); });
      *  @param {Mixed} [observerOrOnNext] The object that is to receive notifications or an action to invoke for each element in the observable sequence.
      *  @param {Function} [onError] Action to invoke upon exceptional termination of the observable sequence.
      *  @param {Function} [onCompleted] Action to invoke upon graceful termination of the observable sequence.
-     *  @returns {Diposable} The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler. 
+     *  @returns {Diposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted) {
+    observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted, thisArg) {
       var subscriber = typeof observerOrOnNext === 'object' ?
         observerOrOnNext :
-        observerCreate(observerOrOnNext, onError, onCompleted);
+        observerCreate(observerOrOnNext, onError, onCompleted, thisArg);
 
       return this._subscribe(subscriber);
+    };
+
+    /**
+     * Subscribes to the next value in the sequence with an optional "this" argument.
+     * @param {Function} onNext The function to invoke on each element in the observable sequence.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
+     * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
+     */
+    observableProto.subscribeNext = function (onNext, thisArg) {
+      return this._subscribe(observerCreate(onNext, null, null, thisArg));
+    };
+
+    /**
+     * Subscribes to an exceptional condition in the sequence with an optional "this" argument.
+     * @param {Function} onError The function to invoke upon exceptional termination of the observable sequence.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
+     * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
+     */
+    observableProto.subscribeError = function (onError, thisArg) {
+      return this._subscribe(observerCreate(null, onError, null, thisArg));
+    };
+
+    /**
+     * Subscribes to the next value in the sequence with an optional "this" argument.
+     * @param {Function} onCompleted The function to invoke upon graceful termination of the observable sequence.
+     * @param {Any} [thisArg] Object to use as this when executing callback.
+     * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
+     */
+    observableProto.subscribeCompleted = function (onCompleted, thisArg) {
+      return this._subscribe(observerCreate(null, null, onCompleted, thisArg));
     };
 
     return Observable;
@@ -3953,28 +3960,28 @@ if (!Array.prototype.forEach) {
     });
   };
 
-    /**
-     *  Projects each element of an observable sequence into a new form by incorporating the element's index.
-     * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
-     * @param {Any} [thisArg] Object to use as this when executing callback.
-     * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
-     */
-    observableProto.select = observableProto.map = function (selector, thisArg) {
-        var parent = this;
-        return new AnonymousObservable(function (observer) {
-            var count = 0;
-            return parent.subscribe(function (value) {
-                var result;
-                try {
-                    result = selector.call(thisArg, value, count++, parent);
-                } catch (exception) {
-                    observer.onError(exception);
-                    return;
-                }
-                observer.onNext(result);
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+  /**
+   *  Projects each element of an observable sequence into a new form by incorporating the element's index.
+   * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source. 
+   */
+  observableProto.select = observableProto.map = function (selector, thisArg) {
+    var parent = this;
+    return new AnonymousObservable(function (observer) {
+      var count = 0;
+      return parent.subscribe(function (value) {
+        var result;
+        try {
+          result = selector.call(thisArg, value, count++, parent);
+        } catch (e) {
+          observer.onError(e);
+          return;
+        }
+        observer.onNext(result);
+      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    });
+  };
 
   /**
    * Retrieves the value of a specified property from all elements in the Observable sequence.
@@ -4192,34 +4199,32 @@ if (!Array.prototype.forEach) {
     });
   };
 
-    /**
-     *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
-     *  
-     * @example
-     *  var res = source.where(function (value) { return value < 10; });
-     *  var res = source.where(function (value, index) { return value < 10 || index < 10; });
-     * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
-     * @param {Any} [thisArg] Object to use as this when executing callback.
-     * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
-     */
-    observableProto.where = observableProto.filter = function (predicate, thisArg) {
-        var parent = this;
-        return new AnonymousObservable(function (observer) {
-            var count = 0;
-            return parent.subscribe(function (value) {
-                var shouldRun;
-                try {
-                    shouldRun = predicate.call(thisArg, value, count++, parent);
-                } catch (exception) {
-                    observer.onError(exception);
-                    return;
-                }
-                if (shouldRun) {
-                    observer.onNext(value);
-                }
-            }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-        });
-    };
+  /**
+   *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
+   *  
+   * @example
+   *  var res = source.where(function (value) { return value < 10; });
+   *  var res = source.where(function (value, index) { return value < 10 || index < 10; });
+   * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.   
+   */
+  observableProto.where = observableProto.filter = function (predicate, thisArg) {
+      var parent = this;
+      return new AnonymousObservable(function (observer) {
+        var count = 0;
+        return parent.subscribe(function (value) {
+          var shouldRun;
+          try {
+            shouldRun = predicate.call(thisArg, value, count++, parent);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+          shouldRun && observer.onNext(value);
+        }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      });
+  };
 
   observableProto.finalValue = function () {
     var source = this;
