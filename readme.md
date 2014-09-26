@@ -367,7 +367,7 @@ RxJS has been thoroughly tested against all major browsers and supports IE6+, Ch
 
 ## Contributing ##
 
-There are lots of ways to [contribute](https://github.com/Reactive-Extensions/RxJS/wiki/Contributions) to the project, and we appreciate our [contributors](https://github.com/Reactive-Extensions/RxJS/wiki/Contributors).
+There are lots of ways to contribute to the project, and we appreciate our [contributors](https://github.com/Reactive-Extensions/RxJS/wiki/Contributors).  If you wish to contribute, check out our [style guide](https://github.com/Reactive-Extensions/RxJS/wiki/Reactive-Extensions-for-JavaScript-%28RxJS%29-Style-Guide).
 
 You can contribute by reviewing and sending feedback on code checkins, suggesting and trying out new features as they are implemented, submit bugs and help us verify fixes as they are checked in, as well as submit code fixes or code contributions of your own. Note that all code submissions will be rigorously reviewed and tested by the Rx Team, and only those that meet an extremely high bar for both quality and design/roadmap appropriateness will be merged into the source.
 
