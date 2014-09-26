@@ -1814,7 +1814,7 @@ if (!Array.prototype.forEach) {
       this._onNext = onNext;
       this._onError = onError;
       this._onCompleted = onCompleted;
-      this._thisArg = thisArg;
+      this._thisArg = arguments.length === 4 ? thisArg : this;
     }
 
     /**
@@ -1866,7 +1866,9 @@ if (!Array.prototype.forEach) {
     observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted, thisArg) {
       var subscriber = typeof observerOrOnNext === 'object' ?
         observerOrOnNext :
-        observerCreate(observerOrOnNext, onError, onCompleted, thisArg);
+        arguments.length === 4 ?
+          observerCreate(observerOrOnNext, onError, onCompleted, thisArg) :
+          observerCreate(observerOrOnNext, onError, onCompleted);
 
       return this._subscribe(subscriber);
     };
@@ -1878,7 +1880,10 @@ if (!Array.prototype.forEach) {
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeNext = function (onNext, thisArg) {
-      return this._subscribe(observerCreate(onNext, null, null, thisArg));
+      var observer = arguments.length === 2 ?
+        observerCreate(onNext, null, null, thisArg) :
+        observerCreate(onNext, null, null);
+      return this._subscribe(observer);
     };
 
     /**
@@ -1888,7 +1893,10 @@ if (!Array.prototype.forEach) {
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeError = function (onError, thisArg) {
-      return this._subscribe(observerCreate(null, onError, null, thisArg));
+      var observer = arguments.length === 2 ?
+        observerCreate(null, onError, null, thisArg) :
+        observerCreate(null, onError, null);      
+      return this._subscribe(observer);
     };
 
     /**
@@ -1898,7 +1906,10 @@ if (!Array.prototype.forEach) {
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeCompleted = function (onCompleted, thisArg) {
-      return this._subscribe(observerCreate(null, null, onCompleted, thisArg));
+      var observer = arguments.length === 2 ?
+        observerCreate(null, null, onCompleted, thisArg) :
+        observerCreate(null, null, onCompleted);        
+      return this._subscribe(observer);
     };
 
     return Observable;

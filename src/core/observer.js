@@ -38,7 +38,9 @@
     onNext || (onNext = noop);
     onError || (onError = defaultError);
     onCompleted || (onCompleted = noop);
-    return new AnonymousObserver(onNext, onError, onCompleted, thisArg);
+    return arguments.length === 4 ?
+      new AnonymousObserver(onNext, onError, onCompleted, thisArg) :
+      new AnonymousObserver(onNext, onError, onCompleted);
   };
 
   /**
