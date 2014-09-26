@@ -15,7 +15,7 @@
       this._onNext = onNext;
       this._onError = onError;
       this._onCompleted = onCompleted;
-      this._thisArg = thisArg;
+      this._thisArg = arguments.length === 4 ? thisArg : this;
     }
 
     /**
