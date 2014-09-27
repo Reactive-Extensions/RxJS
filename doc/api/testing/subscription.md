@@ -20,7 +20,7 @@ Records information about subscriptions to and unsubscriptions from observable s
 ## _Subscription Constructor_ ##
 
 ### <a id="rxsubscriptionsubscribe-unsubscribe"></a>`Rx.Subscription(subscribe, unsubscribe)`
-<a href="#rxsubscriptionsubscribe-unsubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L8-L11 "View in source") 
+<a href="#rxsubscriptionsubscribe-unsubscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L8-L11 "View in source")
 
 Creates a new subscription object with the given virtual subscription and unsubscription time.
 
@@ -48,7 +48,7 @@ console.log(recorded.unsubscribe);
 ## _Subscription Instance Methods_ ##
 
 ### <a id="rxsubscriptionprototypeequalsother"></a>`Rx.Subscription.prototype.equals(other)`
-<a href="#rxsubscriptionprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L18-L20 "View in source") 
+<a href="#rxsubscriptionprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L18-L20 "View in source")
 
 Checks whether the given subscription is equal to the current instance.
 
@@ -79,12 +79,12 @@ console.log(s1.equals(s3));
 * * *
 
 ### <a id="rxsubscriptionprototypetostring"></a>`Rx.Subscription.prototype.toString()`
-<a href="#rxsubscriptionprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L30-L32 "View in source") 
+<a href="#rxsubscriptionprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L30-L32 "View in source")
 
 Returns a string representation of the current Subscription value.
 
 #### Returns
-*(String)*: String representation of the current Subscription value. 
+*(String)*: String representation of the current Subscription value.
 
 #### Example
 
@@ -108,7 +108,7 @@ console.log(s2.toString());
 ## _Subscription Instance Properties_ ##
 
 ### <a id="subscribe"></a>`subscribe`
-<a href="#subscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L8 "View in source") 
+<a href="#subscribe">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L8 "View in source")
 
 Gets the subscription virtual time.
 
@@ -131,7 +131,7 @@ console.log(s1.subscribe);
 * * *
 
 ### <a id="unsubscribe"></a>`unsubscribe`
-<a href="#value">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L9 "View in source") 
+<a href="#value">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L9 "View in source")
 
 Gets the unsubscription virtual time.
 

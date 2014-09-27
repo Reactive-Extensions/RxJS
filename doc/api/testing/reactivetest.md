@@ -20,7 +20,7 @@ This class contains test utility methods such as create notifications for testin
 ## _ReactiveTest Class Methods_ ##
 
 ### <a id="rxreactivetestoncompletedticks"></a>`Rx.ReactiveTest.onCompleted(ticks)`
-<a href="#rxreactivetestoncompletedticks">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L89-L91 "View in source") 
+<a href="#rxreactivetestoncompletedticks">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L89-L91 "View in source")
 
 Factory method for an OnCompleted notification record at a given time.
 
@@ -57,7 +57,7 @@ collectionAssert(res, [
 * * *
 
 ### <a id="rxreactivetestonerrorticksexception"></a>`Rx.ReactiveTest.onError(ticks, exception)`
-<a href="#rxreactivetestonerrorticksexception">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L77-L82 "View in source") 
+<a href="#rxreactivetestonerrorticksexception">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L77-L82 "View in source")
 
 Factory method for an OnError notification record at a given time with a given error.
 
@@ -66,7 +66,7 @@ Factory method for an OnError notification record at a given time with a given e
 2. `exception` *(Error | Function)*: Recorded exception stored in the OnError notification or a predicate
 
 #### Returns
-*(Recorded)*: Recorded OnError notification. 
+*(Recorded)*: Recorded OnError notification.
 
 #### Example
 
@@ -100,7 +100,7 @@ collectionAssert(res, [
 * * *
 
 ### <a id="rxreactivetestonnextticksvalue"></a>`Rx.ReactiveTest.onNext(ticks, value)`
-<a href="#rxreactivetestonnextticksvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L61-L66 "View in source") 
+<a href="#rxreactivetestonnextticksvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L61-L66 "View in source")
 
 Factory method for an OnNext notification record at a given time with a given error.
 
@@ -109,7 +109,7 @@ Factory method for an OnNext notification record at a given time with a given er
 2. `value` *(Any | Function)*: Recorded exception stored in the OnNext notification or a predicate
 
 #### Returns
-*(Recorded)*: Recorded OnNext notification. 
+*(Recorded)*: Recorded OnNext notification.
 
 #### Example
 
@@ -145,7 +145,7 @@ collectionAssert(res, [
 ## _ReactiveTest Class Fields_ ##
 
 ### <a id="rxreactivetestcreated"></a>`Rx.ReactiveTest.created`
-<a href="#rxreactivetestcreated">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L45 "View in source") 
+<a href="#rxreactivetestcreated">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L45 "View in source")
 
 Default virtual time used for creation of observable sequences in unit tests.  This has a value of `100`.
 
@@ -175,7 +175,7 @@ var res = scheduler.startWithTiming(
 * * *
 
 ### <a id="rxreactivetestdisposed"></a>`Rx.ReactiveTest.disposed`
-<a href="#rxreactivetestdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L49 "View in source") 
+<a href="#rxreactivetestdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L49 "View in source")
 
 Default virtual time used to dispose subscriptions in unit tests.  This has a value of `1000`.
 
@@ -205,7 +205,7 @@ var res = scheduler.startWithTiming(
 * * *
 
 ### <a id="rxreactivetestsubscribed"></a>`Rx.ReactiveTest.subscribed`
-<a href="#rxreactivetestsubscribed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L47 "View in source") 
+<a href="#rxreactivetestsubscribed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/reactivetest.js#L47 "View in source")
 
 Default virtual time used to subscribe to observable sequences in unit tests.  This has a value of `200`.
 

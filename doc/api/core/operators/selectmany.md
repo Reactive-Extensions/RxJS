@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.flatMap(selector, [resultSelector])`
 ### `Rx.Observable.prototype.selectMany(selector, [resultSelector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js "View in source")
 
 One of the following:
 
@@ -19,7 +19,7 @@ source.selectMany(function (x, i) { return Promise.resolve(x + i); }, function (
 ```
 
 Projects each element of the source observable sequence to the other observable sequence or Promise and merges the resulting observable sequences into one observable sequence.
- 
+
  ```js
 source.selectMany(Rx.Observable.fromArray([1,2,3]));
 source.selectMany(Promise.resolve(42));
@@ -28,16 +28,16 @@ source.selectMany(Promise.resolve(42));
 #### Arguments
 1. `selector` *(`Function`)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
 2. `[resultSelector]` *(`Function`)*: A transform function to apply to each element of the intermediate sequence.
- 
+
 #### Returns
-*(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
+*(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
 
 #### Example
 ```js
 var source = Rx.Observable
     .range(1, 2)
     .selectMany(function (x) {
-        return Rx.Observable.range(x, 2);    
+        return Rx.Observable.range(x, 2);
     });
 
 var subscription = source.subscribe(
@@ -45,17 +45,17 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 1 
-// => Next: 2 
-// => Next: 2 
-// => Next: 3 
-// => Completed 
+// => Next: 1
+// => Next: 2
+// => Next: 2
+// => Next: 3
+// => Completed
 
 /* Using a promise */
 var source = Rx.Observable.fromArray([1,2,3,4])
@@ -68,17 +68,17 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 4
-// => Next: 4 
-// => Next: 4 
-// => Next: 4 
-// => Completed    
+// => Next: 4
+// => Next: 4
+// => Next: 4
+// => Completed
 ```
 
 ### Location

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.contains(value, [comparer])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/contains.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/contains.js "View in source")
 
 Determines whether an observable sequence contains a specified element with an optional equality comparer.
 
@@ -15,41 +15,41 @@ Determines whether an observable sequence contains a specified element with an o
 /* Without a comparer */
 var source = Rx.Observable.return(42)
     .contains(42);
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: true
-// => Completed 
+// => Completed
 
 /* With a comparer */
 var source = Rx.Observable.return({ value: 42 })
     .contains(
-        { value: 42}, 
+        { value: 42},
         function (x, y) { return x.value === y.value; }
     );
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: true
-// => Completed 
+// => Completed
 ```
 ### Location
 

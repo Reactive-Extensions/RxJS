@@ -47,7 +47,7 @@ console.log(refCountDisposable.isDisposed);
 ## _RefCountDisposable Constructor_ ##
 
 ### <a id="rxrefcountdisposable"></a>`Rx.RefCountDisposable(disposable)`
-<a href="#rxrefcountdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/rxrefcountdisposable.js#L7-L10 "View in source") 
+<a href="#rxrefcountdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/rxrefcountdisposable.js#L7-L10 "View in source")
 
 Initializes a new instance of the `Rx.RefCountDisposable` class with the specified disposable
 
@@ -75,7 +75,7 @@ console.log(refCountDisposable.isDisposed);
 ## _RefCountDisposable Instance Methods_ ##
 
 ### <a id="rxrefcountdisposableprototypedispose"></a>`Rx.RefCountDisposable.prototype.dispose()`
-<a href="#rxrefcountdisposableprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/rxrefcountdisposable.js#L30-L35 "View in source") 
+<a href="#rxrefcountdisposableprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/rxrefcountdisposable.js#L30-L35 "View in source")
 
 Disposes the underlying disposable only when all dependent disposables have been disposed.
 
@@ -112,9 +112,9 @@ console.log(refCountDisposable.isDisposed);
 * * *
 
 ### <a id="rxrefcountdisposableprototypegetdisposable"></a>`Rx.RefCountDisposable.prototype.getDisposable()`
-<a href="#rxrefcountdisposableprototypegetdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/rxrefcountdisposable.js#L18-L20 "View in source") 
+<a href="#rxrefcountdisposableprototypegetdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/rxrefcountdisposable.js#L18-L20 "View in source")
 
-Returns a dependent disposable that when disposed decreases the refcount on the underlying disposable.   
+Returns a dependent disposable that when disposed decreases the refcount on the underlying disposable.
 
 #### Returns
 *(Disposable)*: A dependent disposable contributing to the reference count that manages the underlying disposable's lifetime.
@@ -153,7 +153,7 @@ console.log(refCountDisposable.isDisposed);
 ## _RefCountDisposable Instance Properties_ ##
 
 ### <a id="isdisposed"></a>`isDisposed`
-<a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/rxrefcountdisposable.js#L8 "View in source") 
+<a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/rxrefcountdisposable.js#L8 "View in source")
 
 Gets a value that indicates whether the object is disposed.
 

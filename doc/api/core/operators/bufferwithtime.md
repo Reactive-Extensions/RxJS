@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.bufferWithTime(timeSpan, [timeShift | scheduler], [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithtime.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithtime.js "View in source")
 
 Projects each element of an observable sequence into zero or more buffers which are produced based on timing information.
 
@@ -9,7 +9,7 @@ Projects each element of an observable sequence into zero or more buffers which 
 3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(`Observable`)*: An observable sequence of buffers. 
+*(`Observable`)*: An observable sequence of buffers.
 
 #### Example
 ```js
@@ -23,16 +23,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0,1,2,3 
-// => Next: 4,5,6,7,8 
-// => Next: 9,10,11,12,13 
-// => Completed 
+// => Next: 0,1,2,3
+// => Next: 4,5,6,7,8
+// => Next: 9,10,11,12,13
+// => Completed
 
 /* Using a skip */
 var source = Rx.Observable.interval(100)
@@ -44,16 +44,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0,1,2,3,4 
-// => Next: 0,1,2,3,4,5 
-// => Next: 2,3,4,5,6 
-// => Completed 
+// => Next: 0,1,2,3,4
+// => Next: 0,1,2,3,4,5
+// => Next: 2,3,4,5,6
+// => Completed
 ```
 ### Location
 

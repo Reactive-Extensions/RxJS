@@ -1,8 +1,8 @@
 ### `Rx.Observable.prototype.filter(predicate, [thisArg])`
 ### `Rx.Observable.prototype.where(predicate, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/where.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/where.js "View in source")
 
-Filters the elements of an observable sequence based on a predicate.  
+Filters the elements of an observable sequence based on a predicate.
 
 #### Arguments
 1. `predicate` *(`Function`)*: A function to test each source element for a condition. The callback is called with the following information:
@@ -12,7 +12,7 @@ Filters the elements of an observable sequence based on a predicate.
 2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.
 
 #### Example
 ```js
@@ -26,16 +26,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0 
-// => Next: 2 
-// => Next: 4 
-// => Completed    
+// => Next: 0
+// => Next: 2
+// => Next: 4
+// => Completed
 ```
 
 ### Location

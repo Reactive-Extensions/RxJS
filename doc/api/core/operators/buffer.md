@@ -20,7 +20,7 @@ Rx.Observable.prototype.buffer(bufferBoundaries);
 2. `[bufferClosingSelector]` *(`Function`)*: A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
 
 #### Returns
-*(`Observable`)*: An observable sequence of windows. 
+*(`Observable`)*: An observable sequence of windows.
 
 #### Example
 ```js
@@ -36,16 +36,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0,1,2,3 
+// => Next: 0,1,2,3
 // => Next: 4,5,6,7,8
 // => Next: 9,10,11,12,13
-// => Completed 
+// => Completed
 
 /* Using a buffer closing selector */
 var win = 0;
@@ -59,16 +59,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0 
+// => Next: 0
 // => Next: 1,2,3,4
-// => Next: 5,6,7,8,9,10 
-// => Completed 
+// => Next: 5,6,7,8,9,10
+// => Completed
 
 /* Using Openings and Closing Selector */
 var openings = Rx.Observable.interval(200);
@@ -82,16 +82,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 3,4 
-// => Next: 7,8 
-// => Next: 11,12 
-// => Completed 
+// => Next: 3,4
+// => Next: 7,8
+// => Next: 11,12
+// => Completed
 ```
 ### Location
 

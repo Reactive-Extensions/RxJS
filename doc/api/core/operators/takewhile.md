@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.takeWhile(predicate, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takewhile.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takewhile.js "View in source")
 
 Returns elements from an observable sequence as long as a specified condition is true.
 
@@ -11,8 +11,8 @@ Returns elements from an observable sequence as long as a specified condition is
 2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(`Observable`)*: An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.  
-    
+*(`Observable`)*: An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
+
 #### Example
 ```js
 // With a predicate
@@ -24,16 +24,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0
 // => Next: 1
 // => Next: 2
-// => Completed 
+// => Completed
 ```
 
 ### Location

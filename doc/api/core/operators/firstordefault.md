@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.firstOrDefault(predicate, [defaultValue], [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/firstordefault.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/firstordefault.js "View in source")
 
 Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
 
@@ -12,7 +12,7 @@ Returns the first element of an observable sequence that satisfies the condition
 3. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.
 
 #### Example
 ```js
@@ -25,10 +25,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
@@ -43,14 +43,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 1
-// => Completed  
+// => Completed
 ```
 
 ### Location

@@ -6,7 +6,7 @@ The `Observable` / `Observer` objects are available in the core distribution of 
 
 ## `Observable` / `Observer` ##
 
-Rx exposes asynchronous and event-based data sources as push-based, observable sequences abstracted by the [`Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md) object in the core distribution of RxJS. It represents a data source that can be observed, meaning that it can send data to anyone who is interested. 
+Rx exposes asynchronous and event-based data sources as push-based, observable sequences abstracted by the [`Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md) object in the core distribution of RxJS. It represents a data source that can be observed, meaning that it can send data to anyone who is interested.
 
 As described in [What is RxJS](what.md), the other half of the push model is represented by the [`Observer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observer.md) object, which represents an observer who registers an interest through a subscription. Items are subsequently handed to the observer from the observable sequence to which it subscribes.
 
@@ -17,8 +17,8 @@ Observers support three publication events, reflected by the object's methods. T
 The following lists the `Observable` / `Observer` objects in addition to the `Disposable` object.
 
 ```js
-/** 
- * Defines a method to release allocated resources. 
+/**
+ * Defines a method to release allocated resources.
  */
 function Disposable() { }
 
@@ -26,7 +26,6 @@ function Disposable() { }
  * Performs application-defined tasks associated with freeing, releasing, or resetting resources.
  */
 Disposable.prototype.dispose = function () { ... }
-
 
 /**
  * Defines a provider for push-based notification.
@@ -41,7 +40,6 @@ function Observable() { }
  */
 Observable.prototype.subscribe = function (observer) { ... }
 
-
 /**
  * Provides a mechanism for receiving push-based notifications.
  */
@@ -54,7 +52,7 @@ function Observer() { }
  */
 Observer.prototype.onNext = function (value) { ... };
 
-/** 
+/**
  * Notifies the observer that the provider has experienced an error condition.
  *
  * @param {Error} error An object that provides additional information about the error.

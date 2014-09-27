@@ -23,10 +23,10 @@
     <file src="..\..\ts\rx.aggregates.d.ts" target="content\Scripts\rx.aggregates.d.ts" />
     <file src="..\..\ts\rx.async.d.ts" target="content\Scripts\rx.async.d.ts" />
     <file src="..\..\ts\rx.binding.d.ts" target="content\Scripts\rx.binding.d.ts" />
-    <file src="..\..\ts\rx.coincidence.d.ts" target="content\Scripts\rx.coincidence.d.ts" /> 
-    <file src="..\..\ts\rx.experimental.d.ts" target="content\Scripts\rx.experimental.d.ts" />  
+    <file src="..\..\ts\rx.coincidence.d.ts" target="content\Scripts\rx.coincidence.d.ts" />
+    <file src="..\..\ts\rx.experimental.d.ts" target="content\Scripts\rx.experimental.d.ts" />
     <file src="..\..\ts\rx.joinpatterns.d.ts" target="content\Scripts\rx.joinpatterns.d.ts" />
     <file src="..\..\ts\rx.time.d.ts" target="content\Scripts\rx.time.d.ts" />
-    <file src="..\..\ts\rx.virtualtime.d.ts" target="content\Scripts\rx.virtualtime.d.ts" />   
+    <file src="..\..\ts\rx.virtualtime.d.ts" target="content\Scripts\rx.virtualtime.d.ts" />
   </files>
 </package>

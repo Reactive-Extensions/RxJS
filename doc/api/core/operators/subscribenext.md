@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.subscribeNext(onNext, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable.js "View in source")
 
 Subscribes a function to invoke for each element in the observable sequence.
 
@@ -8,7 +8,7 @@ Subscribes a function to invoke for each element in the observable sequence.
 2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(Disposable)*: The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler. 
+*(Disposable)*: The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler.
 
 #### Example
 ```js

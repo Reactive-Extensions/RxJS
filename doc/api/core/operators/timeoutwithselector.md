@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.timeoutwithselector([firstTimeout], timeoutDurationSelector, [other])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeoutwithselector.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeoutwithselector.js "View in source")
 
 Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
 
@@ -26,25 +26,25 @@ var source = Rx.Observable
         return Rx.Observable.timer(x);
     })
     .map(function (x, i) { return i; })
-    .timeoutWithSelector(function (x) { 
-        return Rx.Observable.timer(400); 
+    .timeoutWithSelector(function (x) {
+        return Rx.Observable.timer(400);
     });
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0 
-// => Next: 1 
-// => Next: 2 
-// => Error: Error: Timeout 
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Error: Error: Timeout
 
 /* With no other */
 var array = [
@@ -59,25 +59,25 @@ var source = Rx.Observable
         return Rx.Observable.timer(x);
     })
     .map(function (x, i) { return i; })
-    .timeoutWithSelector(Rx.Observable.timer(250), function (x) { 
-        return Rx.Observable.timer(400); 
+    .timeoutWithSelector(Rx.Observable.timer(250), function (x) {
+        return Rx.Observable.timer(400);
     });
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0 
-// => Next: 1 
-// => Next: 2 
-// => Error: Error: Timeout 
+// => Next: 0
+// => Next: 1
+// => Next: 2
+// => Error: Error: Timeout
 
 /* With other */
 var array = [
@@ -92,24 +92,24 @@ var source = Rx.Observable
         return Rx.Observable.timer(x);
     })
     .map(function (x, i) { return i; })
-    .timeoutWithSelector(Rx.Observable.timer(250), function (x) { 
-        return Rx.Observable.timer(400); 
+    .timeoutWithSelector(Rx.Observable.timer(250), function (x) {
+        return Rx.Observable.timer(400);
     }, Rx.Observable.return(42));
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0 
-// => Next: 1 
-// => Next: 2 
+// => Next: 0
+// => Next: 1
+// => Next: 2
 // => Next: 42
 // => Completed
 ```

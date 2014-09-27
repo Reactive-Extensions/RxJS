@@ -18,16 +18,16 @@ var source = Rx.Observable
     .return(42)
     .delay(5000)
     .timeout(200);
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Error: Error: Timeout
@@ -37,16 +37,16 @@ var source = Rx.Observable
     .return(42)
     .delay(5000)
     .timeout(200, Rx.Observable.empty());
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Completed

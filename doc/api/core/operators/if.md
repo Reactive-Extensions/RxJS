@@ -1,6 +1,6 @@
 ### `Rx.Observable.if(condition, thenSource, [elseSource])`
 ### `Rx.Observable.ifThen(condition, thenSource, [elseSource])` *DEPRECATED*
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/if.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/if.js "View in source")
 
 Determines whether an observable collection contains values. There is an alias for this method called `ifThen` for browsers <IE9
 
@@ -27,10 +27,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
@@ -50,10 +50,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 56

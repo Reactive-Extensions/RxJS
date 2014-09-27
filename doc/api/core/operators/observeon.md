@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.observeOn(scheduler)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/observeon.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/observeon.js "View in source")
 
 Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
 
@@ -9,8 +9,8 @@ This only invokes observer callbacks on a scheduler. In case the subscription an
 1. `scheduler` *(`Scheduler`)*:  Scheduler to notify observers on.
 
 #### Returns
-*(`Observable`)*: The source sequence whose observations happen on the specified scheduler. 
- 
+*(`Observable`)*: The source sequence whose observations happen on the specified scheduler.
+
 #### Example
 ```js
 /* Change from immediate scheduler to timeout */
@@ -22,14 +22,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
-// => Completed   
+// => Completed
 ```
 
 ### Location
@@ -40,9 +40,9 @@ File:
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
 - [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) 
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:

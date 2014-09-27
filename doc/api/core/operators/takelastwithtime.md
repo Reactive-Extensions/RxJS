@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.takeLastWithTime(duration, [timeScheduler], [loopScheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastwithtime.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastwithtime.js "View in source")
 
 Returns elements within the specified duration from the end of the observable source sequence, using the specified schedulers to run timers and to drain the collected elements.
 
@@ -10,22 +10,22 @@ Returns elements within the specified duration from the end of the observable so
 
 #### Returns
 *(`Observable`)*: An observable sequence with the elements taken during the specified duration from the end of the source sequence.
-    
+
 #### Example
 ```js
 var source = Rx.Observable.timer(0, 1000)
     .take(10)
     .takeLastWithTime(5000);
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 5
@@ -33,7 +33,7 @@ var subscription = source.subscribe(
 // => Next: 7
 // => Next: 8
 // => Next: 9
-// => Completed 
+// => Completed
 ```
 
 ### Location

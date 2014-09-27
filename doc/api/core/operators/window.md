@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.window([windowOpenings], [windowBoundaries], windowClosingSelector)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/window.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/window.js "View in source")
 
 Projects each element of an observable sequence into zero or more windows.
 
@@ -15,8 +15,8 @@ Rx.Observable.prototype.window(windowBoundaries);
 ```
 
 #### Arguments
-1. `[windowOpenings]` *(`Observable`)*: Observable sequence whose elements denote the creation of new windows 
-2.`[windowBoundaries]` *(`Observable`)*: Sequence of window boundary markers. The current window is closed and a new window is opened upon receiving a boundary marker. 
+1. `[windowOpenings]` *(`Observable`)*: Observable sequence whose elements denote the creation of new windows
+2.`[windowBoundaries]` *(`Observable`)*: Sequence of window boundary markers. The current window is closed and a new window is opened upon receiving a boundary marker.
 3. `windowClosingSelector` *(`Function`)*: A function invoked to define the closing of each produced window.
 
 #### Returns
@@ -38,16 +38,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0,1,2,3,4 
-// => Next: 5,6,7,8,9,10 
-// => Next: 11,12,13,14,15 
-// => Completed  
+// => Next: 0,1,2,3,4
+// => Next: 5,6,7,8,9,10
+// => Next: 11,12,13,14,15
+// => Completed
 
 /* With window opening and window closing selector */
 var win = 0;
@@ -62,16 +62,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0,1,2 
-// => Next: 3,4,5,6 
-// => Next: 7,8,9,10,11,12 
-// => Completed 
+// => Next: 0,1,2
+// => Next: 3,4,5,6
+// => Next: 7,8,9,10,11,12
+// => Completed
 
 /* With openings and closings */
 var openings = Rx.Observable.timer(0, 200);
@@ -86,16 +86,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0,1,2 
-// => Next: 4,5 
-// => Next: 8,9 
-// => Completed 
+// => Next: 0,1,2
+// => Next: 4,5
+// => Next: 8,9
+// => Completed
 ```
 
 ### Location

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.let(func)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/let.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/let.js "View in source")
 
 Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
 
@@ -22,10 +22,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 var subscription = source.subscribe(
@@ -33,19 +33,19 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 1 
-// => Next: 2 
-// => Next: 3 
-// => Next: 1 
-// => Next: 2 
-// => Next: 3 
-// => Completed 
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Next: 1
+// => Next: 2
+// => Next: 3
+// => Completed
 ```
 
 ### Location

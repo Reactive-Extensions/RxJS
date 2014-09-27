@@ -1,5 +1,5 @@
 ### `Rx.Observable.zip(...args)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zip.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zip.js "View in source")
 
 Merges the specified observable sequences or Promises into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
 
@@ -16,22 +16,22 @@ var range = Rx.Observable.range(0, 5);
 
 var source = Observable.zip(
     range,
-    range.skip(1), 
-    range.skip(2), 
+    range.skip(1),
+    range.skip(2),
     function (s1, s2, s3) {
         return s1 + ':' + s2 + ':' + s3;
     }
 );
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0:1:2
@@ -50,16 +50,16 @@ var source = Observable.zip(
         return s1 + ':' + s2 + ':' + s3;
     }
 );
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0:1:2

@@ -1,8 +1,8 @@
 ### `Rx.Observable.prototype.all(predicate, [thisArg])`
 ### `Rx.Observable.prototype.every(predicate, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/all.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/all.js "View in source")
 
-Determines whether all elements of an observable sequence satisfy a condition.  
+Determines whether all elements of an observable sequence satisfy a condition.
 
 #### Arguments
 1. `predicate` *(`Function`)*: A function to test each element for a condition.
@@ -23,14 +23,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: true
-// => Completed    
+// => Completed
 ```
 
 ### Location

@@ -88,7 +88,7 @@ Sure, there are a lot of libraries to get started with RxJS?  Confused on where 
 
 This set of libraries include:
 
-- [`rx.all.js`](doc/libraries/rx.complete.md) - complete version of RxJS with all operators, minus the testing operators, and comes with a compat file for older browsers.  
+- [`rx.all.js`](doc/libraries/rx.complete.md) - complete version of RxJS with all operators, minus the testing operators, and comes with a compat file for older browsers.
 - [`rx.lite.js`](doc/libraries/rx.lite.md) - lite version with event bindings, creation, time and standard query operators with a compat file for older browsers.  For most operations, this is the file you'll want to use unless you want the full power of RxJS.
 - [`rx.lite.extras.js`](doc/libraries/rx.lite.extras.md) - the operators missing from rx.lite.js that can be found in rx.js.
 - [`rx.js`](doc/libraries/rx.md) - core library for ES5 compliant browsers and runtimes plus compatibility for older browsers.
@@ -200,7 +200,7 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 
 - Tutorials
     - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
-    - [2 minute introduction to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877) 
+    - [2 minute introduction to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877)
     - [Learn RxJS](https://github.com/jhusain/learnrx)
     - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
@@ -313,10 +313,10 @@ bower install rxjs
 <script src="rx.js"></script>
 
 <!-- Or all of RxJS minus testing -->
-<script src="rx.complete.js"></script>   
+<script src="rx.complete.js"></script>
 
 <!-- Or keeping it lite -->
-<script src="rx.lite.js"></script>       
+<script src="rx.lite.js"></script>
 ```
 
 ### Along with a number of our extras for RxJS:

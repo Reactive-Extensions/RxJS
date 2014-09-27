@@ -1,5 +1,5 @@
 ### `Rx.Observable.onErrorResumeNext(...args)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/onerrorresumenext.js "View in source")
 
 Continues an observable sequence that is terminated normally or by an exception with the next observable sequence or Promise.
 
@@ -7,7 +7,7 @@ Continues an observable sequence that is terminated normally or by an exception 
 1. `args` *(Array|arguments)*: Observable sequences to concatenate.
 
 #### Returns
-*(`Observable`)*: An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally. 
+*(`Observable`)*: An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.
 
 #### Example
 ```js
@@ -22,14 +22,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
-// => Completed 
+// => Completed
 ```
 
 ### Location

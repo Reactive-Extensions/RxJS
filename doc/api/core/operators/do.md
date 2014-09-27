@@ -1,7 +1,7 @@
 ### `Rx.Observable.prototype.do([observer] | [onNext], [onError], [onCompleted])`
 ### `Rx.Observable.prototype.tap([observer] | [onNext], [onError], [onCompleted])`
 ### `Rx.Observable.prototype.doAction([observer] | [onNext], [onError], [onCompleted])` *DEPRECATED*
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js "View in source")
 
 Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
 
@@ -33,10 +33,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Do Next: 0
@@ -46,7 +46,7 @@ var subscription = source.subscribe(
 // => Do Next: 2
 // => Next: 2
 // => Do Completed
-// => Completed 
+// => Completed
 
 /* Using an observer */
 var observer = Rx.Observer.create(
@@ -63,10 +63,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Do Next: 0
@@ -76,7 +76,7 @@ var subscription = source.subscribe(
 // => Do Next: 2
 // => Next: 2
 // => Do Completed
-// => Completed 
+// => Completed
 ```
 ### Location
 

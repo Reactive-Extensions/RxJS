@@ -1,5 +1,5 @@
 ### `Rx.Observable.case(selector, sources, [elseSource|scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/case.js "View in source")
 
 Uses selector to determine which source in sources to use.  There is an alias 'switchCase' for browsers <IE9.
 
@@ -9,7 +9,7 @@ Uses selector to determine which source in sources to use.  There is an alias 's
 3. `[elseSource|scheduler]` *(`Observable` | `Scheduler`)*: The observable sequence that will be run if the sources are not matched. If this is not provided, it defaults to `Rx.Observabe.empty` with the specified scheduler.
 
 #### Returns
-*(`Observable`)*: An observable sequence which is determined by a case statement. 
+*(`Observable`)*: An observable sequence which is determined by a case statement.
 
 #### Example
 ```js
@@ -32,14 +32,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-//=> Next: 42 
-//=> Completed 
+//=> Next: 42
+//=> Completed
 ```
 
 ### Location
@@ -53,7 +53,7 @@ Dist:
 - [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
 
 Prerequisites:
-- If using `rx.expermental.js` 
+- If using `rx.expermental.js`
   - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 NPM Packages:

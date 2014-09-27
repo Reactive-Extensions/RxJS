@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.count([predicate])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/count.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/count.js "View in source")
 
 Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
 
@@ -16,38 +16,38 @@ Returns an observable sequence containing a value that represents how many eleme
 ```js
 /* Without a predicate */
 var source = Rx.Observable.range(0, 10).count();
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 10
-// => Completed 
+// => Completed
 
 /* With a predicate */
 var source = Rx.Observable.range(0, 10)
     .count(function (x) { return x % 2 === 0; });
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 5
-// => Completed 
+// => Completed
 ```
 ### Location
 

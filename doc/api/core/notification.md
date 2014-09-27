@@ -20,7 +20,7 @@ Represents a notification to an observer.
 ## _Notification Methods_ ##
 
 ### <a id="rxnotificationcreateoncompleted"></a>`Rx.Notification.createOnCompleted()`
-<a href="#createOnCompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L113-L134 "View in source") 
+<a href="#createOnCompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L113-L134 "View in source")
 
 Creates an object that represents an OnCompleted notification to an observer.
 
@@ -34,16 +34,16 @@ var source = Rx.Observable
         Rx.Notification.createOnCompleted()
     ])
     .dematerialize();
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Completed
@@ -56,7 +56,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxnotificationcreateonerrorexception"></a>`Rx.Notification.createOnError(exception)`
-<a href="#rxnotificationcreateonerrorexception">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L85-L107 "View in source") 
+<a href="#rxnotificationcreateonerrorexception">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L85-L107 "View in source")
 
 Creates an object that represents an OnError notification to an observer.
 
@@ -73,16 +73,16 @@ var source = Rx.Observable
         Rx.Notification.createOnError(new Error('woops'))
     ])
     .dematerialize();
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Error: Error: woops
@@ -95,7 +95,7 @@ var subscription = source.subscribe(
 * * *
 
 ### <a id="rxnotificationcreateonnextvalue"></a>`Rx.Notification.createOnNext(value)`
-<a href="#rxnotificationcreateonnextvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L56-L178 "View in source") 
+<a href="#rxnotificationcreateonnextvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L56-L178 "View in source")
 
 Creates an object that represents an OnNext notification to an observer.
 
@@ -113,16 +113,16 @@ var source = Rx.Observable
         Rx.Notification.createOnCompleted()
     ])
     .dematerialize();
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
@@ -138,7 +138,7 @@ var subscription = source.subscribe(
 ## _Notification Instance Methods_ ##
 
 ### <a id="rxnotificationprototypeacceptobserver--onnext-onerror-oncompleted"></a>`Rx.Notification.prototype.accept([observer] | [onNext], [onError], [onCompleted])`
-<a href="#rxnotificationprototypeacceptobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L21-L26 "View in source") 
+<a href="#rxnotificationprototypeacceptobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L21-L26 "View in source")
 
 Invokes the delegate corresponding to the notification or the observer's method corresponding to the notification and returns the produced result.
 
@@ -176,7 +176,7 @@ console.log(notification.accept(function (x) { return x; }))
 * * *
 
 ### <a id="rxnotificationprototypetoobservablescheduler"></a>`Rx.Notification.prototype.toObservable([scheduler])`
-<a href="#rxnotificationprototypetoobservablescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L35-L46 "View in source") 
+<a href="#rxnotificationprototypetoobservablescheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L35-L46 "View in source")
 
 Returns an observable sequence with a single notification.
 
@@ -197,10 +197,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
@@ -215,10 +215,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Error: Error: error!
@@ -233,7 +233,7 @@ var subscription = source.subscribe(
 ## _Notification Properties_ ##
 
 ### <a id="exception"></a>`exception`
-<a href="#exception">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L101 "View in source") 
+<a href="#exception">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L101 "View in source")
 
 Gets the exception from the OnError notification.
 
@@ -255,7 +255,7 @@ console.log(notification.exception);
 * * *
 
 ### <a id="hasvalue"></a>`hasValue`
-<a href="#hasvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L6 "View in source") 
+<a href="#hasvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L6 "View in source")
 
 Determines whether the Notification has a value.  Returns `true` for OnNext Notifications, and `false` for OnError and OnCompleted Notifications.
 
@@ -282,7 +282,7 @@ console.log(onCompleted.hasValue);
 * * *
 
 ### <a id="kind"></a>`kind`
-<a href="#kind">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L7 "View in source") 
+<a href="#kind">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L7 "View in source")
 
 Gets the kind from the notification which denotes 'N' for OnNext, 'E' for OnError and 'C' for OnCompleted.
 
@@ -304,7 +304,7 @@ console.log(notification.kind);
 * * *
 
 ### <a id="value"></a>`value`
-<a href="#kind">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L72 "View in source") 
+<a href="#kind">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js#L72 "View in source")
 
 Gets the value from the OnNext notification.
 

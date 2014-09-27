@@ -86,7 +86,7 @@ var browsers = [{
 
               // Async
               'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/topromise.js',    
+              'src/core/linq/observable/topromise.js',
 
               // Creation
               'src/core/linq/observable/toarray.js',
@@ -150,7 +150,7 @@ var browsers = [{
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
-              'src/core/linq/observable/groupbyuntil.js',              
+              'src/core/linq/observable/groupbyuntil.js',
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
@@ -213,7 +213,7 @@ var browsers = [{
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',
               'src/core/backpressure/controlledobservable.js',
-              'src/core/backpressure/controlledsubject.js',              
+              'src/core/backpressure/controlledsubject.js',
 
               // Binding operators
               'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -227,7 +227,7 @@ var browsers = [{
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
-              'src/core/linq/connectableobservable.js',    
+              'src/core/linq/connectableobservable.js',
 
               // Coincidence operators
               'src/core/internal/dictionary.js',
@@ -259,7 +259,7 @@ var browsers = [{
               'src/core/joins/joinobserver.js',
               'src/core/linq/observable/and.js', // Pattern
               'src/core/linq/observable/then.js', // Pattern
-              'src/core/linq/observable/when.js', // CompositeDisposable  
+              'src/core/linq/observable/when.js', // CompositeDisposable
 
               // Time based operators
               'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
@@ -290,7 +290,7 @@ var browsers = [{
               'src/core/linq/observable/takewithtime.js',
               'src/core/linq/observable/skipwithtime.js',
               'src/core/linq/observable/skipuntilwithtime.js',
-              'src/core/linq/observable/takeuntilwithtime.js', 
+              'src/core/linq/observable/takeuntilwithtime.js',
 
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
@@ -298,7 +298,7 @@ var browsers = [{
 
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
-              'src/core/concurrency/historicalscheduler.js',  
+              'src/core/concurrency/historicalscheduler.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -354,7 +354,7 @@ var browsers = [{
 
               // Async
               'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/topromise.js',                    
+              'src/core/linq/observable/topromise.js',
 
               // Creation
               'src/core/linq/observable/toarray.js',
@@ -418,7 +418,7 @@ var browsers = [{
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
-              'src/core/linq/observable/groupbyuntil.js',                
+              'src/core/linq/observable/groupbyuntil.js',
               'src/core/linq/observable/select.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
@@ -481,7 +481,7 @@ var browsers = [{
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',
               'src/core/backpressure/controlledobservable.js',
-              'src/core/backpressure/controlledsubject.js',           
+              'src/core/backpressure/controlledsubject.js',
 
               // Binding operators
               'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -495,7 +495,7 @@ var browsers = [{
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
-              'src/core/linq/connectableobservable.js',              
+              'src/core/linq/connectableobservable.js',
 
               // Coincidence operators
               'src/core/internal/dictionary.js',
@@ -517,7 +517,7 @@ var browsers = [{
               'src/core/linq/observable/expand.js', // immediateScheduler, SerialDisposable, CompositeDisposable, SingleAssignmentDisposable
               'src/core/linq/observable/forkjoin.js', // CompositeDisposable
               'src/core/linq/observable/forkjoinproto.js', // SingleAssignmentDisposable, CompositeDisposable
-              'src/core/linq/observable/manyselect.js', // ImmediateScheduler, CurrentThreadScheduler, select, do, observeOn              
+              'src/core/linq/observable/manyselect.js', // ImmediateScheduler, CurrentThreadScheduler, select, do, observeOn
 
               // Join pattern operators
               'src/core/internal/map.js',
@@ -527,7 +527,7 @@ var browsers = [{
               'src/core/joins/joinobserver.js',
               'src/core/linq/observable/and.js', // Pattern
               'src/core/linq/observable/then.js', // Pattern
-              'src/core/linq/observable/when.js', // CompositeDisposable              
+              'src/core/linq/observable/when.js', // CompositeDisposable
 
               // Time based operators
               'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
@@ -558,7 +558,7 @@ var browsers = [{
               'src/core/linq/observable/takewithtime.js',
               'src/core/linq/observable/skipwithtime.js',
               'src/core/linq/observable/skipuntilwithtime.js',
-              'src/core/linq/observable/takeuntilwithtime.js',              
+              'src/core/linq/observable/takeuntilwithtime.js',
 
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
@@ -566,7 +566,7 @@ var browsers = [{
 
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
-              'src/core/concurrency/historicalscheduler.js',              
+              'src/core/concurrency/historicalscheduler.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -576,7 +576,7 @@ var browsers = [{
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
               'src/core/exports.js',
-              'src/core/outro.js'            
+              'src/core/outro.js'
             ],
             dest: 'dist/rx.all.compat.js'
           },
@@ -622,7 +622,7 @@ var browsers = [{
 
               // Async
               'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/topromise.js',                    
+              'src/core/linq/observable/topromise.js',
 
               // Creation
               'src/core/linq/observable/toarray.js',
@@ -753,7 +753,7 @@ var browsers = [{
 
               // Async
               'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/topromise.js',    
+              'src/core/linq/observable/topromise.js',
 
               // Creation
               'src/core/linq/observable/toarray.js',
@@ -829,7 +829,7 @@ var browsers = [{
 
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',              
+              'src/core/linq/observable/exclusivemap.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -1034,7 +1034,7 @@ var browsers = [{
               'src/core/linq/observable/defer.js',
               'src/core/linq/observable/empty.js',
               'src/core/linq/observable/from.js',
-              'src/core/linq/observable/fromarray.js',   
+              'src/core/linq/observable/fromarray.js',
               'src/core/linq/observable/never.js',
               'src/core/linq/observable/of.js',
               'src/core/linq/observable/range.js',
@@ -1129,7 +1129,7 @@ var browsers = [{
 
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',                                
+              'src/core/linq/observable/exclusivemap.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -1148,8 +1148,8 @@ var browsers = [{
           liteextras: {
             src: [
               'src/core/license.js',
-              'src/core/subintro.js', 
-              'src/core/liteextrasheader.js',             
+              'src/core/subintro.js',
+              'src/core/liteextrasheader.js',
 
               'src/core/disposables/scheduleddisposable.js',
               'src/core/checkedobserver.js',
@@ -1166,7 +1166,7 @@ var browsers = [{
 
               // Multiple
               'src/core/linq/observable/ambproto.js',
-              'src/core/linq/observable/amb.js',              
+              'src/core/linq/observable/amb.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
 
@@ -1179,7 +1179,7 @@ var browsers = [{
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
 
-              'src/core/suboutro.js'  
+              'src/core/suboutro.js'
             ],
             dest: 'dist/rx.lite.extras.js'
           },
@@ -1198,7 +1198,7 @@ var browsers = [{
                   //'src/core/backpressure/windowed.js',
                   //'src/core/backpressure/windowedobservable.js',
 
-                  'src/core/suboutro.js'                    
+                  'src/core/suboutro.js'
               ],
               dest: 'dist/rx.backpressure.js'
           },
@@ -1240,7 +1240,7 @@ var browsers = [{
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where
               'src/core/linq/observable/toset.js',
-              'src/core/linq/observable/tomap.js',            
+              'src/core/linq/observable/tomap.js',
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.aggregates.js'
@@ -1314,7 +1314,7 @@ var browsers = [{
               'src/core/linq/observable/partition.js',
               'src/core/linq/observable/groupby.js',
               'src/core/linq/observable/groupbyuntil.js',
-              'src/core/linq/groupedobservable.js',               
+              'src/core/linq/groupedobservable.js',
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.coincidence.js'
@@ -1428,131 +1428,131 @@ var browsers = [{
         options: {
           banner:
             '/* Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.*/'
-        },                   
+        },
         all: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.all.map'
-          },          
-          files: {'dist/rx.all.min.js': ['dist/rx.all.js'] }        
+          },
+          files: {'dist/rx.all.min.js': ['dist/rx.all.js'] }
         },
         allcompat: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.all.compat.map'
-          },            
-          files: {'dist/rx.all.compat.min.js': ['dist/rx.all.compat.js'] }      
-        },        
+          },
+          files: {'dist/rx.all.compat.min.js': ['dist/rx.all.compat.js'] }
+        },
         basic: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.compat.map'
-          },            
+          },
           files: {'dist/rx.compat.min.js': ['dist/rx.compat.js'] }
         },
         modern: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.map'
-          },            
+          },
           files: {'dist/rx.min.js': ['dist/rx.js'] }
         },
         lite: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.lite.map'
-          },            
+          },
           files: {'dist/rx.lite.min.js': ['dist/rx.lite.js'] }
         },
         litecompat: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.lite.compat.map'
-          },            
+          },
           files: {'dist/rx.lite.compat.min.js': ['dist/rx.lite.compat.js'] }
         },
         liteextras: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.lite.extras.map'
-          },            
+          },
           files: {'dist/rx.lite.extras.min.js': ['dist/rx.lite.extras.js'] }
         },
         backpressure: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.backpressure.map'
-          },            
+          },
           files: {'dist/rx.backpressure.min.js': ['dist/rx.backpressure.js'] }
-        },            
+        },
         aggregates: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.aggregates.map'
-          },            
+          },
           files: {'dist/rx.aggregates.min.js': ['dist/rx.aggregates.js'] }
         },
         asyncCompat: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.async.compat.map'
-          },            
+          },
           files: {'dist/rx.async.compat.min.js': ['dist/rx.async.compat.js'] }
         },
         asyncModern: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.async.map'
-          },            
+          },
           files: {'dist/rx.async.min.js': ['dist/rx.async.js'] }
         },
         binding: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.binding.map'
-          },            
+          },
           files: {'dist/rx.binding.min.js': ['dist/rx.binding.js'] }
         },
         coincidence: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.coincidence.map'
-          },            
+          },
           files: {'dist/rx.coincidence.min.js': ['dist/rx.coincidence.js'] }
         },
         experimental: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.experimental.map'
-          },            
+          },
           files: {'dist/rx.experimental.min.js': ['dist/rx.experimental.js'] }
         },
         joinpatterns: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.joinpatterns.map'
-          },            
+          },
           files: {'dist/rx.joinpatterns.min.js': ['dist/rx.joinpatterns.js'] }
         },
         testing: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.testing.map'
-          },            
+          },
           files: {'dist/rx.testing.min.js': ['dist/rx.testing.js'] }
         },
         time: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.time.map'
-          },            
+          },
           files: {'dist/rx.time.min.js': ['dist/rx.time.js'] }
         },
         virtualtime: {
           options: {
             sourceMap: true,
             sourceMapName: 'dist/rx.virtualtime.map'
-          },            
+          },
           files: {'dist/rx.virtualtime.min.js': ['dist/rx.virtualtime.js'] }
         }
       },
@@ -1684,7 +1684,7 @@ var browsers = [{
 
   grunt.registerTask('nuget-backpressure', 'Register NuGet-BackPressure', function () {
     createNuGetPackage.call(this, 'nuget/RxJS-BackPressure/RxJS-BackPressure.nuspec');
-  });    
+  });
 
   grunt.registerTask('nuget-binding', 'Register NuGet-Binding', function () {
     createNuGetPackage.call(this, 'nuget/RxJS-Binding/RxJS-Binding.nuspec');

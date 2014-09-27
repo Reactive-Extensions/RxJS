@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.scan([seed], accumulator)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js "View in source")
 
 Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
 
@@ -8,7 +8,7 @@ For aggregation behavior with no intermediate results, see `Rx.Observable#aggreg
 #### Arguments
 1. `[seed]` *(`Any`)*: The initial accumulator value.
 2. `accumulator` *(`Function`)*: An accumulator function to be invoked on each element.
- 
+
 #### Returns
 *(`Observable`)*: An observable sequence which results from the comonadic bind operation.
 
@@ -26,16 +26,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 1
 // => Next: 3
 // => Next: 6
-// => Completed 
+// => Completed
 
 /* With a seed */
 var source = Rx.Observable.range(1, 3)
@@ -50,16 +50,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 1
 // => Next: 2
 // => Next: 6
-// => Completed 
+// => Completed
 ```
 
 ### Location

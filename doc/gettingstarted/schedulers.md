@@ -24,7 +24,7 @@ var obs = Rx.Observable.generate(
 	function (x) { return x; });
 ```
 
-This will queue up on the observer quickly. We can improve this code by using the observeOn operator, which allows you to specify the context that you want to use to send pushed notifications (onNext) to observers. By default, the [`observeOn`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/observeon.md) operator ensures that `onNext` will be called as many times as possible on the current thread. You can use its overloads and redirect the `onNext` outputs to a different context. In addition, you can use the [`subscribeOn`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/subscribeon.md) operator to return a proxy observable that delegates actions to a specific scheduler. For example, for a UI-intensive application, you can delegate all background operations to be performed on a scheduler running in the background by using `subscribeOn` and passing to it the `TimeoutScheduler`. 
+This will queue up on the observer quickly. We can improve this code by using the observeOn operator, which allows you to specify the context that you want to use to send pushed notifications (onNext) to observers. By default, the [`observeOn`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/observeon.md) operator ensures that `onNext` will be called as many times as possible on the current thread. You can use its overloads and redirect the `onNext` outputs to a different context. In addition, you can use the [`subscribeOn`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/subscribeon.md) operator to return a proxy observable that delegates actions to a specific scheduler. For example, for a UI-intensive application, you can delegate all background operations to be performed on a scheduler running in the background by using `subscribeOn` and passing to it the `TimeoutScheduler`.
 
 The following example will schedule any onNext notifications on the current Dispatcher, so that any value pushed out is sent on the UI thread. This is especially beneficial to Silverlight developers who use RxJS.
 
@@ -95,11 +95,11 @@ To make things a little easier when you are creating your own operators, or usin
 	<tr>
 		<td>Historical Data Operations</td>
 		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/historicalscheduler.md">Rx.HistoricalScheduler</a></td>
-	</tr>	
+	</tr>
 	<tr>
 		<td>Unit Testing</td>
 		<td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/testing/testscheduler.md">Rx.TestScheduler</a></td>
-	</tr>			
+	</tr>
 </table>
 
 ## See Also

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.skipUntilWithTime(startTime, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js "View in source")
 
 Skips elements from the observable source sequence until the specified start time, using the specified scheduler to run timers.
 
@@ -10,7 +10,7 @@ Errors produced by the source sequence are always forwarded to the result sequen
 2. [`scheduler = Rx.Scheduler.timeout`] *(`Scheduler`)*: Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
 
 #### Returns
-*(`Observable`)*: An observable sequence with the elements skipped until the specified start time.   
+*(`Observable`)*: An observable sequence with the elements skipped until the specified start time.
 
 #### Example
 ```js
@@ -23,16 +23,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 6
 // => Next: 7
 // => Next: 8
-// => Completed 
+// => Completed
 ```
 
 ### Location

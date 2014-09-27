@@ -25,10 +25,10 @@ var subscription = subject.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 3
@@ -53,7 +53,7 @@ var subscription = subject.subscribe(
 ## _AsyncSubject Constructor_ ##
 
 ### <a id="rxasyncsubject"></a>`Rx.AsyncSubject()`
-<a href="#rxasyncsubject">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L33-L42 "View in source") 
+<a href="#rxasyncsubject">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L33-L42 "View in source")
 
 Creates a subject that can only receive one value and that value is cached for all future observations.
 
@@ -63,16 +63,16 @@ var subject = new Rx.AsyncSubject();
 
 subject.onNext(42);
 subject.onCompleted();
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => 42
@@ -88,23 +88,23 @@ var subscription = source.subscribe(
 ## _AsyncSubject Instance Methods_ ##
 
 ### <a id="rxasyncsubjectprototypedispose"></a>`Rx.AsyncSubject.prototype.dispose()`
-<a href="#rxasyncsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L111-L116 "View in source") 
+<a href="#rxasyncsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L111-L116 "View in source")
 
 Unsubscribe all observers and release resources.
 
 #### Example
 ```js
 var subject = new Rx.AsyncSubject();
-    
+
 var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 subject.onNext(42);
@@ -121,7 +121,7 @@ try {
 	console.log(e.message);
 }
 
-// => Object has been disposed 
+// => Object has been disposed
 ```
 
 ### Location
@@ -131,7 +131,7 @@ try {
 * * *
 
 ### <a id="rxasyncsubjectprototypehasobservers"></a>`Rx.AsyncSubject.prototype.hasObservers()`
-<a href="#rxasyncsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L49-L51 "View in source") 
+<a href="#rxasyncsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L49-L51 "View in source")
 
 Indicates whether the subject has observers subscribed to it.
 
@@ -145,16 +145,16 @@ var subject = new Rx.AsyncSubject();
 console.log(subject.hasObservers());
 
 // => false
-    
+
 var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 console.log(subject.hasObservers());
@@ -167,4 +167,3 @@ console.log(subject.hasObservers());
 - rx.js
 
 * * *
-

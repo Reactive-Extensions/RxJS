@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.bufferWithTimeOrCount(timeSpan, count, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithtimeorcount.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithtimeorcount.js "View in source")
 
 Projects each element of an observable sequence into a buffer that is completed when either it's full or a given amount of time has elapsed.
 
@@ -9,7 +9,7 @@ Projects each element of an observable sequence into a buffer that is completed 
 3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(`Observable`)*: An observable sequence of buffers. 
+*(`Observable`)*: An observable sequence of buffers.
 
 #### Example
 ```js
@@ -23,16 +23,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0,1,2 
-// => Next: 3,4,5 
-// => Next: 6,7,8 
-// => Completed 
+// => Next: 0,1,2
+// => Next: 3,4,5
+// => Next: 6,7,8
+// => Completed
 ```
 ### Location
 

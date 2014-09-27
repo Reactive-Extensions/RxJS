@@ -1,5 +1,5 @@
 ### `Rx.Observable.interval(period, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/interval.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/interval.js "View in source")
 
 Returns an observable sequence that produces a value after each period.
 
@@ -22,15 +22,15 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: {value: 0, interval: 500}
 // => Next: {value: 1, interval: 500}
-// => Next: {value: 2, interval: 500} 
+// => Next: {value: 2, interval: 500}
 // => Completed
 ```
 

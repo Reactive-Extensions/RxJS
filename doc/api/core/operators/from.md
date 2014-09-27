@@ -1,5 +1,5 @@
 ### `Rx.Observable.from(iterable, [mapFn], [thisArg], [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/from.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/from.js "View in source")
 
 This method creates a new Observable sequence from an array-like or iterable object.
 
@@ -24,16 +24,16 @@ f(1, 2, 3).subscribe(
     console.log('Next: ' + x);
   },
   function (err) {
-    console.log('Error: ' + err);   
+    console.log('Error: ' + err);
   },
   function () {
-    console.log('Completed');   
+    console.log('Completed');
   });
 
 // => Next: 1
 // => Next: 2
 // => Next: 3
-// => Completed    
+// => Completed
 
 // Any iterable object...
 // Set
@@ -43,15 +43,14 @@ Rx.Observable.from(s).subscribe(
     console.log('Next: ' + x);
   },
   function (err) {
-    console.log('Error: ' + err);   
+    console.log('Error: ' + err);
   },
   function () {
-    console.log('Completed');   
-  }); 
+    console.log('Completed');
+  });
 // => Next: foo
 // => Next: window
 // => Completed
-
 
 // Map
 var m = new Map([[1, 2], [2, 4], [4, 8]]);
@@ -60,16 +59,15 @@ Rx.Observable.from(m).subscribe(
     console.log('Next: ' + x);
   },
   function (err) {
-    console.log('Error: ' + err);   
+    console.log('Error: ' + err);
   },
   function () {
-    console.log('Completed');   
-  });                          
-// => Next: [1, 2] 
+    console.log('Completed');
+  });
+// => Next: [1, 2]
 // => Next: [2, 4]
 // => Next: [4, 8]
-// => Completed  
-
+// => Completed
 
 // String
 Rx.Observable.from("foo").subscribe(
@@ -77,16 +75,15 @@ Rx.Observable.from("foo").subscribe(
     console.log('Next: ' + x);
   },
   function (err) {
-    console.log('Error: ' + err);   
+    console.log('Error: ' + err);
   },
   function () {
-    console.log('Completed');   
-  });                       
-// => Next: f 
+    console.log('Completed');
+  });
+// => Next: f
 // => Next: o
 // => Next: o
-// => Completed  
-
+// => Completed
 
 // Using an arrow function as the map function to
 // manipulate the elements
@@ -95,16 +92,15 @@ Rx.Observable.from([1, 2, 3], function (x) { return x + x; }).subscribe(
     console.log('Next: ' + x);
   },
   function (err) {
-    console.log('Error: ' + err);   
+    console.log('Error: ' + err);
   },
   function () {
-    console.log('Completed');   
+    console.log('Completed');
   });
-// => Next: 2 
+// => Next: 2
 // => Next: 4
 // => Next: 6
-// => Completed  
-
+// => Completed
 
 // Generate a sequence of numbers
 Rx.Observable.from({length: 5}, function(v, k) { return k; }).subscribe(
@@ -112,17 +108,17 @@ Rx.Observable.from({length: 5}, function(v, k) { return k; }).subscribe(
     console.log('Next: ' + x);
   },
   function (err) {
-    console.log('Error: ' + err);   
+    console.log('Error: ' + err);
   },
   function () {
-    console.log('Completed');   
+    console.log('Completed');
   });
-// => Next: 0 
+// => Next: 0
 // => Next: 1
 // => Next: 2
 // => Next: 3
 // => Next: 4
-// => Completed  
+// => Completed
 ```
 
 ### Location

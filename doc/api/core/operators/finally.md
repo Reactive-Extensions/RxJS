@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.finally(action)`
 ### `Rx.Observable.prototype.finallyAction(action)` *DEPRECATED*
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/finally.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/finally.js "View in source")
 
 Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.  There is an alias called `finallyAction` for browsers <IE9
 
@@ -12,7 +12,7 @@ Invokes a specified action after the source observable sequence terminates grace
 2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.  
+*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.
 
 #### Example
 ```js
@@ -27,14 +27,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Error: Error
-// => Finally   
+// => Finally
 ```
 
 ### Location

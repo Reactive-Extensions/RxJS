@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.timeInterval([scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeinterval.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeinterval.js "View in source")
 
 Records the time interval between consecutive values in an observable sequence.
 
@@ -15,16 +15,16 @@ var source = Rx.Observable.timer(0, 1000)
     .timeInterval()
     .map(function (x) { return x.value + ':' + x.interval; })
     .take(5);
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0:0
@@ -32,7 +32,7 @@ var subscription = source.subscribe(
 // => Next: 2:1000
 // => Next: 3:1000
 // => Next: 4:1000
-// => Completed    
+// => Completed
 ```
 
 ### Location

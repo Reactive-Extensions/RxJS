@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.reduce(accumulator, [seed])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/reduce.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/reduce.js "View in source")
 
 Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
 
@@ -8,7 +8,7 @@ For aggregation behavior with incremental intermediate results, see the `scan` m
 #### Arguments
 1. `accumulator` *(`Function`)*:  An accumulator function to be invoked on each element.
 2. `[seed]` *(`Any`)*: The initial accumulator value.
- 
+
 #### Returns
 *(`Observable`)*: An observable sequence containing a single element with the final accumulator value.
 
@@ -24,14 +24,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 6
-// => Completed 
+// => Completed
 ```
 
 ### Location

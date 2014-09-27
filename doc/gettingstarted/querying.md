@@ -104,8 +104,8 @@ var points = move.map(function (e) {
 });
 
 points.subscribe(
-	function (pos) { 
-		console.log('Mouse at point ' + pos.x + ', ' + pos.y); 
+	function (pos) {
+		console.log('Mouse at point ' + pos.x + ', ' + pos.y);
 	});
 ```
 
@@ -137,12 +137,12 @@ var subscription = resultSeq.subscribe(
 ## Filtering ##
 
 In the following example, we use the [`generate`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler) operator to create a simple observable sequence of numbers. The `generate` operator has several versions including with relative and absolute time scheduling. In our example, it takes an initial state (0 in our example), a conditional function to terminate (fewer than 10 times), an iterator (+1), a result selector (a square function of the current value), and prints out only those smaller than 5 using the [`filter`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypefilterpredicate-thisarg) or [`where`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypewherepredicate-thisarg) operators.
- 
+
 ```js
 var seq = Rx.Observable.generate(
-	0, 
-	function (i) { return i < 10; }, 
-	function (i) { return i + 1; }, 
+	0,
+	function (i) { return i < 10; },
+	function (i) { return i + 1; },
 	function (i) { return i * i; });
 
 var source = seq.filter(function (n) { return n < 5; });
@@ -178,7 +178,7 @@ var movesub = overfirstbisector.subscribe(function (pos) { console.log('mouse at
 
 You can use the Buffer operators to perform time-based operations.
 
-Buffering an observable sequence means that an observable sequence’s values are put into a buffer based on either a specified timespan or by a count threshold. This is especially helpful in situations when you expect a tremendous amount of data to be pushed out by the sequence, and the subscriber does not have the resource to process these values. By buffering the results based on time or count, and only returning a sequence of values when the criteria is exceeded (or when the source sequence has completed), the subscriber can process OnNext calls at its own pace. 
+Buffering an observable sequence means that an observable sequence’s values are put into a buffer based on either a specified timespan or by a count threshold. This is especially helpful in situations when you expect a tremendous amount of data to be pushed out by the sequence, and the subscriber does not have the resource to process these values. By buffering the results based on time or count, and only returning a sequence of values when the criteria is exceeded (or when the source sequence has completed), the subscriber can process OnNext calls at its own pace.
 
 In the following example, we first create a simple sequence of integers for every second. We then use the `bufferWithCount` operator and specify that each buffer will hold 5 items from the sequence. The `onNext` is called when the buffer is full. We then tally the sum of the buffer using calling `Array.reduce`. The buffer is automatically flushed and another cycle begins. The printout will be 10, 35, 60… in which 10=0+1+2+3+4, 35=5+6+7+8+9, and so on.
 

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.expand(selector, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/expand.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/expand.js "View in source")
 
 Expands an observable sequence by recursively invoking selector.
 
@@ -21,18 +21,18 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 42 
-// => Next: 84 
-// => Next: 126 
-// => Next: 168 
-// => Next: 210 
-// => Completed    
+// => Next: 42
+// => Next: 84
+// => Next: 126
+// => Next: 168
+// => Next: 210
+// => Completed
 ```
 
 ### Location

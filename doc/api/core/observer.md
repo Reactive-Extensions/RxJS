@@ -2,7 +2,7 @@
 
 The Observer object provides support for push-style iteration over an observable sequence.
 
-The Observer and Objects interfaces provide a generalized mechanism for push-based notification, also known as the observer design pattern. The Observable object represents the object that sends notifications (the provider); the Observer object represents the class that receives them (the observer). 
+The Observer and Objects interfaces provide a generalized mechanism for push-based notification, also known as the observer design pattern. The Observable object represents the object that sends notifications (the provider); the Observer object represents the class that receives them (the observer).
 
 <!-- div -->
 
@@ -43,10 +43,10 @@ var observer = Rx.Observer.create(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     }
 );
 
@@ -151,7 +151,7 @@ Object.defineProperties(SampleObserver.prototype, {
                 console.log('Completed');
             }
         }
-    } 
+    }
 });
 
 var sampleObserver = new SampleObserver();
@@ -177,7 +177,7 @@ If a violation is detected, an Error is thrown from the offending observer metho
 
 #### Returns
 *(Observer)*: An observer that checks callbacks invocations against the observer grammar and, if the checks pass, forwards those to the specified observer.
- 
+
 #### Example
 ```js
 var observer = Rx.Observer.create(
@@ -220,7 +220,7 @@ Schedules the invocation of observer methods on the given scheduler.
 
 #### Returns
 *(Observer)*: Observer whose messages are scheduled on the given scheduler.
- 
+
 #### Example
 ```js
 var observer = Rx.Observer.create(
@@ -283,7 +283,7 @@ observer.onCompleted();
 Notifies the observer that an exception has occurred.
 
 #### Arguments
-1. `error` *(Any)*: The error that has occurred. 
+1. `error` *(Any)*: The error that has occurred.
 
 #### Example
 ```js
@@ -315,7 +315,7 @@ observer.onError(new Error('error!!'));
 Notifies the observer of a new element in the sequence.
 
 #### Arguments
-1. `value` *(Any)*: Next element in the sequence. 
+1. `value` *(Any)*: Next element in the sequence.
 
 #### Example
 ```js

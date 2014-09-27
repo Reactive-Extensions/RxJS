@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.subscribe([observer] | [onNext], [onError], [onCompleted], [thisArg])`
 ### `Rx.Observable.prototype.forEach([observer] | [onNext], [onError], [onCompleted], [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable.js "View in source")
 
 Subscribes an observer to the observable sequence.
 
@@ -12,7 +12,7 @@ Subscribes an observer to the observable sequence.
 4. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(Disposable)*: The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler. 
+*(Disposable)*: The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler.
 
 #### Example
 ```js
@@ -32,10 +32,10 @@ var observer = Rx.Observer.create(
     console.log('Next: %s', x);
   },
   function (err) {
-    console.log('Error: %s', err);   
+    console.log('Error: %s', err);
   },
   function () {
-    console.log('Completed');   
+    console.log('Completed');
   });
 
 var source = Rx.Observable.range(0, 3)
@@ -54,10 +54,10 @@ var subscription = source.subscribe(
     console.log('Next: %s', x);
   },
   function (err) {
-    console.log('Error: %s', err);   
+    console.log('Error: %s', err);
   },
   function () {
-    console.log('Completed');   
+    console.log('Completed');
   });
 
 // => Next: 0
@@ -72,10 +72,10 @@ var subscription = source.subscribe(
     this.log('Next: %s', x);
   },
   function (err) {
-    this.log('Error: %s', err);   
+    this.log('Error: %s', err);
   },
   function () {
-    this.log('Completed');   
+    this.log('Completed');
   }, console);
 
 // => Next: 0

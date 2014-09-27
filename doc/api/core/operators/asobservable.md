@@ -1,4 +1,4 @@
-### `Rx.Observable.asObservable()` [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/asobservable.js "View in source") 
+### `Rx.Observable.asObservable()` [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/asobservable.js "View in source")
 
 Hides the identity of an observable sequence.
 
@@ -7,7 +7,6 @@ Hides the identity of an observable sequence.
 
 #### Returns
 *(`Observable`)*: An observable sequence that hides the identity of the source sequence.
-
 
 #### Example
 ```js
@@ -26,10 +25,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42

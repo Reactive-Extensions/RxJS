@@ -1,5 +1,5 @@
 ### `Rx.Observable.fromEventPattern(addHandler, removeHandler, [selector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js "View in source")
 
 Creates an observable sequence by using the addHandler and removeHandler functions to add and remove the handlers, with an optional selector function to project the event arguments.
 
@@ -32,10 +32,10 @@ var subscription = source.subscribe(
         console.log('Next: Clicked!');
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 input.trigger('click');
@@ -64,10 +64,10 @@ require(['dojo/on', 'dojo/dom', 'rx', 'rx.async', 'rx.binding'], function (on, d
             console.log('Next: Clicked!');
         },
         function (err) {
-            console.log('Error: ' + err);   
+            console.log('Error: ' + err);
         },
         function () {
-            console.log('Completed');   
+            console.log('Completed');
         });
 
     on.emit(input, 'click');
@@ -101,12 +101,11 @@ var subscription = source.subscribe(
         console.log('Next: ' + result);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
-
 
 e.emit('data', 'foo', 'bar');
 // => Next: foo,bar

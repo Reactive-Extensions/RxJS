@@ -27,7 +27,7 @@ The default equality comparer, used when a comparer is not supplied to a functio
 #### Returns
 *(Boolean)*: `true` if equal; else `false`.
 
-#### Example 
+#### Example
 
 ```js
 var comparer = Rx.helpers.defaultComparer;
@@ -56,7 +56,7 @@ The default comparer to determine whether one object is greater, less than or eq
 #### Returns
 *(Number)*: Returns `1` if `x` is greater than `y`, `-1` if `y` is greater than `x`, and `0` if the objects are equal.
 
-#### Example 
+#### Example
 
 ```js
 var comparer = Rx.helpers.defaultSubcomparer;
@@ -86,14 +86,14 @@ Throws the specified error
 #### Arguments
 1. `err` *(Any)*: The error to throw
 
-#### Example 
+#### Example
 
 ```js
 var defaultError = Rx.helpers.defaultError;
 
 // Returns its value
 defaultError(new Error('woops'))
-// => Error: woops 
+// => Error: woops
 ```
 * * *
 
@@ -108,7 +108,7 @@ A function which returns its value unmodified.
 #### Returns
 *(Any)*: The value given as the parameter.
 
-#### Example 
+#### Example
 
 ```js
 var identity = Rx.helpers.identity;
@@ -131,7 +131,7 @@ A function which takes an argument and returns a function, when invoked, returns
 #### Returns
 *(Function)*: A function, when invoked, returns the value.
 
-#### Example 
+#### Example
 
 ```js
 var just = Rx.helpers.just;
@@ -154,7 +154,7 @@ A function which determines whether the object is a `Promise`.
 #### Returns
 *(Boolean)*: `true` if the object is a `Promise` else `false`
 
-#### Example 
+#### Example
 
 ```js
 var isPromise = Rx.helpers.isPromise;
@@ -171,7 +171,7 @@ console.log(isPromise(p));
 
 A function which does nothing
 
-#### Example 
+#### Example
 
 ```js
 var noop = Rx.helpers.noop;
@@ -192,7 +192,7 @@ Plucks a property from the object.
 #### Returns
 *(Boolean)*: `true` if equal; else `false`.
 
-#### Example 
+#### Example
 
 ```js
 var pluck = Rx.helpers.pluck;

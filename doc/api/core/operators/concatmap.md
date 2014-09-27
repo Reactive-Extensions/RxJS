@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.concatMap(selector, [resultSelector])`
 ### `Rx.Observable.prototype.selectConcat(selector, [resultSelector])`
-[&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js "View in source") 
+[&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js "View in source")
 
 This is an alias for the `selectConcat` method.  This can be one of the following:
 
@@ -19,7 +19,7 @@ source.concatMap(function (x, i) { return Promise.resolve(x + i); }, function (x
 ```
 
 Projects each element of the source observable sequence to the other observable sequence or Promise and merges the resulting observable sequences into one observable sequence.
- 
+
  ```js
 source.concatMap(Rx.Observable.fromArray([1,2,3]));
 source.concatMap(Promise.resolve(42));
@@ -28,9 +28,9 @@ source.concatMap(Promise.resolve(42));
 #### Arguments
 1. `selector` *(`Function`)*:  A transform function to apply to each element or an observable sequence to project each element from the source sequence onto.
 2. `[resultSelector]` *(`Function`)*: A transform function to apply to each element of the intermediate sequence.
- 
+
 #### Returns
-*(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.   
+*(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
 
 #### Example
 ```js
@@ -38,7 +38,7 @@ var source = Rx.Observable.range(0, 5)
     .concatMap(function (x, i) {
         return Rx.Observable
             .interval(100)
-            .take(x).map(function() { return i; }); 
+            .take(x).map(function() { return i; });
     });
 
 var subscription = source.subscribe(
@@ -46,23 +46,23 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 1 
-// => Next: 2 
-// => Next: 2 
-// => Next: 3 
-// => Next: 3 
-// => Next: 3 
-// => Next: 4 
-// => Next: 4 
-// => Next: 4 
-// => Next: 4 
-// => Completed 
+// => Next: 1
+// => Next: 2
+// => Next: 2
+// => Next: 3
+// => Next: 3
+// => Next: 3
+// => Next: 4
+// => Next: 4
+// => Next: 4
+// => Next: 4
+// => Completed
 
 /* Using a promise */
 var source = Rx.Observable.fromArray([1,2,3,4])
@@ -75,17 +75,17 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 4
-// => Next: 4 
-// => Next: 4 
-// => Next: 4 
-// => Completed    
+// => Next: 4
+// => Next: 4
+// => Next: 4
+// => Completed
 ```
 
 ### Location

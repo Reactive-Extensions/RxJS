@@ -1,5 +1,5 @@
 ### `Rx.Observable.fromEvent(element, eventName, [selector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js "View in source")
 
 Creates an observable sequence by adding an event listener to the matching DOMElement, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter.
 
@@ -27,10 +27,10 @@ var subscription = source.subscribe(
         console.log('Next: Clicked!');
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 input.trigger('click');
@@ -48,7 +48,7 @@ var eventEmitter = new EventEmitter();
 
 var source = Rx.Observable.fromEvent(
     eventEmitter,
-    'data', 
+    'data',
     function (args) {
         return { foo: args[0], bar: args[1] };
     });
@@ -58,10 +58,10 @@ var subscription = source.subscribe(
         console.log('Next: foo -' x.foo + ', bar -' + x.bar);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 eventEmitter.emit('data', 'baz', 'quux');

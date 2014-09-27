@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.groupByUntil(keySelector, [elementSelector], durationSelector, [comparer])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupbyuntil.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupbyuntil.js "View in source")
 
 Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
 
@@ -10,7 +10,7 @@ Groups the elements of an observable sequence according to a specified key selec
 4. `[comparer]` *(`Any`)*: Used to compare objects. If not specified, the default comparer is used.
 
 #### Returns
-*(`Observable`)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.  
+*(`Observable`)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
 
 If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
 
@@ -42,21 +42,21 @@ var subscription = source.subscribe(
         obs.count().subscribe(function (x) { console.log('Count: ' + x); });
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Count: 2 
-// => Count: 2 
-// => Count: 1 
-// => Count: 1 
-// => Count: 1 
-// => Count: 1 
-// => Count: 1 
-// => Count: 1 
-// => Completed 
+// => Count: 2
+// => Count: 2
+// => Count: 1
+// => Count: 1
+// => Count: 1
+// => Count: 1
+// => Count: 1
+// => Count: 1
+// => Completed
 ```
 
 ### Location

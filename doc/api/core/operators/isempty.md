@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.isEmpty()`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/isempty.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/isempty.js "View in source")
 
 Determines whether an observable sequence is empty.
 
@@ -17,14 +17,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: false
-// => Completed    
+// => Completed
 
 /* Empty */
 var source = Rx.Observable.empty()
@@ -35,14 +35,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: true
-// => Completed  
+// => Completed
 ```
 
 ### Location

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.throttleWithSelector(throttleSelector)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js "View in source")
 
 Ignores values from an observable sequence which are followed by another value before dueTime.
 
@@ -7,8 +7,8 @@ Ignores values from an observable sequence which are followed by another value b
 1. `dueTime` *(`Number`)*: Selector function to retrieve a sequence indicating the throttle duration for each given element.
 
 #### Returns
-*(`Observable`)*: The throttled sequence. 
-    
+*(`Observable`)*: The throttled sequence.
+
 #### Example
 ```js
 var array = [
@@ -27,22 +27,21 @@ var source = Rx.Observable.for(
     .throttleWithSelector(function (x) {
         return Rx.Observable.timer(700);
     });
-    
 
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0
 // => Next: 3
-// => Completed 
+// => Completed
 ```
 
 ### Location

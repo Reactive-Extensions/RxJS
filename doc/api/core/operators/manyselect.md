@@ -1,12 +1,12 @@
 ### `Rx.Observable.prototype.manySelect(selector, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/manyselect.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/manyselect.js "View in source")
 
 Comonadic bind operator.
 
 #### Arguments
 1. `selector` *(`Function`)*: A transform function to apply to each element.
 2. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler used to execute the operation. If not specified, defaults to the `Rx.Scheduler.immediate` scheduler.
- 
+
 #### Returns
 *(`Observable`)*: An observable sequence which results from the comonadic bind operation.
 
@@ -21,16 +21,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0
 // => Next: 1
 // => Next: 2
-// => Completed 
+// => Completed
 ```
 
 ### Location

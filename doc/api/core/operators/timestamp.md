@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.timestamp([scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timestamp.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timestamp.js "View in source")
 
 Records the timestamp for each value in an observable sequence.
 
@@ -15,16 +15,16 @@ var source = Rx.Observable.timer(0, 1000)
     .timestamp()
     .map(function (x) { return x.value + ':' + x.timestamp; })
     .take(5);
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0:1378690776351

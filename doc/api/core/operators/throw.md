@@ -1,5 +1,5 @@
 ### `Rx.Observable.throw(exception, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source")
 
 Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
 
@@ -11,7 +11,7 @@ There is an alias to this method called `throwException` for browsers <IE9.
 
 #### Returns
 *(`Observable`)*: The observable sequence that terminates exceptionally with the specified exception object.
-   
+
 #### Example
 ```js
 var source = Rx.Observable.return(42)
@@ -22,10 +22,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Error: Error: error!

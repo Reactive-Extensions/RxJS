@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.aggregate([seed], accumulator)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/aggregate.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/aggregate.js "View in source")
 
  Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
  For aggregation behavior with incremental intermediate results, see `Rx.Observable.scan`.
@@ -23,14 +23,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 3628800
-// => Completed 
+// => Completed
 
 // Without a seed
 var source = Rx.Observable.range(1, 10).aggregate(function (acc, x) {
@@ -42,14 +42,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 55
-// => Completed     
+// => Completed
 ```
 
 ### Location

@@ -31,7 +31,7 @@ disposable.dispose();
 ## _Class Methods_ ##
 
 ### <a id="rxdisposablecreateaction"></a>`Rx.Disposable.create(action)`
-<a href="#rxdisposablecreateaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js#L25 "View in source") 
+<a href="#rxdisposablecreateaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js#L25 "View in source")
 
 Creates a disposable object that invokes the specified action when disposed.
 
@@ -60,7 +60,7 @@ disposable.dispose();
 ## _Disposable Class Properties_ ##
 
 ### <a id="rxdisposableempty"></a>`Rx.Disposable.empty`
-<a href="#rxdisposableempty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js#L130 "View in source") 
+<a href="#rxdisposableempty">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js#L130 "View in source")
 
 Gets the disposable that does nothing when disposed.
 
@@ -84,7 +84,7 @@ disposable.dispose(); // Does nothing
 ## _Disposable Instance Methods_ ##
 
 ### <a id="rxdisposableprototypedispose"></a>`Rx.Disposable.prototype.dispose()`
-<a href="#rxdisposableprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js#L13-L18 "View in source") 
+<a href="#rxdisposableprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js#L13-L18 "View in source")
 
 Performs the task of cleaning up resources.
 

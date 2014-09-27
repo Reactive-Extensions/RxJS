@@ -4,11 +4,11 @@ Reactive Extensions (Rx) is a library for composing asynchronous and event-based
 
 Data sequences can take many forms, such as a stream of data from a file or web service, web services requests, system notifications, or a series of events such as user input.
 
-Reactive Extensions represents all these data sequences as observable sequences. An application can subscribe to these observable sequences to receive asynchronous notifications as new data arrive. 
+Reactive Extensions represents all these data sequences as observable sequences. An application can subscribe to these observable sequences to receive asynchronous notifications as new data arrive.
 
 RxJS has no dependencies which complements and interoperates smoothly with both synchronous data streams such as iterable objects in JavaScript and single-value asynchronous computations such as Promises as the following diagram shows:
 
-<center>  	
+<center>
 <table>
    <th></th><th>Single return value</th><th>Mutiple return values</th>
    <tr>
