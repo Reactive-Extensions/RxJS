@@ -1,9 +1,9 @@
    /**
    *  Runs all observable sequences in parallel and collect their last elements.
-   *  
+   *
    * @example
    *  1 - res = Rx.Observable.forkJoin([obs1, obs2]);
-   *  1 - res = Rx.Observable.forkJoin(obs1, obs2, ...);  
+   *  1 - res = Rx.Observable.forkJoin(obs1, obs2, ...);
    * @returns {Observable} An observable sequence with an array collecting the last elements of all the input sequences.
    */
   Observable.forkJoin = function () {
@@ -31,12 +31,12 @@
                 hasResults[i] = true;
                 results[i] = value;
               }
-            }, 
+            },
             function (e) {
               finished = true;
               subscriber.onError(e);
               group.dispose();
-            }, 
+            },
             function () {
               if (!finished) {
                 if (!hasResults[i]) {

@@ -19,7 +19,7 @@ test('MutableDisposable_ReplaceBeforeDispose', function () {
     var d1 = Disposable.create(function () {
         disp1 = true;
     });
-    
+
     m.setDisposable(d1);
 
     equal(d1, m.getDisposable());

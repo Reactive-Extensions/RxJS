@@ -39,7 +39,7 @@ test('Throttle_Error', function () {
     );
 
     var res = scheduler.startWithCreate(function () {
-        return xs.throttle(10, scheduler); 
+        return xs.throttle(10, scheduler);
     });
 
     res.messages.assertEqual(

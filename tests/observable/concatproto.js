@@ -13,7 +13,7 @@ asyncTest('ConcatAll_Task', function () {
     new RSVP.Promise(function (res) { res(0); }),
     new RSVP.Promise(function (res) { res(1); }),
     new RSVP.Promise(function (res) { res(2); }),
-    new RSVP.Promise(function (res) { res(3); }), 
+    new RSVP.Promise(function (res) { res(3); }),
   ]);
 
   var res = [];
@@ -24,7 +24,7 @@ asyncTest('ConcatAll_Task', function () {
     function (err) {
       ok(false);
       start();
-    }, 
+    },
     function () {
       ok(isEqual([0,1,2,3], res));
       start();
@@ -36,7 +36,7 @@ asyncTest('ConcatAll_Task_Error', function () {
     new RSVP.Promise(function (res) { res(0); }),
     new RSVP.Promise(function (res, rej) { rej(1); }),
     new RSVP.Promise(function (res) { res(2); }),
-    new RSVP.Promise(function (res) { res(3); }), 
+    new RSVP.Promise(function (res) { res(3); }),
   ]);
 
   var res = [];
@@ -48,7 +48,7 @@ asyncTest('ConcatAll_Task_Error', function () {
       ok(res.length === 1);
       equal(1, err);
       start();
-    }, 
+    },
     function () {
       ok(false);
       start();
@@ -248,4 +248,3 @@ test('Concat_SomeDataSomeData', function () {
     });
     results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250));
 });
-

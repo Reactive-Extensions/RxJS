@@ -74,4 +74,3 @@ test('Event_2', function () {
 
     equal(element.removeEventListenerCalled, true);
 });
-

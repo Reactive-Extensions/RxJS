@@ -13,7 +13,7 @@
         freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
         moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
         freeGlobal = objectTypes[typeof global] && global;
-    
+
     if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
         root = freeGlobal;
     }
@@ -30,4 +30,3 @@
         root.Rx = factory(root, {}, root.Rx);
     }
 }.call(this, function (root, exp, Rx, undefined) {
-    

@@ -8,7 +8,7 @@
     disposableEmpty = Rx.Disposable.empty,
     disposableCreate = Rx.Disposable.create,
     inherits = Rx.internals.inherits,
-    addProperties = Rx.internals.addProperties,  
+    addProperties = Rx.internals.addProperties,
     timeoutScheduler = Rx.Scheduler.timeout,
     identity = Rx.helpers.identity;
 

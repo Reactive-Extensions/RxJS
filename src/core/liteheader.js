@@ -4,7 +4,7 @@
     isScheduler = Rx.helpers.isScheduler = function (x) { return x instanceof Rx.Scheduler; },
     identity = Rx.helpers.identity = function (x) { return x; },
     pluck = Rx.helpers.pluck = function (property) { return function (x) { return x[property]; }; },
-    just = Rx.helpers.just = function (value) { return function () { return value; }; },    
+    just = Rx.helpers.just = function (value) { return function () { return value; }; },
     defaultNow = Rx.helpers.defaultNow = Date.now,
     defaultComparer = Rx.helpers.defaultComparer = function (x, y) { return isEqual(x, y); },
     defaultSubComparer = Rx.helpers.defaultSubComparer = function (x, y) { return x > y ? 1 : (x < y ? -1 : 0); },
@@ -24,7 +24,7 @@
         isFn = function(value) {
           return typeof value == 'function' && toString.call(value) == '[object Function]';
         };
-      }    
+      }
 
       return isFn;
     }());

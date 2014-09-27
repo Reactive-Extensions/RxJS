@@ -16,7 +16,7 @@ if (!!window.Map) {
       });
       return arr;
     }
-          
+
     test('toMap_Completed', function () {
       var scheduler = new TestScheduler();
 
@@ -43,7 +43,6 @@ if (!!window.Map) {
       );
     });
 
-    
     test('toMap_Error', function () {
       var scheduler = new TestScheduler();
 
@@ -71,7 +70,6 @@ if (!!window.Map) {
       );
     });
 
-    
     test('toMap_KeySelectorThrows', function () {
       var scheduler = new TestScheduler();
 
@@ -99,7 +97,6 @@ if (!!window.Map) {
       );
     });
 
-    
     test('toMap_ElementSelectorThrows', function () {
       var scheduler = new TestScheduler();
 
@@ -127,7 +124,6 @@ if (!!window.Map) {
       );
     });
 
-    
     test('toMap_Disposed', function () {
       var scheduler = new TestScheduler();
 
@@ -151,5 +147,5 @@ if (!!window.Map) {
       );
     });
 
-  }());  
+  }());
 }

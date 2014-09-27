@@ -4,7 +4,7 @@
    * var res = res = source.single();
    * var res = res = source.single(function (x) { return x === 42; });
    * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
-   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.        
+   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
    * @returns {Observable} Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
    */
   observableProto.single = function (predicate, thisArg) {

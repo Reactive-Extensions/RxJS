@@ -22,7 +22,7 @@
           } catch (e) {
             if (!autoDetachObserver.fail(e)) {
               throw e;
-            } 
+            }
           }
         };
 

@@ -76,8 +76,3 @@ test('MergeConcat_InnerError', function () {
     results.messages.assertEqual(onNext(260, 1), onNext(280, 4), onNext(310, 2), onNext(330, 3), onNext(330, 5), onNext(360, 6), onNext(440, 7), onNext(460, 8), onError(490, ex));
     xs.subscriptions.assertEqual(subscribe(200, 490));
 });
-
-
-
-
-

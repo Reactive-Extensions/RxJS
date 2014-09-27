@@ -1,6 +1,6 @@
   /**
    * Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-   * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.  
+   * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.
    */
   observableProto['switch'] = observableProto.switchLatest = function () {
     var sources = this;
@@ -19,16 +19,16 @@
             isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
             d.setDisposable(innerSource.subscribe(
-              function (x) { latest === id && observer.onNext(x); }, 
-              function (e) { latest === id && observer.onError(e); }, 
+              function (x) { latest === id && observer.onNext(x); },
+              function (e) { latest === id && observer.onError(e); },
               function () {
                 if (latest === id) {
                   hasLatest = false;
                   isStopped && observer.onCompleted();
                 }
               }));
-          }, 
-          observer.onError.bind(observer), 
+          },
+          observer.onError.bind(observer),
           function () {
             isStopped = true;
             !hasLatest && observer.onCompleted();

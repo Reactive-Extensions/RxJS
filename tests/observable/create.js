@@ -90,7 +90,7 @@ test('Create_Noop_Error', function () {
         });
     });
     results.messages.assertEqual(onError(200, ex));
-});    
+});
 
 test('Create_Exception', function () {
     raises(function () {

@@ -14,8 +14,8 @@
 
   /**
    *  Hides the identity of an observer.
-   * @returns An observer that hides the identity of the specified observer. 
-   */   
+   * @returns An observer that hides the identity of the specified observer.
+   */
   Observer.prototype.asObserver = function () {
       return new AnonymousObserver(this.onNext.bind(this), this.onError.bind(this), this.onCompleted.bind(this));
   };
@@ -48,4 +48,3 @@
       return handler(notificationCreateOnCompleted());
     }, thisArg);
   };
-  

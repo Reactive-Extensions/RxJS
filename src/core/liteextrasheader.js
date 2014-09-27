@@ -21,7 +21,7 @@
     inherits = internals.inherits,
     noop = helpers.noop,
     isScheduler = helpers.isScheduler,
-    observableFromPromise = Observable.fromPromise,   
+    observableFromPromise = Observable.fromPromise,
     slice = Array.prototype.slice;
 
   function argsOrArray(args, idx) {

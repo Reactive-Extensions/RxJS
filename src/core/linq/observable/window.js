@@ -1,10 +1,10 @@
     /**
      *  Projects each element of an observable sequence into zero or more windows.
-     *  
+     *
      *  @param {Mixed} windowOpeningsOrClosingSelector Observable sequence whose elements denote the creation of new windows, or, a function invoked to define the boundaries of the produced windows (a new window is started when the previous one is closed, resulting in non-overlapping windows).
      *  @param {Function} [windowClosingSelector] A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
      *  @returns {Observable} An observable sequence of windows.
-     */    
+     */
     observableProto.window = function (windowOpeningsOrClosingSelector, windowClosingSelector) {
         if (arguments.length === 1 && typeof arguments[0] !== 'function') {
             return observableWindowWithBounaries.call(this, windowOpeningsOrClosingSelector);
@@ -13,7 +13,7 @@
             observableWindowWithClosingSelector.call(this, windowOpeningsOrClosingSelector) :
             observableWindowWithOpenings.call(this, windowOpeningsOrClosingSelector, windowClosingSelector);
     };
-    
+
     function observableWindowWithOpenings(windowOpenings, windowClosingSelector) {
         return windowOpenings.groupJoin(this, windowClosingSelector, function () {
             return observableEmpty();
@@ -25,8 +25,8 @@
     function observableWindowWithBounaries(windowBoundaries) {
         var source = this;
         return new AnonymousObservable(function (observer) {
-            var window = new Subject(), 
-                d = new CompositeDisposable(), 
+            var window = new Subject(),
+                d = new CompositeDisposable(),
                 r = new RefCountDisposable(d);
 
             observer.onNext(addRef(window, r));

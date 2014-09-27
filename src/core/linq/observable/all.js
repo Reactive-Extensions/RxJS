@@ -1,6 +1,6 @@
     /**
      * Determines whether all elements of an observable sequence satisfy a condition.
-     * 
+     *
      * 1 - res = source.all(function (value) { return value.length > 3; });
      * @memberOf Observable#
      * @param {Function} [predicate] A function to test each element for a condition.

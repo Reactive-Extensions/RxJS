@@ -19,5 +19,5 @@
                 observer.onNext(yieldIndex ? -1 : undefined);
                 observer.onCompleted();
             });
-        });        
+        });
     }

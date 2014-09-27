@@ -17,7 +17,7 @@
 
     event || (event = root.event);
     if (!event.target) {
-      event.target = event.target || event.srcElement; 
+      event.target = event.target || event.srcElement;
 
       if (event.type == 'mouseover') {
         event.relatedTarget = event.fromElement;
@@ -38,14 +38,14 @@
             c = 0;
             event.keyCode = 13;
           } else if (c == 13 || c == 27) {
-            c = 0; 
+            c = 0;
           } else if (c == 3) {
-            c = 99; 
+            c = 99;
           }
           event.charCode = c;
           event.keyChar = event.charCode ? String.fromCharCode(event.charCode) : '';
           break;
-      }                    
+      }
     }
 
     return event;
@@ -58,7 +58,7 @@
       return disposableCreate(function () {
         element.removeEventListener(name, handler, false);
       });
-    } 
+    }
     if (element.attachEvent) {
       // IE Specific
       var innerHandler = function (event) {
@@ -67,9 +67,9 @@
       element.attachEvent('on' + name, innerHandler);
       return disposableCreate(function () {
         element.detachEvent('on' + name, innerHandler);
-      });         
+      });
     }
-    // Level 1 DOM Events      
+    // Level 1 DOM Events
     element['on' + name] = handler;
     return disposableCreate(function () {
       element['on' + name] = null;
@@ -92,7 +92,7 @@
   }
 
   /**
-   * Configuration option to determine whether to use native events only 
+   * Configuration option to determine whether to use native events only
    */
   Rx.config.useNativeEvents = false;
 
@@ -104,7 +104,7 @@
 
   // Check for ember
   var ember = !!root.Ember && typeof root.Ember.addListener === 'function';
-  
+
   // Check for Backbone.Marionette. Note if using AMD add Marionette as a dependency of rxjs
   // for proper loading order!
   var marionette = !!root.Backbone && !!root.Backbone.Marionette;
@@ -114,10 +114,10 @@
    *
    * @example
    *   var source = Rx.Observable.fromEvent(element, 'mouseup');
-   * 
+   *
    * @param {Object} element The DOMElement or NodeList to attach a listener.
    * @param {String} eventName The event name to attach the observable sequence.
-   * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
+   * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
    * @returns {Observable} An observable sequence of events from the specified element and the specified event.
    */
   Observable.fromEvent = function (element, eventName, selector) {
@@ -127,7 +127,7 @@
         function (h) { element.addListener(eventName, h); },
         function (h) { element.removeListener(eventName, h); },
         selector);
-    } 
+    }
 
     // Use only if non-native events are allowed
     if (!Rx.config.useNativeEvents) {
@@ -142,7 +142,7 @@
           function (h) { Ember.addListener(element, eventName, h); },
           function (h) { Ember.removeListener(element, eventName, h); },
           selector);
-      }    
+      }
       if (jq) {
         var $elem = jq(element);
         return fromEventPattern(
@@ -153,9 +153,9 @@
     }
     return new AnonymousObservable(function (observer) {
       return createEventListener(
-        element, 
-        eventName, 
-        function handler (e) { 
+        element,
+        eventName,
+        function handler (e) {
           var results = e;
 
           if (selector) {
@@ -167,7 +167,7 @@
             }
           }
 
-          observer.onNext(results); 
+          observer.onNext(results);
         });
     }).publish().refCount();
   };

@@ -6,7 +6,6 @@ var TestScheduler = Rx.TestScheduler,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-
 test('find_Never', function () {
     var scheduler = new TestScheduler();
     var xs = scheduler.createHotObservable(
@@ -81,7 +80,7 @@ test('find_NotFound', function () {
         onNext(220, undefined),
         onCompleted(220)
     );
-});     
+});
 
 test('find_Error', function () {
     var ex = new Error('error');
@@ -101,7 +100,7 @@ test('find_Error', function () {
     res.messages.assertEqual(
         onError(220, ex)
     );
-});  
+});
 
 test('find_Throws', function () {
     var ex = new Error('error');

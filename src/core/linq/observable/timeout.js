@@ -1,5 +1,5 @@
   /**
-   *  Returns the source observable sequence or the other observable sequence if dueTime elapses.  
+   *  Returns the source observable sequence or the other observable sequence if dueTime elapses.
    * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
    * @param {Observable} [other]  Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
    * @param {Scheduler} [scheduler]  Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
@@ -8,7 +8,7 @@
   observableProto.timeout = function (dueTime, other, scheduler) {
     other || (other = observableThrow(new Error('Timeout')));
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    
+
     var source = this, schedulerMethod = dueTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
@@ -33,7 +33,7 @@
       }
 
       createTimer();
-      
+
       original.setDisposable(source.subscribe(function (x) {
         if (!switched) {
           id++;

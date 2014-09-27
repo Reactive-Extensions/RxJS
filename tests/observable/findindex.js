@@ -79,7 +79,7 @@ test('findIndex_NotFound', function () {
         onNext(220, -1),
         onCompleted(220)
     );
-});     
+});
 
 test('findIndex_Error', function () {
     var ex = new Error('error');
@@ -99,7 +99,7 @@ test('findIndex_Error', function () {
     res.messages.assertEqual(
         onError(220, ex)
     );
-});  
+});
 
 test('findIndex_Throws', function () {
     var ex = new Error('error');

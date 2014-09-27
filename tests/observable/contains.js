@@ -6,7 +6,6 @@ var TestScheduler = Rx.TestScheduler,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-
 test('Contains_Empty', function () {
     var msgs, res, scheduler, xs;
     scheduler = new TestScheduler();

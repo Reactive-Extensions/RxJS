@@ -7,7 +7,6 @@ var Observable = Rx.Observable,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-
 test('SubscribeOn_Normal', function () {
     var scheduler = new TestScheduler();
     var xs = scheduler.createHotObservable(

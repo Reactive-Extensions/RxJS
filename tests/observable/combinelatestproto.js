@@ -7,7 +7,6 @@ var Observable = Rx.Observable,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-
 test('CombineLatest_NeverNever', function () {
     var e1, e2, results, scheduler;
     scheduler = new TestScheduler();

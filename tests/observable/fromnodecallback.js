@@ -26,14 +26,14 @@ test('FromNodeCallback_Single', function () {
     },
     function () {
       ok(true);
-    }); 
-});      
+    });
+});
 
 test('FromNodeCallback_Selector', function () {
   var res = Observable.fromNodeCallback(
     function (f,s,t,cb) {
       cb(null, f,s,t);
-    }, 
+    },
     null,
     function (r) {
       return r[0];
@@ -48,16 +48,15 @@ test('FromNodeCallback_Selector', function () {
     },
     function () {
       ok(true);
-    }); 
+    });
 });
-
 
 test('FromNodeCallback_Context', function () {
   var res = Observable.fromNodeCallback(
     function (cb) {
       equal(this, 42);
       cb(null);
-    }, 
+    },
     42)();
 
   res.subscribe(
@@ -85,7 +84,7 @@ test('FromNodeCallback_Error', function () {
     },
     function (err) {
       equal(err, error);
-    }, 
+    },
     function () {
       ok(false);
     });

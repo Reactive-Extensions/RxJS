@@ -9,26 +9,26 @@ var Observable = Rx.Observable,
 
 test('Distinct_DefaultComparer_AllDistinct', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(280, 4), 
-    onNext(300, 2), 
-    onNext(350, 1), 
-    onNext(380, 3), 
-    onNext(400, 5), 
+    onNext(280, 4),
+    onNext(300, 2),
+    onNext(350, 1),
+    onNext(380, 3),
+    onNext(400, 5),
     onCompleted(420)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.distinct();
   });
 
   results.messages.assertEqual(
-    onNext(280, 4), 
-    onNext(300, 2), 
-    onNext(350, 1), 
-    onNext(380, 3), 
-    onNext(400, 5), 
+    onNext(280, 4),
+    onNext(300, 2),
+    onNext(350, 1),
+    onNext(380, 3),
+    onNext(400, 5),
     onCompleted(420)
   );
 
@@ -39,27 +39,27 @@ test('Distinct_DefaultComparer_AllDistinct', function () {
 
 test('Distinct_DefaultComparer_SomeDuplicates', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(280, 4), 
-    onNext(300, 2), 
-    onNext(350, 2), 
-    onNext(380, 3), 
-    onNext(400, 4), 
+    onNext(280, 4),
+    onNext(300, 2),
+    onNext(350, 2),
+    onNext(380, 3),
+    onNext(400, 4),
     onCompleted(420)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.distinct();
   });
-  
+
   results.messages.assertEqual(
-    onNext(280, 4), 
-    onNext(300, 2), 
-    onNext(380, 3), 
+    onNext(280, 4),
+    onNext(300, 2),
+    onNext(380, 3),
     onCompleted(420)
   );
-  
+
   xs.subscriptions.assertEqual(
     subscribe(200, 420)
   );

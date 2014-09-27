@@ -2,7 +2,7 @@
    * Converts an existing observable sequence to an ES6 Compatible Promise
    * @example
    * var promise = Rx.Observable.return(42).toPromise(RSVP.Promise);
-   * 
+   *
    * // With config
    * Rx.config.Promise = RSVP.Promise;
    * var promise = Rx.Observable.return(42).toPromise();

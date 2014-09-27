@@ -52,7 +52,7 @@
       this.heapify(first);
     }
   };
-  
+
   priorityProto.peek = function () { return this.items[0].value; };
 
   priorityProto.removeAt = function (index) {

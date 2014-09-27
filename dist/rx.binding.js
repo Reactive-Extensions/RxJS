@@ -32,7 +32,6 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
 
-
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,
@@ -58,16 +57,16 @@
    * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
    * subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
    * invocation. For specializations with fixed subject types, see Publish, PublishLast, and Replay.
-   * 
+   *
    * @example
    * 1 - res = source.multicast(observable);
    * 2 - res = source.multicast(function () { return new Subject(); }, function (x) { return x; });
-   * 
-   * @param {Function|Subject} subjectOrSubjectSelector 
+   *
+   * @param {Function|Subject} subjectOrSubjectSelector
    * Factory function to create an intermediate subject through which the source sequence's elements will be multicast to the selector function.
    * Or:
    * Subject to push source elements into.
-   * 
+   *
    * @param {Function} [selector] Optional selector function which can use the multicasted source sequence subject to the policies enforced by the created subject. Specified only if <paramref name="subjectOrSubjectSelector" is a factory function.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
    */
@@ -84,11 +83,11 @@
   /**
    * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence.
    * This operator is a specialization of Multicast using a regular Subject.
-   * 
+   *
    * @example
    * var resres = source.publish();
    * var res = source.publish(function (x) { return x; });
-   * 
+   *
    * @param {Function} [selector] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all notifications of the source from the time of the subscription on.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
    */
@@ -101,10 +100,10 @@
   /**
    * Returns an observable sequence that shares a single subscription to the underlying sequence.
    * This operator is a specialization of publish which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-   * 
+   *
    * @example
    * var res = source.share();
-   * 
+   *
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
    */
   observableProto.share = function () {
@@ -114,11 +113,11 @@
   /**
    * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
    * This operator is a specialization of Multicast using a AsyncSubject.
-   * 
+   *
    * @example
    * var res = source.publishLast();
    * var res = source.publishLast(function (x) { return x; });
-   * 
+   *
    * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will only receive the last notification of the source.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
    */
@@ -131,11 +130,11 @@
   /**
    * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence and starts with initialValue.
    * This operator is a specialization of Multicast using a BehaviorSubject.
-   * 
+   *
    * @example
    * var res = source.publishValue(42);
    * var res = source.publishValue(function (x) { return x.select(function (y) { return y * y; }) }, 42);
-   * 
+   *
    * @param {Function} [selector] Optional selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive immediately receive the initial value, followed by all notifications of the source from the time of the subscription on.
    * @param {Mixed} initialValue Initial value received by observers upon subscription.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
@@ -151,10 +150,10 @@
   /**
    * Returns an observable sequence that shares a single subscription to the underlying sequence and starts with an initialValue.
    * This operator is a specialization of publishValue which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-   * 
+   *
    * @example
    * var res = source.shareValue(42);
-   * 
+   *
    * @param {Mixed} initialValue Initial value received by observers upon subscription.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
    */
@@ -165,13 +164,13 @@
   /**
    * Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
    * This operator is a specialization of Multicast using a ReplaySubject.
-   * 
+   *
    * @example
    * var res = source.replay(null, 3);
    * var res = source.replay(null, 3, 500);
    * var res = source.replay(null, 3, 500, scheduler);
    * var res = source.replay(function (x) { return x.take(6).repeat(); }, 3, 500, scheduler);
-   * 
+   *
    * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
    * @param bufferSize [Optional] Maximum element count of the replay buffer.
    * @param window [Optional] Maximum time length of the replay buffer.
@@ -187,12 +186,12 @@
   /**
    * Returns an observable sequence that shares a single subscription to the underlying sequence replaying notifications subject to a maximum time length for the replay buffer.
    * This operator is a specialization of replay which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-   * 
+   *
    * @example
    * var res = source.shareReplay(3);
    * var res = source.shareReplay(3, 500);
    * var res = source.shareReplay(3, 500, scheduler);
-   * 
+   *
 
    * @param bufferSize [Optional] Maximum element count of the replay buffer.
    * @param window [Optional] Maximum time length of the replay buffer.
@@ -248,7 +247,7 @@
      * @constructor
      *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
      *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
-     */       
+     */
     function BehaviorSubject(value) {
       __super__.call(this, subscribe);
       this.value = value,
@@ -262,13 +261,13 @@
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-       */         
+       */
       hasObservers: function () {
         return this.observers.length > 0;
       },
       /**
        * Notifies all subscribed observers about the end of the sequence.
-       */ 
+       */
       onCompleted: function () {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -282,7 +281,7 @@
       /**
        * Notifies all subscribed observers about the exception.
        * @param {Mixed} error The exception to send to all observers.
-       */             
+       */
       onError: function (error) {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -298,7 +297,7 @@
       /**
        * Notifies all subscribed observers about the arrival of the specified element in the sequence.
        * @param {Mixed} value The value to send to all observers.
-       */              
+       */
       onNext: function (value) {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -309,7 +308,7 @@
       },
       /**
        * Unsubscribe all observers and release resources.
-       */            
+       */
       dispose: function () {
         this.isDisposed = true;
         this.observers = null;
@@ -324,7 +323,7 @@
   /**
    * Represents an object that is both an observable sequence as well as an observer.
    * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
-   */  
+   */
   var ReplaySubject = Rx.ReplaySubject = (function (__super__) {
 
     function createRemovableDisposable(subject, observer) {
@@ -384,7 +383,7 @@
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-       */         
+       */
       hasObservers: function () {
         return this.observers.length > 0;
       },
@@ -399,7 +398,7 @@
       /**
        * Notifies all subscribed observers about the arrival of the specified element in the sequence.
        * @param {Mixed} value The value to send to all observers.
-       */              
+       */
       onNext: function (value) {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -417,7 +416,7 @@
       /**
        * Notifies all subscribed observers about the exception.
        * @param {Mixed} error The exception to send to all observers.
-       */                 
+       */
       onError: function (error) {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -436,7 +435,7 @@
       },
       /**
        * Notifies all subscribed observers about the end of the sequence.
-       */             
+       */
       onCompleted: function () {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -453,7 +452,7 @@
       },
       /**
        * Unsubscribe all observers and release resources.
-       */               
+       */
       dispose: function () {
         this.isDisposed = true;
         this.observers = null;
@@ -467,7 +466,7 @@
     inherits(ConnectableObservable, __super__);
 
     function ConnectableObservable(source, subject) {
-      var hasSubscription = false, 
+      var hasSubscription = false,
         subscription,
         sourceObservable = source.asObservable();
 
@@ -483,7 +482,7 @@
 
       __super__.call(this, subject.subscribe.bind(subject));
     }
-    
+
     ConnectableObservable.prototype.refCount = function () {
       var connectableSubscription, count = 0, source = this;
       return new AnonymousObservable(function (observer) {
@@ -499,5 +498,6 @@
 
     return ConnectableObservable;
   }(Observable));
+
     return Rx;
 }));

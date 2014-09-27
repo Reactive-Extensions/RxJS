@@ -32,7 +32,6 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
 
-
   // References
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
@@ -43,7 +42,7 @@
     disposableEmpty = Rx.Disposable.empty,
     disposableCreate = Rx.Disposable.create,
     inherits = Rx.internals.inherits,
-    addProperties = Rx.internals.addProperties,  
+    addProperties = Rx.internals.addProperties,
     timeoutScheduler = Rx.Scheduler.timeout,
     identity = Rx.helpers.identity;
 
@@ -107,6 +106,7 @@
   observableProto.pausable = function (pauser) {
     return new PausableObservable(this, pauser);
   };
+
   function combineLatestSource(source, subject, resultSelector) {
     return new AnonymousObservable(function (observer) {
       var n = 2,
@@ -157,13 +157,13 @@
 
     function subscribe(observer) {
       var q = [], previousShouldFire;
-      
-      var subscription =  
+
+      var subscription =
         combineLatestSource(
           this.source,
           this.pauser.distinctUntilChanged().startWith(false),
           function (data, shouldFire) {
-            return { data: data, shouldFire: shouldFire };      
+            return { data: data, shouldFire: shouldFire };
           })
           .subscribe(
             function (results) {
@@ -197,10 +197,10 @@
               while (q.length > 0) {
                 observer.onNext(q.shift());
               }
-              observer.onCompleted();              
+              observer.onCompleted();
             }
           );
-      return subscription;      
+      return subscription;
     }
 
     function PausableBufferedObservable(source, pauser) {
@@ -224,7 +224,7 @@
       this.controller.onNext(true);
     };
 
-    return PausableBufferedObservable; 
+    return PausableBufferedObservable;
 
   }(Observable));
 
@@ -236,7 +236,7 @@
    * var source = Rx.Observable.interval(100).pausableBuffered(pauser);
    * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
    * @returns {Observable} The observable sequence which is paused based upon the pauser.
-   */  
+   */
   observableProto.pausableBuffered = function (subject) {
     return new PausableBufferedObservable(this, subject);
   };
@@ -248,11 +248,12 @@
    * source.request(3); // Reads 3 values
    * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
    * @returns {Observable} The observable sequence which is paused based upon the pauser.
-   */ 
+   */
   observableProto.controlled = function (enableQueue) {
     if (enableQueue == null) {  enableQueue = true; }
     return new ControlledObservable(this, enableQueue);
   };
+
   var ControlledObservable = (function (_super) {
 
     inherits(ControlledObservable, _super);
@@ -317,7 +318,7 @@
 
                 if (!this.enableQueue || this.queue.length === 0) {
                     this.subject.onError(error);
-                }   
+                }
             },
             onNext: function (value) {
                 checkDisposed.call(this);
@@ -364,7 +365,7 @@
                 } else if (this.hasCompleted) {
                     this.subject.onCompleted();
                     this.controlledDisposable.dispose();
-                    this.controlledDisposable = disposableEmpty;                   
+                    this.controlledDisposable = disposableEmpty;
                 }
 
                 return { numberOfItems: numberOfItems, returnValue: false };
@@ -402,5 +403,6 @@
 
         return ControlledSubject;
     }(Observable));
+
     return Rx;
 }));

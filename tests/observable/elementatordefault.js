@@ -6,7 +6,6 @@ var TestScheduler = Rx.TestScheduler,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-
 test('ElementAtOrDefault_First', function () {
     var results, scheduler, xs;
     scheduler = new TestScheduler();

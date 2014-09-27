@@ -1,6 +1,6 @@
 if (!!window.Set) {
   (function () {
-    
+
     QUnit.module('ToSet');
 
     var TestScheduler = Rx.TestScheduler,
@@ -19,20 +19,20 @@ if (!!window.Set) {
 
     test('ToSet_Completed', function () {
       var scheduler = new TestScheduler();
-      
+
       var xs = scheduler.createHotObservable(
-        onNext(110, 1), 
-        onNext(220, 2), 
-        onNext(330, 3), 
-        onNext(440, 4), 
-        onNext(550, 5), 
+        onNext(110, 1),
+        onNext(220, 2),
+        onNext(330, 3),
+        onNext(440, 4),
+        onNext(550, 5),
         onCompleted(660)
       );
-      
+
       var results = scheduler.startWithCreate(function () {
         return xs.toSet().map(extractValues);
       });
-      
+
       results.messages.assertEqual(
         onNext(660, [2,3,4,5]),
         onCompleted(660)
@@ -49,22 +49,22 @@ if (!!window.Set) {
       var scheduler = new TestScheduler();
 
       var xs = scheduler.createHotObservable(
-        onNext(110, 1), 
-        onNext(220, 2), 
-        onNext(330, 3), 
-        onNext(440, 4), 
-        onNext(550, 5), 
+        onNext(110, 1),
+        onNext(220, 2),
+        onNext(330, 3),
+        onNext(440, 4),
+        onNext(550, 5),
         onError(660, error)
       );
-      
+
       var results = scheduler.startWithCreate(function () {
         return xs.toSet().map(extractValues);
       });
-      
+
       results.messages.assertEqual(
         onError(660, error)
       );
-      
+
       xs.subscriptions.assertEqual(
         subscribe(200, 660)
       );
@@ -72,21 +72,21 @@ if (!!window.Set) {
 
     test('ToSet_Disposed', function () {
       var scheduler = new TestScheduler();
-      
+
       var xs = scheduler.createHotObservable(
-        onNext(110, 1), 
-        onNext(220, 2), 
-        onNext(330, 3), 
-        onNext(440, 4), 
+        onNext(110, 1),
+        onNext(220, 2),
+        onNext(330, 3),
+        onNext(440, 4),
         onNext(550, 5)
       );
-      
+
       var results = scheduler.startWithCreate(function () {
         return xs.toSet().map(extractValues);
       });
-      
+
       results.messages.assertEqual();
-      
+
       xs.subscriptions.assertEqual(
         subscribe(200, 1000)
       );

@@ -79,9 +79,9 @@ addIterator(ArrayIterator.prototype);
 
 test('fromIterable finite', function () {
   var enumerableFinite = new ArrayWrapper([1, 2, 3, 4, 5]);
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.fromIterable(enumerableFinite, scheduler);
   });
@@ -93,21 +93,21 @@ test('fromIterable finite', function () {
     onNext(204, 4),
     onNext(205, 5),
     onCompleted(206)
-  );  
+  );
 });
 
 test('fromIterable empty', function () {
   var enumerableFinite = new ArrayWrapper([]);
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.fromIterable(enumerableFinite, scheduler);
   });
 
   results.messages.assertEqual(
     onCompleted(201)
-  );  
+  );
 });
 
 function InfiniteIterable() { }
@@ -127,9 +127,9 @@ addIterator(ThrowableIterator.prototype);
 
 test('fromIterable infinite', function () {
   var iterable = new InfiniteIterable();
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.fromIterable(iterable, scheduler).take(5);
   });
@@ -141,9 +141,8 @@ test('fromIterable infinite', function () {
     onNext(204, 4),
     onNext(205, 5),
     onCompleted(205)
-  );  
+  );
 });
-
 
 function ThrowableIterable(err) {
   this.err = err;
@@ -156,16 +155,16 @@ ThrowableIterable.prototype[$iterator$] = function () {
 test('fromIterable iterator throws', function () {
   var err = new Error();
   var iterable = new ThrowableIterable(err);
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.fromIterable(iterable, scheduler);
   });
 
   results.messages.assertEqual(
     onError(200, err)
-  ); 
+  );
 });
 
 function ThrowableIteratorHost(err) {
@@ -189,14 +188,14 @@ addIterator(ThrowableIterator.prototype);
 test('fromIterable next throws', function () {
   var err = new Error();
   var iterable = new ThrowableIteratorHost(err);
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.fromIterable(iterable, scheduler);
   });
 
   results.messages.assertEqual(
     onError(201, err)
-  ); 
+  );
 });

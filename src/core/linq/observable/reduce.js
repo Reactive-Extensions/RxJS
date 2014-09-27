@@ -5,7 +5,7 @@
      * 1 - res = source.reduce(function (acc, x) { return acc + x; });
      * 2 - res = source.reduce(function (acc, x) { return acc + x; }, 0);
      * @param {Function} accumulator An accumulator function to be invoked on each element.
-     * @param {Any} [seed] The initial accumulator value.     
+     * @param {Any} [seed] The initial accumulator value.
      * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
      */
     observableProto.reduce = function (accumulator) {
@@ -13,6 +13,6 @@
         if (arguments.length === 2) {
             hasSeed = true;
             seed = arguments[1];
-        } 
+        }
         return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
     };

@@ -1,6 +1,6 @@
   /**
    * Creates a new subscription object with the given virtual subscription and unsubscription time.
-   * 
+   *
    * @constructor
    * @param {Number} subscribe Virtual time at which the subscription occurred.
    * @param {Number} unsubscribe Virtual time at which the unsubscription occurred.

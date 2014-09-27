@@ -32,7 +32,6 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
 
-
 	// Aliases
 	var Scheduler = Rx.Scheduler,
 		PriorityQueue = Rx.internals.PriorityQueue,
@@ -98,26 +97,26 @@
     VirtualTimeSchedulerPrototype.add = notImplemented;
 
     /**
-     * Converts an absolute time to a number 
+     * Converts an absolute time to a number
      * @param {Any} The absolute time.
      * @returns {Number} The absolute time in ms
      */
     VirtualTimeSchedulerPrototype.toDateTimeOffset = notImplemented;
 
     /**
-     * Converts the TimeSpan value to a relative virtual time value.       
+     * Converts the TimeSpan value to a relative virtual time value.
      * @param {Number} timeSpan TimeSpan value to convert.
      * @return {Number} Corresponding relative virtual time value.
      */
     VirtualTimeSchedulerPrototype.toRelative = notImplemented;
 
     /**
-     * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be emulated using recursive scheduling.       
+     * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be emulated using recursive scheduling.
      * @param {Mixed} state Initial state passed to the action upon the first iteration.
      * @param {Number} period Period for running the work periodically.
      * @param {Function} action Action to be executed, potentially updating the state.
      * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
-     */      
+     */
     VirtualTimeSchedulerPrototype.schedulePeriodicWithState = function (state, period, action) {
       var s = new SchedulePeriodicRecursive(this, state, period, action);
       return s.start();
@@ -129,24 +128,24 @@
      * @param {Number} dueTime Relative time after which to execute the action.
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */            
+     */
     VirtualTimeSchedulerPrototype.scheduleRelativeWithState = function (state, dueTime, action) {
       var runAt = this.add(this.clock, dueTime);
       return this.scheduleAbsoluteWithState(state, runAt, action);
     };
 
     /**
-     * Schedules an action to be executed at dueTime.      
+     * Schedules an action to be executed at dueTime.
      * @param {Number} dueTime Relative time after which to execute the action.
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */          
+     */
     VirtualTimeSchedulerPrototype.scheduleRelative = function (dueTime, action) {
       return this.scheduleRelativeWithState(action, dueTime, invokeAction);
-    };    
+    };
 
-    /** 
-     * Starts the virtual time scheduler. 
+    /**
+     * Starts the virtual time scheduler.
      */
     VirtualTimeSchedulerPrototype.start = function () {
       if (!this.isEnabled) {
@@ -163,8 +162,8 @@
       }
     };
 
-    /** 
-     * Stops the virtual time scheduler.  
+    /**
+     * Stops the virtual time scheduler.
      */
     VirtualTimeSchedulerPrototype.stop = function () {
       this.isEnabled = false;
@@ -208,10 +207,10 @@
       if (dueToClock === 0) {  return; }
 
       this.advanceTo(dt);
-    };        
+    };
 
     /**
-     * Advances the scheduler's clock by the specified relative time.      
+     * Advances the scheduler's clock by the specified relative time.
      * @param {Number} time Relative time to advance the scheduler's clock by.
      */
     VirtualTimeSchedulerPrototype.sleep = function (time) {
@@ -222,9 +221,9 @@
     };
 
     /**
-     * Gets the next scheduled item to be executed.          
+     * Gets the next scheduled item to be executed.
      * @returns {ScheduledItem} The next scheduled item.
-     */          
+     */
     VirtualTimeSchedulerPrototype.getNext = function () {
       while (this.queue.length > 0) {
         var next = this.queue.peek();
@@ -238,12 +237,12 @@
     };
 
     /**
-     * Schedules an action to be executed at dueTime.       
+     * Schedules an action to be executed at dueTime.
      * @param {Scheduler} scheduler Scheduler to execute the action on.
      * @param {Number} dueTime Absolute time at which to execute the action.
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */           
+     */
     VirtualTimeSchedulerPrototype.scheduleAbsolute = function (dueTime, action) {
       return this.scheduleAbsoluteWithState(action, dueTime, invokeAction);
     };
@@ -262,10 +261,10 @@
         self.queue.remove(si);
         return action(scheduler, state1);
       }
-      
+
       var si = new ScheduledItem(this, state, run, dueTime, this.comparer);
       this.queue.enqueue(si);
-      
+
       return si.disposable;
     };
 
@@ -306,7 +305,7 @@
 
     /**
      * Converts the TimeSpan value to a relative virtual time value.
-     * @memberOf HistoricalScheduler         
+     * @memberOf HistoricalScheduler
      * @param {Number} timeSpan TimeSpan value to convert.
      * @return {Number} Corresponding relative virtual time value.
      */
@@ -314,7 +313,8 @@
       return timeSpan;
     };
 
-    return HistoricalScheduler;    
+    return HistoricalScheduler;
   }(Rx.VirtualTimeScheduler));
+
     return Rx;
 }));

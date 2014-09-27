@@ -32,7 +32,6 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
 
-
   // Aliases
   var Observable = Rx.Observable,
       observableProto = Observable.prototype,
@@ -97,8 +96,8 @@
   /**
    *  Creates a pattern that matches the current plan matches and when the specified observable sequences has an available value.
    *  @param other Observable sequence to match in addition to the current pattern.
-   *  @return {Pattern} Pattern object that matches when all observable sequences in the pattern have an available value.   
-   */ 
+   *  @return {Pattern} Pattern object that matches when all observable sequences in the pattern have an available value.
+   */
   Pattern.prototype.and = function (other) {
     return new Pattern(this.patterns.concat(other));
   };
@@ -116,7 +115,7 @@
       this.expression = expression;
       this.selector = selector;
   }
-  
+
   Plan.prototype.activate = function (externalSubscriptions, observer, deactivate) {
     var self = this;
     var joinObservers = [];
@@ -226,18 +225,18 @@
         }
       }
     };
-     
+
     JoinObserverPrototype.error = noop;
     JoinObserverPrototype.completed = noop;
 
     JoinObserverPrototype.addActivePlan = function (activePlan) {
       this.activePlans.push(activePlan);
     };
-  
+
     JoinObserverPrototype.subscribe = function () {
       this.subscription.setDisposable(this.source.materialize().subscribe(this));
     };
-     
+
     JoinObserverPrototype.removeActivePlan = function (activePlan) {
       this.activePlans.splice(this.activePlans.indexOf(activePlan), 1);
       this.activePlans.length === 0 && this.dispose();
@@ -250,15 +249,15 @@
         this.subscription.dispose();
       }
     };
-    
+
     return JoinObserver;
   } (AbstractObserver));
 
   /**
    *  Creates a pattern that matches when both observable sequences have an available value.
-   *  
+   *
    *  @param right Observable sequence to match with the current sequence.
-   *  @return {Pattern} Pattern object that matches when both observable sequences have an available value.     
+   *  @return {Pattern} Pattern object that matches when both observable sequences have an available value.
    */
   observableProto.and = function (right) {
     return new Pattern([this, right]);
@@ -266,19 +265,19 @@
 
   /**
    *  Matches when the observable sequence has an available value and projects the value.
-   *  
+   *
    *  @param selector Selector that will be invoked for values in the source sequence.
-   *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator. 
-   */    
+   *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator.
+   */
   observableProto.thenDo = function (selector) {
     return new Pattern([this]).thenDo(selector);
   };
 
   /**
    *  Joins together the results from several patterns.
-   *  
+   *
    *  @param plans A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.
-   *  @returns {Observable} Observable sequence with the results form matching several patterns. 
+   *  @returns {Observable} Observable sequence with the results form matching several patterns.
    */
   Observable.when = function () {
     var plans = argsOrArray(arguments, 0);
@@ -286,11 +285,11 @@
       var activePlans = [],
           externalSubscriptions = new Map();
       var outObserver = observerCreate(
-        observer.onNext.bind(observer), 
+        observer.onNext.bind(observer),
         function (err) {
           externalSubscriptions.forEach(function (v) { v.onError(err); });
           observer.onError(err);
-        }, 
+        },
         observer.onCompleted.bind(observer)
       );
       try {

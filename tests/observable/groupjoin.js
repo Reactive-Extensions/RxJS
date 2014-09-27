@@ -30,11 +30,10 @@ var TimeInterval = (function () {
     return TimeInterval;
 })();
 
-
 function newTimer(l, t, scheduler) {
     var timer = scheduler.createColdObservable(onNext(t, 0), onCompleted(t));
     l.push(timer);
-    return timer;        
+    return timer;
 }
 
 test('GroupJoinOp_Normal_I', function () {
@@ -73,9 +72,9 @@ test('GroupJoinOp_Normal_I', function () {
 
     var res = scheduler.startWithCreate(function (){
         return xs.groupJoin(
-            ys, 
-            function (x) { return newTimer(xsd, x.interval, scheduler); }, 
-            function (y) { return newTimer(ysd, y.interval, scheduler); }, 
+            ys,
+            function (x) { return newTimer(xsd, x.interval, scheduler); },
+            function (y) { return newTimer(ysd, y.interval, scheduler); },
             function (x, yy) { return yy.select(function (y) { return x.value + y.value; })})
         .mergeObservable();
     });
@@ -111,7 +110,7 @@ test('GroupJoinOp_Normal_I', function () {
 
     ys.subscriptions.assertEqual(
         subscribe(200, 990)
-    );                    
+    );
 });
 
 test('GroupJoinOp_Normal_II', function () {
@@ -149,9 +148,9 @@ test('GroupJoinOp_Normal_II', function () {
 
     var res = scheduler.startWithCreate(function (){
         return xs.groupJoin(
-            ys, 
-            function (x) { return newTimer(xsd, x.interval, scheduler); }, 
-            function (y) { return newTimer(ysd, y.interval, scheduler); }, 
+            ys,
+            function (x) { return newTimer(xsd, x.interval, scheduler); },
+            function (y) { return newTimer(ysd, y.interval, scheduler); },
             function (x, yy) { return yy.select(function (y) { return x.value + y.value; })})
         .mergeObservable();
     });
@@ -186,7 +185,7 @@ test('GroupJoinOp_Normal_II', function () {
 
     ys.subscriptions.assertEqual(
         subscribe(200, 910)
-    );          
+    );
 });
 
 test('GroupJoinOp_Normal_III', function () {

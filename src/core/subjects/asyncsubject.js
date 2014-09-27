@@ -1,12 +1,12 @@
   /**
    *  Represents the result of an asynchronous operation.
    *  The last value before the OnCompleted notification, or the error received through OnError, is sent to all subscribed observers.
-   */   
+   */
   var AsyncSubject = Rx.AsyncSubject = (function (__super__) {
 
     function subscribe(observer) {
       checkDisposed.call(this);
-      
+
       if (!this.isStopped) {
         this.observers.push(observer);
         return new InnerSubscription(this, observer);
@@ -33,7 +33,7 @@
     /**
      * Creates a subject that can only receive one value and that value is cached for all future observations.
      * @constructor
-     */ 
+     */
     function AsyncSubject() {
       __super__.call(this, subscribe);
 
@@ -49,14 +49,14 @@
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-       */         
+       */
       hasObservers: function () {
         checkDisposed.call(this);
         return this.observers.length > 0;
       },
       /**
        * Notifies all subscribed observers about the end of the sequence, also causing the last received value to be sent out (if any).
-       */ 
+       */
       onCompleted: function () {
         var o, i, len;
         checkDisposed.call(this);
@@ -84,7 +84,7 @@
       /**
        * Notifies all subscribed observers about the error.
        * @param {Mixed} error The Error to send to all observers.
-       */ 
+       */
       onError: function (error) {
         checkDisposed.call(this);
         if (!this.isStopped) {
@@ -102,7 +102,7 @@
       /**
        * Sends a value to the subject. The last value received before successful termination will be sent to all subscribed and future observers.
        * @param {Mixed} value The value to store in the subject.
-       */             
+       */
       onNext: function (value) {
         checkDisposed.call(this);
         if (this.isStopped) { return; }

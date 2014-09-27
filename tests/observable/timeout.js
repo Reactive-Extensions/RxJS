@@ -197,4 +197,3 @@ test('Timeout_DateTimeOffset_TimeoutOccur_3', function () {
     xs.subscriptions.assertEqual(subscribe(200, 400));
     ys.subscriptions.assertEqual(subscribe(400, 1000));
 });
-

@@ -2,7 +2,7 @@
       this.expression = expression;
       this.selector = selector;
   }
-  
+
   Plan.prototype.activate = function (externalSubscriptions, observer, deactivate) {
     var self = this;
     var joinObservers = [];

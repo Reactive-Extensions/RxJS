@@ -26,7 +26,7 @@
               } catch (e) {
                 observer.onError(e);
                 return;
-              }              
+              }
             }
 
             m.set(key, element);

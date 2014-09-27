@@ -1,6 +1,6 @@
   /**
    *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
-   *  
+   *
    * @example
    *  var res = Rx.Observable.fromArray([1,2,3]);
    *  var res = Rx.Observable.fromArray([1,2,3], Rx.Scheduler.timeout);

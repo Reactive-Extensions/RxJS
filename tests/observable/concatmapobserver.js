@@ -281,7 +281,6 @@ test('ConcatMap_Triple_InnersWithTiming3', function () {
   );
 });
 
-
 test('ConcatMap_Triple_Error_Identity', function () {
   var scheduler = new TestScheduler();
 
@@ -428,7 +427,6 @@ test('ConcatMap_Triple_Catch', function () {
   );
 });
 
-
 test('ConcatMap_Triple_Error_Catch', function () {
   var scheduler = new TestScheduler();
 
@@ -507,7 +505,6 @@ test('ConcatMap_Triple_All', function () {
   );
 });
 
-
 test('ConcatMap_Triple_Error_All', function () {
   var scheduler = new TestScheduler();
 
@@ -582,7 +579,6 @@ test('ConcatMap_Triple_All_Dispose', function () {
   );
 });
 
-
 test('ConcatMap_Triple_All_Dispose_Before_First', function () {
   var scheduler = new TestScheduler();
 
@@ -643,7 +639,6 @@ test('ConcatMap_Triple_OnNextThrow', function () {
     subscribe(200, 300)
   );
 });
-
 
 test('ConcatMap_Triple_OnErrorThrow', function () {
   var scheduler = new TestScheduler();
@@ -713,7 +708,6 @@ test('ConcatMap_Triple_OnCompletedThrow', function () {
   );
 });
 
-
 test('ConcatMapWithIndex_Triple_Identity', function () {
   var scheduler = new TestScheduler();
 
@@ -747,7 +741,6 @@ test('ConcatMapWithIndex_Triple_Identity', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('ConcatMapWithIndex_Triple_InnersWithTiming1', function () {
   var scheduler = new TestScheduler();
@@ -826,7 +819,6 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming1', function () {
   );
 });
 
-
 test('ConcatMapWithIndex_Triple_InnersWithTiming2', function () {
   var scheduler = new TestScheduler();
 
@@ -903,7 +895,6 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming2', function () {
     subscribe(500, 550)
   );
 });
-
 
 test('ConcatMapWithIndex_Triple_InnersWithTiming3', function () {
   var scheduler = new TestScheduler();
@@ -982,7 +973,6 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming3', function () {
   );
 });
 
-
 test('ConcatMapWithIndex_Triple_Error_Identity', function () {
   var scheduler = new TestScheduler();
 
@@ -1018,7 +1008,6 @@ test('ConcatMapWithIndex_Triple_Error_Identity', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('ConcatMapWithIndex_Triple_ConcatMap', function () {
   var scheduler = new TestScheduler();
@@ -1167,7 +1156,6 @@ test('ConcatMapWithIndex_Triple_Error_Catch', function () {
   );
 });
 
-
 test('ConcatMapWithIndex_Triple_All', function () {
   var scheduler = new TestScheduler();
 
@@ -1208,7 +1196,6 @@ test('ConcatMapWithIndex_Triple_All', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('ConcatMapWithIndex_Triple_Error_All', function () {
   var scheduler = new TestScheduler();
@@ -1284,7 +1271,6 @@ test('ConcatMapWithIndex_Triple_All_Dispose', function () {
   );
 });
 
-
 test('ConcatMapWithIndex_Triple_All_Dispose_Before_First', function () {
   var scheduler = new TestScheduler();
 
@@ -1346,7 +1332,6 @@ test('ConcatMapWithIndex_Triple_OnNextThrow', function () {
   );
 });
 
-
 test('ConcatMapWithIndex_Triple_OnErrorThrow', function () {
   var scheduler = new TestScheduler();
 
@@ -1380,7 +1365,6 @@ test('ConcatMapWithIndex_Triple_OnErrorThrow', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('ConcatMapWithIndex_Triple_OnCompletedThrow', function () {
     var scheduler = new TestScheduler();

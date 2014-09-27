@@ -1,14 +1,14 @@
   /**
    *  Generates an observable sequence by iterating a state from an initial state until the condition fails.
-   * 
-   * @example 
-   *  res = source.generateWithRelativeTime(0, 
-   *      function (x) { return return true; }, 
-   *      function (x) { return x + 1; }, 
-   *      function (x) { return x; }, 
+   *
+   * @example
+   *  res = source.generateWithRelativeTime(0,
+   *      function (x) { return return true; },
+   *      function (x) { return x + 1; },
+   *      function (x) { return x; },
    *      function (x) { return 500; }
    *  );
-   *      
+   *
    * @param {Mixed} initialState Initial state.
    * @param {Function} condition Condition to terminate generation (upon returning false).
    * @param {Function} iterate Iteration step function.

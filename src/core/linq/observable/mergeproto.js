@@ -1,13 +1,13 @@
   /**
    * Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.
    * Or merges two observable sequences into a single observable sequence.
-   * 
+   *
    * @example
    * 1 - merged = sources.merge(1);
-   * 2 - merged = source.merge(otherSource);  
+   * 2 - merged = source.merge(otherSource);
    * @param {Mixed} [maxConcurrentOrOther] Maximum number of inner observable sequences being subscribed to concurrently or the second observable sequence.
-   * @returns {Observable} The observable sequence that merges the elements of the inner sequences. 
-   */ 
+   * @returns {Observable} The observable sequence that merges the elements of the inner sequences.
+   */
   observableProto.merge = function (maxConcurrentOrOther) {
     if (typeof maxConcurrentOrOther !== 'number') { return observableMerge(this, maxConcurrentOrOther); }
     var sources = this;

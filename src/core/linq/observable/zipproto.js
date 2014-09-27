@@ -17,7 +17,7 @@
         }
       }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
     });
-  }    
+  }
 
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
@@ -25,9 +25,9 @@
    *
    * @example
    * 1 - res = obs1.zip(obs2, fn);
-   * 1 - res = x1.zip([1,2,3], fn);  
-   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
-   */   
+   * 1 - res = x1.zip([1,2,3], fn);
+   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+   */
   observableProto.zip = function () {
     if (Array.isArray(arguments[0])) {
       return zipArray.apply(this, arguments);
@@ -38,7 +38,7 @@
       var n = sources.length,
         queues = arrayInitialize(n, function () { return []; }),
         isDone = arrayInitialize(n, function () { return false; });
-        
+
       function next(i) {
         var res, queuedValues;
         if (queues.every(function (x) { return x.length > 0; })) {

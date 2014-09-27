@@ -8,8 +8,8 @@
      */
     observableProto.some = observableProto.any = function (predicate, thisArg) {
         var source = this;
-        return predicate ? 
-            source.where(predicate, thisArg).any() : 
+        return predicate ?
+            source.where(predicate, thisArg).any() :
             new AnonymousObservable(function (observer) {
                 return source.subscribe(function () {
                     observer.onNext(true);

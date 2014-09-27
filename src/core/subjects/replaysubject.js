@@ -1,7 +1,7 @@
   /**
    * Represents an object that is both an observable sequence as well as an observer.
    * Each notification is broadcasted to all subscribed and future observers, subject to buffer trimming policies.
-   */  
+   */
   var ReplaySubject = Rx.ReplaySubject = (function (__super__) {
 
     function createRemovableDisposable(subject, observer) {
@@ -61,7 +61,7 @@
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-       */         
+       */
       hasObservers: function () {
         return this.observers.length > 0;
       },
@@ -76,7 +76,7 @@
       /**
        * Notifies all subscribed observers about the arrival of the specified element in the sequence.
        * @param {Mixed} value The value to send to all observers.
-       */              
+       */
       onNext: function (value) {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -94,7 +94,7 @@
       /**
        * Notifies all subscribed observers about the exception.
        * @param {Mixed} error The exception to send to all observers.
-       */                 
+       */
       onError: function (error) {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -113,7 +113,7 @@
       },
       /**
        * Notifies all subscribed observers about the end of the sequence.
-       */             
+       */
       onCompleted: function () {
         checkDisposed.call(this);
         if (this.isStopped) { return; }
@@ -130,7 +130,7 @@
       },
       /**
        * Unsubscribe all observers and release resources.
-       */               
+       */
       dispose: function () {
         this.isDisposed = true;
         this.observers = null;

@@ -3,7 +3,7 @@
    * @description
    *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
    *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the
-   *  result sequence. This causes elements to be delayed with duration.    
+   *  result sequence. This causes elements to be delayed with duration.
    * @param {Number} duration Duration for taking elements from the end of the sequence.
    * @param {Scheduler} [scheduler]  Scheduler to run the timer on. If not specified, defaults to Rx.Scheduler.timeout.
    * @returns {Observable} An observable sequence with the elements taken during the specified duration from the end of the source sequence.
@@ -27,5 +27,5 @@
         }
         observer.onCompleted();
       });
-    });    
+    });
   };

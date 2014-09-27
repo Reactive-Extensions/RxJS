@@ -77,7 +77,7 @@ test('Create_OnNext_HasError', function () {
 
     res.onNext(42);
     ok(next);
-    
+
     try {
         res.onError(ex);
         ok(false);
@@ -222,7 +222,7 @@ test('Create_OnNextOnErrorOnCompleted2', function () {
     ok(!completed);
 
     res.onError(ex);
-    
+
     ok(!completed);
     ok(error);
 });
@@ -274,8 +274,8 @@ test('AsObserver_Forwards', function () {
 
 test('Observer_Checked_AlreadyTerminated_Completed', function () {
     var m = 0, n = 0;
-    var o = Observer.create(function () { 
-        m++; 
+    var o = Observer.create(function () {
+        m++;
     }, function () {
         ok(false);
     }, function () {
@@ -296,7 +296,7 @@ test('Observer_Checked_AlreadyTerminated_Error', function () {
     var m = 0, n = 0;
     var o = Observer.create(function () {
         m++;
-    }, function () { 
+    }, function () {
         n++;
     }, function () {
         ok(false);

@@ -22,7 +22,7 @@
         /**
          * Creates a subject.
          * @constructor
-         */      
+         */
         function Subject() {
             _super.call(this, subscribe);
             this.isDisposed = false,
@@ -34,13 +34,13 @@
             /**
              * Indicates whether the subject has observers subscribed to it.
              * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-             */         
+             */
             hasObservers: function () {
                 return this.observers.length > 0;
             },
             /**
              * Notifies all subscribed observers about the end of the sequence.
-             */                          
+             */
             onCompleted: function () {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -56,7 +56,7 @@
             /**
              * Notifies all subscribed observers about the exception.
              * @param {Mixed} error The exception to send to all observers.
-             */               
+             */
             onError: function (exception) {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -73,7 +73,7 @@
             /**
              * Notifies all subscribed observers about the arrival of the specified element in the sequence.
              * @param {Mixed} value The value to send to all observers.
-             */                 
+             */
             onNext: function (value) {
                 checkDisposed.call(this);
                 if (!this.isStopped) {
@@ -85,7 +85,7 @@
             },
             /**
              * Unsubscribe all observers and release resources.
-             */                
+             */
             dispose: function () {
                 this.isDisposed = true;
                 this.observers = null;

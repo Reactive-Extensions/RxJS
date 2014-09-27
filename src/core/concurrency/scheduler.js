@@ -64,7 +64,7 @@
     var schedulerProto = Scheduler.prototype;
 
     /**
-     * Schedules an action to be executed.        
+     * Schedules an action to be executed.
      * @param {Function} action Action to execute.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
@@ -73,7 +73,7 @@
     };
 
     /**
-     * Schedules an action to be executed.    
+     * Schedules an action to be executed.
      * @param state State passed to the action to be executed.
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -83,7 +83,7 @@
     };
 
     /**
-     * Schedules an action to be executed after the specified relative due time.       
+     * Schedules an action to be executed after the specified relative due time.
      * @param {Function} action Action to execute.
      * @param {Number} dueTime Relative time after which to execute the action.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -93,7 +93,7 @@
     };
 
     /**
-     * Schedules an action to be executed after dueTime.     
+     * Schedules an action to be executed after dueTime.
      * @param state State passed to the action to be executed.
      * @param {Function} action Action to be executed.
      * @param {Number} dueTime Relative time after which to execute the action.
@@ -104,7 +104,7 @@
     };
 
     /**
-     * Schedules an action to be executed at the specified absolute due time.    
+     * Schedules an action to be executed at the specified absolute due time.
      * @param {Function} action Action to execute.
      * @param {Number} dueTime Absolute time at which to execute the action.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -114,7 +114,7 @@
     };
 
     /**
-     * Schedules an action to be executed at dueTime.     
+     * Schedules an action to be executed at dueTime.
      * @param {Mixed} state State passed to the action to be executed.
      * @param {Function} action Action to be executed.
      * @param {Number}dueTime Absolute time at which to execute the action.
@@ -131,7 +131,7 @@
      * Normalizes the specified TimeSpan value to a positive value.
      * @param {Number} timeSpan The time span value to normalize.
      * @returns {Number} The specified TimeSpan value if it is zero or positive; otherwise, 0
-     */   
+     */
     Scheduler.normalize = function (timeSpan) {
       timeSpan < 0 && (timeSpan = 0);
       return timeSpan;
@@ -141,4 +141,3 @@
   }());
 
   var normalizeTime = Scheduler.normalize;
-  

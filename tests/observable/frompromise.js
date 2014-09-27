@@ -13,7 +13,7 @@ asyncTest('Promise_Success', function () {
     var subscription = source.subscribe(
         function (x) {
             equal(42, x);
-        }, 
+        },
         function (err) {
             ok(false);
         },
@@ -35,7 +35,7 @@ asyncTest('Promise_Failure', function () {
     var subscription = source.subscribe(
         function (x) {
             ok(false);
-        }, 
+        },
         function (err) {
             strictEqual(err, error);
             start();

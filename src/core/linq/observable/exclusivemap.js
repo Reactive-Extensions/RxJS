@@ -20,12 +20,12 @@
         function (innerSource) {
 
           if (!hasCurrent) {
-            hasCurrent = true;          
+            hasCurrent = true;
 
             innerSubscription = new SingleAssignmentDisposable();
             g.add(innerSubscription);
 
-            isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));      
+            isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
             innerSubscription.setDisposable(innerSource.subscribe(
               function (x) {
@@ -49,7 +49,7 @@
                 }
               }));
           }
-        }, 
+        },
         observer.onError.bind(observer),
         function () {
           isStopped = true;

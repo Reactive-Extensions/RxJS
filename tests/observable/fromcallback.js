@@ -6,7 +6,7 @@ test('FromCallback', function () {
   var res = Observable.fromCallback(function (cb) {
     cb(true);
   })();
-  
+
   res.subscribe(
     function (r) {
       equal(r, true);
@@ -16,14 +16,14 @@ test('FromCallback', function () {
     },
     function () {
       ok(true);
-    });  
+    });
 });
 
 test('FromCallback_Single', function () {
   var res = Observable.fromCallback(function (file, cb) {
     cb(file);
   })('file.txt');
-  
+
   res.subscribe(
     function (r) {
       equal(r, 'file.txt');
@@ -33,14 +33,14 @@ test('FromCallback_Single', function () {
     },
     function () {
       ok(true);
-    }); 
-});    
+    });
+});
 
 test('FromNodeCallback_Selector', function () {
   var res = Observable.fromCallback(
     function (f,s,t,cb) {
       cb(f,s,t);
-    }, 
+    },
     null,
     function (r) {
       return r[0];
@@ -55,7 +55,7 @@ test('FromNodeCallback_Selector', function () {
     },
     function () {
       ok(true);
-    }); 
+    });
 });
 
 test('FromCallback_Context', function () {
@@ -63,7 +63,7 @@ test('FromCallback_Context', function () {
     function (cb) {
       equal(this, 42);
       cb(true);
-    }, 
+    },
     42)();
 
   res.subscribe(

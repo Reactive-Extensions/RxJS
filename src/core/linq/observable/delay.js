@@ -70,11 +70,11 @@
 
   /**
    *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
-   *  
+   *
    * @example
    *  1 - res = Rx.Observable.delay(new Date());
    *  2 - res = Rx.Observable.delay(new Date(), Rx.Scheduler.timeout);
-   *  
+   *
    *  3 - res = Rx.Observable.delay(5000);
    *  4 - res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
    * @memberOf Observable#

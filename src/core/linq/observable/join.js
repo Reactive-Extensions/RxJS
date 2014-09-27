@@ -1,12 +1,12 @@
   /**
    *  Correlates the elements of two sequences based on overlapping durations.
-   *  
+   *
    *  @param {Observable} right The right observable sequence to join elements for.
    *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
    *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
    *  @param {Function} resultSelector A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters passed to the function correspond with the elements from the left and right source sequences for which overlap occurs.
    *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
-   */    
+   */
   observableProto.join = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
     var left = this;
     return new AnonymousObservable(function (observer) {
@@ -22,12 +22,12 @@
 
           leftMap.add(id, value);
           group.add(md);
-          
+
           var expire = function () {
             leftMap.remove(id) && leftMap.count() === 0 && leftDone && observer.onCompleted();
             group.remove(md);
           };
-          
+
           var duration;
           try {
             duration = leftDurationSelector(value);
@@ -49,8 +49,8 @@
 
             observer.onNext(result);
           });
-        }, 
-        observer.onError.bind(observer), 
+        },
+        observer.onError.bind(observer),
         function () {
           leftDone = true;
           (rightDone || leftMap.count() === 0) && observer.onCompleted();
@@ -91,8 +91,8 @@
 
             observer.onNext(result);
           });
-        }, 
-        observer.onError.bind(observer), 
+        },
+        observer.onError.bind(observer),
         function () {
           rightDone = true;
           (leftDone || rightMap.count() === 0) && observer.onCompleted();

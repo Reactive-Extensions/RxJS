@@ -1,6 +1,5 @@
-  
   var Dictionary = (function () {
-    
+
     var primes = [1, 3, 7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749, 65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593, 16777213, 33554393, 67108859, 134217689, 268435399, 536870909, 1073741789, 2147483647],
       noSuchkey = "no such key",
       duplicatekey = "duplicate key";
@@ -42,7 +41,7 @@
     }
 
     function numberHashFn(key) {
-      var c2 = 0x27d4eb2d; 
+      var c2 = 0x27d4eb2d;
       key = (key ^ 61) ^ (key >>> 16);
       key = key + (key << 3);
       key = key ^ (key >>> 4);
@@ -84,7 +83,7 @@
     function Dictionary(capacity, comparer) {
       if (capacity < 0) { throw new Error('out of range'); }
       if (capacity > 0) { this._initialize(capacity); }
-      
+
       this.comparer = comparer || defaultComparer;
       this.freeCount = 0;
       this.size = 0;
@@ -245,4 +244,4 @@
     };
 
     return Dictionary;
-  }()); 
+  }());

@@ -48,13 +48,13 @@
 
     function subscribe(observer) {
       var q = [], previousShouldFire;
-      
-      var subscription =  
+
+      var subscription =
         combineLatestSource(
           this.source,
           this.pauser.distinctUntilChanged().startWith(false),
           function (data, shouldFire) {
-            return { data: data, shouldFire: shouldFire };      
+            return { data: data, shouldFire: shouldFire };
           })
           .subscribe(
             function (results) {
@@ -88,10 +88,10 @@
               while (q.length > 0) {
                 observer.onNext(q.shift());
               }
-              observer.onCompleted();              
+              observer.onCompleted();
             }
           );
-      return subscription;      
+      return subscription;
     }
 
     function PausableBufferedObservable(source, pauser) {
@@ -115,7 +115,7 @@
       this.controller.onNext(true);
     };
 
-    return PausableBufferedObservable; 
+    return PausableBufferedObservable;
 
   }(Observable));
 
@@ -127,7 +127,7 @@
    * var source = Rx.Observable.interval(100).pausableBuffered(pauser);
    * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
    * @returns {Observable} The observable sequence which is paused based upon the pauser.
-   */  
+   */
   observableProto.pausableBuffered = function (subject) {
     return new PausableBufferedObservable(this, subject);
   };

@@ -1,6 +1,6 @@
   /**
    * Creates a list from an observable sequence.
-   * @returns An observable sequence containing a single element with a list containing all the elements of the source sequence.  
+   * @returns An observable sequence containing a single element with a list containing all the elements of the source sequence.
    */
   observableProto.toArray = function () {
     var self = this;

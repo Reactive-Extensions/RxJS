@@ -14,16 +14,15 @@
     freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
     moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
     freeGlobal = objectTypes[typeof global] && global;
-  
+
   if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
     root = freeGlobal;
   }
 
-  var Rx = { 
-      internals: {}, 
+  var Rx = {
+      internals: {},
       config: {
         Promise: root.Promise // Detect if promise exists
       },
       helpers: { }
   };
-    

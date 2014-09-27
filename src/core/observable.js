@@ -50,7 +50,7 @@
     observableProto.subscribeError = function (onError, thisArg) {
       var observer = arguments.length === 2 ?
         observerCreate(null, onError, null, thisArg) :
-        observerCreate(null, onError, null);      
+        observerCreate(null, onError, null);
       return this._subscribe(observer);
     };
 
@@ -63,7 +63,7 @@
     observableProto.subscribeCompleted = function (onCompleted, thisArg) {
       var observer = arguments.length === 2 ?
         observerCreate(null, null, onCompleted, thisArg) :
-        observerCreate(null, null, onCompleted);        
+        observerCreate(null, null, onCompleted);
       return this._subscribe(observer);
     };
 

@@ -49,7 +49,7 @@ test('Immediate_Recursive1', function () {
     var xx = 0;
     var yy = 0;
     scheduler.scheduleWithState(42, function (self, x) {
-        xx = x; 
+        xx = x;
         return self.scheduleWithState(43, function (self2, y) {
             yy = y;
             return disposableEmpty;
@@ -62,8 +62,8 @@ test('Immediate_Recursive1', function () {
 test('Immediate_Recursive2', function () {
     var xx = 0;
     var yy = 0;
-    scheduler.scheduleWithAbsoluteAndState(42, new Date().getTime(), function (self, x) { 
-        xx = x; 
+    scheduler.scheduleWithAbsoluteAndState(42, new Date().getTime(), function (self, x) {
+        xx = x;
         return self.scheduleWithAbsoluteAndState(43, new Date().getTime(), function (self2, y) {
             yy = y;
             return disposableEmpty;
@@ -76,8 +76,8 @@ test('Immediate_Recursive2', function () {
 test('Immediate_Recursive3', function () {
     var xx = 0;
     var yy = 0;
-    scheduler.scheduleWithRelativeAndState(42, 0, function (self, x) { 
-        xx = x; 
+    scheduler.scheduleWithRelativeAndState(42, 0, function (self, x) {
+        xx = x;
         return self.scheduleWithRelativeAndState(43, 0, function (self2, y) {
             yy = y;
             return disposableEmpty;

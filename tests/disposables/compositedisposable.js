@@ -14,7 +14,7 @@ test('GroupDisposable_Add', function () {
       g = new CompositeDisposable(d1);
 
   equal(1, g.length);
-  
+
   g.add(d2);
   equal(2, g.length);
 });
@@ -26,18 +26,18 @@ test('GroupDisposable_AddAfterDispose', function () {
   var d1 = Disposable.create(function () {
       disp1 = true;
   });
-  
+
   var d2 = Disposable.create(function () {
       disp2 = true;
   });
-  
+
   var g = new CompositeDisposable(d1);
   equal(1, g.length);
-  
+
   g.dispose();
   ok(disp1);
   equal(0, g.length);
-  
+
   g.add(d2);
   ok(disp2);
   equal(0, g.length);

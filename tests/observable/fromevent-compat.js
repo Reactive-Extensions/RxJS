@@ -131,7 +131,7 @@ test('Event_6', function () {
     var element = new FakeDOMStandardElement('foo');
 
     var d = Observable.fromEvent(
-            element, 
+            element,
             'someEvent',
             function (arr) {
                 return { foo: arr[0], bar: arr[1] };

@@ -1,7 +1,7 @@
   /**
    *  Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
    *  There is an alias called 'just', and 'returnValue' for browsers <IE9.
-   *  
+   *
    * @example
    *  var res = Rx.Observable.return(42);
    *  var res = Rx.Observable.return(42, Rx.Scheduler.timeout);

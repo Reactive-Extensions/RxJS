@@ -10,15 +10,15 @@ var Observable = Rx.Observable,
 test('Finally has orders of effects', function () {
   var results = [];
   function noop () {}
-  
+
   var someObservable = Rx.Observable.empty().finallyAction(function () {
     results.push('invoked');
   });
-  
+
   var d = someObservable.subscribe(noop, noop, function () {
     results.push('completed');
   });
-  
+
   equal(results[0], 'completed');
   equal(results[1], 'invoked');
 });
@@ -39,16 +39,16 @@ test('Finally calls finally before throwing', function () {
 
 test('Finally only called once on empty', function () {
   var invokeCount = 0;
-  
+
   var someObservable = Rx.Observable.empty().finallyAction(function () {
     invokeCount++;
   });
-  
+
   var d = someObservable.subscribe();
-  
+
   d.dispose();
   d.dispose();
-  
+
   equal(1, invokeCount);
 });
 
@@ -56,10 +56,10 @@ test('finally called with empty', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onCompleted(250)
   );
-  
+
   var invoked = false;
 
   var results = scheduler.startWithCreate(function () {
@@ -71,25 +71,25 @@ test('finally called with empty', function () {
   results.assertEqual(
     onCompleted(250)
   );
-  
+
   xs.subscriptions.assertEqual(
     subscribe(200, 250)
   );
-  
+
   ok(invoked);
 });
 
 test('Finally called with single value', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var invoked = false;
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.finallyAction(function () {
       invoked = true;
@@ -103,7 +103,7 @@ test('Finally called with single value', function () {
 
   xs.subscriptions.assertEqual(
     subscribe(200, 250)
-  );  
+  );
 
   ok(invoked);
 });
@@ -112,14 +112,14 @@ test('Finally on throws', function () {
   var ex = new Error('ex');
 
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onError(250, ex)
   );
-  
+
   var invoked = false;
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.finallyAction(function () {
       invoked = true;
@@ -132,7 +132,7 @@ test('Finally on throws', function () {
 
   xs.subscriptions.assertEqual(
     subscribe(200, 250)
-  );  
+  );
 
   ok(invoked);
 });

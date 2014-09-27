@@ -281,7 +281,6 @@ test('SelectMany_Triple_InnersWithTiming3', function () {
   );
 });
 
-
 test('SelectMany_Triple_Error_Identity', function () {
   var scheduler = new TestScheduler();
 
@@ -428,7 +427,6 @@ test('SelectMany_Triple_Catch', function () {
   );
 });
 
-
 test('SelectMany_Triple_Error_Catch', function () {
   var scheduler = new TestScheduler();
 
@@ -506,7 +504,6 @@ test('SelectMany_Triple_All', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('SelectMany_Triple_Error_All', function () {
   var scheduler = new TestScheduler();
@@ -586,7 +583,6 @@ test('SelectMany_Triple_All_Dispose', function () {
   );
 });
 
-
 test('SelectMany_Triple_All_Dispose_Before_First', function () {
   var scheduler = new TestScheduler();
 
@@ -647,7 +643,6 @@ test('SelectMany_Triple_OnNextThrow', function () {
     subscribe(200, 300)
   );
 });
-
 
 test('SelectMany_Triple_OnErrorThrow', function () {
   var scheduler = new TestScheduler();
@@ -719,7 +714,6 @@ test('SelectMany_Triple_OnCompletedThrow', function () {
   );
 });
 
-
 test('SelectManyWithIndex_Triple_Identity', function () {
   var scheduler = new TestScheduler();
 
@@ -753,7 +747,6 @@ test('SelectManyWithIndex_Triple_Identity', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('SelectManyWithIndex_Triple_InnersWithTiming1', function () {
   var scheduler = new TestScheduler();
@@ -832,7 +825,6 @@ test('SelectManyWithIndex_Triple_InnersWithTiming1', function () {
   );
 });
 
-
 test('SelectManyWithIndex_Triple_InnersWithTiming2', function () {
   var scheduler = new TestScheduler();
 
@@ -909,7 +901,6 @@ test('SelectManyWithIndex_Triple_InnersWithTiming2', function () {
     subscribe(305, 355)
   );
 });
-
 
 test('SelectManyWithIndex_Triple_InnersWithTiming3', function () {
   var scheduler = new TestScheduler();
@@ -988,7 +979,6 @@ test('SelectManyWithIndex_Triple_InnersWithTiming3', function () {
   );
 });
 
-
 test('SelectManyWithIndex_Triple_Error_Identity', function () {
   var scheduler = new TestScheduler();
 
@@ -1024,7 +1014,6 @@ test('SelectManyWithIndex_Triple_Error_Identity', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('SelectManyWithIndex_Triple_SelectMany', function () {
   var scheduler = new TestScheduler();
@@ -1173,7 +1162,6 @@ test('SelectManyWithIndex_Triple_Error_Catch', function () {
   );
 });
 
-
 test('SelectManyWithIndex_Triple_All', function () {
   var scheduler = new TestScheduler();
 
@@ -1214,7 +1202,6 @@ test('SelectManyWithIndex_Triple_All', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('SelectManyWithIndex_Triple_Error_All', function () {
   var scheduler = new TestScheduler();
@@ -1294,7 +1281,6 @@ test('SelectManyWithIndex_Triple_All_Dispose', function () {
   );
 });
 
-
 test('SelectManyWithIndex_Triple_All_Dispose_Before_First', function () {
   var scheduler = new TestScheduler();
 
@@ -1356,7 +1342,6 @@ test('SelectManyWithIndex_Triple_OnNextThrow', function () {
   );
 });
 
-
 test('SelectManyWithIndex_Triple_OnErrorThrow', function () {
   var scheduler = new TestScheduler();
 
@@ -1391,7 +1376,6 @@ test('SelectManyWithIndex_Triple_OnErrorThrow', function () {
     subscribe(200, 305)
   );
 });
-
 
 test('SelectManyWithIndex_Triple_OnCompletedThrow', function () {
     var scheduler = new TestScheduler();

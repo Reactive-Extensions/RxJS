@@ -23,7 +23,7 @@
     var len = +o.length;
     if (isNaN(len)) { return 0; }
     if (len === 0 || !numberIsFinite(len)) { return len; }
-    len = sign(len) * Math.floor(Math.abs(len));        
+    len = sign(len) * Math.floor(Math.abs(len));
     if (len <= 0) { return 0; }
     if (len > maxSafeInteger) { return maxSafeInteger; }
     return len;
@@ -75,7 +75,7 @@
             } catch (e) {
               observer.onError(e);
               return;
-            }            
+            }
           }
 
           observer.onNext(result);

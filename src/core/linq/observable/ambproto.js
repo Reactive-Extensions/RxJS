@@ -2,7 +2,7 @@
    * Propagates the observable sequence or Promise that reacts first.
    * @param {Observable} rightSource Second observable sequence or Promise.
    * @returns {Observable} {Observable} An observable sequence that surfaces either of the given sequences, whichever reacted first.
-   */  
+   */
   observableProto.amb = function (rightSource) {
     var leftSource = this;
     return new AnonymousObservable(function (observer) {

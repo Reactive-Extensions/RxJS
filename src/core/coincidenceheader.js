@@ -13,4 +13,3 @@
     defaultComparer = Rx.internals.isEqual,
     noop = Rx.helpers.noop,
     identity = Rx.helpers.identity;
-  

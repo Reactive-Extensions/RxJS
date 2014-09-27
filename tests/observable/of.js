@@ -28,7 +28,7 @@ test('of empty', function () {
 
 test('ofWithScheduler', function () {
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.ofWithScheduler(scheduler, 1,2,3,4,5);
   });
@@ -45,7 +45,7 @@ test('ofWithScheduler', function () {
 
 test('ofWithScheduler empty', function () {
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.ofWithScheduler(scheduler);
   });

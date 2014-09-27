@@ -17,11 +17,11 @@
       setTimeout: localSetTimeout,
       clearTimeout: localClearTimeout
     };
-  }());   
+  }());
   var localSetTimeout = localTimer.setTimeout,
     localClearTimeout = localTimer.clearTimeout;
 
-  (function () {   
+  (function () {
 
     var reNative = RegExp('^' +
       String(toString)
@@ -37,7 +37,7 @@
     function postMessageSupported () {
       // Ensure not in a worker
       if (!root.postMessage || root.importScripts) { return false; }
-      var isAsync = false, 
+      var isAsync = false,
           oldHandler = root.onmessage;
       // Test for async
       root.onmessage = function () { isAsync = true; };
@@ -94,19 +94,19 @@
       scheduleMethod = function (action) {
         var id = channelTaskId++;
         channelTasks[id] = action;
-        channel.port2.postMessage(id);     
+        channel.port2.postMessage(id);
       };
     } else if ('document' in root && 'onreadystatechange' in root.document.createElement('script')) {
-        
+
       scheduleMethod = function (action) {
         var scriptElement = root.document.createElement('script');
-        scriptElement.onreadystatechange = function () { 
+        scriptElement.onreadystatechange = function () {
           action();
           scriptElement.onreadystatechange = null;
           scriptElement.parentNode.removeChild(scriptElement);
-          scriptElement = null;  
+          scriptElement = null;
         };
-        root.document.documentElement.appendChild(scriptElement);  
+        root.document.documentElement.appendChild(scriptElement);
       };
 
     } else {
@@ -115,7 +115,7 @@
     }
   }());
 
-  /** 
+  /**
    * Gets a scheduler that schedules work via a timed callback based upon platform.
    */
   var timeoutScheduler = Scheduler.timeout = (function () {

@@ -77,7 +77,7 @@ test('Create_OnNext_HasError', function () {
 
     res.onNext(42);
     ok(next);
-    
+
     try {
         res.onError(ex);
         ok(false);
@@ -222,7 +222,7 @@ test('Create_OnNextOnErrorOnCompleted2', function () {
     ok(!completed);
 
     res.onError(ex);
-    
+
     ok(!completed);
     ok(error);
 });

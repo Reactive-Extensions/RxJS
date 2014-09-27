@@ -2,7 +2,7 @@
      *  Groups the elements of an observable sequence according to a specified key selector function.
      *  A duration selector function is used to control the lifetime of groups. When a group expires, it receives an OnCompleted notification. When a new element with the same
      *  key value as a reclaimed group occurs, the group will be reborn with a new lifetime request.
-     *  
+     *
      * @example
      *  var res = observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); });
@@ -10,10 +10,10 @@
      * @param {Function} keySelector A function to extract the key for each element.
      * @param {Function} durationSelector A function to signal the expiration of a group.
      * @param {Function} [comparer] Used to compare objects. When not specified, the default comparer is used.
-     * @returns {Observable} 
+     * @returns {Observable}
      *  A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
      *  If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
-     *      
+     *
      */
     observableProto.groupByUntil = function (keySelector, elementSelector, durationSelector, comparer) {
       var source = this;
@@ -55,21 +55,21 @@
             }
 
             observer.onNext(group);
-            
+
             var md = new SingleAssignmentDisposable();
             groupDisposable.add(md);
-            
+
             var expire = function () {
               map.remove(key) && writer.onCompleted();
               groupDisposable.remove(md);
             };
 
             md.setDisposable(duration.take(1).subscribe(
-              noop, 
+              noop,
               function (exn) {
                 map.getValues().forEach(handleError(exn));
                 observer.onError(exn);
-              }, 
+              },
               expire)
             );
           }

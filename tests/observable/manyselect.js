@@ -27,7 +27,7 @@ test('ManySelect_Basic', function () {
     onCompleted(500)
   );
 
-  var res = scheduler.startWithCreate(function () { 
+  var res = scheduler.startWithCreate(function () {
     return xs.manySelect(function (ys) { return ys.first(); }, scheduler).mergeAll();
   });
 
@@ -56,7 +56,7 @@ test('ManySelect_Error', function () {
     onError(500, ex)
   );
 
-  var res = scheduler.startWithCreate(function () { 
+  var res = scheduler.startWithCreate(function () {
     return xs.manySelect(function (ys) { return ys.first(); }, scheduler).mergeAll();;
   });
 

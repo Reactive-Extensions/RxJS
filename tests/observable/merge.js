@@ -12,7 +12,7 @@ test('Merge_Never2', function () {
 
     var n1 = Observable.never();
     var n2 = Observable.never();
-    
+
     var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, n1, n2);
     });
@@ -26,7 +26,7 @@ test('Merge_Never3', function () {
     var n1 = Observable.never();
     var n2 = Observable.never();
     var n3 = Observable.never();
-    
+
     var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, n1, n2, n3);
     });
@@ -43,13 +43,13 @@ test('Merge_Empty2', function () {
     var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, e1, e2);
     });
-    
+
     results.messages.assertEqual(onCompleted(203));
 });
 
 test('Merge_Empty3', function () {
     var scheduler = new TestScheduler();
-    
+
     var e1 = Observable.empty();
     var e2 = Observable.empty();
     var e3 = Observable.empty();
@@ -66,7 +66,7 @@ test('Merge_EmptyDelayed2_RightLast', function () {
 
     var e1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(240));
     var e2 = scheduler.createHotObservable(onNext(150, 1), onCompleted(250));
-    
+
     var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, e1, e2);
     });
@@ -79,7 +79,7 @@ test('Merge_EmptyDelayed2_LeftLast', function () {
 
     var e1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(250));
     var e2 = scheduler.createHotObservable(onNext(150, 1), onCompleted(240));
-    
+
     var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, e1, e2);
     });
@@ -93,7 +93,7 @@ test('Merge_EmptyDelayed3_MiddleLast', function () {
     var e1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(245));
     var e2 = scheduler.createHotObservable(onNext(150, 1), onCompleted(250));
     var e3 = scheduler.createHotObservable(onNext(150, 1), onCompleted(240));
-    
+
     var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, e1, e2, e3);
     });
@@ -103,10 +103,10 @@ test('Merge_EmptyDelayed3_MiddleLast', function () {
 
 test('Merge_EmptyNever', function () {
     var scheduler = new TestScheduler();
-    
+
     var e1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(245));
     var n1 = Observable.never();
-    
+
     var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, e1, n1);
     });
@@ -116,14 +116,14 @@ test('Merge_EmptyNever', function () {
 
 test('Merge_NeverEmpty', function () {
     var scheduler = new TestScheduler();
-    
+
     var e1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(245));
     var n1 = Observable.never();
-    
+
     var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, n1, e1);
     });
-    
+
     results.messages.assertEqual();
 });
 

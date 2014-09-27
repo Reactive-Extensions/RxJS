@@ -33,11 +33,11 @@ test('paused_no_skip', function () {
 
   scheduler.scheduleAbsolute(205, function () {
     controller.onNext(false);
-  });  
+  });
 
   scheduler.scheduleAbsolute(209, function () {
     controller.onNext(true);
-  });  
+  });
 
   scheduler.scheduleAbsolute(1000, function () {
       subscription.dispose();
@@ -52,7 +52,7 @@ test('paused_no_skip', function () {
     onNext(350, 5),
     onNext(399, 6),
     onCompleted(500)
-  );  
+  );
 });
 
 test('paused_skips', function () {
@@ -81,11 +81,11 @@ test('paused_skips', function () {
 
   scheduler.scheduleAbsolute(300, function () {
     controller.onNext(false);
-  });  
+  });
 
   scheduler.scheduleAbsolute(400, function () {
     controller.onNext(true);
-  });  
+  });
 
   scheduler.scheduleAbsolute(1000, function () {
       subscription.dispose();
@@ -97,7 +97,7 @@ test('paused_skips', function () {
     onNext(210, 2),
     onNext(230, 3),
     onCompleted(500)
-  );  
+  );
 });
 
 test('paused_error', function () {
@@ -127,11 +127,11 @@ test('paused_error', function () {
 
   scheduler.scheduleAbsolute(300, function () {
     controller.onNext(false);
-  });  
+  });
 
   scheduler.scheduleAbsolute(400, function () {
     controller.onNext(true);
-  });  
+  });
 
   scheduler.scheduleAbsolute(1000, function () {
     subscription.dispose();
@@ -142,7 +142,7 @@ test('paused_error', function () {
   results.messages.assertEqual(
     onNext(210, 2),
     onError(230, err)
-  );  
+  );
 });
 
 test('paused_with_observable_controller_and_pause_and_unpause', function(){

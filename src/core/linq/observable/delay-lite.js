@@ -1,6 +1,6 @@
   /**
    *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
-   *  
+   *
    * @example
    *  var res = Rx.Observable.delay(5000);
    *  var res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
@@ -11,7 +11,7 @@
    */
   observableProto.delay = function (dueTime, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this;  
+    var source = this;
     return new AnonymousObservable(function (observer) {
       var active = false,
         cancelable = new SerialDisposable(),
@@ -52,7 +52,7 @@
                   result.accept(observer);
                 }
               } while (result !== null);
-              
+
               shouldRecurse = false;
               recurseDueTime = 0;
               if (q.length > 0) {
