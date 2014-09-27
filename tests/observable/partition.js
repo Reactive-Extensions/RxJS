@@ -15,7 +15,7 @@ test('partition_empty', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(180, 5), 
+    onNext(180, 5),
     onCompleted(210)
   );
 
@@ -37,7 +37,7 @@ test('partition_empty', function () {
   scheduler.scheduleAbsolute(ReactiveTest.disposed, function () {
     subscription1.dispose();
     subscription2.dispose();
-  });  
+  });
 
   scheduler.start();
 
@@ -47,7 +47,7 @@ test('partition_empty', function () {
 
   results2.messages.assertEqual(
     onCompleted(210)
-  );  
+  );
 
   xs.subscriptions.assertEqual(
     subscribe(200, 210)
@@ -58,8 +58,8 @@ test('partition_single', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(180, 5), 
-    onNext(210, 4), 
+    onNext(180, 5),
+    onNext(210, 4),
     onCompleted(220)
   );
 
@@ -81,7 +81,7 @@ test('partition_single', function () {
   scheduler.scheduleAbsolute(ReactiveTest.disposed, function () {
     subscription1.dispose();
     subscription2.dispose();
-  });  
+  });
 
   scheduler.start();
 
@@ -92,7 +92,7 @@ test('partition_single', function () {
 
   results2.messages.assertEqual(
     onCompleted(220)
-  );  
+  );
 
   xs.subscriptions.assertEqual(
     subscribe(200, 220)
@@ -103,8 +103,8 @@ test('partition_each', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(180, 5), 
-    onNext(210, 4), 
+    onNext(180, 5),
+    onNext(210, 4),
     onNext(220, 3),
     onCompleted(230)
   );
@@ -127,7 +127,7 @@ test('partition_each', function () {
   scheduler.scheduleAbsolute(ReactiveTest.disposed, function () {
     subscription1.dispose();
     subscription2.dispose();
-  });  
+  });
 
   scheduler.start();
 
@@ -139,7 +139,7 @@ test('partition_each', function () {
   results2.messages.assertEqual(
     onNext(220, 3),
     onCompleted(230)
-  );  
+  );
 
   xs.subscriptions.assertEqual(
     subscribe(200, 230)
@@ -150,10 +150,10 @@ test('partition_completed', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(180, 5), 
-    onNext(210, 4), 
-    onNext(240, 3), 
-    onNext(290, 2), 
+    onNext(180, 5),
+    onNext(210, 4),
+    onNext(240, 3),
+    onNext(290, 2),
     onNext(350, 1),
     onCompleted(360)
   );
@@ -176,7 +176,7 @@ test('partition_completed', function () {
   scheduler.scheduleAbsolute(ReactiveTest.disposed, function () {
     subscription1.dispose();
     subscription2.dispose();
-  });  
+  });
 
   scheduler.start();
 
@@ -190,21 +190,21 @@ test('partition_completed', function () {
     onNext(240, 3),
     onNext(350, 1),
     onCompleted(360)
-  );  
+  );
 
   xs.subscriptions.assertEqual(
     subscribe(200, 360)
-  ); 
+  );
 });
 
 test('partition_not_completed', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(180, 5), 
-    onNext(210, 4), 
-    onNext(240, 3), 
-    onNext(290, 2), 
+    onNext(180, 5),
+    onNext(210, 4),
+    onNext(240, 3),
+    onNext(290, 2),
     onNext(350, 1)
   );
 
@@ -226,7 +226,7 @@ test('partition_not_completed', function () {
   scheduler.scheduleAbsolute(ReactiveTest.disposed, function () {
     subscription1.dispose();
     subscription2.dispose();
-  });  
+  });
 
   scheduler.start();
 
@@ -238,11 +238,11 @@ test('partition_not_completed', function () {
   results2.messages.assertEqual(
     onNext(240, 3),
     onNext(350, 1)
-  );  
+  );
 
   xs.subscriptions.assertEqual(
     subscribe(200, 1000)
-  );    
+  );
 });
 
 test('partition_error', function () {
@@ -250,10 +250,10 @@ test('partition_error', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(180, 5), 
-    onNext(210, 4), 
-    onNext(240, 3), 
-    onError(290, error), 
+    onNext(180, 5),
+    onNext(210, 4),
+    onNext(240, 3),
+    onError(290, error),
     onNext(350, 1),
     onCompleted(360)
   );
@@ -276,7 +276,7 @@ test('partition_error', function () {
   scheduler.scheduleAbsolute(ReactiveTest.disposed, function () {
     subscription1.dispose();
     subscription2.dispose();
-  });  
+  });
 
   scheduler.start();
 
@@ -288,21 +288,21 @@ test('partition_error', function () {
   results2.messages.assertEqual(
     onNext(240, 3),
     onError(290, error)
-  );  
+  );
 
   xs.subscriptions.assertEqual(
     subscribe(200, 290)
-  );   
+  );
 });
 
 test('partition_disposed', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(180, 5), 
-    onNext(210, 4), 
-    onNext(240, 3), 
-    onNext(290, 2), 
+    onNext(180, 5),
+    onNext(210, 4),
+    onNext(240, 3),
+    onNext(290, 2),
     onNext(350, 1),
     onCompleted(360)
   );
@@ -325,7 +325,7 @@ test('partition_disposed', function () {
   scheduler.scheduleAbsolute(280, function () {
     subscription1.dispose();
     subscription2.dispose();
-  });  
+  });
 
   scheduler.start();
 
@@ -335,9 +335,9 @@ test('partition_disposed', function () {
 
   results2.messages.assertEqual(
     onNext(240, 3)
-  );  
+  );
 
   xs.subscriptions.assertEqual(
     subscribe(200, 280)
-  );    
+  );
 });

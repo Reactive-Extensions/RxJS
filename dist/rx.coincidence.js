@@ -32,7 +32,6 @@
     }
 }.call(this, function (root, exp, Rx, undefined) {
 
-
   var Observable = Rx.Observable,
     CompositeDisposable = Rx.CompositeDisposable,
     RefCountDisposable = Rx.RefCountDisposable,
@@ -48,10 +47,9 @@
     defaultComparer = Rx.internals.isEqual,
     noop = Rx.helpers.noop,
     identity = Rx.helpers.identity;
-  
-  
+
   var Dictionary = (function () {
-    
+
     var primes = [1, 3, 7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749, 65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593, 16777213, 33554393, 67108859, 134217689, 268435399, 536870909, 1073741789, 2147483647],
       noSuchkey = "no such key",
       duplicatekey = "duplicate key";
@@ -93,7 +91,7 @@
     }
 
     function numberHashFn(key) {
-      var c2 = 0x27d4eb2d; 
+      var c2 = 0x27d4eb2d;
       key = (key ^ 61) ^ (key >>> 16);
       key = key + (key << 3);
       key = key ^ (key >>> 4);
@@ -135,7 +133,7 @@
     function Dictionary(capacity, comparer) {
       if (capacity < 0) { throw new Error('out of range'); }
       if (capacity > 0) { this._initialize(capacity); }
-      
+
       this.comparer = comparer || defaultComparer;
       this.freeCount = 0;
       this.size = 0;
@@ -296,17 +294,17 @@
     };
 
     return Dictionary;
-  }()); 
+  }());
 
   /**
    *  Correlates the elements of two sequences based on overlapping durations.
-   *  
+   *
    *  @param {Observable} right The right observable sequence to join elements for.
    *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
    *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
    *  @param {Function} resultSelector A function invoked to compute a result element for any two overlapping elements of the left and right observable sequences. The parameters passed to the function correspond with the elements from the left and right source sequences for which overlap occurs.
    *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
-   */    
+   */
   observableProto.join = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
     var left = this;
     return new AnonymousObservable(function (observer) {
@@ -322,12 +320,12 @@
 
           leftMap.add(id, value);
           group.add(md);
-          
+
           var expire = function () {
             leftMap.remove(id) && leftMap.count() === 0 && leftDone && observer.onCompleted();
             group.remove(md);
           };
-          
+
           var duration;
           try {
             duration = leftDurationSelector(value);
@@ -349,8 +347,8 @@
 
             observer.onNext(result);
           });
-        }, 
-        observer.onError.bind(observer), 
+        },
+        observer.onError.bind(observer),
         function () {
           leftDone = true;
           (rightDone || leftMap.count() === 0) && observer.onCompleted();
@@ -391,8 +389,8 @@
 
             observer.onNext(result);
           });
-        }, 
-        observer.onError.bind(observer), 
+        },
+        observer.onError.bind(observer),
         function () {
           rightDone = true;
           (leftDone || rightMap.count() === 0) && observer.onCompleted();
@@ -404,13 +402,13 @@
 
   /**
    *  Correlates the elements of two sequences based on overlapping durations, and groups the results.
-   *  
+   *
    *  @param {Observable} right The right observable sequence to join elements for.
    *  @param {Function} leftDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
    *  @param {Function} rightDurationSelector A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
    *  @param {Function} resultSelector A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. The first parameter passed to the function is an element of the left sequence. The second parameter passed to the function is an observable sequence with elements from the right sequence that overlap with the left sequence's element.
    *  @returns {Observable} An observable sequence that contains result elements computed from source elements that have an overlapping duration.
-   */    
+   */
   observableProto.groupJoin = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
     var left = this;
     return new AnonymousObservable(function (observer) {
@@ -516,10 +514,10 @@
 
     /**
      *  Projects each element of an observable sequence into zero or more buffers.
-     *  
+     *
      *  @param {Mixed} bufferOpeningsOrClosingSelector Observable sequence whose elements denote the creation of new windows, or, a function invoked to define the boundaries of the produced windows (a new window is started when the previous one is closed, resulting in non-overlapping windows).
      *  @param {Function} [bufferClosingSelector] A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
-     *  @returns {Observable} An observable sequence of windows.    
+     *  @returns {Observable} An observable sequence of windows.
      */
     observableProto.buffer = function (bufferOpeningsOrClosingSelector, bufferClosingSelector) {
         return this.window.apply(this, arguments).selectMany(function (x) { return x.toArray(); });
@@ -527,11 +525,11 @@
 
     /**
      *  Projects each element of an observable sequence into zero or more windows.
-     *  
+     *
      *  @param {Mixed} windowOpeningsOrClosingSelector Observable sequence whose elements denote the creation of new windows, or, a function invoked to define the boundaries of the produced windows (a new window is started when the previous one is closed, resulting in non-overlapping windows).
      *  @param {Function} [windowClosingSelector] A function invoked to define the closing of each produced window. If a closing selector function is specified for the first parameter, this parameter is ignored.
      *  @returns {Observable} An observable sequence of windows.
-     */    
+     */
     observableProto.window = function (windowOpeningsOrClosingSelector, windowClosingSelector) {
         if (arguments.length === 1 && typeof arguments[0] !== 'function') {
             return observableWindowWithBounaries.call(this, windowOpeningsOrClosingSelector);
@@ -540,7 +538,7 @@
             observableWindowWithClosingSelector.call(this, windowOpeningsOrClosingSelector) :
             observableWindowWithOpenings.call(this, windowOpeningsOrClosingSelector, windowClosingSelector);
     };
-    
+
     function observableWindowWithOpenings(windowOpenings, windowClosingSelector) {
         return windowOpenings.groupJoin(this, windowClosingSelector, function () {
             return observableEmpty();
@@ -552,8 +550,8 @@
     function observableWindowWithBounaries(windowBoundaries) {
         var source = this;
         return new AnonymousObservable(function (observer) {
-            var window = new Subject(), 
-                d = new CompositeDisposable(), 
+            var window = new Subject(),
+                d = new CompositeDisposable(),
                 r = new RefCountDisposable(d);
 
             observer.onNext(addRef(window, r));
@@ -628,8 +626,8 @@
     }
 
   /**
-   * Returns a new observable that triggers on the second and subsequent triggerings of the input observable. 
-   * The Nth triggering of the input observable passes the arguments from the N-1th and Nth triggering as a pair. 
+   * Returns a new observable that triggers on the second and subsequent triggerings of the input observable.
+   * The Nth triggering of the input observable passes the arguments from the N-1th and Nth triggering as a pair.
    * The argument passed to the N-1th triggering is held in hidden internal state until the Nth triggering occurs.
    * @returns {Observable} An observable that triggers on successive pairs of observations from the input observable as an array.
    */
@@ -650,30 +648,31 @@
         observer.onCompleted.bind(observer));
     });
   };
-  /** 
+
+  /**
    * Returns two observables which partition the observations of the source by the given function.
-   * The first will trigger observations for those values for which the predicate returns true. 
-   * The second will trigger observations for those values where the predicate returns false. 
-   * The predicate is executed once for each subscribed observer. 
-   * Both also propagate all error observations arising from the source and each completes 
+   * The first will trigger observations for those values for which the predicate returns true.
+   * The second will trigger observations for those values where the predicate returns false.
+   * The predicate is executed once for each subscribed observer.
+   * Both also propagate all error observations arising from the source and each completes
    * when the source completes.
-   * @param {Function} predicate 
+   * @param {Function} predicate
    *    The function to determine which output Observable will trigger a particular observation.
    * @returns {Array}
-   *    An array of observables. The first triggers when the predicate returns true, 
+   *    An array of observables. The first triggers when the predicate returns true,
    *    and the second triggers when the predicate returns false.
   */
   observableProto.partition = function(predicate, thisArg) {
     var published = this.publish().refCount();
-    return [ 
-      published.filter(predicate, thisArg), 
+    return [
+      published.filter(predicate, thisArg),
       published.filter(function (x, i, o) { return !predicate.call(thisArg, x, i, o); })
     ];
   };
 
   /**
    *  Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
-   *  
+   *
    * @example
    *  var res = observable.groupBy(function (x) { return x.id; });
    *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
@@ -681,7 +680,7 @@
    * @param {Function} keySelector A function to extract the key for each element.
    * @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
    * @param {Function} [comparer] Used to determine whether the objects are equal.
-   * @returns {Observable} A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.    
+   * @returns {Observable} A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
    */
   observableProto.groupBy = function (keySelector, elementSelector, comparer) {
     return this.groupByUntil(keySelector, elementSelector, observableNever, comparer);
@@ -691,7 +690,7 @@
      *  Groups the elements of an observable sequence according to a specified key selector function.
      *  A duration selector function is used to control the lifetime of groups. When a group expires, it receives an OnCompleted notification. When a new element with the same
      *  key value as a reclaimed group occurs, the group will be reborn with a new lifetime request.
-     *  
+     *
      * @example
      *  var res = observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
      *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); });
@@ -699,10 +698,10 @@
      * @param {Function} keySelector A function to extract the key for each element.
      * @param {Function} durationSelector A function to signal the expiration of a group.
      * @param {Function} [comparer] Used to compare objects. When not specified, the default comparer is used.
-     * @returns {Observable} 
+     * @returns {Observable}
      *  A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
      *  If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
-     *      
+     *
      */
     observableProto.groupByUntil = function (keySelector, elementSelector, durationSelector, comparer) {
       var source = this;
@@ -744,21 +743,21 @@
             }
 
             observer.onNext(group);
-            
+
             var md = new SingleAssignmentDisposable();
             groupDisposable.add(md);
-            
+
             var expire = function () {
               map.remove(key) && writer.onCompleted();
               groupDisposable.remove(md);
             };
 
             md.setDisposable(duration.take(1).subscribe(
-              noop, 
+              noop,
               function (exn) {
                 map.getValues().forEach(handleError(exn));
                 observer.onError(exn);
-              }, 
+              },
               expire)
             );
           }

@@ -17,7 +17,7 @@
         return;
       }
 
-      var isDisposed, 
+      var isDisposed,
         subscription = new SerialDisposable();
       var cancelable = immediateScheduler.scheduleRecursive(function (self) {
         var currentItem;
@@ -65,7 +65,7 @@
         return;
       }
 
-      var isDisposed, 
+      var isDisposed,
         lastException,
         subscription = new SerialDisposable();
       var cancelable = immediateScheduler.scheduleRecursive(function (self) {
@@ -90,7 +90,7 @@
 
         // Check if promise
         var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));        
+        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
 
         var d = new SingleAssignmentDisposable();
         subscription.setDisposable(d);

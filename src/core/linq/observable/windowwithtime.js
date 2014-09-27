@@ -1,10 +1,10 @@
   /**
    *  Projects each element of an observable sequence into zero or more windows which are produced based on timing information.
-   *  
+   *
    * @example
    *  1 - res = xs.windowWithTime(1000, scheduler); // non-overlapping segments of 1 second
    *  2 - res = xs.windowWithTime(1000, 500 , scheduler); // segments of 1 second with time shift 0.5 seconds
-   *      
+   *
    * @param {Number} timeSpan Length of each window (specified as an integer denoting milliseconds).
    * @param {Mixed} [timeShiftOrScheduler]  Interval between creation of consecutive windows (specified as an integer denoting milliseconds), or an optional scheduler parameter. If not specified, the time shift corresponds to the timeSpan parameter, resulting in non-overlapping adjacent windows.
    * @param {Scheduler} [scheduler]  Scheduler to run windowing timers on. If not specified, the timeout scheduler is used.

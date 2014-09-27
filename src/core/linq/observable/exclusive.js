@@ -17,7 +17,7 @@
         function (innerSource) {
           if (!hasCurrent) {
             hasCurrent = true;
-            
+
             isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
             var innerSubscription = new SingleAssignmentDisposable();
@@ -38,7 +38,7 @@
         observer.onError.bind(observer),
         function () {
           isStopped = true;
-          if (!hasCurrent && g.length === 1) { 
+          if (!hasCurrent && g.length === 1) {
             observer.onCompleted();
           }
         }));

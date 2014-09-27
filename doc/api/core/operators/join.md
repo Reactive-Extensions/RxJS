@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.join(right, leftDurationSelector, rightDurationSelector, resultSelector)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/join.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/join.js "View in source")
 
 Correlates the elements of two sequences based on overlapping durations.
 
@@ -13,7 +13,7 @@ Correlates the elements of two sequences based on overlapping durations.
 
 #### Returns
 *(`Observable`)*: An observable sequence that contains result elements computed from source elements that have an overlapping duration.
- 
+
 #### Example
 ```js
 var xs = Rx.Observable.interval(100)
@@ -36,18 +36,18 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: first0second0 
-// => Next: first1second1 
-// => Next: first2second2 
-// => Next: first3second3 
-// => Next: first4second4 
-// => Completed  
+// => Next: first0second0
+// => Next: first1second1
+// => Next: first2second2
+// => Next: first3second3
+// => Next: first4second4
+// => Completed
 ```
 
 ### Location

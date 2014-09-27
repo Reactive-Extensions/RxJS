@@ -49,7 +49,7 @@ var xs = scheduler.createHotObservable(
 
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
 var res = scheduler.startWithCreate(function () {
-    return xs.map(function (x) { return x * x }); 
+    return xs.map(function (x) { return x * x });
 });
 
 // Implement collection assertion
@@ -87,7 +87,7 @@ collectionAssert.assertEqual(xs.subscriptions, [
 ## _TestScheduler Constructor_ ##
 
 ### <a id="rxtestscheduler"></a>`Rx.TestScheduler()`
-<a href="#rxtestscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L10-L12 "View in source") 
+<a href="#rxtestscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L10-L12 "View in source")
 
 Creates a new virtual time test scheduler.
 
@@ -108,7 +108,7 @@ var xs = scheduler.createHotObservable(
 
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
 var res = scheduler.startWithCreate(function () {
-    return xs.map(function (x) { return x * x }); 
+    return xs.map(function (x) { return x * x });
 });
 
 // Implement collection assertion
@@ -133,7 +133,7 @@ collectionAssert.assertEqual(xs.subscriptions, [
 ## _TestScheduler Instance Methods_ ##
 
 ### <a id="rxtestschedulerprototypecreatecoldobservableargs"></a>`Rx.TestScheduler.prototype.createColdObservable(...args)`
-<a href="#rxtestschedulerprototypecreatecoldobservableargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L118-L121 "View in source") 
+<a href="#rxtestschedulerprototypecreatecoldobservableargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L118-L121 "View in source")
 
 Creates a cold observable using the specified timestamped notification messages.
 
@@ -160,7 +160,7 @@ var xs = scheduler.createColdObservable(
 
 // Note we'll start at 200 for subscribe
 var res = scheduler.startWithCreate(function () {
-    return xs.filter(function (x) { return x % 2 === 0; }); 
+    return xs.filter(function (x) { return x % 2 === 0; });
 });
 
 // Implement collection assertion
@@ -182,7 +182,7 @@ collectionAssert.assertEqual(xs.subscriptions, [
 * * *
 
 ### <a id="rxtestschedulerprototypecreatehotobservableargs"></a>`Rx.TestScheduler.prototype.createHotObservable(...args)`
-<a href="#rxtestschedulerprototypecreatehotobservableargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L108-L111 "View in source") 
+<a href="#rxtestschedulerprototypecreatehotobservableargs">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L108-L111 "View in source")
 
 Creates a hot observable using the specified timestamped notification messages.
 
@@ -209,7 +209,7 @@ var xs = scheduler.createHotObservable(
 
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
 var res = scheduler.startWithCreate(function () {
-    return xs.map(function (x) { return x * x }); 
+    return xs.map(function (x) { return x * x });
 });
 
 // Implement collection assertion
@@ -232,7 +232,7 @@ collectionAssert.assertEqual(xs.subscriptions, [
 * * *
 
 ### <a id="rxtestschedulerprototypecreateobserver"></a>`Rx.TestScheduler.prototype.createObserver()`
-<a href="#rxtestschedulerprototypecreateobserver">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L127-L129 "View in source") 
+<a href="#rxtestschedulerprototypecreateobserver">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L127-L129 "View in source")
 
 Creates an observer that records received notification messages and timestamps those.
 
@@ -276,7 +276,7 @@ collectionAssert.assertEqual(res.messages, [
 * * *
 
 ### <a id="rxtestschedulerprototypestartwithcreatecreate"></a>`Rx.TestScheduler.prototype.startWithCreate(create)`
-<a href="#rxtestschedulerprototypestartwithcreatecreate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L99-L101 "View in source") 
+<a href="#rxtestschedulerprototypestartwithcreatecreate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L99-L101 "View in source")
 
 Starts the test scheduler and uses default virtual times to invoke the factory function, to subscribe to the resulting sequence, and to dispose the subscription.
 
@@ -303,7 +303,7 @@ var xs = scheduler.createColdObservable(
 
 // Note we'll start at 200 for subscribe
 var res = scheduler.startWithCreate(function () {
-    return xs.filter(function (x) { return x % 2 === 0; }); 
+    return xs.filter(function (x) { return x % 2 === 0; });
 });
 
 // Implement collection assertion
@@ -325,7 +325,7 @@ collectionAssert.assertEqual(xs.subscriptions, [
 * * *
 
 ### <a id="rxtestschedulerprototypestartwithdisposecreate-disposed"></a>`Rx.TestScheduler.prototype.startWithDispose(create, disposed)`
-<a href="#rxtestschedulerprototypestartwithdisposecreate-disposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L90-L92 "View in source") 
+<a href="#rxtestschedulerprototypestartwithdisposecreate-disposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L90-L92 "View in source")
 
 Starts the test scheduler and uses the specified virtual time to dispose the subscription to the sequence obtained through the factory function.
 Default virtual times are used for factory invocation and sequence subscription.
@@ -355,7 +355,7 @@ var xs = scheduler.createHotObservable(
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
 var res = scheduler.startWithDispose(
     function () {
-        return xs.map(function (x) { return x * x }); 
+        return xs.map(function (x) { return x * x });
     },
     215 /* Dispose at 215 */
 );
@@ -379,7 +379,7 @@ collectionAssert.assertEqual(xs.subscriptions, [
 * * *
 
 ### <a id="rxtestschedulerprototypestartwithtimingcreate-created-subscribed-disposed"></a>`Rx.TestScheduler.prototype.startWithTiming(create, created, subscribed, disposed)`
-<a href="#rxtestschedulerprototypestartwithtimingcreate-created-subscribed-disposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L65-L81 "View in source") 
+<a href="#rxtestschedulerprototypestartwithtimingcreate-created-subscribed-disposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/testscheduler.js#L65-L81 "View in source")
 
 Starts the test scheduler and uses the specified virtual times to invoke the factory function, subscribe to the resulting sequence, and dispose the subscription.
 
@@ -411,7 +411,7 @@ var xs = scheduler.createHotObservable(
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
 var res = scheduler.startWithTiming(
     function () {
-        return xs.map(function (x) { return x * x }); 
+        return xs.map(function (x) { return x * x });
     },
     100, /* Create at 100    */
     200, /* Subscribe at 200 */

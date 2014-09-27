@@ -1,5 +1,5 @@
 ### `Rx.Observable.create(subscribe)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/create.js "View in source")
 
 Creates an observable sequence from a specified subscribe method implementation.  This is an alias for the `createWithDisposable` method
 
@@ -27,10 +27,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
@@ -56,10 +56,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42

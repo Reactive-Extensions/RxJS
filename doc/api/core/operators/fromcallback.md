@@ -1,7 +1,7 @@
-### `Rx.Observable.fromCallback(func, [context], [selector])` 
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js "View in source") 
+### `Rx.Observable.fromCallback(func, [context], [selector])`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js "View in source")
 
-Converts a callback function to an observable sequence. 
+Converts a callback function to an observable sequence.
 
 #### Arguments
 1. `func` *(`Function`)*: Function with a callback as the last parameter to convert to an Observable sequence.
@@ -27,10 +27,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + result);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: true

@@ -15,20 +15,20 @@ var TestScheduler = Rx.TestScheduler,
 test('Multicast_Hot_1', function () {
 
   var scheduler = new TestScheduler();
-  
+
   var s = new Subject();
 
   var xs = scheduler.createHotObservable(
-    onNext(40, 0), 
-    onNext(90, 1), 
-    onNext(150, 2), 
-    onNext(210, 3), 
-    onNext(240, 4), 
-    onNext(270, 5), 
-    onNext(330, 6), 
-    onNext(340, 7), 
+    onNext(40, 0),
+    onNext(90, 1),
+    onNext(150, 2),
+    onNext(210, 3),
+    onNext(240, 4),
+    onNext(270, 5),
+    onNext(330, 6),
+    onNext(340, 7),
     onCompleted(390));
-  
+
   var c;
   var o = scheduler.createObserver();
   var d1;
@@ -37,11 +37,11 @@ test('Multicast_Hot_1', function () {
   scheduler.scheduleAbsolute(50,function () {
     c = xs.multicast(s);
   });
-  
+
   scheduler.scheduleAbsolute(100, function () {
     d1 = c.subscribe(o);
   });
-  
+
   scheduler.scheduleAbsolute(200, function () {
     d2 = c.connect();
   });
@@ -49,15 +49,15 @@ test('Multicast_Hot_1', function () {
   scheduler.scheduleAbsolute(300, function () {
     d1.dispose();
   });
-  
+
   scheduler.start();
-  
+
   o.messages.assertEqual(
-    onNext(210, 3), 
-    onNext(240, 4), 
+    onNext(210, 3),
+    onNext(240, 4),
     onNext(270, 5)
   );
-  
+
   xs.subscriptions.assertEqual(subscribe(200, 390));
 });
 

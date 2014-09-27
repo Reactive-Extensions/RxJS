@@ -24,10 +24,10 @@
         isFn = function(value) {
           return typeof value == 'function' && toString.call(value) == '[object Function]';
         };
-      }    
+      }
 
       return isFn;
-    }());    
+    }());
 
   // Errors
   var sequenceContainsNoElements = 'Sequence contains no elements.';

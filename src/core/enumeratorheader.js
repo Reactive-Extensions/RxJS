@@ -5,7 +5,7 @@
   if (root.Set && typeof new root.Set()['@@iterator'] === 'function') {
     $iterator$ = '@@iterator';
   }
-  
+
   var doneEnumerator = Rx.doneEnumerator = { done: true, value: undefined };
 
   Rx.iterator = $iterator$;

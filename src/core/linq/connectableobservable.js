@@ -2,7 +2,7 @@
     inherits(ConnectableObservable, __super__);
 
     function ConnectableObservable(source, subject) {
-      var hasSubscription = false, 
+      var hasSubscription = false,
         subscription,
         sourceObservable = source.asObservable();
 
@@ -18,7 +18,7 @@
 
       __super__.call(this, subject.subscribe.bind(subject));
     }
-    
+
     ConnectableObservable.prototype.refCount = function () {
       var connectableSubscription, count = 0, source = this;
       return new AnonymousObservable(function (observer) {

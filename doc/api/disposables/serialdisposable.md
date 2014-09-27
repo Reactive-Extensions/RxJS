@@ -44,7 +44,7 @@ serialDisposable.dispose();
 ## _SerialDisposable Constructor_ ##
 
 ### <a id="rxserialdisposable"></a>`Rx.SerialDisposable()`
-<a href="#rxserialdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L5-L8 "View in source") 
+<a href="#rxserialdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L5-L8 "View in source")
 
 Initializes a new instance of the `Rx.SerialDisposable` class.
 
@@ -65,7 +65,7 @@ console.log(serialDisposable.isDisposed);
 ## _SerialDisposable Instance Methods_ ##
 
 ### <a id="rxserialdisposableprototypedispose"></a>`Rx.SerialDisposable.prototype.dispose()`
-<a href="#rxserialdisposableprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L50-L60 "View in source") 
+<a href="#rxserialdisposableprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L50-L60 "View in source")
 
 Disposes the underlying disposable as well as all future replacements.
 
@@ -97,9 +97,9 @@ var d2 = Rx.Disposable.create(function () {
 * * *
 
 ### <a id="rxserialdisposableprototypegetdisposable"></a>`Rx.SerialDisposable.prototype.getDisposable()`
-<a href="#rxserialdisposableprototypegetdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L16-L18 "View in source") 
+<a href="#rxserialdisposableprototypegetdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L16-L18 "View in source")
 
-Gets the underlying disposable. 
+Gets the underlying disposable.
 
 #### Returns
 *(Disposable)*: The underlying disposable.
@@ -127,9 +127,9 @@ console.log(d === disposable);
 * * *
 
 ### <a id="rxserialdisposableprototypesetdisposablevalue"></a>`Rx.SerialDisposable.prototype.setDisposable(value)`
-<a href="#rxserialdisposableprototypesetdisposablevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L24-L36 "View in source") 
+<a href="#rxserialdisposableprototypesetdisposablevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L24-L36 "View in source")
 
-Sets the underlying disposable. 
+Sets the underlying disposable.
 
 #### Arguments
 1. `value` *(Disposable)*: The new underlying disposable.
@@ -165,7 +165,7 @@ serialDisposable.setDisposable(d2);
 ## _SerialDisposable Instance Properties_ ##
 
 ### <a id="isdisposed"></a>`isDisposed`
-<a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L6 "View in source") 
+<a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/serialdisposable.js#L6 "View in source")
 
 Gets a value that indicates whether the object is disposed.
 

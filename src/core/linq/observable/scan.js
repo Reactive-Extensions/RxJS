@@ -13,7 +13,7 @@
     if (arguments.length === 2) {
       hasSeed = true;
       seed = arguments[0];
-      accumulator = arguments[1];        
+      accumulator = arguments[1];
     } else {
       accumulator = arguments[0];
     }
@@ -28,7 +28,7 @@
             } else {
               accumulation = hasSeed ? accumulator(seed, x) : x;
               hasAccumulation = true;
-            }                    
+            }
           } catch (e) {
             observer.onError(e);
             return;

@@ -20,7 +20,7 @@ Record of a value including the virtual time it was produced on.
 ## _Recorded Constructor_ ##
 
 ### <a id="rxrecordedtime-value-comparer"></a>`Rx.Recorded(time, value, [comparer])`
-<a href="#rxrecordedtime-value-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L9-L13 "View in source") 
+<a href="#rxrecordedtime-value-comparer">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L9-L13 "View in source")
 
 Creates a new object recording the production of the specified value at the given virtual time.
 
@@ -49,7 +49,7 @@ console.log(recorded.value);
 ## _Recorded Instance Methods_ ##
 
 ### <a id="rxrecordedprototypeequalsother"></a>`Rx.Recorded.prototype.equals(other)`
-<a href="#rxrecordedprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L21-L23 "View in source") 
+<a href="#rxrecordedprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L21-L23 "View in source")
 
 Checks whether the given recorded object is equal to the current instance.
 
@@ -80,12 +80,12 @@ console.log(r1.equals(r3));
 * * *
 
 ### <a id="rxrecordedprototypetostring"></a>`Rx.Recorded.prototype.toString()`
-<a href="#rxrecordedprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L30-L32 "View in source") 
+<a href="#rxrecordedprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L30-L32 "View in source")
 
 Returns a string representation of the current Recorded value.
 
 #### Returns
-*(String)*: String representation of the current Recorded value. 
+*(String)*: String representation of the current Recorded value.
 
 #### Example
 
@@ -105,7 +105,7 @@ console.log(r1.toString());
 ## _Recorded Instance Properties_ ##
 
 ### <a id="time"></a>`time`
-<a href="#time">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L10 "View in source") 
+<a href="#time">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L10 "View in source")
 
 Gets the virtual time the value was produced on.
 
@@ -128,7 +128,7 @@ console.log(r1.time);
 * * *
 
 ### <a id="value"></a>`value`
-<a href="#value">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L11 "View in source") 
+<a href="#value">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/recorded.js#L11 "View in source")
 
 Gets the recorded value.
 

@@ -22,7 +22,7 @@
 
   /**
    *  Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
-   * 
+   *
    * @example
    * var res = res = source.sequenceEqual([1,2,3]);
    * var res = res = source.sequenceEqual([{ value: 42 }], function (x, y) { return x.value === y.value; });

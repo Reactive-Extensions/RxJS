@@ -1,7 +1,7 @@
 ### `Rx.Observable.prototype.find(predicate, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/find.js)
 Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire Observable sequence.
- 
+
 #### Arguments
 1. `predicate` *(`Function`)*: A function to test each source element for a condition;  The callback is called with the following information:
     1. the value of the element
@@ -27,14 +27,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 1
-// => Completed  
+// => Completed
 
 /* Not found */
 var array = [1,2,3,4];
@@ -49,14 +49,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: undefined
-// => Completed 
+// => Completed
 ```
 
 ### Location

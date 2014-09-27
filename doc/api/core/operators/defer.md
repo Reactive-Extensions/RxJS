@@ -1,5 +1,5 @@
 ### `Rx.Observable.defer(observableFactory)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/defer.js "View in source")
 
 Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
 
@@ -21,10 +21,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
@@ -40,10 +40,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42

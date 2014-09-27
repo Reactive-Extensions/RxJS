@@ -37,7 +37,7 @@ singleDisposable.dispose();
 ## _SingleAssignmentDisposable Constructor_ ##
 
 ### <a id="rxsingleassignmentdisposable"></a>`Rx.SingleAssignmentDisposable()`
-<a href="#rxsingleassignmentdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L7-L10 "View in source") 
+<a href="#rxsingleassignmentdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L7-L10 "View in source")
 
 Initializes a new instance of the `Rx.SingleAssignmentDisposable` class.
 
@@ -58,7 +58,7 @@ console.log(singleDisposable.isDisposed);
 ## _SingleAssignmentDisposable Instance Methods_ ##
 
 ### <a id="rxsingleassignmentdisposableprototypedispose"></a>`Rx.SingleAssignmentDisposable.prototype.dispose()`
-<a href="#rxsingleassignmentdisposableprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L47-L57 "View in source") 
+<a href="#rxsingleassignmentdisposableprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L47-L57 "View in source")
 
 Disposes the underlying disposable.
 
@@ -90,9 +90,9 @@ console.log(singleDisposable.isDisposed);
 * * *
 
 ### <a id="rxsingleassignmentdisposableprototypegetdisposable"></a>`Rx.SingleAssignmentDisposable.prototype.getDisposable()`
-<a href="#rxsingleassignmentdisposableprototypegetdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L18-L20 "View in source") 
+<a href="#rxsingleassignmentdisposableprototypegetdisposable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L18-L20 "View in source")
 
-Gets the underlying disposable. After disposal, the result of getting this method is undefined. 
+Gets the underlying disposable. After disposal, the result of getting this method is undefined.
 
 #### Returns
 *(Disposable)*: The underlying disposable.
@@ -120,9 +120,9 @@ console.log(d === disposable);
 * * *
 
 ### <a id="rxsingleassignmentdisposableprototypesetdisposablevalue"></a>`Rx.SingleAssignmentDisposable.prototype.setDisposable(value)`
-<a href="#rxsingleassignmentdisposableprototypesetdisposablevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L31-L42 "View in source") 
+<a href="#rxsingleassignmentdisposableprototypesetdisposablevalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L31-L42 "View in source")
 
-Sets the underlying disposable. 
+Sets the underlying disposable.
 
 #### Arguments
 1. `value` *(Disposable)*: The new underlying disposable.
@@ -160,7 +160,7 @@ try {
 ## _SingleAssignmentDisposable Instance Properties_ ##
 
 ### <a id="isdisposed"></a>`isDisposed`
-<a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L8 "View in source") 
+<a href="#isdisposed">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/singleassignmentdisposable.js#L8 "View in source")
 
 Gets a value that indicates whether the object is disposed.
 

@@ -8,7 +8,7 @@ var Observable = Rx.Observable,
     subscribe = Rx.ReactiveTest.subscribe,
     created = Rx.ReactiveTest.created,
     subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;        
+    disposed = Rx.ReactiveTest.disposed;
 
 function defaultEqualityComparer (x, y) {
     return Rx.Internals.isEqual(x, y);
@@ -31,21 +31,21 @@ test('Window_Closings_Basic', function () {
 
     var scheduler = new TestScheduler();
     var xs = scheduler.createHotObservable(
-        onNext(90, 1), 
-        onNext(180, 2), 
-        onNext(250, 3), 
-        onNext(260, 4), 
-        onNext(310, 5), 
-        onNext(340, 6), 
-        onNext(410, 7), 
-        onNext(420, 8), 
-        onNext(470, 9), 
-        onNext(550, 10), 
+        onNext(90, 1),
+        onNext(180, 2),
+        onNext(250, 3),
+        onNext(260, 4),
+        onNext(310, 5),
+        onNext(340, 6),
+        onNext(410, 7),
+        onNext(420, 8),
+        onNext(470, 9),
+        onNext(550, 10),
         onCompleted(590)
     );
 
     var window = 1;
-    
+
     var results = scheduler.startWithCreate(function () {
         return xs.window(function () {
             return Observable.timer(window++ * 100, undefined, scheduler);
@@ -57,17 +57,17 @@ test('Window_Closings_Basic', function () {
     });
 
     results.messages.assertEqual(
-        onNext(250, "0 3"), 
-        onNext(260, "0 4"), 
-        onNext(310, "1 5"), 
-        onNext(340, "1 6"), 
-        onNext(410, "1 7"), 
-        onNext(420, "1 8"), 
-        onNext(470, "1 9"), 
-        onNext(550, "2 10"), 
+        onNext(250, "0 3"),
+        onNext(260, "0 4"),
+        onNext(310, "1 5"),
+        onNext(340, "1 6"),
+        onNext(410, "1 7"),
+        onNext(420, "1 8"),
+        onNext(470, "1 9"),
+        onNext(550, "2 10"),
         onCompleted(590)
     );
-    
+
     xs.subscriptions.assertEqual(subscribe(200, 590));
 });
 

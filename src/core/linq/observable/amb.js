@@ -4,7 +4,7 @@
    * @example
    * var = Rx.Observable.amb(xs, ys, zs);
    * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
-   */  
+   */
   Observable.amb = function () {
     var acc = observableNever(),
       items = argsOrArray(arguments, 0);

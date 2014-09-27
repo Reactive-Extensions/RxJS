@@ -16,10 +16,10 @@ var subscription = subject.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 subject.onNext(42);
@@ -56,7 +56,7 @@ subject.onCompleted();
 ## _Subject Constructor_ ##
 
 ### <a id="rxsubject"></a>`Rx.Subject()`
-<a href="#rxsubject">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L26-L31 "View in source") 
+<a href="#rxsubject">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L26-L31 "View in source")
 
 Creates a subject.
 
@@ -69,10 +69,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 subject.onNext(42);
@@ -91,7 +91,7 @@ subject.onCompleted();
 ## _Subject Class Methods_ ##
 
 ### <a id="rxsubjectcreateobserver-observable"></a>`Rx.Subject.create(observer, observable)`
-<a href="#rxsubjectcreateobserver-observable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L101-L103 "View in source") 
+<a href="#rxsubjectcreateobserver-observable">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L101-L103 "View in source")
 
 Creates a subject from the specified observer and observable.
 
@@ -124,7 +124,7 @@ var observer = Rx.Observer.create(
 
 // Create observable to handle the messages
 var observable = Rx.Observable.create(function (obs) {
-    
+
     worker.onmessage = function (data) {
         obs.onNext(data);
     };
@@ -135,7 +135,7 @@ var observable = Rx.Observable.create(function (obs) {
 
     return function () {
         worker.close();
-    }; 
+    };
 });
 
 var subject = Rx.Subject.create(observer, observable);
@@ -145,10 +145,10 @@ var subscription = subject.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 subject.onNext(42);
@@ -165,23 +165,23 @@ subject.onNext(42);
 ## _Subject Instance Methods_ ##
 
 ### <a id="rxsubjectprototypedispose"></a>`Rx.Subject.prototype.dispose()`
-<a href="#rxsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L89-L92 "View in source") 
+<a href="#rxsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L89-L92 "View in source")
 
 Unsubscribe all observers and release resources.
 
 #### Example
 ```js
 var subject = new Rx.Subject();
-    
+
 var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 subject.onNext(42);
@@ -198,7 +198,7 @@ try {
 	console.log(e.message);
 }
 
-// => Object has been disposed 
+// => Object has been disposed
 ```
 
 ### Location
@@ -208,7 +208,7 @@ try {
 * * *
 
 ### <a id="rxsubjectprototypehasobservers"></a>`Rx.Subject.prototype.hasObservers()`
-<a href="#rxsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L38-L40 "View in source") 
+<a href="#rxsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/subject.js#L38-L40 "View in source")
 
 Indicates whether the subject has observers subscribed to it.
 
@@ -221,16 +221,16 @@ var subject = new Rx.Subject();
 
 console.log(subject.hasObservers());
 // => false
-    
+
 var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 console.log(subject.hasObservers());
@@ -242,4 +242,3 @@ console.log(subject.hasObservers());
 - rx.js
 
 * * *
-

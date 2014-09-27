@@ -10,7 +10,6 @@ var Observable = Rx.Observable,
     subscribed = Rx.ReactiveTest.subscribed,
     disposed = Rx.ReactiveTest.disposed;
 
-
 test('Generate_Finite', function () {
     var results, scheduler;
     scheduler = new TestScheduler();

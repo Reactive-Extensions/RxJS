@@ -1,6 +1,6 @@
   /**
    * Abstract base class for implementations of the Observer class.
-   * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages. 
+   * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages.
    */
   var AbstractObserver = Rx.internals.AbstractObserver = (function (__super__) {
     inherits(AbstractObserver, __super__);
@@ -15,7 +15,7 @@
 
     /**
      * Notifies the observer of a new element in the sequence.
-     * @param {Any} value Next element in the sequence. 
+     * @param {Any} value Next element in the sequence.
      */
     AbstractObserver.prototype.onNext = function (value) {
       if (!this.isStopped) { this.next(value); }
@@ -23,8 +23,8 @@
 
     /**
      * Notifies the observer that an exception has occurred.
-     * @param {Any} error The error that has occurred.     
-     */    
+     * @param {Any} error The error that has occurred.
+     */
     AbstractObserver.prototype.onError = function (error) {
       if (!this.isStopped) {
         this.isStopped = true;
@@ -34,7 +34,7 @@
 
     /**
      * Notifies the observer of the end of the sequence.
-     */    
+     */
     AbstractObserver.prototype.onCompleted = function () {
       if (!this.isStopped) {
         this.isStopped = true;

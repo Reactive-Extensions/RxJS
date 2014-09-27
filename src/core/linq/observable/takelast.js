@@ -5,7 +5,7 @@
    *  the source sequence, this buffer is drained on the result sequence. This causes the elements to be delayed.
    * @param {Number} count Number of elements to take from the end of the source sequence.
    * @returns {Observable} An observable sequence containing the specified number of elements from the end of the source sequence.
-   */   
+   */
   observableProto.takeLast = function (count) {
     var source = this;
     return new AnonymousObservable(function (observer) {

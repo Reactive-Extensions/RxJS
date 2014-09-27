@@ -1,5 +1,5 @@
 ### <a id="rxobservableprototypetakeuntilwithtimeendtime-scheduler"></a>`Rx.Observable.prototype.takeUntilWithTime(other)`
-<a href="#rxobservableprototypetakeuntilwithtimeendtime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js "View in source") 
+<a href="#rxobservableprototypetakeuntilwithtimeendtime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js "View in source")
 
 Returns the values from the source observable sequence until the other observable sequence produces a value.
 
@@ -8,7 +8,7 @@ Returns the values from the source observable sequence until the other observabl
 2. [`scheduler`] *(`Scheduler`)*: Scheduler to run the timer on.
 
 #### Returns
-*(`Observable`)*: An observable sequence with the elements taken until the specified end time.   
+*(`Observable`)*: An observable sequence with the elements taken until the specified end time.
 
 #### Example
 ```js
@@ -20,10 +20,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0
@@ -31,7 +31,7 @@ var subscription = source.subscribe(
 // => Next: 2
 // => Next: 3
 // => Next: 4
-// => Completed 
+// => Completed
 ```
 
 ### Location

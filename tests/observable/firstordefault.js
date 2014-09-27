@@ -6,7 +6,6 @@ var TestScheduler = Rx.TestScheduler,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-
 // First or default
 test('FirstOrDefaultAsync_Empty', function () {
     var res, scheduler, xs;

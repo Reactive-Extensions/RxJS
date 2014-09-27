@@ -24,7 +24,7 @@
   }
 
   /**
-   * Configuration option to determine whether to use native events only 
+   * Configuration option to determine whether to use native events only
    */
   Rx.config.useNativeEvents = false;
 
@@ -36,7 +36,7 @@
 
   // Check for ember
   var ember = !!root.Ember && typeof root.Ember.addListener === 'function';
-  
+
   // Check for Backbone.Marionette. Note if using AMD add Marionette as a dependency of rxjs
   // for proper loading order!
   var marionette = !!root.Backbone && !!root.Backbone.Marionette;
@@ -46,10 +46,10 @@
    *
    * @example
    *   var source = Rx.Observable.fromEvent(element, 'mouseup');
-   * 
+   *
    * @param {Object} element The DOMElement or NodeList to attach a listener.
    * @param {String} eventName The event name to attach the observable sequence.
-   * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.     
+   * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
    * @returns {Observable} An observable sequence of events from the specified element and the specified event.
    */
   Observable.fromEvent = function (element, eventName, selector) {
@@ -59,8 +59,8 @@
         function (h) { element.addListener(eventName, h); },
         function (h) { element.removeListener(eventName, h); },
         selector);
-    } 
-    
+    }
+
     // Use only if non-native events are allowed
     if (!Rx.config.useNativeEvents) {
       if (marionette) {
@@ -74,7 +74,7 @@
           function (h) { Ember.addListener(element, eventName, h); },
           function (h) { Ember.removeListener(element, eventName, h); },
           selector);
-      }    
+      }
       if (jq) {
         var $elem = jq(element);
         return fromEventPattern(
@@ -85,9 +85,9 @@
     }
     return new AnonymousObservable(function (observer) {
       return createEventListener(
-        element, 
-        eventName, 
-        function handler (e) { 
+        element,
+        eventName,
+        function handler (e) {
           var results = e;
 
           if (selector) {
@@ -99,7 +99,7 @@
             }
           }
 
-          observer.onNext(results); 
+          observer.onNext(results);
         });
     }).publish().refCount();
   };

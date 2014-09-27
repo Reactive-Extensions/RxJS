@@ -1,5 +1,5 @@
 ### `Rx.Observable.zipArray(...args)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparray.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ziparray.js "View in source")
 
 Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
 
@@ -14,22 +14,22 @@ Merges the specified observable sequences into one observable sequence by emitti
 var range = Rx.Observable.range(0, 5);
 
 var source = Rx.Observable.zipArray([1,2,3], function (x) { return x * x; });
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 1
-// => Next: 4 
-// => Next: 9 
-// => Completed 
+// => Next: 4
+// => Next: 9
+// => Completed
 ```
 
 ### Location

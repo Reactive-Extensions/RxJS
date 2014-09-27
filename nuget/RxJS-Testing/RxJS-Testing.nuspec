@@ -22,6 +22,6 @@
   <files>
     <file src="..\..\dist\rx.testing.js" target="content\Scripts\rx.testing.js" />
     <file src="..\..\dist\rx.testing.min.js" target="content\Scripts\rx.testing.min.js" />
-    <file src="..\..\ts\rx.testing.d.ts" target="content\Scripts\rx.testing.d.ts" />  
+    <file src="..\..\ts\rx.testing.d.ts" target="content\Scripts\rx.testing.d.ts" />
   </files>
 </package>

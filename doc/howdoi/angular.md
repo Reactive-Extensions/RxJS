@@ -13,13 +13,13 @@ Scopes provide the ability to observe change mutations on the scope through the 
 var scope = $rootScope;
 scope.name = 'Reactive Extensions';
 scope.counter = 0;
- 
+
 scope.$watch('name', function(newValue, oldValue) {
   scope.counter = scope.counter + 1;
   scope.oldValue = oldValue;
   scope.newValue = newValue;
 });
- 
+
 scope.name = 'RxJS';
 
 // Process All the Watchers
@@ -57,11 +57,11 @@ scope.data = [];
 
 // Watch for name change and throttle it for 1 second and then query a service
 Rx.Observable.$watch(scope, 'name')
-	.throttle(1000) 
+	.throttle(1000)
 	.map(function (e) {
 		return e.newValue;
 	})
-	.do(function () { 
+	.do(function () {
 		// Set loading and reset data
 		scope.isLoading = true;
 		scope.data = [];
@@ -84,7 +84,7 @@ $http.get('/someUrl')
 	.then(successCallback, errCallback);
 ```
 
-Using the Reactive Extensions for JavaScript, we can also integrate using the `Rx.Observable.fromPromise` bridge available in RxJS version 2.2+.  We simply 
+Using the Reactive Extensions for JavaScript, we can also integrate using the `Rx.Observable.fromPromise` bridge available in RxJS version 2.2+.  We simply
 
 ```js
 // Query data

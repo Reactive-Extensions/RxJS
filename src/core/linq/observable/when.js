@@ -1,8 +1,8 @@
   /**
    *  Joins together the results from several patterns.
-   *  
+   *
    *  @param plans A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.
-   *  @returns {Observable} Observable sequence with the results form matching several patterns. 
+   *  @returns {Observable} Observable sequence with the results form matching several patterns.
    */
   Observable.when = function () {
     var plans = argsOrArray(arguments, 0);
@@ -10,11 +10,11 @@
       var activePlans = [],
           externalSubscriptions = new Map();
       var outObserver = observerCreate(
-        observer.onNext.bind(observer), 
+        observer.onNext.bind(observer),
         function (err) {
           externalSubscriptions.forEach(function (v) { v.onError(err); });
           observer.onError(err);
-        }, 
+        },
         observer.onCompleted.bind(observer)
       );
       try {

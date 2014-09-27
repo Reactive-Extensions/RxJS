@@ -7,7 +7,6 @@ var Observable = Rx.Observable,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-
 test('SkipUntil_SomeData_Next', function () {
     var l, lMsgs, r, rMsgs, results, scheduler;
     scheduler = new TestScheduler();

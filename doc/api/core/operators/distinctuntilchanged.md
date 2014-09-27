@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.distinctUntilChanged([keySelector], [comparer])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/distinctuntilchanged.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/distinctuntilchanged.js "View in source")
 
 Returns an observable sequence that contains only distinct contiguous elements according to the keySelector and the comparer.
 
@@ -23,15 +23,15 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
 // => Next: 24
-// => Completed 
+// => Completed
 
 /* With key selector */
 var source = Rx.Observable.fromArray([
@@ -44,15 +44,15 @@ var subscription = source.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: { value: 42 }
 // => Next: { value: 24 }
-// => Completed 
+// => Completed
 ```
 ### Location
 

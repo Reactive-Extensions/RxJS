@@ -12,7 +12,7 @@ asyncTest('Timeout_ScheduleAction', 1, function () {
     expect(1);
     TimeoutScheduler.schedule(function () {
         ok(true);
-        start();            
+        start();
     });
 });
 
@@ -30,7 +30,7 @@ asyncTest('ThreadPool_ScheduleActionDue', function () {
 asyncTest('Timeout_ScheduleActionCancel', 1, function () {
     var set = false;
     var d = TimeoutScheduler.scheduleWithRelative(200, function () {
-        set = true;         
+        set = true;
     });
 
     d.dispose();
@@ -38,5 +38,5 @@ asyncTest('Timeout_ScheduleActionCancel', 1, function () {
     setTimeout(function () {
         ok(!set);
         start();
-    }, 400);        
+    }, 400);
 });

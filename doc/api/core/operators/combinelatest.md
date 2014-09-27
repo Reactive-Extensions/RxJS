@@ -1,5 +1,5 @@
 ### `Rx.Observable.combineLatest(...args, resultSelector)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/combinelatest.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/combinelatest.js "View in source")
 
 Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences produces an element.  This can be in the form of an argument list of observables or an array.
 
@@ -8,7 +8,7 @@ Merges the specified observable sequences into one observable sequence by using 
 1. `resultSelector` *(`Function`)*: Function to invoke whenever either of the sources produces an element.
 
 #### Returns
-*(`Observable`)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function. 
+*(`Observable`)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function.
 
 #### Example
 ```js
@@ -25,23 +25,23 @@ var source = Rx.Observable.combineLatest(
         source2,
         function (s1, s2) { return s1 + ', ' + s2; }
     ).take(4);
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: First: 0, Second: 0 
-// => Next: First: 1, Second: 0 
-// => Next: First: 1, Second: 1 
-// => Next: First: 2, Second: 1 
-// => Completed 
+// => Next: First: 0, Second: 0
+// => Next: First: 1, Second: 0
+// => Next: First: 1, Second: 1
+// => Next: First: 2, Second: 1
+// => Completed
 ```
 ### Location
 

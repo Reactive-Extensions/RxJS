@@ -15,8 +15,8 @@
             try {
                 this.observer.onNext(value);
                 noError = true;
-            } catch (e) { 
-                throw e;                
+            } catch (e) {
+                throw e;
             } finally {
                 if (!noError) {
                     this.dispose();
@@ -27,8 +27,8 @@
         AutoDetachObserverPrototype.error = function (exn) {
             try {
                 this.observer.onError(exn);
-            } catch (e) { 
-                throw e;                
+            } catch (e) {
+                throw e;
             } finally {
                 this.dispose();
             }
@@ -37,8 +37,8 @@
         AutoDetachObserverPrototype.completed = function () {
             try {
                 this.observer.onCompleted();
-            } catch (e) { 
-                throw e;                
+            } catch (e) {
+                throw e;
             } finally {
                 this.dispose();
             }

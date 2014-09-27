@@ -1,6 +1,6 @@
   /**
    * jortSort checks if your inputs are sorted until another Observable sequence fires.
-   * See http://jort.technology/ for full details.   
+   * See http://jort.technology/ for full details.
    * @returns {Observable} An observable which has a single value of true if sorted, else false.
    */
   observableProto.jortSortUntil = function (other) {

@@ -1,6 +1,6 @@
   /**
-   * Converts a callback function to an observable sequence. 
-   * 
+   * Converts a callback function to an observable sequence.
+   *
    * @param {Function} function Function with a callback as the last parameter to convert to an Observable sequence.
    * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
    * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
@@ -13,7 +13,7 @@
       return new AnonymousObservable(function (observer) {
         function handler(e) {
           var results = e;
-          
+
           if (selector) {
             try {
               results = selector(arguments);
@@ -24,13 +24,13 @@
 
             observer.onNext(results);
           } else {
-            if (results.length <= 1) { 
+            if (results.length <= 1) {
               observer.onNext.apply(observer, results);
             } else {
               observer.onNext(results);
             }
           }
-          
+
           observer.onCompleted();
         }
 

@@ -1,10 +1,10 @@
   /**
    *  Records the time interval between consecutive values in an observable sequence.
-   *  
+   *
    * @example
    *  1 - res = source.timeInterval();
    *  2 - res = source.timeInterval(Rx.Scheduler.timeout);
-   *      
+   *
    * @param [scheduler]  Scheduler used to compute time intervals. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence with time interval information on values.
    */

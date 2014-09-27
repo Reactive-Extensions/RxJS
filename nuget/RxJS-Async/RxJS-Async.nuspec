@@ -23,7 +23,7 @@
     <file src="..\..\dist\rx.async.js" target="content\Scripts\rx.async.js" />
     <file src="..\..\dist\rx.async.min.js" target="content\Scripts\rx.async.min.js" />
     <file src="..\..\dist\rx.async.compat.js" target="content\Scripts\rx.async.compat.js" />
-    <file src="..\..\dist\rx.async.compat.min.js" target="content\Scripts\rx.async.compat.min.js" />    
+    <file src="..\..\dist\rx.async.compat.min.js" target="content\Scripts\rx.async.compat.min.js" />
     <file src="..\..\ts\rx.async.d.ts" target="content\Scripts\rx.async.d.ts" />
     <file src="..\..\ts\rx.async-lite.d.ts" target="content\Scripts\rx.async-lite.d.ts" />
   </files>

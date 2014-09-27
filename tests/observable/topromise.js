@@ -12,7 +12,7 @@ asyncTest('Promise_Success', function () {
         function (value) {
             equal(42, value);
             start();
-        }, 
+        },
         function (reason) {
             ok(false);
         }
@@ -29,7 +29,7 @@ asyncTest('Promise_Failure', function () {
     promise.then(
         function (value) {
             ok(false);
-        }, 
+        },
         function (reason) {
             equal(error, reason);
             start();

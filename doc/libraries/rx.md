@@ -7,7 +7,7 @@ This comes with both `rx.js` which is for use in modern development environments
 ## Details ##
 
 Files:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) 
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 
 NPM Packages:

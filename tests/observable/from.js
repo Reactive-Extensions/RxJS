@@ -2,9 +2,9 @@ QUnit.module('From');
 
 test('From Array', function () {
   var enumerableFinite = [1, 2, 3, 4, 5];
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.from(enumerableFinite, null, null, scheduler);
   });
@@ -16,14 +16,14 @@ test('From Array', function () {
     onNext(204, 4),
     onNext(205, 5),
     onCompleted(206)
-  );  
+  );
 });
 
 test('From Array Empty', function () {
   var enumerableFinite = [];
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.from(enumerableFinite, null, null, scheduler);
   });
@@ -37,7 +37,7 @@ test('From With Length', function () {
   var enumerableFinite = { length: 5 }
 
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.from(enumerableFinite, function (v, k) { return k; }, null, scheduler);
   });
@@ -49,14 +49,14 @@ test('From With Length', function () {
     onNext(204, 3),
     onNext(205, 4),
     onCompleted(206)
-  ); 
+  );
 });
 
 test('From With String', function () {
   var enumerableFinite = 'foo';
 
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.from(enumerableFinite, null, null, scheduler);
   });
@@ -66,14 +66,14 @@ test('From With String', function () {
     onNext(202, 'o'),
     onNext(203, 'o'),
     onCompleted(204)
-  ); 
+  );
 });
 
 test('From With Selector', function () {
   var enumerableFinite = [1,2,3];
 
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.from(enumerableFinite, function (x) { return x + x; }, null, scheduler);
   });
@@ -83,7 +83,7 @@ test('From With Selector', function () {
     onNext(202, 4),
     onNext(203, 6),
     onCompleted(204)
-  ); 
+  );
 });
 
 test('From With Selector Error', function () {
@@ -91,14 +91,14 @@ test('From With Selector Error', function () {
   var error = new Error('woops');
 
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.from(enumerableFinite, function (x) { throw error; }, null, scheduler);
   });
 
   results.messages.assertEqual(
     onError(201, error)
-  ); 
+  );
 });
 
 test('From With Selector Some Error', function () {
@@ -106,11 +106,11 @@ test('From With Selector Some Error', function () {
   var error = new Error('woops');
 
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
-    return Observable.from(enumerableFinite, function (x, i) { 
+    return Observable.from(enumerableFinite, function (x, i) {
       if (i > 1) { throw error; }
-      return x + x; 
+      return x + x;
     }, null, scheduler);
   });
 
@@ -118,7 +118,7 @@ test('From With Selector Some Error', function () {
     onNext(201, 2),
     onNext(202, 4),
     onError(203, error)
-  ); 
+  );
 });
 
 test('From With Selector And Context', function () {
@@ -126,11 +126,11 @@ test('From With Selector And Context', function () {
   var context = 42;
 
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
-    return Observable.from(enumerableFinite, function (x) { 
+    return Observable.from(enumerableFinite, function (x) {
       equal(this, context);
-      return x + x; 
+      return x + x;
     }, context, scheduler);
   });
 
@@ -139,7 +139,7 @@ test('From With Selector And Context', function () {
     onNext(202, 4),
     onNext(203, 6),
     onCompleted(204)
-  ); 
+  );
 });
 
 // Shim in iterator support
@@ -156,7 +156,7 @@ if (!!window.Map && new window.Map()[$iterator$] !== undefined) {
     var enumerableFinite = new Map([[1, 2], [2, 4], [4, 8]]);
 
     var scheduler = new TestScheduler();
-    
+
     var results = scheduler.startWithCreate(function () {
       return Observable.from(enumerableFinite, null, null, scheduler);
     });
@@ -166,7 +166,7 @@ if (!!window.Map && new window.Map()[$iterator$] !== undefined) {
       onNext(202, [2,4]),
       onNext(203, [4,8]),
       onCompleted(204)
-    ); 
+    );
   });
 }
 
@@ -175,7 +175,7 @@ if (!!window.Set && new window.Set()[$iterator$] !== undefined) {
     var enumerableFinite = new Set(['foo','bar','baz']);
 
     var scheduler = new TestScheduler();
-    
+
     var results = scheduler.startWithCreate(function () {
       return Observable.from(enumerableFinite, null, null, scheduler);
     });
@@ -185,6 +185,6 @@ if (!!window.Set && new window.Set()[$iterator$] !== undefined) {
       onNext(202, 'bar'),
       onNext(203, 'baz'),
       onCompleted(204)
-    ); 
-  });  
+    );
+  });
 }

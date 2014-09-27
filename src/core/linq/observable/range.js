@@ -1,6 +1,6 @@
   /**
    *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
-   *  
+   *
    * @example
    *  var res = Rx.Observable.range(0, 10);
    *  var res = Rx.Observable.range(0, 10, Rx.Scheduler.timeout);

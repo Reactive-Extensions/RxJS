@@ -1,5 +1,5 @@
 ### `Rx.Observable.fromPromise(promise)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js "View in source")
 
 Converts a Promises/A+ spec compliant Promise and/or ES6 compliant Promise to an Observable sequence.
 
@@ -24,10 +24,10 @@ var subscription1 = source1.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
@@ -45,10 +45,10 @@ var subscription2 = source2.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Error: Error: reject

@@ -10,12 +10,11 @@ var Observable = Rx.Observable,
   subscribed = Rx.ReactiveTest.subscribed,
   disposed = Rx.ReactiveTest.disposed;
 
-
 test('SubscribeToEnumerable_Finite', function () {
   var enumerableFinite = [1, 2, 3, 4, 5];
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.fromArray(enumerableFinite, scheduler);
   });
@@ -32,9 +31,9 @@ test('SubscribeToEnumerable_Finite', function () {
 
 test('SubscribeToEnumerable_Empty', function () {
   var enumerableFinite = [];
-  
+
   var scheduler = new TestScheduler();
-  
+
   var results = scheduler.startWithCreate(function () {
     return Observable.fromArray(enumerableFinite, scheduler);
   });

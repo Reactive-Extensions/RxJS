@@ -8,7 +8,7 @@ var Observable = Rx.Observable,
     subscribe = Rx.ReactiveTest.subscribe,
     created = Rx.ReactiveTest.created,
     subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;        
+    disposed = Rx.ReactiveTest.disposed;
 
 test('Buffer_Boundaries_Simple', function () {
     var scheduler = new TestScheduler();
@@ -213,7 +213,7 @@ test('Buffer_Closings_Basic', function () {
     var window = 1;
 
     var res = scheduler.startWithCreate(function () {
-        return xs.buffer(function () { return Observable.timer((window++) * 100, scheduler); }); 
+        return xs.buffer(function () { return Observable.timer((window++) * 100, scheduler); });
     });
 
     res.messages.assertEqual(
@@ -468,7 +468,6 @@ test('Buffer_Closings_WindowClose_Error', function () {
         subscribe(200, 201)
     );
 });
-
 
 test('Buffer_OpeningClosings_Basic', function () {
     var scheduler = new TestScheduler();

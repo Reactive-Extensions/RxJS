@@ -1,6 +1,6 @@
     /**
      * Represents a disposable resource that only disposes its underlying disposable resource when all dependent disposable objects have been disposed.
-     */  
+     */
     var RefCountDisposable = Rx.RefCountDisposable = (function () {
 
         function InnerDisposable(disposable) {
@@ -34,8 +34,8 @@
             this.count = 0;
         }
 
-        /** 
-         * Disposes the underlying disposable only when all dependent disposables have been disposed 
+        /**
+         * Disposes the underlying disposable only when all dependent disposables have been disposed
          */
         RefCountDisposable.prototype.dispose = function () {
             if (!this.isDisposed) {
@@ -50,9 +50,9 @@
         };
 
         /**
-         * Returns a dependent disposable that when disposed decreases the refcount on the underlying disposable.      
+         * Returns a dependent disposable that when disposed decreases the refcount on the underlying disposable.
          * @returns {Disposable} A dependent disposable contributing to the reference count that manages the underlying disposable's lifetime.
-         */        
+         */
         RefCountDisposable.prototype.getDisposable = function () {
             return this.isDisposed ? disposableEmpty : new InnerDisposable(this);
         };

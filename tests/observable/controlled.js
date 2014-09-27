@@ -31,7 +31,7 @@ test('controlled gets some values', function () {
 
   scheduler.scheduleAbsolute(400, function () {
     controlled.request(5);
-  });  
+  });
 
   scheduler.scheduleAbsolute(1000, function () {
       subscription.dispose();
@@ -46,7 +46,7 @@ test('controlled gets some values', function () {
     onNext(400, 5),
     onNext(400, 6),
     onCompleted(500)
-  );  
+  );
 });
 
 test('controlled gets two sets of values', function () {
@@ -74,11 +74,11 @@ test('controlled gets two sets of values', function () {
 
   scheduler.scheduleAbsolute(400, function () {
     controlled.request(3);
-  });  
+  });
 
   scheduler.scheduleAbsolute(450, function () {
     controlled.request(2);
-  });    
+  });
 
   scheduler.scheduleAbsolute(1000, function () {
       subscription.dispose();
@@ -93,5 +93,5 @@ test('controlled gets two sets of values', function () {
     onNext(450, 5),
     onNext(450, 6),
     onCompleted(500)
-  );  
+  );
 });

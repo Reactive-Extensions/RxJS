@@ -5,7 +5,7 @@ The Reactive Extensions for JavaScript has a number of aggregation operators inc
 ## Details ##
 
 Files:
-- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.aggregates.js) 
+- [`rx.aggregates.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.aggregates.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)

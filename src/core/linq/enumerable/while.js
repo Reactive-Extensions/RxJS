@@ -3,7 +3,7 @@
       return new Enumerator(function () {
         return condition() ?
           { done: false, value: source } :
-          { done: true, value: undefined };  
+          { done: true, value: undefined };
       });
     });
   }

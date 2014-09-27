@@ -9,7 +9,7 @@ Using RxJS, you can represent multiple asynchronous data streams (that come from
 Because observable sequences are data streams, you can query them using standard query operators implemented by the Observable extension methods. Thus you can filter, project, aggregate, compose and perform time-based operations on multiple events easily by using these standard query operators. In addition, there are a number of other reactive stream specific operators that allow powerful queries to be written.  Cancellation, exceptions, and synchronization are also handled gracefully by using the extension methods provided by Rx.
 
 RxJS complements and interoperates smoothly with both synchronous data streams such as Arrays, Sets and Maps and single-value asynchronous computations such as Promises as the following diagram shows:
-  	
+
 <table>
    <th></th><th>Single return value</th><th>Mutiple return values</th>
    <tr>
@@ -34,4 +34,3 @@ On the other hand, in reactive programming, the application is offered more info
 This is the push pattern employed by Reactive Extensions for JavaScript. This is similar to joining a book club in which you register your interest in a particular genre, and books that match your interest are automatically sent to you as they are published. You do not need to stand in a line to acquire something that you want. Employing a push pattern is especially helpful in heavy UI environment in which the UI thread cannot be blocked while the application is waiting for some events, which is essential in JavaScript environments which has its own set of asynchronous requirements. In summary, by using RxJS, you can make your application more responsive.
 
 The push model implemented by Rx is represented by the observable pattern of `Observable`/`Observer`. The `Observable` will notify all the observers automatically of any state changes. To register an interest through a subscription, you use the `subscribe` method of `Observable`, which takes on an `Observer` and returns a `Disposable` object. This gives you the ability to track your subscription and be able to dispose the subscription. You can essentially treat the observable sequence (such as a sequence of mouseover events) as if it were a normal collection. RxJS’s built-in query implementation over observable sequences allows developers to compose complex event processing queries over push-based sequences such as events, callbacks, Promises,  HTML5 Geolocation APIs, and much much more.. For more information on these two interfaces, see Exploring The Major Concepts in RxJS.
-

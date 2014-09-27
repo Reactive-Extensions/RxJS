@@ -51,7 +51,7 @@ var MySubject = (function (_super) {
         _super.call(this, subscribe);
         this.disposeOnMap = {};
         this.subscribeCount = 0;
-        this.disposed = false;       
+        this.disposed = false;
     }
     MySubject.prototype.disposeOn = function (value, disposable) {
         this.disposeOnMap[value] = disposable;
@@ -80,7 +80,7 @@ test('ConnectableObservable_Creation', function () {
 
     co2.subscribe(function (x) { y = x; });
     notEqual(1, y);
-        
+
     co2.connect();
     equal(1, y);
 });

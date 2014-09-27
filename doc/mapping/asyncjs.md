@@ -79,7 +79,7 @@ Rx.Observable
     );
 ```
 
-* * * 
+* * *
 
 ## `async.map` ##
 
@@ -180,7 +180,7 @@ Rx.Observable
 ## `async.reject` ##
 
 The `async.reject` method is the opposite of filter. Removes values that pass an async truth test.
- 
+
 #### async version ####
 
 In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
@@ -226,7 +226,7 @@ Rx.Observable
 ## `async.reduce` ##
 
 The `async.reduce` method reduces a list of values into a single value using an async iterator to return each successive step. Memo is the initial state of the reduction. This function only operates in series. For performance reasons, it may make sense to split a call to this function into a parallel map, then use the normal `Array.prototype.reduce` on the results. This function is for situations where each step in the reduction needs to be async, if you can get the data before reducing it then it's probably a good idea to do so.
- 
+
 #### async version ####
 
 In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
@@ -270,8 +270,8 @@ Rx.Observable
 
 ## `async.detect` ##
 
-The `async.detect` method returns the first value in a list that passes an async truth test. The iterator is applied in parallel, meaning the first iterator to return true will fire the detect callback with that result. 
- 
+The `async.detect` method returns the first value in a list that passes an async truth test. The iterator is applied in parallel, meaning the first iterator to return true will fire the detect callback with that result.
+
 #### async version ####
 
 In this example, we'll get the first file that matches.
@@ -315,7 +315,7 @@ Rx.Observable
 ## `async.some` ##
 
 The `async.some` method returns `true` if at least one element in the array satisfies an async test. The callback for each iterator call only accepts a single argument of true or false, it does not accept an error argument first! This is in-line with the way node libraries work with truth tests like fs.exists. Once any iterator call returns true, the main callback is immediately called.
- 
+
 #### async version ####
 
 In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
@@ -355,7 +355,7 @@ Rx.Observable
 ## `async.every` ##
 
 The `async.every` method returns `true` if every element in the array satisfies an async test. The callback for each iterator call only accepts a single argument of true or false, it does not accept an error argument first! This is in-line with the way node libraries work with truth tests like fs.exists.
- 
+
 #### async version ####
 
 In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
@@ -397,7 +397,7 @@ Rx.Observable
 ## `async.concat` ##
 
 The `async.concat` method applies an iterator to each item in a list, concatenating the results. Returns the concatenated list. The iterators are called in parallel, and the results are concatenated as they return.
- 
+
 #### async version ####
 
 In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
@@ -442,7 +442,7 @@ Rx.Observable
 The `async.series` runs an array of functions in series, each one running once the previous function has completed. If any functions in the series pass an error to its callback, no more functions are run and the callback for the series is immediately called with the value of the error. Once the tasks have completed, the results are passed to the final callback as an array.
 
 It is also possible to use an object instead of an array. Each property will be run as a function and the results will be passed to the final callback as an object instead of an array. This can be a more readable way of handling results from async.series.
- 
+
 #### async version ####
 
 In this example we'll run some examples with both an array or an object.
@@ -465,7 +465,6 @@ function(err, results){
     // results is now equal to ['one', 'two']
 });
 
-
 // an example using an object instead of an array
 async.series({
     one: function(callback){
@@ -486,7 +485,7 @@ function(err, results) {
 
 #### RxJS version ####
 
-We can achieve the same functionality of `async.series` with an array by simply calling fromArray and calling `flatMap` to give us the observable of the current.  Then we'll call `reduce` to add each item to a new array to return. 
+We can achieve the same functionality of `async.series` with an array by simply calling fromArray and calling `flatMap` to give us the observable of the current.  Then we'll call `reduce` to add each item to a new array to return.
 
 ```js
 var Rx = require('rx');
@@ -575,7 +574,7 @@ wrapObject({
 The `async.parallel` runs an array of functions in parallel, without waiting until the previous function has completed. If any of the functions pass an error to its callback, the main callback is immediately called with the value of the error. Once the tasks have completed, the results are passed to the final callback as an array.
 
 It is also possible to use an object instead of an array. Each property will be run as a function and the results will be passed to the final callback as an object instead of an array. This can be a more readable way of handling results from async.parallel.
- 
+
 #### async version ####
 
 In this example we'll run some examples with both an array or an object.
@@ -601,8 +600,6 @@ function(err, results){
     // the results array will equal ['one','two'] even though
     // the second function had a shorter timeout.
 });
-
-
 
 // an example using an object instead of an array
 async.parallel({
@@ -675,7 +672,7 @@ function wrapObjectParallel (obj) {
 
                 newObj[key] = x;
 
-                return newObj;                
+                return newObj;
             }, {})
         });
 }
@@ -701,7 +698,7 @@ wrapObjectParallel({
 ## `async.whilst` ##
 
 The `async.whilst` method repeatedly call function, while test returns true. Calls the callback when stopped, or an error occurs.
- 
+
 #### async version ####
 
 In this example we'll just run a keep calling the callback while the count is less than 5.
@@ -752,7 +749,7 @@ Rx.Observable.while(
 ## `async.doWhilst` ##
 
 The `async.doWhilst` method is a post check version of `whilst`. To reflect the difference in the order of operations test and fn arguments are switched. `doWhils`t is to `whilst` as `do while` is to `while` in plain JavaScript.
- 
+
 #### async version ####
 
 In this example we'll just run a keep calling the callback while the count is less than 5.
@@ -797,7 +794,7 @@ var source = Rx.Observable.return(42).doWhile(
 ## `async.nextTick` ##
 
 The `async.nextTick` method calls the callback on a later loop around the event loop. In node.js this just calls process.nextTick, in the browser it falls back to setImmediate(callback) if available, otherwise setTimeout(callback, 0), which means other higher priority events may precede the execution of the callback.
- 
+
 #### async version ####
 
 In this example we'll just run a keep calling the callback while the count is less than 5.
@@ -837,7 +834,7 @@ call_order.push('one');
 ## `async.waterfall` ##
 
 The `async.waterfall` method runs an array of functions in series, each passing their results to the next in the array. However, if any of the functions pass an error to the callback, the next function is not executed and the main callback is immediately called with the error.
- 
+
 #### async version ####
 
 In this example, we'll check whether a file exists, then rename it and finally return its [stats](http://nodejs.org/api/fs.html#fs_class_fs_stats).
@@ -903,7 +900,7 @@ var async = {
                 }(series[i]));
             }
 
-            return acc; 
+            return acc;
         });
     }
 }
@@ -955,7 +952,7 @@ obs.subscribe(
 The [`async.compose`](https://github.com/caolan/async#composefn1-fn2) method creates a function which is a composition of the passed asynchronous functions. Each function consumes the return value of the function that follows. Composing functions f(), g() and h() would produce the result of f(g(h())), only this version uses callbacks to obtain the return values.
 
 Each function is executed with the `this` binding of the composed function.
- 
+
 #### async version ####
 
 In this example, we'll chain together two functions, one to add 1 to a supplied argument, and then chain it to another to multiply the result by 3.

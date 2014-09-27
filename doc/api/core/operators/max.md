@@ -1,11 +1,11 @@
 ### `Rx.Observable.prototype.max([comparer])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/max.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/max.js "View in source")
 
 Returns the maximum value in an observable sequence according to the specified comparer.
 
 #### Arguments
 1. `[comparer]` *(`Function`)*:  Comparer used to compare elements.
- 
+
 #### Returns
 *(`Observable`)*: An observable sequence containing a single element with the maximum element in the source sequence.
 
@@ -20,14 +20,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 9
-// => Completed 
+// => Completed
 
 /* With a comparer */
 function comparer (x, y) {
@@ -47,14 +47,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 9
-// => Completed 
+// => Completed
 ```
 
 ### Location

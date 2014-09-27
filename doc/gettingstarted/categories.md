@@ -185,10 +185,10 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Primitives</td>
    <td>
    <ol>
-    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableemptyscheduler">empty</a></li>   
-    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablenever">never</a></li>   
+    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableemptyscheduler">empty</a></li>
+    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablenever">never</a></li>
  	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablereturnvalue-scheduler">return</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablethrowexception-scheduler">throw</a></li> 	
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablethrowexception-scheduler">throw</a></li>
    </ol>
    </td>
    </tr>

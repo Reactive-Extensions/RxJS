@@ -20,10 +20,10 @@ var subscription = subject.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: b
@@ -51,7 +51,7 @@ subject.onNext('d');
 ## _ReplaySubject Constructor_ ##
 
 ### <a id="rxreplaysubjectbuffersize-windowSize-scheduler"></a>`Rx.ReplaySubject([bufferSize], [windowSize], [scheduler])`
-<a href="#rxreplaysubjectintialvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/replaysubject.js#L53-L64 "View in source") 
+<a href="#rxreplaysubjectintialvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/replaysubject.js#L53-L64 "View in source")
 
 Initializes a new instance of the `Rx.ReplaySubject` class with the specified buffer size, window and scheduler.
 
@@ -63,7 +63,7 @@ Initializes a new instance of the `Rx.ReplaySubject` class with the specified bu
 #### Example
 ```js
 var subject = new Rx.ReplaySubject(
-    2 /* buffer size */, 
+    2 /* buffer size */,
     null /* unlimited time buffer */,
     Rx.Scheduler.timeout);
 
@@ -76,10 +76,10 @@ var subscription = subject.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: b
@@ -98,23 +98,23 @@ subject.onNext('d');
 ## _ReplaySubject Instance Methods_ ##
 
 ### <a id="rxreplaysubjectprototypedispose"></a>`Rx.ReplaySubject.prototype.dispose()`
-<a href="#rxreplaysubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/ReplaySubject.js#L147-L150 "View in source") 
+<a href="#rxreplaysubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/ReplaySubject.js#L147-L150 "View in source")
 
 Unsubscribe all observers and release resources.
 
 #### Example
 ```js
 var subject = new Rx.ReplaySubject();
-    
+
 var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 subject.onNext(42);
@@ -131,7 +131,7 @@ try {
 	console.log(e.message);
 }
 
-// => Object has been disposed 
+// => Object has been disposed
 ```
 
 ### Location
@@ -141,7 +141,7 @@ try {
 * * *
 
 ### <a id="rxreplaysubjectprototypehasobservers"></a>`Rx.ReplaySubject.prototype.hasObservers()`
-<a href="#rxreplaysubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/ReplaySubject.js#L71-L73 "View in source") 
+<a href="#rxreplaysubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/ReplaySubject.js#L71-L73 "View in source")
 
 Indicates whether the subject has observers subscribed to it.
 
@@ -155,16 +155,16 @@ var subject = new Rx.ReplaySubject();
 console.log(subject.hasObservers());
 
 // => false
-    
+
 var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 console.log(subject.hasObservers());
@@ -177,4 +177,3 @@ console.log(subject.hasObservers());
 - rx.binding.js
 
 * * *
-

@@ -285,7 +285,7 @@ test('WhereIndex_DisposeInPredicate', function () {
 test('Where multiple subscribers', function () {
     var s = new TestScheduler(),
         xs = s.createHotObservable([onCompleted(100)]).filter(function () { return true; }),
-        o1 = s.createObserver(), 
+        o1 = s.createObserver(),
         o2 = s.createObserver();
 
     xs.subscribe(o1);
@@ -293,5 +293,5 @@ test('Where multiple subscribers', function () {
     s.start();
 
     equal(o1.messages.length, 1);
-    equal(o2.messages.length, 1); 
+    equal(o2.messages.length, 1);
 });

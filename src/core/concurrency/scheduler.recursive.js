@@ -62,7 +62,7 @@
     };
 
     /**
-     * Schedules an action to be executed recursively.     
+     * Schedules an action to be executed recursively.
      * @param {Mixed} state State passed to the action to be executed.
      * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in recursive invocation state.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -72,7 +72,7 @@
     };
 
     /**
-     * Schedules an action to be executed recursively after a specified relative due time.     
+     * Schedules an action to be executed recursively after a specified relative due time.
      * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action at the specified relative time.
      * @param {Number}dueTime Relative time after which to execute the action for the first time.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -82,7 +82,7 @@
     };
 
     /**
-     * Schedules an action to be executed recursively after a specified relative due time.  
+     * Schedules an action to be executed recursively after a specified relative due time.
      * @param {Mixed} state State passed to the action to be executed.
      * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in the recursive due time and invocation state.
      * @param {Number}dueTime Relative time after which to execute the action for the first time.
@@ -95,7 +95,7 @@
     };
 
     /**
-     * Schedules an action to be executed recursively at a specified absolute due time.    
+     * Schedules an action to be executed recursively at a specified absolute due time.
      * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action at the specified absolute time.
      * @param {Number}dueTime Absolute time at which to execute the action for the first time.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
@@ -105,7 +105,7 @@
     };
 
     /**
-     * Schedules an action to be executed recursively at a specified absolute due time.     
+     * Schedules an action to be executed recursively at a specified absolute due time.
      * @param {Mixed} state State passed to the action to be executed.
      * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in the recursive due time and invocation state.
      * @param {Number}dueTime Absolute time at which to execute the action for the first time.
@@ -115,5 +115,5 @@
       return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
         return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
       });
-    };  
+    };
   }(Scheduler.prototype));

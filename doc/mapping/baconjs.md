@@ -11,13 +11,13 @@ Bacon.js has two main concepts, Event Streams and Properties, which we will map 
 
 ## Event Streams ##
 
-In Bacon.js (and RxJS for that matter), an EventStream represents a stream of events. It is an Observable object, meaning that you can listen to events in the stream using, for instance, the onValue method with a callback.  
+In Bacon.js (and RxJS for that matter), an EventStream represents a stream of events. It is an Observable object, meaning that you can listen to events in the stream using, for instance, the onValue method with a callback.
 
-### Creating Event Streams ### 
+### Creating Event Streams ###
 
 #### Bacon.js ####
 
-Because Bacon.js is optimized for jQuery and Zepto, you can use the `$.fn.asEventStream` method to easily bind to create event streams. 
+Because Bacon.js is optimized for jQuery and Zepto, you can use the `$.fn.asEventStream` method to easily bind to create event streams.
 
 For example we can get the clickable element, listen to the `click` event, and then we can subscribe via the `onValue` method to capture the clicks.
 
@@ -34,18 +34,18 @@ The support goes above just standard support, but also selectors and an optional
 ```js
 $("#my-div").asEventStream("click", ".more-specific-selector")
 
-$("#my-div").asEventStream("click", ".more-specific-selector", function(event, args) { 
-	return args[0]; 
+$("#my-div").asEventStream("click", ".more-specific-selector", function(event, args) {
+	return args[0];
 });
 
-$("#my-div").asEventStream("click", function (event, args) { 
-	return args[0] 
+$("#my-div").asEventStream("click", function (event, args) {
+	return args[0]
 });
 ```
 
 #### RxJS ####
 
-It's very similar in RxJS core.  Until recently, this feature was reserved for external libraries such as [RxJS-jQuery](https://github.com/Reactive-Extensions/RxJS-jQuery), [RxJS-DOM](https://github.com/Reactive-Extensions/RxJS-DOM), [RxJS-Dojo](https://github.com/Reactive-Extensions/RxJS-Dojo) and [RxJS-MooTools](https://github.com/Reactive-Extensions/RxJS-MooTools).  RxJS 2.2 introduced two ways to bind to events with `fromEvent` and `fromEventPattern` so that bridge libraries are strictly not as necessary as they used to be.  
+It's very similar in RxJS core.  Until recently, this feature was reserved for external libraries such as [RxJS-jQuery](https://github.com/Reactive-Extensions/RxJS-jQuery), [RxJS-DOM](https://github.com/Reactive-Extensions/RxJS-DOM), [RxJS-Dojo](https://github.com/Reactive-Extensions/RxJS-Dojo) and [RxJS-MooTools](https://github.com/Reactive-Extensions/RxJS-MooTools).  RxJS 2.2 introduced two ways to bind to events with `fromEvent` and `fromEventPattern` so that bridge libraries are strictly not as necessary as they used to be.
 
 For example, we can recreate the binding to the clickable element for the `click` event, and then call `subscribe` with a function which listens for each time the clickable is clicked.
 
@@ -64,7 +64,7 @@ var Rx = require('rx'),
 
 var e = new EventEmitter();
 
-Rx.Observable.fromEvent(e, 'data', 
+Rx.Observable.fromEvent(e, 'data',
 	function (args) {
 		return { first: args[0], second: args[1] };
 	})

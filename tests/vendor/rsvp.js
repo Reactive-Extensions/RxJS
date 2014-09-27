@@ -42,7 +42,6 @@ define("rsvp/all",
     var Promise = __dependency1__.Promise;
     /* global toString */
 
-
     function all(promises) {
       if (Object.prototype.toString.call(promises) !== "[object Array]") {
         throw new TypeError('You must pass an array to all.');
@@ -80,7 +79,6 @@ define("rsvp/all",
         }
       });
     }
-
 
     __exports__.all = all;
   });
@@ -152,7 +150,6 @@ define("rsvp/async",
       }
     }
 
-
     __exports__.async = async;
   });
 define("rsvp/config",
@@ -163,7 +160,6 @@ define("rsvp/config",
 
     var config = {};
     config.async = async;
-
 
     __exports__.config = config;
   });
@@ -188,7 +184,6 @@ define("rsvp/defer",
 
       return deferred;
     }
-
 
     __exports__.defer = defer;
   });
@@ -290,7 +285,6 @@ define("rsvp/events",
       }
     };
 
-
     __exports__.EventTarget = EventTarget;
   });
 define("rsvp/hash",
@@ -344,7 +338,6 @@ define("rsvp/hash",
       return deferred.promise;
     }
 
-
     __exports__.hash = hash;
   });
 define("rsvp/node",
@@ -389,7 +382,6 @@ define("rsvp/node",
         return promise;
       };
     }
-
 
     __exports__.denodeify = denodeify;
   });
@@ -588,7 +580,6 @@ define("rsvp/promise",
       });
     }
 
-
     __exports__.Promise = Promise;
   });
 define("rsvp/reject",
@@ -602,7 +593,6 @@ define("rsvp/reject",
         reject(reason);
       });
     }
-
 
     __exports__.reject = reject;
   });
@@ -618,7 +608,6 @@ define("rsvp/resolve",
       });
     }
 
-
     __exports__.resolve = resolve;
   });
 define("rsvp/rethrow",
@@ -633,7 +622,6 @@ define("rsvp/rethrow",
       });
       throw reason;
     }
-
 
     __exports__.rethrow = rethrow;
   });
@@ -655,7 +643,6 @@ define("rsvp",
     function configure(name, value) {
       config[name] = value;
     }
-
 
     __exports__.Promise = Promise;
     __exports__.EventTarget = EventTarget;

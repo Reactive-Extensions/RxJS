@@ -1,5 +1,5 @@
   var fnString = 'function';
-  
+
   function toThunk(obj, ctx) {
     if (Array.isArray(obj)) {
       return objectToThunk.call(ctx, obj);
@@ -100,7 +100,7 @@
         fn(null, res);
       }, fn);
     }
-  }  
+  }
 
   function isObservable(obj) {
     return obj && obj.prototype.subscribe === fnString;
@@ -118,7 +118,7 @@
     return val && val.constructor === Object;
   }
 
-  /* 
+  /*
    * Spawns a generator function which allows for Promises, Observable sequences, Arrays, Objects, Generators and functions.
    * @param {Function} The spawning function.
    * @returns {Function} a function which has a done continuation.
@@ -131,7 +131,7 @@
         gen = fan;
 
       if (isGenFun) {
-        var args = slice.call(arguments), 
+        var args = slice.call(arguments),
           len = args.length,
           hasCallback = len && typeof args[len - 1] === fnString;
 
@@ -179,7 +179,7 @@
           var called = false;
           try {
             ret.value.call(ctx, function(){
-              if (called) { 
+              if (called) {
                 return;
               }
 
@@ -188,7 +188,7 @@
             });
           } catch (e) {
             timeoutScheduler.schedule(function () {
-              if (called) { 
+              if (called) {
                 return;
               }
 
@@ -202,7 +202,7 @@
         // Not supported
         next(new TypeError('Rx.spawn only supports a function, Promise, Observable, Object or Array.'));
       }
-    }    
+    }
   };
 
   /**
@@ -237,4 +237,4 @@
         }
       }
     }
-  };  
+  };

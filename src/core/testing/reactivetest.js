@@ -30,10 +30,10 @@
 
     /**
      * Factory method for an OnNext notification record at a given time with a given value or a predicate function.
-     * 
+     *
      * 1 - ReactiveTest.onNext(200, 42);
      * 2 - ReactiveTest.onNext(200, function (x) { return x.length == 2; });
-     * 
+     *
      * @param ticks Recorded virtual time the OnNext notification occurs.
      * @param value Recorded value stored in the OnNext notification or a predicate.
      * @return Recorded OnNext notification.
@@ -46,14 +46,14 @@
     },
     /**
      * Factory method for an OnError notification record at a given time with a given error.
-     * 
+     *
      * 1 - ReactiveTest.onNext(200, new Error('error'));
      * 2 - ReactiveTest.onNext(200, function (e) { return e.message === 'error'; });
-     * 
+     *
      * @param ticks Recorded virtual time the OnError notification occurs.
      * @param exception Recorded exception stored in the OnError notification.
-     * @return Recorded OnError notification. 
-     */      
+     * @return Recorded OnError notification.
+     */
     onError: function (ticks, exception) {
         if (typeof exception === 'function') {
             return new Recorded(ticks, new OnErrorPredicate(exception));
@@ -62,7 +62,7 @@
     },
     /**
      * Factory method for an OnCompleted notification record at a given time.
-     * 
+     *
      * @param ticks Recorded virtual time the OnCompleted notification occurs.
      * @return Recorded OnCompleted notification.
      */
@@ -71,7 +71,7 @@
     },
     /**
      * Factory method for a subscription record based on a given subscription and disposal time.
-     * 
+     *
      * @param start Virtual time indicating when the subscription was created.
      * @param end Virtual time indicating when the subscription was disposed.
      * @return Subscription object.

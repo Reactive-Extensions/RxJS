@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.throttle(dueTime, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js "View in source")
 
 Ignores values from an observable sequence which are followed by another value before dueTime.
 
@@ -8,8 +8,8 @@ Ignores values from an observable sequence which are followed by another value b
 2. `[scheduler=Rx.Scheduler.timeout]` *(`Any`)*: Scheduler to run the throttle timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
-*(`Observable`)*: The throttled sequence. 
-    
+*(`Observable`)*: The throttled sequence.
+
 #### Example
 ```js
 var times = [
@@ -22,7 +22,7 @@ var times = [
 
 // Delay each item by time and project value;
 var source = Rx.Observable.for(
-    times, 
+    times,
     function (item) {
         return Rx.Observable
             .return(item.value)
@@ -35,16 +35,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 0
 // => Next: 2
 // => Next: 4
-// => Completed 
+// => Completed
 ```
 
 ### Location

@@ -12,14 +12,14 @@ var Observable = Rx.Observable,
 
 test('Never_Basic', function () {
     var scheduler = new TestScheduler();
-    
+
     var xs = Observable.never();
-    
+
     var results = scheduler.createObserver();
-    
+
     xs.subscribe(results);
-    
+
     scheduler.start();
-    
+
     results.messages.assertEqual();
 });

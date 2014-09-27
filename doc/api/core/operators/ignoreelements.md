@@ -1,10 +1,10 @@
 ### `Rx.Observable.prototype.ignoreElements()`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ignoreelements.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/ignoreelements.js "View in source")
 
 Ignores all elements in an observable sequence leaving only the termination messages.
 
 #### Returns
-*(`Observable`)*: An empty observable sequence that signals termination, successful or exceptional, of the source sequence.    
+*(`Observable`)*: An empty observable sequence that signals termination, successful or exceptional, of the source sequence.
 
 #### Example
 ```js
@@ -16,10 +16,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Completed

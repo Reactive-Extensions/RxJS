@@ -13,7 +13,7 @@
   /**
    * Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
    * @param {Mixed} item Disposable to add.
-   */    
+   */
   CompositeDisposablePrototype.add = function (item) {
     if (this.isDisposed) {
       item.dispose();
@@ -43,7 +43,7 @@
   };
 
   /**
-   *  Disposes all disposables in the group and removes them from the group.  
+   *  Disposes all disposables in the group and removes them from the group.
    */
   CompositeDisposablePrototype.dispose = function () {
     if (!this.isDisposed) {
@@ -61,8 +61,7 @@
   /**
    * Converts the existing CompositeDisposable to an array of disposables
    * @returns {Array} An array of disposable objects.
-   */  
+   */
   CompositeDisposablePrototype.toArray = function () {
     return this.disposables.slice(0);
   };
-  

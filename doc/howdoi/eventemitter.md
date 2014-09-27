@@ -66,7 +66,7 @@ Emitter.prototype.off = function (name, handler) {
 
 Emitter.prototype.dispose = function () {
 	var subjects = this.subjects;
-	for (var prop in subjects) {	
+	for (var prop in subjects) {
 		if (hasOwnProp.call(subjects, prop)) {
 			subjects[prop].dispose();
 		}
@@ -76,7 +76,7 @@ Emitter.prototype.dispose = function () {
 };
 ```
 
-Then we can use it much as we did above.  As the call to `subscribe` returns a subscription, we might want to hand that back to the user instead of providing an off method.  So, we could rewrite the above where we call the `on` method to `listen` and we return a subscription handle to the user to stop listening.  
+Then we can use it much as we did above.  As the call to `subscribe` returns a subscription, we might want to hand that back to the user instead of providing an off method.  So, we could rewrite the above where we call the `on` method to `listen` and we return a subscription handle to the user to stop listening.
 
 ```js
 var hasOwnProp = {}.hasOwnProperty;
@@ -103,7 +103,7 @@ Emitter.prototype.listen = function (name, handler) {
 
 Emitter.prototype.dispose = function () {
 	var subjects = this.subjects;
-	for (var prop in subjects) {	
+	for (var prop in subjects) {
 		if (hasOwnProp.call(subjects, prop)) {
 			subjects[prop].dispose();
 		}
@@ -128,4 +128,3 @@ emitter.emit('data', 'foo');
 // Destroy the subscription
 subscription.dispose();
 ```
-

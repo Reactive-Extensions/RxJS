@@ -29,7 +29,6 @@ NuGet Dependencies:
 - [`interval`](../api/core/operators/generatewithrelativetime.md)
 - [`timer`](../api/core/operators/timer.md)
 
-
 ### `Observable Instance Methods`
 - [`bufferWithTime`](../api/core/operators/bufferwithtime.md)
 - [`bufferWithTimeOrCount`](../api/core/operators/bufferwithtimeorcount.md)

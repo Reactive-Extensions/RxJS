@@ -9,8 +9,8 @@
   /**
    *  Creates a pattern that matches the current plan matches and when the specified observable sequences has an available value.
    *  @param other Observable sequence to match in addition to the current pattern.
-   *  @return {Pattern} Pattern object that matches when all observable sequences in the pattern have an available value.   
-   */ 
+   *  @return {Pattern} Pattern object that matches when all observable sequences in the pattern have an available value.
+   */
   Pattern.prototype.and = function (other) {
     return new Pattern(this.patterns.concat(other));
   };

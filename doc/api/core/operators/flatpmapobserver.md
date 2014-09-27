@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.flatMapObserver(onNext, onError, onCompleted, [thisArg])`
 ### `Rx.Observable.prototype.selectManyObserver(onNext, onError, onCompleted, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectmanyobserver.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectmanyobserver.js "View in source")
 
 Projects each notification of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
 
@@ -11,7 +11,7 @@ Projects each notification of an observable sequence to an observable sequence a
 2. `onError` *(`Function`)*: A transform function to apply when an error occurs in the source sequence.
 3. `onCompleted` *(`Function`)*: A transform function to apply when the end of the source sequence is reached.
 4. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the transform functions.
- 
+
 #### Returns
 *(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function corresponding to each notification in the input sequence.
 
@@ -34,16 +34,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 2 
-// => Next: 3 
-// => Next: 3 
-// => Completed  
+// => Next: 2
+// => Next: 3
+// => Next: 3
+// => Completed
 ```
 
 ### Location

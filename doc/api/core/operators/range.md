@@ -1,5 +1,5 @@
 ### `Rx.Observable.range(start, count, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js "View in source")
 
 Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
 
@@ -9,7 +9,7 @@ Generates an observable sequence of integral numbers within a specified range, u
 3. `[scheduler=Rx.Scheduler.currentThread]` *(`Scheduler`)*: Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
 
 #### Returns
-*(`Observable`)*: An observable sequence that contains a range of sequential integral numbers. 
+*(`Observable`)*: An observable sequence that contains a range of sequential integral numbers.
 
 #### Example
 ```js
@@ -20,16 +20,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: 0 
+// => Next: 0
 // => Next: 1
-// => Next: 2 
-// => Completed 
+// => Next: 2
+// => Completed
 ```
 
 ### Location

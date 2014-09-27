@@ -13,8 +13,8 @@
             this.checkAccess();
             try {
                 this._observer.onNext(value);
-            } catch (e) { 
-                throw e;                
+            } catch (e) {
+                throw e;
             } finally {
                 this._state = 0;
             }
@@ -24,8 +24,8 @@
             this.checkAccess();
             try {
                 this._observer.onError(err);
-            } catch (e) { 
-                throw e;                
+            } catch (e) {
+                throw e;
             } finally {
                 this._state = 2;
             }
@@ -35,8 +35,8 @@
             this.checkAccess();
             try {
                 this._observer.onCompleted();
-            } catch (e) { 
-                throw e;                
+            } catch (e) {
+                throw e;
             } finally {
                 this._state = 2;
             }

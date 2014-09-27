@@ -48,14 +48,14 @@ test('Amb_NeverEmpty', function () {
 
 test('Amb_EmptyNever', function () {
     var scheduler = new TestScheduler();
-    
+
     var n = Observable.never();
     var e = scheduler.createHotObservable(onNext(150, 1), onCompleted(225));
-    
+
     var results = scheduler.startWithCreate(function () {
         return e.amb(n);
     });
-    
+
     results.messages.assertEqual(onCompleted(225));
 });
 
@@ -83,7 +83,7 @@ test('Amb_WinnerThrows', function () {
     var scheduler = new TestScheduler();
 
     var sourceNotDisposed = false;
-    
+
     var o1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onError(220, ex));
     var o2 = scheduler.createHotObservable(onNext(150, 1), onNext(220, 3), onCompleted(250)).doAction(function () {
         return sourceNotDisposed = true;
@@ -103,13 +103,13 @@ test('Amb_LoserThrows', function () {
     var scheduler = new TestScheduler();
 
     var sourceNotDisposed = false;
-    
+
     var o1 = scheduler.createHotObservable(onNext(150, 1), onNext(220, 2), onError(230, ex)).doAction(function () {
         return sourceNotDisposed = true;
     });
 
     var o2 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 3), onCompleted(250));
-    
+
     var results = scheduler.startWithCreate(function () {
         return o1.amb(o2);
     });
@@ -122,9 +122,9 @@ test('Amb_ThrowsBeforeElection', function () {
     var ex = 'ex';
 
     var scheduler = new TestScheduler();
-    
+
     var sourceNotDisposed = false;
-    
+
     var o1 = scheduler.createHotObservable(onNext(150, 1), onError(210, ex));
     var o2 = scheduler.createHotObservable(onNext(150, 1), onNext(220, 3), onCompleted(250)).doAction(function () {
         return sourceNotDisposed = true;
@@ -135,6 +135,6 @@ test('Amb_ThrowsBeforeElection', function () {
     });
 
     results.messages.assertEqual(onError(210, ex));
-    
+
     ok(!sourceNotDisposed);
 });

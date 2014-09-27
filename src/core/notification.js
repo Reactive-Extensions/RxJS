@@ -2,14 +2,14 @@
    *  Represents a notification to an observer.
    */
   var Notification = Rx.Notification = (function () {
-    function Notification(kind, hasValue) { 
+    function Notification(kind, hasValue) {
       this.hasValue = hasValue == null ? false : hasValue;
       this.kind = kind;
     }
 
     /**
      * Invokes the delegate corresponding to the notification or the observer's method corresponding to the notification and returns the produced result.
-     * 
+     *
      * @memberOf Notification
      * @param {Any} observerOrOnNext Delegate to invoke for an OnNext notification or Observer to invoke the notification on..
      * @param {Function} onError Delegate to invoke for an OnError notification.
@@ -24,7 +24,7 @@
 
     /**
      * Returns an observable sequence with a single notification.
-     * 
+     *
      * @memberOf Notifications
      * @param {Scheduler} [scheduler] Scheduler to send out the notification calls on.
      * @returns {Observable} The observable sequence that surfaces the behavior of the notification upon subscription.

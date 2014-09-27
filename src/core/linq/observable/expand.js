@@ -1,6 +1,6 @@
    /**
    *  Expands an observable sequence by recursively invoking selector.
-   *  
+   *
    * @param {Function} selector Selector function to invoke for each produced element, resulting in another sequence to which the selector will be invoked recursively again.
    * @param {Scheduler} [scheduler] Scheduler on which to perform the expansion. If not provided, this defaults to the current thread scheduler.
    * @returns {Observable} An observable sequence containing all the elements produced by the recursive expansion.

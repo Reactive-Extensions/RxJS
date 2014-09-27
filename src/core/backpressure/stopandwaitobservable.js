@@ -65,7 +65,7 @@
       };
 
       return StopAndWaitObserver;
-    }(Observer));    
+    }(Observer));
 
     return StopAndWaitObservable;
   }(Observable));

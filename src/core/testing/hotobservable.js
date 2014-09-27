@@ -1,4 +1,4 @@
-    /** @private */    
+    /** @private */
     var HotObservable = (function (_super) {
 
         function subscribe(observer) {

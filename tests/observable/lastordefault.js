@@ -6,7 +6,6 @@ var TestScheduler = Rx.TestScheduler,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-
 // Last or Default
 test('LastOrDefaultAsync_Empty', function () {
     var res, scheduler, xs;

@@ -4,7 +4,7 @@
    *  var res = source.startWith(1, 2, 3);
    *  var res = source.startWith(Rx.Scheduler.timeout, 1, 2, 3);
    * @param {Arguments} args The specified values to prepend to the observable sequence
-   * @returns {Observable} The source sequence prepended with the specified values.  
+   * @returns {Observable} The source sequence prepended with the specified values.
    */
   observableProto.startWith = function () {
     var values, scheduler, start = 0;

@@ -32,7 +32,7 @@
 
     /**
      * Converts the TimeSpan value to a relative virtual time value.
-     * @memberOf HistoricalScheduler         
+     * @memberOf HistoricalScheduler
      * @param {Number} timeSpan TimeSpan value to convert.
      * @return {Number} Corresponding relative virtual time value.
      */
@@ -40,5 +40,5 @@
       return timeSpan;
     };
 
-    return HistoricalScheduler;    
+    return HistoricalScheduler;
   }(Rx.VirtualTimeScheduler));

@@ -4,7 +4,7 @@
      * var res = res = source.average();
      * var res = res = source.average(function (x) { return x.value; });
      * @param {Function} [selector] A transform function to apply to each element.
-     * @param {Any} [thisArg] Object to use as this when executing callback.        
+     * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Observable} An observable sequence containing a single element with the average of the sequence of values.
      */
     observableProto.average = function (keySelector, thisArg) {

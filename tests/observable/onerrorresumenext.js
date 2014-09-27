@@ -23,21 +23,19 @@ test('OnErrorResumeNext_ErrorMultiple', function () {
 
 test('OnErrorResumeNext_EmptyReturnThrowAndMore', function () {
     var scheduler = new TestScheduler();
-    
+
     var o1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(205));
     var o2 = scheduler.createHotObservable(onNext(215, 2), onCompleted(220));
     var o3 = scheduler.createHotObservable(onNext(225, 3), onNext(230, 4), onCompleted(235));
     var o4 = scheduler.createHotObservable(onError(240, 'ex'));
     var o5 = scheduler.createHotObservable(onNext(245, 5), onCompleted(250));
-    
+
     var results = scheduler.startWithCreate(function () {
         return Observable.onErrorResumeNext(o1, o2, o3, o4, o5);
     });
-    
+
     results.messages.assertEqual(onNext(215, 2), onNext(225, 3), onNext(230, 4), onNext(245, 5), onCompleted(250));
 });
-
-
 
 test('OnErrorResumeNext_SingleSourceThrows', function () {
     var ex, msgs1, o1, results, scheduler;

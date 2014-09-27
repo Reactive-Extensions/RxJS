@@ -1,6 +1,6 @@
 # How do I work with jQuery and RxJS #
 
-The [jQuery](http://jquery.com) project and RxJS play very well together as libraries.  In fact, we supply bindings directly for RxJS to jQuery should you want to wrap animations, events, Ajax calls and more using Observables in [RxJS-jQuery](https://github.com/Reactive-Extensions/RxJS-jQuery).  The bindings library provides many handy features for bridging the world to Observables.  If you're interested in that library, go ahead and use it.  
+The [jQuery](http://jquery.com) project and RxJS play very well together as libraries.  In fact, we supply bindings directly for RxJS to jQuery should you want to wrap animations, events, Ajax calls and more using Observables in [RxJS-jQuery](https://github.com/Reactive-Extensions/RxJS-jQuery).  The bindings library provides many handy features for bridging the world to Observables.  If you're interested in that library, go ahead and use it.
 
 ## Using RxJS with Rx-jQuery ##
 
@@ -18,7 +18,7 @@ Now we can start using the bindings!  For example, we can listen to a `click` ev
 
 ```js
 $( "#go" ).clickAsObservable().flatMap(function () {
-	  
+
 	return $( "#block" ).animateAsObservable({
 		width: "70%",
 		opacity: 0.4,
@@ -68,7 +68,7 @@ We could go a step further and create our own jQuery plugin which handles events
  * @returns {Observable} An observable sequence of events from the specified element and the specified event.
  */
 jQuery.fn.toObservable = function (eventName, selector) {
-	return Rx.Observable.fromEvent(this, eventName, selector);	
+	return Rx.Observable.fromEvent(this, eventName, selector);
 };
 ```
 

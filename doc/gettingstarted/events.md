@@ -11,7 +11,7 @@ The following sample creates a simple DOM event handler for the mouse move event
 ```js
 var result = document.getElementById('result');
 
-document.addEventListener('mousemove', function (e) { 
+document.addEventListener('mousemove', function (e) {
 	result.innerHTML = e.clientX + ', ' + e.clientY;
 }, false);
 ```
@@ -34,7 +34,7 @@ Notice that in this sample, move becomes an observable sequence in which we can 
 
 Cleaning up of the event handler is taken care of by the `Disposable` object returned by the `subscribe` method. Calling `dispose` will release all resources being used by the sequence including the underlying event handler. This essentially takes care of unsubscribing to an event on your behalf.
 
-The `fromEvent` method also supports adding event handlers to multiple items, for example a DOM NodeList.  This example will add the 'click' to each element in the list. 
+The `fromEvent` method also supports adding event handlers to multiple items, for example a DOM NodeList.  This example will add the 'click' to each element in the list.
 
 ```
 var result = document.getElementById('result');
@@ -127,10 +127,10 @@ require(['dojo/on', 'dojo/dom', 'rx', 'rx.async', 'rx.binding'], function (on, d
             console.log('Next: Clicked!');
         },
         function (err) {
-            console.log('Error: ' + err);   
+            console.log('Error: ' + err);
         },
         function () {
-            console.log('Completed');   
+            console.log('Completed');
         });
 
     on.emit(input, 'click');

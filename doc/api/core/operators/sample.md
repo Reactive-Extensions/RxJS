@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.sample(interval | sampleObservable)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sample.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sample.js "View in source")
 
 Samples the observable sequence at each interval.
 
@@ -7,7 +7,7 @@ Samples the observable sequence at each interval.
 1. `[interval]` *(`Number`)*: Interval at which to sample (specified as an integer denoting milliseconds)
 2. `[sampleObservable]` *(`Observable`)*: Sampler Observable.
 3. `[scheduler=Rx.Scheduler.timeout]` *(`Scheduler`)*: Scheduler to run the sampling timer on. If not specified, the timeout scheduler is used.
- 
+
 #### Returns
 *(`Observable`)*: Sampled observable sequence.
 
@@ -23,15 +23,15 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 3
 // => Next: 8
-// => Completed 
+// => Completed
 
 /* With a sampler */
 var source = Rx.Observable.interval(1000)
@@ -43,10 +43,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 3

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.elementAt(index)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/elementat.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/elementat.js "View in source")
 
 Returns the element at a specified index in a sequence.
 
@@ -20,14 +20,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 2
-// => Completed 
+// => Completed
 
 /* Not found */
 var source = Rx.Observable.fromArray([1,2,3,4])
@@ -38,10 +38,10 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Error: Error: Argument out of range

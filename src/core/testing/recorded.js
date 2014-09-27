@@ -16,8 +16,8 @@
    * Checks whether the given recorded object is equal to the current instance.
    *
    * @param {Recorded} other Recorded object to check for equality.
-   * @returns {Boolean} true if both objects are equal; false otherwise.  
-   */  
+   * @returns {Boolean} true if both objects are equal; false otherwise.
+   */
   Recorded.prototype.equals = function (other) {
     return this.time === other.time && this.comparer(this.value, other.value);
   };
@@ -25,8 +25,8 @@
   /**
    * Returns a string representation of the current Recorded value.
    *
-   * @returns {String} String representation of the current Recorded value. 
-   */   
+   * @returns {String} String representation of the current Recorded value.
+   */
   Recorded.prototype.toString = function () {
     return this.value.toString() + '@' + this.time;
   };

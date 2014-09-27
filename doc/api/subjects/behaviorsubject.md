@@ -17,10 +17,10 @@ var subscription = subject.subscribe(
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
@@ -50,7 +50,7 @@ subject.onCompleted();
 ## _BehaviorSubject Constructor_ ##
 
 ### <a id="rxbehaviorsubjectintialvalue"></a>`Rx.BehaviorSubject(initialValue)`
-<a href="#rxbehaviorsubjectintialvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L30-L37 "View in source") 
+<a href="#rxbehaviorsubjectintialvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L30-L37 "View in source")
 
 Initializes a new instance of the `Rx.BehaviorSubject` class which creates a subject that caches its last value and starts with the specified value.
 
@@ -61,18 +61,17 @@ Initializes a new instance of the `Rx.BehaviorSubject` class which creates a sub
 ```js
 var subject = new Rx.BehaviorSubject(56);
 
-
 subject.onCompleted();
-    
+
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 56
@@ -93,23 +92,23 @@ subject.onCompleted();
 ## _BehaviorSubject Instance Methods_ ##
 
 ### <a id="rxbehaviorsubjectprototypedispose"></a>`Rx.BehaviorSubject.prototype.dispose()`
-<a href="#rxbehaviorsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L97-L102 "View in source") 
+<a href="#rxbehaviorsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L97-L102 "View in source")
 
 Unsubscribe all observers and release resources.
 
 #### Example
 ```js
 var subject = new Rx.BehaviorSubject();
-    
+
 var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 subject.onNext(42);
@@ -126,7 +125,7 @@ try {
 	console.log(e.message);
 }
 
-// => Object has been disposed 
+// => Object has been disposed
 ```
 
 ### Location
@@ -136,7 +135,7 @@ try {
 * * *
 
 ### <a id="rxbehaviorsubjectprototypehasobservers"></a>`Rx.BehaviorSubject.prototype.hasObservers()`
-<a href="#rxbehaviorsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L44-L46 "View in source") 
+<a href="#rxbehaviorsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L44-L46 "View in source")
 
 Indicates whether the subject has observers subscribed to it.
 
@@ -150,16 +149,16 @@ var subject = new Rx.BehaviorSubject();
 console.log(subject.hasObservers());
 
 // => false
-    
+
 var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x.toString());
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 console.log(subject.hasObservers());
@@ -172,4 +171,3 @@ console.log(subject.hasObservers());
 = rx.binding.js
 
 * * *
-

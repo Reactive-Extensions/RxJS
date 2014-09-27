@@ -8,7 +8,7 @@ The follow example shows the basic usage of an `Rx.Scheduler`.
 
 ```js
 var disposable = Rx.Scheduler.timeout.scheduleWithState(
-     'world', 
+     'world',
      function (x) {
           console.log('hello ' + x);
      }
@@ -59,7 +59,7 @@ var disposable = Rx.Scheduler.timeout.scheduleWithState(
 ## _Scheduler Constructor_ ##
 
 ### <a id="rxschedulernow-schedule-schedulerelative-scheduleabsolute"></a>`Rx.Scheduler(now, schedule, scheduleRelative, scheduleAbsolute)`
-<a href="#rxschedulernow-schedule-schedulerelative-scheduleabsolute">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L5-L9 "View in source") 
+<a href="#rxschedulernow-schedule-schedulerelative-scheduleabsolute">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L5-L9 "View in source")
 
 Initializes a new instance of the `Rx.Scheduler`.  This is meant for Scheduler implementers and not normal usage.
 
@@ -103,7 +103,7 @@ function scheduleRelative(state, dueTime, action) {
                disposable.setDisposable(action(scheduler, state));
           }
      }, dt);
-  
+
      return new CompositeDisposable(disposable, disposableCreate(function () {
           window.clearTimeout(id);
      }));
@@ -137,14 +137,14 @@ var handle = timeoutScheduler.schedule(function () {
 ## _Scheduler Instance Methods_ ##
 
 ### <a id="rxschedulerprototypecatchhandler"></a>`Rx.Scheduler.prototype.catch(handler)`
-<a href="#rxschedulerprototypecatchhandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L65-L72 "View in source") 
+<a href="#rxschedulerprototypecatchhandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L65-L72 "View in source")
 
 Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.  There is an alias of `catchException` for browsers < IE9.
 
 #### Arguments
 1. `handler` *(Function)*: Handler that's run if an exception is caught. The exception will be rethrown if the handler returns `false`.
 
-#### Returns 
+#### Returns
 *(Scheduler)*: Wrapper around the original scheduler, enforcing exception handling.
 
 #### Example
@@ -165,7 +165,7 @@ function inherits (ctor, superCtor) {
 inherits (SchedulerError, Error);
 
 function SchedulerError(message) {
-    Error.call(this, message);   
+    Error.call(this, message);
 }
 
 var scheduler = Rx.Scheduler.timeout;
@@ -175,11 +175,11 @@ var catchScheduler = scheduler.catchException(function (e) {
 
 // Throws no exception
 var d1 = catchScheduler.schedule(function () {
-    throw new SchedulerError('woops'); 
+    throw new SchedulerError('woops');
 });
 
 var d2 = catchScheduler.schedule(function () {
-    throw new Error('woops'); 
+    throw new Error('woops');
 });
 
 // => Uncaught Error: woops
@@ -192,11 +192,11 @@ var d2 = catchScheduler.schedule(function () {
 * * *
 
 ### <a id="rxschedulerprototypenow"></a>`Rx.Scheduler.prototype.now()`
-<a href="#rxschedulerprototypenow">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L17-L24 "View in source") 
+<a href="#rxschedulerprototypenow">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L17-L24 "View in source")
 
 Gets the current time according to the Scheduler implementation.
 
-#### Returns 
+#### Returns
 *(Number)*: The current time according to the Scheduler implementation.
 
 #### Example
@@ -217,7 +217,7 @@ console.log(now);
 ### Standard Scheduling ###
 
 ### <a id="rxschedulerprototypescheduleaction"></a>`Rx.Scheduler.prototype.schedule(action)`
-<a href="#rxschedulerprototypescheduleaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L112-114 "View in source") 
+<a href="#rxschedulerprototypescheduleaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L112-114 "View in source")
 
 Schedules an action to be executed.
 
@@ -231,7 +231,7 @@ Schedules an action to be executed.
 
 ```js
 var disposable = Rx.Scheduler.immediate.schedule(function () {
-     console.log('hello');  
+     console.log('hello');
 });
 
 // => hello
@@ -247,7 +247,7 @@ disposable.dispose();
 * * *
 
 ### <a id="rxschedulerprototypeschedulewithstatestate-action"></a>`Rx.Scheduler.prototype.scheduleWithState(state, action)`
-<a href="#rxschedulerprototypeschedulewithstatestate-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L122-124 "View in source") 
+<a href="#rxschedulerprototypeschedulewithstatestate-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L122-124 "View in source")
 
 Schedules an action to be executed with state.
 
@@ -262,7 +262,7 @@ Schedules an action to be executed with state.
 
 ```js
 var disposable = Rx.Scheduler.immediate.scheduleWithState('world', function (x) {
-     console.log('hello ' + x);  
+     console.log('hello ' + x);
 });
 
 // => hello world
@@ -278,9 +278,9 @@ disposable.dispose();
 * * *
 
 ### <a id="rxschedulerprototypeschedulewithabsoluteduetime-action"></a>`Rx.Scheduler.prototype.scheduleWithAbsolute(duetime, action)`
-<a href="#rxschedulerprototypeschedulewithabsoluteduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L153-155 "View in source") 
+<a href="#rxschedulerprototypeschedulewithabsoluteduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L153-155 "View in source")
 
-Schedules an action to be executed at the specified absolute due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.   
+Schedules an action to be executed at the specified absolute due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.
 
 #### Arguments
 1. `dueTime` *(Number)*: Absolute time at which to execute the action.
@@ -295,7 +295,7 @@ Schedules an action to be executed at the specified absolute due time. Note this
 var disposable = Rx.Scheduler.timeout.scheduleWithAbsolute(
      Date.now() + 5000, /* 5 seconds in the future */
      function () {
-          console.log('hello');  
+          console.log('hello');
      }
 );
 
@@ -309,9 +309,9 @@ var disposable = Rx.Scheduler.timeout.scheduleWithAbsolute(
 * * *
 
 ### <a id="rxschedulerprototypeschedulewithabsoluteandstatestate-duetime-action"></a>`Rx.Scheduler.prototype.scheduleWithAbsoluteAndState(state, duetime, action)`
-<a href="#rxschedulerprototypeschedulewithabsoluteandstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L164-166 "View in source") 
+<a href="#rxschedulerprototypeschedulewithabsoluteandstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L164-166 "View in source")
 
-Schedules an action to be executed at the specified absolute due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.   
+Schedules an action to be executed at the specified absolute due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.
 
 #### Arguments
 1. `state` *(Any)*: State passed to the action to be executed.
@@ -328,7 +328,7 @@ var disposable = Rx.Scheduler.timeout.scheduleWithAbsolute(
      'world',
      Date.now() + 5000, /* 5 seconds in the future */
      function (x) {
-          console.log('hello ' + x);  
+          console.log('hello ' + x);
      }
 );
 
@@ -342,9 +342,9 @@ var disposable = Rx.Scheduler.timeout.scheduleWithAbsolute(
 * * *
 
 ### <a id="rxschedulerprototypeschedulewithrelativeduetime-action"></a>`Rx.Scheduler.prototype.scheduleWithRelative(duetime, action)`
-<a href="#rxschedulerprototypeschedulewithrelativeduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L132-134 "View in source") 
+<a href="#rxschedulerprototypeschedulewithrelativeduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L132-134 "View in source")
 
-Schedules an action to be executed after the specified relative due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.   
+Schedules an action to be executed after the specified relative due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.
 
 #### Arguments
 1. `dueTime` *(Number)*: Relative time at which to execute the action.
@@ -359,7 +359,7 @@ Schedules an action to be executed after the specified relative due time. Note t
 var disposable = Rx.Scheduler.timeout.scheduleWithRelative(
      5000, /* 5 seconds in the future */
      function () {
-          console.log('hello');  
+          console.log('hello');
      }
 );
 
@@ -373,9 +373,9 @@ var disposable = Rx.Scheduler.timeout.scheduleWithRelative(
 * * *
 
 ### <a id="rxschedulerprototypeschedulewithrelativeandstatestate-duetime-action"></a>`Rx.Scheduler.prototype.scheduleWithRelativeAndState(state, duetime, action)`
-<a href="#rxschedulerprototypeschedulewithrelativeandstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L164-166 "View in source") 
+<a href="#rxschedulerprototypeschedulewithrelativeandstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L164-166 "View in source")
 
-Schedules an action to be executed at the specified relative due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.   
+Schedules an action to be executed at the specified relative due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.
 
 #### Arguments
 1. `state` *(Any)*: State passed to the action to be executed.
@@ -392,7 +392,7 @@ var disposable = Rx.Scheduler.timeout.scheduleWithAbsolute(
      'world',
      5000, /* 5 seconds in the future */
      function (x) {
-          console.log('hello ' + x);  
+          console.log('hello ' + x);
      }
 );
 
@@ -408,7 +408,7 @@ var disposable = Rx.Scheduler.timeout.scheduleWithAbsolute(
 ### Recursive Scheduling ###
 
 ### <a id="rxschedulerprototypeschedulerecursiveaction"></a>`Rx.Scheduler.prototype.scheduleRecursive(action)`
-<a href="#rxschedulerprototypescheduleaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L173-179 "View in source") 
+<a href="#rxschedulerprototypescheduleaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L173-179 "View in source")
 
 Schedules an action to be executed recursively.
 
@@ -428,7 +428,7 @@ var disposable = Rx.Scheduler.immediate.scheduleRecursive(
           console.log(i);
           if (++i < 3) {
                self(i);
-          } 
+          }
      }
 );
 
@@ -444,7 +444,7 @@ var disposable = Rx.Scheduler.immediate.scheduleRecursive(
 * * *
 
 ### <a id="rxschedulerprototypeschedulerecursivewithstatestate-action"></a>`Rx.Scheduler.prototype.scheduleRecursiveWithState(state, action)`
-<a href="#rxschedulerprototypeschedulerecursivewithstatestate-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L122-124 "View in source") 
+<a href="#rxschedulerprototypeschedulerecursivewithstatestate-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L122-124 "View in source")
 
 Schedules an action to be executed with state.
 
@@ -459,12 +459,12 @@ Schedules an action to be executed with state.
 
 ```js
 var disposable = Rx.Scheduler.immediate.scheduleRecursiveWithState(
-     0, 
+     0,
      function (i, self) {
           console.log(i);
           if (++i < 3) {
                self(i);
-          } 
+          }
      }
 );
 
@@ -480,9 +480,9 @@ var disposable = Rx.Scheduler.immediate.scheduleRecursiveWithState(
 * * *
 
 ### <a id="rxschedulerprototypeschedulerecursivewithabsoluteduetime-action"></a>`Rx.Scheduler.prototype.scheduleRecursiveWithAbsolute(duetime, action)`
-<a href="#rxschedulerprototypeschedulerecursivewithabsoluteduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L226-232 "View in source") 
+<a href="#rxschedulerprototypeschedulerecursivewithabsoluteduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L226-232 "View in source")
 
-Schedules an action to be executed recursively at a specified absolute due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.   
+Schedules an action to be executed recursively at a specified absolute due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.
 
 #### Arguments
 1. `dueTime` *(Number)*: Absolute time at which to execute the action for the first time.
@@ -503,7 +503,7 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithAbsolute(
           if (++i < 3) {
                // Schedule mutliplied by a second by position
                self(Date.now() + (i * 1000));
-          } 
+          }
      }
 );
 
@@ -519,9 +519,9 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithAbsolute(
 * * *
 
 ### <a id="rxschedulerprototypeschedulerecursivewithabsoluteandstatestate-duetime-action"></a>`Rx.Scheduler.prototype.scheduleRecursiveWithAbsoluteAndState(state, duetime, action)`
-<a href="#rxschedulerprototypeschedulerecursivewithabsoluteandstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L241-L245 "View in source") 
+<a href="#rxschedulerprototypeschedulerecursivewithabsoluteandstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L241-L245 "View in source")
 
-Schedules an action to be executed recursively at a specified absolute due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.   
+Schedules an action to be executed recursively at a specified absolute due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.
 
 #### Arguments
 1. `state` *(Any)*: State passed to the action to be executed.
@@ -542,7 +542,7 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithAbsoluteAndState(
           if (++i < 3) {
                // Schedule mutliplied by a second by position
                self(i, Date.now() + (i * 1000));
-          } 
+          }
      }
 );
 
@@ -558,9 +558,9 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithAbsoluteAndState(
 * * *
 
 ### <a id="rxschedulerprototypeschedulerecursivewithrelativeduetime-action"></a>`Rx.Scheduler.prototype.scheduleRecursiveWithRelative(duetime, action)`
-<a href="#rxschedulerprototypeschedulerecursivewithrelativeduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L199-L205 "View in source") 
+<a href="#rxschedulerprototypeschedulerecursivewithrelativeduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L199-L205 "View in source")
 
-Schedules an action to be executed recursively at a specified relative due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.   
+Schedules an action to be executed recursively at a specified relative due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.
 
 #### Arguments
 1. `dueTime` *(Number)*: Relative time at which to execute the action for the first time.
@@ -581,7 +581,7 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithRelative(
           if (++i < 3) {
                // Schedule mutliplied by a second by position
                self(i * 1000);
-          } 
+          }
      }
 );
 
@@ -597,9 +597,9 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithRelative(
 * * *
 
 ### <a id="rxschedulerprototypeschedulerecursivewithrelativeandstatestate-duetime-action"></a>`Rx.Scheduler.prototype.scheduleRecursiveWithAbsoluteAndState(state, duetime, action)`
-<a href="#rxschedulerprototypeschedulerecursivewithrelativeandstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L214-218 "View in source") 
+<a href="#rxschedulerprototypeschedulerecursivewithrelativeandstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L214-218 "View in source")
 
-Schedules an action to be executed recursively at a specified relative due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.   
+Schedules an action to be executed recursively at a specified relative due time. Note this only works with the built-in `Rx.Scheduler.timeout` scheduler, as the rest will throw an exception as the framework does not allow for blocking.
 
 #### Arguments
 1. `state` *(Any)*: State passed to the action to be executed.
@@ -620,7 +620,7 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithRelativeAndState(
           if (++i < 3) {
                // Schedule mutliplied by a second by position
                self(i, i * 1000);
-          } 
+          }
      }
 );
 
@@ -638,9 +638,9 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithRelativeAndState(
 ### Periodic Scheduling ###
 
 ### <a id="rxschedulerprototypescheduleperiodicperiod-action"></a>`Rx.Scheduler.prototype.schedulePeriodic(period, action)`
-<a href="#rxschedulerprototypescheduleperiodicperiod-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L85-L89 "View in source") 
+<a href="#rxschedulerprototypescheduleperiodicperiod-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L85-L89 "View in source")
 
- Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using `window.setInterval` for the base implementation.       
+ Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using `window.setInterval` for the base implementation.
 
 #### Arguments
 1. `period` *(Number)*: Period for running the work periodically in ms.
@@ -655,7 +655,7 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithRelativeAndState(
 var i = 0;
 
 var disposable = Rx.Scheduler.timeout.schedulePeriodic(
-     1000, /* 1 second */ 
+     1000, /* 1 second */
      function () {
           console.log(i);
 
@@ -678,7 +678,7 @@ var disposable = Rx.Scheduler.timeout.schedulePeriodic(
 * * *
 
 ### <a id="rxschedulerscheduleperiodicwithstatestate-period-action"></a>`Rx.Scheduler.prototype.schedulePeriodicWithState(state, period, action)`
-<a href="#rxschedulerscheduleperiodicwithstatestate-period-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L98-L104 "View in source") 
+<a href="#rxschedulerscheduleperiodicwithstatestate-period-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L98-L104 "View in source")
 
 Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using `window.setInterval` for the base implementation.
 
@@ -695,7 +695,7 @@ Schedules a periodic piece of work by dynamically discovering the scheduler's ca
 ```js
 var disposable = Rx.Scheduler.timeout.schedulePeriodicWithState(
      0,
-     1000, /* 1 second */ 
+     1000, /* 1 second */
      function (i) {
           console.log(i);
 
@@ -722,7 +722,7 @@ var disposable = Rx.Scheduler.timeout.schedulePeriodicWithState(
 ## _Scheduler Class Methods_ ##
 
 ### <a id="rxschedulernormalizeduetime"></a>`Rx.Scheduler.normalize(dueTime)`
-<a href="#rxschedulernormalizeduetime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L255-L260 "View in source") 
+<a href="#rxschedulernormalizeduetime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/scheduler.js#L255-L260 "View in source")
 
 Normalizes the specified time span value to a positive value.
 
@@ -753,7 +753,7 @@ console.log(r1);
 ## _Scheduler Class Properties_ ##
 
 ### <a id="rxschedulercurrentthread"></a>`Rx.Scheduler.currentThread`
-<a href="#rxschedulercurrentthread">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/currentthreadscheduler.js#L4-L68 "View in source") 
+<a href="#rxschedulercurrentthread">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/currentthreadscheduler.js#L4-L68 "View in source")
 
 Gets a scheduler that schedules work as soon as possible on the current thread.  This implementation does not support relative and absolute scheduling due to thread blocking required.
 
@@ -777,7 +777,7 @@ var disposable = scheduler.scheduleWithState(
 * * *
 
 ### <a id="rxschedulerimmediate"></a>`Rx.Scheduler.immediate`
-<a href="#rxschedulerimmediate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/immediatescheduler.js#L6-L22 "View in source") 
+<a href="#rxschedulerimmediate">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/immediatescheduler.js#L6-L22 "View in source")
 
 Gets a scheduler that schedules work immediately on the current thread.
 
@@ -807,9 +807,9 @@ var disposable = scheduler.scheduleRecursiveWithState(
 * * *
 
 ### <a id="rxschedulertimeout"></a>`Rx.Scheduler.timeout`
-<a href="#rxschedulertimeout">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/timeoutscheduler.js#L88-L125 "View in source") 
+<a href="#rxschedulertimeout">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/timeoutscheduler.js#L88-L125 "View in source")
 
-Gets a scheduler that schedules work via a timed callback based upon platform.  
+Gets a scheduler that schedules work via a timed callback based upon platform.
 
 For all schedule calls, it defaults to:
 

@@ -1,11 +1,11 @@
     /**
      *  Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
-     *  
+     *
      *  var res = xs.windowWithCount(10);
      *  var res = xs.windowWithCount(10, 1);
      * @param {Number} count Length of each window.
      * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
-     * @returns {Observable} An observable sequence of windows.  
+     * @returns {Observable} An observable sequence of windows.
      */
     observableProto.windowWithCount = function (count, skip) {
         var source = this;

@@ -1,4 +1,4 @@
-    /** 
+    /**
      * Gets a scheduler that schedules work as soon as possible on the current thread.
      */
     var currentThreadScheduler = Scheduler.currentThread = (function () {
@@ -15,7 +15,7 @@
                         item.invoke();
                     }
                 }
-            }            
+            }
         }
 
         function scheduleNow(state, action) {
@@ -31,7 +31,7 @@
                 queue.enqueue(si);
                 try {
                     runTrampoline(queue);
-                } catch (e) { 
+                } catch (e) {
                     throw e;
                 } finally {
                     queue = null;

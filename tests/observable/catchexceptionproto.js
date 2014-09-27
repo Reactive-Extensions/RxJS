@@ -9,10 +9,10 @@ var Observable = Rx.Observable,
 
 test('Catch_NoErrors', function () {
     var scheduler = new TestScheduler();
-    
+
     var o1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onNext(220, 3), onCompleted(230));
     var o2 = scheduler.createHotObservable(onNext(240, 5), onCompleted(250));
-    
+
     var results = scheduler.startWithCreate(function () {
         return o1.catchException(o2);
     });
@@ -22,10 +22,10 @@ test('Catch_NoErrors', function () {
 
 test('Catch_Never', function () {
     var scheduler = new TestScheduler();
-    
+
     var o1 = Observable.never();
     var o2 = scheduler.createHotObservable(onNext(240, 5), onCompleted(250));
-    
+
     var results = scheduler.startWithCreate(function () {
         return o1.catchException(o2);
     });
@@ -35,10 +35,10 @@ test('Catch_Never', function () {
 
 test('Catch_Empty', function () {
     var scheduler = new TestScheduler();
-    
+
     var o1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(230));
     var o2 = scheduler.createHotObservable(onNext(240, 5), onCompleted(250));
-    
+
     var results = scheduler.startWithCreate(function () {
         return o1.catchException(o2);
     });
@@ -48,10 +48,10 @@ test('Catch_Empty', function () {
 
 test('Catch_Return', function () {
     var scheduler = new TestScheduler();
-    
+
     var o1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onCompleted(230));
     var o2 = scheduler.createHotObservable(onNext(240, 5), onCompleted(250));
-    
+
     var results = scheduler.startWithCreate(function () {
         return o1.catchException(o2);
     });

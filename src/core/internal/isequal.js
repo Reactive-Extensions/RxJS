@@ -11,7 +11,7 @@
     stringClass = '[object String]';
 
   var toString = Object.prototype.toString,
-    hasOwnProperty = Object.prototype.hasOwnProperty,  
+    hasOwnProperty = Object.prototype.hasOwnProperty,
     supportsArgsClass = toString.call(arguments) == argsClass, // For less <IE9 && FF<4
     suportNodeClass,
     errorProto = Error.prototype,
@@ -40,7 +40,7 @@
       props = [];
 
     ctor.prototype = { 'valueOf': 1, 'y': 1 };
-    for (var key in new ctor) { props.push(key); }      
+    for (var key in new ctor) { props.push(key); }
     for (key in arguments) { }
 
     // Detect if `name` or `message` properties of `Error.prototype` are enumerable by default.
@@ -114,7 +114,7 @@
       }
     }
     return object;
-  }   
+  }
 
   function internalForIn(object, callback) {
     return internalFor(object, callback, keysIn);
@@ -135,10 +135,10 @@
     isArguments = function(value) {
       return (value && typeof value == 'object') ? hasOwnProperty.call(value, 'callee') : false;
     };
-  }     
+  }
 
   var isEqual = Rx.internals.isEqual = function (x, y) {
-    return deepEquals(x, y, [], []); 
+    return deepEquals(x, y, [], []);
   };
 
   /** @private

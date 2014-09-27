@@ -1,6 +1,6 @@
   /**
    *  Generates an observable sequence that repeats the given element the specified number of times, using the specified scheduler to send out observer messages.
-   *  
+   *
    * @example
    *  var res = Rx.Observable.repeat(42);
    *  var res = Rx.Observable.repeat(42, 4);

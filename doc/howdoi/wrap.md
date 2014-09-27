@@ -36,10 +36,10 @@ function watchPosition(geolocationOptions) {
         var watchId = window.navigator.geolocation.watchPosition(
             function successHandler (loc) {
                 observer.onNext(loc);
-            }, 
+            },
             function errorHandler (err) {
                 observer.onError(err);
-            }, 
+            },
             geolocationOptions);
 
         return function () {
@@ -49,7 +49,7 @@ function watchPosition(geolocationOptions) {
  }
 ```
 
-We need to also be aware of ensuring we're not adding too many watchPosition calls as we compose it together with other observable sequences.  To do that, we'll need to utilize the [`publish`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypepublishselector) and [`refCount`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#connectableobservableprototyperefcount) methods from rx.binding.js.  
+We need to also be aware of ensuring we're not adding too many watchPosition calls as we compose it together with other observable sequences.  To do that, we'll need to utilize the [`publish`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypepublishselector) and [`refCount`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#connectableobservableprototyperefcount) methods from rx.binding.js.
 
 Our final result should look like the following:
 
@@ -59,10 +59,10 @@ function watchPosition(geolocationOptions) {
         var watchId = window.navigator.geolocation.watchPosition(
             function successHandler (loc) {
                 observer.onNext(loc);
-            }, 
+            },
             function errorHandler (err) {
                 observer.onError(err);
-            }, 
+            },
             geolocationOptions);
 
         return function () {

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.skipWhile(predicate, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipwhile.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipwhile.js "View in source")
 
 Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
 
@@ -11,8 +11,8 @@ Bypasses elements in an observable sequence as long as a specified condition is 
 2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(`Observable`)*: An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.   
- 
+*(`Observable`)*: An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
+
 #### Example
 ```js
 // With a predicate
@@ -24,16 +24,16 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 3
 // => Next: 4
 // => Next: 5
-// => Completed 
+// => Completed
 ```
 
 ### Location

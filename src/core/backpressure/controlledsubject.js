@@ -39,7 +39,7 @@
 
                 if (!this.enableQueue || this.queue.length === 0) {
                     this.subject.onError(error);
-                }   
+                }
             },
             onNext: function (value) {
                 checkDisposed.call(this);
@@ -86,7 +86,7 @@
                 } else if (this.hasCompleted) {
                     this.subject.onCompleted();
                     this.controlledDisposable.dispose();
-                    this.controlledDisposable = disposableEmpty;                   
+                    this.controlledDisposable = disposableEmpty;
                 }
 
                 return { numberOfItems: numberOfItems, returnValue: false };

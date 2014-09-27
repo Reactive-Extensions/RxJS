@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.publishLast([selector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlast.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/publishlast.js "View in source")
 
 Returns an observable sequence that is the result of invoking the selector on a connectable observable sequence that shares a single subscription to the underlying sequence containing only the last notification.
 
@@ -10,22 +10,22 @@ This operator is a specialization of `multicast` using a `Rx.AsyncSubject`.
 
 #### Returns
 *(ConnectableObservable)*: An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
- 
+
 #### Example
 ```js
 var interval = Rx.Observable.interval(1000);
 
 var source = interval
     .take(2)
-    .doAction(function (x) { 
+    .doAction(function (x) {
         console.log('Side effect');
     });
- 
+
 var published = source.publishLast();
- 
+
 published.subscribe(createObserver('SourceA'));
 published.subscribe(createObserver('SourceB'));
- 
+
 var connection = published.connect();
 
 function createObserver(tag) {
@@ -34,19 +34,19 @@ function createObserver(tag) {
             console.log('Next: ' + tag + x);
         },
         function (err) {
-            console.log('Error: ' + err);   
+            console.log('Error: ' + err);
         },
         function () {
-            console.log('Completed');   
+            console.log('Completed');
         });
 }
 
 // => Side effect
 // => Side effect
-// => Next: SourceA1 
+// => Next: SourceA1
 // => Completed
-// => Next: SourceB1 
-// => Completed    
+// => Next: SourceB1
+// => Completed
 ```
 
 ### Location
@@ -58,7 +58,7 @@ Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
 - [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
 - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) 
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
 
 Prerequisites:

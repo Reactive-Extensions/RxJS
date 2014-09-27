@@ -16,4 +16,3 @@
   // Defaults
   var argumentOutOfRange = 'Argument out of range',
       sequenceContainsNoElements = "Sequence contains no elements.";
-  

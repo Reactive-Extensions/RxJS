@@ -58,15 +58,15 @@ test('buffer should join strings', function () {
 
     var results = scheduler.startWithTiming(
         function () {
-            return input.buffer(function () { 
+            return input.buffer(function () {
                 return input.throttle(100, scheduler);
             })
             .map(function (b) {
                 return b.join(',');
             });
-        }, 
+        },
         50,  // created
-        150, // subscribed 
+        150, // subscribed
         600  // disposed
     );
 
@@ -80,8 +80,8 @@ test('buffer should join strings', function () {
         subscribe(150, 500),
         subscribe(150, 400),
         subscribe(400, 500)
-    ]);       
-}); 
+    ]);
+});
 ```
 
 ## Debugging your Rx application ##
@@ -97,14 +97,14 @@ var seq1 = Rx.Observable.interval(1000)
    .do(function (x) { console.log('buffer is full'))
    .subscribe(function (x) { console.log('Sum of the buffer is ' + x.reduce(function (acc, x) { return acc + x; }, 0)); });
 
-// => 0 
-// => 1 
-// => 2 
-// => 3 
-// => 4 
-// => buffer is full 
+// => 0
+// => 1
+// => 2
+// => 3
+// => 4
+// => buffer is full
 // => Sum of the buffer is 10
-// ...          
+// ...
 ```
 
 As you can see from this sample, a subscription is on the recipient end of a series of chained observable sequences. At first, we create an observable sequence of integers separate by a second using the Interval operator. Then, we put 5 items into a buffer using the Buffer operator, and send them out as another sequence only when the buffer is full. Lastly, this is handed over to the Subscribe operator. Data propagate down all these intermediate sequences until they are pushed to the observer. In the same way, subscriptions are propagated in the reverse direction to the source sequence. By inserting the `do` operator in the middle of such propagations, you can "spy" on such data flow just like you use console.log  perform debugging.
@@ -117,19 +117,19 @@ console.log('Current time: ' + Date.now());
 var source = Rx.Observable.timer(5000, 1000)
     .timestamp();
 
-var subscription = source.subscribe(function (x) { 
-    console.log(x.value + ': ' + x.timestamp); 
+var subscription = source.subscribe(function (x) {
+    console.log(x.value + ': ' + x.timestamp);
 });
 
 /* Output will look similar to this */
-// => Current time: 1382646947400 
-// => 0: 1382646952400 
+// => Current time: 1382646947400
+// => 0: 1382646952400
 // => 1: 1382646953400
-// => 2: 1382646954400 
-// => 3: 1382646955400 
-// => 4: 1382646956400 
-// => 5: 1382646957400 
-// => 6: 1382646958400 
+// => 2: 1382646954400
+// => 3: 1382646955400
+// => 4: 1382646956400
+// => 5: 1382646957400
+// => 6: 1382646958400
 ```
 
 By using the `timestamp` operator, we have verified that the first item is indeed pushed out 5 seconds after the sequence, and each item is published 1 second later.

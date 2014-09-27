@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.groupJoin(right, leftDurationSelector, rightDurationSelector, resultSelector)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupjoin.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupjoin.js "View in source")
 
 Correlates the elements of two sequences based on overlapping durations, and groups the results.
 
@@ -8,7 +8,7 @@ Correlates the elements of two sequences based on overlapping durations, and gro
 2. `leftDurationSelector` *(`Function`)*: A function to select the duration (expressed as an observable sequence) of each element of the left observable sequence, used to determine overlap.
 3. `rightDurationSelector` *(`Function`)*: A function to select the duration (expressed as an observable sequence) of each element of the right observable sequence, used to determine overlap.
 4. `resultSelector` *(`Any`)*: A function invoked to compute a result element for any element of the left sequence with overlapping elements from the right observable sequence. It has the following arguments
-    1. *(`Any`)* An element of the left sequence. 
+    1. *(`Any`)* An element of the left sequence.
     2. *(`Observable`)* An observable sequence with elements from the right sequence that overlap with the left sequence's element.
 
 #### Returns
@@ -26,9 +26,9 @@ var source = xs.groupJoin(
     ys,
     function () { return Rx.Observable.timer(0); },
     function () { return Rx.Observable.timer(0); },
-    function (x, yy) { 
-        return yy.select(function (y) { 
-            return x + y; 
+    function (x, yy) {
+        return yy.select(function (y) {
+            return x + y;
         })
     }).mergeAll().take(5);
 
@@ -37,18 +37,18 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
-// => Next: first0second0 
-// => Next: first1second1 
-// => Next: first2second2 
-// => Next: first3second3 
-// => Next: first4second4 
-// => Completed  
+// => Next: first0second0
+// => Next: first1second1
+// => Next: first2second2
+// => Next: first3second3
+// => Next: first4second4
+// => Completed
 ```
 
 ### Location

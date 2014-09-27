@@ -4,11 +4,11 @@
    * var res = source.sum();
    * var res = source.sum(function (x) { return x.value; });
    * @param {Function} [selector] A transform function to apply to each element.
-   * @param {Any} [thisArg] Object to use as this when executing callback.        
+   * @param {Any} [thisArg] Object to use as this when executing callback.
    * @returns {Observable} An observable sequence containing a single element with the sum of the values in the source sequence.
-   */    
+   */
   observableProto.sum = function (keySelector, thisArg) {
-    return keySelector && isFunction(keySelector) ? 
+    return keySelector && isFunction(keySelector) ?
       this.map(keySelector, thisArg).sum() :
       this.aggregate(0, function (prev, curr) {
         return prev + curr;

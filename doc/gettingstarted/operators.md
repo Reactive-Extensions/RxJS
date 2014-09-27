@@ -10,7 +10,7 @@ For example, let's see how we might implement the [_.where](http://lodash.com/do
 
 ```js
 Rx.Observable.prototype.whereProperties = function (properties) {
-	var source = this, 
+	var source = this,
 		comparer = Rx.Internals.equals;
 
 	return Rx.Observable.filterByProperties(function (observer) {
@@ -47,7 +47,7 @@ Many existing operators, such as this, instead could be built using other basic 
 
 ```js
 Rx.Observable.prototype.flatMap = function (selector) {
-	return this.map(selector).mergeObservable();	
+	return this.map(selector).mergeObservable();
 };
 ```
 
@@ -105,8 +105,8 @@ test('filterProperties should yield with match', function () {
 
     collectionAssert.assertEqual(input.subscriptions, [
     	subscribe(200, 230)
-    ]);       
-}); 
+    ]);
+});
 ```
 
 In order for this to be successfully tested, we should check for when there is no data, empty, single matches, multiple matches and so forth.
@@ -115,5 +115,3 @@ In order for this to be successfully tested, we should check for when there is n
 
 **Resources**
 - [Testing and Debugging](testing.md)
-
-

@@ -1,10 +1,10 @@
   /**
    * Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
-   * 
+   *
    * @example
    * 1 - res = Rx.Observable.onErrorResumeNext(xs, ys, zs);
    * 1 - res = Rx.Observable.onErrorResumeNext([xs, ys, zs]);
-   * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.   
+   * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.
    */
   var onErrorResumeNext = Observable.onErrorResumeNext = function () {
     var sources = argsOrArray(arguments, 0);

@@ -34,7 +34,7 @@
           isPromise(result) && (result = observableFromPromise(result));
           observer.onNext(result);
           observer.onCompleted();
-        }, 
+        },
         function () {
           var result;
           try {
@@ -42,8 +42,8 @@
           } catch (e) {
             observer.onError(e);
             return;
-          }       
-          isPromise(result) && (result = observableFromPromise(result));   
+          }
+          isPromise(result) && (result = observableFromPromise(result));
           observer.onNext(result);
           observer.onCompleted();
         });

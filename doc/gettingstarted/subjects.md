@@ -2,7 +2,7 @@
 
 The [`Subject`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/subject.md) class inherits both [`Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md) and [`Observer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observer.md), in the sense that it is both an observer and an observable. You can use a subject to subscribe all the observers, and then subscribe the subject to a backend data source. In this way, the subject can act as a proxy for a group of subscribers and a source. You can use subjects to implement a custom observable with caching, buffering and time shifting. In addition, you can use subjects to broadcast data to multiple subscribers.
 
-By default, subjects do not perform any synchronization across threads. They do not take a scheduler but rather assume that all serialization and grammatical correctness are handled by the caller of the subject.  A subject simply broadcasts to all subscribed observers in the thread-safe list of subscribers. Doing so has the advantage of reducing overhead and improving performance. 
+By default, subjects do not perform any synchronization across threads. They do not take a scheduler but rather assume that all serialization and grammatical correctness are handled by the caller of the subject.  A subject simply broadcasts to all subscribed observers in the thread-safe list of subscribers. Doing so has the advantage of reducing overhead and improving performance.
 
 ## Using Subjects ##
 
@@ -35,7 +35,7 @@ The following example illustrates the proxy and broadcast nature of a `Subject`.
 
 ```js
 // Every second
-var source = Rx.Observable.interval(1000); 
+var source = Rx.Observable.interval(1000);
 
 var subject = new Rx.Subject();
 
@@ -55,19 +55,19 @@ setTimeout(function () {
 	// Clean up
 	subject.onCompleted();
 	subSubject1.dispose();
-	subSubject2.dispose();	
+	subSubject2.dispose();
 }, 5000);
 
-// => Value published to observer #1: 0 
-// => Value published to observer #2: 0 
-// => Value published to observer #1: 1 
-// => Value published to observer #2: 1 
-// => Value published to observer #1: 2 
-// => Value published to observer #2: 2 
-// => Value published to observer #1: 3 
-// => Value published to observer #2: 3 
-// => onCompleted 
-// => onCompleted 
+// => Value published to observer #1: 0
+// => Value published to observer #2: 0
+// => Value published to observer #1: 1
+// => Value published to observer #2: 1
+// => Value published to observer #1: 2
+// => Value published to observer #2: 2
+// => Value published to observer #1: 3
+// => Value published to observer #2: 3
+// => onCompleted
+// => onCompleted
 
 ```
 

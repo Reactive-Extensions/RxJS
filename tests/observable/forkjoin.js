@@ -33,7 +33,6 @@ test('ForkJoin_NaryParams', function () {
     equal(2, results.length);
 });
 
-
 test('ForkJoin_NaryParamsEmpty', function () {
     var o1, o2, o3, results, scheduler;
     scheduler = new TestScheduler();

@@ -58,7 +58,7 @@ test('jortSortUntil error never', function () {
 
   var ys = scheduler.createHotObservable(
     onNext(190, 1)
-  );  
+  );
 
   var results = scheduler.startWithCreate(function () {
     return xs.jortSortUntil(ys);
@@ -81,7 +81,7 @@ test('jortSortUntil error empty', function () {
 
   var ys = scheduler.createHotObservable(
     onNext(190, 1)
-  );  
+  );
 
   var results = scheduler.startWithCreate(function () {
     return xs.jortSortUntil(ys);
@@ -109,7 +109,7 @@ test('jortSortUntil error pre-empted', function () {
     onNext(190, 1),
     onNext(245, 2),
     onCompleted(255)
-  );  
+  );
 
   var results = scheduler.startWithCreate(function () {
     return xs.jortSortUntil(ys);
@@ -138,7 +138,7 @@ test('jortSortUntil pre-empted true', function () {
     onNext(190, 1),
     onNext(245, 2),
     onCompleted(255)
-  );  
+  );
 
   var results = scheduler.startWithCreate(function () {
     return xs.jortSortUntil(ys);
@@ -149,7 +149,6 @@ test('jortSortUntil pre-empted true', function () {
     onCompleted(245)
   );
 });
-
 
 test('jortSortUntil pre-empted false', function () {
   var scheduler = new TestScheduler();
@@ -168,7 +167,7 @@ test('jortSortUntil pre-empted false', function () {
     onNext(190, 1),
     onNext(245, 2),
     onCompleted(255)
-  );  
+  );
 
   var results = scheduler.startWithCreate(function () {
     return xs.jortSortUntil(ys);
@@ -197,7 +196,7 @@ test('jortSortUntil not pre-empted true', function () {
     onNext(190, 1),
     onNext(255, 2),
     onCompleted(265)
-  );  
+  );
 
   var results = scheduler.startWithCreate(function () {
     return xs.jortSortUntil(ys);
@@ -208,7 +207,6 @@ test('jortSortUntil not pre-empted true', function () {
     onCompleted(250)
   );
 });
-
 
 test('jortSortUntil not pre-empted false', function () {
   var scheduler = new TestScheduler();
@@ -227,7 +225,7 @@ test('jortSortUntil not pre-empted false', function () {
     onNext(190, 1),
     onNext(255, 2),
     onCompleted(265)
-  );   
+  );
 
   var results = scheduler.startWithCreate(function () {
     return xs.jortSortUntil(ys);

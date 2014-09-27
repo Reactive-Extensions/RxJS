@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.subscribeOn(scheduler)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/subscribeon.js "View in source") 
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/subscribeon.js "View in source")
 
 Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler.
 
@@ -9,8 +9,8 @@ This only performs the side-effects of subscription and unsubscription on the sp
 1. `scheduler` *(`Scheduler`)*:  Scheduler to notify observers on.
 
 #### Returns
-*(`Observable`)*: The source sequence whose observations happen on the specified scheduler. 
- 
+*(`Observable`)*: The source sequence whose observations happen on the specified scheduler.
+
 #### Example
 ```js
 var observable = Rx.Observable.create(function (observer) {
@@ -36,14 +36,14 @@ var subscription = source.subscribe(
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);   
+        console.log('Error: ' + err);
     },
     function () {
-        console.log('Completed');   
+        console.log('Completed');
     });
 
 // => Next: 42
-// => Completed   
+// => Completed
 ```
 
 ### Location

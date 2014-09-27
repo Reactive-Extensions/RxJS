@@ -11,7 +11,7 @@
     __.prototype = parent.prototype;
     child.prototype = new __();
   };
-  
+
   var addProperties = Rx.internals.addProperties = function (obj) {
     var sources = slice.call(arguments, 1);
     for (var i = 0, len = sources.length; i < len; i++) {

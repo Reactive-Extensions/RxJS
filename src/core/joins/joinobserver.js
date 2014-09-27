@@ -27,18 +27,18 @@
         }
       }
     };
-     
+
     JoinObserverPrototype.error = noop;
     JoinObserverPrototype.completed = noop;
 
     JoinObserverPrototype.addActivePlan = function (activePlan) {
       this.activePlans.push(activePlan);
     };
-  
+
     JoinObserverPrototype.subscribe = function () {
       this.subscription.setDisposable(this.source.materialize().subscribe(this));
     };
-     
+
     JoinObserverPrototype.removeActivePlan = function (activePlan) {
       this.activePlans.splice(this.activePlans.indexOf(activePlan), 1);
       this.activePlans.length === 0 && this.dispose();
@@ -51,6 +51,6 @@
         this.subscription.dispose();
       }
     };
-    
+
     return JoinObserver;
   } (AbstractObserver));
