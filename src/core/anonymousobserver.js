@@ -10,12 +10,11 @@
      * @param {Any} onError Observer's OnError action implementation.
      * @param {Any} onCompleted Observer's OnCompleted action implementation.
      */
-    function AnonymousObserver(onNext, onError, onCompleted, thisArg) {
+    function AnonymousObserver(onNext, onError, onCompleted) {
       __super__.call(this);
       this._onNext = onNext;
       this._onError = onError;
       this._onCompleted = onCompleted;
-      this._thisArg = arguments.length === 4 ? thisArg : this;
     }
 
     /**
@@ -23,7 +22,7 @@
      * @param {Any} value Next element in the sequence.
      */
     AnonymousObserver.prototype.next = function (value) {
-      this._onNext.call(this._thisArg, value);
+      this._onNext(value);
     };
 
     /**
@@ -31,14 +30,14 @@
      * @param {Any} error The error that has occurred.
      */
     AnonymousObserver.prototype.error = function (error) {
-      this._onError.call(this._thisArg, error);
+      this._onError(error);
     };
 
     /**
      *  Calls the onCompleted action.
      */
     AnonymousObserver.prototype.completed = function () {
-      this._onCompleted.call(this._thisArg);
+      this._onCompleted();
     };
 
     return AnonymousObserver;

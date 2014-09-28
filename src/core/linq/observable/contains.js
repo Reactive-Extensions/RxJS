@@ -1,15 +1,28 @@
-    /**
-     * Determines whether an observable sequence contains a specified element with an optional equality comparer.
-     * @example
-     * 1 - res = source.contains(42);
-     * 2 - res = source.contains({ value: 42 }, function (x, y) { return x.value === y.value; });
-     * @param value The value to locate in the source sequence.
-     * @param {Function} [comparer] An equality comparer to compare elements.
-     * @returns {Observable} An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value.
-     */
-    observableProto.contains = function (value, comparer) {
-        comparer || (comparer = defaultComparer);
-        return this.where(function (v) {
-            return comparer(v, value);
-        }).any();
-    };
+  /**
+   * Determines whether an observable sequence contains a specified element with an optional equality comparer.
+   * @param searchElement The value to locate in the source sequence.
+   * @param {Number} [fromIndex] An equality comparer to compare elements.
+   * @returns {Observable} An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value from the given index.
+   */
+  observableProto.contains = function (searchElement, fromIndex) {
+    var source = this;
+    function comparer(a, b) {
+      return (a === 0 && b === 0) || (a === b || (isNaN(a) && isNaN(b)));
+    }
+    return new AnonymousObservable(function (observer) {
+      var i = 0, n = +fromIndex || 0;
+      return source.subscribe(
+        function (x) {
+          if (i >= n && comparer(x, searchElement)) {
+            observer.onNext(true);
+            observer.onCompleted();
+          }
+          ++i;
+        },
+        observer.onError.bind(observer),
+        function () {
+          observer.onNext(false);
+          observer.onCompleted();
+        });
+    });
+  };

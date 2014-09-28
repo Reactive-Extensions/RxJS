@@ -1714,11 +1714,11 @@ if (!Array.prototype.forEach) {
    * @param {Function} [onCompleted] Observer's OnCompleted action implementation.
    * @returns {Observer} The observer object implemented using the given actions.
    */
-  var observerCreate = Observer.create = function (onNext, onError, onCompleted, thisArg) {
+  var observerCreate = Observer.create = function (onNext, onError, onCompleted) {
     onNext || (onNext = noop);
     onError || (onError = defaultError);
     onCompleted || (onCompleted = noop);
-    return new AnonymousObserver(onNext, onError, onCompleted, thisArg);
+    return new AnonymousObserver(onNext, onError, onCompleted);
   };
 
   /**
@@ -1728,12 +1728,12 @@ if (!Array.prototype.forEach) {
    */
   Observer.fromNotifier = function (handler, thisArg) {
     return new AnonymousObserver(function (x) {
-      return handler(notificationCreateOnNext(x));
+      return handler.call(thisArg, notificationCreateOnNext(x));
     }, function (e) {
-      return handler(notificationCreateOnError(e));
+      return handler.call(thisArg, notificationCreateOnError(e));
     }, function () {
-      return handler(notificationCreateOnCompleted());
-    }, thisArg);
+      return handler.call(thisArg, notificationCreateOnCompleted());
+    });
   };
 
   /**
@@ -1812,12 +1812,11 @@ if (!Array.prototype.forEach) {
      * @param {Any} onError Observer's OnError action implementation.
      * @param {Any} onCompleted Observer's OnCompleted action implementation.
      */
-    function AnonymousObserver(onNext, onError, onCompleted, thisArg) {
+    function AnonymousObserver(onNext, onError, onCompleted) {
       __super__.call(this);
       this._onNext = onNext;
       this._onError = onError;
       this._onCompleted = onCompleted;
-      this._thisArg = arguments.length === 4 ? thisArg : this;
     }
 
     /**
@@ -1825,7 +1824,7 @@ if (!Array.prototype.forEach) {
      * @param {Any} value Next element in the sequence.
      */
     AnonymousObserver.prototype.next = function (value) {
-      this._onNext.call(this._thisArg, value);
+      this._onNext(value);
     };
 
     /**
@@ -1833,14 +1832,14 @@ if (!Array.prototype.forEach) {
      * @param {Any} error The error that has occurred.
      */
     AnonymousObserver.prototype.error = function (error) {
-      this._onError.call(this._thisArg, error);
+      this._onError(error);
     };
 
     /**
      *  Calls the onCompleted action.
      */
     AnonymousObserver.prototype.completed = function () {
-      this._onCompleted.call(this._thisArg);
+      this._onCompleted();
     };
 
     return AnonymousObserver;
@@ -1866,14 +1865,10 @@ if (!Array.prototype.forEach) {
      *  @param {Function} [onCompleted] Action to invoke upon graceful termination of the observable sequence.
      *  @returns {Diposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted, thisArg) {
-      var subscriber = typeof observerOrOnNext === 'object' ?
+    observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted) {
+      return this._subscribe(typeof observerOrOnNext === 'object' ?
         observerOrOnNext :
-        arguments.length === 4 ?
-          observerCreate(observerOrOnNext, onError, onCompleted, thisArg) :
-          observerCreate(observerOrOnNext, onError, onCompleted);
-
-      return this._subscribe(subscriber);
+        observerCreate(observerOrOnNext, onError, onCompleted));
     };
 
     /**
@@ -1883,10 +1878,7 @@ if (!Array.prototype.forEach) {
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeNext = function (onNext, thisArg) {
-      var observer = arguments.length === 2 ?
-        observerCreate(onNext, null, null, thisArg) :
-        observerCreate(onNext, null, null);
-      return this._subscribe(observer);
+      return this._subscribe(observerCreate(arguments.length === 2 ? function(x) { onNext.call(thisArg, x); } : onNext));
     };
 
     /**
@@ -1896,10 +1888,7 @@ if (!Array.prototype.forEach) {
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeError = function (onError, thisArg) {
-      var observer = arguments.length === 2 ?
-        observerCreate(null, onError, null, thisArg) :
-        observerCreate(null, onError, null);
-      return this._subscribe(observer);
+      return this._subscribe(observerCreate(null, arguments.length === 2 ? function(e) { onError.call(thisArg, e); } : onError));
     };
 
     /**
@@ -1909,10 +1898,7 @@ if (!Array.prototype.forEach) {
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeCompleted = function (onCompleted, thisArg) {
-      var observer = arguments.length === 2 ?
-        observerCreate(null, null, onCompleted, thisArg) :
-        observerCreate(null, null, onCompleted);
-      return this._subscribe(observer);
+      return this._subscribe(observerCreate(null, null, arguments.length === 2 ? function() { onCompleted.call(thisArg); } : onCompleted));
     };
 
     return Observable;
@@ -2856,12 +2842,6 @@ if (!Array.prototype.forEach) {
   /**
    *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
    *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
-   *
-   * @example
-   *  var res = observable.do(observer);
-   *  var res = observable.do(onNext);
-   *  var res = observable.do(onNext, onError);
-   *  var res = observable.do(onNext, onError, onCompleted);
    * @param {Function | Observer} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
    * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
    * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
@@ -2885,29 +2865,58 @@ if (!Array.prototype.forEach) {
         }
         observer.onNext(x);
       }, function (err) {
-        if (!onError) {
-          observer.onError(err);
-        } else {
+        if (onError) {
           try {
             onError(err);
           } catch (e) {
             observer.onError(e);
           }
-          observer.onError(err);
         }
+        observer.onError(err);
       }, function () {
-        if (!onCompleted) {
-          observer.onCompleted();
-        } else {
+        if (onCompleted) {
           try {
             onCompleted();
           } catch (e) {
             observer.onError(e);
           }
-          observer.onCompleted();
         }
+        observer.onCompleted();
       });
     });
+  };
+
+  /**
+   *  Invokes an action for each element in the observable sequence.
+   *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
+   * @param {Function} onNext Action to invoke for each element in the observable sequence.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} The source sequence with the side-effecting behavior applied.
+   */
+  observableProto.doNext = observableProto.tapNext = function (onNext, thisArg) {
+    return this.tap(arguments.length === 2 ? function (x) { onNext.call(thisArg, x); } : onNext);
+  };
+
+  /**
+   *  Invokes an action upon exceptional termination of the observable sequence.
+   *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
+   * @param {Function} onError Action to invoke upon exceptional termination of the observable sequence.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} The source sequence with the side-effecting behavior applied.
+   */
+  observableProto.doError = observableProto.tapError = function (onError, thisArg) {
+    return this.tap(noop, arguments.length === 2 ? function (e) { onError.call(thisArg, e); } : onError);
+  };
+
+  /**
+   *  Invokes an action upon graceful termination of the observable sequence.
+   *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
+   * @param {Function} onCompleted Action to invoke upon graceful termination of the observable sequence.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} The source sequence with the side-effecting behavior applied.
+   */
+  observableProto.doCompleted = observableProto.tapCompleted = function (onCompleted, thisArg) {
+    return this.tap(noop, null, arguments.length === 2 ? function () { onCompleted.call(thisArg); } : onCompleted);
   };
 
   /**

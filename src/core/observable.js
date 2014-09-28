@@ -18,14 +18,10 @@
      *  @param {Function} [onCompleted] Action to invoke upon graceful termination of the observable sequence.
      *  @returns {Diposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted, thisArg) {
-      var subscriber = typeof observerOrOnNext === 'object' ?
+    observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted) {
+      return this._subscribe(typeof observerOrOnNext === 'object' ?
         observerOrOnNext :
-        arguments.length === 4 ?
-          observerCreate(observerOrOnNext, onError, onCompleted, thisArg) :
-          observerCreate(observerOrOnNext, onError, onCompleted);
-
-      return this._subscribe(subscriber);
+        observerCreate(observerOrOnNext, onError, onCompleted));
     };
 
     /**
@@ -35,10 +31,7 @@
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeNext = function (onNext, thisArg) {
-      var observer = arguments.length === 2 ?
-        observerCreate(onNext, null, null, thisArg) :
-        observerCreate(onNext, null, null);
-      return this._subscribe(observer);
+      return this._subscribe(observerCreate(arguments.length === 2 ? function(x) { onNext.call(thisArg, x); } : onNext));
     };
 
     /**
@@ -48,10 +41,7 @@
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeError = function (onError, thisArg) {
-      var observer = arguments.length === 2 ?
-        observerCreate(null, onError, null, thisArg) :
-        observerCreate(null, onError, null);
-      return this._subscribe(observer);
+      return this._subscribe(observerCreate(null, arguments.length === 2 ? function(e) { onError.call(thisArg, e); } : onError));
     };
 
     /**
@@ -61,10 +51,7 @@
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeCompleted = function (onCompleted, thisArg) {
-      var observer = arguments.length === 2 ?
-        observerCreate(null, null, onCompleted, thisArg) :
-        observerCreate(null, null, onCompleted);
-      return this._subscribe(observer);
+      return this._subscribe(observerCreate(null, null, arguments.length === 2 ? function() { onCompleted.call(thisArg); } : onCompleted));
     };
 
     return Observable;

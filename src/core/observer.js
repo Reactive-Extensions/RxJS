@@ -34,13 +34,11 @@
    * @param {Function} [onCompleted] Observer's OnCompleted action implementation.
    * @returns {Observer} The observer object implemented using the given actions.
    */
-  var observerCreate = Observer.create = function (onNext, onError, onCompleted, thisArg) {
+  var observerCreate = Observer.create = function (onNext, onError, onCompleted) {
     onNext || (onNext = noop);
     onError || (onError = defaultError);
     onCompleted || (onCompleted = noop);
-    return arguments.length === 4 ?
-      new AnonymousObserver(onNext, onError, onCompleted, thisArg) :
-      new AnonymousObserver(onNext, onError, onCompleted);
+    return new AnonymousObserver(onNext, onError, onCompleted);
   };
 
   /**
@@ -53,12 +51,12 @@
    */
   Observer.fromNotifier = function (handler, thisArg) {
     return new AnonymousObserver(function (x) {
-      return handler(notificationCreateOnNext(x));
+      return handler.call(thisArg, notificationCreateOnNext(x));
     }, function (e) {
-      return handler(notificationCreateOnError(e));
+      return handler.call(thisArg, notificationCreateOnError(e));
     }, function () {
-      return handler(notificationCreateOnCompleted());
-    }, thisArg);
+      return handler.call(thisArg, notificationCreateOnCompleted());
+    });
   };
 
   /**
