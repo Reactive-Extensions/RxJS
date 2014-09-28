@@ -37,6 +37,7 @@
     observableProto = Observable.prototype,
     CompositeDisposable = Rx.CompositeDisposable,
     AnonymousObservable = Rx.AnonymousObservable,
+    disposableEmpty = Rx.Disposable.empty,
     isEqual = Rx.internals.isEqual,
     helpers = Rx.helpers,
     not = helpers.not,
@@ -49,7 +50,7 @@
 
   // Defaults
   var argumentOutOfRange = 'Argument out of range',
-      sequenceContainsNoElements = "Sequence contains no elements.";
+    sequenceContainsNoElements = "Sequence contains no elements.";
 
   observableProto.finalValue = function () {
     var source = this;
@@ -213,6 +214,11 @@
     }
     return new AnonymousObservable(function (observer) {
       var i = 0, n = +fromIndex || 0;
+      if (n < 0) {
+        observer.onNext(false);
+        observer.onCompleted();
+        return disposableEmpty;
+      }
       return source.subscribe(
         function (x) {
           if (i >= n && comparer(x, searchElement)) {

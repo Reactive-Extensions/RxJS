@@ -11,6 +11,11 @@
     }
     return new AnonymousObservable(function (observer) {
       var i = 0, n = +fromIndex || 0;
+      if (n < 0) {
+        observer.onNext(false);
+        observer.onCompleted();
+        return disposableEmpty;
+      }
       return source.subscribe(
         function (x) {
           if (i >= n && comparer(x, searchElement)) {

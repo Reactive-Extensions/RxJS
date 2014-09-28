@@ -3,6 +3,7 @@
     observableProto = Observable.prototype,
     CompositeDisposable = Rx.CompositeDisposable,
     AnonymousObservable = Rx.AnonymousObservable,
+    disposableEmpty = Rx.Disposable.empty,
     isEqual = Rx.internals.isEqual,
     helpers = Rx.helpers,
     not = helpers.not,
@@ -15,4 +16,4 @@
 
   // Defaults
   var argumentOutOfRange = 'Argument out of range',
-      sequenceContainsNoElements = "Sequence contains no elements.";
+    sequenceContainsNoElements = "Sequence contains no elements.";
