@@ -173,6 +173,7 @@ var browsers = [{
               'src/core/linq/observable/all.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
+              'src/core/linq/observable/indexof.js',              
               'src/core/linq/observable/sum.js', // select, aggregate
               'src/core/linq/observable/minby.js', // _extremaby
               'src/core/linq/observable/min.js',   // minby, _firstonly
@@ -441,6 +442,7 @@ var browsers = [{
               'src/core/linq/observable/all.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
+              'src/core/linq/observable/indexof.js',              
               'src/core/linq/observable/sum.js', // select, aggregate
               'src/core/linq/observable/minby.js', // _extremaby
               'src/core/linq/observable/min.js',   // minby, _firstonly
@@ -1217,6 +1219,7 @@ var browsers = [{
               'src/core/linq/observable/all.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
+              'src/core/linq/observable/indexof.js', 
               'src/core/linq/observable/sum.js', // select, aggregate
               'src/core/linq/observable/minby.js', // _extremaby
               'src/core/linq/observable/min.js',   // minby, _firstonly

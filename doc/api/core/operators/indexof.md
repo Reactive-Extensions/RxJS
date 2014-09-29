@@ -1,20 +1,20 @@
-### `Rx.Observable.prototype.contains(searchElement, [fromIndex])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/contains.js "View in source")
+### `Rx.Observable.prototype.indexof(searchElement, [fromIndex])`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/indexof.js "View in source")
 
-Determines whether an observable sequence contains a specified element with an optional from index.
+Returns the first index at which a given element can be found in the observable sequence, or -1 if it is not present.
 
 #### Arguments
 1. `searchElement` *(`Any`)*: The value to locate in the source sequence.
 2. `[fromIndex]` *(`Number`)*: The index to start the search.  If not specified, defaults to 0.
 
 #### Returns
-*(`Observable`)*: An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value with an optional from index.
+*(`Observable`)*: And observable sequence containing the first index at which a given element can be found in the observable sequence, or -1 if it is not present.
 
 #### Example
 ```js
 /* Without an index */
 var source = Rx.Observable.of(42)
-  .contains(42);
+  .indexOf(42);
 
 var subscription = source.subscribe(
   function (x) {
@@ -27,12 +27,12 @@ var subscription = source.subscribe(
       console.log('Completed');
   });
 
-// => Next: true
+// => Next: 0
 // => Completed
 
 /* With an index */
 var source = Rx.Observable.of(1,2,3)
-  .contains(2, 1);
+  .indexOf(2, 1);
 
 var subscription = source.subscribe(
   function (x) {
@@ -45,13 +45,13 @@ var subscription = source.subscribe(
     console.log('Completed');
   });
 
-// => Next: true
+// => Next: 0
 // => Completed
 ```
 ### Location
 
 File:
-- [`/src/core/linq/observable/contains.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/contains.js)
+- [`/src/core/linq/observable/indexof.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/indexof.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
@@ -69,4 +69,4 @@ NuGet Packages:
 - [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
 
 Unit Tests:
-- [`/tests/observable/contains.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/contains.js)
+- [`/tests/observable/indexof.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/indexof.js)

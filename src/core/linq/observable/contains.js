@@ -11,6 +11,7 @@
     }
     return new AnonymousObservable(function (observer) {
       var i = 0, n = +fromIndex || 0;
+      Math.abs(n) === Infinity && (n = 0);
       if (n < 0) {
         observer.onNext(false);
         observer.onCompleted();
@@ -18,11 +19,10 @@
       }
       return source.subscribe(
         function (x) {
-          if (i >= n && comparer(x, searchElement)) {
+          if (i++ >= n && comparer(x, searchElement)) {
             observer.onNext(true);
             observer.onCompleted();
           }
-          ++i;
         },
         observer.onError.bind(observer),
         function () {
