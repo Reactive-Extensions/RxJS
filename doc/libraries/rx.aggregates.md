@@ -35,6 +35,7 @@ NuGet Dependencies:
 - [`findIndex`](../api/core/operators/findindex.md)
 - [`first`](../api/core/operators/first.md)
 - [`firstOrDefault`](../api/core/operators/firstordefault.md)
+- [`indexOf`](../api/core/operators/indexof.md)
 - [`isEmpty`](../api/core/operators/isempty.md)
 - [`last`](../api/core/operators/last.md)
 - [`lastOrDefault`](../api/core/operators/lastordefault.md)

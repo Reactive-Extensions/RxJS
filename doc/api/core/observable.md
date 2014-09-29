@@ -101,6 +101,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`groupByUntil`](operators/groupbyuntil.md)
 - [`groupJoin`](operators/groupjoin.md)
 - [`ignoreElements`](operators/ignoreelements.md)
+- [`indexOf`](operators/indexOf.md)
 - [`isEmpty`](operators/isempty.md)
 - [`join`](operators/join.md)
 - [`last`](operators/last.md)
