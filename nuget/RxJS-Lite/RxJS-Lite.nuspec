@@ -4,7 +4,7 @@
     <id>RxJS-Lite</id>
     <title>Reactive Extensions for JavaScript - Lite Library</title>
     <!-- Automatically updated by build, keeping fixed dev build number here in case of local build -->
-    <version>2.2.6</version>
+    <version>$version$</version>
     <authors>Microsoft Corporation</authors>
     <description>Reactive Extensions for JavaScript main library used to express complex event processing queries over observable sequences.</description>
     <projectUrl>http://rx.codeplex.com</projectUrl>
@@ -25,5 +25,6 @@
     <file src="..\..\ts\rx.binding-lite.d.ts" target="content\Scripts\rx.binding-lite.d.ts" />
     <file src="..\..\ts\rx.time-lite.d.ts" target="content\Scripts\rx.time-lite.d.ts" />
     <file src="..\..\ts\rx.backpressure-lite.d.ts" target="content\Scripts\rx.backpressure-lite.d.ts" />
+    <file src="..\..\ts\rx.coincidence-lite.d.ts" target="content\Scripts\rx.coincidence-lite.d.ts" />
   </files>
 </package>
