@@ -2001,7 +2001,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribeNext = function (onNext, thisArg) {
+    observableProto.subscribeOnNext = function (onNext, thisArg) {
       return this._subscribe(observerCreate(arguments.length === 2 ? function(x) { onNext.call(thisArg, x); } : onNext));
     };
 
@@ -2011,7 +2011,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribeError = function (onError, thisArg) {
+    observableProto.subscribeOnError = function (onError, thisArg) {
       return this._subscribe(observerCreate(null, arguments.length === 2 ? function(e) { onError.call(thisArg, e); } : onError));
     };
 
@@ -2021,7 +2021,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribeCompleted = function (onCompleted, thisArg) {
+    observableProto.subscribeOnCompleted = function (onCompleted, thisArg) {
       return this._subscribe(observerCreate(null, null, arguments.length === 2 ? function() { onCompleted.call(thisArg); } : onCompleted));
     };
 
@@ -3243,7 +3243,7 @@
    * @param {Any} [thisArg] Object to use as this when executing callback.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto.doNext = observableProto.tapNext = function (onNext, thisArg) {
+  observableProto.doOnNext = observableProto.tapOnNext = function (onNext, thisArg) {
     return this.tap(arguments.length === 2 ? function (x) { onNext.call(thisArg, x); } : onNext);
   };
 
@@ -3254,7 +3254,7 @@
    * @param {Any} [thisArg] Object to use as this when executing callback.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto.doError = observableProto.tapError = function (onError, thisArg) {
+  observableProto.doOnError = observableProto.tapOnError = function (onError, thisArg) {
     return this.tap(noop, arguments.length === 2 ? function (e) { onError.call(thisArg, e); } : onError);
   };
 
@@ -3265,7 +3265,7 @@
    * @param {Any} [thisArg] Object to use as this when executing callback.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto.doCompleted = observableProto.tapCompleted = function (onCompleted, thisArg) {
+  observableProto.doOnCompleted = observableProto.tapOnCompleted = function (onCompleted, thisArg) {
     return this.tap(noop, null, arguments.length === 2 ? function () { onCompleted.call(thisArg); } : onCompleted);
   };
 

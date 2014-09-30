@@ -1,19 +1,14 @@
-### `Rx.Observable.prototype.do([observer] | [onNext], [onError], [onCompleted])`
-### `Rx.Observable.prototype.tap([observer] | [onNext], [onError], [onCompleted])`
-### `Rx.Observable.prototype.doAction([observer] | [onNext], [onError], [onCompleted])` *DEPRECATED*
+### `Rx.Observable.prototype.doOnNext(onNext, [thisArg])`
+### `Rx.Observable.prototype.tapOnNext(onNext, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js "View in source")
 
-Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
+Invokes an action upon exceptional termination of the observable sequence.
 
 This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
 
-There is an alias to this method `doAction` for browsers <IE9 and `tap` as well.
-
 #### Arguments
-1. `[observer]` *(Observer)*: An observer to invoke for each element in the observable sequence.
-1. `[onNext]` *(`Function`)*: Function to invoke for each element in the observable sequence.
-2. `[onError]` *(`Function`)*: Function to invoke upon exceptional termination of the observable sequence. Used if only the first parameter is also a function.
-3. `[oncompleted]` *(`Function`)*: Function to invoke upon graceful termination of the observable sequence. Used if only the first parameter is also a function.
+1. `onNext` *(`Function`)*: Function to invoke for each element in the observable sequence.
+2. [`thisArg`] *(Any)*: Object to use as this when executing callback.
 
 #### Returns
 *(`Observable`)*: The source sequence with the side-effecting behavior applied.
@@ -22,22 +17,20 @@ There is an alias to this method `doAction` for browsers <IE9 and `tap` as well.
 ```js
 /* Using a function */
 var source = Rx.Observable.range(0, 3)
-    .do(
-        function (x) { console.log('Do Next:', x); },
-        function (err) { console.log('Do Error:', err); },
-        function () { console.log('Do Completed'); }
-    );
+  .doOnCompleted(
+    function () { console.log('Do Next: %s', x); }
+  );
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Do Next: 0
 // => Next: 0
@@ -45,29 +38,26 @@ var subscription = source.subscribe(
 // => Next: 1
 // => Do Next: 2
 // => Next: 2
-// => Do Completed
 // => Completed
 
-/* Using an observer */
-var observer = Rx.Observer.create(
-    function (x) { console.log('Do Next:', x); },
-    function (err) { console.log('Do Error:', err); },
-    function () { console.log('Do Completed'); }
-);
+/* Using a thisArg */
 
 var source = Rx.Observable.range(0, 3)
-    .do(observer);
+  .doOnCompleted(
+    function () { this.log('Do Next: %s', x); },
+    console
+  );
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Do Next: 0
 // => Next: 0
@@ -75,7 +65,6 @@ var subscription = source.subscribe(
 // => Next: 1
 // => Do Next: 2
 // => Next: 2
-// => Do Completed
 // => Completed
 ```
 ### Location

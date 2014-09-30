@@ -1,10 +1,10 @@
-### `Rx.Observable.prototype.subscribeNext(onNext, [thisArg])`
+### `Rx.Observable.prototype.subscribeOnError(onError, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable.js "View in source")
 
-Subscribes a function to invoke for each element in the observable sequence.
+Subscribes a function to invoke upon exceptional termination of the observable sequence.
 
 #### Arguments
-1. `onNext` *(`Function`)*: Function to invoke for each element in the observable sequence.
+1. `onError` *(`Function`)*: Function to invoke upon exceptional termination of the observable sequence.
 2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
@@ -13,28 +13,24 @@ Subscribes a function to invoke for each element in the observable sequence.
 #### Example
 ```js
 /* Using functions */
-var source = Rx.Observable.range(0, 3)
+var source = Rx.Observable.throw(new Error());
 
-var subscription = source.subscribeNext(
-  function (x) {
-    console.log('Next: %s', x);
+var subscription = source.subscribeOnError(
+  function (err) {
+    console.log('Error: %s', err);
   });
 
-// => Next: 0
-// => Next: 1
-// => Next: 2
+// => Error: Error
 
 /* With a thisArg */
-var source = Rx.Observable.range(0, 3)
+var source = Rx.Observable.throw(new Error());
 
-var subscription = source.subscribeNext(
-  function (x) {
-    this.log('Next: %s', x);
+var subscription = source.subscribeOnError(
+  function (err) {
+    this.log('Error: %s', err);
   }}, console);
 
-// => Next: 0
-// => Next: 1
-// => Next: 2
+// => Error: Error
 ```
 
 ### Location

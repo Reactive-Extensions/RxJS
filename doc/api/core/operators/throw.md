@@ -1,9 +1,9 @@
 ### `Rx.Observable.throw(exception, [scheduler])`
+### `Rx.Observable.throwError(exception, [scheduler])`
+### `Rx.Observable.throwException(exception, [scheduler])` ** DEPRECATED **
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js#L133-L152 "View in source")
 
 Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
-
-There is an alias to this method called `throwException` for browsers <IE9.
 
 ### Arguments
 1. `dueTime` *(`Any`)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) at which to produce the first value.
