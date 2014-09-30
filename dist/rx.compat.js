@@ -3191,70 +3191,67 @@ if (!Array.prototype.forEach) {
     });
   };
 
-    /**
-     * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
-     * @param arguments Observable sources.
-     * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
-     * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
-     */
-    Observable.zip = function () {
-        var args = slice.call(arguments, 0),
-            first = args.shift();
-        return first.zip.apply(first, args);
-    };
+  /**
+   * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
+   * @param arguments Observable sources.
+   * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
+   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+   */
+  Observable.zip = function () {
+    var args = slice.call(arguments, 0), first = args.shift();
+    return first.zip.apply(first, args);
+  };
 
-    /**
-     * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-     * @param arguments Observable sources.
-     * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
-     */
-    Observable.zipArray = function () {
-        var sources = argsOrArray(arguments, 0);
-        return new AnonymousObservable(function (observer) {
-            var n = sources.length,
-              queues = arrayInitialize(n, function () { return []; }),
-              isDone = arrayInitialize(n, function () { return false; });
+  /**
+   * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
+   * @param arguments Observable sources.
+   * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
+   */
+  Observable.zipArray = function () {
+    var sources = argsOrArray(arguments, 0);
+    return new AnonymousObservable(function (observer) {
+      var n = sources.length,
+        queues = arrayInitialize(n, function () { return []; }),
+        isDone = arrayInitialize(n, function () { return false; });
 
-            function next(i) {
-                if (queues.every(function (x) { return x.length > 0; })) {
-                    var res = queues.map(function (x) { return x.shift(); });
-                    observer.onNext(res);
-                } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-                    observer.onCompleted();
-                    return;
-                }
-            };
+      function next(i) {
+        if (queues.every(function (x) { return x.length > 0; })) {
+          var res = queues.map(function (x) { return x.shift(); });
+          observer.onNext(res);
+        } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+          observer.onCompleted();
+          return;
+        }
+      };
 
-            function done(i) {
-                isDone[i] = true;
-                if (isDone.every(identity)) {
-                    observer.onCompleted();
-                    return;
-                }
-            }
+      function done(i) {
+        isDone[i] = true;
+        if (isDone.every(identity)) {
+          observer.onCompleted();
+          return;
+        }
+      }
 
-            var subscriptions = new Array(n);
-            for (var idx = 0; idx < n; idx++) {
-                (function (i) {
-                    subscriptions[i] = new SingleAssignmentDisposable();
-                    subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
-                        queues[i].push(x);
-                        next(i);
-                    }, observer.onError.bind(observer), function () {
-                        done(i);
-                    }));
-                })(idx);
-            }
+      var subscriptions = new Array(n);
+      for (var idx = 0; idx < n; idx++) {
+        (function (i) {
+          subscriptions[i] = new SingleAssignmentDisposable();
+          subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
+            queues[i].push(x);
+            next(i);
+          }, observer.onError.bind(observer), function () {
+            done(i);
+          }));
+        })(idx);
+      }
 
-            var compositeDisposable = new CompositeDisposable(subscriptions);
-            compositeDisposable.add(disposableCreate(function () {
-                for (var qIdx = 0, qLen = queues.length; qIdx < qLen; qIdx++) {
-                    queues[qIdx] = [];
-                }
-            }));
-            return compositeDisposable;
-        });
-    };
+      var compositeDisposable = new CompositeDisposable(subscriptions);
+      compositeDisposable.add(disposableCreate(function () {
+        for (var qIdx = 0, qLen = queues.length; qIdx < qLen; qIdx++) { queues[qIdx] = []; }
+      }));
+      return compositeDisposable;
+    });
+  };
 
   /**
    *  Hides the identity of an observable sequence.
@@ -3638,65 +3635,58 @@ if (!Array.prototype.forEach) {
     });
   };
 
-    /**
-     *  Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
-     *
-     *  var res = xs.windowWithCount(10);
-     *  var res = xs.windowWithCount(10, 1);
-     * @param {Number} count Length of each window.
-     * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
-     * @returns {Observable} An observable sequence of windows.
-     */
-    observableProto.windowWithCount = function (count, skip) {
-        var source = this;
-        if (count <= 0) {
-            throw new Error(argumentOutOfRange);
+  /**
+   *  Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
+   *
+   *  var res = xs.windowWithCount(10);
+   *  var res = xs.windowWithCount(10, 1);
+   * @param {Number} count Length of each window.
+   * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
+   * @returns {Observable} An observable sequence of windows.
+   */
+  observableProto.windowWithCount = function (count, skip) {
+    var source = this;
+    +count || (count = 0);
+    Math.abs(count) === Infinity && (count = 0);
+    if (count <= 0) { throw new Error(argumentOutOfRange); }
+    skip == null && (skip = count);
+    +skip || (skip = 0);
+    Math.abs(skip) === Infinity && (skip = 0);
+
+    if (skip <= 0) { throw new Error(argumentOutOfRange); }
+    return new AnonymousObservable(function (observer) {
+      var m = new SingleAssignmentDisposable(),
+        refCountDisposable = new RefCountDisposable(m),
+        n = 0,
+        q = [];
+
+      function createWindow () {
+        var s = new Subject();
+        q.push(s);
+        observer.onNext(addRef(s, refCountDisposable));
+      }
+
+      createWindow();
+
+      m.setDisposable(source.subscribe(
+        function (x) {
+          for (var i = 0, len = q.length; i < len; i++) { q[i].onNext(x); }
+          var c = n - count + 1;
+          c >=0 && c % skip === 0 && q.shift().onCompleted();
+          ++n % skip === 0 && createWindow();
+        }, 
+        function (e) {
+          while (q.length > 0) { q.shift().onError(e); }
+          observer.onError(e);
+        }, 
+        function () {
+          while (q.length > 0) { q.shift().onCompleted(); }
+          observer.onCompleted();
         }
-        if (arguments.length === 1) {
-            skip = count;
-        }
-        if (skip <= 0) {
-            throw new Error(argumentOutOfRange);
-        }
-        return new AnonymousObservable(function (observer) {
-            var m = new SingleAssignmentDisposable(),
-                refCountDisposable = new RefCountDisposable(m),
-                n = 0,
-                q = [],
-                createWindow = function () {
-                    var s = new Subject();
-                    q.push(s);
-                    observer.onNext(addRef(s, refCountDisposable));
-                };
-            createWindow();
-            m.setDisposable(source.subscribe(function (x) {
-                var s;
-                for (var i = 0, len = q.length; i < len; i++) {
-                    q[i].onNext(x);
-                }
-                var c = n - count + 1;
-                if (c >= 0 && c % skip === 0) {
-                    s = q.shift();
-                    s.onCompleted();
-                }
-                n++;
-                if (n % skip === 0) {
-                    createWindow();
-                }
-            }, function (exception) {
-                while (q.length > 0) {
-                    q.shift().onError(exception);
-                }
-                observer.onError(exception);
-            }, function () {
-                while (q.length > 0) {
-                    q.shift().onCompleted();
-                }
-                observer.onCompleted();
-            }));
-            return refCountDisposable;
-        });
-    };
+      ));
+      return refCountDisposable;
+    });
+  };
 
     function concatMap(source, selector, thisArg) {
       return source.map(function (x, i) {

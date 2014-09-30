@@ -12,4 +12,6 @@
     addRef = Rx.internals.addRef,
     defaultComparer = Rx.internals.isEqual,
     noop = Rx.helpers.noop,
-    identity = Rx.helpers.identity;
+    identity = Rx.helpers.identity,
+    isPromise = Rx.helpers.isPromise,
+    observableFromPromise = Observable.fromPromise;
