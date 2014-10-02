@@ -1726,7 +1726,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribeNext = function (onNext, thisArg) {
+    observableProto.subscribeOnNext = function (onNext, thisArg) {
       return this._subscribe(observerCreate(arguments.length === 2 ? function(x) { onNext.call(thisArg, x); } : onNext));
     };
 
@@ -1736,7 +1736,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribeError = function (onError, thisArg) {
+    observableProto.subscribeOnError = function (onError, thisArg) {
       return this._subscribe(observerCreate(null, arguments.length === 2 ? function(e) { onError.call(thisArg, e); } : onError));
     };
 
@@ -1746,7 +1746,7 @@
      * @param {Any} [thisArg] Object to use as this when executing callback.
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribeCompleted = function (onCompleted, thisArg) {
+    observableProto.subscribeOnCompleted = function (onCompleted, thisArg) {
       return this._subscribe(observerCreate(null, null, arguments.length === 2 ? function() { onCompleted.call(thisArg); } : onCompleted));
     };
 
@@ -2560,70 +2560,67 @@
     });
   };
 
-    /**
-     * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
-     * @param arguments Observable sources.
-     * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
-     * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
-     */
-    Observable.zip = function () {
-        var args = slice.call(arguments, 0),
-            first = args.shift();
-        return first.zip.apply(first, args);
-    };
+  /**
+   * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
+   * @param arguments Observable sources.
+   * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
+   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+   */
+  Observable.zip = function () {
+    var args = slice.call(arguments, 0), first = args.shift();
+    return first.zip.apply(first, args);
+  };
 
-    /**
-     * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-     * @param arguments Observable sources.
-     * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
-     */
-    Observable.zipArray = function () {
-        var sources = argsOrArray(arguments, 0);
-        return new AnonymousObservable(function (observer) {
-            var n = sources.length,
-              queues = arrayInitialize(n, function () { return []; }),
-              isDone = arrayInitialize(n, function () { return false; });
+  /**
+   * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
+   * @param arguments Observable sources.
+   * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
+   */
+  Observable.zipArray = function () {
+    var sources = argsOrArray(arguments, 0);
+    return new AnonymousObservable(function (observer) {
+      var n = sources.length,
+        queues = arrayInitialize(n, function () { return []; }),
+        isDone = arrayInitialize(n, function () { return false; });
 
-            function next(i) {
-                if (queues.every(function (x) { return x.length > 0; })) {
-                    var res = queues.map(function (x) { return x.shift(); });
-                    observer.onNext(res);
-                } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-                    observer.onCompleted();
-                    return;
-                }
-            };
+      function next(i) {
+        if (queues.every(function (x) { return x.length > 0; })) {
+          var res = queues.map(function (x) { return x.shift(); });
+          observer.onNext(res);
+        } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+          observer.onCompleted();
+          return;
+        }
+      };
 
-            function done(i) {
-                isDone[i] = true;
-                if (isDone.every(identity)) {
-                    observer.onCompleted();
-                    return;
-                }
-            }
+      function done(i) {
+        isDone[i] = true;
+        if (isDone.every(identity)) {
+          observer.onCompleted();
+          return;
+        }
+      }
 
-            var subscriptions = new Array(n);
-            for (var idx = 0; idx < n; idx++) {
-                (function (i) {
-                    subscriptions[i] = new SingleAssignmentDisposable();
-                    subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
-                        queues[i].push(x);
-                        next(i);
-                    }, observer.onError.bind(observer), function () {
-                        done(i);
-                    }));
-                })(idx);
-            }
+      var subscriptions = new Array(n);
+      for (var idx = 0; idx < n; idx++) {
+        (function (i) {
+          subscriptions[i] = new SingleAssignmentDisposable();
+          subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
+            queues[i].push(x);
+            next(i);
+          }, observer.onError.bind(observer), function () {
+            done(i);
+          }));
+        })(idx);
+      }
 
-            var compositeDisposable = new CompositeDisposable(subscriptions);
-            compositeDisposable.add(disposableCreate(function () {
-                for (var qIdx = 0, qLen = queues.length; qIdx < qLen; qIdx++) {
-                    queues[qIdx] = [];
-                }
-            }));
-            return compositeDisposable;
-        });
-    };
+      var compositeDisposable = new CompositeDisposable(subscriptions);
+      compositeDisposable.add(disposableCreate(function () {
+        for (var qIdx = 0, qLen = queues.length; qIdx < qLen; qIdx++) { queues[qIdx] = []; }
+      }));
+      return compositeDisposable;
+    });
+  };
 
   /**
    *  Hides the identity of an observable sequence.
@@ -2742,7 +2739,7 @@
    * @param {Any} [thisArg] Object to use as this when executing callback.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto.doNext = observableProto.tapNext = function (onNext, thisArg) {
+  observableProto.doOnNext = observableProto.tapOnNext = function (onNext, thisArg) {
     return this.tap(arguments.length === 2 ? function (x) { onNext.call(thisArg, x); } : onNext);
   };
 
@@ -2753,7 +2750,7 @@
    * @param {Any} [thisArg] Object to use as this when executing callback.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto.doError = observableProto.tapError = function (onError, thisArg) {
+  observableProto.doOnError = observableProto.tapOnError = function (onError, thisArg) {
     return this.tap(noop, arguments.length === 2 ? function (e) { onError.call(thisArg, e); } : onError);
   };
 
@@ -2764,7 +2761,7 @@
    * @param {Any} [thisArg] Object to use as this when executing callback.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto.doCompleted = observableProto.tapCompleted = function (onCompleted, thisArg) {
+  observableProto.doOnCompleted = observableProto.tapOnCompleted = function (onCompleted, thisArg) {
     return this.tap(noop, null, arguments.length === 2 ? function () { onCompleted.call(thisArg); } : onCompleted);
   };
 

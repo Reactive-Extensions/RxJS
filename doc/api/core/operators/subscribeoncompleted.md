@@ -1,4 +1,4 @@
-### `Rx.Observable.prototype.subscribeCompleted(onCompleted, [thisArg])`
+### `Rx.Observable.prototype.subscribeOnCompleted(onCompleted, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/observable.js "View in source")
 
 Subscribes a function to invoke upon graceful termination of the observable sequence.
@@ -15,7 +15,7 @@ Subscribes a function to invoke upon graceful termination of the observable sequ
 /* Using functions */
 var source = Rx.Observable.range(0, 3);
 
-var subscription = source.subscribeError(
+var subscription = source.subscribeOnCompleted(
   function () {
     console.log('Completed');
   });
@@ -25,7 +25,7 @@ var subscription = source.subscribeError(
 /* With a thisArg */
 var source = Rx.Observable.range(0, 3);
 
-var subscription = source.subscribeCompleted(
+var subscription = source.subscribeOnCompleted(
   function (err) {
     this.log('Completed');
   }}, console);

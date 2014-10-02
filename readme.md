@@ -257,6 +257,14 @@ You can find the documentation [here](https://github.com/Reactive-Extensions/RxJ
 
 There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/libraries/rxjs/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
 
+### Custom Builds
+
+You can use the [`rx-cli`](https://www.npmjs.org/package/rx-cli) to perform custom builds to create the RxJS you want:
+
+```bash
+rx --lite --compat --methods select,selectmany,takeuntil,fromevent
+```
+
 ### Download the Source
 
 ```bash

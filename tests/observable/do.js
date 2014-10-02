@@ -490,7 +490,7 @@ test('Do1422_Observer_CompletedThrows', function () {
   );
 });
 
-test('doNext no thisArg', function () {
+test('doOnNext no thisArg', function () {
   var scheduler = new TestScheduler();
 
   var self = this, that;
@@ -502,13 +502,13 @@ test('doNext no thisArg', function () {
   );
 
   scheduler.startWithCreate(function () {
-    return xs.doNext(function () { that = this; });
+    return xs.doOnNext(function () { that = this; });
   });
 
   notEqual(that, self);
 });
 
-test('doNext thisArg', function () {
+test('doOnNext thisArg', function () {
   var scheduler = new TestScheduler();
 
   var self = 42, that;
@@ -520,13 +520,13 @@ test('doNext thisArg', function () {
   );
 
   scheduler.startWithCreate(function () {
-    return xs.doNext(function () { that = this; }, self);
+    return xs.doOnNext(function () { that = this; }, self);
   });
 
   equal(that, self);
 });
 
-test('doError no thisArg', function () {
+test('doOnError no thisArg', function () {
   var scheduler = new TestScheduler();
 
   var self = this, that;
@@ -537,13 +537,13 @@ test('doError no thisArg', function () {
   );
 
   scheduler.startWithCreate(function () {
-    return xs.doError(function () { that = this; });
+    return xs.doOnError(function () { that = this; });
   });
 
   notEqual(that, self);
 });
 
-test('doError thisArg', function () {
+test('doOnError thisArg', function () {
   var scheduler = new TestScheduler();
 
   var self = 42, that;
@@ -554,13 +554,13 @@ test('doError thisArg', function () {
   );
 
   scheduler.startWithCreate(function () {
-    return xs.doError(function () { that = this; }, self);
+    return xs.doOnError(function () { that = this; }, self);
   });
 
   equal(that, self);
 });
 
-test('doCompleted no thisArg', function () {
+test('doOnCompleted no thisArg', function () {
   var scheduler = new TestScheduler();
 
   var self = this, that;
@@ -571,13 +571,13 @@ test('doCompleted no thisArg', function () {
   );
 
   scheduler.startWithCreate(function () {
-    return xs.doCompleted(function () { that = this; });
+    return xs.doOnCompleted(function () { that = this; });
   });
 
   notEqual(that, self);
 });
 
-test('doCompleted thisArg', function () {
+test('doOnCompleted thisArg', function () {
   var scheduler = new TestScheduler();
 
   var self = 42, that;
@@ -589,7 +589,7 @@ test('doCompleted thisArg', function () {
 
 
   scheduler.startWithCreate(function () {
-    return xs.doCompleted(function () { that = this; }, self);
+    return xs.doOnCompleted(function () { that = this; }, self);
   });
 
   equal(that, self);
