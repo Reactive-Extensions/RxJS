@@ -25,8 +25,8 @@ This set of libraries include:
 - **rx.js** - core library for ES5 compliant browsers and runtimes
 - **rx.compat.js** - core library for older non-ES5 compliant browsers.
 - **rx.aggregates.js** - aggregation event processing query operations
-- **rx.async.js** - async operationrs such as events, callbacks and promises
-- **rx.async.compat.js** - async operationrs such as events, callbacks and promises with support back to IE6
+- **rx.async.js** - async operations such as events, callbacks and promises
+- **rx.async.compat.js** - async operations such as events, callbacks and promises with support back to IE6
 - **rx.binding.js** - binding operators including multicast, publish, publishLast, publishValue, and replay
 - **rx.coincidence.js** - reactive coincidence join event processing query operations
 - **rx.experimental.js** - experimental operators including imperative operators and forkJoin
