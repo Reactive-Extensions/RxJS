@@ -47,7 +47,8 @@
     isScheduler = Rx.helpers.isScheduler,
     slice = Array.prototype.slice;
 
-  var fnString = 'function';
+  var fnString = 'function',
+      throwString = 'throw';
 
   function toThunk(obj, ctx) {
     if (Array.isArray(obj)) {  return objectToThunk.call(ctx, obj); }
@@ -140,7 +141,7 @@
   }
 
   function isGenerator(obj) {
-    return obj && typeof obj.next === fnString && typeof obj.throw === fnString;
+    return obj && typeof obj.next === fnString && typeof obj[throwString] === fnString;
   }
 
   function isObject(val) {
@@ -184,7 +185,7 @@
 
         if (err) {
           try {
-            ret = gen.throw(err);
+            ret = gen[throwString](err);
           } catch (e) {
             return exit(e);
           }
@@ -273,7 +274,7 @@
     timeoutScheduler.schedule(function(){
       throw err;
     });
-  }  
+  }
 
   /**
    * Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
