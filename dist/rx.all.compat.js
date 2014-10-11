@@ -5002,33 +5002,13 @@ if (!Array.prototype.forEach) {
   var fnString = 'function';
 
   function toThunk(obj, ctx) {
-    if (Array.isArray(obj)) {
-      return objectToThunk.call(ctx, obj);
-    }
-
-    if (isGeneratorFunction(obj)) {
-      return observableSpawn(obj.call(ctx));
-    }
-
-    if (isGenerator(obj)) {
-      return observableSpawn(obj);
-    }
-
-    if (isObservable(obj)) {
-      return observableToThunk(obj);
-    }
-
-    if (isPromise(obj)) {
-      return promiseToThunk(obj);
-    }
-
-    if (typeof obj === fnString) {
-      return obj;
-    }
-
-    if (isObject(obj) || Array.isArray(obj)) {
-      return objectToThunk.call(ctx, obj);
-    }
+    if (Array.isArray(obj)) {  return objectToThunk.call(ctx, obj); }
+    if (isGeneratorFunction(obj)) { return observableSpawn(obj.call(ctx)); }
+    if (isGenerator(obj)) {  return observableSpawn(obj); }
+    if (isObservable(obj)) { return observableToThunk(obj); }
+    if (isPromise(obj)) { return promiseToThunk(obj); }
+    if (typeof obj === fnString) { return obj; }
+    if (isObject(obj) || Array.isArray(obj)) { return objectToThunk.call(ctx, obj); }
 
     return obj;
   }
@@ -5080,7 +5060,7 @@ if (!Array.prototype.forEach) {
     }
   }
 
-  function observableToThink(observable) {
+  function observableToThunk(observable) {
     return function (fn) {
       var value, hasValue = false;
       observable.subscribe(
@@ -5104,7 +5084,7 @@ if (!Array.prototype.forEach) {
   }
 
   function isObservable(obj) {
-    return obj && obj.prototype.subscribe === fnString;
+    return obj && typeof obj.subscribe === fnString;
   }
 
   function isGeneratorFunction(obj) {
@@ -5129,7 +5109,7 @@ if (!Array.prototype.forEach) {
 
     return function (done) {
       var ctx = this,
-        gen = fan;
+        gen = fn;
 
       if (isGenFun) {
         var args = slice.call(arguments),
@@ -5239,6 +5219,13 @@ if (!Array.prototype.forEach) {
       }
     }
   };
+
+  function error(err) {
+    if (!err) { return; }
+    timeoutScheduler.schedule(function(){
+      throw err;
+    });
+  }  
 
   /**
    * Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
