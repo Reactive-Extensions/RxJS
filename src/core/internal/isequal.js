@@ -227,7 +227,7 @@
       }
     }
     var size = 0;
-    result = true;
+    var result = true;
 
     // add `a` and `b` to the stack of traversed objects
     stackA.push(a);
