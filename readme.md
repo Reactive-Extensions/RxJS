@@ -185,7 +185,11 @@ And there you have it!
 
 ## Dive In! ##
 
-You can find the documentation [here](https://github.com/Reactive-Extensions/RxJS/tree/master/doc) as well as examples [here](https://github.com/Reactive-Extensions/RxJS/tree/master/examples) and plenty of [unit tests](https://github.com/Reactive-Extensions/RxJS/tree/master/tests).
+Please check out:
+
+ - [The full documentation](https://github.com/Reactive-Extensions/RxJS/tree/master/doc)
+ - [Our great set of examples](https://github.com/Reactive-Extensions/RxJS/tree/master/examples)
+ - [Our numerous unit tests](https://github.com/Reactive-Extensions/RxJS/tree/master/tests).
 
 ## Resources
 
