@@ -16,8 +16,8 @@
   }
 
   Array.prototype.assertEqual = function () {
-    var actual = slice.call(arguments);
-    var expected = this;
+    var expected = slice.call(arguments);
+    var actual = this;
 
     var i, isOk = true;
     if (expected.length !== actual.length) {
@@ -25,7 +25,16 @@
       return;
     }
     for (i = 0; i < expected.length; i++) {
-      isOk = comparer(expected[i], actual[i]);
+      var e = expected[i], a = actual[i];
+      // ALlow for predicates
+      if (e.value && typeof e.value.predicate === 'function') {
+
+        isOk = e.time === a.time && e.value.predicate(a.value);
+      } else {
+        isOk = comparer(e, a);
+      }
+
+      
       if (!isOk) {
         break;
       }
