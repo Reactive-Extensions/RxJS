@@ -112,46 +112,40 @@
         return x[0];
     }
 
-    /**
-     * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
-     * For aggregation behavior with incremental intermediate results, see Observable.scan.
-     * @example
-     * 1 - res = source.aggregate(function (acc, x) { return acc + x; });
-     * 2 - res = source.aggregate(0, function (acc, x) { return acc + x; });
-     * @param {Mixed} [seed] The initial accumulator value.
-     * @param {Function} accumulator An accumulator function to be invoked on each element.
-     * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
-     */
-    observableProto.aggregate = function () {
-        var seed, hasSeed, accumulator;
-        if (arguments.length === 2) {
-            seed = arguments[0];
-            hasSeed = true;
-            accumulator = arguments[1];
-        } else {
-            accumulator = arguments[0];
-        }
-        return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
-    };
+  /**
+   * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
+   * For aggregation behavior with incremental intermediate results, see Observable.scan.
+   * @param {Mixed} [seed] The initial accumulator value.
+   * @param {Function} accumulator An accumulator function to be invoked on each element.
+   * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
+   */
+  observableProto.aggregate = function () {
+    var seed, hasSeed, accumulator;
+    if (arguments.length === 2) {
+      seed = arguments[0];
+      hasSeed = true;
+      accumulator = arguments[1];
+    } else {
+      accumulator = arguments[0];
+    }
+    return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
+  };
 
-    /**
-     * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
-     * For aggregation behavior with incremental intermediate results, see Observable.scan.
-     * @example
-     * 1 - res = source.reduce(function (acc, x) { return acc + x; });
-     * 2 - res = source.reduce(function (acc, x) { return acc + x; }, 0);
-     * @param {Function} accumulator An accumulator function to be invoked on each element.
-     * @param {Any} [seed] The initial accumulator value.
-     * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
-     */
-    observableProto.reduce = function (accumulator) {
-        var seed, hasSeed;
-        if (arguments.length === 2) {
-            hasSeed = true;
-            seed = arguments[1];
-        }
-        return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
-    };
+  /**
+   * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
+   * For aggregation behavior with incremental intermediate results, see Observable.scan.
+   * @param {Function} accumulator An accumulator function to be invoked on each element.
+   * @param {Any} [seed] The initial accumulator value.
+   * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
+   */
+  observableProto.reduce = function (accumulator) {
+    var seed, hasSeed;
+    if (arguments.length === 2) {
+      hasSeed = true;
+      seed = arguments[1];
+    }
+    return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
+  };
 
     /**
      * Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence.
@@ -358,33 +352,27 @@
         });
     };
 
-    /**
-     * Computes the average of an observable sequence of values that are in the sequence or obtained by invoking a transform function on each element of the input sequence if present.
-     * @example
-     * var res = res = source.average();
-     * var res = res = source.average(function (x) { return x.value; });
-     * @param {Function} [selector] A transform function to apply to each element.
-     * @param {Any} [thisArg] Object to use as this when executing callback.
-     * @returns {Observable} An observable sequence containing a single element with the average of the sequence of values.
-     */
-    observableProto.average = function (keySelector, thisArg) {
-        return keySelector ?
-            this.select(keySelector, thisArg).average() :
-            this.scan({
-                sum: 0,
-                count: 0
-            }, function (prev, cur) {
-                return {
-                    sum: prev.sum + cur,
-                    count: prev.count + 1
-                };
-            }).finalValue().select(function (s) {
-                if (s.count === 0) {
-                    throw new Error('The input sequence was empty');
-                }
-                return s.sum / s.count;
-            });
-    };
+  /**
+   * Computes the average of an observable sequence of values that are in the sequence or obtained by invoking a transform function on each element of the input sequence if present.
+   * @param {Function} [selector] A transform function to apply to each element.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} An observable sequence containing a single element with the average of the sequence of values.
+   */
+  observableProto.average = function (keySelector, thisArg) {
+    return keySelector && isFunction(keySelector) ?
+      this.select(keySelector, thisArg).average() :
+      this.scan({sum: 0, count: 0 }, function (prev, cur) {
+        return {
+          sum: prev.sum + cur,
+          count: prev.count + 1
+        };
+      }).finalValue().map(function (s) {
+        if (s.count === 0) {
+          throw new Error('The input sequence was empty');
+        }
+        return s.sum / s.count;
+      });
+  };
 
   function sequenceEqualArray(first, second, comparer) {
     return new AnonymousObservable(function (observer) {
