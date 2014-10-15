@@ -186,22 +186,22 @@ NuGet Packages:
 
 ### Core Objects
 
-- [`Rx.Observer`](../api/core/observable.md../api/core/observable.mdapi/core/observer.md)
-- [`Rx.Notification`](../api/core/observable.md../api/core/observable.mdapi/core/notification.md)
+- [`Rx.Observer`](../api/core/observer.md)
+- [`Rx.Notification`](../api/core/notification.md)
 
 ### Subjects
 
-- [`Rx.AsyncSubject`](../api/core/observable.md../api/core/observable.mdapi/subjects/asyncsubject.md)
-- [`Rx.Subject`](../api/core/observable.md../api/core/observable.mdapi/subjects/subject.md)
+- [`Rx.AsyncSubject`](../api/subjects/asyncsubject.md)
+- [`Rx.Subject`](../api/subjects/subject.md)
 
 ### Schedulers
 
-- [`Rx.Scheduler`](../api/core/observable.md../api/core/observable.mdapi/schedulers/scheduler.md)
+- [`Rx.Scheduler`](../api/schedulers/scheduler.md)
 
 ### Disposables
 
-- [`Rx.CompositeDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/compositedisposable.md)
-- [`Rx.Disposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/disposable.md)
-- [`Rx.RefCountDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/refcountdisposable.md)
-- [`Rx.SerialDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/serialdisposable.md)
-- [`Rx.SingleAssignmentDisposable`](../api/core/observable.md../api/core/observable.mdapi/disposables/singleassignmentdisposable.md)
+- [`Rx.CompositeDisposable`](../api/disposables/compositedisposable.md)
+- [`Rx.Disposable`](../api/disposables/disposable.md)
+- [`Rx.RefCountDisposable`](../api/disposables/refcountdisposable.md)
+- [`Rx.SerialDisposable`](../api/disposables/serialdisposable.md)
+- [`Rx.SingleAssignmentDisposable`](../api/disposables/singleassignmentdisposable.md)
