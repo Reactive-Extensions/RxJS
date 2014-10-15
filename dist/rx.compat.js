@@ -2322,7 +2322,7 @@ if (!Array.prototype.forEach) {
    * @param {Any} [thisArg] The context to use calling the mapFn if provided.
    * @param {Scheduler} [scheduler] Optional scheduler to use for scheduling.  If not provided, defaults to Scheduler.currentThread.
    */
-  Observable.from = function (iterable, mapFn, thisArg, scheduler) {
+  var observableFrom = Observable.from = function (iterable, mapFn, thisArg, scheduler) {
     if (iterable == null) {
       throw new Error('iterable cannot be null.')
     }
@@ -3630,47 +3630,50 @@ if (!Array.prototype.forEach) {
     });
   };
 
-    function concatMap(source, selector, thisArg) {
-      return source.map(function (x, i) {
-        var result = selector.call(thisArg, x, i);
-        return isPromise(result) ? observableFromPromise(result) : result;
-      }).concatAll();
+  function concatMap(source, selector, thisArg) {
+    return source.map(function (x, i) {
+      var result = selector.call(thisArg, x, i);
+      isPromise(result) && (result = observableFromPromise(result));
+      (Array.isArray(result) || isIterable(result)) && (result = observableFrom(result));
+      return result;
+    }).concatAll();
+  }
+
+  /**
+   *  One of the Following:
+   *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+   *
+   * @example
+   *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); });
+   *  Or:
+   *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+   *
+   *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+   *  Or:
+   *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+   *
+   *  var res = source.concatMap(Rx.Observable.fromArray([1,2,3]));
+   * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the
+   * source sequence onto which could be either an observable or Promise.
+   * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+   * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+   */
+  observableProto.selectConcat = observableProto.concatMap = function (selector, resultSelector, thisArg) {
+    if (resultSelector) {
+      return this.concatMap(function (x, i) {
+        var selectorResult = selector(x, i);
+        isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
+        (Array.isArray(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
+
+        return selectorResult.map(function (y) {
+          return resultSelector(x, y, i);
+        });
+      });
     }
-
-    /**
-     *  One of the Following:
-     *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
-     *
-     * @example
-     *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); });
-     *  Or:
-     *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
-     *
-     *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
-     *  Or:
-     *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
-     *
-     *  var res = source.concatMap(Rx.Observable.fromArray([1,2,3]));
-     * @param selector A transform function to apply to each element or an observable sequence to project each element from the
-     * source sequence onto which could be either an observable or Promise.
-     * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
-     * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
-     */
-    observableProto.selectConcat = observableProto.concatMap = function (selector, resultSelector, thisArg) {
-      if (resultSelector) {
-          return this.concatMap(function (x, i) {
-            var selectorResult = selector(x, i),
-              result = isPromise(selectorResult) ? observableFromPromise(selectorResult) : selectorResult;
-
-            return result.map(function (y) {
-              return resultSelector(x, y, i);
-            });
-          });
-      }
-      return typeof selector === 'function' ?
-        concatMap(this, selector, thisArg) :
-        concatMap(this, function () { return selector; });
-    };
+    return typeof selector === 'function' ?
+      concatMap(this, selector, thisArg) :
+      concatMap(this, function () { return selector; });
+  };
 
   /**
    * Projects each notification of an observable sequence to an observable sequence and concats the resulting observable sequences into one observable sequence.
@@ -3838,48 +3841,50 @@ if (!Array.prototype.forEach) {
     return this.map(function (x) { return x[prop]; });
   };
 
-    function flatMap(source, selector, thisArg) {
-      return source.map(function (x, i) {
-        var result = selector.call(thisArg, x, i);
-        return isPromise(result) ? observableFromPromise(result) : result;
-      }).mergeObservable();
+  function flatMap(source, selector, thisArg) {
+    return source.map(function (x, i) {
+      var result = selector.call(thisArg, x, i);
+      isPromise(result) && (result = observableFromPromise(result));
+      (Array.isArray(result) || isIterable(result)) && (result = observableFrom(result));
+      return result;
+    }).mergeObservable();
+  }
+
+  /**
+   *  One of the Following:
+   *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+   *
+   * @example
+   *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+   *  Or:
+   *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+   *
+   *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+   *  Or:
+   *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+   *
+   *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
+   * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto which could be either an observable or Promise.
+   * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+   */
+  observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector, thisArg) {
+    if (resultSelector) {
+      return this.flatMap(function (x, i) {
+        var selectorResult = selector(x, i);
+        isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
+        (Array.isArray(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
+
+        return selectorResult.map(function (y) {
+          return resultSelector(x, y, i);
+        });
+      }, thisArg);
     }
-
-    /**
-     *  One of the Following:
-     *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
-     *
-     * @example
-     *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); });
-     *  Or:
-     *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
-     *
-     *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
-     *  Or:
-     *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
-     *
-     *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
-     * @param selector A transform function to apply to each element or an observable sequence to project each element from the
-     * source sequence onto which could be either an observable or Promise.
-     * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
-     * @param {Any} [thisArg] Object to use as this when executing callback.
-     * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
-     */
-    observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector, thisArg) {
-      if (resultSelector) {
-          return this.flatMap(function (x, i) {
-            var selectorResult = selector(x, i),
-              result = isPromise(selectorResult) ? observableFromPromise(selectorResult) : selectorResult;
-
-            return result.map(function (y) {
-              return resultSelector(x, y, i);
-            });
-          }, thisArg);
-      }
-      return typeof selector === 'function' ?
-        flatMap(this, selector, thisArg) :
-        flatMap(this, function () { return selector; });
-    };
+    return typeof selector === 'function' ?
+      flatMap(this, selector, thisArg) :
+      flatMap(this, function () { return selector; });
+  };
 
   /**
    * Projects each notification of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
