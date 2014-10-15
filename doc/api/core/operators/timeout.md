@@ -5,7 +5,7 @@ Returns the source observable sequence or the other observable sequence if dueTi
 
 #### Arguments
 1. `dueTime` *(Date | Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
-2. `[other]` *(`Observable`)*: Sequence or Promise to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
+2. `[other]` *(`Observable` | `Promise` | `string`)*: Observable sequence or Promise to return in case of a timeout. If a string is specified, then an error will be thrown with the given error message.  If not specified, a timeout error throwing sequence will be used.
 3. `[scheduler=Rx.Observable.timeout]` *(`Scheduler`)*: Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
 
 #### Returns
@@ -20,35 +20,74 @@ var source = Rx.Observable
     .timeout(200);
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Error: Error: Timeout
 
-/* With another */
+/* With message */
 var source = Rx.Observable
     .return(42)
     .delay(5000)
-    .timeout(200, Rx.Observable.empty());
+    .timeout(200, 'Timeout has occurred.');
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
+// => Error: Error: Timeout has occurred.
+
+/* With an observable */
+var source = Rx.Observable
+  .return(42)
+  .delay(5000)
+  .timeout(200, Rx.Observable.empty());
+
+var subscription = source.subscribe(
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
+
+// => Completed
+
+/* With a Promise */
+var source = Rx.Observable
+  .return(42)
+  .delay(5000)
+  .timeout(200, Promise.resolve(42));
+
+var subscription = source.subscribe(
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
+
+// => Next: 42
 // => Completed
 ```
 

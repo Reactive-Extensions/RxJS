@@ -6,7 +6,7 @@
    * @returns {Observable} The source sequence switching to the other sequence in case of a timeout.
    */
   observableProto.timeout = function (dueTime, other, scheduler) {
-    other || (other = observableThrow(new Error('Timeout')));
+    (other == null || typeof other === 'string') && (other = observableThrow(new Error(other || 'Timeout')));
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
 
     var source = this, schedulerMethod = dueTime instanceof Date ?
