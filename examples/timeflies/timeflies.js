@@ -19,7 +19,7 @@
         mousemove = Rx.Observable.fromEvent(document, 'mousemove');
 
     // Get the offset on mousemove from the container
-    var mouseMoveOffset = mousemove.select(function (e) {
+    var mouseMoveOffset = mousemove.map(function (e) {
       var offset = getOffset(container);
       return {
         offsetX : e.clientX - offset.left + document.documentElement.scrollLeft,
@@ -27,24 +27,23 @@
       };
     });
 
-    for (var i = 0, len = text.length; i < len; i++) {
-
-      (function (i) {
-
+    Rx.Observable.from(text).flatMap(
+      function (letter, i) {
         // Add an element for each letter
         var s = document.createElement('span');
-        s.innerHTML = text[i];
+        s.innerHTML = letter;
         s.style.position = 'absolute';
         container.appendChild(s);
 
         // move each letter with a delay based upon overall position
-        mouseMoveOffset.delay(i * 100).subscribe(function (e) {
-          s.style.top = e.offsetY + 'px';
-          s.style.left = e.offsetX + i * 10 + 15 + 'px';
+        return mouseMoveOffset.delay(i * 100).map(function (pos) {
+          return { pos: pos, element: s, index: i };
         });
-      }(i));
-
-    }
+      })
+    .subscribe(function (data) {
+      data.element.style.top = data.pos.offsetY + 'px';
+      data.element.style.left = data.pos.offsetX + data.index * 10 + 15 + 'px';
+    });
   }
 
   main();

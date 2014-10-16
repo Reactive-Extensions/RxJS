@@ -2348,7 +2348,7 @@ if (!Array.prototype.forEach) {
 
             result = next.value;
           } else {
-            result = list[i];
+            result = !!list.charAt ? list.charAt(i) : list[i];
           }
 
           if (mapFn && isCallable(mapFn)) {
