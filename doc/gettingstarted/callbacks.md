@@ -66,7 +66,7 @@ var promise1 = new RSVP.Promise(function (resolve, reject) {
     resolve(42);
 });
 
-var source1 = Rx.Observable.fromPromise(promise);
+var source1 = Rx.Observable.fromPromise(promise1);
 
 var subscription1 = source1.subscribe(
 	function (x) { console.log('onNext: ' + x); },
@@ -81,7 +81,7 @@ var promise2 = new RSVP.Promise(function (resolve, reject) {
     reject(new Error('reason'));
 });
 
-var source2 = Rx.Observable.fromPromise(promise);
+var source2 = Rx.Observable.fromPromise(promise2);
 
 var subscription2 = source2.subscribe(
 	function (x) { console.log('onNext: ' + x); },
