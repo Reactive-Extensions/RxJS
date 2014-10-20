@@ -293,6 +293,9 @@ var browsers = [{
               'src/core/linq/observable/skipuntilwithtime.js',
               'src/core/linq/observable/takeuntilwithtime.js',
 
+              // Transducers
+              'src/core/linq/observable/transducer.js',
+
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
               'src/core/linq/observable/exclusivemap.js',
@@ -566,6 +569,9 @@ var browsers = [{
               'src/core/linq/observable/exclusive.js',
               'src/core/linq/observable/exclusivemap.js',
 
+              // Transducers
+              'src/core/linq/observable/transducer.js',
+
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',
@@ -698,9 +704,8 @@ var browsers = [{
               'src/core/linq/observable/takewhile.js',
               'src/core/linq/observable/where.js',
 
-              // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              // Transducers
+              'src/core/linq/observable/transducer.js',              
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -829,9 +834,8 @@ var browsers = [{
               'src/core/linq/observable/takewhile.js',
               'src/core/linq/observable/where.js',
 
-              // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              // Transducers
+              'src/core/linq/observable/transducer.js',              
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -978,9 +982,8 @@ var browsers = [{
               //'src/core/backpressure/windowed.js',
               //'src/core/backpressure/windowedobservable.js',
 
-              // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              // Transducers
+              'src/core/linq/observable/transducer.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -1129,9 +1132,8 @@ var browsers = [{
               'src/core/backpressure/controlledobservable.js',
               'src/core/backpressure/controlledsubject.js',
 
-              // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              // Transducers
+              'src/core/linq/observable/transducer.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -1339,6 +1341,11 @@ var browsers = [{
               'src/core/linq/observable/forkjoin.js', // CompositeDisposable
               'src/core/linq/observable/forkjoinproto.js', // SingleAssignmentDisposable, CompositeDisposable
               'src/core/linq/observable/manyselect.js', // ImmediateScheduler, CurrentThreadScheduler, select, do, observeOn
+
+              // Experimental Flattening
+              'src/core/linq/observable/exclusive.js',
+              'src/core/linq/observable/exclusivemap.js',
+              
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.experimental.js'

@@ -5,7 +5,7 @@
   function setLeft(x) { this.style.left = x + 'px'; }
   function setTop(y) { this.style.top = y + 'px'; }
   function add(x, y) { return x + y; }
-  var partialAdd = function (x) { return add.bind(null, x); };
+  function partialAdd(x) { return add.bind(null, x); };
   function randomize() { return Math.round(10 * Math.random() - 5); }
 
   var delay = 300;
