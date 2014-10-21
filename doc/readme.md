@@ -59,9 +59,10 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 - [Creating and Querying Observable Sequences](gettingstarted/creatingquerying.md)
    1. [Creating and Subscribing to Simple Observable Sequences](gettingstarted/creating.md)
    2. [Bridging to Events](gettingstarted/events.md)
-   3. [Bridging to Callbacks and Promises](gettingstarted/callbacks.md)
-   4. [Querying Observable Sequences](gettingstarted/querying.md)
-   5. [Operators by Category](gettingstarted/categories.md)
+   3. [Bridging to Callbacks](gettingstarted/callbacks.md)
+   4. [Bridging to Promises](gettingstarted/promises.md)   
+   5. [Querying Observable Sequences](gettingstarted/querying.md)
+   6. [Operators by Category](gettingstarted/categories.md)
 - [Subjects](gettingstarted/subjects.md)
 - [Scheduling and Concurrency](gettingstarted/schedulers.md)
 - [Testing and Debugging](gettingstarted/testing.md)
@@ -71,17 +72,17 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 
 There are many libraries that make up the Reactive Extensions for JavaScript, so it may be a little daunting at first to know which ones to include.  This will serve as a guide for which libraries you might need.  For most operations you'll only need the newly defined [RxJS-Lite](libraries/rx.lite.md), but you may find you need more operators, so you start with [RxJS Core](libraries/rx.md) and add additional files to mix in functionality as you need it.
 
-- [rx.lite.js](libraries/rx.lite.md)
-- [rx.js](libraries/rx.md)
-- [rx.async.js](libraries/rx.async.md)
-- [rx.binding.js](libraries/rx.binding.md)
-- [rx.coincidence.js](libraries/rx.coincidence.md)
-- [rx.experimental.js](libraries/rx.experimental.md)
-- [rx.joinpatterns.js](libraries/rx.joinpatterns.md)
-- [rx.node.js](libraries/rx.node.md)
-- [rx.testing.js](libraries/rx.testing.md)
-- [rx.time.js](libraries/rx.time.md)
-- [rx.virtualtime.js](libraries/rx.virtualtime.md)
+- [`rx.lite.js`](libraries/rx.lite.md)
+- [`rx.js`](libraries/rx.md)
+- [`rx.async.js`](libraries/rx.async.md)
+- [`rx.binding.js`](libraries/rx.binding.md)
+- [`rx.coincidence.js`](libraries/rx.coincidence.md)
+- [`rx.experimental.js`](libraries/rx.experimental.md)
+- [`rx.joinpatterns.js`](libraries/rx.joinpatterns.md)
+- [`rx.node.js`](libraries/rx.node.md)
+- [`rx.testing.js`](libraries/rx.testing.md)
+- [`rx.time.js`](libraries/rx.time.md)
+- [`rx.virtualtime.js`](libraries/rx.virtualtime.md)
 
 ## How Do I? ##
 
@@ -98,6 +99,7 @@ Converting your existing code from other libraries can be easy.  Many of the con
 
 1. [For Bacon.js Users](mapping/baconjs.md)
 2. [For Async.js Users](mapping/asyncjs.md)
+3. [For Highland.js Users](mapping/highlandjs.md)
 
 ## Reactive Extensions Class Library
 

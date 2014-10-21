@@ -62,7 +62,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/linq/observable/transduce.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/transduce.js)
+- [`/src/core/linq/observable/transduce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/transduce.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -79,4 +79,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/return.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/transduce.js)
+- [`/tests/observable/transduce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/transduce.js)
