@@ -24,7 +24,7 @@ Coordinate key up behavior with querying a web service to retrieve hints for que
 
 Paint on an HTML5 Canvas by coordinating mouse move with mouse down events until mouse up.
 
-- [See the code](https://github.com/Reactive-Extensions/RxJS/tree/master/examples/autocomplete)
+- [See the code](https://github.com/Reactive-Extensions/RxJS/tree/master/examples/canvaspaint)
 - [Edit the code in JSFiddle](http://jsfiddle.net/mattpodwysocki/2EnC4)
 
 * * *
