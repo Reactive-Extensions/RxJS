@@ -3952,12 +3952,19 @@
     return new AnonymousObservable(function(observer) {
       var xform = transducer(transformForObserver(observer));
       return source.subscribe(
-        function(v) { xform.step(observer, v);}, 
+        function(v) { 
+          try {
+            xform.step(observer, v);
+          } catch (e) {
+            observer.onError(e);
+          }
+        }, 
         observer.onError.bind(observer), 
         function() { xform.result(observer); }
       );
     });
   };
+
   var AnonymousObservable = Rx.AnonymousObservable = (function (__super__) {
     inherits(AnonymousObservable, __super__);
 

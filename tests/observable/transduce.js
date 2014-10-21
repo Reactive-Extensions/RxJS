@@ -103,7 +103,7 @@ test('transduce throw', function () {
   };
 
   var results = scheduler.startWithCreate(function () {
-    return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
+    return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
   });
 
   results.messages.assertEqual(

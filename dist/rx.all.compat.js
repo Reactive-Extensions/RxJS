@@ -8772,12 +8772,19 @@ if (!Array.prototype.forEach) {
     return new AnonymousObservable(function(observer) {
       var xform = transducer(transformForObserver(observer));
       return source.subscribe(
-        function(v) { xform.step(observer, v);}, 
+        function(v) { 
+          try {
+            xform.step(observer, v);
+          } catch (e) {
+            observer.onError(e);
+          }
+        }, 
         observer.onError.bind(observer), 
         function() { xform.result(observer); }
       );
     });
   };
+
   /** Provides a set of extension methods for virtual time scheduling. */
   Rx.VirtualTimeScheduler = (function (__super__) {
 
