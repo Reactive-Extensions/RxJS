@@ -1,114 +1,207 @@
-QUnit.module('Transduce');
+(function () {
+  QUnit.module('Transduce');
 
-var TestScheduler = Rx.TestScheduler,
-  onNext = Rx.ReactiveTest.onNext,
-  onError = Rx.ReactiveTest.onError,
-  onCompleted = Rx.ReactiveTest.onCompleted,
-  subscribe = Rx.ReactiveTest.subscribe,
-  t = transducers;
+  var TestScheduler = Rx.TestScheduler,
+    onNext = Rx.ReactiveTest.onNext,
+    onError = Rx.ReactiveTest.onError,
+    onCompleted = Rx.ReactiveTest.onCompleted,
+    subscribe = Rx.ReactiveTest.subscribe,
+    t = transducers;
 
-function even (x) { return x % 2 === 0; }
-function mul10(x) { return x * 10; }
+  function even (x) { return x % 2 === 0; }
+  function mul10(x) { return x * 10; }
+  function noop () { }
+  function identity (x) { return x; }
+  function throwError () { throw new Error(); }
 
-test('transduce never', function () {
-  var scheduler = new TestScheduler();
+  test('transduce raises', function () {
 
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1)
-  );
+    raises(function () {
+      Observable.throwError(new Error())
+        .transduce(t.comp(t.filter(even), t.map(mul10)))
+        .subscribe(noop, throwError);
+    });
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
+    raises(function () {
+      Observable.empty()
+        .transduce(t.comp(t.filter(even), t.map(mul10)))
+        .subscribe(noop, noop, throwError);
+    });
+
+    raises(function () {
+      Observable.create(throwError)
+        .transduce(t.comp(t.filter(even), t.map(mul10)))
+        .subscribe();
+    });
+
   });
 
-  results.messages.assertEqual();
-});
+  test('transduce never', function () {
+    var scheduler = new TestScheduler();
 
-test('transduce empty', function () {
-  var scheduler = new TestScheduler();
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1)
+    );
 
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onCompleted(250)
-  );
+    var results = scheduler.startWithCreate(function () {
+      return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
+    });
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
-  });  
+    results.messages.assertEqual();
 
-  results.messages.assertEqual(
-    onCompleted(250)
-  );
-});
-
-test('transduce some', function () {
-  var scheduler = new TestScheduler();
-
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2),
-    onNext(220, 3),
-    onNext(230, 4),
-    onNext(240, 5),
-    onCompleted(250)
-  );
-
-  var results = scheduler.startWithCreate(function () {
-    return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
-  });  
-
-  results.messages.assertEqual(
-    onNext(210, 20),
-    onNext(230, 40),
-    onCompleted(250)
-  );
-});
-
-test('transduce error', function () {
-  var error = new Error();
-
-  var scheduler = new TestScheduler();
-
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onError(210, error)
-  );
-
-  var results = scheduler.startWithCreate(function () {
-    return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
+    xs.subscriptions.assertEqual(
+      subscribe(200, 1000)
+    );
   });
 
-  results.messages.assertEqual(
-    onError(210, error)
-  );
-});
+  test('transduce empty', function () {
+    var scheduler = new TestScheduler();
 
-test('transduce throw', function () {
-  var error = new Error();
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1), 
+      onCompleted(250)
+    );
 
-  var scheduler = new TestScheduler();
+    var i = 0;
+    var evenFilter = function (x) {
+      i++; return x % 2 === 0;
+    };  
 
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2),
-    onNext(220, 3),
-    onNext(230, 4),
-    onNext(240, 5),
-    onCompleted(250)
-  );
+    var results = scheduler.startWithCreate(function () {
+      return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
+    });  
 
-  var i = 0;
-  var evenFilter = function (x) {
-    if (i++ > 2) { throw error; } else { return x % 2 === 0; }
-  };
+    results.messages.assertEqual(
+      onCompleted(250)
+    );
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
+    xs.subscriptions.assertEqual(
+      subscribe(200, 250)
+    );
+
+    equal(0, i);    
   });
 
-  results.messages.assertEqual(
-    onNext(210, 20),
-    onNext(230, 40),
-    onError(240, error)
-  );
-});
+  test('transduce some', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1), 
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var i = 0;
+    var evenFilter = function (x) {
+      i++; return x % 2 === 0;
+    };
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
+    });  
+
+    results.messages.assertEqual(
+      onNext(210, 20),
+      onNext(230, 40),
+      onCompleted(250)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 250)
+    );
+
+    equal(4, i);  
+  });
+
+  test('transduce ifinite', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1), 
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5)
+    );
+
+    var i = 0;
+    var evenFilter = function (x) {
+      i++; return x % 2 === 0;
+    };
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
+    });  
+
+    results.messages.assertEqual(
+      onNext(210, 20),
+      onNext(230, 40)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 1000)
+    );
+
+    equal(4, i);
+  });
+
+  test('transduce error', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1), 
+      onError(210, error)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
+    });
+
+    results.messages.assertEqual(
+      onError(210, error)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 210)
+    );  
+  });
+
+  test('transduce throw', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1), 
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var i = 0;
+    var evenFilter = function (x) {
+      if (i++ > 2) { throw error; } else { return x % 2 === 0; }
+    };
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
+    });
+
+    results.messages.assertEqual(
+      onNext(210, 20),
+      onNext(230, 40),
+      onError(240, error)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 240)
+    );    
+  });
+}());
