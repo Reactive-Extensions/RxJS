@@ -294,7 +294,7 @@ var browsers = [{
               'src/core/linq/observable/takeuntilwithtime.js',
 
               // Transducers
-              'src/core/linq/observable/transducer.js',
+              'src/core/linq/observable/transduce.js',
 
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
@@ -570,7 +570,7 @@ var browsers = [{
               'src/core/linq/observable/exclusivemap.js',
 
               // Transducers
-              'src/core/linq/observable/transducer.js',
+              'src/core/linq/observable/transduce.js',
 
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
@@ -705,7 +705,7 @@ var browsers = [{
               'src/core/linq/observable/where.js',
 
               // Transducers
-              'src/core/linq/observable/transducer.js',              
+              'src/core/linq/observable/transduce.js',              
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -835,7 +835,7 @@ var browsers = [{
               'src/core/linq/observable/where.js',
 
               // Transducers
-              'src/core/linq/observable/transducer.js',              
+              'src/core/linq/observable/transduce.js',              
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -983,7 +983,7 @@ var browsers = [{
               //'src/core/backpressure/windowedobservable.js',
 
               // Transducers
-              'src/core/linq/observable/transducer.js',
+              'src/core/linq/observable/transduce.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -1133,7 +1133,7 @@ var browsers = [{
               'src/core/backpressure/controlledsubject.js',
 
               // Transducers
-              'src/core/linq/observable/transducer.js',
+              'src/core/linq/observable/transduce.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',

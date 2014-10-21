@@ -33,8 +33,8 @@
         isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
         (Array.isArray(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
 
-        return selectorResult.map(function (y) {
-          return resultSelector(x, y, i);
+        return selectorResult.map(function (y, i2) {
+          return resultSelector(x, y, i, i2);
         });
       }, thisArg);
     }

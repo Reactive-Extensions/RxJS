@@ -3665,8 +3665,8 @@ if (!Array.prototype.forEach) {
         isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
         (Array.isArray(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
 
-        return selectorResult.map(function (y) {
-          return resultSelector(x, y, i);
+        return selectorResult.map(function (y, i2) {
+          return resultSelector(x, y, i, i2);
         });
       });
     }
@@ -3876,8 +3876,8 @@ if (!Array.prototype.forEach) {
         isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
         (Array.isArray(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
 
-        return selectorResult.map(function (y) {
-          return resultSelector(x, y, i);
+        return selectorResult.map(function (y, i2) {
+          return resultSelector(x, y, i, i2);
         });
       }, thisArg);
     }
@@ -4078,6 +4078,37 @@ if (!Array.prototype.forEach) {
       });
   };
 
+  /**
+   * Executes a transducer to transform the observable sequence 
+   * @param {Transducer} transducer A transducer to execute
+   * @returns {Observable} An Observable sequence containing the results from the transducer.
+   */
+  observableProto.transduce = function(transducer) {
+    var source = this;
+
+    function transformForObserver(observer) {
+      return {
+        init: function() {
+          return observer;
+        },
+        step: function(obs, input) {
+          return obs.onNext(input);
+        },
+        result: function(obs) {
+          return obs.onCompleted();
+        }
+      };
+    }
+
+    return new AnonymousObservable(function(observer) {
+      var xform = transducer(transformForObserver(observer));
+      return source.subscribe(
+        function(v) { xform.step(observer, v);}, 
+        observer.onError.bind(observer), 
+        function() { xform.result(observer); }
+      );
+    });
+  };
   var AnonymousObservable = Rx.AnonymousObservable = (function (__super__) {
     inherits(AnonymousObservable, __super__);
 
