@@ -94,6 +94,7 @@ NuGet Packages:
 - [`takeUntil`](../api/core/operators/takeuntil.md)
 - [`takeWhile`](../api/core/operators/takewhile.md)
 - [`toArray`](../api/core/operators/toarray.md)
+- [`transduce`](../api/core/operators/transduce.md)
 - [`where`](../api/core/operators/where.md)
 - [`windowWithCount`](../api/core/operators/windowwithcount.md)
 - [`zip`](../api/core/operators/zipproto.md)
