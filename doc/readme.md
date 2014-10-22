@@ -13,13 +13,13 @@ RxJS has no dependencies which complements and interoperates smoothly with both 
    <th></th><th>Single return value</th><th>Mutiple return values</th>
    <tr>
       <td>Pull/Synchronous/Interactive</td>
-      <td><pre><code>Object</code></pre></td>
-      <td>Iterables(<pre><code>Array</code></pre> | <pre><code>Set</code></pre> | <pre><code>Map</code></pre>)</td>
+      <td>Object</td>
+      <td>Iterables(Array | Set | Map)</td>
    </tr>
    <tr>
       <td>Push/Asynchronous/Reactive</td>
-      <td><pre><code>Promise</code></pre></td>
-      <td><pre><code>Observable</code></pre></td>
+      <td>Promise</td>
+      <td>Observable</td>
    </tr>
 </table>
 </center>
