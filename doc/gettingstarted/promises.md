@@ -89,6 +89,8 @@ var subscription2 = source2.subscribe(
 // => onError: reject
 ```
 
+Notice that in this sample, these promises becomes an observable sequences in which we can manipulate further. The [Querying Observable Sequences](querying.md) topic will show you how you can project this sequence into another, filter its content, so that your application will only receive values that satisfy a certain criteria.
+
 ## Converting Observable Sequences to Promises ##
 
 Just as you can convert a Promise to an Observable sequence, you can also convert an Observable sequence to a Promise.  This either requires native support for Promises, or a Promise library you can add yourself, such as [Q](https://github.com/kriskowal/q), [RSVP](https://github.com/tildeio/rsvp.js), [when.js](https://github.com/cujojs/when) among others.  These libraries must conform to the ES6 standard for construction where it provides two functions to resolve or reject the promise.
@@ -129,3 +131,38 @@ source2.then(
 // => Rejected reason: Error: reason
 ```
 
+If an implementation is not given with the [`toPromise`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/frompromise.md) method, it will fall back to the Promise implementation specified in the `Rx.config.Promise` field.  By default this will be set to the runtime's ES6 Promise implementation, but can easily be overridden by specifying the configuration information.
+
+```js
+Rx.config.Promise = RSVP.Promise;
+
+var source1 = Rx.Observable.just(1).toPromise();
+
+source1.then(
+  function (value) {
+    console.log('Resolved value: %s', value);
+  },
+  function (reason) {
+    console.log('Rejected reason: %s', reason);
+  });
+
+// => Resolved value: 1
+```
+
+If you are in a pure ES6 environment, this should just work without any settings on your part as it will use the runtime's ES6 Promise implementation.
+```js
+var source1 = Rx.Observable.just(1).toPromise();
+
+source1.then(
+  function (value) {
+    console.log('Resolved value: %s', value);
+  },
+  function (reason) {
+    console.log('Rejected reason: %s', reason);
+  });
+
+// => Resolved value: 1
+```
+
+Concepts
+- [Querying Observable Sequences](querying.md)

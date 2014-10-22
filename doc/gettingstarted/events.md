@@ -1,8 +1,10 @@
 # Bridging to Events #
 
-RxJS provides factory methods for you to bridge with existing asynchronous sources in the DOM or Node.js so that you can employ the rich composing, filtering and resource management features provided by RxJS on any kind of data streams. This topic examines the [`fromEvent`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromeventelement-eventname) and [`fromEventPattern`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromeventpatternaddhander-removehandler) operator that allows "importing" a DOM or custom event into RxJS as an observable sequence. Every time an event is raised, an `onNext` message will be delivered to the observable sequence. You can then manipulate event data just like any other observable sequences.
+RxJS provides factory methods for you to bridge with existing asynchronous sources in the DOM or Node.js so that you can employ the rich composing, filtering and resource management features provided by RxJS on any kind of data streams. This topic examines the [`fromEvent`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/fromevent.md) and [`fromEventPattern`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/fromeventpattern.md) operator that allows "importing" a DOM or custom event into RxJS as an observable sequence. Every time an event is raised, an `onNext` message will be delivered to the observable sequence. You can then manipulate event data just like any other observable sequences.
 
 RxJS does not aim at replacing existing asynchronous programming models such as promises or callbacks. However, when you attempt to compose events, RxJS’s factory methods will provide you the convenience that cannot be found in the current programming model. This is especially true for resource maintenance (e.g., when to unsubscribe) and filtering (e.g., choosing what kind of data to receive). In this topic and the ones that follow, you can examine how these RxJS features can assist you in asynchronous programming.
+
+Natively, RxJS supports a number of libraries and hooks into them such as [jQuery](http://jquery.com/), [Zepto.js](http://zeptojs.com/), [AngularJS](https://angularjs.org/), [Ember.js](http://emberjs.com/) and [Backbone.js](http://backbonejs.org) for using their event system.  This behavior, however, can be overridden to only use native bindings only.  By default, RxJS also has hooks for [Node.js](http://nodejs.org) `EventEmitter` events natively supported.
 
 ## Converting a DOM event to a RxJS Observable Sequence ##
 
@@ -12,11 +14,11 @@ The following sample creates a simple DOM event handler for the mouse move event
 var result = document.getElementById('result');
 
 document.addEventListener('mousemove', function (e) {
-	result.innerHTML = e.clientX + ', ' + e.clientY;
+  result.innerHTML = e.clientX + ', ' + e.clientY;
 }, false);
 ```
 
-To import an event into RxJS, you can use the [`fromEvent`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromeventelement-eventname) operator, and provide the event arguments that will be raised by the event being bridged. It then converts the given event into an observable sequence.
+To import an event into RxJS, you can use the [`fromEvent`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/amb.md) operator, and provide the event arguments that will be raised by the event being bridged. It then converts the given event into an observable sequence.
 
 In the following example, we convert the mousemove event stream of the DOM into an observable sequence. Every time a mouse-move event is fired, the subscriber will receive an `onNext` notification. We can then examine the event arguments value of such notification and get the location of the mouse-move.
 
@@ -26,7 +28,7 @@ var result = document.getElementById('result');
 var source = Rx.Observable.fromEvent(document, 'mousemove');
 
 var subscription = source.subscribe(function (e) {
-	result.innerHTML = e.clientX + ', ' + e.clientY;
+  result.innerHTML = e.clientX + ', ' + e.clientY;
 });
 ```
 
@@ -43,11 +45,11 @@ var sources = document.querySelectorAll('div');
 var source = Rx.Observable.fromEvent(sources, 'click');
 
 var subscription = source.subscribe(function (e) {
-	result.innerHTML = e.clientX + ', ' + e.clientY;
+  result.innerHTML = e.clientX + ', ' + e.clientY;
 });
 ```
 
-In addition, `fromEvent` also supports libraries such as [jQuery](http://jquery.com/):
+In addition, `fromEvent` also supports libraries such as [jQuery](http://jquery.com/), [Zepto.js](http://zeptojs.com/), [AngularJS](https://angularjs.org/), [Ember.js](http://emberjs.com/) and [Backbone.js](http://backbonejs.org):
 
 ```
 var $result = $('#result');
@@ -56,9 +58,68 @@ var $sources = $('div');
 var source = Rx.Observable.fromEvent($sources, 'click');
 
 var subscription = source.subscribe(function (e) {
-	$result.html(e.clientX + ', ' + e.clientY);
+  $result.html(e.clientX + ', ' + e.clientY);
 });
 ```
+
+If this behavior is not desired, you can override it by setting the `Rx.config.useNativeEvents` to `true` which will disregard any library for which we support events.
+
+```js
+// Use only native events even if jQuery
+Rx.config.useNativeEvents = true;
+
+// Native events only
+var result = document.getElementById('result');
+
+var source = Rx.Observable.fromEvent(document, 'mousemove');
+
+var subscription = source.subscribe(function (e) {
+  result.innerHTML = e.clientX + ', ' + e.clientY;
+});
+```
+
+In addition, you could easily add many shortcuts into the event system for events such as `mousemove`, and even extending to [Pointer](http://www.w3.org/TR/pointerevents/) and [Touch](http://www.w3.org/TR/touch-events/) Events.
+
+```js
+Rx.dom = {};
+
+var events = "blur focus focusin focusout load resize scroll unload click dblclick " +
+  "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
+  "change select submit keydown keypress keyup error contextmenu";
+
+if (root.PointerEvent) {
+  events += " pointerdown pointerup pointermove pointerover pointerout pointerenter pointerleave";
+}
+
+if (root.TouchEvent) {
+  events += " touchstart touchend touchmove touchcancel";
+}
+
+events.split(' ').forEach(function (e) {
+  Rx.dom[e] = function (element, selector) {
+    return Rx.Observable.fromEvent(element, e, selector);
+  };
+});
+```
+
+Now we can rewrite a simple mouse drag as the following:
+```js
+var draggable = document.getElementById('draggable');
+
+var mousedrag = Rx.dom.mousedown(draggable).flatMap(function (md) {
+  md.preventDefault();
+
+  var start = getLocation(md);
+
+  return Rx.dom.mousemove(document)
+    .map(function (mm) {
+      return getDelta(start, mm);
+    })
+    .takeUntil(Rx.dom.mouseup(draggable));
+});
+```
+
+Note this is already available in the [RxJS-DOM](https://github.com/Reactive-Extensions/RxJS-DOM) project, but is small enough for you to implement yourself.
 
 ## Converting a Node.js event to a RxJS Observable Sequence ##
 
@@ -66,14 +127,14 @@ Node.js is also supported such as an [`EventEmitter`](http://nodejs.org/api/even
 
 ```js
 var Rx = require('rx'),
-	EventEmitter = require('events').EventEmitter;
+  EventEmitter = require('events').EventEmitter;
 
 var eventEmitter = new EventEmitter();
 
 var source = Rx.Observable.fromEvent(eventEmitter, 'data')
 
 var subscription = source.subscribe(function (data) {
-	console.log('data: ' + data);
+  console.log('data: ' + data);
 });
 
 eventEmitter.emit('data', 'foo');
@@ -82,7 +143,7 @@ eventEmitter.emit('data', 'foo');
 
 ## Bridging to Custom Events with FromEventPattern ##
 
-There may be instances dealing with libraries which have different ways of subscribing and unsubscribing from events.  The [`fromEventPattern`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromeventpatternaddhander-removehandler) method was created exactly for this purpose to allow you to bridge to each of these custom event emitters.
+There may be instances dealing with libraries which have different ways of subscribing and unsubscribing from events.  The [`fromEventPattern`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/fromeventpattern.md) method was created exactly for this purpose to allow you to bridge to each of these custom event emitters.
 
 For example, you might want to bridge to using jQuery [`on`](http://api.jquery.com/on/) method.  We can convert the following code which alerts based upon the click of a table row.
 
@@ -98,11 +159,11 @@ The converted code looks like this while using the `fromEventPattern` method.  E
 var $tbody = $('#dataTable tbody');
 
 var source = Rx.Observable.fromEventPattern(
-	function addHandler (h) { $tbody.on('click', 'tr', h); },
-	function delHandler (h) { $tbody.off('click', 'tr', h); });
+  function addHandler (h) { $tbody.on('click', 'tr', h); },
+  function delHandler (h) { $tbody.off('click', 'tr', h); });
 
 var subscription = source.subscribe(function (e) {
-	alert( $(e.target).text() );
+  alert( $(e.target).text() );
 });
 ```
 
