@@ -13,13 +13,13 @@ RxJS has no dependencies which complements and interoperates smoothly with both 
    <th></th><th>Single return value</th><th>Mutiple return values</th>
    <tr>
       <td>Pull/Synchronous/Interactive</td>
-      <td>Object</td>
-      <td>Iterables (Array | Set | Map | Object)</td>
+      <td>`Object`</td>
+      <td>Iterables (`Array` | `Set` | `Map`)</td>
    </tr>
    <tr>
       <td>Push/Asynchronous/Reactive</td>
-      <td>Promise</td>
-      <td>Observable</td>
+      <td>`Promise`</td>
+      <td>`Observable`</td>
    </tr>
 </table>
 </center>
@@ -35,11 +35,11 @@ To put it more concretely, if you know how to program against Arrays using the A
   <tr><td><pre><code>getDataFromLocalMemory()
   .filter (s => s != null)
   .map(s => s + 'transformed')
-  .forEach(s => console.log('next => '' + it))</code></pre></td>
+  .forEach(s => console.log('next => %s', it))</code></pre></td>
   <td><pre><code>getDataFromNetwork()
   .filter (s => s != null)
   .map(s => s + 'transformed')
-  .subscribe(s => console.log('next => '' + it))</code></pre></td></tr>
+  .subscribe(s => console.log('next => %s', it))</code></pre></td></tr>
  </tbody>
 </table></center>
 
@@ -62,7 +62,8 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
    3. [Bridging to Callbacks](gettingstarted/callbacks.md)
    4. [Bridging to Promises](gettingstarted/promises.md)   
    5. [Querying Observable Sequences](gettingstarted/querying.md)
-   6. [Operators by Category](gettingstarted/categories.md)
+   6. [Transducers with Observable Sequences](gettingstarted/transducers.md)
+   7. [Operators by Category](gettingstarted/categories.md)
 - [Subjects](gettingstarted/subjects.md)
 - [Scheduling and Concurrency](gettingstarted/schedulers.md)
 - [Testing and Debugging](gettingstarted/testing.md)
@@ -70,7 +71,7 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 
 ## Getting to Know RxJS Libraries ##
 
-There are many libraries that make up the Reactive Extensions for JavaScript, so it may be a little daunting at first to know which ones to include.  This will serve as a guide for which libraries you might need.  For most operations you'll only need the newly defined [RxJS-Lite](libraries/rx.lite.md), but you may find you need more operators, so you start with [RxJS Core](libraries/rx.md) and add additional files to mix in functionality as you need it.
+There are many libraries that make up the Reactive Extensions for JavaScript, so it may be a little daunting at first to know which ones to include.  This will serve as a guide for which libraries you might need.  For most operations you'll only need [RxJS-Lite](libraries/rx.lite.md), but you may find you need more operators, so you start with [RxJS Core](libraries/rx.md) and add additional files to mix in functionality as you need it.
 
 - [`rx.lite.js`](libraries/rx.lite.md)
 - [`rx.js`](libraries/rx.md)
@@ -107,7 +108,8 @@ This section contains the reference documentation for the Reactive Extensions cl
 
 ### Helpers
 
-- [`Rx.helpers`](api/core/readme.md)
+- [`Rx.config`](api/config/readme.md)
+- [`Rx.helpers`](api/helpers/readme.md)
 
 ### Core Objects
 

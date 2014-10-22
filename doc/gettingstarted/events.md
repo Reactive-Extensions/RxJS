@@ -18,7 +18,7 @@ document.addEventListener('mousemove', function (e) {
 }, false);
 ```
 
-To import an event into RxJS, you can use the [`fromEvent`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/amb.md) operator, and provide the event arguments that will be raised by the event being bridged. It then converts the given event into an observable sequence.
+To import an event into RxJS, you can use the [`fromEvent`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/fromevent.md) operator, and provide the event arguments that will be raised by the event being bridged. It then converts the given event into an observable sequence.
 
 In the following example, we convert the mousemove event stream of the DOM into an observable sequence. Every time a mouse-move event is fired, the subscriber will receive an `onNext` notification. We can then examine the event arguments value of such notification and get the location of the mouse-move.
 
