@@ -107,6 +107,8 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`indexOf`](operators/indexOf.md)
 - [`isEmpty`](operators/isempty.md)
 - [`join`](operators/join.md)
+- [`jortSort`](operators/jortsort.md)
+- [`jortSortUntil`](operators/jortsortuntil.md)
 - [`last`](operators/last.md)
 - [`lastOrDefault`](operators/lastordefault.md)
 - [`let | letBind`](operators/let.md)
