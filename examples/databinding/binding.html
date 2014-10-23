@@ -12,6 +12,7 @@
 <body>
   <script src="../assets/jquery/jquery-1.10.2.min.js"></script>
   <script src="../../dist/rx.lite.compat.js"></script>
+  <script src="../../dist/rx.time.js"></script>
   <script src="binding.js"></script>    
 
   <div class="container">
@@ -91,7 +92,7 @@
         self.value.onNext(++count);
       };
       
-      this.interval = this.value.timeInterval().pluck('interval');
+      this.interval = this.value.timeInterval().map(function (x) { return x.interval; });
     }
 
     var vm = new ViewModel();
