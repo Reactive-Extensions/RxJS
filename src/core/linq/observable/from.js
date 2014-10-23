@@ -58,7 +58,13 @@
         if (i < len || objIsIterable) {
           var result;
           if (objIsIterable) {
-            var next = it.next();
+            var next;
+            try {
+              next = it.next();
+            } catch (e) {
+              observer.onError(e);
+              return;
+            }
             if (next.done) {
               observer.onCompleted();
               return;

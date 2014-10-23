@@ -1,4 +1,4 @@
-QUnit.module('SelectMany');
+QUnit.module('FlatMap');
 
 var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
@@ -14,13 +14,13 @@ var Observable = Rx.Observable,
 
 function noop () { }
 
-asyncTest('SelectMany_Then_Complete_Task', function () {
+asyncTest('flatMap_Then_Complete_Task', function () {
   var xs = Rx.Observable.fromArray([4,3,2,1]);
 
   var ys = new RSVP.Promise(function (res) { res(42); });
 
   var results = [];
-  xs.selectMany(ys).subscribe(
+  xs.flatMap(ys).subscribe(
     function (x) {
       results.push(x);
     },
@@ -34,12 +34,12 @@ asyncTest('SelectMany_Then_Complete_Task', function () {
     });
 });
 
-asyncTest('SelectMany_Then_Error_Task', function () {
+asyncTest('flatMap_Then_Error_Task', function () {
   var xs = Rx.Observable.fromArray([4,3,2,1]);
 
   var ys = new RSVP.Promise(function (res, rej) { rej(42); });
 
-  xs.selectMany(ys).subscribe(
+  xs.flatMap(ys).subscribe(
     function (x) {
       ok(false);
       start();
@@ -54,11 +54,11 @@ asyncTest('SelectMany_Then_Error_Task', function () {
     });
 });
 
-asyncTest('SelectMany_Selector_Complete_Task', function () {
+asyncTest('flatMap_Selector_Complete_Task', function () {
   var xs = Rx.Observable.fromArray([4,3,2,1]);
 
   var results = [];
-  xs.selectMany(function (x, i) {
+  xs.flatMap(function (x, i) {
     return new RSVP.Promise(function (res) { res(x + i); });
   }).subscribe(
     function (x) {
@@ -74,10 +74,10 @@ asyncTest('SelectMany_Selector_Complete_Task', function () {
     });
 });
 
-asyncTest('SelectMany_Selector_Error_Task', function () {
+asyncTest('flatMap_Selector_Error_Task', function () {
   var xs = Rx.Observable.fromArray([4,3,2,1]);
 
-  xs.selectMany(function (x, i) {
+  xs.flatMap(function (x, i) {
     return new RSVP.Promise(function (res, rej) { rej(x + i); })
   }).subscribe(
     function (x) {
@@ -94,11 +94,11 @@ asyncTest('SelectMany_Selector_Error_Task', function () {
     });
 });
 
-asyncTest('SelectMany_ResultSelector_Complete_Task', function () {
+asyncTest('flatMap_ResultSelector_Complete_Task', function () {
   var xs = Rx.Observable.fromArray([4,3,2,1]);
 
   var results = [];
-  xs.selectMany(
+  xs.flatMap(
     function (x, i) {
       return new RSVP.Promise(function (res) { res(x + i); });
     },
@@ -119,10 +119,10 @@ asyncTest('SelectMany_ResultSelector_Complete_Task', function () {
       });
 });
 
-asyncTest('SelectMany_ResultSelector_Error_Task', function () {
+asyncTest('flatMap_ResultSelector_Error_Task', function () {
   var xs = Rx.Observable.fromArray([4,3,2,1]);
 
-  xs.selectMany(
+  xs.flatMap(
     function (x, i) {
       return new RSVP.Promise(function (res, rej) { rej(x + i); })
     },
@@ -144,7 +144,7 @@ asyncTest('SelectMany_ResultSelector_Error_Task', function () {
       });
 });
 
-test('SelectMany_Then_Complete_Complete', function () {
+test('flatMap_Then_Complete_Complete', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -162,7 +162,7 @@ test('SelectMany_Then_Complete_Complete', function () {
         onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
-        return xs.selectMany(ys);
+        return xs.flatMap(ys);
     });
 
     results.messages.assertEqual(
@@ -193,7 +193,7 @@ test('SelectMany_Then_Complete_Complete', function () {
         subscribe(600, 850));
 });
 
-test('SelectMany_Then_Complete_Complete_2', function () {
+test('flatMap_Then_Complete_Complete_2', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -211,7 +211,7 @@ test('SelectMany_Then_Complete_Complete_2', function () {
       onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
-        return xs.selectMany(ys);
+        return xs.flatMap(ys);
     });
 
     results.messages.assertEqual(
@@ -242,7 +242,7 @@ test('SelectMany_Then_Complete_Complete_2', function () {
       subscribe(600, 850));
 });
 
-test('SelectMany_Then_Never_Complete', function () {
+test('flatMap_Then_Never_Complete', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -261,7 +261,7 @@ test('SelectMany_Then_Never_Complete', function () {
       onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
-        return xs.selectMany(ys);
+        return xs.flatMap(ys);
     });
 
     results.messages.assertEqual(
@@ -298,7 +298,7 @@ test('SelectMany_Then_Never_Complete', function () {
       subscribe(900, 1000));
 });
 
-test('SelectMany_Then_Complete_Never', function () {
+test('flatMap_Then_Complete_Never', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -315,7 +315,7 @@ test('SelectMany_Then_Complete_Never', function () {
       onNext(200, "qux"));
 
     var results = scheduler.startWithCreate(function () {
-      return xs.selectMany(ys);
+      return xs.flatMap(ys);
     });
 
     results.messages.assertEqual(
@@ -340,7 +340,7 @@ test('SelectMany_Then_Complete_Never', function () {
     ys.subscriptions.assertEqual(subscribe(300, 1000), subscribe(400, 1000), subscribe(500, 1000), subscribe(600, 1000));
 });
 
-test('SelectMany_Then_Complete_Error', function () {
+test('flatMap_Then_Complete_Error', function () {
     var ex = new Error('ex');
 
     var scheduler = new TestScheduler();
@@ -360,7 +360,7 @@ test('SelectMany_Then_Complete_Error', function () {
       onError(300, ex));
 
     var results = scheduler.startWithCreate(function () {
-        return xs.selectMany(ys);
+        return xs.flatMap(ys);
     });
 
     results.messages.assertEqual(
@@ -379,7 +379,7 @@ test('SelectMany_Then_Complete_Error', function () {
     ys.subscriptions.assertEqual(subscribe(300, 600), subscribe(400, 600), subscribe(500, 600), subscribe(600, 600));
 });
 
-test('SelectMany_Then_Error_Complete', function () {
+test('flatMap_Then_Error_Complete', function () {
     var ex = new Error('ex');
 
     var scheduler = new TestScheduler();
@@ -399,7 +399,7 @@ test('SelectMany_Then_Error_Complete', function () {
       onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
-      return xs.selectMany(ys);
+      return xs.flatMap(ys);
     });
 
     results.messages.assertEqual(
@@ -426,7 +426,7 @@ test('SelectMany_Then_Error_Complete', function () {
       subscribe(600, 700));
 });
 
-test('SelectMany_Then_Error_Error', function () {
+test('flatMap_Then_Error_Error', function () {
   var ex = new Error('ex');
 
   var scheduler = new TestScheduler();
@@ -446,7 +446,7 @@ test('SelectMany_Then_Error_Error', function () {
     onError(250, ex));
 
   var results = scheduler.startWithCreate(function () {
-    return xs.selectMany(ys);
+    return xs.flatMap(ys);
   });
 
   results.messages.assertEqual(
@@ -466,7 +466,7 @@ test('SelectMany_Then_Error_Error', function () {
     subscribe(500, 550));
 });
 
-test('SelectMany_Complete', function () {
+test('flatMap_Complete', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -498,7 +498,7 @@ test('SelectMany_Complete', function () {
     onCompleted(900));
 
   var results = scheduler.startWithCreate(function () {
-    return xs.selectMany(function (x) {
+    return xs.flatMap(function (x) {
       return x;
     });
   });
@@ -529,7 +529,7 @@ test('SelectMany_Complete', function () {
   xs.messages[6].value.value.subscriptions.assertEqual(subscribe(850, 950));
 });
 
-test('SelectMany_Complete_InnerNotComplete', function () {
+test('flatMap_Complete_InnerNotComplete', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -560,7 +560,7 @@ test('SelectMany_Complete_InnerNotComplete', function () {
     onCompleted(900));
 
   var results = scheduler.startWithCreate(function () {
-    return xs.selectMany(function (x) {
+    return xs.flatMap(function (x) {
       return x;
     });
   });
@@ -590,7 +590,7 @@ test('SelectMany_Complete_InnerNotComplete', function () {
   xs.messages[6].value.value.subscriptions.assertEqual(subscribe(850, 950));
 });
 
-test('SelectMany_Complete_OuterNotComplete', function () {
+test('flatMap_Complete_OuterNotComplete', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -621,7 +621,7 @@ test('SelectMany_Complete_OuterNotComplete', function () {
         onCompleted(100))));
 
     var results = scheduler.startWithCreate(function () {
-      return xs.selectMany(function (x) {
+      return xs.flatMap(function (x) {
         return x;
       });
     });
@@ -650,7 +650,7 @@ test('SelectMany_Complete_OuterNotComplete', function () {
     xs.messages[6].value.value.subscriptions.assertEqual(subscribe(850, 950));
 });
 
-test('SelectMany_Error_Outer', function () {
+test('flatMap_Error_Outer', function () {
     var ex = new Error('ex');
 
     var scheduler = new TestScheduler();
@@ -684,7 +684,7 @@ test('SelectMany_Error_Outer', function () {
       onError(900, ex));
 
     var results = scheduler.startWithCreate(function () {
-      return xs.selectMany(function (x) {
+      return xs.flatMap(function (x) {
         return x;
       });
     });
@@ -713,7 +713,7 @@ test('SelectMany_Error_Outer', function () {
     xs.messages[6].value.value.subscriptions.assertEqual(subscribe(850, 900));
 });
 
-test('SelectMany_Error_Inner', function () {
+test('flatMap_Error_Inner', function () {
     var ex = new Error('ex');
 
     var scheduler = new TestScheduler();
@@ -747,7 +747,7 @@ test('SelectMany_Error_Inner', function () {
       onCompleted(900));
 
     var results = scheduler.startWithCreate(function () {
-      return xs.selectMany(function (x) {
+      return xs.flatMap(function (x) {
         return x;
       });
     });
@@ -774,7 +774,7 @@ test('SelectMany_Error_Inner', function () {
     xs.messages[6].value.value.subscriptions.assertEqual();
 });
 
-test('SelectMany_Dispose', function () {
+test('flatMap_Dispose', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -806,9 +806,7 @@ test('SelectMany_Dispose', function () {
     onCompleted(900));
 
   var results = scheduler.startWithDispose(function () {
-      return xs.selectMany(function (x) {
-          return x;
-      });
+      return xs.flatMap(function (x) { return x; });
   }, 700);
 
   results.messages.assertEqual(
@@ -831,7 +829,7 @@ test('SelectMany_Dispose', function () {
   xs.messages[6].value.value.subscriptions.assertEqual();
 });
 
-test('SelectMany_Throw', function () {
+test('flatMap_Throw', function () {
   var invoked = 0;
   var ex = new Error('ex');
 
@@ -867,55 +865,424 @@ test('SelectMany_Throw', function () {
     onCompleted(900));
 
   var results = scheduler.startWithCreate(function () {
-      return xs.selectMany(function (x) {
-          invoked++;
-          if (invoked === 3) {
-              throw ex;
-          }
-          return x;
-      });
+    return xs.flatMap(function (x) {
+      invoked++;
+      if (invoked === 3) { throw ex; }
+      return x;
+    });
   });
-  results.messages.assertEqual(onNext(310, 102), onNext(390, 103), onNext(410, 104), onNext(490, 105), onError(550, ex));
+
+  results.messages.assertEqual(
+    onNext(310, 102), 
+    onNext(390, 103), 
+    onNext(410, 104), 
+    onNext(490, 105), 
+    onError(550, ex)
+  );
+
   xs.subscriptions.assertEqual(subscribe(200, 550));
-  xs.messages[2].value.value.subscriptions.assertEqual(subscribe(300, 550));
-  xs.messages[3].value.value.subscriptions.assertEqual(subscribe(400, 550));
+
+  xs.messages[2].value.value.subscriptions.assertEqual(
+    subscribe(300, 550)
+  );
+  
+  xs.messages[3].value.value.subscriptions.assertEqual(
+    subscribe(400, 550)
+  );
+
   xs.messages[4].value.value.subscriptions.assertEqual();
   xs.messages[5].value.value.subscriptions.assertEqual();
   xs.messages[6].value.value.subscriptions.assertEqual();
 });
 
-test('SelectMany_UseFunction', function () {
-    var scheduler = new TestScheduler();
+test('flatMap_UseFunction', function () {
+  var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(
-      onNext(210, 4),
-      onNext(220, 3),
-      onNext(250, 5),
-      onNext(270, 1),
-      onCompleted(290));
+  var xs = scheduler.createHotObservable(
+    onNext(210, 4),
+    onNext(220, 3),
+    onNext(250, 5),
+    onNext(270, 1),
+    onCompleted(290)
+  );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.selectMany(function (x) {
-        return Observable.interval(10, scheduler).select(function () {
-          return x;
-        }).take(x);
-      });
+  var results = scheduler.startWithCreate(function () {
+    return xs.flatMap(function (x) {
+      return Observable.interval(10, scheduler).select(function () {
+        return x;
+      }).take(x);
     });
+  });
 
-    results.messages.assertEqual(
-      onNext(220, 4),
-      onNext(230, 3),
-      onNext(230, 4),
-      onNext(240, 3),
-      onNext(240, 4),
-      onNext(250, 3),
-      onNext(250, 4),
-      onNext(260, 5),
-      onNext(270, 5),
-      onNext(280, 1),
-      onNext(280, 5),
-      onNext(290, 5),
-      onNext(300, 5),
-      onCompleted(300));
-    xs.subscriptions.assertEqual(subscribe(200, 290));
+  results.messages.assertEqual(
+    onNext(220, 4),
+    onNext(230, 3),
+    onNext(230, 4),
+    onNext(240, 3),
+    onNext(240, 4),
+    onNext(250, 3),
+    onNext(250, 4),
+    onNext(260, 5),
+    onNext(270, 5),
+    onNext(280, 1),
+    onNext(280, 5),
+    onNext(290, 5),
+    onNext(300, 5),
+    onCompleted(300)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 290)
+  );
+});
+
+function arrayRepeat(value, times) {
+  var results = [];
+  for(var i = 0; i < times; i++) {
+    results.push(value);
+  }
+  return results;
+}
+
+test('flatMap_Iterable_Complete', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var inners = [];
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.flatMap(function (x) {
+      var ys = arrayRepeat(x, x);
+      inners.push(ys);
+      return ys;
+    });
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 2),
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(420, 3),
+    onNext(420, 3),
+    onNext(510, 2),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600)
+  );
+
+  equal(4, inners.length);
+});
+
+test('flatMap_Iterable_Complete_ResultSelector', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.flatMap(function (x) { return arrayRepeat(x, x); }, function (x, y) { return x + y; });
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(420, 6),
+    onNext(420, 6),
+    onNext(420, 6),
+    onNext(510, 4),
+    onNext(510, 4),
+    onCompleted(600)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600)
+  );
+});
+
+test('flatMap_Iterable_Error', function () {
+  var scheduler = new TestScheduler();
+
+  var ex = new Error();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onError(600, ex)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.flatMap(function (x) { return arrayRepeat(x, x); })
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 2),
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(420, 3),
+    onNext(420, 3),
+    onNext(510, 2),
+    onNext(510, 2),
+    onError(600, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600)
+  );
+});
+
+test('flatMap_Iterable_Error_ResultSelector', function () {
+  var scheduler = new TestScheduler();
+
+  var ex = new Error();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onError(600, ex)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.flatMap(function (x) { return arrayRepeat(x, x); }, function (x, y) { return x + y; });
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(420, 6),
+    onNext(420, 6),
+    onNext(420, 6),
+    onNext(510, 4),
+    onNext(510, 4),
+    onError(600, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600)
+  );
+});
+
+test('flatMap_Iterable_Dispose', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var res = scheduler.startWithDispose(
+    function () {
+      return xs.flatMap(function (x) { return arrayRepeat(x, x); })
+    },
+    350
+  );
+
+  res.messages.assertEqual(
+    onNext(210, 2),
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 350)
+  );
+});
+
+test('flatMap_Iterable_Dispose_ResultSelector', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var res = scheduler.startWithDispose(
+    function () {
+      return xs.flatMap(function (x) { return arrayRepeat(x, x); }, function (x, y) { return x + y; });
+    },
+    350
+  );
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 350)
+  );
+});
+
+test('flatMap_Iterable_SelectorThrows', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var invoked = 0;
+  var ex = new Error();
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.flatMap(function (x) {
+      invoked++;
+      if (invoked === 3) { throw ex; }
+      return arrayRepeat(x, x);
+    });
+  });
+
+  res.messages.assertEqual(
+      onNext(210, 2),
+      onNext(210, 2),
+      onNext(340, 4),
+      onNext(340, 4),
+      onNext(340, 4),
+      onNext(340, 4),
+      onError(420, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+      subscribe(200, 420)
+  );
+
+  equal(3, invoked);
+});
+
+test('flatMap_Iterable_ResultSelectorThrows', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var ex = new Error();
+
+  var inners = [];
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.flatMap(
+      function (x) {
+        var ys = arrayRepeat(x, x);
+        inners.push(ys);
+        return ys;
+      },
+      function (x, y) {
+        if (x === 3) { throw ex; }
+        return x + y;
+      }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onError(420, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 420)
+  );
+
+  equal(3, inners.length);
+});
+
+test('flatMap_Iterable_SelectorThrows_ResultSelector', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var invoked = 0;
+  var ex = new Error();
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.flatMap(
+      function (x) {
+        invoked++;
+        if (invoked === 3) { throw ex; }
+        return arrayRepeat(x, x);
+      },
+      function (x, y) { return x + y; }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onError(420, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 420)
+  );
+
+  equal(3, invoked);
 });

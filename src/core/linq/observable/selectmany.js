@@ -1,6 +1,6 @@
   function flatMap(source, selector, thisArg) {
     return source.map(function (x, i) {
-      var result = selector.call(thisArg, x, i);
+      var result = selector.call(thisArg, x, i, source);
       isPromise(result) && (result = observableFromPromise(result));
       (Array.isArray(result) || isIterable(result)) && (result = observableFrom(result));
       return result;

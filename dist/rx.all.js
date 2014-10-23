@@ -1411,14 +1411,14 @@
     function _acceptObservable(observer) { return observer.onError(this.exception); }
     function toString () { return 'OnError(' + this.exception + ')'; }
 
-    return function (exception) {
+    return function (e) {
       var notification = new Notification('E');
-      notification.exception = exception;
+      notification.exception = e;
       notification._accept = _accept;
       notification._acceptObservable = _acceptObservable;
       notification.toString = toString;
       return notification;
-      };
+    };
   }());
 
   /**
@@ -1427,17 +1427,17 @@
    */
   var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
 
-      function _accept (onNext, onError, onCompleted) { return onCompleted(); }
-      function _acceptObservable(observer) { return observer.onCompleted(); }
-      function toString () { return 'OnCompleted()'; }
+    function _accept (onNext, onError, onCompleted) { return onCompleted(); }
+    function _acceptObservable(observer) { return observer.onCompleted(); }
+    function toString () { return 'OnCompleted()'; }
 
-      return function () {
-        var notification = new Notification('C');
-        notification._accept = _accept;
-        notification._acceptObservable = _acceptObservable;
-        notification.toString = toString;
-        return notification;
-      };
+    return function () {
+      var notification = new Notification('C');
+      notification._accept = _accept;
+      notification._acceptObservable = _acceptObservable;
+      notification.toString = toString;
+      return notification;
+    };
   }());
 
   var Enumerator = Rx.internals.Enumerator = function (next) {
@@ -2189,7 +2189,13 @@
         if (i < len || objIsIterable) {
           var result;
           if (objIsIterable) {
-            var next = it.next();
+            var next;
+            try {
+              next = it.next();
+            } catch (e) {
+              observer.onError(e);
+              return;
+            }
             if (next.done) {
               observer.onCompleted();
               return;
@@ -3481,7 +3487,7 @@
 
   function concatMap(source, selector, thisArg) {
     return source.map(function (x, i) {
-      var result = selector.call(thisArg, x, i);
+      var result = selector.call(thisArg, x, i, source);
       isPromise(result) && (result = observableFromPromise(result));
       (Array.isArray(result) || isIterable(result)) && (result = observableFrom(result));
       return result;
@@ -3508,7 +3514,7 @@
    * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
    */
   observableProto.selectConcat = observableProto.concatMap = function (selector, resultSelector, thisArg) {
-    if (resultSelector) {
+    if (typeof selector === 'function' && typeof resultSelector === 'function') {
       return this.concatMap(function (x, i) {
         var selectorResult = selector(x, i);
         isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
@@ -3806,7 +3812,7 @@
 
   function flatMap(source, selector, thisArg) {
     return source.map(function (x, i) {
-      var result = selector.call(thisArg, x, i);
+      var result = selector.call(thisArg, x, i, source);
       isPromise(result) && (result = observableFromPromise(result));
       (Array.isArray(result) || isIterable(result)) && (result = observableFrom(result));
       return result;
@@ -3833,7 +3839,7 @@
    * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
    */
   observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector, thisArg) {
-    if (resultSelector) {
+    if (typeof selector === 'function' && typeof resultSelector === 'function') {
       return this.flatMap(function (x, i) {
         var selectorResult = selector(x, i);
         isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));

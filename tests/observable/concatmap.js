@@ -829,38 +829,389 @@ test('ConcatMap_Throw', function () {
 });
 
 test('ConcatMap_UseFunction', function () {
-    var scheduler = new TestScheduler();
+  var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(
-      onNext(210, 4),
-      onNext(220, 3),
-      onNext(250, 5),
-      onNext(270, 1),
-      onCompleted(290));
+  var xs = scheduler.createHotObservable(
+    onNext(210, 4),
+    onNext(220, 3),
+    onNext(250, 5),
+    onNext(270, 1),
+    onCompleted(290));
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.concatMap(function (x) {
-        return Observable.interval(10, scheduler).select(function () {
-          return x;
-        }).take(x);
-      });
+  var results = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) {
+      return Observable.interval(10, scheduler).select(function () {
+        return x;
+      }).take(x);
     });
+  });
 
-    results.messages.assertEqual(
-      onNext(220, 4),
-      onNext(230, 4),
-      onNext(240, 4),
-      onNext(250, 4),
-      onNext(260, 3),
-      onNext(270, 3),
-      onNext(280, 3),
-      onNext(290, 5),
-      onNext(300, 5),
-      onNext(310, 5),
-      onNext(320, 5),
-      onNext(330, 5),
-      onNext(340, 1),
-      onCompleted(340));
+  results.messages.assertEqual(
+    onNext(220, 4),
+    onNext(230, 4),
+    onNext(240, 4),
+    onNext(250, 4),
+    onNext(260, 3),
+    onNext(270, 3),
+    onNext(280, 3),
+    onNext(290, 5),
+    onNext(300, 5),
+    onNext(310, 5),
+    onNext(320, 5),
+    onNext(330, 5),
+    onNext(340, 1),
+    onCompleted(340));
 
-    xs.subscriptions.assertEqual(subscribe(200, 290));
+  xs.subscriptions.assertEqual(subscribe(200, 290));
+});
+
+function arrayRepeat(value, times) {
+  var results = [];
+  for(var i = 0; i < times; i++) {
+    results.push(value);
+  }
+  return results;
+}
+
+test('concatMap_Iterable_Complete', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var inners = [];
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) {
+      var ys = arrayRepeat(x, x);
+      inners.push(ys);
+      return ys;
+    });
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 2),
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(420, 3),
+    onNext(420, 3),
+    onNext(510, 2),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600)
+  );
+
+  equal(4, inners.length);
+});
+
+test('concatMap_Iterable_Complete_ResultSelector', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) { return arrayRepeat(x, x); }, function (x, y) { return x + y; });
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(420, 6),
+    onNext(420, 6),
+    onNext(420, 6),
+    onNext(510, 4),
+    onNext(510, 4),
+    onCompleted(600)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600)
+  );
+});
+
+test('concatMap_Iterable_Error', function () {
+  var scheduler = new TestScheduler();
+
+  var ex = new Error();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onError(600, ex)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) { return arrayRepeat(x, x); })
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 2),
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(420, 3),
+    onNext(420, 3),
+    onNext(510, 2),
+    onNext(510, 2),
+    onError(600, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600)
+  );
+});
+
+test('concatMap_Iterable_Error_ResultSelector', function () {
+  var scheduler = new TestScheduler();
+
+  var ex = new Error();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onError(600, ex)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) { return arrayRepeat(x, x); }, function (x, y) { return x + y; });
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(420, 6),
+    onNext(420, 6),
+    onNext(420, 6),
+    onNext(510, 4),
+    onNext(510, 4),
+    onError(600, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 600)
+  );
+});
+
+test('concatMap_Iterable_Dispose', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var res = scheduler.startWithDispose(
+    function () {
+      return xs.concatMap(function (x) { return arrayRepeat(x, x); })
+    },
+    350
+  );
+
+  res.messages.assertEqual(
+    onNext(210, 2),
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4),
+    onNext(340, 4)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 350)
+  );
+});
+
+test('concatMap_Iterable_Dispose_ResultSelector', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var res = scheduler.startWithDispose(
+    function () {
+      return xs.concatMap(function (x) { return arrayRepeat(x, x); }, function (x, y) { return x + y; });
+    },
+    350
+  );
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 350)
+  );
+});
+
+test('concatMap_Iterable_SelectorThrows', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var invoked = 0;
+  var ex = new Error();
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.concatMap(function (x) {
+      invoked++;
+      if (invoked === 3) { throw ex; }
+      return arrayRepeat(x, x);
+    });
+  });
+
+  res.messages.assertEqual(
+      onNext(210, 2),
+      onNext(210, 2),
+      onNext(340, 4),
+      onNext(340, 4),
+      onNext(340, 4),
+      onNext(340, 4),
+      onError(420, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+      subscribe(200, 420)
+  );
+
+  equal(3, invoked);
+});
+
+test('concatMap_Iterable_ResultSelectorThrows', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var ex = new Error();
+
+  var inners = [];
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.concatMap(
+      function (x) {
+        var ys = arrayRepeat(x, x);
+        inners.push(ys);
+        return ys;
+      },
+      function (x, y) {
+        if (x === 3) { throw ex; }
+        return x + y;
+      }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onError(420, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 420)
+  );
+
+  equal(3, inners.length);
+});
+
+test('concatMap_Iterable_SelectorThrows_ResultSelector', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(210, 2),
+    onNext(340, 4),
+    onNext(420, 3),
+    onNext(510, 2),
+    onCompleted(600)
+  );
+
+  var invoked = 0;
+  var ex = new Error();
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.concatMap(
+      function (x) {
+        invoked++;
+        if (invoked === 3) { throw ex; }
+        return arrayRepeat(x, x);
+      },
+      function (x, y) { return x + y; }
+    );
+  });
+
+  res.messages.assertEqual(
+    onNext(210, 4),
+    onNext(210, 4),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onNext(340, 8),
+    onError(420, ex)
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 420)
+  );
+
+  equal(3, invoked);
 });
