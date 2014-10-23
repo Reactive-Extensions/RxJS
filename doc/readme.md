@@ -61,7 +61,7 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
    2. [Bridging to Events](gettingstarted/events.md)
    3. [Bridging to Callbacks](gettingstarted/callbacks.md)
    4. [Bridging to Promises](gettingstarted/promises.md)  
-   5  [Generators and Observable Sequences](gettingstarted/generators.md)  
+   5. [Generators and Observable Sequences](gettingstarted/generators.md)  
    6. [Querying Observable Sequences](gettingstarted/querying.md)
    7. [Transducers with Observable Sequences](gettingstarted/transducers.md)
    8. [Operators by Category](gettingstarted/categories.md)
