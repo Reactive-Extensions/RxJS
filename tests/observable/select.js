@@ -91,14 +91,14 @@
     var invoked = 0;
 
     var xs = scheduler.createHotObservable(
-      onNext(180, 5), 
-      onNext(210, 4), 
-      onNext(240, 3), 
-      onNext(290, 2), 
-      onNext(350, 1), 
-      onCompleted(400), 
-      onNext(410, -1), 
-      onCompleted(420), 
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onNext(290, 2),
+      onNext(350, 1),
+      onCompleted(400),
+      onNext(410, -1),
+      onCompleted(420),
       onError(430, new Error())
     );
 
@@ -110,10 +110,10 @@
     });
 
     results.messages.assertEqual(
-      onNext(210, 5), 
-      onNext(240, 14), 
-      onNext(290, 23), 
-      onNext(350, 32), 
+      onNext(210, 5),
+      onNext(240, 14),
+      onNext(290, 23),
+      onNext(350, 32),
       onCompleted(400)
     );
 
@@ -130,13 +130,13 @@
     var invoked = 0;
 
     var xs = scheduler.createHotObservable(
-      onNext(180, 5), 
-      onNext(210, 4), 
-      onNext(240, 3), 
-      onNext(290, 2), 
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onNext(290, 2),
       onNext(350, 1)
     );
-    
+
     var results = scheduler.startWithCreate(function () {
       return xs.map(function (x, index) {
         invoked++;
@@ -145,9 +145,9 @@
     });
 
     results.messages.assertEqual(
-      onNext(210, 5), 
-      onNext(240, 14), 
-      onNext(290, 23), 
+      onNext(210, 5),
+      onNext(240, 14),
+      onNext(290, 23),
       onNext(350, 32)
     );
 
@@ -166,14 +166,14 @@
     var invoked = 0;
 
     var xs = scheduler.createHotObservable(
-      onNext(180, 5), 
-      onNext(210, 4), 
-      onNext(240, 3), 
-      onNext(290, 2), 
-      onNext(350, 1), 
-      onError(400, error), 
-      onNext(410, -1), 
-      onCompleted(420), 
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onNext(290, 2),
+      onNext(350, 1),
+      onError(400, error),
+      onNext(410, -1),
+      onCompleted(420),
       onError(430, new Error())
     );
 
@@ -185,10 +185,10 @@
     });
 
     results.messages.assertEqual(
-      onNext(210, 5), 
-      onNext(240, 14), 
-      onNext(290, 23), 
-      onNext(350, 32), 
+      onNext(210, 5),
+      onNext(240, 14),
+      onNext(290, 23),
+      onNext(350, 32),
       onError(400, error)
     );
 
@@ -207,17 +207,17 @@
     var error = new Error();
 
     var xs = scheduler.createHotObservable(
-      onNext(180, 5), 
-      onNext(210, 4), 
-      onNext(240, 3), 
-      onNext(290, 2), 
-      onNext(350, 1), 
-      onCompleted(400), 
-      onNext(410, -1), 
-      onCompleted(420), 
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onNext(290, 2),
+      onNext(350, 1),
+      onCompleted(400),
+      onNext(410, -1),
+      onCompleted(420),
       onError(430, new Error())
     );
-    
+
     var results = scheduler.startWithCreate(function () {
       return xs.map(function (x, index) {
         invoked++;
@@ -227,8 +227,8 @@
     });
 
     results.messages.assertEqual(
-      onNext(210, 5), 
-      onNext(240, 14), 
+      onNext(210, 5),
+      onNext(240, 14),
       onError(290, error)
     );
 
@@ -239,5 +239,29 @@
     equal(3, invoked);
   });
 
-}());
+  test('Select value', function () {
+    var scheduler = new TestScheduler();
 
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.map(-1);
+    });
+
+    results.messages.assertEqual(
+      onNext(210, -1),
+      onNext(220, -1),
+      onNext(230, -1),
+      onNext(240, -1),
+      onCompleted(250)
+    );
+  });
+
+}());

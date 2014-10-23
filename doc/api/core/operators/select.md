@@ -5,7 +5,7 @@
 Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
 
 #### Arguments
-1. `selector` *(`Function`)*:  Transform function to apply to each source element.  The selector is called with the following information:
+1. `selector` *(`Function` | `Object`)*:  Transform function to apply to each source element or an element to yield.  If selector is a function, it is called with the following information:
     1. the value of the element
     2. the index of the element
     3. the Observable object being subscribed
@@ -16,6 +16,11 @@ Projects each element of an observable sequence into a new form by incorporating
 
 #### Example
 ```js
+// Using a value
+var md = Rx.Observable.fromEvent(document, 'mousedown').map(true);
+var mu = Rx.Observable.fromEvent(document, 'mouseup').map(false);
+
+// Using a function
 var source = Rx.Observable.range(1, 3)
     .select(function (x, idx, obs) {
         return x * x;

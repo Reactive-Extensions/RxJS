@@ -38,7 +38,7 @@
         });
       }, thisArg);
     }
-    return typeof selector === 'function' ?
+    return isFunction(selector) ?
       flatMap(this, selector, thisArg) :
       flatMap(this, function () { return selector; });
   };
