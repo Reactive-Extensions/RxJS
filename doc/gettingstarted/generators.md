@@ -74,7 +74,7 @@ Rx.spawn(function* () {
 
   console.log(data);
 }());
-```js
+```
 
 ## Mixing Operators with Generators ##
 
