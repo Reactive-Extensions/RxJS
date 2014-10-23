@@ -60,10 +60,11 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
    1. [Creating and Subscribing to Simple Observable Sequences](gettingstarted/creating.md)
    2. [Bridging to Events](gettingstarted/events.md)
    3. [Bridging to Callbacks](gettingstarted/callbacks.md)
-   4. [Bridging to Promises](gettingstarted/promises.md)   
-   5. [Querying Observable Sequences](gettingstarted/querying.md)
-   6. [Transducers with Observable Sequences](gettingstarted/transducers.md)
-   7. [Operators by Category](gettingstarted/categories.md)
+   4. [Bridging to Promises](gettingstarted/promises.md)  
+   5  [Generators and Observable Sequences](gettingstarted/generators.md)  
+   6. [Querying Observable Sequences](gettingstarted/querying.md)
+   7. [Transducers with Observable Sequences](gettingstarted/transducers.md)
+   8. [Operators by Category](gettingstarted/categories.md)
 - [Subjects](gettingstarted/subjects.md)
 - [Scheduling and Concurrency](gettingstarted/schedulers.md)
 - [Testing and Debugging](gettingstarted/testing.md)
@@ -111,8 +112,8 @@ This section contains the reference documentation for the Reactive Extensions cl
 - [`Rx.config`](api/config/readme.md)
 - [`Rx.helpers`](api/helpers/readme.md)
 
-### Core Objects
-
+### Core
+- [`Rx.spawn`](api/core/observable/spawn.md)
 - [`Rx.Observable`](api/core/observable.md)
 - [`Rx.Observer`](api/core/observer.md)
 - [`Rx.Notification`](api/core/notification.md)

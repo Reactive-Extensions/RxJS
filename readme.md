@@ -165,19 +165,13 @@ Finally, we call the subscribe method on our observable sequence to start pullin
 
 ```js
 suggestions.subscribe( function (data) {
-    var res = data[1];
-
-    /* Do something with the data like binding */
-    $results.empty();
-
-    $.each(res, function (_, value) {
-        $('<li>' + value + '</li>').appendTo($results);
-    });
+    $('#results') 
+        .empty () 
+        .append ($.map function(data[1], (value) {  
+            return $('<li>').text (value)); 
+        });
 }, function (error) {
-    /* handle any errors */
-    $results.empty();
-
-    $('<li>Error: ' + error + '</li>').appendTo($results);
+    $results.empty().append($'<li>').text('Error:' + error);
 });
 ```
 
@@ -218,12 +212,11 @@ Please check out:
     - [Rx Design Guidelines](http://go.microsoft.com/fwlink/?LinkID=205219)
     - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
 
-- Required Reading
-    - [Reactive Manifesto](http://www.reactivemanifesto.org/)
-
 - Examples
     - [React RxJS Autocomplete](https://github.com/eliseumds/react-autocomplete)
     - [React RxJS TODO MVC](https://github.com/fdecampredon/react-rxjs-todomvc)
+    - [Rx-React](https://github.com/fdecampredon/rx-react)
+    - [React RxJS Router](https://github.com/kmcclosk/reactjs-rxjs-example)
     - [Ninya.io - Angular + RxJS + rx.angular.js](https://github.com/ninya-io/ninya.io) - [Site](http://stackwho.herokuapp.com/)
     - [Reactive Trader](https://github.com/AdaptiveConsulting/ReactiveTrader) - [Site](https://reactivetrader.azurewebsites.net/)
 
