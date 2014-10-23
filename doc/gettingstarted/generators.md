@@ -108,7 +108,7 @@ Rx.Observable.from(fibonacci())
 //=> Value: 21
 //=> Value: 34
 //=> Value: 55
-```js
+```
 
 That's just the beginning, as there are several operators such as [`concatMap`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/concatmap.md)/[`selectConcat`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/concatmap.md) and [`flatMap`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/selectmany.md)/[`selectMany`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/concatmap.md) which take iterables as an argument so that we can further enable composition.  For example, we could project using generators from a `flatMap` operation.
 
