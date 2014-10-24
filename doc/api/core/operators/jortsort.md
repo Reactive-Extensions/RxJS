@@ -1,4 +1,4 @@
-### `Rx.Observable.jorSort()` [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/jortsort.js "View in source")
+### `Rx.Observable.jortSort()` [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/jortsort.js "View in source")
 
 The `jortSort` method checks if your inputs are sorted.  Note that this is only for a sequence with an end.
 
