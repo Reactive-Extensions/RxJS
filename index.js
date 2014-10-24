@@ -1,4 +1,5 @@
 var Rx = require('./dist/rx.all');
+require('./dist/rx.sorting');
 require('./dist/rx.testing');
 
 // Add specific Node functions
