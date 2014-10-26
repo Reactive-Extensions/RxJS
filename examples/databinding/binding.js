@@ -65,7 +65,7 @@
           var subscription = _super.prototype.subscribe.apply(this, arguments);
 
           this.purge();
-          var obsFunc = typeof observerOrOnNext === fn ? 
+          var obsFunc = typeof observerOrOnNext === fn ?
               observerOrOnNext :
               observerOrOnNext.onNext;
 
@@ -95,7 +95,7 @@
 
       observableArrayPrototype.splice = function () {
           splice.apply(this.values, arguments);
-          var removed = spliced.apply(this.lifetimes, arguments);
+          var removed = splice.apply(this.lifetimes, arguments);
 
           for (var i = 0, len = removed.length; i < len; i++) {
               removed[i].onCompleted();
@@ -375,7 +375,7 @@
    *           return params.a + ":" + params.b + ":" + params.c + ":" + params.d;
    *       }
    *   });
-   *   
+   *
    *   obs.subscribe(function (x) {
    *       console.log(x);
    *   });
