@@ -1,7 +1,7 @@
 (function (window, undefined) {
   // Calcualte offset either layerX/Y or offsetX/Y
   function getOffset(event) {
-    return { 
+    return {
       offsetX: event.offsetX === undefined ? event.layerX : event.offsetX,
       offsetY: event.offsetY === undefined ? event.layerY : event.offsetY
     };
@@ -29,7 +29,7 @@
       var mouseDiffs = mouseMoves.zip(mouseMoves.skip(1), function (fst, snd) {
         return { first: getOffset(fst), second: getOffset(snd) };
       });
-      
+
       // Get merge together both mouse up and mouse down
       var mouseButton = Rx.Observable.fromEvent(canvas, down).map(function () { return true; })
         .merge(Rx.Observable.fromEvent(canvas, up).map(function () { return false; }));

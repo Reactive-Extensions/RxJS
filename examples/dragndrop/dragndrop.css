@@ -5,10 +5,10 @@
     background-size: contain;
     height: 200px;
     width: 200px;
-    background-color: #000000; 
+    background-color: #000000;
     border: 1px solid #666666;
-    color: #ffffff; 
-    padding: 10px; 
+    color: #ffffff;
+    padding: 10px;
     position: absolute;
     cursor: move;
 }

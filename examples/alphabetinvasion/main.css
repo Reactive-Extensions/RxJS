@@ -12,7 +12,6 @@ body{
   overflow:hidden;
 }
 
-
 #title {
   text-align:center;
   font-size:38px;
@@ -95,7 +94,7 @@ body{
   box-align: center;
 
   /* Transition */
-  -ms-transition: opacity .5s linear;  
+  -ms-transition: opacity .5s linear;
   -webkit-transition: opacity .5s linear;
   -moz-transition: opacity .5s linear;
   transition: opacity .5s linear;

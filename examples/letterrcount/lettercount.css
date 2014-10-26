@@ -1,9 +1,9 @@
 body {
   padding: 10px;
   font-family: sans-serif;
-  text-align: center; 
+  text-align: center;
   background-color: #CCFFCC;
-  color: #006600;}  
+  color: #006600;}
 }
 
 .block {
@@ -30,9 +30,9 @@ li {
   background-color: #ffffff;
 }
 
-label { 
+label {
   display: block;
-  padding: 5px; 
+  padding: 5px;
 }
 fieldset {
   border-style: solid;

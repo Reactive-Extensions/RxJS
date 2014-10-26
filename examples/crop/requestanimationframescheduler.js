@@ -43,13 +43,13 @@
     cancelAnimFrame = window.msCancelAnimationFrame;
   } else if (window.oRequestAnimationFrame) {
     requestAnimFrame = window.oRequestAnimationFrame;
-    cancelAnimFrame = window.oCancelAnimationFrame;    
+    cancelAnimFrame = window.oCancelAnimationFrame;
   } else {
     requestAnimFrame = function(cb) { window.setTimeout(cb, 1000 / 60); };
     cancelAnimFrame = window.clearTimeout;
   }
 
-  /** 
+  /**
    * Gets a scheduler that schedules schedules work on the requestAnimationFrame for immediate actions.
    */
   Scheduler.requestAnimationFrame = (function () {
@@ -98,10 +98,9 @@
       return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
     }
 
-    return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);        
+    return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
 
   }());
 
   return Rx;
 }));
-  

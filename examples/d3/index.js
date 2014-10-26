@@ -105,30 +105,30 @@
       // Update the ranges of the chart to reflect the new data
       if (updates.length > 0)   {
           xRange.domain(d3.extent(updates, function(d) { return d.x; }));
-          yRange.domain([d3.min(updates, function(d) { return d.y; }), 
+          yRange.domain([d3.min(updates, function(d) { return d.y; }),
                          d3.max(updates, function(d) { return d.y; })]);
       }
-      
+
       // Until we have filled up our data window, we just keep adding data
       // points to the end of the chart.
       if (updates.length < maxNumberOfDataPoints) {
           line.transition()
               .ease("linear")
               .attr("d", lineFunc(updates));
-          
+
           svg.selectAll("g.x.axis")
               .transition()
               .ease("linear")
               .call(xAxis);
       }
-      // Once we have filled up the window, we then remove points from the 
-      // start of the chart, and move the data over so the chart looks 
+      // Once we have filled up the window, we then remove points from the
+      // start of the chart, and move the data over so the chart looks
       // like it is scrolling forwards in time
       else    {
           // Calculate the amount of translation on the x axis which equates to the
           // time between two samples
           var xTranslation = xRange(updates[0].x) - xRange(updates[1].x);
-          
+
           // Transform our line series immediately, then translate it from
           // right to left. This gives the effect of our chart scrolling
           // forwards in time
@@ -139,14 +139,14 @@
               .duration(samplingTime - 20)
               .ease("linear")
               .attr("transform", "translate(" + xTranslation + ", 0)");
-          
+
           svg.selectAll("g.x.axis")
               .transition()
               .duration(samplingTime - 20)
               .ease("linear")
               .call(xAxis);
       }
-      
+
       svg.selectAll("g.y.axis")
           .transition()
           .call(yAxis);
@@ -182,7 +182,7 @@
 
   var openStream = fromEvent(ws, 'open');
   var closeStream = fromEvent(ws,'close');
-  
+
   var messageStream = fromEvent(ws, 'message').delaySubscription(openStream).takeUntil(closeStream);
 
   openStream.subscribe(function () {
@@ -207,7 +207,7 @@
       updateNewUser(["New user at: " + format(new Date())]);
   });
 
-  // Filter the update stream for unspecified events, which we're taking to mean 
+  // Filter the update stream for unspecified events, which we're taking to mean
   // edits in this case
   var editStream = updateStream.filter(function(update) {
       return update.type === "unspecified";
@@ -225,8 +225,8 @@
   var totalUpdatesBeforeLastSample = 0;
   sampledUpdates.subscribe(function(value) {
       updatesOverTime.push({
-          x: new Date(), 
-          y:(value - totalUpdatesBeforeLastSample) / 
+          x: new Date(),
+          y:(value - totalUpdatesBeforeLastSample) /
               (samplingTime / 1000)
       });
       if (updatesOverTime.length > maxNumberOfDataPoints)  {

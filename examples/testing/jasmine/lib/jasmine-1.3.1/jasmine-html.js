@@ -51,7 +51,6 @@ jasmine.HtmlReporterHelpers.appendToSummary = function(child, childElement) {
   parentDiv.appendChild(childElement);
 };
 
-
 jasmine.HtmlReporterHelpers.addHelpers = function(ctor) {
   for(var fn in jasmine.HtmlReporterHelpers) {
     ctor.prototype[fn] = jasmine.HtmlReporterHelpers[fn];
@@ -386,7 +385,6 @@ jasmine.HtmlReporter.ReporterView = function(dom) {
 
 jasmine.HtmlReporterHelpers.addHelpers(jasmine.HtmlReporter.ReporterView);
 
-
 jasmine.HtmlReporter.SpecView = function(spec, dom, views) {
   this.spec = spec;
   this.dom = dom;
@@ -626,7 +624,6 @@ jasmine.TrivialReporter.prototype.reportSpecResults = function(spec) {
         href: '?spec=' + encodeURIComponent(spec.getFullName()),
         title: spec.getFullName()
       }, spec.description));
-
 
   var resultItems = results.getItems();
   var messagesDiv = this.createDom('div', { className: 'messages' });
