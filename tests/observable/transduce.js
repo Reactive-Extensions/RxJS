@@ -58,18 +58,18 @@
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-      onNext(150, 1), 
+      onNext(150, 1),
       onCompleted(250)
     );
 
     var i = 0;
     var evenFilter = function (x) {
       i++; return x % 2 === 0;
-    };  
+    };
 
     var results = scheduler.startWithCreate(function () {
       return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
-    });  
+    });
 
     results.messages.assertEqual(
       onCompleted(250)
@@ -79,14 +79,14 @@
       subscribe(200, 250)
     );
 
-    equal(0, i);    
+    equal(0, i);
   });
 
   test('transduce some', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-      onNext(150, 1), 
+      onNext(150, 1),
       onNext(210, 2),
       onNext(220, 3),
       onNext(230, 4),
@@ -101,7 +101,7 @@
 
     var results = scheduler.startWithCreate(function () {
       return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
-    });  
+    });
 
     results.messages.assertEqual(
       onNext(210, 20),
@@ -113,14 +113,14 @@
       subscribe(200, 250)
     );
 
-    equal(4, i);  
+    equal(4, i);
   });
 
   test('transduce ifinite', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-      onNext(150, 1), 
+      onNext(150, 1),
       onNext(210, 2),
       onNext(220, 3),
       onNext(230, 4),
@@ -134,7 +134,7 @@
 
     var results = scheduler.startWithCreate(function () {
       return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
-    });  
+    });
 
     results.messages.assertEqual(
       onNext(210, 20),
@@ -154,7 +154,7 @@
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-      onNext(150, 1), 
+      onNext(150, 1),
       onError(210, error)
     );
 
@@ -168,7 +168,7 @@
 
     xs.subscriptions.assertEqual(
       subscribe(200, 210)
-    );  
+    );
   });
 
   test('transduce throw', function () {
@@ -177,7 +177,7 @@
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-      onNext(150, 1), 
+      onNext(150, 1),
       onNext(210, 2),
       onNext(220, 3),
       onNext(230, 4),
@@ -202,6 +202,6 @@
 
     xs.subscriptions.assertEqual(
       subscribe(200, 240)
-    );    
+    );
   });
 }());

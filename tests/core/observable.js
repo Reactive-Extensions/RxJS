@@ -62,8 +62,8 @@ test('Subscribe_OnNext_Empty', function () {
   Observable.just(42, Scheduler.immediate).subscribe(
     function (x) {
       x1 = x;
-    }, 
-    null, 
+    },
+    null,
     function () {
       finished = true;
     });
@@ -80,8 +80,8 @@ test('Subscribe_OnNextOnCompleted_Throw', function () {
     Observable.throwError(error, Scheduler.immediate).subscribe(
       function () {
         ok(false);
-      }, 
-      null, 
+      },
+      null,
       function () {
         ok(false);
       });
@@ -97,8 +97,8 @@ test('Subscribe_OnNextOnCompleted_Empty', function () {
   Observable.empty(Scheduler.immediate).subscribe(
     function () {
       ok(false);
-    }, 
-    null, 
+    },
+    null,
     function () {
       finished = true;
     });
