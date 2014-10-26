@@ -38,7 +38,7 @@ if [ "$1" = "merge" ] ; then
 	# If the build was successful, travis after-success will send merge
 	echo "Merging incoming-pr to master"
 	git checkout master
-	git merge incoming-pr --log 
+	git merge incoming-pr --log
 	git push $repo master -q 2> /dev/null
 else
 	# If build failed, travis after-failure will send ./travis.sh revert
@@ -46,14 +46,14 @@ else
 	# Save the current changes to a new branch
 	echo "Creating a new branch for failed build - incoming-pr-fail-$TRAVIS_BUILD_ID"
 	git checkout -b incoming-pr-fail-$TRAVIS_BUILD_ID
-	git push $repo incoming-pr-fail-$TRAVIS_BUILD_ID -q 2> /dev/null 
+	git push $repo incoming-pr-fail-$TRAVIS_BUILD_ID -q 2> /dev/null
 	git checkout master
 fi
 
 echo "Making incoming-pr same as master"
 # Merge or revert is done, so make incoming-pr branch at par with master
 # This is done to make it ready for accepting the next pull request
-git push $repo --delete incoming-pr -q 2> /dev/null 
+git push $repo --delete incoming-pr -q 2> /dev/null
 git branch -D incoming-pr
 git branch incoming-pr
 git push $repo incoming-pr -q 2> /dev/null
