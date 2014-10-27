@@ -10,16 +10,16 @@ test('indexOf empty', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(42);
   });
-  
+
   results.messages.assertEqual(
-    onNext(250, -1), 
+    onNext(250, -1),
     onCompleted(250)
   );
 });
@@ -28,17 +28,17 @@ test('indexOf return positive', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(2);
   });
 
   results.messages.assertEqual(
-    onNext(210, 0), 
+    onNext(210, 0),
     onCompleted(210)
   );
 });
@@ -47,17 +47,17 @@ test('indexOf return negative', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(-2);
   });
-  
+
   results.messages.assertEqual(
-    onNext(250, -1), 
+    onNext(250, -1),
     onCompleted(250)
   );
 });
@@ -66,19 +66,19 @@ test('indexOf some positive', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(3);
   });
-  
+
   results.messages.assertEqual(
-    onNext(220, 1), 
+    onNext(220, 1),
     onCompleted(220)
   );
 });
@@ -87,19 +87,19 @@ test('indexOf some negative', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(-3);
   });
-  
+
   results.messages.assertEqual(
-    onNext(250, -1), 
+    onNext(250, -1),
     onCompleted(250)
   );
 });
@@ -108,16 +108,16 @@ test('indexOf throw', function () {
   var error = new Error();
 
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onError(210, error)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(42);
   });
-  
+
   results.messages.assertEqual(
     onError(210, error)
   );
@@ -129,7 +129,7 @@ test('indexOf never', function () {
   var xs = scheduler.createHotObservable(
     onNext(150, 1)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(42);
   });
@@ -143,7 +143,7 @@ test('indexOf fromIndex less than zero', function () {
   var xs = scheduler.createHotObservable(
     onNext(150, 1)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(42, -1);
   });
@@ -160,9 +160,9 @@ test('indexOf fromIndex Infinity', function () {
   var xs = scheduler.createHotObservable(
     onNext(150, 1),
     onNext(210, 2),
-    onCompleted(250)    
+    onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(2, Infinity);
   });
@@ -181,7 +181,7 @@ test('indexOf fromIndex zero', function () {
     onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(2, 0);
   });
@@ -203,7 +203,7 @@ test('indexOf fromIndex greater than zero misses', function () {
     onNext(240, 5),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(2, 1);
   });
@@ -224,7 +224,7 @@ test('indexOf fromIndex greater than zero no end', function () {
     onNext(230, 4),
     onNext(240, 5)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(2, 1);
   });
@@ -244,7 +244,7 @@ test('indexOf fromIndex greater than zero hits', function () {
     onNext(240, 5),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(3, 1);
   });
@@ -263,7 +263,7 @@ test('indexOf -0 equals 0', function () {
     onNext(210, -0),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(0);
   });
@@ -282,7 +282,7 @@ test('indexOf +0 equals 0', function () {
     onNext(210, +0),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.indexOf(0);
   });

@@ -24,7 +24,7 @@ $(function () {
     lastName1.subscribe(function (text) { ln1.value = text });
 
     var full1 = document.querySelector('#fullName1');
-    fullName1.subscribe(function (text) { full1.value = text });        
+    fullName1.subscribe(function (text) { full1.value = text });
 
     // Create two way bindings for both first name and last name
     Rx.Observable.fromEvent(fn1, 'keyup')

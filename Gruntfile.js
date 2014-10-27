@@ -173,7 +173,7 @@ var browsers = [{
               'src/core/linq/observable/all.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
-              'src/core/linq/observable/indexof.js',              
+              'src/core/linq/observable/indexof.js',
               'src/core/linq/observable/sum.js', // select, aggregate
               'src/core/linq/observable/minby.js', // _extremaby
               'src/core/linq/observable/min.js',   // minby, _firstonly
@@ -445,7 +445,7 @@ var browsers = [{
               'src/core/linq/observable/all.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
-              'src/core/linq/observable/indexof.js',              
+              'src/core/linq/observable/indexof.js',
               'src/core/linq/observable/sum.js', // select, aggregate
               'src/core/linq/observable/minby.js', // _extremaby
               'src/core/linq/observable/min.js',   // minby, _firstonly
@@ -705,7 +705,7 @@ var browsers = [{
               'src/core/linq/observable/where.js',
 
               // Transducers
-              'src/core/linq/observable/transduce.js',              
+              'src/core/linq/observable/transduce.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -835,7 +835,7 @@ var browsers = [{
               'src/core/linq/observable/where.js',
 
               // Transducers
-              'src/core/linq/observable/transduce.js',              
+              'src/core/linq/observable/transduce.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
@@ -1221,7 +1221,7 @@ var browsers = [{
               'src/core/linq/observable/all.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
-              'src/core/linq/observable/indexof.js', 
+              'src/core/linq/observable/indexof.js',
               'src/core/linq/observable/sum.js', // select, aggregate
               'src/core/linq/observable/minby.js', // _extremaby
               'src/core/linq/observable/min.js',   // minby, _firstonly
@@ -1345,7 +1345,7 @@ var browsers = [{
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
               'src/core/linq/observable/exclusivemap.js',
-              
+
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.experimental.js'
@@ -1443,7 +1443,7 @@ var browsers = [{
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.sorting.js'
-          }          
+          }
       },
       uglify: {
         options: {
@@ -1582,7 +1582,7 @@ var browsers = [{
             sourceMapName: 'dist/rx.sorting.map'
           },
           files: {'dist/rx.sorting.min.js': ['dist/rx.sorting.js'] }
-        }        
+        }
       },
       qunit: {
           all: ['tests/*.html']

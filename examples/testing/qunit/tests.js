@@ -42,7 +42,7 @@
             onNext(150, 1),
             onNext(210, 2),
             onCompleted(220)
-        );        
+        );
 
         // Project the hot observable via select without index
         var results = scheduler.startWithCreate(function () {
@@ -76,7 +76,7 @@
             onNext(210, 2),
             onNext(215, 3),
             onCompleted(220)
-        );        
+        );
 
         // Project the hot observable via select without index
         var results = scheduler.startWithCreate(function () {
@@ -98,7 +98,7 @@
         ];
 
         CollectionAssert.assertEqual(expectedSubscriptions, xs.subscriptions);
-    });    
+    });
 
     /* Tests select method empty behavior */
     test('select Empty', function () {
@@ -109,7 +109,7 @@
         var xs = scheduler.createHotObservable(
             onNext(150, 1),
             onCompleted(220)
-        );        
+        );
 
         // Project the hot observable via select without index
         var results = scheduler.startWithCreate(function () {
@@ -138,7 +138,7 @@
         // Project no messages after subscribe at 200
         var xs = scheduler.createHotObservable(
             onNext(150, 1)
-        );        
+        );
 
         // Project the hot observable via select without index
         var results = scheduler.startWithCreate(function () {
@@ -157,7 +157,7 @@
         ];
 
         CollectionAssert.assertEqual(expectedSubscriptions, xs.subscriptions);
-    });        
+    });
 
     /* Tests select method where the observable throws an exception */
     test('select Throws', function () {
@@ -168,7 +168,7 @@
         var xs = scheduler.createHotObservable(
             onNext(150, 1),
             onError(210, error)
-        );        
+        );
 
         var results = scheduler.startWithCreate(function () {
             return xs.select(function (x) { return x + x; });
@@ -198,7 +198,7 @@
         var xs = scheduler.createHotObservable(
             onNext(150, 1),
             onNext(210, 2)
-        );        
+        );
 
         var results = scheduler.startWithCreate(function () {
             return xs.select(function (x) { throw error; });
@@ -217,7 +217,7 @@
         ];
 
         CollectionAssert.assertEqual(expectedSubscriptions, xs.subscriptions);
-    });    
+    });
 
     /* Tests select method basic behavior */
     test('select With Index Basic', function () {
@@ -229,7 +229,7 @@
             onNext(150, 1),
             onNext(210, 2),
             onCompleted(220)
-        );        
+        );
 
         var results = scheduler.startWithCreate(function () {
             return xs.select(function (x, i) { return (x + x) * i; });

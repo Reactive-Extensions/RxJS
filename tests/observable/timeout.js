@@ -11,12 +11,12 @@ test('Timeout_InTime', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(230, 3), 
-    onNext(260, 4), 
-    onNext(300, 5), 
-    onNext(350, 6), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(260, 4),
+    onNext(300, 5),
+    onNext(350, 6),
     onCompleted(400)
   );
 
@@ -25,11 +25,11 @@ test('Timeout_InTime', function () {
   });
 
   results.messages.assertEqual(
-    onNext(210, 2), 
-    onNext(230, 3), 
-    onNext(260, 4), 
-    onNext(300, 5), 
-    onNext(350, 6), 
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(260, 4),
+    onNext(300, 5),
+    onNext(350, 6),
     onCompleted(400)
   );
 });
@@ -118,25 +118,25 @@ test('Timeout_OutOfTime', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(230, 3), 
-    onNext(260, 4), 
-    onNext(300, 5), 
-    onNext(350, 6), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(260, 4),
+    onNext(300, 5),
+    onNext(350, 6),
     onCompleted(400)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.timeout(205, null, scheduler);
   });
 
   results.messages.assertEqual(
-    onNext(210, 2), 
-    onNext(230, 3), 
-    onNext(260, 4), 
-    onNext(300, 5), 
-    onNext(350, 6), 
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(260, 4),
+    onNext(300, 5),
+    onNext(350, 6),
     onCompleted(400)
   );
 });
@@ -145,17 +145,17 @@ test('Timeout_TimeoutOccurs_1', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(70, 1), 
-    onNext(130, 2), 
-    onNext(310, 3), 
-    onNext(400, 4), 
+    onNext(70, 1),
+    onNext(130, 2),
+    onNext(310, 3),
+    onNext(400, 4),
     onCompleted(500)
   );
 
   var ys = scheduler.createColdObservable(
-    onNext(50, -1), 
-    onNext(200, -2), 
-    onNext(310, -3), 
+    onNext(50, -1),
+    onNext(200, -2),
+    onNext(310, -3),
     onCompleted(320)
   );
 
@@ -164,9 +164,9 @@ test('Timeout_TimeoutOccurs_1', function () {
   });
 
   results.messages.assertEqual(
-    onNext(350, -1), 
-    onNext(500, -2), 
-    onNext(610, -3), 
+    onNext(350, -1),
+    onNext(500, -2),
+    onNext(610, -3),
     onCompleted(620)
   );
 
@@ -183,31 +183,31 @@ test('Timeout_TimeoutOccurs_2', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(70, 1), 
-    onNext(130, 2), 
-    onNext(240, 3), 
-    onNext(310, 4), 
-    onNext(430, 5), 
+    onNext(70, 1),
+    onNext(130, 2),
+    onNext(240, 3),
+    onNext(310, 4),
+    onNext(430, 5),
     onCompleted(500)
   );
 
   var ys = scheduler.createColdObservable(
-    onNext(50, -1), 
-    onNext(200, -2), 
-    onNext(310, -3), 
+    onNext(50, -1),
+    onNext(200, -2),
+    onNext(310, -3),
     onCompleted(320)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.timeout(100, ys, scheduler);
   });
 
   results.messages.assertEqual(
-    onNext(240, 3), 
-    onNext(310, 4), 
-    onNext(460, -1), 
-    onNext(610, -2), 
-    onNext(720, -3), 
+    onNext(240, 3),
+    onNext(310, 4),
+    onNext(460, -1),
+    onNext(610, -2),
+    onNext(720, -3),
     onCompleted(730)
   );
 
@@ -224,11 +224,11 @@ test('Timeout_TimeoutOccurs_Never', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(70, 1), 
-    onNext(130, 2), 
-    onNext(240, 3), 
-    onNext(310, 4), 
-    onNext(430, 5), 
+    onNext(70, 1),
+    onNext(130, 2),
+    onNext(240, 3),
+    onNext(310, 4),
+    onNext(430, 5),
     onCompleted(500)
   );
 
@@ -239,7 +239,7 @@ test('Timeout_TimeoutOccurs_Never', function () {
   });
 
   results.messages.assertEqual(
-    onNext(240, 3), 
+    onNext(240, 3),
     onNext(310, 4)
   );
 
@@ -365,18 +365,18 @@ test('Timeout_TimeoutNotOccurs_Error', function () {
 test('Timeout_TimeoutDoesNotOccur', function () {
   var scheduler = new TestScheduler();
   var xs = scheduler.createHotObservable(
-    onNext(70, 1), 
-    onNext(130, 2), 
-    onNext(240, 3), 
-    onNext(320, 4), 
-    onNext(410, 5), 
+    onNext(70, 1),
+    onNext(130, 2),
+    onNext(240, 3),
+    onNext(320, 4),
+    onNext(410, 5),
     onCompleted(500)
   );
 
   var ys = scheduler.createColdObservable(
-    onNext(50, -1), 
-    onNext(200, -2), 
-    onNext(310, -3), 
+    onNext(50, -1),
+    onNext(200, -2),
+    onNext(310, -3),
     onCompleted(320)
   );
 
@@ -385,9 +385,9 @@ test('Timeout_TimeoutDoesNotOccur', function () {
   });
 
   results.messages.assertEqual(
-    onNext(240, 3), 
-    onNext(320, 4), 
-    onNext(410, 5), 
+    onNext(240, 3),
+    onNext(320, 4),
+    onNext(410, 5),
     onCompleted(500)
   );
 
@@ -428,7 +428,7 @@ test('Timeout_DateTimeOffset_TimeoutDoesNotOccur_Completed', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(310, 1), 
+    onNext(310, 1),
     onCompleted(390)
   );
 
@@ -457,7 +457,7 @@ test('Timeout_DateTimeOffset_TimeoutDoesNotOccur_Error', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(310, 1), 
+    onNext(310, 1),
     onError(390, error)
   );
 
@@ -470,7 +470,7 @@ test('Timeout_DateTimeOffset_TimeoutDoesNotOccur_Error', function () {
   });
 
   results.messages.assertEqual(
-    onNext(310, 1), 
+    onNext(310, 1),
     onError(390, error)
   );
 
@@ -485,9 +485,9 @@ test('Timeout_DateTimeOffset_TimeoutOccur_2', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(310, 1), 
-    onNext(350, 2), 
-    onNext(420, 3), 
+    onNext(310, 1),
+    onNext(350, 2),
+    onNext(420, 3),
     onCompleted(450)
   );
 
@@ -500,8 +500,8 @@ test('Timeout_DateTimeOffset_TimeoutOccur_2', function () {
   });
 
   results.messages.assertEqual(
-    onNext(310, 1), 
-    onNext(350, 2), 
+    onNext(310, 1),
+    onNext(350, 2),
     onNext(500, -1)
   );
 
@@ -518,9 +518,9 @@ test('Timeout_DateTimeOffset_TimeoutOccur_3', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(310, 1), 
-    onNext(350, 2), 
-    onNext(420, 3), 
+    onNext(310, 1),
+    onNext(350, 2),
+    onNext(420, 3),
     onCompleted(450)
   );
 
@@ -531,7 +531,7 @@ test('Timeout_DateTimeOffset_TimeoutOccur_3', function () {
   });
 
   results.messages.assertEqual(
-    onNext(310, 1), 
+    onNext(310, 1),
     onNext(350, 2)
   );
 

@@ -1,5 +1,5 @@
 (function (window, undefined) {
-  
+
   function getOffset(element) {
     var doc = element.ownerDocument,
         docElem = doc.documentElement,

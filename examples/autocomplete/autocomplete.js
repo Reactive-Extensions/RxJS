@@ -40,7 +40,7 @@
         $.each(res, function (_, value) {
           $('<li>' + value + '</li>').appendTo(results);
         });
-      }, 
+      },
       function (error) {
         // Handle any errors
         $results.empty();

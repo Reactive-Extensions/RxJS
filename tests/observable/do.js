@@ -11,19 +11,19 @@ function noop () { }
 
 test('Do_ShouldSeeAllValues', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
-    onNext(240, 5), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
+    onNext(240, 5),
     onCompleted(250)
   );
-  
+
   var i = 0;
   var sum = 2 + 3 + 4 + 5;
-  
+
   scheduler.startWithCreate(function () {
     return xs.tap(function (x) { i++; return sum -= x; });
   });
@@ -34,37 +34,37 @@ test('Do_ShouldSeeAllValues', function () {
 
 test('Do_PlainAction', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
-    onNext(240, 5), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
+    onNext(240, 5),
     onCompleted(250)
   );
-  
+
   var i = 0;
-  
+
   scheduler.startWithCreate(function () {
     return xs.tap(function (x) { return i++; });
   });
-  
+
   equal(4, i);
 });
 
 test('Do_NextCompleted', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
-    onNext(240, 5), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
+    onNext(240, 5),
     onCompleted(250)
   );
-  
+
   var i = 0;
   var sum = 2 + 3 + 4 + 5;
   var completed = false;
@@ -80,10 +80,10 @@ test('Do_NextCompleted', function () {
 
 test('Do_NextCompleted_Never', function () {
   var scheduler = new TestScheduler();
-  
+
   var i = 0;
   var completed = false;
-  
+
   var xs = scheduler.createHotObservable(
     onNext(150, 1)
   );
@@ -98,22 +98,22 @@ test('Do_NextCompleted_Never', function () {
 
 test('Do_NextError', function () {
   var error = new Error();
-  
+
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
-    onNext(240, 5), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
+    onNext(240, 5),
     onError(250, error)
   );
-  
+
   var i = 0;
   var sum = 2 + 3 + 4 + 5;
   var sawError = false;
-  
+
   scheduler.startWithCreate(function () {
     return xs.tap(function (x) { i++; sum -= x; }, function (e) { sawError = e === error; });
   });
@@ -125,20 +125,20 @@ test('Do_NextError', function () {
 
 test('Do_NextErrorNot', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
-    onNext(240, 5), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
+    onNext(240, 5),
     onCompleted(250)
   );
-  
+
   var i = 0;
   var sum = 2 + 3 + 4 + 5;
   var sawError = false;
-  
+
   scheduler.startWithCreate(function () {
     return xs.tap(function (x) { i++; sum -= x; }, function () { sawError = true; });
   });
@@ -150,20 +150,20 @@ test('Do_NextErrorNot', function () {
 
 test('Do_NextErrorCompleted', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
     onNext(240, 5), onCompleted(250)
   );
-  
+
   var i = 0;
   var sum = 2 + 3 + 4 + 5;
   var sawError = false;
   var hasCompleted = false;
-  
+
   scheduler.startWithCreate(function () {
     return xs.tap(function (x) { i++; sum -= x; }, function () { sawError = true; }, function () { hasCompleted = true; });
   });
@@ -176,23 +176,23 @@ test('Do_NextErrorCompleted', function () {
 
 test('Do_NextErrorCompletedError', function () {
   var error = new Error();
-  
+
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
-    onNext(240, 5), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
+    onNext(240, 5),
     onError(250, error)
   );
-  
+
   var i = 0;
   var sum = 2 + 3 + 4 + 5;
   var sawError = false;
   var hasCompleted = false;
-  
+
   scheduler.startWithCreate(function () {
     return xs.tap(function (x) { i++; sum -= x; }, function () { sawError = true; }, function () { hasCompleted = true; });
   });
@@ -205,7 +205,7 @@ test('Do_NextErrorCompletedError', function () {
 
 test('Do_NextErrorCompletedNever', function () {
   var scheduler = new TestScheduler();
-  
+
   var i = 0;
   var sawError = false;
   var hasCompleted = false;
@@ -227,21 +227,21 @@ test('Do_Observer_SomeDataWithError', function () {
   var error = new Error();
 
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
-    onNext(240, 5), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
+    onNext(240, 5),
     onError(250, error)
   );
-  
+
   var i = 0;
   var sum = 2 + 3 + 4 + 5;
   var sawError = false;
   var hasCompleted = false;
-  
+
   scheduler.startWithCreate(function () {
     return xs.tap(Rx.Observer.create(function (x) { i++; sum -= x; }, function (e) { sawError = e === error; }, function () { hasCompleted = true; }));
   });
@@ -254,21 +254,21 @@ test('Do_Observer_SomeDataWithError', function () {
 
 test('Do_Observer_SomeDataWithError', function () {
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
-    onNext(220, 3), 
-    onNext(230, 4), 
-    onNext(240, 5), 
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(220, 3),
+    onNext(230, 4),
+    onNext(240, 5),
     onCompleted(250)
   );
-  
+
   var i = 0;
   var sum = 2 + 3 + 4 + 5;
   var sawError = false;
   var hasCompleted = false;
-  
+
   scheduler.startWithCreate(function () {
     return xs.tap(Rx.Observer.create(function (x) { i++; sum -= x; }, function () { sawError = true; }, function () { hasCompleted = true; }));
   });
@@ -283,13 +283,13 @@ test('Do1422_Next_NextThrows', function () {
   var error = new Error();
 
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(function () { throw error; });
   });
@@ -311,21 +311,21 @@ test('Do1422_NextCompleted_NextThrows', function () {
 
 test('Do1422_NextCompleted_CompletedThrows', function () {
   var error = new Error();
-  
+
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
       return xs.tap(noop, null, function () { throw error; });
   });
 
   results.messages.assertEqual(
-    onNext(210, 2), 
+    onNext(210, 2),
     onError(250, error)
   );
 });
@@ -334,13 +334,13 @@ test('Do1422_NextError_NextThrows', function () {
   var error = new Error();
 
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(function () { throw error; }, noop);
   });
@@ -353,12 +353,12 @@ test('Do1422_NextError_NextThrows', function () {
   var error2 = new Error();
 
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onError(210, error1)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(noop, function () { throw error2; });
   });
@@ -370,19 +370,19 @@ test('Do1422_NextError_NextThrows', function () {
 
 test('Do1422_NextErrorCompleted_NextThrows', function () {
   var error = new Error();
-  
+
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(function () { throw error; }, noop, noop);
   });
-  
+
   results.messages.assertEqual(
     onError(210, error)
   );
@@ -393,12 +393,12 @@ test('Do1422_NextErrorCompleted_ErrorThrows', function () {
   var error2 = new Error();
 
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onError(210, error1)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(noop, function () { throw error2; }, noop);
   });
@@ -410,21 +410,21 @@ test('Do1422_NextErrorCompleted_ErrorThrows', function () {
 
 test('Do1422_NextErrorCompleted_CompletedThrows', function () {
   var error = new Error();
-  
+
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(noop, noop, function () { throw error; });
   });
 
   results.messages.assertEqual(
-    onNext(210, 2), 
+    onNext(210, 2),
     onError(250, error)
   );
 });
@@ -435,11 +435,11 @@ test('Do1422_Observer_NextThrows', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(Rx.Observer.create(function () { throw error;  }, noop, noop));
   });
@@ -452,14 +452,14 @@ test('Do1422_Observer_NextThrows', function () {
 test('Do1422_Observer_ErrorThrows', function () {
   var error1 = new Error();
   var error2 = new Error();
-  
+
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onError(210, error1)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(Rx.Observer.create(noop, function () { throw error2; }, noop));
   });
@@ -471,21 +471,21 @@ test('Do1422_Observer_ErrorThrows', function () {
 
 test('Do1422_Observer_CompletedThrows', function () {
   var error = new Error();
-  
+
   var scheduler = new TestScheduler();
-  
+
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
-  
+
   var results = scheduler.startWithCreate(function () {
     return xs.tap(Rx.Observer.create(noop, noop, function () { throw error; }));
   });
 
   results.messages.assertEqual(
-    onNext(210, 2), 
+    onNext(210, 2),
     onError(250, error)
   );
 });
@@ -496,8 +496,8 @@ test('doOnNext no thisArg', function () {
   var self = this, that;
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
 
@@ -514,8 +514,8 @@ test('doOnNext thisArg', function () {
   var self = 42, that;
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
-    onNext(210, 2), 
+    onNext(150, 1),
+    onNext(210, 2),
     onCompleted(250)
   );
 
@@ -532,7 +532,7 @@ test('doOnError no thisArg', function () {
   var self = this, that;
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onError(210, new Error())
   );
 
@@ -549,7 +549,7 @@ test('doOnError thisArg', function () {
   var self = 42, that;
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onError(210, new Error())
   );
 
@@ -566,7 +566,7 @@ test('doOnCompleted no thisArg', function () {
   var self = this, that;
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onCompleted(250)
   );
 
@@ -583,10 +583,9 @@ test('doOnCompleted thisArg', function () {
   var self = 42, that;
 
   var xs = scheduler.createHotObservable(
-    onNext(150, 1), 
+    onNext(150, 1),
     onCompleted(250)
   );
-
 
   scheduler.startWithCreate(function () {
     return xs.doOnCompleted(function () { that = this; }, self);

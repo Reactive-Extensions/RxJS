@@ -37,11 +37,11 @@
           var c = n - count + 1;
           c >=0 && c % skip === 0 && q.shift().onCompleted();
           ++n % skip === 0 && createWindow();
-        }, 
+        },
         function (e) {
           while (q.length > 0) { q.shift().onError(e); }
           observer.onError(e);
-        }, 
+        },
         function () {
           while (q.length > 0) { q.shift().onCompleted(); }
           observer.onCompleted();

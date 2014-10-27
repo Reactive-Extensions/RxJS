@@ -12,7 +12,6 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-
 // Known Issues:
 //
 // * Patterns are not implemented.
@@ -653,7 +652,6 @@ if (!document.createElement('canvas').getContext) {
                        mr(p.xEnd), ',', mr(p.yEnd));
           break;
       }
-
 
       // TODO: Following is broken for curves due to
       //       move to proper paths.

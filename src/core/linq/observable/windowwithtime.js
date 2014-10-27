@@ -64,11 +64,11 @@
       groupDisposable.add(source.subscribe(
         function (x) {
           for (var i = 0, len = q.length; i < len; i++) { q[i].onNext(x); }
-        }, 
+        },
         function (e) {
           for (var i = 0, len = q.length; i < len; i++) { q[i].onError(e); }
           observer.onError(e);
-        }, 
+        },
         function () {
           for (var i = 0, len = q.length; i < len; i++) { q[i].onCompleted(); }
           observer.onCompleted();
