@@ -1303,7 +1303,7 @@ if (!Array.prototype.forEach) {
       return isAsync;
     }
 
-    // Use in order, nextTick, setImmediate, postMessage, MessageChannel, script readystatechanged, setTimeout
+    // Use in order, setImmediate, nextTick, postMessage, MessageChannel, script readystatechanged, setTimeout
     if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
       scheduleMethod = process.nextTick;
     } else if (typeof setImmediate === 'function') {
