@@ -1432,7 +1432,18 @@ var browsers = [{
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.virtualtime.js'
-          }
+          },
+          sorting: {
+            src: [
+              'src/core/license.js',
+              'src/core/subintro.js',
+              'src/core/sortingheader.js',
+              'src/core/linq/observable/jortsort.js',
+              'src/core/linq/observable/jortsortuntil.js',
+              'src/core/suboutro.js'
+            ],
+            dest: 'dist/rx.sorting.js'
+          }          
       },
       uglify: {
         options: {
@@ -1564,7 +1575,14 @@ var browsers = [{
             sourceMapName: 'dist/rx.virtualtime.map'
           },
           files: {'dist/rx.virtualtime.min.js': ['dist/rx.virtualtime.js'] }
-        }
+        },
+        sorting: {
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.sorting.map'
+          },
+          files: {'dist/rx.sorting.min.js': ['dist/rx.sorting.js'] }
+        }        
       },
       qunit: {
           all: ['tests/*.html']
@@ -1777,6 +1795,7 @@ var browsers = [{
     'concat:lite',
     'concat:litecompat',
     'concat:liteextras',
+    'concat:sorting',
 
     'uglify:all',
     'uglify:allcompat',
@@ -1796,6 +1815,7 @@ var browsers = [{
     'uglify:lite',
     'uglify:litecompat',
     'uglify:liteextras',
+    'uglify:sorting',
 
     'qunit'
   ]);

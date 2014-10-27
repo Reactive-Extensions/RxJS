@@ -50,5 +50,11 @@ var subscription = source.subscribe(
 File:
 - [`/src/core/linq/observable/jortsortuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/jortsortuntil.js)
 
+Dist:
+- [`rx.sorting.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.sorting.js)
+
+Prerequisites:
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+
 Unit Tests:
 - [`/tests/observable/jortsortuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/jortsortuntil.js)
