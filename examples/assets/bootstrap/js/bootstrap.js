@@ -17,11 +17,9 @@
  * limitations under the License.
  * ========================================================== */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
   /* CSS TRANSITION SUPPORT (http://www.modernizr.com/)
    * ======================================================= */
@@ -76,11 +74,9 @@
  * limitations under the License.
  * ========================================================== */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* ALERT CLASS DEFINITION
   * ====================== */
@@ -123,7 +119,6 @@
       removeElement()
   }
 
-
  /* ALERT PLUGIN DEFINITION
   * ======================= */
 
@@ -140,7 +135,6 @@
 
   $.fn.alert.Constructor = Alert
 
-
  /* ALERT NO CONFLICT
   * ================= */
 
@@ -148,7 +142,6 @@
     $.fn.alert = old
     return this
   }
-
 
  /* ALERT DATA-API
   * ============== */
@@ -174,11 +167,9 @@
  * limitations under the License.
  * ============================================================ */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* BUTTON PUBLIC CLASS DEFINITION
   * ============================== */
@@ -217,7 +208,6 @@
     this.$element.toggleClass('active')
   }
 
-
  /* BUTTON PLUGIN DEFINITION
   * ======================== */
 
@@ -240,7 +230,6 @@
 
   $.fn.button.Constructor = Button
 
-
  /* BUTTON NO CONFLICT
   * ================== */
 
@@ -248,7 +237,6 @@
     $.fn.button = old
     return this
   }
-
 
  /* BUTTON DATA-API
   * =============== */
@@ -278,11 +266,9 @@
  * limitations under the License.
  * ========================================================== */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* CAROUSEL CLASS DEFINITION
   * ========================= */
@@ -412,7 +398,6 @@
 
   }
 
-
  /* CAROUSEL PLUGIN DEFINITION
   * ========================== */
 
@@ -437,7 +422,6 @@
   }
 
   $.fn.carousel.Constructor = Carousel
-
 
  /* CAROUSEL NO CONFLICT
   * ==================== */
@@ -484,11 +468,9 @@
  * limitations under the License.
  * ============================================================ */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* COLLAPSE PUBLIC CLASS DEFINITION
   * ================================ */
@@ -586,7 +568,6 @@
 
   }
 
-
  /* COLLAPSE PLUGIN DEFINITION
   * ========================== */
 
@@ -608,7 +589,6 @@
 
   $.fn.collapse.Constructor = Collapse
 
-
  /* COLLAPSE NO CONFLICT
   * ==================== */
 
@@ -616,7 +596,6 @@
     $.fn.collapse = old
     return this
   }
-
 
  /* COLLAPSE DATA-API
   * ================= */
@@ -650,11 +629,9 @@
  * limitations under the License.
  * ============================================================ */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* DROPDOWN CLASS DEFINITION
   * ========================= */
@@ -763,7 +740,6 @@
     return $parent
   }
 
-
   /* DROPDOWN PLUGIN DEFINITION
    * ========================== */
 
@@ -780,7 +756,6 @@
 
   $.fn.dropdown.Constructor = Dropdown
 
-
  /* DROPDOWN NO CONFLICT
   * ==================== */
 
@@ -788,7 +763,6 @@
     $.fn.dropdown = old
     return this
   }
-
 
   /* APPLY TO STANDARD DROPDOWN ELEMENTS
    * =================================== */
@@ -819,11 +793,9 @@
  * limitations under the License.
  * ========================================================= */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* MODAL CLASS DEFINITION
   * ====================== */
@@ -993,7 +965,6 @@
       }
   }
 
-
  /* MODAL PLUGIN DEFINITION
   * ======================= */
 
@@ -1018,7 +989,6 @@
 
   $.fn.modal.Constructor = Modal
 
-
  /* MODAL NO CONFLICT
   * ================= */
 
@@ -1026,7 +996,6 @@
     $.fn.modal = old
     return this
   }
-
 
  /* MODAL DATA-API
   * ============== */
@@ -1067,11 +1036,9 @@
  * limitations under the License.
  * ========================================================== */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* TOOLTIP PUBLIC CLASS DEFINITION
   * =============================== */
@@ -1368,7 +1335,6 @@
 
   }
 
-
  /* TOOLTIP PLUGIN DEFINITION
   * ========================= */
 
@@ -1398,7 +1364,6 @@
   , container: false
   }
 
-
  /* TOOLTIP NO CONFLICT
   * =================== */
 
@@ -1427,11 +1392,9 @@
  * limitations under the License.
  * =========================================================== */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* POPOVER PUBLIC CLASS DEFINITION
   * =============================== */
@@ -1439,7 +1402,6 @@
   var Popover = function (element, options) {
     this.init('popover', element, options)
   }
-
 
   /* NOTE: POPOVER EXTENDS BOOTSTRAP-TOOLTIP.js
      ========================================== */
@@ -1487,7 +1449,6 @@
 
   })
 
-
  /* POPOVER PLUGIN DEFINITION
   * ======================= */
 
@@ -1511,7 +1472,6 @@
   , content: ''
   , template: '<div class="popover"><div class="arrow"></div><h3 class="popover-title"></h3><div class="popover-content"></div></div>'
   })
-
 
  /* POPOVER NO CONFLICT
   * =================== */
@@ -1541,11 +1501,9 @@
  * limitations under the License.
  * ============================================================== */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* SCROLLSPY CLASS DEFINITION
   * ========================== */
@@ -1641,7 +1599,6 @@
 
   }
 
-
  /* SCROLLSPY PLUGIN DEFINITION
   * =========================== */
 
@@ -1663,7 +1620,6 @@
     offset: 10
   }
 
-
  /* SCROLLSPY NO CONFLICT
   * ===================== */
 
@@ -1671,7 +1627,6 @@
     $.fn.scrollspy = old
     return this
   }
-
 
  /* SCROLLSPY DATA-API
   * ================== */
@@ -1702,11 +1657,9 @@
  * limitations under the License.
  * ======================================================== */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* TAB CLASS DEFINITION
   * ==================== */
@@ -1791,7 +1744,6 @@
     }
   }
 
-
  /* TAB PLUGIN DEFINITION
   * ===================== */
 
@@ -1808,7 +1760,6 @@
 
   $.fn.tab.Constructor = Tab
 
-
  /* TAB NO CONFLICT
   * =============== */
 
@@ -1816,7 +1767,6 @@
     $.fn.tab = old
     return this
   }
-
 
  /* TAB DATA-API
   * ============ */
@@ -1845,11 +1795,9 @@
  * limitations under the License.
  * ============================================================ */
 
-
 !function($){
 
   "use strict"; // jshint ;_;
-
 
  /* TYPEAHEAD PUBLIC CLASS DEFINITION
   * ================================= */
@@ -2115,7 +2063,6 @@
 
   }
 
-
   /* TYPEAHEAD PLUGIN DEFINITION
    * =========================== */
 
@@ -2141,7 +2088,6 @@
 
   $.fn.typeahead.Constructor = Typeahead
 
-
  /* TYPEAHEAD NO CONFLICT
   * =================== */
 
@@ -2149,7 +2095,6 @@
     $.fn.typeahead = old
     return this
   }
-
 
  /* TYPEAHEAD DATA-API
   * ================== */
@@ -2180,11 +2125,9 @@
  * limitations under the License.
  * ========================================================== */
 
-
 !function ($) {
 
   "use strict"; // jshint ;_;
-
 
  /* AFFIX CLASS DEFINITION
   * ====================== */
@@ -2227,7 +2170,6 @@
     this.$element.removeClass(reset).addClass('affix' + (affix ? '-' + affix : ''))
   }
 
-
  /* AFFIX PLUGIN DEFINITION
   * ======================= */
 
@@ -2249,7 +2191,6 @@
     offset: 0
   }
 
-
  /* AFFIX NO CONFLICT
   * ================= */
 
@@ -2257,7 +2198,6 @@
     $.fn.affix = old
     return this
   }
-
 
  /* AFFIX DATA-API
   * ============== */
@@ -2275,6 +2215,5 @@
       $spy.affix(data)
     })
   })
-
 
 }(window.jQuery);

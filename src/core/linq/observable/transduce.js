@@ -1,5 +1,5 @@
   /**
-   * Executes a transducer to transform the observable sequence 
+   * Executes a transducer to transform the observable sequence
    * @param {Transducer} transducer A transducer to execute
    * @returns {Observable} An Observable sequence containing the results from the transducer.
    */
@@ -23,14 +23,14 @@
     return new AnonymousObservable(function(observer) {
       var xform = transducer(transformForObserver(observer));
       return source.subscribe(
-        function(v) { 
+        function(v) {
           try {
             xform.step(observer, v);
           } catch (e) {
             observer.onError(e);
           }
-        }, 
-        observer.onError.bind(observer), 
+        },
+        observer.onError.bind(observer),
         function() { xform.result(observer); }
       );
     });

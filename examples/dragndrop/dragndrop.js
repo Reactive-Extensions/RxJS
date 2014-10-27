@@ -25,7 +25,7 @@
     });
 
     // Update position
-    var subscription = mousedrag.subscribe(function (pos) {          
+    var subscription = mousedrag.subscribe(function (pos) {
       dragTarget.style.top = pos.top + 'px';
       dragTarget.style.left = pos.left + 'px';
     });

@@ -23,4 +23,4 @@
   MockPromise.prototype.then = function (onResolved, onRejected) {
     this.resolvers.push({onResolved: onResolved, onRejected: onRejected});
     return new MockPromise(this.scheduler, []);
-  };  
+  };

@@ -29,7 +29,7 @@
           createTimer(newId);
         }));
       }
-      
+
       observer.onNext(addRef(s, refCountDisposable));
       createTimer(0);
 
@@ -46,7 +46,7 @@
             observer.onNext(addRef(s, refCountDisposable));
           }
           newWindow && createTimer(newId);
-        }, 
+        },
         function (e) {
           s.onError(e);
           observer.onError(e);

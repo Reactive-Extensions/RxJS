@@ -3,7 +3,7 @@
 <head>
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta charset="utf-8">  
+  <meta charset="utf-8">
   <title>TKO knocks you out technically!</title>
   <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
   <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap-responsive.min.css">
@@ -13,23 +13,23 @@
   <script src="../assets/jquery/jquery-1.10.2.min.js"></script>
   <script src="../../dist/rx.lite.compat.js"></script>
   <script src="../../dist/rx.time.js"></script>
-  <script src="binding.js"></script>    
+  <script src="binding.js"></script>
 
   <div class="container">
     <h1>TKO - Technical Knockout</h1>
     <p class="lead">Inspired by <a href="https://github.com/cwharris/rxjs-splash">RxJS-Splash</a> and <a href="http://knockoutjs.com/">Knockout.js</a></p>
-    
+
     <div class="row">
       <div class="well" id="textRow">
         <label>First Name</label>
         <input type="text" data-tko="value: { source: firstName, on: 'keyup' }"/>
         <span class="help-block" data-tko="text: firstName"></span>
-        
+
         <label>Last Name</label>
         <input type="text" data-tko="value: { source: lastName, on: 'keyup' }"/>
-        <span class="help-block" data-tko="text: lastName"></span>      
-        
-        <span class="help-block" data-tko="text: fullName"></span>  
+        <span class="help-block" data-tko="text: lastName"></span>
+
+        <span class="help-block" data-tko="text: fullName"></span>
       </div>
     </div>
     <script>
@@ -73,8 +73,8 @@
         <span class="help-block" data-tko="text: value"></span>
 
         <label>Time between clicks</label>
-        <span class="help-block" data-tko="text: interval"></span>              
-      </div>          
+        <span class="help-block" data-tko="text: interval"></span>
+      </div>
     </div>
   </div>
 
@@ -83,15 +83,15 @@
   $(function () {
     function ViewModel () {
 
-      var count = 0, 
+      var count = 0,
           self = this;
-        
+
       this.value = tko.behavior(0);
 
       this.click = function () {
         self.value.onNext(++count);
       };
-      
+
       this.interval = this.value.timeInterval().map(function (x) { return x.interval; });
     }
 
@@ -100,6 +100,6 @@
     tko.applyBindings(vm, $('#buttonRow'));
   });
   </script>
-     
+
 </body>
 </html>

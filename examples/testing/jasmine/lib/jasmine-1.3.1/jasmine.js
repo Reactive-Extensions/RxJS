@@ -615,7 +615,6 @@ var xdescribe = function(description, specDefinitions) {
 };
 if (isCommonJS) exports.xdescribe = xdescribe;
 
-
 // Provide the XMLHttpRequest class for IE 5.x-6.x:
 jasmine.XmlHttpRequest = (typeof XMLHttpRequest == "undefined") ? function() {
   function tryIt(f) {
@@ -741,7 +740,6 @@ jasmine.Env = function() {
 
   jasmine.Matchers.wrapInto_(jasmine.Matchers.prototype, this.matchersClass);
 };
-
 
 jasmine.Env.prototype.setTimeout = jasmine.setTimeout;
 jasmine.Env.prototype.clearTimeout = jasmine.clearTimeout;
@@ -1100,7 +1098,7 @@ jasmine.JsApiReporter.prototype.summarize_ = function(suiteOrSpec) {
     type: isSuite ? 'suite' : 'spec',
     children: []
   };
-  
+
   if (isSuite) {
     var children = suiteOrSpec.children();
     for (var i = 0; i < children.length; i++) {
@@ -1244,9 +1242,6 @@ jasmine.Matchers.matcherFn_ = function(matcherName, matcherFunction) {
   };
 };
 
-
-
-
 /**
  * toBe: compares the actual to the expected using ===
  * @param expected
@@ -1340,14 +1335,12 @@ jasmine.Matchers.prototype.toBeTruthy = function() {
   return !!this.actual;
 };
 
-
 /**
  * Matcher that boolean nots the actual.
  */
 jasmine.Matchers.prototype.toBeFalsy = function() {
   return !this.actual;
 };
-
 
 /**
  * Matcher that checks to see if the actual, a Jasmine spy, was called.
@@ -1929,7 +1922,7 @@ jasmine.PrettyPrinter.prototype.iterateObject = function(obj, fn) {
   for (var property in obj) {
     if (!obj.hasOwnProperty(property)) continue;
     if (property == '__Jasmine_been_here_before__') continue;
-    fn(property, obj.__lookupGetter__ ? (obj.__lookupGetter__(property) !== jasmine.undefined && 
+    fn(property, obj.__lookupGetter__ ? (obj.__lookupGetter__(property) !== jasmine.undefined &&
                                          obj.__lookupGetter__(property) !== null) : false);
   }
 };
@@ -2061,7 +2054,7 @@ jasmine.Queue.prototype.next_ = function() {
 
   while (goAgain) {
     goAgain = false;
-    
+
     if (self.index < self.blocks.length && !(this.abort && !this.ensured[self.index])) {
       var calledSynchronously = true;
       var completedSynchronously = false;
@@ -2099,7 +2092,7 @@ jasmine.Queue.prototype.next_ = function() {
       if (completedSynchronously) {
         onComplete();
       }
-      
+
     } else {
       self.running = false;
       if (self.onComplete) {
@@ -2118,7 +2111,6 @@ jasmine.Queue.prototype.results = function() {
   }
   return results;
 };
-
 
 /**
  * Runner
@@ -2154,7 +2146,6 @@ jasmine.Runner.prototype.afterEach = function(afterEachFunction) {
   afterEachFunction.typeName = 'afterEach';
   this.after_.splice(0,0,afterEachFunction);
 };
-
 
 jasmine.Runner.prototype.finishCallback = function() {
   this.env.reporter.reportRunnerResults(this);
@@ -2230,7 +2221,6 @@ jasmine.Spec = function(env, suite, description) {
 jasmine.Spec.prototype.getFullName = function() {
   return this.suite.getFullName() + ' ' + this.description + '.';
 };
-
 
 jasmine.Spec.prototype.results = function() {
   return this.results_;

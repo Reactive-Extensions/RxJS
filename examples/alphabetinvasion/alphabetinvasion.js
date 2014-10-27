@@ -29,13 +29,13 @@
             });
         });
     };
-    
+
     var GameState = {
         playing: 'playing',
         paused: 'paused',
         stopped: 'stopped'
     };
-    
+
     var AlphabetInvasion = (function () {
         function AlphabetInvasion() {
             this.enemies = [];
@@ -133,7 +133,7 @@
                 });
 
                 // set another subscriber to the keyboardObservable
-                // which handles play input during each level				
+                // which handles play input during each level
                 self.keyboard = self.keyboardObservable.subscribe(function (e) {
                     if (self.enemies.length === 0 && !allEnemiesLaunched) {
                         return;
@@ -157,7 +157,7 @@
                 });
 
                 // Generate enemies for this Level.
-                // 10% chance for uppercase enemy				
+                // 10% chance for uppercase enemy
                 self.generator = Rx.Observable.random(0, 25, config[LAUNCH_RATE], config[LAUNCH_RATE], enemiesThisLevel).select(function (v) {
                     return Math.random() <= capitalLetterProbability ? lookup.charAt(v) : lookup.charAt(v).toUpperCase();
                 }).subscribe(function (v) {
@@ -198,7 +198,7 @@
             }
 
             // change game state and dispose of our
-            // game loop observables			
+            // game loop observables
             this.gameState = GameState.stopped;
             this.gameloop.dispose();
             this.generator.dispose();
@@ -226,7 +226,7 @@
             this.keyboard.dispose();
 
             // adjust all enemies except the one that landed
-            // to look like :P		
+            // to look like :P
             for (var i = 0, len = this.enemies.length; i < len; i++) {
                 var enemy = this.enemies[i];
                 if (enemy !== this.enemies[0]) {
@@ -309,7 +309,7 @@
                 this.highScore.innerText = newScore;
                 if (window.localStorage){
                     window.localStorage.setItem(HIGH_SCORE_STORAGE_KEY, newScore);
-                }  
+                }
             }
         };
 

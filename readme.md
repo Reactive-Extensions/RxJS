@@ -165,10 +165,10 @@ Finally, we call the subscribe method on our observable sequence to start pullin
 
 ```js
 suggestions.subscribe( function (data) {
-    $('#results') 
-        .empty () 
-        .append ($.map function(data[1], (value) {  
-            return $('<li>').text (value)); 
+    $('#results')
+        .empty ()
+        .append ($.map function(data[1], (value) {
+            return $('<li>').text (value));
         });
 }, function (error) {
     $results.empty().append($'<li>').text('Error:' + error);

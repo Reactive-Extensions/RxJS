@@ -873,10 +873,10 @@ test('flatMap_Throw', function () {
   });
 
   results.messages.assertEqual(
-    onNext(310, 102), 
-    onNext(390, 103), 
-    onNext(410, 104), 
-    onNext(490, 105), 
+    onNext(310, 102),
+    onNext(390, 103),
+    onNext(410, 104),
+    onNext(490, 105),
     onError(550, ex)
   );
 
@@ -885,7 +885,7 @@ test('flatMap_Throw', function () {
   xs.messages[2].value.value.subscriptions.assertEqual(
     subscribe(300, 550)
   );
-  
+
   xs.messages[3].value.value.subscriptions.assertEqual(
     subscribe(400, 550)
   );
