@@ -38,6 +38,7 @@
     observableNever = Observable.never,
     isEqual = Rx.internals.isEqual,
     defaultSubComparer = Rx.helpers.defaultSubComparer;
+
   /**
    * jortSort checks if your inputs are sorted.  Note that this is only for a sequence with an end.
    * See http://jort.technology/ for full details.

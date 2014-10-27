@@ -601,7 +601,7 @@
           win.onCompleted();
           observer.onCompleted();
       }));
-      
+
       function createWindowClose () {
         var windowClose;
         try {

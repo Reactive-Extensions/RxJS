@@ -404,19 +404,19 @@ var ReactiveTest = Rx.ReactiveTest = {
         source = create();
         return disposableEmpty;
       });
-      
+
       this.scheduleAbsoluteWithState(null, subscribed, function () {
         subscription = source.subscribe(observer);
         return disposableEmpty;
       });
-      
+
       this.scheduleAbsoluteWithState(null, disposed, function () {
         subscription.dispose();
         return disposableEmpty;
       });
-      
+
       this.start();
-      
+
       return observer;
     };
 
@@ -463,7 +463,7 @@ var ReactiveTest = Rx.ReactiveTest = {
     };
 
     /**
-     * Creates a resolved promise with the given value and ticks 
+     * Creates a resolved promise with the given value and ticks
      * @param {Number} ticks The absolute time of the resolution.
      * @param {Any} value The value to yield at the given tick.
      * @returns {MockPromise} A mock Promise which fulfills with the given value.
@@ -473,7 +473,7 @@ var ReactiveTest = Rx.ReactiveTest = {
     };
 
     /**
-     * Creates a rejected promise with the given reason and ticks 
+     * Creates a rejected promise with the given reason and ticks
      * @param {Number} ticks The absolute time of the resolution.
      * @param {Any} reason The reason for rejection to yield at the given tick.
      * @returns {MockPromise} A mock Promise which rejects with the given reason.
