@@ -31,7 +31,7 @@
           height: img.height
         };
       });
-  } 
+  }
 
   function initBoundingBox(size) {
     boundingBox = {
@@ -56,7 +56,7 @@
       // `updateModel` allows us to modify the correct part of the crop region model
       handle['updateModel'] = updateModel;
 
-      handles.push(handle);            
+      handles.push(handle);
     }
 
     // top left
@@ -150,7 +150,7 @@
     ctx.fill();
 
     handles.forEach(function (tool) { tool['render'](); });
-  }    
+  }
 
   function main () {
     overlay = document.getElementById('overlay');

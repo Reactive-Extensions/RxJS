@@ -45,7 +45,7 @@ describe('Observable', function () {
                 onNext(150, 1),
                 onNext(210, 2),
                 onCompleted(220)
-            );        
+            );
 
             // Project the hot observable via select without index
             var results = scheduler.startWithCreate(function () {
@@ -77,7 +77,7 @@ describe('Observable', function () {
                 onNext(210, 2),
                 onNext(215, 3),
                 onCompleted(220)
-            );        
+            );
 
             // Project the hot observable via select without index
             var results = scheduler.startWithCreate(function () {
@@ -108,7 +108,7 @@ describe('Observable', function () {
             var xs = scheduler.createHotObservable(
                 onNext(150, 1),
                 onCompleted(220)
-            );        
+            );
 
             // Project the hot observable via select without index
             var results = scheduler.startWithCreate(function () {
@@ -135,7 +135,7 @@ describe('Observable', function () {
             // Project no messages after subscribe at 200
             var xs = scheduler.createHotObservable(
                 onNext(150, 1)
-            );        
+            );
 
             // Project the hot observable via select without index
             var results = scheduler.startWithCreate(function () {
@@ -154,7 +154,7 @@ describe('Observable', function () {
             ];
 
             collectionAssert.assertEqual(expectedSubscriptions, xs.subscriptions);
-        });    
+        });
 
         it('should project an error if sequence has an error', function () {
             var error = new Error('woops');
@@ -164,7 +164,7 @@ describe('Observable', function () {
             var xs = scheduler.createHotObservable(
                 onNext(150, 1),
                 onError(210, error)
-            );        
+            );
 
             var results = scheduler.startWithCreate(function () {
                 return xs.map(function (x) { return x + x; });
@@ -193,7 +193,7 @@ describe('Observable', function () {
             var xs = scheduler.createHotObservable(
                 onNext(150, 1),
                 onNext(210, 2)
-            );        
+            );
 
             var results = scheduler.startWithCreate(function () {
                 return xs.map(function (x) { throw error; });
@@ -212,7 +212,7 @@ describe('Observable', function () {
             ];
 
             collectionAssert.assertEqual(expectedSubscriptions, xs.subscriptions);
-        });  
+        });
 
         it('should project a single value with index and then complete', function () {
             var scheduler = new TestScheduler();
@@ -222,7 +222,7 @@ describe('Observable', function () {
                 onNext(150, 1),
                 onNext(210, 2),
                 onCompleted(220)
-            );        
+            );
 
             var results = scheduler.startWithCreate(function () {
                 return xs.map(function (x, i) { return (x + x) * i; });
@@ -242,6 +242,6 @@ describe('Observable', function () {
             ];
 
             collectionAssert.assertEqual(expectedSubscriptions, xs.subscriptions);
-        });  
+        });
     });
-});     
+});

@@ -34,7 +34,6 @@
         isOk = comparer(e, a);
       }
 
-      
       if (!isOk) {
         break;
       }
