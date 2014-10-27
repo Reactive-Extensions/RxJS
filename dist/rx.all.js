@@ -1153,11 +1153,11 @@
     }
 
     // Use in order, setImmediate, nextTick, postMessage, MessageChannel, script readystatechanged, setTimeout
-    if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
-      scheduleMethod = process.nextTick;
-    } else if (typeof setImmediate === 'function') {
+    if (typeof setImmediate === 'function') {
       scheduleMethod = setImmediate;
       clearMethod = clearImmediate;
+    } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
+      scheduleMethod = process.nextTick;
     } else if (postMessageSupported()) {
       var MSG_PREFIX = 'ms.rx.schedule' + Math.random(),
         tasks = {},
@@ -3471,11 +3471,11 @@
           var c = n - count + 1;
           c >=0 && c % skip === 0 && q.shift().onCompleted();
           ++n % skip === 0 && createWindow();
-        }, 
+        },
         function (e) {
           while (q.length > 0) { q.shift().onError(e); }
           observer.onError(e);
-        }, 
+        },
         function () {
           while (q.length > 0) { q.shift().onCompleted(); }
           observer.onCompleted();
@@ -4273,6 +4273,7 @@
         });
     });
   };
+
   /**
    * Computes the sum of a sequence of values that are obtained by invoking an optional transform function on each element of the input sequence, else if not specified computes the sum on each item in the sequence.
    * @example
@@ -6665,7 +6666,7 @@
           win.onCompleted();
           observer.onCompleted();
       }));
-      
+
       function createWindowClose () {
         var windowClose;
         try {
@@ -7670,11 +7671,11 @@
       groupDisposable.add(source.subscribe(
         function (x) {
           for (var i = 0, len = q.length; i < len; i++) { q[i].onNext(x); }
-        }, 
+        },
         function (e) {
           for (var i = 0, len = q.length; i < len; i++) { q[i].onError(e); }
           observer.onError(e);
-        }, 
+        },
         function () {
           for (var i = 0, len = q.length; i < len; i++) { q[i].onCompleted(); }
           observer.onCompleted();
@@ -7715,7 +7716,7 @@
           createTimer(newId);
         }));
       }
-      
+
       observer.onNext(addRef(s, refCountDisposable));
       createTimer(0);
 
@@ -7732,7 +7733,7 @@
             observer.onNext(addRef(s, refCountDisposable));
           }
           newWindow && createTimer(newId);
-        }, 
+        },
         function (e) {
           s.onError(e);
           observer.onError(e);
@@ -8424,7 +8425,7 @@
   };
 
   /**
-   * Executes a transducer to transform the observable sequence 
+   * Executes a transducer to transform the observable sequence
    * @param {Transducer} transducer A transducer to execute
    * @returns {Observable} An Observable sequence containing the results from the transducer.
    */
@@ -8448,14 +8449,14 @@
     return new AnonymousObservable(function(observer) {
       var xform = transducer(transformForObserver(observer));
       return source.subscribe(
-        function(v) { 
+        function(v) {
           try {
             xform.step(observer, v);
           } catch (e) {
             observer.onError(e);
           }
-        }, 
-        observer.onError.bind(observer), 
+        },
+        observer.onError.bind(observer),
         function() { xform.result(observer); }
       );
     });
