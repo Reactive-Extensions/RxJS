@@ -44,11 +44,12 @@ To put it more concretely, if you know how to program against Arrays using the A
 </table></center>
 
 There are a number of ways of getting started with RxJS including:
-- [Getting Started With RxJS](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#getting-started-with-rxjs)
-- [Getting to Know RxJS Libraries](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#getting-to-know-rxjs-libraries)
-- [How Do I?](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#how-do-i)
-- [Mapping RxJS from Different Libraries](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#mapping-rxjs-from-different-libraries)
-- [API Documentation](https://github.com/Reactive-Extensions/RxJS/tree/master/doc#reactive-extensions-class-library)
+- [Getting Started With RxJS](#getting-started-with-rxjs)
+- [RxJS Guidelines](#rxjs-guidlines)
+- [Getting to Know RxJS Libraries](#getting-to-know-rxjs-libraries)
+- [How Do I?](#how-do-i)
+- [Mapping RxJS from Different Libraries](#mapping-rxjs-from-different-libraries)
+- [API Documentation](#reactive-extensions-class-library)
 
 ## Getting Started With RxJS
 
@@ -69,6 +70,13 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 - [Scheduling and Concurrency](gettingstarted/schedulers.md)
 - [Testing and Debugging](gettingstarted/testing.md)
 - [Implementing Your Own Operators](gettingstarted/operators.md)
+
+## RxJS Guidelines ##
+
+Curious on how we designed RxJS? This is covered along with overall guidelines of how your RxJS code should operate.  In addition, we have contribution guidelines which set the bar for which we accept contributions.
+
+- [RxJS Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
+- [RxJS Contribution Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/contributing)
 
 ## Getting to Know RxJS Libraries ##
 

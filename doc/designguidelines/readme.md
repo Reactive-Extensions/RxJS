@@ -4,41 +4,41 @@
   src="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/designguidelines/images/984368.png"
   alt="RxJS Logo">
 
-1. Introduction
-2. When to use RxJS
-  1. Use RxJS for orchestrating asynchronous and event-based computations
-  2. Use RxJS to deal with asynchronous sequences of data
-3. The RxJS contract
-  1. Assume the RxJS Grammar
-  2. Assume resources are cleaned up after an `onError` or `onCompleted` messages
-  3. Assume a best effort to stop all outstanding work on Unsubscribe
-4. Using RxJS
-  1. Consider drawing a Marble-diagram
-  2. Consider passing multiple arguments to `subscribe`
-  3. Consider passing a specific scheduler to concurrency introducing operators
-  4. Call the `observeOn` operator as late and in as few
-  5. Consider limiting buffers
-  6. Make side-effects explicit using the `do`/`tap` operator
-  7. Assume messages can come through until unsubscribe has completed
-  8. Use the Publish operator to share side-effects
-5. Operator implementations
-  1. Implement new operators by composing existing operators
-  2. Implement custom operators using `Observable.create`
-  3. Protect calls to user code from within an operator
-  4. `subscribe` implementations should not throw
-  5. `onError` messages should have abort semantics
-  6. Parameterize concurrency by providing a scheduler argument
-  7. Provide a default scheduler
-  8. The scheduler should be the last argument to the operator
-  9. Avoid introducing concurrency
-  10. Hand out all disposables instances created inside the operator to consumers
-  11. Operators should not block
-  12. Avoid deep stacks caused by recursion in operators
-  13. Argument validation should occur outside `Observable.create`
-  14. Unsubscription should be idempotent
-  15. Unsubscription should not throw
-  16. Custom Observable implementations should follow the Rx contract
-  17. Operator implementations should follow guidelines for Rx usage
+1. [Introduction](#1-introduction)
+2. [When to use RxJS](#2-when-to-use-rxjs)
+  1. [Use RxJS for orchestrating asynchronous and event-based computations](#21-use-rxjs-for-orchestrating-asynchronous-and-event-based-computations)
+  2. [Use RxJS to deal with asynchronous sequences of data](#22-use-rxjs-to-deal-with-asynchronous-sequences-of-data)
+3. [The RxJS contract](#3-the-rxjs-contract)
+  1. [Assume the RxJS Grammar](#31-the-rxjs-grammar)
+  2. [Assume resources are cleaned up after an `onError` or `onCompleted` messages](#32-assume-resources-are-cleaned-up-after-an-onerror-or-oncompleted-message)
+  3. [Assume a best effort to stop all outstanding work on Unsubscribe](#33-assume-a-best-effort-to-stop-all-outstanding-work-on-unsubscribe)
+4. [Using RxJS](#4-using-rx)
+  1. [Consider drawing a Marble-diagram](#41-consider-drawing-a-marble-diagram)
+  2. [Consider passing multiple arguments to `subscribe`](#42-consider-passing-multiple-arguments-to-subscribe)
+  3. [Consider passing a specific scheduler to concurrency introducing operators](#43-consider-passing-a-specific-scheduler-to-concurrency-introducing-operators)
+  4. [Call the `observeOn` operator as late and in as few places as possible](#44-call-the-observeon-operator-as-late-and-in-as-few-places-as-possible)
+  5. [Consider limiting buffers](#45-consider-limiting-buffers)
+  6. [Make side-effects explicit using the `do`/`tap` operator](#46-make-side-effects-explicit-using-the-dotap-operator)
+  7. [Assume messages can come through until unsubscribe has completed](#47-assume-messages-can-come-through-until-unsubscribe-has-completed)
+  8. [Use the `publish` operator to share side-effects](#48-use-the-publish-operator-to-share-side-effects)
+5. [Operator implementations](#5-operator-implementations)
+  1. [Implement new operators by composing existing operators](#51-implement-new-operators-by-composing-existing-operators)
+  2. [Implement custom operators using `Observable.create`](#52-implement-custom-operators-using-observablecreate)
+  3. [Protect calls to user code from within an operator](#53-protect-calls-to-user-code-from-within-an-operator)
+  4. []`subscribe` implementations should not throw](#54-subscribe-implementations-should-not-throw)
+  5. []`onError` messages should have abort semantics](#55-onerror-messages-should-have-abort-semantics)
+  6. [Parameterize concurrency by providing a scheduler argument](#56-parameterize-concurrency-by-providing-a-scheduler-argument)
+  7. [Provide a default scheduler](#57-provide-a-default-scheduler)
+  8. [The scheduler should be the last argument to the operator](#58-the-scheduler-should-be-the-last-argument-to-the-operator)
+  9. [Avoid introducing concurrency](#59-avoid-introducing-concurrency)
+  10. [Hand out all disposables instances created inside the operator to consumers](#510-hand-out-all-disposables-instances-created-inside-the-operator-to-consumers)
+  11. [Operators should not block](#511-operators-should-not-block)
+  12. [Avoid deep stacks caused by recursion in operators](#512-avoid-deep-stacks-caused-by-recursion-in-operators)
+  13. [Argument validation should occur outside `Observable.create`](#513-argument-validation-should-occur-outside-observablecreate)
+  14. [Unsubscription should be idempotent](#514-unsubscription-should-be-idempotent)
+  15. [Unsubscription should not throw](#515-unsubscription-should-not-throw)
+  16. [Custom Observable implementations should follow the RxJS contract](#516-custom-observable-implementations-should-follow-the-rxjs-contract)
+  17. [Operator implementations should follow guidelines for RxJS usage](#517-operator-implementations-should-follow-guidelines-for-rxjs-usage)
 
 ## 1. Introduction ##
 

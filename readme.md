@@ -182,8 +182,10 @@ And there you have it!
 Please check out:
 
  - [The full documentation](https://github.com/Reactive-Extensions/RxJS/tree/master/doc)
- - [Our great set of examples](https://github.com/Reactive-Extensions/RxJS/tree/master/examples)
- - [Our numerous unit tests](https://github.com/Reactive-Extensions/RxJS/tree/master/tests).
+ - [Our many great examples](https://github.com/Reactive-Extensions/RxJS/tree/master/examples)
+ - [Our design guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
+ - [Our contribution guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/contributing)
+ - [Our complete Unit Tests](https://github.com/Reactive-Extensions/RxJS/tree/master/tests)
 
 ## Resources
 
@@ -374,7 +376,7 @@ RxJS has been thoroughly tested against all major browsers and supports IE6+, Ch
 
 ## Contributing ##
 
-There are lots of ways to contribute to the project, and we appreciate our [contributors](https://github.com/Reactive-Extensions/RxJS/wiki/Contributors).  If you wish to contribute, check out our [style guide](https://github.com/Reactive-Extensions/RxJS/wiki/Reactive-Extensions-for-JavaScript-%28RxJS%29-Style-Guide).
+There are lots of ways to contribute to the project, and we appreciate our [contributors](https://github.com/Reactive-Extensions/RxJS/wiki/Contributors).  If you wish to contribute, check out our [style guide]((https://github.com/Reactive-Extensions/RxJS/tree/master/doc/contributing)).
 
 You can contribute by reviewing and sending feedback on code checkins, suggesting and trying out new features as they are implemented, submit bugs and help us verify fixes as they are checked in, as well as submit code fixes or code contributions of your own. Note that all code submissions will be rigorously reviewed and tested by the Rx Team, and only those that meet an extremely high bar for both quality and design/roadmap appropriateness will be merged into the source.
 
