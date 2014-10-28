@@ -1998,7 +1998,7 @@ if (!Array.prototype.forEach) {
   };
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
-
+  
   function numberIsFinite(value) {
     return typeof value === 'number' && root.isFinite(value);
   }

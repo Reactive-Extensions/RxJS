@@ -256,3 +256,15 @@ Rx.Observable.startAsync(function () {
 ```
 
 In this sample the `startAsync` operator will immediately schedule the execution of the lambda provided as its argument. The subscription registers the observer instance as a listener to this execution. As the lambda is already running once the subscription is disposed, it will keep running and its return value is ignored.
+
+## 4. Using Rx ##
+
+### 4.1 Consider drawing a Marble-diagram
+
+Draw a marble-diagram of the observable sequence you want to create. By drawing the diagram, you
+will get a clearer picture on what operator(s) to use.
+
+A marble-diagram is a diagram that shows event occurring over time. A marble diagram contains both
+input and output sequences(s).
+
+<img src="throttleWithSelector.png" alt="throttleWithSelector">
