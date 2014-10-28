@@ -267,4 +267,4 @@ will get a clearer picture on what operator(s) to use.
 A marble-diagram is a diagram that shows event occurring over time. A marble diagram contains both
 input and output sequences(s).
 
-<img src="throttleWithSelector.png" alt="throttleWithSelector">
+<img src="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/designguidelines/throttleWithTimeout.png" alt="throttleWithSelector">
