@@ -1,17 +1,17 @@
   var STACK_JUMP_SEPARATOR = "From previous event:";
 
-  function makeStackTraceLong(error, observable) {
+  function makeStackTraceLong(error, observer) {
       // If possible, transform the error stack trace by removing Node and RxJS
       // cruft, then concatenating with the stack trace of `observable`.
       if (hasStacks &&
-          observable.stack &&
+          observer.stack &&
           typeof error === "object" &&
           error !== null &&
           error.stack &&
           error.stack.indexOf(STACK_JUMP_SEPARATOR) === -1
       ) {
         var stacks = [];
-        for (var o = observable; !!o; o = o.source) {
+        for (var o = observer; !!o; o = o.source) {
           if (o.stack) {
             stacks.unshift(o.stack);
           }
