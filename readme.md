@@ -101,7 +101,7 @@ This set of libraries include:
 - [`rx.joinpatterns.js`](doc/libraries/rx.joinpatterns.md) - join patterns event processing query operations
 - [`rx.testing.js`](doc/libraries/rx.testing.md) - used to write unit tests for complex event processing queries
 - [`rx.time.js`](doc/libraries/rx.time.md) - time-based event processing query operations
-- [`rx.virtualtime.j`s](doc/libraries/rx.virtualtime.md) - virtual-time-based schedulers
+- [`rx.virtualtime.js`](doc/libraries/rx.virtualtime.md) - virtual-time-based schedulers
 
 ## Why RxJS? ##
 
