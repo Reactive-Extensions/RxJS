@@ -84,7 +84,7 @@ Unit testing the Reactive Extensions operators using [Jasmine](http://pivotal.gi
 
 ### Testing with Mocha and Node.js ###
 
-Unit testing the Reactive Extensions operators using [Mocha](http://visionmedia.github.io/mocha/) with [Node.js](http://nodejs.org)
+Unit testing the Reactive Extensions operators using [Mocha](http://mochajs.org/) with [Node.js](http://nodejs.org)
 
 - [See the code](https://github.com/Reactive-Extensions/RxJS/tree/master/examples/testing/nodejs)
 
