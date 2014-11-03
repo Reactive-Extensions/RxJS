@@ -322,7 +322,7 @@ bower install rxjs
 <script src="rx.js"></script>
 
 <!-- Or all of RxJS minus testing -->
-<script src="rx.complete.js"></script>
+<script src="rx.all.js"></script>
 
 <!-- Or keeping it lite -->
 <script src="rx.lite.js"></script>
