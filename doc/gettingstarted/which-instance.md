@@ -7,7 +7,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
 <tbody>
     <!-- Observable operators -->
     <tr>
-        <td rowspan="72">Using an existing sequence</td>
+        <td rowspan="70">Using an existing sequence</td>
         <td colspan="3">I want to change each value</td>
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/select.md">map/select</a></td>
     </tr>
@@ -180,8 +180,8 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
         <td rowspan="11">I want to group the values</td>
         <td colspan="2">until the sequence completes</td>
         <td>
-          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/toArray.md">toArray</a>
-          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/tomap.md">toMap</a>
+          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/toArray.md">toArray</a><br>
+          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/tomap.md">toMap</a><br>
           <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/toset.md">toSet</a>
         </td>
     </tr>
@@ -340,7 +340,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/observeon.md">observeOn</a></td>
     </tr>
     <tr>
-        <td rowspan="7">Using two sequences</td>
+        <td rowspan="9">Using two sequences</td>
         <td>I want to decide which to receive values from</td>
         <td colspan="2">based on which one has values first</td>
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/amproto.md">amb</a></td>
