@@ -108,7 +108,7 @@
       observableArrayPrototype.purge = function () {
         for (var i = 0, len = this.lifetimes.length; i < len; i++) {
           var lifetime = this.lifetimes[i];
-          if (lifetime.isCompleted) { this.remove(lifetime); }
+          if (lifetime.isStopped) { this.remove(lifetime); }
         }
     };
 
