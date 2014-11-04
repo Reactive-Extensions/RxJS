@@ -35,7 +35,7 @@
    * @param {Scheduler} [scheduler]  Scheduler to run the sampling timer on. If not specified, the timeout scheduler is used.
    * @returns {Observable} Sampled observable sequence.
    */
-  observableProto.sample = function (intervalOrSampler, scheduler) {
+  observableProto.sample = observableProto.throttleLatest = function (intervalOrSampler, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return typeof intervalOrSampler === 'number' ?
       sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
