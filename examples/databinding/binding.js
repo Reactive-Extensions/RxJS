@@ -1,40 +1,39 @@
 /**
 * Inspired by Knockout.js and RxJS-Splash
 */
-
 (function (root, factory) {
   var freeExports = typeof exports == 'object' && exports,
       freeModule = typeof module == 'object' && module && module.exports == freeExports && module,
       freeGlobal = typeof global == 'object' && global;
   if (freeGlobal.global === freeGlobal) {
-      window = freeGlobal;
+    window = freeGlobal;
   }
 
   // Because of build optimizers
   if (typeof define === 'function' && define.amd) {
-      define(['rx', 'exports'], function (Rx, exports) {
-          root.tko = factory(root, exports, Rx);
-          return root.tko;
-      });
+    define(['rx', 'exports'], function (Rx, exports) {
+      root.tko = factory(root, exports, Rx);
+      return root.tko;
+    });
   } else if (typeof module === 'object' && module && module.exports === freeExports) {
-      module.exports = factory(root, module.exports, require('rx'));
+    module.exports = factory(root, module.exports, require('rx'));
   } else {
-      root.tko = factory(root, {}, root.Rx);
+    root.tko = factory(root, {}, root.Rx);
   }
 }(this, function (global, exp, Rx, undefined) {
 
   var Observer = Rx.Observer,
-      Observable = Rx.Observable,
-      observableCreate = Rx.Observable.create,
-      fromEvent = Rx.Observable.fromEvent,
-      BehaviorSubject = Rx.BehaviorSubject,
-      Subject = Rx.Subject,
-      CompositeDisposable = Rx.CompositeDisposable,
-      disposableCreate = Rx.Disposable.create,
-      disposableEmpty = Rx.Disposable.empty,
-      timeoutScheduler = Rx.Scheduler.timeout,
-      inherits = Rx.internals.inherits,
-      splice = Array.prototype.splice;
+    Observable = Rx.Observable,
+    observableCreate = Rx.Observable.create,
+    fromEvent = Rx.Observable.fromEvent,
+    BehaviorSubject = Rx.BehaviorSubject,
+    Subject = Rx.Subject,
+    CompositeDisposable = Rx.CompositeDisposable,
+    disposableCreate = Rx.Disposable.create,
+    disposableEmpty = Rx.Disposable.empty,
+    timeoutScheduler = Rx.Scheduler.timeout,
+    inherits = Rx.internals.inherits,
+    splice = Array.prototype.splice;
 
   var sub = 'subscribe',
       fn = 'function',
@@ -44,232 +43,221 @@
 
   var tko = { };
 
-  var ObservableArray = (function (_super) {
+  var ObservableArray = (function (__super__) {
 
       function ObservableArray(items) {
-          this.values = [];
-          this.lifetimes = [];
-          for (var i = 0, len = items.length; i < len; i++) {
-              this.push(items[i]);
-          }
+        this.values = [];
+        this.lifetimes = [];
+        for (var i = 0, len = items.length; i < len; i++) {
+          this.push(items[i]);
+        }
 
-          _super.call(this);
+        __super__.call(this);
       }
 
-      inherits(ObservableArray, _super);
+      inherits(ObservableArray, __super__);
 
       var observableArrayPrototype = ObservableArray.prototype;
 
       observableArrayPrototype.subscribe = function (observerOrOnNext) {
-          observerOrOnNext || (observerOrOnNext = noop);
-          var subscription = _super.prototype.subscribe.apply(this, arguments);
+        observerOrOnNext || (observerOrOnNext = noop);
+        var subscription = __super__.prototype.subscribe.apply(this, arguments);
 
-          this.purge();
-          var obsFunc = typeof observerOrOnNext === fn ?
-              observerOrOnNext :
-              observerOrOnNext.onNext;
+        this.purge();
+        var obsFunc = typeof observerOrOnNext === fn ?
+          observerOrOnNext :
+          observerOrOnNext.onNext;
 
-          for(var i = 0, len = this.lifetimes.length; i < len; i++) {
-              obsFunc(this.lifetimes[i]);
-          }
+        for(var i = 0, len = this.lifetimes.length; i < len; i++) {
+          obsFunc(this.lifetimes[i]);
+        }
 
-          return subscription;
+        return subscription;
       };
 
       observableArrayPrototype.push = function (item) {
-          this.values.push(value);
-          var lifetime = new BehaviorSubject(value);
-          this.lifetimes.push(lifetime);
-          this.onNext(lifetime);
+        this.values.push(value);
+        var lifetime = new BehaviorSubject(value);
+        this.lifetimes.push(lifetime);
+        this.onNext(lifetime);
 
-          return this.values.length;
+        return this.values.length;
       };
 
       observableArrayPrototype.remove = function (value) {
-          var index = this.values.indexOf(value);
-
-          this.splice(index, 1);
-
-          return index !== -1;
+        var index = this.values.indexOf(value);
+        this.splice(index, 1);
+        return index !== -1;
       };
 
       observableArrayPrototype.splice = function () {
-          splice.apply(this.values, arguments);
-          var removed = splice.apply(this.lifetimes, arguments);
+        splice.apply(this.values, arguments);
+        var removed = splice.apply(this.lifetimes, arguments);
 
-          for (var i = 0, len = removed.length; i < len; i++) {
-              removed[i].onCompleted();
-          }
+        for (var i = 0, len = removed.length; i < len; i++) {
+          removed[i].onCompleted();
+        }
       };
 
       observableArrayPrototype.dispose = function () {
-          for (var i = 0, len = this.lifetimes.length; i < len; i++) {
-              this.lifetimes[i].onCompleted();
-          }
+        for (var i = 0, len = this.lifetimes.length; i < len; i++) {
+          this.lifetimes[i].onCompleted();
+        }
       };
 
       observableArrayPrototype.purge = function () {
-          for (var i = 0, len = this.lifetimes.length; i < len; i++) {
-              var lifetime = this.lifetimes[i];
-              if (lifetime.isCompleted) {
-                  this.remove(lifetime);
-              }
-          }
-      };
+        for (var i = 0, len = this.lifetimes.length; i < len; i++) {
+          var lifetime = this.lifetimes[i];
+          if (lifetime.isCompleted) { this.remove(lifetime); }
+        }
+    };
 
-      return ObservableArray;
+    return ObservableArray;
   }(Subject));
 
   tko.binders = {
-      attr: function (target, context, options) {
-          var disposable = new CompositeDisposable();
+    attr: function (target, context, options) {
+        var disposable = new CompositeDisposable();
 
-          for (var key in options) {
-              (function (key) {
-                  var obsOrValue = options[key];
-                  disposable.add(tko.utils.applyBindings(obsOrValue, function (x) {
-                      target.attr(key, x);
-                  }));
-              }(key));
-          }
-
-          return disposable;
-      },
-      checked: function (target, context, obsOrValue) {
-          var disposable = new CompositeDisposable();
-          if (onNext in obsOrValue) {
-              var observer = obsOrValue;
-
-              disposable.add(fromEvent(target, 'change')
-                  .map(function () {
-                          return target.prop('checked');
-                      })
-                  .subscribe(observer.onNext.bind(observer)));
-          }
+      for (var key in options) {
+        (function (key) {
+          var obsOrValue = options[key];
           disposable.add(tko.utils.applyBindings(obsOrValue, function (x) {
-              target.prop('checked', x);
+            target.attr(key, x);
           }));
-
-          return disposable;
-      },
-      click: function (target, context, options) {
-          return tko.binders.event(target, context, options, 'click');
-      },
-      css: function (target, context, options) {
-          var disposable = new CompositeDisposable();
-
-          for (var key in options) {
-              (function (key) {
-                  disposable.add(tko.utils.applyBindings(options[key], function (x) {
-                      target.toggleClass(css, x);
-                  }));
-              }(key));
-          }
-
-          return disposable;
-      },
-      event: function (target, context, options, type) {
-          type || (type = options.type);
-          var obs = fromEvent(target, type);
-
-          return obs.subscribe(function (e) {
-              var opts = {
-                  target: target,
-                  context: context,
-                  e: e
-              };
-              if (typeof options === fn) {
-                  options(opts);
-              } else {
-                  options.onNext(opts);
-              }
-          });
-      },
-      foreach: function (target, context, obsArray) {
-          var disposable = new CompositeDisposable();
-
-          var template = target.html().trim();
-
-          disposable.add(disposableCreate(function () {
-              target.empty().append(template);
-          }));
-
-          timeoutScheduler.schedule(function () {
-              disposable.add(obsArray.subscribe(function (lifetime) {
-                  var sub,
-                      disposer,
-                      child = $(template).appendTo(target),
-                      binding = tko.internal.applyBindings(child, {
-                          viewModel: lifetime.value,
-                          viewModelRoot: context. viewModelRoot,
-                          viewModelParent: context.viewModel
-                      }),
-
-                      dispose = function () {
-                          child.remove();
-                          disposable.remove(binding);
-                          disposable.remove(disposer);
-                          disposable.remove(sub);
-                      },
-
-                      disposer = disposableCreate(dispose),
-
-                      sub = lifetime.subscribe(noop, dispose, dispose);
-
-                  disposable.add(binding);
-                  disposable.add(disposer);
-                  disposable.add(sub);
-              }));
-          });
-
-          return disposable;
-      },
-      html: function (target, context, obsOrValue) {
-          return tko.utils.applyBindings(obsOrValue, target.html.bind(target));
-      },
-      text: function (target, context, obsOrValue) {
-          return tko.utils.applyBindings(obsOrValue, target.text.bind(target));
-      },
-      value: function (target, context, options) {
-          var disposable = new CompositeDisposable();
-
-          var options = tko.utils.parseBindingOptions(options);
-          if (options.on && options.on.indexOf('after') === 0) {
-              options.on = options.on.slice(5);
-              options.delay = true;
-          }
-          if (typeof options.source.onNext === fn) {
-              var observer = options.source,
-                  getObs = fromEvent(target, options.on || 'change');
-
-              if (options.delay)  {
-                  getObs = getObs.delay(0);
-              }
-
-              disposable.add(getObs
-                  .map(function () {
-                      return target.val();
-                  })
-                  .subscribe(observer.onNext.bind(observer))
-              );
-          }
-
-          if (options.source instanceof Observable) {
-              var focus = fromEvent(target, 'focus'),
-                  blur = fromEvent(target,'blur');
-
-              options.source = options.source.takeUntil(focus).concat(blur.take(1)).repeat();
-          }
-
-          disposable.add(tko.utils.applyBindings(options.source, target.val.bind(target)));
-
-          return disposable;
-      },
-      visible: function (target, context, options) {
-          return tko.utils.applyBindings(obsOrValue, function (x) {
-              taget.css(x ? '' : 'none');
-          });
+        }(key));
       }
+
+      return disposable;
+    },
+    checked: function (target, context, obsOrValue) {
+      var disposable = new CompositeDisposable();
+      if (onNext in obsOrValue) {
+        var observer = obsOrValue;
+
+        disposable.add(fromEvent(target, 'change')
+          .map(function () { return target.prop('checked'); })
+          .subscribe(observer.onNext.bind(observer)));
+      }
+      disposable.add(tko.utils.applyBindings(obsOrValue, function (x) {
+        target.prop('checked', x);
+      }));
+
+      return disposable;
+    },
+    click: function (target, context, options) {
+      return tko.binders.event(target, context, options, 'click');
+    },
+    css: function (target, context, options) {
+      var disposable = new CompositeDisposable();
+
+      for (var key in options) {
+        (function (key) {
+          disposable.add(tko.utils.applyBindings(options[key], function (x) {
+            target.toggleClass(css, x);
+          }));
+        }(key));
+      }
+
+      return disposable;
+    },
+    event: function (target, context, options, type) {
+      type || (type = options.type);
+      var obs = fromEvent(target, type);
+
+      return obs.subscribe(function (e) {
+        var opts = {
+            target: target,
+            context: context,
+            e: e
+        };
+        if (typeof options === fn) {
+          options(opts);
+        } else {
+          options.onNext(opts);
+        }
+      });
+    },
+    foreach: function (target, context, obsArray) {
+      var disposable = new CompositeDisposable();
+
+      var template = target.html().trim();
+
+      disposable.add(disposableCreate(function () {
+        target.empty().append(template);
+      }));
+
+      timeoutScheduler.schedule(function () {
+        disposable.add(obsArray.subscribe(function (lifetime) {
+          var sub,
+            disposer,
+            child = $(template).appendTo(target),
+            binding = tko.internal.applyBindings(child, {
+                viewModel: lifetime.value,
+                viewModelRoot: context. viewModelRoot,
+                viewModelParent: context.viewModel
+            }),
+
+            dispose = function () {
+                child.remove();
+                disposable.remove(binding);
+                disposable.remove(disposer);
+                disposable.remove(sub);
+            },
+
+            disposer = disposableCreate(dispose),
+
+            sub = lifetime.subscribe(noop, dispose, dispose);
+
+          disposable.add(binding);
+          disposable.add(disposer);
+          disposable.add(sub);
+        }));
+      });
+
+      return disposable;
+    },
+    html: function (target, context, obsOrValue) {
+      return tko.utils.applyBindings(obsOrValue, target.html.bind(target));
+    },
+    text: function (target, context, obsOrValue) {
+      return tko.utils.applyBindings(obsOrValue, target.text.bind(target));
+    },
+    value: function (target, context, options) {
+      var disposable = new CompositeDisposable();
+
+      var options = tko.utils.parseBindingOptions(options);
+      if (options.on && options.on.indexOf('after') === 0) {
+        options.on = options.on.slice(5);
+        options.delay = true;
+      }
+      if (typeof options.source.onNext === fn) {
+        var observer = options.source,
+          getObs = fromEvent(target, options.on || 'change');
+
+        if (options.delay)  { getObs = getObs.delay(0); }
+
+        disposable.add(getObs
+          .map(function () { return target.val(); })
+          .subscribe(observer.onNext.bind(observer)));
+      }
+
+      if (options.source instanceof Observable) {
+        var focus = fromEvent(target, 'focus'),
+          blur = fromEvent(target,'blur');
+
+        options.source = options.source.takeUntil(focus).concat(blur.take(1)).repeat();
+      }
+
+      disposable.add(tko.utils.applyBindings(options.source, target.val.bind(target)));
+
+      return disposable;
+    },
+    visible: function (target, context, options) {
+      return tko.utils.applyBindings(obsOrValue, function (x) {
+        target.css(x ? '' : 'none');
+      });
+    }
   };
 
   tko.utils = {
