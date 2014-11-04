@@ -11,29 +11,33 @@ This topic lists all major operators implemented by the [`Observable`](https://g
       <td>Creating an observable sequence</td>
       <td>
       <ol>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablecreatesubscribe">create</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablecreatewithdisposablesubscribe">createWithDisposable</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservabledeferobservablefactory">defer</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">generate</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegeneratewithabsolutetimeinitialstate-condition-iterate-resultselector-timeselector-scheduler">generateWithAbsoluteTime</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablegenerateinitialstate-condition-iterate-resultselector-scheduler">generateWithRelativeTime</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablerangestart-count-scheduler">range</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableusingresourcefactory-observablefactory">using</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/create.md">create</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/defer.md">defer</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generate.md">generate</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generatewithabsolutetime.nd">generateWithAbsoluteTime</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generatewithrelativetime.md">generateWithRelativeTime</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservablerangestart-count-scheduler">range</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/using.md">using</a></li>
       </ol>
       </td>
    </tr>
    <tr>
       <td>Converting events or asynchronous patterns to observable sequences, or between Arrays and observable sequences.</td>
       <td>
-      	<ol>
-      	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromarrayarray-scheduler">fromArray</a></li>
-      	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromcallbackfunc-scheduler-context">fromCallback</a></li>
-      	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromnodecallbackfunc-scheduler-context">fromNodeCallback</a></li>
-      	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromeventelement-eventname">fromEvent</a></li>
-      	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefromeventpatternaddhandler-removehandler">fromEventPattern</a></li>
-      	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablefrompromisepromise">fromPromise</a></li>
-      	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetoarray">toArray</a></li>
-      	</ol>
+    	<ol>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/from.md">from</a></li>
+    	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/fromarray.md">fromArray</a></li>
+    	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/fromcallback.md">fromCallback</a></li>
+    	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/fromnodecallback.md">fromNodeCallback</a></li>
+    	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/fromevent.md">fromEvent</a></li>
+    	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/fromeventpattern.md">fromEventPattern</a></li>
+    	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/frompromise.md">fromPromise</a></li>
+    	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/of.md">of</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/toarray.md">toArray</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/tomap.md">toMap</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/topromise.md">toPromise</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/toset.md">toSet</a></li>
+    	</ol>
       </td>
    </tr>
    <tr>
@@ -42,30 +46,35 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    </td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableambargs">amb</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeambrightsource">prototype.amb</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypecombinelatestargs-resultselector">combineLatest</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableconcatargs">concat</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeambrightsource">prototype.concat</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypestartwithscheduler-args">startWith</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablemergescheduler-args">merge</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypemergemaxconcurrent--other">prototype.merge</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypemergeobservable">mergeObservable</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablerepeatvalue-repeatcount-scheduler">repeat</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototyperepeatrepeatcount">prototype.repeat</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablezipargs">zip</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypezipargs-resultselector">prototype.zip</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/amb.md">amb</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/ambproto.md">prototype.amb</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/combinelatest.md">combineLatest</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/concat.md">concat</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/concatproto.md">prototype.concat</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/startwith.md">startWith</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/merge.md">merge</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/mergeproto">prototype.merge</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/mergeall.md">mergeAll</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/repeat.md">repeat</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/repeatproto.md">prototype.repeat</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/zip.md">zip</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/zipproto.md">prototype.zip</a></li>
    </ol>
    </td>
    </tr>
    <tr>
-   <td>Functional</td>
+   <td>Functional - Sharing Side Effects</td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeletfunc">let</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypepublishselector">publish</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypepublishlatestselector">publishLast</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypereplayselector-buffersize-window-scheduler">replay</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/let.md">let</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/publish.md">publish</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/publishlast.md">publishLast</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/publishvalue.md">publishValue</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/replay.md">replay</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/share.md">share</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/sharelast.md">shareLast</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/sharereplay.md">shareReplay</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/sharevalue.md">shareValue</a></li>
    </ol>
    </td>
    </tr>
@@ -73,15 +82,15 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Mathemathical operators on sequences</td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeaggregateseed-accumulator">aggregate</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeaverageselector">average</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypecountpredicate">count</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypemaxcomparer">max</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypemaxbykeyselector-comparer">maxBy</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypemincomparer">min</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeminbykeyselector-comparer">minBy</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypereduceaccumulator-seed">reduce</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypesumkeyselector-thisarg">sum</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/aggregate.md">aggregate</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/average.md">average</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/count.md">count</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/max.md">max</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/maxby.md">maxBy</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/min.md">min</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/minby.md">minBy</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/reduce.md">reduce</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/sum.md">sum</a></li>
    </ol>
    </td>
    </tr>
@@ -89,14 +98,15 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Time-based operations</td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypedelayduetime-scheduler">delay</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableintervalperiod-scheduler">interval</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypethrottleduetime-scheduler">throttle</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypethrottlewithselectorthrottleselector">throttleWithSelector</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetimeintervalscheduler">timeInterval</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservabletimerduetime-period-scheduler">timer</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetimeoutduetime-other-scheduler">timeoutWithSelector</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetimestampscheduler">timestamp</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/delay.md">delay</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/interval.md">interval</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/throttle.md">throttle</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/throwttlewithselector.md">throttleWithSelector</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/timeinterval.md">timeInterval</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/timer.md">timer</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/timeout.md">timeout</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/timeoutwithselector.md">timeoutWithSelector</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/timestamp.md">timestamp</a></li>
    </ol>
    </td>
    </tr>
@@ -104,12 +114,12 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Handling Exceptions</td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablecatchargs">catch</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypecatchsecond--handler">prototype.catch</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypefinallyaction">finally</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableonerrorresumenextargs">onErrorResumenext</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeonerrorresumenextsecond">prototype.onErrorResumeNext</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototyperetryretrycount">retry</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/catch.md">catch</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/catchproto.md">prototype.catch</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/finally.md">finally</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/onerrorresumenext.md">onErrorResumenext</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/onerrorresumenextproto.md">prototype.onErrorResumeNext</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/retry.md">retry</a></li>
    </ol>
    </td>
    </tr>
@@ -117,36 +127,41 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Filtering and selecting values in a sequence</td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeelementatindex">elementAt</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeelementatordefaultindex-defaultvalue">elementAtOrDefault</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypefilterpredicate-thisarg">filter</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeflatmapselector-resultselector">flatMap</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeflatmaplatestselector-thisarg">flatMapLatest</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypefirstpredicate-thisarg">first</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypefirstordefaultpredicate-defaultvalue-thisarg">firstOrDefault</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypefindpredicate-thisarg">find</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypefindindexpredicate-thisarg">findIndex</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypelastpredicate-thisarg">last</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypelastordefaultpredicate-defaultvalue-thisarg">lastOrDefault</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypemapselector-thisarg">map</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypepluckproperty">pluck</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeselectselector-thisarg">select</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeselectmanyselector-resultselector">selectMany</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeselectswitchselector-thisarg">selectSwitch</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypesinglepredicate-thisarg">single</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypesingleordefaultpredicate-defaultvalue-thisarg">singleOrDefault</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeskipcount">skip</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeskiplastcount">skipLast</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeskiplastwithtimeduration">skipLastWithTime</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeskipuntilother">skipUntil</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypeskipwhilepredicate-thisarg">skipWhile</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetakecount-scheduler">take</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetakelastcount">takeLast</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetakelastbuffercount">takeLastBuffer</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetakelastbufferwithtimeduration-scheduler">takeLastBufferWithTime</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetakelastwithtimeduration-timescheduler-loopscheduler">takeLastWithTime</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypetakewhilepredicate-thisarg">takeWhile</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypewherepredicate-thisarg">where</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/concatmap.md">concatMap</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/concatmapobserver.md">concatMapObserver</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/elementat.md">elementAt</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/elementatordefault.md">elementAtOrDefault</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/where.md">filter</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/selectmany.md">flatMap</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/flatmaplatest.md">flatMapLatest</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/flatmapobserver.md">flatMapObserver</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/find.md">find</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/findindex.md">findIndex</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/first.md">first</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/firstordefault.md">firstOrDefault</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/last.md">last</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/lastordefault.md">lastOrDefault</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/select.md">map</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/pluck.md">pluck</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/select.md">select</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/concatmap.md">selectConcat</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/selectmany.md">selectMany</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/selectmanyobserver.md">selectManyObserver</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/flatmaplatest.md">selectSwitch</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/single.md">single</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/singleordefault.md">singleOrDefault</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservableprototypeskipcount">skip</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/skiplast.md">skipLast</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/skiplastwithtime.md">skipLastWithTime</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/skipuntil.md">skipUntil</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/skipwhile.md">skipWhile</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/take.md">take</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/takelast.md">takeLast</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/takelastbuffer.md">takeLastBuffer</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/takelastbufferwithtime.md">takeLastBufferWithTime</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/takelastwithtime.md">takeLastWithTime</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/takewhile.md">takeWhile</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/where.md">where</a></li>
    </ol>
    </td>
    </tr>
@@ -154,17 +169,17 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Grouping and Windowing</td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypebufferbufferopenings-bufferboundaries-bufferclosingselector">buffer</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypebufferwithcountcount-skip">bufferWithCount</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypebufferwithtimetimespan-timeshift--scheduler-scheduler">bufferWithTimeOrCount</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypegroupbykeyselector-elementselector-keyserializer">groupBy</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypegroupbyuntilkeyselector-elementselector-durationselector-keyserializer">groupByUntil</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypegroupjoinright-leftdurationselector-rightdurationselector-resultselector">groupJoin</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypejoinright-leftdurationselector-rightdurationselector-resultselector">join</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypewindowwindowopenings-windowboundaries-windowclosingselector">window</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypewindowwithcountcount-skip">windowWithCount</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypewindowwithtimetimespan-timeshift--scheduler">windowWithTime</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler">windowWithTimeOrCount</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/buffer.md">buffer</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferiwthcount.md">bufferWithCount</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferwithtimeorcount.md">bufferWithTimeOrCount</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupby.md">groupBy</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupbyuntil.md">groupByUntil</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupjoin.md">groupJoin</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/join.md">join</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/window">window</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/windowwithcount.md">windowWithCount</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/windowwithtime.md">windowWithTime</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/windowwithtimeorcount.md">windowWithTimeOrCount</a></li>
    </ol>
    </td>
    </tr>
@@ -172,12 +187,19 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Imperative Operators</td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablecaseselector-sources-elsesourcescheduler">case</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypedoobserver--onnext-onerror-oncompleted">do</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableprototypedowhilecondition-source">doWhile</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableforsources-resultselector">for</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableifcondition-thensource-elsesource">if</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablewhilecondition-source">while</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/case.md">case</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/do.md">do</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/doonnext.md">doOnNext</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/doonerror.md">doOnError</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/dooncompleted.md">doOnCompleted</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/dowhile.md">doWhile</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservableforsources-resultselector">for</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservableifcondition-thensource-elsesource">if</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/do.md">tap</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/doonnext.md">tapOnNext</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/doonerror.md">tapOnError</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/dooncompleted.md">tapOnCompleted</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/while.md">while</a></li>
    </ol>
    </td>
    </tr>
@@ -185,10 +207,10 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Primitives</td>
    <td>
    <ol>
-    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservableemptyscheduler">empty</a></li>
-    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablenever">never</a></li>
- 	<li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablereturnvalue-scheduler">return</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md#rxobservablethrowexception-scheduler">throw</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/empt">empty</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/never.md">never</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/return.md">return</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/throw.md">throw</a></li>
    </ol>
    </td>
    </tr>
