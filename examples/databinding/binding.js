@@ -75,7 +75,7 @@
         return subscription;
       };
 
-      observableArrayPrototype.push = function (item) {
+      observableArrayPrototype.push = function (value) {
         this.values.push(value);
         var lifetime = new BehaviorSubject(value);
         this.lifetimes.push(lifetime);
