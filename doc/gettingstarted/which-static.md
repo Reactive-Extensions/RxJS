@@ -177,7 +177,7 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/onerrorresumenext.md">Observable.onErrorResumeNext</a></td>
     </tr>
     <tr>
-        <td colspan="3">by responding to different combinations of values with [join calculus](http://en.wikipedia.org/wiki/Join-calculus)</td>
+        <td colspan="3">by responding to different combinations of values <a href="http://en.wikipedia.org/wiki/Join-calculus">(join calculus)</a></td>
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/when.md">Observable.when</a></td>
     </tr>
 </tbody></table>
