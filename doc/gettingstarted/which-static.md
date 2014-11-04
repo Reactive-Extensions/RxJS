@@ -63,7 +63,7 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/frompromise.md">Observable.fromPromise</a></td>
     </tr>
     <tr>
-        <td rowspan="4">that iterates</td>
+        <td rowspan="5">that iterates</td>
         <td rowspan="2">over the values in an array</td>
         <td></td>
         <td>
