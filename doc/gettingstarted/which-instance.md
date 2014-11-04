@@ -7,7 +7,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
 <tbody>
     <!-- Observable operators -->
     <tr>
-        <td rowspan="70">Using an existing sequence</td>
+        <td rowspan="71">Using an existing sequence</td>
         <td colspan="3">I want to change each value</td>
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/select.md">map/select</a></td>
     </tr>
