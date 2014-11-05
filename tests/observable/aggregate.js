@@ -1,141 +1,280 @@
-QUnit.module('Aggregate');
+(function () {
 
-var TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  QUnit.module('Aggregate');
 
-test('AggregateWithSeed_Empty', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onCompleted(250)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(42, function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual(onNext(250, 42), onCompleted(250));
-});
+  var TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      subscribe = Rx.ReactiveTest.subscribe;
 
-test('AggregateWithSeed_Return', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onNext(210, 24), onCompleted(250)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(42, function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual(onNext(250, 42 + 24), onCompleted(250));
-});
+  function add(acc, x) { return acc + x; }
 
-test('AggregateWithSeed_Throw', function () {
-    var ex, msgs, res, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onError(210, ex)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(42, function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual(onError(210, ex));
-});
+  test('AggregateWithSeed_Empty', function () {
+    var scheduler = new TestScheduler();
 
-test('AggregateWithSeed_Never', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(42, function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual();
-});
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(250)
+    );
 
-test('AggregateWithSeed_Range', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onNext(210, 0), onNext(220, 1), onNext(230, 2), onNext(240, 3), onNext(250, 4), onCompleted(260)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(42, function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual(onNext(260, 10 + 42), onCompleted(260));
-});
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(42, add);
+    });
 
-test('AggregateWithoutSeed_Empty', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onCompleted(250)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    equal(1, res.length);
-    ok(res[0].value.kind === 'E' && res[0].value.exception !== undefined);
-    equal(250, res[0].time);
-});
+    results.messages.assertEqual(
+      onNext(250, 42),
+      onCompleted(250)
+    );
+  });
 
-test('AggregateWithoutSeed_Return', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onNext(210, 24), onCompleted(250)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual(onNext(250, 24), onCompleted(250));
-});
+  test('AggregateWithSeed_Return', function () {
+    var scheduler = new TestScheduler();
 
-test('AggregateWithoutSeed_Throw', function () {
-    var ex, msgs, res, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onError(210, ex)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual(onError(210, ex));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 24),
+      onCompleted(250)
+    );
 
-test('AggregateWithoutSeed_Never', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual();
-});
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(42, add);
+    });
 
-test('AggregateWithoutSeed_Range', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onNext(210, 0), onNext(220, 1), onNext(230, 2), onNext(240, 3), onNext(250, 4), onCompleted(260)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.aggregate(function (acc, x) {
-            return acc + x;
-        });
-    }).messages;
-    res.assertEqual(onNext(260, 10), onCompleted(260));
-});
+    results.messages.assertEqual(
+      onNext(250, 42 + 24),
+      onCompleted(250)
+    );
+  });
+
+  test('AggregateWithSeed_Throw', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(210, error)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(42, add);
+    });
+
+    results.messages.assertEqual(
+      onError(210, error)
+    );
+  });
+
+  test('AggregateWithSeed_Function_Throws', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 0),
+      onNext(220, 1),
+      onNext(230, 2),
+      onNext(240, 3),
+      onNext(250, 4),
+      onCompleted(260)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(42, function () { throw error; });
+    });
+
+    results.messages.assertEqual(
+      onError(210, error)
+    );
+  });
+
+  test('AggregateWithSeed_Never', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(42, add);
+    });
+
+    results.messages.assertEqual();
+  });
+
+  test('AggregateWithSeed_NoEnd', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 0),
+      onNext(220, 1),
+      onNext(230, 2),
+      onNext(240, 3),
+      onNext(250, 4)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(42, add);
+    });
+
+    results.messages.assertEqual();
+  });
+
+  test('AggregateWithSeed_Range', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 0),
+      onNext(220, 1),
+      onNext(230, 2),
+      onNext(240, 3),
+      onNext(250, 4),
+      onCompleted(260)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(42, add);
+    });
+
+    results.messages.assertEqual(
+      onNext(260, 10 + 42),
+      onCompleted(260)
+    );
+  });
+
+  test('AggregateWithoutSeed_Empty', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(add);
+    });
+
+    equal(1, results.messages.length);
+    ok(results.messages[0].value.kind === 'E' && results.messages[0].value.exception !== undefined);
+    equal(250, results.messages[0].time);
+  });
+
+  test('AggregateWithoutSeed_Return', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 24),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(add);
+    });
+
+    results.messages.assertEqual(
+      onNext(250, 24),
+      onCompleted(250)
+    );
+  });
+
+  test('AggregateWithoutSeed_Throw', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(210, error)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(add);
+    });
+
+    results.messages.assertEqual(
+      onError(210, error)
+    );
+  });
+
+  test('AggregateWithoutSeed_Function_Throws', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 0),
+      onNext(220, 1),
+      onNext(230, 2),
+      onNext(240, 3),
+      onNext(250, 4),
+      onCompleted(260)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(function () { throw error; });
+    });
+
+    results.messages.assertEqual(
+      onError(220, error)
+    );
+  });
+
+  test('AggregateWithoutSeed_Never', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(add);
+    });
+
+    results.messages.assertEqual();
+  });
+
+  test('AggregateWithoutSeed_NoEnd', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 0),
+      onNext(220, 1),
+      onNext(230, 2),
+      onNext(240, 3),
+      onNext(250, 4)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(add);
+    });
+
+    results.messages.assertEqual();
+  });
+
+  test('AggregateWithoutSeed_Range', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 0),
+      onNext(220, 1),
+      onNext(230, 2),
+      onNext(240, 3),
+      onNext(250, 4),
+      onCompleted(260)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.aggregate(add);
+    });
+
+    results.messages.assertEqual(onNext(260, 10), onCompleted(260));
+  });
+}());
