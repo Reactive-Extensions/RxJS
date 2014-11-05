@@ -38,6 +38,8 @@ NuGet Dependencies:
 - [`skipLastWithTime`](../api/core/operators/skiplastwithtime.md)
 - [`takeLastBufferWithTime`](../api/core/operators/takelastbufferwithtime.md)
 - [`takeLastWithTime`](../api/core/operators/takelastwithtime.md)
+- [`throttle`](..api/core/operators/throttlefirst.md)
+- [`throttleFirst`](..api/core/operators/throttlefirst.md)
 - [`throttleWithSelector`](../api/core/operators/throttlewithselector.md)
 - [`timeInterval`](../api/core/operators/timeinterval.md)
 - [`timeout`](../api/core/operators/timeout.md)

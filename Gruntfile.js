@@ -292,6 +292,7 @@ var browsers = [{
               'src/core/linq/observable/skipwithtime.js',
               'src/core/linq/observable/skipuntilwithtime.js',
               'src/core/linq/observable/takeuntilwithtime.js',
+              'src/core/linq/observable/throttlefirst.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -564,6 +565,7 @@ var browsers = [{
               'src/core/linq/observable/skipwithtime.js',
               'src/core/linq/observable/skipuntilwithtime.js',
               'src/core/linq/observable/takeuntilwithtime.js',
+              'src/core/linq/observable/throttlefirst.js',
 
               // Experimental Flattening
               'src/core/linq/observable/exclusive.js',
@@ -972,6 +974,7 @@ var browsers = [{
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
+              'src/core/linq/observable/throttlefirst.js',
 
               // Backpressure operators
               'src/core/backpressure/pausable.js',
@@ -1124,6 +1127,7 @@ var browsers = [{
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
+              'src/core/linq/observable/throttlefirst.js',
 
               // Backpressure operators
               'src/core/backpressure/pausable.js',
@@ -1418,6 +1422,7 @@ var browsers = [{
               'src/core/linq/observable/skipwithtime.js',
               'src/core/linq/observable/skipuntilwithtime.js',
               'src/core/linq/observable/takeuntilwithtime.js',
+              'src/core/linq/observable/throttlefirst.js',
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.time.js'

@@ -178,6 +178,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`tapOnError`](operators/doonerror.md)
 - [`tapOnCompleted`](operators/dooncompleted.md)
 - [`throttle`](operators/throttle.md)
+- [`throttleFirst`](operators/throttlefirst.md)
 - [`throttleWithSelector`](operators/throttlewithselector.md)
 - [`timeInterval`](operators/timeinterval.md)
 - [`timeout`](operators/timeout.md)
