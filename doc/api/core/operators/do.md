@@ -1,6 +1,6 @@
-### `Rx.Observable.prototype.do([observer] | [onNext], [onError], [onCompleted])`
-### `Rx.Observable.prototype.tap([observer] | [onNext], [onError], [onCompleted])`
-### `Rx.Observable.prototype.doAction([observer] | [onNext], [onError], [onCompleted])` *DEPRECATED*
+### `Rx.Observable.prototype.do([observer] | [onNext], [onError], [onCompleted])` ###
+### `Rx.Observable.prototype.tap([observer] | [onNext], [onError], [onCompleted])` ###
+### `Rx.Observable.prototype.doAction([observer] | [onNext], [onError], [onCompleted])` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js "View in source")
 
 Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
@@ -22,22 +22,22 @@ There is an alias to this method `doAction` for browsers <IE9 and `tap` as well.
 ```js
 /* Using a function */
 var source = Rx.Observable.range(0, 3)
-    .do(
-        function (x) { console.log('Do Next:', x); },
-        function (err) { console.log('Do Error:', err); },
-        function () { console.log('Do Completed'); }
-    );
+  .do(
+    function (x)   { console.log('Do Next:', x); },
+    function (err) { console.log('Do Error:', err); },
+    function ()    { console.log('Do Completed'); }
+  );
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Do Next: 0
 // => Next: 0
@@ -50,24 +50,24 @@ var subscription = source.subscribe(
 
 /* Using an observer */
 var observer = Rx.Observer.create(
-    function (x) { console.log('Do Next:', x); },
-    function (err) { console.log('Do Error:', err); },
-    function () { console.log('Do Completed'); }
+  function (x) { console.log('Do Next: %s', x); },
+  function (err) { console.log('Do Error: %s', err); },
+  function () { console.log('Do Completed'); }
 );
 
 var source = Rx.Observable.range(0, 3)
     .do(observer);
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Do Next: 0
 // => Next: 0

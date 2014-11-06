@@ -1,6 +1,6 @@
-### `Rx.Observable.prototype.concatAll()`
-### `Rx.Observable.prototype.concatObservable()` *DEPRECATED*
-[&#x24C8;](/src/core/linq/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatobservable.js "View in source")
+### `Rx.Observable.prototype.concatAll()` ###
+### `Rx.Observable.prototype.concatObservable()` **DEPRECATED** ###
+[&#x24C8;](/src/core/linq/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatall.js "View in source")
 
 Concatenates a sequence of observable sequences or promises into a single observable sequence.
 
@@ -10,19 +10,19 @@ Concatenates a sequence of observable sequences or promises into a single observ
 #### Example
 ```js
 var source = Rx.Observable.range(0, 3)
-    .map(function (x) { return Rx.Observable.range(x, 3); })
-    .concatAll();
+  .map(function (x) { return Rx.Observable.range(x, 3); })
+  .concatAll();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 0
 // => Next: 1
@@ -39,7 +39,7 @@ var subscription = source.subscribe(
 #### Location
 
 File:
-- [/src/core/linq/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatobservable.js)
+- [/src/core/linq/observable/concatall.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatall.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -58,4 +58,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatobservable.js)
+- [/tests/observable/concatall.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatall.js)

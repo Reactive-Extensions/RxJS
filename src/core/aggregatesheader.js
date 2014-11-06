@@ -12,7 +12,8 @@
     defaultSubComparer = helpers.defaultSubComparer,
     isFunction = helpers.isFunction,
     isPromise = helpers.isPromise,
-    observableFromPromise = Observable.fromPromise;
+    observableFromPromise = Observable.fromPromise,
+    deprecate = helpers.deprecate;
 
   // Defaults
   var argumentOutOfRange = 'Argument out of range',

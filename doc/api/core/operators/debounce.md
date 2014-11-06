@@ -1,4 +1,6 @@
-### `Rx.Observable.prototype.throttle(dueTime, [scheduler])`
+### `Rx.Observable.prototype.debounce(dueTime, [scheduler])` ###
+### `Rx.Observable.prototype.throttleWithTimeout(dueTime, [scheduler])` ###
+### `Rx.Observable.prototype.throttle(dueTime, [scheduler])` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js "View in source")
 
 Ignores values from an observable sequence which are followed by another value before dueTime.
@@ -21,25 +23,24 @@ var times = [
 ];
 
 // Delay each item by time and project value;
-var source = Rx.Observable.for(
-    times,
-    function (item) {
-        return Rx.Observable
-            .return(item.value)
-            .delay(item.time);
-    })
-    .throttle(500 /* ms */);
+var source = Rx.Observable.from(times)
+  .flatMap(function (item) {
+    return Rx.Observable
+      .of(item.value)
+      .delay(item.time);
+  })
+  .debounce(500 /* ms */);
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 0
 // => Next: 2
@@ -50,7 +51,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/throttle.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js)
+- [`/src/core/linq/observable/debounce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/debounce.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -72,4 +73,4 @@ NuGet Packages:
 - [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
 
 Unit Tests:
-- [`/tests/observable/throttle.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/throttle.js)
+- [`/tests/observable/debounce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/debounce.js)

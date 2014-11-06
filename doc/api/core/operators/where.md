@@ -17,20 +17,20 @@ Filters the elements of an observable sequence based on a predicate.
 #### Example
 ```js
 var source = Rx.Observable.range(0, 5)
-    .where(function (x, idx, obs) {
-        return x % 2 === 0;
-    });
+  .filter(function (x, idx, obs) {
+    return x % 2 === 0;
+  });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 0
 // => Next: 2

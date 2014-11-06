@@ -29,8 +29,16 @@
    * @param {Mixed} handlerOrSecond Exception handler function that returns an observable sequence given the error that occurred in the first sequence, or a second observable sequence used to produce results when an error occurred in the first sequence.
    * @returns {Observable} An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
    */
-  observableProto['catch'] = observableProto.catchError = observableProto.catchException = function (handlerOrSecond) {
+  observableProto['catch'] = observableProto.catchError = function (handlerOrSecond) {
     return typeof handlerOrSecond === 'function' ?
       observableCatchHandler(this, handlerOrSecond) :
       observableCatch([this, handlerOrSecond]);
+  };
+
+  /**
+   * @deprecated use #catch or #catchError instead.
+   */
+  observableProto.catchException = function (handlerOrSecond) {
+    deprecate('catchException', 'catch or catchError');
+    return this.catchError(handlerOrSecond);
   };

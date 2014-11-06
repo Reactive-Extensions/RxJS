@@ -1,8 +1,11 @@
-### `Rx.Observable.prototype.aggregate([seed], accumulator)`
+### `Rx.Observable.prototype.aggregate([seed], accumulator)` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/aggregate.js "View in source")
 
- Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
- For aggregation behavior with incremental intermediate results, see `Rx.Observable.scan`.
+Use `Rx.Observable.prototype.reduce` instead.
+
+Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
+
+ For aggregation behavior with incremental intermediate results, see `Rx.Observable.prototype.scan`.
 
 #### Arguments
 1. `[seed]` *(Mixed)*: The initial accumulator value.

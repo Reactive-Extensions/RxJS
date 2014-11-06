@@ -1,6 +1,6 @@
-### `Rx.Observable.prototype.all(predicate, [thisArg])`
-### `Rx.Observable.prototype.every(predicate, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/all.js "View in source")
+### `Rx.Observable.prototype.every(predicate, [thisArg])` ##
+### `Rx.Observable.prototype.all(predicate, [thisArg])` **DEPRECATED** ##
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/every.js "View in source")
 
 Determines whether all elements of an observable sequence satisfy a condition.
 
@@ -13,21 +13,21 @@ Determines whether all elements of an observable sequence satisfy a condition.
 
 #### Example
 ```js
-var source = Rx.Observable.fromArray([1,2,3,4,5])
-    .all(function (x) {
-        return x < 6;
-    });
+var source = Rx.Observable.of(1,2,3,4,5)
+  .every(function (x) {
+    return x < 6;
+  });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: true
 // => Completed
@@ -36,7 +36,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/all.js)
+- [`/src/core/linq/observable/every.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/every.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
@@ -54,4 +54,4 @@ NuGet Packages:
 - [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
 
 Unit Tests:
-- [`/tests/observable/all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/all.js)
+- [`/tests/observable/every.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/every.js)

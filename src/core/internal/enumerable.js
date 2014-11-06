@@ -54,7 +54,7 @@
     });
   };
 
-  Enumerable.prototype.catchException = function () {
+  Enumerable.prototype.catchError = function () {
     var sources = this;
     return new AnonymousObservable(function (observer) {
       var e;
@@ -109,7 +109,7 @@
   };
 
   var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
-    if (repeatCount == null) { repeatCount = -1; }
+    +repeatCount || (repeatCount = -1);
     return new Enumerable(function () {
       var left = repeatCount;
       return new Enumerator(function () {

@@ -1,5 +1,3 @@
-  var throttleDeprecationWarn = true;
-
   /**
    *  Ignores values from an observable sequence which are followed by another value before dueTime.
    * @param {Number} dueTime Duration of the debounce period for each value (specified as an integer denoting milliseconds).
@@ -45,10 +43,6 @@
    * @deprecated use #debounce or #throttleWithTimeout instead.
    */
   observableProto.throttle = function(dueTime, scheduler) {
-    if (throttleDeprecationWarn) {
-      console.warn('observable#throttle is deprecated; please use #debounce or #throttleWithTimeout');
-      throttleDeprecationWarn = null;
-    }
-
+    deprecate('throttle', 'debounce or throttleWithTimeout');
     return this.debounce(dueTime, scheduler);
   };

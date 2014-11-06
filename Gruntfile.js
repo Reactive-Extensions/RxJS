@@ -30,9 +30,7 @@ var browsers = [{
           banner:
             '/*'+
             'Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.\r\n' +
-            'Microsoft Open Technologies would like to thank its contributors, a list.\r\n' +
-            'of whom are at http://aspnetwebstack.codeplex.com/wikipage?title=Contributors..\r\n' +
-            'Licensed under the Apache License, Version 2.0 (the "License"); you.\r\n' +
+            'Microsoft Open Technologies. Licensed under the Apache License, Version 2.0 (the "License"); you.\r\n' +
             'may not use this file except in compliance with the License. You may.\r\n' +
             'obtain a copy of the License at.\r\n\r\n' +
             'http://www.apache.org/licenses/LICENSE-2.0.\r\n\r\n' +
@@ -51,6 +49,7 @@ var browsers = [{
               'src/core/basicheader-modern.js',
               'src/core/enumeratorheader.js',
 
+              'src/core/deprecate.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/priorityqueue.js',
@@ -113,10 +112,10 @@ var browsers = [{
               'src/core/linq/observable/combinelatest.js',
               'src/core/linq/observable/concatproto.js',
               'src/core/linq/observable/concat.js',
-              'src/core/linq/observable/concatobservable.js',
+              'src/core/linq/observable/concatall.js',
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
-              'src/core/linq/observable/mergeobservable.js',
+              'src/core/linq/observable/mergeall.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
               'src/core/linq/observable/skipuntil.js',
@@ -168,9 +167,9 @@ var browsers = [{
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
               'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
-              'src/core/linq/observable/any.js',  // where
+              'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
-              'src/core/linq/observable/all.js', // where, any
+              'src/core/linq/observable/every.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
               'src/core/linq/observable/indexof.js',
@@ -324,6 +323,7 @@ var browsers = [{
               'src/core/basicheader.js',
               'src/core/enumeratorheader.js',
 
+              'src/core/deprecate.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/polyfills.js',
@@ -386,10 +386,10 @@ var browsers = [{
               'src/core/linq/observable/combinelatest.js',
               'src/core/linq/observable/concatproto.js',
               'src/core/linq/observable/concat.js',
-              'src/core/linq/observable/concatobservable.js',
+              'src/core/linq/observable/concatall.js',
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
-              'src/core/linq/observable/mergeobservable.js',
+              'src/core/linq/observable/mergeall.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
               'src/core/linq/observable/skipuntil.js',
@@ -441,9 +441,9 @@ var browsers = [{
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
               'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
-              'src/core/linq/observable/any.js',  // where
+              'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
-              'src/core/linq/observable/all.js', // where, any
+              'src/core/linq/observable/every.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
               'src/core/linq/observable/indexof.js',
@@ -597,6 +597,7 @@ var browsers = [{
               'src/core/basicheader.js',
               'src/core/enumeratorheader.js',
 
+              'src/core/deprecate.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/polyfills.js',
@@ -659,10 +660,10 @@ var browsers = [{
               'src/core/linq/observable/combinelatest.js',
               'src/core/linq/observable/concatproto.js',
               'src/core/linq/observable/concat.js',
-              'src/core/linq/observable/concatobservable.js',
+              'src/core/linq/observable/concatall.js',
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
-              'src/core/linq/observable/mergeobservable.js',
+              'src/core/linq/observable/mergeall.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
               'src/core/linq/observable/skipuntil.js',
@@ -727,6 +728,7 @@ var browsers = [{
               'src/core/basicheader-modern.js',
               'src/core/enumeratorheader.js',
 
+              'src/core/deprecate.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/priorityqueue.js',
@@ -789,10 +791,10 @@ var browsers = [{
               'src/core/linq/observable/combinelatest.js',
               'src/core/linq/observable/concatproto.js',
               'src/core/linq/observable/concat.js',
-              'src/core/linq/observable/concatobservable.js',
+              'src/core/linq/observable/concatall.js',
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
-              'src/core/linq/observable/mergeobservable.js',
+              'src/core/linq/observable/mergeall.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
               'src/core/linq/observable/skipuntil.js',
@@ -857,6 +859,7 @@ var browsers = [{
               'src/core/liteheader.js',
               'src/core/enumeratorheader.js',
 
+              'src/core/deprecate.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/priorityqueue.js',
@@ -904,10 +907,10 @@ var browsers = [{
               'src/core/linq/observable/combinelatest.js',
               'src/core/linq/observable/concatproto.js',
               'src/core/linq/observable/concat.js',
-              'src/core/linq/observable/concatobservable.js',
+              'src/core/linq/observable/concatall.js',
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
-              'src/core/linq/observable/mergeobservable.js',
+              'src/core/linq/observable/mergeall.js',
               'src/core/linq/observable/skipuntil.js',
               'src/core/linq/observable/switch.js',
               'src/core/linq/observable/takeuntil.js',
@@ -1009,6 +1012,7 @@ var browsers = [{
               'src/core/liteheader-compat.js',
               'src/core/enumeratorheader.js',
 
+              'src/core/deprecate.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/polyfills.js',
@@ -1057,10 +1061,10 @@ var browsers = [{
               'src/core/linq/observable/combinelatest.js',
               'src/core/linq/observable/concatproto.js',
               'src/core/linq/observable/concat.js',
-              'src/core/linq/observable/concatobservable.js',
+              'src/core/linq/observable/concatall.js',
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
-              'src/core/linq/observable/mergeobservable.js',
+              'src/core/linq/observable/mergeall.js',
               'src/core/linq/observable/skipuntil.js',
               'src/core/linq/observable/switch.js',
               'src/core/linq/observable/takeuntil.js',
@@ -1192,23 +1196,23 @@ var browsers = [{
             dest: 'dist/rx.lite.extras.js'
           },
           backpressure: {
-              src: [
-                  'src/core/license.js',
-                  'src/core/subintro.js',
-                  'src/core/backpressureheader.js',
+            src: [
+              'src/core/license.js',
+              'src/core/subintro.js',
+              'src/core/backpressureheader.js',
 
-                  // Backpressure operators
-                  'src/core/backpressure/pausable.js',
-                  'src/core/backpressure/pausablebuffered.js',
-                  'src/core/backpressure/controlled.js',
-                  'src/core/backpressure/controlledobservable.js',
-                  'src/core/backpressure/controlledsubject.js',
-                  //'src/core/backpressure/windowed.js',
-                  //'src/core/backpressure/windowedobservable.js',
+              // Backpressure operators
+              'src/core/backpressure/pausable.js',
+              'src/core/backpressure/pausablebuffered.js',
+              'src/core/backpressure/controlled.js',
+              'src/core/backpressure/controlledobservable.js',
+              'src/core/backpressure/controlledsubject.js',
+              //'src/core/backpressure/windowed.js',
+              //'src/core/backpressure/windowedobservable.js',
 
-                  'src/core/suboutro.js'
-              ],
-              dest: 'dist/rx.backpressure.js'
+              'src/core/suboutro.js'
+            ],
+            dest: 'dist/rx.backpressure.js'
           },
           aggregates: {
             src: [
@@ -1220,9 +1224,9 @@ var browsers = [{
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
               'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
-              'src/core/linq/observable/any.js',  // where
+              'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
-              'src/core/linq/observable/all.js', // where, any
+              'src/core/linq/observable/every.js', // where, any
               'src/core/linq/observable/contains.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
               'src/core/linq/observable/indexof.js',

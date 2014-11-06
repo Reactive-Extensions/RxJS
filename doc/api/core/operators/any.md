@@ -1,6 +1,6 @@
-### `Rx.Observable.prototype.any([predicate], [thisArg])`
-### `Rx.Observable.prototype.some([predicate], [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/any.js "View in source")
+### `Rx.Observable.prototype.some([predicate], [thisArg])` ###
+### `Rx.Observable.prototype.any([predicate], [thisArg])` **DEPRECATED** ###
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/some.js "View in source")
 
 Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence. There is an alias to this function called `some`.
 
@@ -14,36 +14,36 @@ Determines whether any element of an observable sequence satisfies a condition i
 #### Example
 ```js
 // Without a predicate
-var source = Rx.Observable.empty().any();
+var source = Rx.Observable.empty().some();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: false
 // => Completed
 
 // With a predicate
-var source = Rx.Observable.fromArray([1,2,3,4,5])
-    .any(function (x) { return x % 2 === 0; });
+var source = Rx.Observable.of(1,2,3,4,5)
+  .some(function (x) { return x % 2 === 0; });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: true
 // => Completed
@@ -52,7 +52,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/any.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/any.js)
+- [`/src/core/linq/observable/some.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/some.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.all.js)
@@ -70,4 +70,4 @@ NuGet Packages:
 - [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
 
 Unit Tests:
-- [`/tests/observable/any.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/any.js)
+- [`/tests/observable/some.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/some.js)

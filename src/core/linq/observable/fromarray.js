@@ -1,4 +1,3 @@
-  var warnFromArray = true;
   /**
    *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
    * @deprecated use Observable.from or Observable.of
@@ -6,10 +5,7 @@
    * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
    */
   var observableFromArray = Observable.fromArray = function (array, scheduler) {
-    if (warnFromArray) {
-      console.warn('fromArray is deprecated. Use Observable.from instead.');
-      warnFromArray = null;
-    }
+    deprecate('fromArray', 'from');
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
       var count = 0, len = array.length;
