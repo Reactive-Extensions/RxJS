@@ -37,7 +37,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`onErrorResumeNext`](operators/onerrorresumenext.md)
 - [`range`](operators/range.md)
 - [`repeat`](operators/repeat.md)
-- [`return | returnValue`](operators/return.md)
+- [`return`](operators/return.md)
 - [`start`](operators/start.md)
 - [`startAsync`](operators/startasync.md)
 - [`throw | throwError`](operators/throw.md)
@@ -195,6 +195,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 
 ## `Deprecated Observable Methods` ##
 - [`catchException`](operators/catch.md)
+- [`returnValue`](operators/return.md)
 - [`throwException`](operators/throw.md)
 
 ## `Deprecated Observable Instance Methods` ##

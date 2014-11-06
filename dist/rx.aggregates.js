@@ -46,7 +46,10 @@
     defaultSubComparer = helpers.defaultSubComparer,
     isFunction = helpers.isFunction,
     isPromise = helpers.isPromise,
+    isArrayLike = helpers.isArrayLike,
+    isIterable = helpers.isIterable,
     observableFromPromise = Observable.fromPromise,
+    observableFrom = Observable.from,
     deprecate = helpers.deprecate;
 
   // Defaults
@@ -374,28 +377,6 @@
       });
   };
 
-  function sequenceEqualArray(first, second, comparer) {
-    return new AnonymousObservable(function (observer) {
-      var count = 0, len = second.length;
-      return first.subscribe(function (value) {
-        var equal = false;
-        try {
-          count < len && (equal = comparer(value, second[count++]));
-        } catch (e) {
-          observer.onError(e);
-          return;
-        }
-        if (!equal) {
-          observer.onNext(false);
-          observer.onCompleted();
-        }
-      }, observer.onError.bind(observer), function () {
-        observer.onNext(count === len);
-        observer.onCompleted();
-      });
-    });
-  }
-
   /**
    *  Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
    *
@@ -411,9 +392,6 @@
   observableProto.sequenceEqual = function (second, comparer) {
     var first = this;
     comparer || (comparer = defaultComparer);
-    if (Array.isArray(second)) {
-      return sequenceEqualArray(first, second, comparer);
-    }
     return new AnonymousObservable(function (observer) {
       var donel = false, doner = false, ql = [], qr = [];
       var subscription1 = first.subscribe(function (x) {
@@ -449,6 +427,7 @@
         }
       });
 
+      (isArrayLike(second) || isIterable(second)) && (second = observableFrom(second));
       isPromise(second) && (second = observableFromPromise(second));
       var subscription2 = second.subscribe(function (x) {
         var equal;

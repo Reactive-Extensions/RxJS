@@ -1,6 +1,6 @@
-### `Rx.Observable.return(value, [scheduler])`
-### `Rx.Observable.just(value, [scheduler])`
-### `Rx.Observable.returnValue(value, [scheduler])` _DEPRECATED_
+### `Rx.Observable.return(value, [scheduler])` ###
+### `Rx.Observable.just(value, [scheduler])` ###
+### `Rx.Observable.returnValue(value, [scheduler])` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js "View in source")
 
 Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
@@ -12,22 +12,22 @@ There is an alias called `returnValue` for browsers <IE9 and a regular alias cal
 2. `[scheduler=Rx.Scheduler.immediate]` *(`Scheduler`)*: Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
 
 #### Returns
-*(`Observable`)*: An observable sequence that repeats the given element the specified number of times.
+*(`Observable`)*: An observable sequence with the single element.
 
 #### Example
 ```js
-var source = Rx.Observable.return(42);
+var source = Rx.Observable.just(42);
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 42
 // => Completed

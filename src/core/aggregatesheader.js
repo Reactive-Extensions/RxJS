@@ -12,7 +12,10 @@
     defaultSubComparer = helpers.defaultSubComparer,
     isFunction = helpers.isFunction,
     isPromise = helpers.isPromise,
+    isArrayLike = helpers.isArrayLike,
+    isIterable = helpers.isIterable,
     observableFromPromise = Observable.fromPromise,
+    observableFrom = Observable.from,
     deprecate = helpers.deprecate;
 
   // Defaults

@@ -2599,7 +2599,7 @@ if (!Array.prototype.forEach) {
    * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} An observable sequence containing the single specified element.
    */
-  var observableReturn = Observable['return'] = Observable.returnValue = Observable.just = function (value, scheduler) {
+  var observableReturn = Observable['return'] = Observable.just = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
       return scheduler.schedule(function () {
@@ -2607,6 +2607,12 @@ if (!Array.prototype.forEach) {
         observer.onCompleted();
       });
     });
+  };
+
+  /** @deprecated use return or just */
+  Observable.returnValue = function () {
+    deprecate('returnValue', 'return or just');
+    return observableReturn.apply(null, arguments);
   };
 
   /**
@@ -4624,28 +4630,6 @@ if (!Array.prototype.forEach) {
       });
   };
 
-  function sequenceEqualArray(first, second, comparer) {
-    return new AnonymousObservable(function (observer) {
-      var count = 0, len = second.length;
-      return first.subscribe(function (value) {
-        var equal = false;
-        try {
-          count < len && (equal = comparer(value, second[count++]));
-        } catch (e) {
-          observer.onError(e);
-          return;
-        }
-        if (!equal) {
-          observer.onNext(false);
-          observer.onCompleted();
-        }
-      }, observer.onError.bind(observer), function () {
-        observer.onNext(count === len);
-        observer.onCompleted();
-      });
-    });
-  }
-
   /**
    *  Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
    *
@@ -4661,9 +4645,6 @@ if (!Array.prototype.forEach) {
   observableProto.sequenceEqual = function (second, comparer) {
     var first = this;
     comparer || (comparer = defaultComparer);
-    if (Array.isArray(second)) {
-      return sequenceEqualArray(first, second, comparer);
-    }
     return new AnonymousObservable(function (observer) {
       var donel = false, doner = false, ql = [], qr = [];
       var subscription1 = first.subscribe(function (x) {
@@ -4699,6 +4680,7 @@ if (!Array.prototype.forEach) {
         }
       });
 
+      (isArrayLike(second) || isIterable(second)) && (second = observableFrom(second));
       isPromise(second) && (second = observableFromPromise(second));
       var subscription2 = second.subscribe(function (x) {
         var equal;

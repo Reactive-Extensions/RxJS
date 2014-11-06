@@ -2122,7 +2122,7 @@
    * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} An observable sequence containing the single specified element.
    */
-  var observableReturn = Observable['return'] = Observable.returnValue = Observable.just = function (value, scheduler) {
+  var observableReturn = Observable['return'] = Observable.just = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
       return scheduler.schedule(function () {
@@ -2130,6 +2130,12 @@
         observer.onCompleted();
       });
     });
+  };
+
+  /** @deprecated use return or just */
+  Observable.returnValue = function () {
+    deprecate('returnValue', 'return or just');
+    return observableReturn.apply(null, arguments);
   };
 
   /**
