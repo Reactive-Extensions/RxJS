@@ -6,7 +6,7 @@
    * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto['do'] = observableProto.doAction = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
+  observableProto['do'] = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
     var source = this, onNextFunc;
     if (typeof observerOrOnNext === 'function') {
       onNextFunc = observerOrOnNext;
@@ -43,6 +43,18 @@
         observer.onCompleted();
       });
     });
+  };
+
+  var warnDo = true;
+  /**
+   * @deprecated use #do or #tap instead.
+   */
+  observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
+    if(warnDo) {
+      console.warn('doAction is deprecated, use #do or #tap instead');
+      warnDo = null;
+    }
+    return this.tap(observerOrOnNext, onError, onCompleted);
   };
 
   /**

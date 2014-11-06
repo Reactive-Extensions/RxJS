@@ -76,7 +76,11 @@
 
   var doneEnumerator = Rx.doneEnumerator = { done: true, value: undefined };
 
-  Rx.iterator = $iterator$;
+  var isIterable = Rx.helpers.isIterable = function (o) {
+    return o[$iterator$] !== undefined;
+  }
+
+  Rx.helpers.iterator = $iterator$;
 
   /** `Object#toString` result shortcuts */
   var argsClass = '[object Arguments]',
@@ -1998,7 +2002,61 @@ if (!Array.prototype.forEach) {
   };
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
-  
+
+  function StringIterable(str) {
+    this._s = s;
+  }
+
+  StringIterable.prototype[$iterator$] = function () {
+    return new StringIterator(this._s);
+  };
+
+  function StringIterator(str) {
+    this._s = s;
+    this._l = s.length;
+    this._i = 0;
+  }
+
+  StringIterator.prototype[$iterator$] = function () {
+    return this;
+  };
+
+  StringIterator.prototype.next = function () {
+    if (this._i < this._l) {
+      var val = this._s.charAt(this._i++);
+      return { done: false, value: val };
+    } else {
+      return doneEnumerator;
+    }
+  };
+
+  function ArrayIterable(a) {
+    this._a = a;
+  }
+
+  ArrayIterable.prototype[$iterator$] = function () {
+    return new ArrayIterator(this._a);
+  };
+
+  function ArrayIterator(a) {
+    this._a = a;
+    this._l = toLength(a);
+    this._i = 0;
+  }
+
+  ArrayIterator.prototype[$iterator$] = function () {
+    return this;
+  };
+
+  ArrayIterator.prototype.next = function () {
+    if (this._i < this._l) {
+      var val = this._a[this._i++];
+      return { done: false, value: val };
+    } else {
+      return doneEnumerator;
+    }
+  };
+
   function numberIsFinite(value) {
     return typeof value === 'number' && root.isFinite(value);
   }
@@ -2007,8 +2065,18 @@ if (!Array.prototype.forEach) {
     return n !== n;
   }
 
-  function isIterable(o) {
-    return o[$iterator$] !== undefined;
+  function getIterable(o) {
+    var i = o[$iterator$], it;
+    if (!i && typeof o === 'string') {
+      it = new StringIterable(o);
+      return it[$iterator$]();
+    }
+    if (!i && o.length !== undefined) {
+      it = new ArrayIterable(o);
+      return it[$iterator$]();
+    }
+    if (!i) { throw new TypeError('Object is not iterable'); }
+    return o[$iterator$]();
   }
 
   function sign(value) {
@@ -2028,10 +2096,6 @@ if (!Array.prototype.forEach) {
     return len;
   }
 
-  function isCallable(f) {
-    return Object.prototype.toString.call(f) === '[object Function]' && typeof f === 'function';
-  }
-
   /**
    * This method creates a new Observable sequence from an array-like or iterable object.
    * @param {Any} arrayLike An array-like or iterable object to convert to an Observable sequence.
@@ -2043,66 +2107,56 @@ if (!Array.prototype.forEach) {
     if (iterable == null) {
       throw new Error('iterable cannot be null.')
     }
-    if (mapFn && !isCallable(mapFn)) {
+    if (mapFn && !isFunction(mapFn)) {
       throw new Error('mapFn when provided must be a function');
     }
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
+    var list = Object(iterable), it = getIterable(list);
     return new AnonymousObservable(function (observer) {
-      var list = Object(iterable),
-        objIsIterable = isIterable(list),
-        len = objIsIterable ? 0 : toLength(list),
-        it = objIsIterable ? list[$iterator$]() : null,
-        i = 0;
+      var i = 0;
       return scheduler.scheduleRecursive(function (self) {
-        if (i < len || objIsIterable) {
-          var result;
-          if (objIsIterable) {
-            var next;
-            try {
-              next = it.next();
-            } catch (e) {
-              observer.onError(e);
-              return;
-            }
-            if (next.done) {
-              observer.onCompleted();
-              return;
-            }
-
-            result = next.value;
-          } else {
-            result = !!list.charAt ? list.charAt(i) : list[i];
-          }
-
-          if (mapFn && isCallable(mapFn)) {
-            try {
-              result = thisArg ? mapFn.call(thisArg, result, i) : mapFn(result, i);
-            } catch (e) {
-              observer.onError(e);
-              return;
-            }
-          }
-
-          observer.onNext(result);
-          i++;
-          self();
-        } else {
-          observer.onCompleted();
+        var next;
+        try {
+          next = it.next();
+        } catch (e) {
+          observer.onError(e);
+          return;
         }
+        if (next.done) {
+          observer.onCompleted();
+          return;
+        }
+
+        var result = next.value;
+
+        if (mapFn && isFunction(mapFn)) {
+          try {
+            result = mapFn.call(thisArg, result, i);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+        }
+
+        observer.onNext(result);
+        i++;
+        self();
       });
     });
   };
 
+  var warnFromArray = true;
   /**
    *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
-   *
-   * @example
-   *  var res = Rx.Observable.fromArray([1,2,3]);
-   *  var res = Rx.Observable.fromArray([1,2,3], Rx.Scheduler.timeout);
+   * @deprecated use Observable.from or Observable.of
    * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
    * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
    */
   var observableFromArray = Observable.fromArray = function (array, scheduler) {
+    if (warnFromArray) {
+      console.warn('fromArray is deprecated. Use Observable.from instead.');
+      warnFromArray = null;
+    }
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
       var count = 0, len = array.length;
@@ -2127,29 +2181,36 @@ if (!Array.prototype.forEach) {
     });
   };
 
+  function observableOf (scheduler, array) {
+    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
+    return new AnonymousObservable(function (observer) {
+      var count = 0, len = array.length;
+      return scheduler.scheduleRecursive(function (self) {
+        if (count < len) {
+          observer.onNext(array[count++]);
+          self();
+        } else {
+          observer.onCompleted();
+        }
+      });
+    });
+  }
+
   /**
    *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
-   * @example
-   *  var res = Rx.Observable.of(1,2,3);
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
   Observable.of = function () {
-    var len = arguments.length, args = new Array(len);
-    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-    return observableFromArray(args);
+    return observableOf(null, arguments);
   };
 
   /**
    *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
-   * @example
-   *  var res = Rx.Observable.of(1,2,3);
    * @param {Scheduler} scheduler A scheduler to use for scheduling the arguments.
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
-  var observableOf = Observable.ofWithScheduler = function (scheduler) {
-    var len = arguments.length - 1, args = new Array(len);
-    for(var i = 0; i < len; i++) { args[i] = arguments[i + 1]; }
-    return observableFromArray(args, scheduler);
+  Observable.ofWithScheduler = function (scheduler) {
+    return observableOf(scheduler, slice.call(arguments, 1));
   };
 
   /**
@@ -2802,7 +2863,7 @@ if (!Array.prototype.forEach) {
    * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto['do'] = observableProto.doAction = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
+  observableProto['do'] = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
     var source = this, onNextFunc;
     if (typeof observerOrOnNext === 'function') {
       onNextFunc = observerOrOnNext;
@@ -2839,6 +2900,18 @@ if (!Array.prototype.forEach) {
         observer.onCompleted();
       });
     });
+  };
+
+  var warnDo = true;
+  /**
+   * @deprecated use #do or #tap instead.
+   */
+  observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
+    if(warnDo) {
+      console.warn('doAction is deprecated, use #do or #tap instead');
+      warnDo = null;
+    }
+    return this.tap(observerOrOnNext, onError, onCompleted);
   };
 
   /**
@@ -2882,7 +2955,7 @@ if (!Array.prototype.forEach) {
    * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
    * @returns {Observable} Source sequence with the action-invoking termination behavior applied.
    */
-  observableProto['finally'] = observableProto.finallyAction = function (action) {
+  observableProto['finally'] = observableProto.ensure = function (action) {
     var source = this;
     return new AnonymousObservable(function (observer) {
       var subscription;
@@ -2902,6 +2975,18 @@ if (!Array.prototype.forEach) {
         }
       });
     });
+  };
+
+  var warnFinally = true;
+  /**
+   * @deprecated use #finally or #ensure instead.
+   */
+  observableProto.finallyAction = function (action) {
+    if(warnFinally) {
+      console.warn('#finallyAction deprecated, use #finally or #ensure instead');
+      warnFinally = null;
+    }
+    return this.ensure(action);
   };
 
   /**
@@ -4053,18 +4138,15 @@ if (!Array.prototype.forEach) {
       observableDelayTimeSpan(this, dueTime, scheduler);
   };
 
+  var throttleDeprecationWarn = true;
+
   /**
    *  Ignores values from an observable sequence which are followed by another value before dueTime.
-   *
-   * @example
-   *  1 - res = source.throttle(5000); // 5 seconds
-   *  2 - res = source.throttle(5000, scheduler);
-   *
-   * @param {Number} dueTime Duration of the throttle period for each value (specified as an integer denoting milliseconds).
-   * @param {Scheduler} [scheduler]  Scheduler to run the throttle timers on. If not specified, the timeout scheduler is used.
-   * @returns {Observable} The throttled sequence.
+   * @param {Number} dueTime Duration of the debounce period for each value (specified as an integer denoting milliseconds).
+   * @param {Scheduler} [scheduler]  Scheduler to run the debounce timers on. If not specified, the timeout scheduler is used.
+   * @returns {Observable} The debounced sequence.
    */
-  observableProto.throttle = function (dueTime, scheduler) {
+  observableProto.debounce = observableProto.throttleWithTimeout = function (dueTime, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this;
     return new AnonymousObservable(function (observer) {
@@ -4097,6 +4179,18 @@ if (!Array.prototype.forEach) {
         });
       return new CompositeDisposable(subscription, cancelable);
     });
+  };
+
+  /**
+   * @deprecated use #debounce or #throttleWithTimeout instead.
+   */
+  observableProto.throttle = function(dueTime, scheduler) {
+    if (throttleDeprecationWarn) {
+      console.warn('observable#throttle is deprecated; please use #debounce or #throttleWithTimeout');
+      throttleDeprecationWarn = null;
+    }
+
+    return this.debounce(dueTime, scheduler);
   };
 
   /**
@@ -4153,7 +4247,7 @@ if (!Array.prototype.forEach) {
    * @param {Scheduler} [scheduler]  Scheduler to run the sampling timer on. If not specified, the timeout scheduler is used.
    * @returns {Observable} Sampled observable sequence.
    */
-  observableProto.sample = function (intervalOrSampler, scheduler) {
+  observableProto.sample = observableProto.throttleLatest = function (intervalOrSampler, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return typeof intervalOrSampler === 'number' ?
       sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :

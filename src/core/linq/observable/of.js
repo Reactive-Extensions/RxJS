@@ -1,24 +1,31 @@
+  function observableOf (scheduler, array) {
+    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
+    return new AnonymousObservable(function (observer) {
+      var count = 0, len = array.length;
+      return scheduler.scheduleRecursive(function (self) {
+        if (count < len) {
+          observer.onNext(array[count++]);
+          self();
+        } else {
+          observer.onCompleted();
+        }
+      });
+    });
+  }
+
   /**
    *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
-   * @example
-   *  var res = Rx.Observable.of(1,2,3);
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
   Observable.of = function () {
-    var len = arguments.length, args = new Array(len);
-    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-    return observableFromArray(args);
+    return observableOf(null, arguments);
   };
 
   /**
    *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
-   * @example
-   *  var res = Rx.Observable.of(1,2,3);
    * @param {Scheduler} scheduler A scheduler to use for scheduling the arguments.
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
-  var observableOf = Observable.ofWithScheduler = function (scheduler) {
-    var len = arguments.length - 1, args = new Array(len);
-    for(var i = 0; i < len; i++) { args[i] = arguments[i + 1]; }
-    return observableFromArray(args, scheduler);
+  Observable.ofWithScheduler = function (scheduler) {
+    return observableOf(scheduler, slice.call(arguments, 1));
   };

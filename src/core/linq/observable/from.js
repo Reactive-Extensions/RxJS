@@ -1,5 +1,59 @@
   var maxSafeInteger = Math.pow(2, 53) - 1;
-  
+
+  function StringIterable(str) {
+    this._s = s;
+  }
+
+  StringIterable.prototype[$iterator$] = function () {
+    return new StringIterator(this._s);
+  };
+
+  function StringIterator(str) {
+    this._s = s;
+    this._l = s.length;
+    this._i = 0;
+  }
+
+  StringIterator.prototype[$iterator$] = function () {
+    return this;
+  };
+
+  StringIterator.prototype.next = function () {
+    if (this._i < this._l) {
+      var val = this._s.charAt(this._i++);
+      return { done: false, value: val };
+    } else {
+      return doneEnumerator;
+    }
+  };
+
+  function ArrayIterable(a) {
+    this._a = a;
+  }
+
+  ArrayIterable.prototype[$iterator$] = function () {
+    return new ArrayIterator(this._a);
+  };
+
+  function ArrayIterator(a) {
+    this._a = a;
+    this._l = toLength(a);
+    this._i = 0;
+  }
+
+  ArrayIterator.prototype[$iterator$] = function () {
+    return this;
+  };
+
+  ArrayIterator.prototype.next = function () {
+    if (this._i < this._l) {
+      var val = this._a[this._i++];
+      return { done: false, value: val };
+    } else {
+      return doneEnumerator;
+    }
+  };
+
   function numberIsFinite(value) {
     return typeof value === 'number' && root.isFinite(value);
   }
@@ -8,8 +62,18 @@
     return n !== n;
   }
 
-  function isIterable(o) {
-    return o[$iterator$] !== undefined;
+  function getIterable(o) {
+    var i = o[$iterator$], it;
+    if (!i && typeof o === 'string') {
+      it = new StringIterable(o);
+      return it[$iterator$]();
+    }
+    if (!i && o.length !== undefined) {
+      it = new ArrayIterable(o);
+      return it[$iterator$]();
+    }
+    if (!i) { throw new TypeError('Object is not iterable'); }
+    return o[$iterator$]();
   }
 
   function sign(value) {
@@ -29,10 +93,6 @@
     return len;
   }
 
-  function isCallable(f) {
-    return Object.prototype.toString.call(f) === '[object Function]' && typeof f === 'function';
-  }
-
   /**
    * This method creates a new Observable sequence from an array-like or iterable object.
    * @param {Any} arrayLike An array-like or iterable object to convert to an Observable sequence.
@@ -44,52 +104,40 @@
     if (iterable == null) {
       throw new Error('iterable cannot be null.')
     }
-    if (mapFn && !isCallable(mapFn)) {
+    if (mapFn && !isFunction(mapFn)) {
       throw new Error('mapFn when provided must be a function');
     }
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
+    var list = Object(iterable), it = getIterable(list);
     return new AnonymousObservable(function (observer) {
-      var list = Object(iterable),
-        objIsIterable = isIterable(list),
-        len = objIsIterable ? 0 : toLength(list),
-        it = objIsIterable ? list[$iterator$]() : null,
-        i = 0;
+      var i = 0;
       return scheduler.scheduleRecursive(function (self) {
-        if (i < len || objIsIterable) {
-          var result;
-          if (objIsIterable) {
-            var next;
-            try {
-              next = it.next();
-            } catch (e) {
-              observer.onError(e);
-              return;
-            }
-            if (next.done) {
-              observer.onCompleted();
-              return;
-            }
-
-            result = next.value;
-          } else {
-            result = !!list.charAt ? list.charAt(i) : list[i];
-          }
-
-          if (mapFn && isCallable(mapFn)) {
-            try {
-              result = thisArg ? mapFn.call(thisArg, result, i) : mapFn(result, i);
-            } catch (e) {
-              observer.onError(e);
-              return;
-            }
-          }
-
-          observer.onNext(result);
-          i++;
-          self();
-        } else {
-          observer.onCompleted();
+        var next;
+        try {
+          next = it.next();
+        } catch (e) {
+          observer.onError(e);
+          return;
         }
+        if (next.done) {
+          observer.onCompleted();
+          return;
+        }
+
+        var result = next.value;
+
+        if (mapFn && isFunction(mapFn)) {
+          try {
+            result = mapFn.call(thisArg, result, i);
+          } catch (e) {
+            observer.onError(e);
+            return;
+          }
+        }
+
+        observer.onNext(result);
+        i++;
+        self();
       });
     });
   };

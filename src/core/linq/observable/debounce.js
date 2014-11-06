@@ -2,11 +2,6 @@
 
   /**
    *  Ignores values from an observable sequence which are followed by another value before dueTime.
-   *
-   * @example
-   *  1 - res = source.debounce(5000); // 5 seconds
-   *  2 - res = source.debounce(5000, scheduler);
-   *
    * @param {Number} dueTime Duration of the debounce period for each value (specified as an integer denoting milliseconds).
    * @param {Scheduler} [scheduler]  Scheduler to run the debounce timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} The debounced sequence.
@@ -46,9 +41,12 @@
     });
   };
 
+  /**
+   * @deprecated use #debounce or #throttleWithTimeout instead.
+   */
   observableProto.throttle = function(dueTime, scheduler) {
     if (throttleDeprecationWarn) {
-      console.warn('observable#throttle is deprecated; please use #debounce');
+      console.warn('observable#throttle is deprecated; please use #debounce or #throttleWithTimeout');
       throttleDeprecationWarn = null;
     }
 
