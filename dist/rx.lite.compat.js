@@ -80,6 +80,10 @@
     return o[$iterator$] !== undefined;
   }
 
+  var isArrayLike = Rx.helpers.isArrayLike = function (o) {
+    return o && o.length !== undefined;
+  }
+
   Rx.helpers.iterator = $iterator$;
 
   var deprecate = Rx.helpers.deprecate = function (name, alternative) {
@@ -3173,7 +3177,7 @@ if (!Array.prototype.forEach) {
     return source.map(function (x, i) {
       var result = selector.call(thisArg, x, i, source);
       isPromise(result) && (result = observableFromPromise(result));
-      (Array.isArray(result) || isIterable(result)) && (result = observableFrom(result));
+      (isArrayLike(result) || isIterable(result)) && (result = observableFrom(result));
       return result;
     }).concatAll();
   }
@@ -3198,18 +3202,18 @@ if (!Array.prototype.forEach) {
    * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
    */
   observableProto.selectConcat = observableProto.concatMap = function (selector, resultSelector, thisArg) {
-    if (typeof selector === 'function' && typeof resultSelector === 'function') {
+    if (isFunction(selector) && isFunction(resultSelector)) {
       return this.concatMap(function (x, i) {
         var selectorResult = selector(x, i);
         isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
-        (Array.isArray(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
+        (isArrayLike(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
 
         return selectorResult.map(function (y, i2) {
           return resultSelector(x, y, i, i2);
         });
       });
     }
-    return typeof selector === 'function' ?
+    return isFunction(selector) ?
       concatMap(this, selector, thisArg) :
       concatMap(this, function () { return selector; });
   };
@@ -3251,7 +3255,7 @@ if (!Array.prototype.forEach) {
     return source.map(function (x, i) {
       var result = selector.call(thisArg, x, i, source);
       isPromise(result) && (result = observableFromPromise(result));
-      (Array.isArray(result) || isIterable(result)) && (result = observableFrom(result));
+      (isArrayLike(result) || isIterable(result)) && (result = observableFrom(result));
       return result;
     }).mergeAll();
   }
@@ -3276,11 +3280,11 @@ if (!Array.prototype.forEach) {
    * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
    */
   observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector, thisArg) {
-    if (typeof selector === 'function' && typeof resultSelector === 'function') {
+    if (isFunction(selector) && isFunction(resultSelector)) {
       return this.flatMap(function (x, i) {
         var selectorResult = selector(x, i);
         isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
-        (Array.isArray(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
+        (isArrayLike(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
 
         return selectorResult.map(function (y, i2) {
           return resultSelector(x, y, i, i2);

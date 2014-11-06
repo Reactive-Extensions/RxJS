@@ -12,4 +12,8 @@
     return o[$iterator$] !== undefined;
   }
 
+  var isArrayLike = Rx.helpers.isArrayLike = function (o) {
+    return o && o.length !== undefined;
+  }
+
   Rx.helpers.iterator = $iterator$;
