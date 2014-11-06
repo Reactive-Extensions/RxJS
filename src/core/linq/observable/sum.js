@@ -10,7 +10,7 @@
   observableProto.sum = function (keySelector, thisArg) {
     return keySelector && isFunction(keySelector) ?
       this.map(keySelector, thisArg).sum() :
-      this.aggregate(0, function (prev, curr) {
+      this.reduce(function (prev, curr) {
         return prev + curr;
-      });
+      }, 0);
   };

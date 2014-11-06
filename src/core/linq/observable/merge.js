@@ -24,5 +24,5 @@
         if (Array.isArray(sources[0])) {
             sources = sources[0];
         }
-        return observableFromArray(sources, scheduler).mergeObservable();
+        return observableOf(scheduler, sources).mergeAll();
     };

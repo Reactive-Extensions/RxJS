@@ -19,4 +19,4 @@
     isPromise = helpers.isPromise,
     isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise,
-    notDefined = helpers.notDefined;
+    deprecate = helpers.deprecate;

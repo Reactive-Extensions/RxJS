@@ -4,7 +4,7 @@
       isPromise(result) && (result = observableFromPromise(result));
       (Array.isArray(result) || isIterable(result)) && (result = observableFrom(result));
       return result;
-    }).mergeObservable();
+    }).mergeAll();
   }
 
   /**

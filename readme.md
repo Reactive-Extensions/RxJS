@@ -122,35 +122,35 @@ var $input = $('#input'),
 
 /* Only get the value from each key up */
 var keyups = Rx.Observable.fromEvent($input, 'keyup')
-    .map(function (e) {
-        return e.target.value;
-    })
-    .filter(function (text) {
-        return text.length > 2;
-    });
+  .map(function (e) {
+    return e.target.value;
+  })
+  .filter(function (text) {
+    return text.length > 2;
+  });
 
-/* Now throttle/debounce the input for 500ms */
-var throttled = keyups
-    .throttle(500 /* ms */);
+/* Now debounce the input for 500ms */
+var debounced = keyups
+  .debounce(500 /* ms */);
 
 /* Now get only distinct values, so we eliminate the arrows and other control characters */
-var distinct = throttled
-    .distinctUntilChanged();
+var distinct = debounced
+  .distinctUntilChanged();
 ```
 
 Now, let's query Wikipedia!  In RxJS, we can instantly bind to any [Promises A+](https://github.com/promises-aplus/promises-spec) implementation through the `Rx.Observable.fromPromise` method or by just directly returning it, and we wrap it for you.
 
 ```js
 function searchWikipedia (term) {
-    return $.ajax({
-        url: 'http://en.wikipedia.org/w/api.php',
-        dataType: 'jsonp',
-        data: {
-            action: 'opensearch',
-            format: 'json',
-            search: term
-        }
-    }).promise();
+  return $.ajax({
+    url: 'http://en.wikipedia.org/w/api.php',
+    dataType: 'jsonp',
+    data: {
+      action: 'opensearch',
+      format: 'json',
+      search: term
+    }
+  }).promise();
 }
 ```
 
@@ -158,21 +158,23 @@ Once that is created, now we can tie together the distinct throttled input and t
 
 ```js
 var suggestions = distinct
-    .flatMapLatest(searchWikipedia);
+  .flatMapLatest(searchWikipedia);
 ```
 
 Finally, we call the subscribe method on our observable sequence to start pulling data.
 
 ```js
-suggestions.subscribe( function (data) {
+suggestions.subscribe(
+  function (data) {
     $('#results')
-        .empty ()
-        .append ($.map function(data[1], (value) {
-            return $('<li>').text (value));
-        });
-}, function (error) {
+      .empty ()
+      .append ($.map function(data[1], (value) {
+        return $('<li>').text (value));
+      });
+  },
+  function (error) {
     $results.empty().append($'<li>').text('Error:' + error);
-});
+  });
 ```
 
 And there you have it!

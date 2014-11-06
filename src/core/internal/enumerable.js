@@ -109,7 +109,7 @@
   };
 
   var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
-    +repeatCount || (repeatCount = -1);
+    if (repeatCount == null) { repeatCount = -1; }
     return new Enumerable(function () {
       var left = repeatCount;
       return new Enumerator(function () {

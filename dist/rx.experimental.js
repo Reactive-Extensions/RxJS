@@ -434,7 +434,7 @@
       var self = this, g = new CompositeDisposable();
       g.add(currentThreadScheduler.schedule(function () {
         observer.onNext(self.head);
-        g.add(self.tail.mergeObservable().subscribe(observer));
+        g.add(self.tail.mergeAll().subscribe(observer));
       }));
 
       return g;

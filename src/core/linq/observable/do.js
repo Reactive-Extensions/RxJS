@@ -45,16 +45,10 @@
     });
   };
 
-  var warnDo = true;
-  /**
-   * @deprecated use #do or #tap instead.
-   */
-  observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
-    if(warnDo) {
-      console.warn('doAction is deprecated, use #do or #tap instead');
-      warnDo = null;
-    }
-    return this.tap(observerOrOnNext, onError, onCompleted);
+  /** @deprecated use #do or #tap instead. */
+  observableProto.doAction = function () {
+    deprecate('doAction', 'do or tap');
+    return this.tap.apply(this, arguments);
   };
 
   /**
