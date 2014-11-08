@@ -1,145 +1,58 @@
 # RxJS for Bacon.js Users #
 
-[Bacon.js](https://github.com/baconjs/bacon.js) is a popular Functional Reactive Programming (FRP) library which was inspired by RxJS, ReactiveBanana among other libraries.  If you're not familiar with FRP, Conal Elliott summed it up nicely on [StackOverflow](http://stackoverflow.com/questions/1028250/what-is-functional-reactive-programming/1030631#1030631) so no need to repeat that here.
+[Bacon.js](https://github.com/baconjs/bacon.js) is a popular Reactive Programming (FRP) library which was inspired by RxJS, ReactiveBanana among other libraries.  Bacon.js has two main concepts, Event Streams and Properties, which we will map to RxJS concepts in this document.
 
-Bacon.js has two main concepts, Event Streams and Properties, which we will map to RxJS concepts.
+But, before we get started, why use RxJS over Bacon.js?
 
-### Contents ###
-- [Event Streams](#eventstreams)
+## Why RxJS versus Bacon.js ##
 
-### Common API Methods ###
+There are a number of reasons why RxJS makes sense to use versus Bacon.js.  Some of these include:
+- Performance
+- Interoperability With The Libraries You Use
+- Swappable Concurrency Layer
+- Build What You Want
+- Many Examples and Tutorials
+- Extensive Documentation
+- A Commitment to Standards
 
-## Event Streams ##
+### Performance ###
 
-In Bacon.js (and RxJS for that matter), an EventStream represents a stream of events. It is an Observable object, meaning that you can listen to events in the stream using, for instance, the onValue method with a callback.
+RxJS has always been committed to providing the best performance available on any given JavaScript platform.  Whether it is providing a small footprint for an `Observable` instance, to providing the capability of using `setImmediate` versus `setTimeout` versus `requestAnimationFrame`, all by choosing a different scheduler.  In addition, since RxJS is written in regular JavaScript versus CoffeeScript, there are a lot more optimizations that can be made by hand to ensure performance.
 
-### Creating Event Streams ###
+To make this more concrete, there is a project called [Kefir](https://github.com/pozadi/kefir) which is trying to make a more performance oriented version of Bacon.js.  Here are some current numbers based upon the memory tests provided by Kefir.  Note that these may change over time, but gives you a good indication of memory consumtpion.  Below will be comparison of `combineLatest`, `filter`, `map`, and `scan`.
 
-#### Bacon.js ####
+```
+stream1.combine(stream2, ->) (1000 samples)
+----------------------------------------------------------------
+Kefir   w/o subscr. 0.44 KiB   w/ subscr. +0.80 KiB   sum 1.23 KiB
+Bacon   w/o subscr. 5.42 KiB   w/ subscr. +6.15 KiB   sum 11.57 KiB
+Rx      w/o subscr. 0.43 KiB   w/ subscr. +2.84 KiB   sum 3.26 KiB
+-----------------------
+Kefir 1.00 1.00 1.00    Bacon 12.45 7.71 9.39    Rx 0.98 3.56 2.65
 
-Because Bacon.js is optimized for jQuery and Zepto, you can use the `$.fn.asEventStream` method to easily bind to create event streams.
+.filter(->) (1000 samples)
+----------------------------------------------------------------
+Kefir   w/o subscr. 0.31 KiB   w/ subscr. +0.46 KiB   sum 0.77 KiB
+Bacon   w/o subscr. 1.82 KiB   w/ subscr. +2.49 KiB   sum 4.31 KiB
+Rx      w/o subscr. 0.37 KiB   w/ subscr. +1.44 KiB   sum 1.81 KiB
+-----------------------
+Kefir 1.00 1.00 1.00    Bacon 5.91 5.39 5.60    Rx 1.21 3.11 2.35
 
-For example we can get the clickable element, listen to the `click` event, and then we can subscribe via the `onValue` method to capture the clicks.
+.map(->) (1000 samples)
+----------------------------------------------------------------
+Kefir   w/o subscr. 0.30 KiB   w/ subscr. +0.47 KiB   sum 0.77 KiB
+Bacon   w/o subscr. 1.81 KiB   w/ subscr. +2.49 KiB   sum 4.30 KiB
+Rx      w/o subscr. 0.37 KiB   w/ subscr. +1.43 KiB   sum 1.81 KiB
+-----------------------
+Kefir 1.00 1.00 1.00    Bacon 6.07 5.31 5.60    Rx 1.24 3.06 2.35
 
-```js
-var clickable = $('#clickable').asEventStream('click');
-
-clickable.onValue(function (e) {
-	console.log('clicked!');
-});
+.scan(0, ->) (1000 samples)
+----------------------------------------------------------------
+Kefir   w/o subscr. 0.30 KiB   w/ subscr. +0.47 KiB   sum 0.76 KiB
+Bacon   w/o subscr. 1.68 KiB   w/ subscr. +2.06 KiB   sum 3.75 KiB
+Rx      w/o subscr. 0.39 KiB   w/ subscr. +1.13 KiB   sum 1.52 KiB
+-----------------------
+Kefir 1.00 1.00 1.00    Bacon 5.62 4.44 4.90    Rx 1.29 2.43 1.99
 ```
 
-The support goes above just standard support, but also selectors and an optional argument selector which transforms the arguments of the event to a single object.
-
-```js
-$("#my-div").asEventStream("click", ".more-specific-selector")
-
-$("#my-div").asEventStream("click", ".more-specific-selector", function(event, args) {
-	return args[0];
-});
-
-$("#my-div").asEventStream("click", function (event, args) {
-	return args[0]
-});
-```
-
-#### RxJS ####
-
-It's very similar in RxJS core.  Until recently, this feature was reserved for external libraries such as [RxJS-jQuery](https://github.com/Reactive-Extensions/RxJS-jQuery), [RxJS-DOM](https://github.com/Reactive-Extensions/RxJS-DOM), [RxJS-Dojo](https://github.com/Reactive-Extensions/RxJS-Dojo) and [RxJS-MooTools](https://github.com/Reactive-Extensions/RxJS-MooTools).  RxJS 2.2 introduced two ways to bind to events with `fromEvent` and `fromEventPattern` so that bridge libraries are strictly not as necessary as they used to be.
-
-For example, we can recreate the binding to the clickable element for the `click` event, and then call `subscribe` with a function which listens for each time the clickable is clicked.
-
-```js
-var clickable = $('#clickable');
-
-var clickableObservable = Rx.Observable.fromEvent(clickable, 'click')
-	.subscribe(function () { console.log('clicked!'); });
-```
-
-In addition, RxJS also supports for event argument transformers for additional data.  For example, if a Node.js `EventEmitter` emits more than one piece of data at a time, you can still capture it.
-
-```js
-var Rx = require('rx'),
-	EventEmitter = require('events').EventEmitter;
-
-var e = new EventEmitter();
-
-Rx.Observable.fromEvent(e, 'data',
-	function (args) {
-		return { first: args[0], second: args[1] };
-	})
-	.subscribe(function (data) {
-		console.log(data.first + ',' + data.second);
-	});
-
-e.emit('data', 'foo', 'bar');
-// => foo,bar
-```
-
-### Querying Streams ###
-
-Querying streams is a fundamental piece of both RxJS and Bacon.js, such as `map`, `filter` and so forth.
-
-#### Bacon.js ####
-
-Event Streams support higher ordered functions much as RxJS does such as `map`, `filter` and more, although supports a more Underscore/Lo-Dash style than the callback selector style found in RxJS.
-
-```js
-var plus = $("#plus").asEventStream("click").map(1);
-var minus = $("#minus").asEventStream("click").map(-1);
-
-// Combine both into one
-var both = plus.merge(minus);
-
-both.onValue (function (x) { /* returns 1 or -1 */ });
-```
-
-#### RxJS ####
-
-Observables support basic usage of the `map` function in which we can get values.
-
-```js
-var plus = Rx.Observable.fromEvent($("#plus"), "click").map(function () { return 1; });
-var minus = Rx.Observable.fromEvent($("#minus"), "click").map(function () { return -1; });
-
-// Combine both into one
-var both = plus.merge(minus);
-
-both.subscribe (function (x) { /* returns 1 or -1 */ });
-```
-
-In addition, RxJS has helpers to extract property values through the `pluck` operator such as:
-
-```js
-var values = Rx.Observable.from(
-	{ name: 'Matt'},
-	{ name: 'Erik',
-	{ name: Bart });
-
-values.pluck('name').subscribe(function (x) { /* returns the name */ });
-```
-
-We also have helper functions in `Rx.helpers` that can help you pluck values using `pluck`, or just return values by using `just`.  Using pluck, we could still use `map` and use the `pluck` helper.
-
-```js
-var pluck = Rx.helpers.pluck;
-var values = Rx.Observable.from(
-	{ name: 'Matt'},
-	{ name: 'Erik',
-	{ name: Bart });
-
-values.map(pluck('name')).subscribe(function (x) { /* returns the name */ });
-```
-
-Knowing this, we could rewrite the top example as the following:
-
-```js
-var just = Rx.helpers.just;
-var plus = Rx.Observable.fromEvent($("#plus"), "click").map(just(1));
-var minus = Rx.Observable.fromEvent($("#minus"), "click").map(just(-1));
-
-// Combine both into one
-var both = plus.merge(minus);
-
-both.subscribe (function (x) { /* returns 1 or -1 */ });
-```
+As you'll note, while Kefir does pretty well here, Bacon.js does not.  Bacon.js has a fairly heavy Observable object to start with and then subscriptions are fairly heavy as well.  With both Kefir and RxJS, the initial size of the Observable is about the same.  We'll get to the other fine tuning such as schedulers in the later section.
