@@ -1620,9 +1620,9 @@ var browsers = [{
         ]
       },
       jscs: {
-        src: 'dist/*.js',
+        src: 'src/**/*.js',
         options: {
-          requireCurlyBraces: [ "if" ]
+          "preset": "google"
         }
       },
       watch: {
@@ -1775,10 +1775,6 @@ var browsers = [{
     'nuget-testing',
     'nuget-time',
     'nuget-virtualtime'
-  ]);
-
-  grunt.registerTask('jscs', [
-    'jscs'
   ]);
 
   var testjobs = ['connect'];
