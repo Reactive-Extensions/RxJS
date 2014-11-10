@@ -2,7 +2,7 @@
 ### `Rx.Observable.prototype.tapOnNext(onNext, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js "View in source")
 
-Invokes an action upon exceptional termination of the observable sequence.
+Invokes an action for each element of the observable sequence.
 
 This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
 
@@ -17,7 +17,7 @@ This method can be used for debugging, logging, etc. of query behavior by interc
 ```js
 /* Using a function */
 var source = Rx.Observable.range(0, 3)
-  .doOnCompleted(
+  .doOnNext(
     function () { console.log('Do Next: %s', x); }
   );
 
@@ -43,7 +43,7 @@ var subscription = source.subscribe(
 /* Using a thisArg */
 
 var source = Rx.Observable.range(0, 3)
-  .doOnCompleted(
+  .doOnNext(
     function () { this.log('Do Next: %s', x); },
     console
   );
