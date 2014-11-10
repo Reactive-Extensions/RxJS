@@ -30,7 +30,9 @@
     var hasProp = {}.hasOwnProperty;
     var inherits = root.Internals.inherits = function (child, parent) {
         for (var key in parent) {
-            if (key !== 'prototype' && hasProp.call(parent, key)) child[key] = parent[key];
+            if (key !== 'prototype' && hasProp.call(parent, key)) {
+                child[key] = parent[key];
+            }
         }
         function ctor() { this.constructor = child; }
         ctor.prototype = parent.prototype;

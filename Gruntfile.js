@@ -1622,7 +1622,7 @@ var browsers = [{
       jscs: {
         src: 'src/**/*.js',
         options: {
-          "preset": "google"
+          config: '.jscsrc'
         }
       },
       watch: {

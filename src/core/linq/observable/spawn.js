@@ -41,7 +41,7 @@
             return --pending || done(null, results);
           }
 
-          fn.call(ctx, function(err, res){
+          fn.call(ctx, function(err, res) {
             if (finished) { return; }
 
             if (err) {
@@ -76,7 +76,7 @@
   }
 
   function promiseToThunk(promise) {
-    return function(fn){
+    return function(fn) {
       promise.then(function(res) {
         fn(null, res);
       }, fn);
@@ -132,7 +132,9 @@
         var ret;
 
         // multiple args
-        if (arguments.length > 2) res = slice.call(arguments, 1);
+        if (arguments.length > 2) {
+          res = slice.call(arguments, 1);
+        }
 
         if (err) {
           try {
@@ -159,7 +161,7 @@
         if (typeof ret.value === fnString) {
           var called = false;
           try {
-            ret.value.call(ctx, function(){
+            ret.value.call(ctx, function() {
               if (called) {
                 return;
               }
@@ -192,13 +194,13 @@
    * @returns {Function} A function, when executed will continue the state machine.
    */
   Rx.denodify = function (fn) {
-    return function (){
+    return function () {
       var args = slice.call(arguments),
         results,
         called,
         callback;
 
-      args.push(function(){
+      args.push(function() {
         results = arguments;
 
         if (callback && !called) {
@@ -209,7 +211,7 @@
 
       fn.apply(this, args);
 
-      return function (fn){
+      return function (fn) {
         callback = fn;
 
         if (results && !called) {
@@ -222,7 +224,7 @@
 
   function error(err) {
     if (!err) { return; }
-    timeoutScheduler.schedule(function(){
+    timeoutScheduler.schedule(function() {
       throw err;
     });
   }

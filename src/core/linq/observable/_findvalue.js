@@ -5,7 +5,7 @@
                 var shouldRun;
                 try {
                     shouldRun = predicate.call(thisArg, x, i, source);
-                } catch(e) {
+                } catch (e) {
                     observer.onError(e);
                     return;
                 }
