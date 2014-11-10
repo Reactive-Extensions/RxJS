@@ -1619,6 +1619,12 @@ var browsers = [{
           'rx.virtualtime.js'
         ]
       },
+      jscs: {
+        src: 'dist/*.js',
+        options: {
+          requireCurlyBraces: [ "if" ]
+        }
+      },
       watch: {
         scripts: {
           files: 'src/**/*.js',
@@ -1626,11 +1632,6 @@ var browsers = [{
           options: {
             interrupt: true
           }
-        }
-      },
-      changelog: {
-        options: {
-          dest: 'CHANGELOG.md'
         }
       },
       connect: {
@@ -1776,13 +1777,16 @@ var browsers = [{
     'nuget-virtualtime'
   ]);
 
+  grunt.registerTask('jscs', [
+    'jscs'
+  ]);
+
   var testjobs = ['connect'];
-  console.log(process.env.SAUCE_ACCESS_KEY);
   if (typeof process.env.SAUCE_ACCESS_KEY !== 'undefined'){
       testjobs = testjobs.concat(['saucelabs-qunit']);
   }
 
-   grunt.registerTask('test', testjobs);
+  grunt.registerTask('test', testjobs);
 
   // Default task
   grunt.registerTask('default', [
