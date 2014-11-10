@@ -84,7 +84,7 @@
             var result;
             try {
               result = resultSelector(v, value);
-            } catch(exn) {
+            } catch (exn) {
               observer.onError(exn);
               return;
             }

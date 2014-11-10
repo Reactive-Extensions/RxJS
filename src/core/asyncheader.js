@@ -6,7 +6,7 @@
     AnonymousObservable = Rx.AnonymousObservable,
     AsyncSubject = Rx.AsyncSubject,
     disposableCreate = Rx.Disposable.create,
-    CompositeDisposable= Rx.CompositeDisposable,
+    CompositeDisposable = Rx.CompositeDisposable,
     immediateScheduler = Rx.Scheduler.immediate,
     timeoutScheduler = Rx.Scheduler.timeout,
     isScheduler = Rx.helpers.isScheduler,

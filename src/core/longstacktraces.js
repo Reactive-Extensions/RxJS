@@ -41,7 +41,6 @@
       stackLine.indexOf("(node.js:") !== -1;
   }
 
-
   function captureLine() {
     if (!hasStacks) { return; }
 

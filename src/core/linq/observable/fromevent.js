@@ -26,12 +26,12 @@
         event.relatedTarget = event.toElement;
       }
       // Adding stopPropogation and preventDefault to IE
-      if (!event.stopPropagation){
+      if (!event.stopPropagation) {
         event.stopPropagation = stopPropagation;
         event.preventDefault = preventDefault;
       }
       // Normalize key events
-      switch(event.type){
+      switch (event.type) {
         case 'keypress':
           var c = ('charCode' in event ? event.charCode : event.keyCode);
           if (c == 10) {
