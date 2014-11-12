@@ -5460,17 +5460,22 @@
 
   function combineLatestSource(source, subject, resultSelector) {
     return new AnonymousObservable(function (observer) {
-      var n = 2,
-        hasValue = [false, false],
+      var hasValue = [false, false],
         hasValueAll = false,
         isDone = false,
-        values = new Array(n);
+        values = new Array(2),
+        err;
 
       function next(x, i) {
         values[i] = x
         var res;
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
+          if (err) {
+            observer.onError(err);
+            return;
+          }
+
           try {
             res = resultSelector.apply(null, values);
           } catch (ex) {
@@ -5489,7 +5494,13 @@
           function (x) {
             next(x, 0);
           },
-          observer.onError.bind(observer),
+          function (e) {
+            if (values[1]) {
+              observer.onError(e);
+            } else {
+              err = e;
+            }
+          },
           function () {
             isDone = true;
             values[1] && observer.onCompleted();

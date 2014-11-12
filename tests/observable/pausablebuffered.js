@@ -364,6 +364,47 @@ test('paused with observable controller and pause and unpause after end', functi
   );
 });
 
+test('paused with observable controller and pause and unpause after error', function(){
+  var error = new Error();
+
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.createObserver();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(301, 4),
+    onNext(350, 5),
+    onNext(399, 6),
+    onNext(450, 7),
+    onNext(470, 8),
+    onError(500, error)
+  );
+
+  var controller = scheduler.createHotObservable(
+    onNext(201, true),
+    onNext(300, false),
+    onNext(600, true)
+  );
+
+  var results = scheduler.startWithCreate(function () {
+    return xs.pausableBuffered(controller);
+  });
+
+  results.messages.assertEqual(
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(600, 4),
+    onNext(600, 5),
+    onNext(600, 6),
+    onNext(600, 7),
+    onNext(600, 8),
+    onError(600, error)
+  );
+});
+
 test('paused with state change in subscriber', function(){
   var subscription;
 
