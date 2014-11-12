@@ -18,7 +18,8 @@
             return;
           }
           observer.onNext(res);
-        } else if (isDone && values[1]) {
+        }
+        if (isDone && values[1]) {
           observer.onCompleted();
         }
       }

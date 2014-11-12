@@ -355,12 +355,12 @@ test('paused with observable controller and pause and unpause after end', functi
   results.messages.assertEqual(
     onNext(210, 2),
     onNext(230, 3),
-    onNext(400, 4),
-    onNext(400, 5),
-    onNext(400, 6),
-    onNext(450, 7),
-    onNext(480, 8),
-    //onCompleted(500) // TODO: Fix bug here
+    onNext(600, 4),
+    onNext(600, 5),
+    onNext(600, 6),
+    onNext(600, 7),
+    onNext(600, 8),
+    onCompleted(600)
   );
 });
 

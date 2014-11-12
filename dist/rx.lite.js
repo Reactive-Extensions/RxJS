@@ -4216,7 +4216,8 @@
             return;
           }
           observer.onNext(res);
-        } else if (isDone && values[1] === true) {
+        }
+        if (isDone && values[1]) {
           observer.onCompleted();
         }
       }
