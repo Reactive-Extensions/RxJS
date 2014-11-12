@@ -114,7 +114,7 @@
 
   try {
     suportNodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
-  } catch(e) {
+  } catch (e) {
     suportNodeClass = true;
   }
 
@@ -276,10 +276,10 @@
 
       case numberClass:
         // treat `NaN` vs. `NaN` as equal
-        return (a != +a)
-          ? b != +b
+        return (a != +a) ?
+          b != +b :
           // but treat `-0` vs. `+0` as not equal
-          : (a == 0 ? (1 / a == 1 / b) : a == +b);
+          (a == 0 ? (1 / a == 1 / b) : a == +b);
 
       case regexpClass:
       case stringClass:
@@ -1133,7 +1133,7 @@
           oldHandler = root.onmessage;
       // Test for async
       root.onmessage = function () { isAsync = true; };
-      root.postMessage('','*');
+      root.postMessage('', '*');
       root.onmessage = oldHandler;
 
       return isAsync;
@@ -1379,7 +1379,7 @@
       var e;
       try {
         e = sources[$iterator$]();
-      } catch(err) {
+      } catch (err) {
         observer.onError();
         return;
       }
@@ -1427,7 +1427,7 @@
       var e;
       try {
         e = sources[$iterator$]();
-      } catch(err) {
+      } catch (err) {
         observer.onError();
         return;
       }
@@ -3022,7 +3022,7 @@
         q.push(x);
         q.length > count && q.shift();
       }, observer.onError.bind(observer), function () {
-        while(q.length > 0) { observer.onNext(q.shift()); }
+        while (q.length > 0) { observer.onNext(q.shift()); }
         observer.onCompleted();
       });
     });
@@ -4216,7 +4216,7 @@
             return;
           }
           observer.onNext(res);
-        } else if (isDone) {
+        } else if (isDone && values[1] === true) {
           observer.onCompleted();
         }
       }
@@ -4229,20 +4229,24 @@
           observer.onError.bind(observer),
           function () {
             isDone = true;
-            observer.onCompleted();
+            values[1] && observer.onCompleted();
           }),
         subject.subscribe(
           function (x) {
             next(x, 1);
           },
-          observer.onError.bind(observer))
+          observer.onError.bind(observer),
+          function () {
+            isDone = true;
+            next(true, 1);
+          })
         );
     });
   }
 
-  var PausableBufferedObservable = (function (_super) {
+  var PausableBufferedObservable = (function (__super__) {
 
-    inherits(PausableBufferedObservable, _super);
+    inherits(PausableBufferedObservable, __super__);
 
     function subscribe(observer) {
       var q = [], previousShouldFire;
@@ -4302,7 +4306,7 @@
         this.pauser = this.controller;
       }
 
-      _super.call(this, subscribe);
+      __super__.call(this, subscribe);
     }
 
     PausableBufferedObservable.prototype.pause = function () {

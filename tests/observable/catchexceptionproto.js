@@ -1,4 +1,4 @@
-QUnit.module('CatchExceptionProto');
+QUnit.module('catchErrorProto');
 
 var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
@@ -14,7 +14,7 @@ test('Catch_NoErrors', function () {
     var o2 = scheduler.createHotObservable(onNext(240, 5), onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
-        return o1.catchException(o2);
+        return o1.catchError(o2);
     });
 
     results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onCompleted(230));
@@ -27,7 +27,7 @@ test('Catch_Never', function () {
     var o2 = scheduler.createHotObservable(onNext(240, 5), onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
-        return o1.catchException(o2);
+        return o1.catchError(o2);
     });
 
     results.messages.assertEqual();
@@ -40,7 +40,7 @@ test('Catch_Empty', function () {
     var o2 = scheduler.createHotObservable(onNext(240, 5), onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
-        return o1.catchException(o2);
+        return o1.catchError(o2);
     });
 
     results.messages.assertEqual(onCompleted(230));
@@ -53,7 +53,7 @@ test('Catch_Return', function () {
     var o2 = scheduler.createHotObservable(onNext(240, 5), onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
-        return o1.catchException(o2);
+        return o1.catchError(o2);
     });
 
     results.messages.assertEqual(onNext(210, 2), onCompleted(230));
@@ -68,7 +68,7 @@ test('Catch_Error', function () {
     o1 = scheduler.createHotObservable(msgs1);
     o2 = scheduler.createHotObservable(msgs2);
     results = scheduler.startWithCreate(function () {
-        return o1.catchException(o2);
+        return o1.catchError(o2);
     });
     results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onNext(240, 5), onCompleted(250));
 });
@@ -81,7 +81,7 @@ test('Catch_Error_Never', function () {
     o1 = scheduler.createHotObservable(msgs1);
     o2 = Observable.never();
     results = scheduler.startWithCreate(function () {
-        return o1.catchException(o2);
+        return o1.catchError(o2);
     });
     results.messages.assertEqual(onNext(210, 2), onNext(220, 3));
 });
@@ -95,7 +95,7 @@ test('Catch_Error_Error', function () {
     o1 = scheduler.createHotObservable(msgs1);
     o2 = scheduler.createHotObservable(msgs2);
     results = scheduler.startWithCreate(function () {
-        return o1.catchException(o2);
+        return o1.catchError(o2);
     });
     results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onNext(240, 4), onError(250, ex));
 });
@@ -111,7 +111,7 @@ test('Catch_Multiple', function () {
     o2 = scheduler.createHotObservable(msgs2);
     o3 = scheduler.createHotObservable(msgs3);
     results = scheduler.startWithCreate(function () {
-        return Observable.catchException(o1, o2, o3);
+        return Observable.catchError(o1, o2, o3);
     });
     results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onNext(230, 4), onCompleted(235));
 });
@@ -126,7 +126,7 @@ test('Catch_ErrorSpecific_Caught', function () {
     o1 = scheduler.createHotObservable(msgs1);
     o2 = scheduler.createHotObservable(msgs2);
     results = scheduler.startWithCreate(function () {
-        return o1.catchException(function (e) {
+        return o1.catchError(function (e) {
             handlerCalled = true;
             return o2;
         });
@@ -143,7 +143,7 @@ test('Catch_ErrorSpecific_CaughtImmediate', function () {
     msgs2 = [onNext(240, 4), onCompleted(250)];
     o2 = scheduler.createHotObservable(msgs2);
     results = scheduler.startWithCreate(function () {
-        return Observable.throwException('ex').catchException(function (e) {
+        return Observable.throwException('ex').catchError(function (e) {
             handlerCalled = true;
             return o2;
         });
@@ -161,7 +161,7 @@ test('Catch_HandlerThrows', function () {
     msgs1 = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onError(230, ex)];
     o1 = scheduler.createHotObservable(msgs1);
     results = scheduler.startWithCreate(function () {
-        return o1.catchException(function (e) {
+        return o1.catchError(function (e) {
             handlerCalled = true;
             throw ex2;
         });
@@ -183,10 +183,10 @@ test('Catch_Nested_OuterCatches', function () {
     o2 = scheduler.createHotObservable(msgs2);
     o3 = scheduler.createHotObservable(msgs3);
     results = scheduler.startWithCreate(function () {
-        return o1.catchException(function (e) {
+        return o1.catchError(function (e) {
             firstHandlerCalled = true;
             return o2;
-        }).catchException(function (e) {
+        }).catchError(function (e) {
             secondHandlerCalled = true;
             return o3;
         });
@@ -210,11 +210,11 @@ test('Catch_ThrowFromNestedCatch', function () {
     o2 = scheduler.createHotObservable(msgs2);
     o3 = scheduler.createHotObservable(msgs3);
     results = scheduler.startWithCreate(function () {
-        return o1.catchException(function (e) {
+        return o1.catchError(function (e) {
             firstHandlerCalled = true;
             equal(e, ex);
             return o2;
-        }).catchException(function (e) {
+        }).catchError(function (e) {
             secondHandlerCalled = true;
             equal(e, ex2);
             return o3;
@@ -225,13 +225,13 @@ test('Catch_ThrowFromNestedCatch', function () {
     ok(secondHandlerCalled);
 });
 
-test("Rx.Observable.catchException() does not lose subscription to underlying observable", 12, function () {
+test("Rx.Observable.catchError() does not lose subscription to underlying observable", 12, function () {
     var subscribes = 0,
             unsubscribes = 0,
             tracer = Rx.Observable.create(function (observer) { ++subscribes; return function () { ++unsubscribes; }; }),
             s;
 
-    // Try it without catchException()
+    // Try it without catchError()
     s = tracer.subscribe();
     strictEqual(subscribes, 1, "1 subscribes");
     strictEqual(unsubscribes, 0, "0 unsubscribes");
@@ -239,21 +239,21 @@ test("Rx.Observable.catchException() does not lose subscription to underlying ob
     strictEqual(subscribes, 1, "After dispose: 1 subscribes");
     strictEqual(unsubscribes, 1, "After dispose: 1 unsubscribes");
 
-    // Now try again with catchException(Observable):
+    // Now try again with catchError(Observable):
     subscribes = unsubscribes = 0;
-    s = tracer.catchException(Rx.Observable.never()).subscribe();
-    strictEqual(subscribes, 1, "catchException(Observable): 1 subscribes");
-    strictEqual(unsubscribes, 0, "catchException(Observable): 0 unsubscribes");
+    s = tracer.catchError(Rx.Observable.never()).subscribe();
+    strictEqual(subscribes, 1, "catchError(Observable): 1 subscribes");
+    strictEqual(unsubscribes, 0, "catchError(Observable): 0 unsubscribes");
     s.dispose();
-    strictEqual(subscribes, 1, "catchException(Observable): After dispose: 1 subscribes");
-    strictEqual(unsubscribes, 1, "catchException(Observable): After dispose: 1 unsubscribes");
+    strictEqual(subscribes, 1, "catchError(Observable): After dispose: 1 subscribes");
+    strictEqual(unsubscribes, 1, "catchError(Observable): After dispose: 1 unsubscribes");
 
-    // And now try again with catchException(function()):
+    // And now try again with catchError(function()):
     subscribes = unsubscribes = 0;
-    s = tracer.catchException(function () { return Rx.Observable.never(); }).subscribe();
-    strictEqual(subscribes, 1, "catchException(function): 1 subscribes");
-    strictEqual(unsubscribes, 0, "catchException(function): 0 unsubscribes");
+    s = tracer.catchError(function () { return Rx.Observable.never(); }).subscribe();
+    strictEqual(subscribes, 1, "catchError(function): 1 subscribes");
+    strictEqual(unsubscribes, 0, "catchError(function): 0 unsubscribes");
     s.dispose();
-    strictEqual(subscribes, 1, "catchException(function): After dispose: 1 subscribes");
-    strictEqual(unsubscribes, 1, "catchException(function): After dispose: 1 unsubscribes"); // this one FAILS (unsubscribes is 0)
+    strictEqual(subscribes, 1, "catchError(function): After dispose: 1 subscribes");
+    strictEqual(unsubscribes, 1, "catchError(function): After dispose: 1 unsubscribes"); // this one FAILS (unsubscribes is 0)
 });

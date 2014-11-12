@@ -86,7 +86,7 @@
       if (!str.length) { return hash; }
       for (var i = 0, len = str.length; i < len; i++) {
         var character = str.charCodeAt(i);
-        hash = ((hash<<5)-hash)+character;
+        hash = ((hash << 5) - hash) + character;
         hash = hash & hash;
       }
       return hash;
@@ -384,7 +384,7 @@
             var result;
             try {
               result = resultSelector(v, value);
-            } catch(exn) {
+            } catch (exn) {
               observer.onError(exn);
               return;
             }

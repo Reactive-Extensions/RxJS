@@ -40,7 +40,7 @@ test('paused_no_skip', function () {
   });
 
   scheduler.scheduleAbsolute(1000, function () {
-      subscription.dispose();
+    subscription.dispose();
   });
 
   scheduler.start();
@@ -225,7 +225,7 @@ test('paused_with_observable_controller_and_pause_and_unpause', function(){
   });
 
   scheduler.scheduleAbsolute(1000, function () {
-      subscription.dispose();
+    subscription.dispose();
   });
 
   scheduler.start();
@@ -255,7 +255,7 @@ test('paused with immediate unpause', function(){
     onCompleted(500)
   );
 
-  var controller = Rx.Observable.return(true);
+  var controller = Rx.Observable.just(true);
 
   var pausableBuffered = xs.pausableBuffered(controller);
 
@@ -270,6 +270,98 @@ test('paused with immediate unpause', function(){
     onCompleted(500)
   );
 
+});
+
+test('paused when finishing', function () {
+  var subscription;
+
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.createObserver();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(301, 4),
+    onNext(350, 5),
+    onNext(399, 6),
+    onNext(450, 7),
+    onNext(470, 8),
+    onCompleted(500)
+  );
+
+  var controller = scheduler.createHotObservable(
+    onNext(201, true),
+    onNext(300, false),
+    onNext(400, true)
+  );
+
+  var pausableBuffered = xs.pausableBuffered(controller);
+
+  scheduler.scheduleAbsolute(200, function () {
+    subscription = pausableBuffered.subscribe(results);
+  });
+
+  scheduler.scheduleAbsolute(460, function () {
+    pausableBuffered.pause();
+  });
+
+  scheduler.scheduleAbsolute(1000, function () {
+    subscription.dispose();
+  });
+
+  scheduler.start();
+
+  results.messages.assertEqual(
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(400, 4),
+    onNext(400, 5),
+    onNext(400, 6),
+    onNext(450, 7)
+  );
+});
+
+test('paused with observable controller and pause and unpause after end', function(){
+  var subscription;
+
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.createObserver();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(301, 4),
+    onNext(350, 5),
+    onNext(399, 6),
+    onNext(450, 7),
+    onNext(470, 8),
+    onCompleted(500)
+  );
+
+  var controller = scheduler.createHotObservable(
+    onNext(201, true),
+    onNext(300, false),
+    onNext(600, true)
+  );
+
+  var results = scheduler.startWithCreate(function () {
+    return xs.pausableBuffered(controller);
+  });
+
+  results.messages.assertEqual(
+    onNext(210, 2),
+    onNext(230, 3),
+    onNext(400, 4),
+    onNext(400, 5),
+    onNext(400, 6),
+    onNext(450, 7),
+    onNext(480, 8),
+    //onCompleted(500) // TODO: Fix bug here
+  );
 });
 
 test('paused with state change in subscriber', function(){

@@ -114,7 +114,7 @@
 
   try {
     suportNodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
-  } catch(e) {
+  } catch (e) {
     suportNodeClass = true;
   }
 
@@ -276,10 +276,10 @@
 
       case numberClass:
         // treat `NaN` vs. `NaN` as equal
-        return (a != +a)
-          ? b != +b
+        return (a != +a) ?
+          b != +b :
           // but treat `-0` vs. `+0` as not equal
-          : (a == 0 ? (1 / a == 1 / b) : a == +b);
+          (a == 0 ? (1 / a == 1 / b) : a == +b);
 
       case regexpClass:
       case stringClass:
@@ -1311,7 +1311,7 @@ if (!Array.prototype.forEach) {
           oldHandler = root.onmessage;
       // Test for async
       root.onmessage = function () { isAsync = true; };
-      root.postMessage('','*');
+      root.postMessage('', '*');
       root.onmessage = oldHandler;
 
       return isAsync;
@@ -1629,7 +1629,7 @@ if (!Array.prototype.forEach) {
       var e;
       try {
         e = sources[$iterator$]();
-      } catch(err) {
+      } catch (err) {
         observer.onError();
         return;
       }
@@ -1677,7 +1677,7 @@ if (!Array.prototype.forEach) {
       var e;
       try {
         e = sources[$iterator$]();
-      } catch(err) {
+      } catch (err) {
         observer.onError();
         return;
       }
@@ -3664,7 +3664,7 @@ if (!Array.prototype.forEach) {
         q.push(x);
         q.length > count && q.shift();
       }, observer.onError.bind(observer), function () {
-        while(q.length > 0) { observer.onNext(q.shift()); }
+        while (q.length > 0) { observer.onNext(q.shift()); }
         observer.onCompleted();
       });
     });
@@ -3730,7 +3730,7 @@ if (!Array.prototype.forEach) {
         function (x) {
           for (var i = 0, len = q.length; i < len; i++) { q[i].onNext(x); }
           var c = n - count + 1;
-          c >=0 && c % skip === 0 && q.shift().onCompleted();
+          c >= 0 && c % skip === 0 && q.shift().onCompleted();
           ++n % skip === 0 && createWindow();
         },
         function (e) {
@@ -4926,7 +4926,7 @@ if (!Array.prototype.forEach) {
                 var shouldRun;
                 try {
                     shouldRun = predicate.call(thisArg, x, i, source);
-                } catch(e) {
+                } catch (e) {
                     observer.onError(e);
                     return;
                 }
@@ -5069,7 +5069,7 @@ if (!Array.prototype.forEach) {
             return --pending || done(null, results);
           }
 
-          fn.call(ctx, function(err, res){
+          fn.call(ctx, function(err, res) {
             if (finished) { return; }
 
             if (err) {
@@ -5104,7 +5104,7 @@ if (!Array.prototype.forEach) {
   }
 
   function promiseToThunk(promise) {
-    return function(fn){
+    return function(fn) {
       promise.then(function(res) {
         fn(null, res);
       }, fn);
@@ -5160,7 +5160,9 @@ if (!Array.prototype.forEach) {
         var ret;
 
         // multiple args
-        if (arguments.length > 2) res = slice.call(arguments, 1);
+        if (arguments.length > 2) {
+          res = slice.call(arguments, 1);
+        }
 
         if (err) {
           try {
@@ -5187,7 +5189,7 @@ if (!Array.prototype.forEach) {
         if (typeof ret.value === fnString) {
           var called = false;
           try {
-            ret.value.call(ctx, function(){
+            ret.value.call(ctx, function() {
               if (called) {
                 return;
               }
@@ -5220,13 +5222,13 @@ if (!Array.prototype.forEach) {
    * @returns {Function} A function, when executed will continue the state machine.
    */
   Rx.denodify = function (fn) {
-    return function (){
+    return function () {
       var args = slice.call(arguments),
         results,
         called,
         callback;
 
-      args.push(function(){
+      args.push(function() {
         results = arguments;
 
         if (callback && !called) {
@@ -5237,7 +5239,7 @@ if (!Array.prototype.forEach) {
 
       fn.apply(this, args);
 
-      return function (fn){
+      return function (fn) {
         callback = fn;
 
         if (results && !called) {
@@ -5250,7 +5252,7 @@ if (!Array.prototype.forEach) {
 
   function error(err) {
     if (!err) { return; }
-    timeoutScheduler.schedule(function(){
+    timeoutScheduler.schedule(function() {
       throw err;
     });
   }
@@ -5425,12 +5427,12 @@ if (!Array.prototype.forEach) {
         event.relatedTarget = event.toElement;
       }
       // Adding stopPropogation and preventDefault to IE
-      if (!event.stopPropagation){
+      if (!event.stopPropagation) {
         event.stopPropagation = stopPropagation;
         event.preventDefault = preventDefault;
       }
       // Normalize key events
-      switch(event.type){
+      switch (event.type) {
         case 'keypress':
           var c = ('charCode' in event ? event.charCode : event.keyCode);
           if (c == 10) {
@@ -5695,7 +5697,7 @@ if (!Array.prototype.forEach) {
             return;
           }
           observer.onNext(res);
-        } else if (isDone) {
+        } else if (isDone && values[1] === true) {
           observer.onCompleted();
         }
       }
@@ -5708,20 +5710,24 @@ if (!Array.prototype.forEach) {
           observer.onError.bind(observer),
           function () {
             isDone = true;
-            observer.onCompleted();
+            values[1] && observer.onCompleted();
           }),
         subject.subscribe(
           function (x) {
             next(x, 1);
           },
-          observer.onError.bind(observer))
+          observer.onError.bind(observer),
+          function () {
+            isDone = true;
+            next(true, 1);
+          })
         );
     });
   }
 
-  var PausableBufferedObservable = (function (_super) {
+  var PausableBufferedObservable = (function (__super__) {
 
-    inherits(PausableBufferedObservable, _super);
+    inherits(PausableBufferedObservable, __super__);
 
     function subscribe(observer) {
       var q = [], previousShouldFire;
@@ -5781,7 +5787,7 @@ if (!Array.prototype.forEach) {
         this.pauser = this.controller;
       }
 
-      _super.call(this, subscribe);
+      __super__.call(this, subscribe);
     }
 
     PausableBufferedObservable.prototype.pause = function () {
@@ -6454,7 +6460,7 @@ if (!Array.prototype.forEach) {
       if (!str.length) { return hash; }
       for (var i = 0, len = str.length; i < len; i++) {
         var character = str.charCodeAt(i);
-        hash = ((hash<<5)-hash)+character;
+        hash = ((hash << 5) - hash) + character;
         hash = hash & hash;
       }
       return hash;
@@ -6752,7 +6758,7 @@ if (!Array.prototype.forEach) {
             var result;
             try {
               result = resultSelector(v, value);
-            } catch(exn) {
+            } catch (exn) {
               observer.onError(exn);
               return;
             }

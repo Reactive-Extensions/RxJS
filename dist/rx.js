@@ -114,7 +114,7 @@
 
   try {
     suportNodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
-  } catch(e) {
+  } catch (e) {
     suportNodeClass = true;
   }
 
@@ -276,10 +276,10 @@
 
       case numberClass:
         // treat `NaN` vs. `NaN` as equal
-        return (a != +a)
-          ? b != +b
+        return (a != +a) ?
+          b != +b :
           // but treat `-0` vs. `+0` as not equal
-          : (a == 0 ? (1 / a == 1 / b) : a == +b);
+          (a == 0 ? (1 / a == 1 / b) : a == +b);
 
       case regexpClass:
       case stringClass:
@@ -1160,7 +1160,7 @@
           oldHandler = root.onmessage;
       // Test for async
       root.onmessage = function () { isAsync = true; };
-      root.postMessage('','*');
+      root.postMessage('', '*');
       root.onmessage = oldHandler;
 
       return isAsync;
@@ -1478,7 +1478,7 @@
       var e;
       try {
         e = sources[$iterator$]();
-      } catch(err) {
+      } catch (err) {
         observer.onError();
         return;
       }
@@ -1526,7 +1526,7 @@
       var e;
       try {
         e = sources[$iterator$]();
-      } catch(err) {
+      } catch (err) {
         observer.onError();
         return;
       }
@@ -3513,7 +3513,7 @@
         q.push(x);
         q.length > count && q.shift();
       }, observer.onError.bind(observer), function () {
-        while(q.length > 0) { observer.onNext(q.shift()); }
+        while (q.length > 0) { observer.onNext(q.shift()); }
         observer.onCompleted();
       });
     });
@@ -3579,7 +3579,7 @@
         function (x) {
           for (var i = 0, len = q.length; i < len; i++) { q[i].onNext(x); }
           var c = n - count + 1;
-          c >=0 && c % skip === 0 && q.shift().onCompleted();
+          c >= 0 && c % skip === 0 && q.shift().onCompleted();
           ++n % skip === 0 && createWindow();
         },
         function (e) {
