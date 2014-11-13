@@ -1385,6 +1385,7 @@ var browsers = [{
               'src/core/testing/subscription.js',
               'src/core/testing/mockdisposable.js',
               'src/core/testing/mockobserver.js',
+              'src/core/testing/mockpromise.js',
               'src/core/testing/hotobservable.js',
               'src/core/testing/coldobservable.js',
               'src/core/testing/testscheduler.js',

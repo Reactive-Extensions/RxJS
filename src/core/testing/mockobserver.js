@@ -1,42 +1,25 @@
-    /** @private */
-    var MockObserver = (function (_super) {
-        inherits(MockObserver, _super);
+  var MockObserver = (function (__super__) {
+    inherits(MockObserver, __super__);
 
-        /*
-         * @constructor
-         * @prviate
-         */
-        function MockObserver(scheduler) {
-            _super.call(this);
-            this.scheduler = scheduler;
-            this.messages = [];
-        }
+    function MockObserver(scheduler) {
+      __super__.call(this);
+      this.scheduler = scheduler;
+      this.messages = [];
+    }
 
-        var MockObserverPrototype = MockObserver.prototype;
+    var MockObserverPrototype = MockObserver.prototype;
 
-        /*
-         * @memberOf MockObserverPrototype#
-         * @prviate
-         */
-        MockObserverPrototype.onNext = function (value) {
-            this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnNext(value)));
-        };
+    MockObserverPrototype.onNext = function (value) {
+      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnNext(value)));
+    };
 
-        /*
-         * @memberOf MockObserverPrototype#
-         * @prviate
-         */
-        MockObserverPrototype.onError = function (exception) {
-            this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(exception)));
-        };
+    MockObserverPrototype.onError = function (exception) {
+      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(exception)));
+    };
 
-        /*
-         * @memberOf MockObserverPrototype#
-         * @prviate
-         */
-        MockObserverPrototype.onCompleted = function () {
-            this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnCompleted()));
-        };
+    MockObserverPrototype.onCompleted = function () {
+      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnCompleted()));
+    };
 
-        return MockObserver;
-    })(Observer);
+    return MockObserver;
+  })(Observer);

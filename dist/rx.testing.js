@@ -211,48 +211,73 @@ var ReactiveTest = Rx.ReactiveTest = {
         this.disposes.push(this.scheduler.clock);
     };
 
-    /** @private */
-    var MockObserver = (function (_super) {
-        inherits(MockObserver, _super);
+  var MockObserver = (function (__super__) {
+    inherits(MockObserver, __super__);
 
-        /*
-         * @constructor
-         * @prviate
-         */
-        function MockObserver(scheduler) {
-            _super.call(this);
-            this.scheduler = scheduler;
-            this.messages = [];
-        }
+    function MockObserver(scheduler) {
+      __super__.call(this);
+      this.scheduler = scheduler;
+      this.messages = [];
+    }
 
-        var MockObserverPrototype = MockObserver.prototype;
+    var MockObserverPrototype = MockObserver.prototype;
 
-        /*
-         * @memberOf MockObserverPrototype#
-         * @prviate
-         */
-        MockObserverPrototype.onNext = function (value) {
-            this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnNext(value)));
-        };
+    MockObserverPrototype.onNext = function (value) {
+      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnNext(value)));
+    };
 
-        /*
-         * @memberOf MockObserverPrototype#
-         * @prviate
-         */
-        MockObserverPrototype.onError = function (exception) {
-            this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(exception)));
-        };
+    MockObserverPrototype.onError = function (exception) {
+      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(exception)));
+    };
 
-        /*
-         * @memberOf MockObserverPrototype#
-         * @prviate
-         */
-        MockObserverPrototype.onCompleted = function () {
-            this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnCompleted()));
-        };
+    MockObserverPrototype.onCompleted = function () {
+      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnCompleted()));
+    };
 
-        return MockObserver;
-    })(Observer);
+    return MockObserver;
+  })(Observer);
+
+  function MockPromise(scheduler, messages) {
+    var message, notification, observable = this;
+    this.scheduler = scheduler;
+    this.messages = messages;
+    this.subscriptions = [];
+    this.observers = [];
+    for (var i = 0, len = this.messages.length; i < len; i++) {
+      message = this.messages[i];
+      notification = message.value;
+      (function (innerNotification) {
+        scheduler.scheduleAbsoluteWithState(null, message.time, function () {
+          var obs = observable.observers.slice(0);
+
+          for (var j = 0, jLen = obs.length; j < jLen; j++) {
+            innerNotification.accept(obs[j]);
+          }
+          return disposableEmpty;
+        });
+      })(notification);
+    }
+  }
+
+  MockPromise.prototype.then = function (onResolved, onRejected) {
+    var self = this;
+
+    var observer = Rx.Observer.create(
+      function (x) {
+        onResolved(x);
+        var idx = self.observers.indexOf(observer);
+        self.observers.splice(idx, 1);
+      },
+      function (err) {
+        onRejected(err);
+        var idx = self.observers.indexOf(observer);
+        self.observers.splice(idx, 1);
+      }
+    );
+    this.observers.push(observer);
+
+    return new MockPromise(this.scheduler, []);
+  }
 
   var HotObservable = (function (__super__) {
 
@@ -296,45 +321,40 @@ var ReactiveTest = Rx.ReactiveTest = {
     return HotObservable;
   })(Observable);
 
-    /** @private */
-    var ColdObservable = (function (_super) {
+  var ColdObservable = (function (__super__) {
 
-        function subscribe(observer) {
-            var message, notification, observable = this;
-            this.subscriptions.push(new Subscription(this.scheduler.clock));
-            var index = this.subscriptions.length - 1;
-            var d = new CompositeDisposable();
-            for (var i = 0, len = this.messages.length; i < len; i++) {
-                message = this.messages[i];
-                notification = message.value;
-                (function (innerNotification) {
-                    d.add(observable.scheduler.scheduleRelativeWithState(null, message.time, function () {
-                        innerNotification.accept(observer);
-                        return disposableEmpty;
-                    }));
-                })(notification);
-            }
-            return disposableCreate(function () {
-                observable.subscriptions[index] = new Subscription(observable.subscriptions[index].subscribe, observable.scheduler.clock);
-                d.dispose();
-            });
-        }
+    function subscribe(observer) {
+      var message, notification, observable = this;
+      this.subscriptions.push(new Subscription(this.scheduler.clock));
+      var index = this.subscriptions.length - 1;
+      var d = new CompositeDisposable();
+      for (var i = 0, len = this.messages.length; i < len; i++) {
+        message = this.messages[i];
+        notification = message.value;
+        (function (innerNotification) {
+          d.add(observable.scheduler.scheduleRelativeWithState(null, message.time, function () {
+            innerNotification.accept(observer);
+            return disposableEmpty;
+          }));
+        })(notification);
+      }
+      return disposableCreate(function () {
+        observable.subscriptions[index] = new Subscription(observable.subscriptions[index].subscribe, observable.scheduler.clock);
+        d.dispose();
+      });
+    }
 
-        inherits(ColdObservable, _super);
+    inherits(ColdObservable, __super__);
 
-        /**
-         * @private
-         * @constructor
-         */
-        function ColdObservable(scheduler, messages) {
-            _super.call(this, subscribe);
-            this.scheduler = scheduler;
-            this.messages = messages;
-            this.subscriptions = [];
-        }
+    function ColdObservable(scheduler, messages) {
+      __super__.call(this, subscribe);
+      this.scheduler = scheduler;
+      this.messages = messages;
+      this.subscriptions = [];
+    }
 
-        return ColdObservable;
-    })(Observable);
+    return ColdObservable;
+  })(Observable);
 
   /** Virtual time scheduler used for testing applications and libraries built using Reactive Extensions. */
   Rx.TestScheduler = (function (__super__) {
