@@ -37,7 +37,7 @@ debounced.subscribeOnNext(function (value) {
 Another technique to deal with an observable sequence which is producing too much for the consumer is through throttling with the use of the [`throttleFirst`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/throttlefirst.md) method which emits the first items emitted by an Observable within periodic time intervals.  Throttling can be especially useful for rate limiting execution of handlers on events like resize and scroll.
 
 ```js
-var debounced = Rx.Observable.fromEvent(window, 'resize')
+var throttled = Rx.Observable.fromEvent(window, 'resize')
   .throttleFirst(250 /* ms */);
 
 debounced.subscribeOnNext(function (e) {
