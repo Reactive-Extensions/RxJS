@@ -1,10 +1,11 @@
-### `Rx.Observable.prototype.throttleWithSelector(throttleSelector)`
+### `Rx.Observable.prototype.debounceWithSelector(durationSelector)` ###
+### `Rx.Observable.prototype.throttleWithSelector(durationSelector)` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js "View in source")
 
-Ignores values from an observable sequence which are followed by another value before dueTime.
+Ignores values from an observable sequence which are followed by another value within a computed debounced duration.
 
 #### Arguments
-1. `dueTime` *(`Number`)*: Selector function to retrieve a sequence indicating the throttle duration for each given element.
+1. `durationSelector` *(`Function`)*: Selector function to retrieve a sequence indicating the throttle duration for each given element.
 
 #### Returns
 *(`Observable`)*: The throttled sequence.

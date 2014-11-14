@@ -1,20 +1,16 @@
   /**
-   *  Ignores values from an observable sequence which are followed by another value within a computed throttle duration.
-   *
-   * @example
-   *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(x + x); });
-   *
-   * @param {Function} throttleDurationSelector Selector function to retrieve a sequence indicating the throttle duration for each given element.
-   * @returns {Observable} The throttled sequence.
+   * Ignores values from an observable sequence which are followed by another value within a computed throttle duration.
+   * @param {Function} durationSelector Selector function to retrieve a sequence indicating the throttle duration for each given element.
+   * @returns {Observable} The debounced sequence.
    */
-  observableProto.throttleWithSelector = function (throttleDurationSelector) {
+  observableProto.debounceWithSelector = function (durationSelector) {
     var source = this;
     return new AnonymousObservable(function (observer) {
       var value, hasValue = false, cancelable = new SerialDisposable(), id = 0;
       var subscription = source.subscribe(function (x) {
         var throttle;
         try {
-          throttle = throttleDurationSelector(x);
+          throttle = durationSelector(x);
         } catch (e) {
           observer.onError(e);
           return;
@@ -50,4 +46,9 @@
       });
       return new CompositeDisposable(subscription, cancelable);
     });
+  };
+
+  observableProto.throttleWithSelector = function () {
+    deprecate('throttleWithSelector', 'debounceWithSelector');
+    return this.debounceWithSelector.apply(this, arguments);
   };

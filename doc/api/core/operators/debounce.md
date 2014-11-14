@@ -3,7 +3,7 @@
 ### `Rx.Observable.prototype.throttle(dueTime, [scheduler])` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js "View in source")
 
-Ignores values from an observable sequence which are followed by another value before dueTime.
+Emits an item from the source Observable after a particular timespan has passed without the Observable emitting any other items.
 
 #### Arguments
 1. `dueTime` *(`Number`)*: Duration of the throttle period for each value (specified as an integer denoting milliseconds).

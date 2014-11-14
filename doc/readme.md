@@ -65,8 +65,9 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
    5. [Generators and Observable Sequences](gettingstarted/generators.md)  
    6. [Querying Observable Sequences](gettingstarted/querying.md)
    7. [Transducers with Observable Sequences](gettingstarted/transducers.md)
-   8. [Operators by Category](gettingstarted/categories.md)
-   9. Which Operator do I use?
+   8. [Backpressure with Observable Sequences](gettingstarted/backpressure.md)
+   9. [Operators by Category](gettingstarted/categories.md)
+   10. Which Operator do I use?
       - [Creation Operators](gettingstarted/which-static.md)
       - [Instance Operators](gettingstarted/which-instance.md)
 - [Subjects](gettingstarted/subjects.md)
