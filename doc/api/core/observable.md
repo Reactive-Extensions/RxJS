@@ -207,4 +207,4 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`concatObservable`](operators/concatall.md)
 - [`finallyAction`](operators/finally.md)
 - [`mergeObservable`](operators/mergeall.md)
-- [`throttle`](operators/throttle.md)
+- [`throttle`](operators/debounce.md)
