@@ -3788,7 +3788,7 @@
       return source.subscribe(function (value) {
         var result;
         try {
-          result = selectorFn.call(thisArg, value, count++, parent);
+          result = selectorFn.call(thisArg, value, count++, source);
         } catch (e) {
           observer.onError(e);
           return;
