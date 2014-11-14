@@ -201,8 +201,6 @@ declare module Rx {
 	export interface Observable<T> extends IObservable<T> {
 		forEach(onNext?: (value: T) => void, onError?: (exception: any) => void, onCompleted?: () => void): IDisposable;	// alias for subscribe
 		toArray(): Observable<T[]>;
-		toMap(keySelector: (value: T) => U, elementSelector?: (value: T) => V): Observable<Map<U, V>>
-		toSet() : Observable<Set<T>>;
 
 		catch(handler: (exception: any) => Observable<T>): Observable<T>;
 		catchException(handler: (exception: any) => Observable<T>): Observable<T>;	// alias for catch
