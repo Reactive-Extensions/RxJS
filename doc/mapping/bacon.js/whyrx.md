@@ -289,7 +289,7 @@ In our applications, we consume a lot of data from external sources.  But, what 
 
 RxJS has a rather large surface area, so we give you the ability to build RxJS with only the things you want and none of the things you don't via the [`rx-cli`](https://www.npmjs.org/package/rx-cli) project.  For example, we can build a `compat` version of RxJS with only the `map`, `flatMap`, `takeUntil`, and `fromEvent` methods, which keeps your RxJS version lean and mean.
 
-``js
+```js
 rx --lite --compat --methods map,flatmap,takeuntil,fromevent
 ```
 
