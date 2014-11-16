@@ -140,6 +140,22 @@ An example of forward thinking is the introduction of ES6+ operators on Array wi
 
 In addition, RxJS supports ES6 iterables in many methods which allow you to accept `Map`, `Set`, `Array` and array-like objects, for example in `Rx.Observable.from`, `flatMap`, `concatMap` among others.  RxJS also has the capability of converting to Maps and Sets via the `toMap` and `toSet` methods if available in your runtime.
 
+This makes the following code possible to yield an array from an observable sequence and have it automatically converted into an observable sequence.
+
+```js
+Rx.Observable.range(1, 3)
+  .flatMap(function (x, i) { return [x, i]; })
+  .subscribeNext(function (value) {
+    console.log('Value: %o', value);
+  });
+// => 1
+// => 0
+// => 2
+// => 1
+// => 3
+// => 2
+```
+
 ### Generators ###
 
 Generators also play a big part in the next version of JavaScript.  RxJS also takes [full advantage of generators](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/gettingstarted/generators.md) as iterables in such methods as the aforementioned `Rx.Observable.from`, `flatMap`, `concatMap` and other methods.  For example, you can yield values like the following:
