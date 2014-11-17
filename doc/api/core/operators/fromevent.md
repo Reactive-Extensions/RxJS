@@ -55,7 +55,7 @@ var source = Rx.Observable.fromEvent(
 
 var subscription = source.subscribe(
     function (x) {
-        console.log('Next: foo -' x.foo + ', bar -' + x.bar);
+        console.log('Next: foo -' + x.foo + ', bar -' + x.bar);
     },
     function (err) {
         console.log('Error: ' + err);
