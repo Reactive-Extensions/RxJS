@@ -243,7 +243,7 @@ function* fibonacci () {
 }
 
 // Converts a generator to an observable sequence
-var source = Rx.Observable.from(set).take(5);
+var source = Rx.Observable.from(fibonacci()).take(5);
 
 // Prints out each item
 var subscription = source.subscribe(
