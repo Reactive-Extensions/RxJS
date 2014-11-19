@@ -35,14 +35,14 @@ File:
 - [`/src/core/backpressure/controlled.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/backpressure/controlled.js)
 
 Dist:
-- [`rx.backpressure.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.async.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.backpressure.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.async.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 Prerequisites:
 - If using `rx.backpressure.js`
     - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.binding.js)
+    - [`rx.binding.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.binding.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
