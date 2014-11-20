@@ -48,7 +48,7 @@ File:
 - [/src/core/linq/observable/generatewithabsolutetime.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generatewithabsolutetime.js)
 
 Dist:
-- [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.time.js)
+- [rx.time.js](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.time.js)
 
 Prerequisites:
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.time.js)
