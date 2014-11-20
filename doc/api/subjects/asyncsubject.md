@@ -75,7 +75,7 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
-// => 42
+// => Next: 42
 // => Completed
 ```
 
