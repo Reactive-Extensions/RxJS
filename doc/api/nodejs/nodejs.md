@@ -29,7 +29,7 @@ The Reactive Extensions for JavaScript provides integration points to the core N
 ### Callback Handlers ###
 
 ### <a id="rxnodefromcallbackfunc-scheduler-context"></a>`Rx.Node.fromCallback(func, [scheduler], [context])`
-<a href="#rxnodefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L20-L22 "View in source")
+<a href="#rxnodefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L20-L22 "View in source")
 
 **Deprecated in favor of `Rx.Observable.fromCallback` in rx.async.js.**
 
@@ -74,12 +74,12 @@ var subscription = source.subscribe(observer);
 
 ### Location
 
-- rx.node.js
+- index.js
 
 * * *
 
 ### <a id="rxnodefromnodecallbackfunc-scheduler-context"></a>`Rx.Node.fromNodeCallback(func, [scheduler], [context])`
-<a href="#rxnodefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L35-L37 "View in source")
+<a href="#rxnodefromcallbackfunc-scheduler-context">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L34-L36 "View in source")
 
 **Deprecated in favor of `Rx.Observable.fromNodeCallback` in rx.async.js.**
 
@@ -128,7 +128,7 @@ var subscription = source.subscribe(observer);
 ### Event Handlers ###
 
 ### <a id="rxnodefromeventeventemitter-eventname"></a>`Rx.Node.fromEvent(eventEmitter, eventName)`
-<a href="#rxnodefromeventeventemitter-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L49-L51 "View in source")
+<a href="#rxnodefromeventeventemitter-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L48-L50 "View in source")
 
 Handles an event from the given EventEmitter as an observable sequence.
 
@@ -174,7 +174,7 @@ emitter.emit('data', 'foo');
 * * *
 
 ### <a id="rxnodetoeventemitterobservable-eventname"></a>`Rx.Node.toEventEmitter(observable, eventName)`
-<a href="#rxnodetoeventemitterobservable-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L61-L80 "View in source")
+<a href="#rxnodetoeventemitterobservable-eventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L60-L88 "View in source")
 
 Converts the given observable sequence to an event emitter with the given event name.
 The errors are handled on the 'error' event and completion on the 'end' event.
@@ -218,7 +218,7 @@ emitter.publish();
 ### Stream Handlers ###
 
 ### <a id="rxnodefromstreamstream-finisheventname"></a>`Rx.Node.fromStream(stream, finishEventName)`
-<a href="#rxnodefromstreamstream-finisheventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L88-L116 "View in source")
+<a href="#rxnodefromstreamstream-finisheventname">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L96-L124 "View in source")
 
 Converts a flowing stream to an Observable sequence.
 
@@ -247,7 +247,7 @@ var subscription = Rx.Node.fromStream(process.stdin, 'end')
 * * *
 
 ### <a id="rxnodefromreadablestreamstream"></a>`Rx.Node.fromReadableStream(stream)`
-<a href="#rxnodefromreadablestreamstream">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L123-L125 "View in source")
+<a href="#rxnodefromreadablestreamstream">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L131-L133 "View in source")
 
 Converts a flowing readable stream to an Observable sequence.
 
@@ -275,7 +275,7 @@ var subscription = Rx.Node.fromReadableStream(process.stdin)
 * * *
 
 ### <a id="rxnodefromwritablestreamstream"></a>`Rx.Node.fromWritableStream(stream)`
-<a href="#rxnodefromwritablestreamstream">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L132-L134 "View in source")
+<a href="#rxnodefromwritablestreamstream">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L140-L142 "View in source")
 
 Converts a flowing writeable stream to an Observable sequence.
 
@@ -303,7 +303,7 @@ var subscription = Rx.Node.fromWritableStream(process.stdout)
 * * *
 
 ### <a id="rxnodefromtransformstreamstream"></a>`Rx.Node.fromTransformStream(stream)`
-<a href="#rxnodefromtransformstreamstream">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L141-L143 "View in source")
+<a href="#rxnodefromtransformstreamstream">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L149-L151 "View in source")
 
 Converts a flowing transform stream to an Observable sequence.
 
@@ -327,7 +327,7 @@ var subscription = Rx.Node.fromTransformStream(getTransformStreamSomehow());
 * * *
 
 ### <a id="rxnodewritetostreamobservable-stream-encoding"></a>`Rx.Node.writeToStream(observable, stream, [encoding])`
-<a href="#rxnodewritetostreamobservable-stream-encoding">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.node.js#L152-L164 "View in source")
+<a href="#rxnodewritetostreamobservable-stream-encoding">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/index.js#L160-L171 "View in source")
 
 Writes an observable sequence to a stream.
 
