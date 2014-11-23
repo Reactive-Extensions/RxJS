@@ -43,6 +43,7 @@
     internals = Rx.internals,
     helpers = Rx.helpers,
     ScheduledObserver = internals.ScheduledObserver,
+    SerialDisposable = Rx.SerialDisposable,
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     CompositeDisposable = Rx.CompositeDisposable,
     RefCountDisposable = Rx.RefCountDisposable,

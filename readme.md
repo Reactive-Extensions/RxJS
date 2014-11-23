@@ -204,7 +204,7 @@ Please check out:
     - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
     - [2 minute introduction to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877)
     - [Learn RxJS](https://github.com/jhusain/learnrx)
-    - [RxJS Koans](https://github.com/mattpodwysocki/RxJSKoans)
+    - [RxJS Koans](https://github.com/Reactive-Extensions/RxJSKoans)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
     - [Reactive Programming and MVC](http://aaronstacy.com/writings/reactive-programming-and-mvc/)
 
