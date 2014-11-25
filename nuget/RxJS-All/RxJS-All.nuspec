@@ -26,4 +26,7 @@
       <dependency id="RxJS-VirtualTime" version="$version$" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="..\..\ts\rx.all.d.ts" target="content\Scripts\rx.all.d.ts" />
+  </files>
 </package>
