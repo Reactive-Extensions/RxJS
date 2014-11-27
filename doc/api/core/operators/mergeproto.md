@@ -5,7 +5,7 @@ Merges an observable sequence of observable sequences into an observable sequenc
 Or merges two observable sequences into a single observable sequence.
 
 #### Arguments
-1. `maxConcurrent` *(`Function`)*: Maximum number of inner observable sequences being subscribed to concurrently.
+1. `maxConcurrent` *(`Number`)*: Maximum number of inner observable sequences being subscribed to concurrently.
 1. `other` *(`Observable`)*:  The second observable sequence to merge into the first.
 
 #### Returns
