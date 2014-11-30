@@ -6501,10 +6501,10 @@ if (!Array.prototype.forEach) {
           if (typeof valueOf === 'number') { return numberHashFn(valueOf); }
           if (typeof obj === 'string') { return stringHashFn(valueOf); }
         }
-        if (obj.getHashCode) { return obj.getHashCode(); }
+        if (obj.hashCode) { return obj.hashCode(); }
 
         var id = 17 * uniqueIdCounter++;
-        obj.getHashCode = function () { return id; };
+        obj.hashCode = function () { return id; };
         return id;
       };
     }());
@@ -6537,7 +6537,7 @@ if (!Array.prototype.forEach) {
     };
 
     dictionaryProto.add = function (key, value) {
-      return this._insert(key, value, true);
+      this._insert(key, value, true);
     };
 
     dictionaryProto._insert = function (key, value, add) {
