@@ -64,6 +64,6 @@
    * @param {Scheduler} scheduler Scheduler to schedule observer messages on.
    * @returns {Observer} Observer whose messages are scheduled on the given scheduler.
    */
-  Observer.notifyOn = function (scheduler) {
+  Observer.prototype.notifyOn = function (scheduler) {
     return new ObserveOnObserver(scheduler, this);
   };

@@ -1816,7 +1816,7 @@ if (!Array.prototype.forEach) {
    * @param {Scheduler} scheduler Scheduler to schedule observer messages on.
    * @returns {Observer} Observer whose messages are scheduled on the given scheduler.
    */
-  Observer.notifyOn = function (scheduler) {
+  Observer.prototype.notifyOn = function (scheduler) {
     return new ObserveOnObserver(scheduler, this);
   };
 
@@ -2048,8 +2048,9 @@ if (!Array.prototype.forEach) {
   var ObserveOnObserver = (function (__super__) {
     inherits(ObserveOnObserver, __super__);
 
-    function ObserveOnObserver() {
-      __super__.apply(this, arguments);
+    function ObserveOnObserver(scheduler, observer, cancel) {
+      __super__.call(this, scheduler, observer);
+      this._cancel = cancel;
     }
 
     ObserveOnObserver.prototype.next = function (value) {
@@ -2065,6 +2066,12 @@ if (!Array.prototype.forEach) {
     ObserveOnObserver.prototype.completed = function () {
       __super__.prototype.completed.call(this);
       this.ensureActive();
+    };
+
+    ObserveOnObserver.prototype.dispose = function () {
+      __super__.prototype.dispose.call(this);
+      this._cancel && this._cancel.dispose();
+      this._cancel = null;
     };
 
     return ObserveOnObserver;
