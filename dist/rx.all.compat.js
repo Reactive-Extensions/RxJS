@@ -1630,7 +1630,7 @@ if (!Array.prototype.forEach) {
       try {
         e = sources[$iterator$]();
       } catch (err) {
-        observer.onError();
+        observer.onError(err);
         return;
       }
 
@@ -1678,7 +1678,7 @@ if (!Array.prototype.forEach) {
       try {
         e = sources[$iterator$]();
       } catch (err) {
-        observer.onError();
+        observer.onError(err);
         return;
       }
 

@@ -1380,7 +1380,7 @@
       try {
         e = sources[$iterator$]();
       } catch (err) {
-        observer.onError();
+        observer.onError(err);
         return;
       }
 
@@ -1428,7 +1428,7 @@
       try {
         e = sources[$iterator$]();
       } catch (err) {
-        observer.onError();
+        observer.onError(err);
         return;
       }
 
