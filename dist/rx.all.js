@@ -6219,7 +6219,7 @@
       duplicatekey = "duplicate key";
 
     function isPrime(candidate) {
-      if (candidate & 1 === 0) { return candidate === 2; }
+      if ((candidate & 1) === 0) { return candidate === 2; }
       var num1 = Math.sqrt(candidate),
         num2 = 3;
       while (num2 <= num1) {
