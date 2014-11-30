@@ -1846,23 +1846,17 @@
 
     ScheduledObserver.prototype.next = function (value) {
       var self = this;
-      this.queue.push(function () {
-        self.observer.onNext(value);
-      });
+      this.queue.push(function () { self.observer.onNext(value); });
     };
 
-    ScheduledObserver.prototype.error = function (err) {
+    ScheduledObserver.prototype.error = function (e) {
       var self = this;
-      this.queue.push(function () {
-        self.observer.onError(err);
-      });
+      this.queue.push(function () { self.observer.onError(e); });
     };
 
     ScheduledObserver.prototype.completed = function () {
       var self = this;
-      this.queue.push(function () {
-        self.observer.onCompleted();
-      });
+      this.queue.push(function () { self.observer.onCompleted(); });
     };
 
     ScheduledObserver.prototype.ensureActive = function () {
@@ -6058,21 +6052,17 @@
       this._trim(this.scheduler.now());
       this.observers.push(so);
 
-      var n = this.q.length;
-
       for (var i = 0, len = this.q.length; i < len; i++) {
         so.onNext(this.q[i].value);
       }
 
       if (this.hasError) {
-        n++;
         so.onError(this.error);
       } else if (this.isStopped) {
-        n++;
         so.onCompleted();
       }
 
-      so.ensureActive(n);
+      so.ensureActive();
       return subscription;
     }
 
@@ -9072,9 +9062,6 @@
 
     AutoDetachObserverPrototype.setDisposable = function (value) { this.m.setDisposable(value); };
     AutoDetachObserverPrototype.getDisposable = function (value) { return this.m.getDisposable(); };
-    AutoDetachObserverPrototype.disposable = function (value) {
-      return arguments.length ? this.getDisposable() : this.setDisposable(value);
-    };
 
     AutoDetachObserverPrototype.dispose = function () {
       __super__.prototype.dispose.call(this);

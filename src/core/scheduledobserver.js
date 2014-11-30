@@ -13,23 +13,17 @@
 
     ScheduledObserver.prototype.next = function (value) {
       var self = this;
-      this.queue.push(function () {
-        self.observer.onNext(value);
-      });
+      this.queue.push(function () { self.observer.onNext(value); });
     };
 
-    ScheduledObserver.prototype.error = function (err) {
+    ScheduledObserver.prototype.error = function (e) {
       var self = this;
-      this.queue.push(function () {
-        self.observer.onError(err);
-      });
+      this.queue.push(function () { self.observer.onError(e); });
     };
 
     ScheduledObserver.prototype.completed = function () {
       var self = this;
-      this.queue.push(function () {
-        self.observer.onCompleted();
-      });
+      this.queue.push(function () { self.observer.onCompleted(); });
     };
 
     ScheduledObserver.prototype.ensureActive = function () {

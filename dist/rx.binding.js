@@ -340,21 +340,17 @@
       this._trim(this.scheduler.now());
       this.observers.push(so);
 
-      var n = this.q.length;
-
       for (var i = 0, len = this.q.length; i < len; i++) {
         so.onNext(this.q[i].value);
       }
 
       if (this.hasError) {
-        n++;
         so.onError(this.error);
       } else if (this.isStopped) {
-        n++;
         so.onCompleted();
       }
 
-      so.ensureActive(n);
+      so.ensureActive();
       return subscription;
     }
 
