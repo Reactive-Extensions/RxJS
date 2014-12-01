@@ -253,7 +253,7 @@ Please check out:
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
 
 - Books
--   - [RxJS](http://xgrommx.github.io/rx-book)
+    - [RxJS](http://xgrommx.github.io/rx-book)
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
 
