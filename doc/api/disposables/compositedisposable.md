@@ -236,7 +236,7 @@ console.log(disposables.remove(d1));
 ### <a id="rxcompositedisposableprototypetoarray"></a>`Rx.CompositeDisposable.prototype.toarray()`
 <a href="#rxcompositedisposableprototypetoarray">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/compositedisposable.js#L87-L89 "View in source")
 
-Converts the existing CompositeDisposable to an array of disposables
+Converts the existing CompositeDisposable to an array of disposables. Does not dispose the objects.
 
 #### Returns
 *(Array)*: An array of disposable objects.
