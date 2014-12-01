@@ -173,7 +173,7 @@ suggestions.subscribe(
       }));
   },
   function (error) {
-    $results.empty().append($'<li>').text('Error:' + error);
+    $results.empty().append($('<li>')).text('Error:' + error);
   });
 ```
 
