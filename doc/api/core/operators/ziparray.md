@@ -11,8 +11,6 @@ Merges the specified observable sequences into one observable sequence by emitti
 
 #### Example
 ```js
-var range = Rx.Observable.range(0, 5);
-
 var source = Rx.Observable.zipArray([1,2,3], function (x) { return x * x; });
 
 var subscription = source.subscribe(
