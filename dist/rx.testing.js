@@ -262,22 +262,27 @@ var ReactiveTest = Rx.ReactiveTest = {
   MockPromise.prototype.then = function (onResolved, onRejected) {
     var self = this;
 
+    this.subscriptions.push(new Subscription(this.scheduler.clock));
+    var index = this.subscriptions.length - 1;
+
     var observer = Rx.Observer.create(
       function (x) {
-        onResolved(x);
+        self.messages = onResolved(x) || [];
         var idx = self.observers.indexOf(observer);
         self.observers.splice(idx, 1);
+        self.subscriptions[index] = new Subscription(self.subscriptions[index].subscribe, self.scheduler.clock);
       },
       function (err) {
-        onRejected(err);
+        self.messages = onRejected(err) || [];
         var idx = self.observers.indexOf(observer);
         self.observers.splice(idx, 1);
+        self.subscriptions[index] = new Subscription(self.subscriptions[index].subscribe, self.scheduler.clock);
       }
     );
     this.observers.push(observer);
 
-    return new MockPromise(this.scheduler, []);
-  }
+    return new MockPromise(this.scheduler, this.messages);
+  };
 
   var HotObservable = (function (__super__) {
 
