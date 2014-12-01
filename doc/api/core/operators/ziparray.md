@@ -11,22 +11,28 @@ Merges the specified observable sequences into one observable sequence by emitti
 
 #### Example
 ```js
-var source = Rx.Observable.zipArray([1,2,3], function (x) { return x * x; });
+var range = Rx.Observable.range(0, 5);
+
+var source = Rx.Observable.zipArray(
+    range,
+    range.skip(1), 
+    range.skip(2)
+);
 
 var subscription = source.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
     function (err) {
-        console.log('Error: ' + err);
+        console.log('Error: ' + err);   
     },
     function () {
-        console.log('Completed');
+        console.log('Completed');   
     });
 
-// => Next: 1
-// => Next: 4
-// => Next: 9
+// => Next: 0,1,2 
+// => Next: 1,2,3 
+// => Next: 2,3,4 
 // => Completed
 ```
 
