@@ -3,7 +3,6 @@
 [![NPM version](http://img.shields.io/npm/v/rx.svg)](https://npmjs.org/package/rx)
 [![Downloads](http://img.shields.io/npm/dm/rx.svg)](https://npmjs.org/package/rx)
 [![NuGet](http://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
-[![Code Climate](https://codeclimate.com/github/Reactive-Extensions/RxJS/badges/gpa.svg)](https://codeclimate.com/github/Reactive-Extensions/RxJS)
 [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
 
 **[The Need to go Reactive](#the-need-to-go-reactive)** |
@@ -205,6 +204,7 @@ Please check out:
     - [2 minute introduction to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877)
     - [Learn RxJS](https://github.com/jhusain/learnrx)
     - [RxJS Koans](https://github.com/Reactive-Extensions/RxJSKoans)
+    - [RxJS Workshop](https://github.com/Reactive-Extensions/BuildStuffWorkshop)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
     - [Reactive Programming and MVC](http://aaronstacy.com/writings/reactive-programming-and-mvc/)
 
@@ -213,16 +213,23 @@ Please check out:
     - [RxJS GitBook](http://xgrommx.github.io/rx-book/)
     - [Intro to Rx](http://introtorx.com/)
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
-    - [Rx Design Guidelines](http://go.microsoft.com/fwlink/?LinkID=205219)
+    - [Rx Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
     - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
 
 - Examples
-    - [React RxJS Autocomplete](https://github.com/eliseumds/react-autocomplete)
-    - [React RxJS TODO MVC](https://github.com/fdecampredon/react-rxjs-todomvc)
-    - [Rx-React](https://github.com/fdecampredon/rx-react)
-    - [React RxJS Router](https://github.com/kmcclosk/reactjs-rxjs-example)
-    - [Ninya.io - Angular + RxJS + rx.angular.js](https://github.com/ninya-io/ninya.io) - [Site](http://stackwho.herokuapp.com/)
-    - [Reactive Trader](https://github.com/AdaptiveConsulting/ReactiveTrader) - [Site](https://reactivetrader.azurewebsites.net/)
+    - [React](http://facebook.github.io/react/)
+        - [React RxJS Autocomplete](https://github.com/eliseumds/react-autocomplete)
+        - [React RxJS TODO MVC](https://github.com/fdecampredon/react-rxjs-todomvc)
+        - [Rx-React](https://github.com/fdecampredon/rx-react)
+        - [React RxJS Router](https://github.com/kmcclosk/reactjs-rxjs-example)
+    - [AngularJS](http://angularjs.org)
+        - [Ninya.io - Angular + RxJS + rx.angular.js](https://github.com/ninya-io/ninya.io) - [Site](http://stackwho.herokuapp.com/)
+    - [Cycle](https://github.com/staltz/cycle)
+        - [Cycle TODO MVC](https://github.com/staltz/todomvc-cycle)
+    - [jQuery](http://jquery.com)
+        - [Mario Elm Example](http://fudini.github.io/rx/mario.html)
+    - [Knockout.js](http://knockoutjs.com/)
+        - [Reactive Trader](https://github.com/AdaptiveConsulting/ReactiveTrader) - [Site](https://reactivetrader.azurewebsites.net/)
 
 - Presentations
     - Don't Cross the Streams - Cascadia.js 2012 [slides/demos](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams) | [video](http://www.youtube.com/watch?v=FqBq4uoiG0M)
@@ -266,7 +273,7 @@ There are a number of ways to get started with RxJS. The files are available on 
 You can use the [`rx-cli`](https://www.npmjs.org/package/rx-cli) to perform custom builds to create the RxJS you want:
 
 ```bash
-rx --lite --compat --methods select,selectmany,takeuntil,fromevent
+$ rx --lite --compat --methods select,selectmany,takeuntil,fromevent
 ```
 
 ### Download the Source
@@ -279,8 +286,8 @@ cd ./rxjs
 ### Installing with [NPM](https://npmjs.org/)
 
 ```bash`
-npm install rx
-npm install -g rx
+$ npm install rx
+$ npm install -g rx
 ```
 
 ### Using with Node.js and Ringo.js
@@ -292,17 +299,17 @@ var Rx = require('rx');
 ### Installing with [Bower](http://bower.io/)
 
 ```bash
-bower install rxjs
+$ bower install rxjs
 ```
 
 ### Installing with [Jam](http://jamjs.org/)
-
-    jam install rx
-
+```bash
+$ jam install rx
+```
 ### Installing All of RxJS via [NuGet](http://nuget.org/)
-
-    Install-Package RxJS-All
-
+```bash
+$ Install-Package RxJS-All
+```
 ### Install individual packages via [NuGet](http://nuget.org/):
 
     Install-Package RxJS-All
@@ -350,13 +357,13 @@ bower install rxjs
 
 ```js
 require({
-    'paths': {
-        'rx': 'path/to/rx.js'
-    }
+  'paths': {
+    'rx': 'path/to/rx-lite.js'
+  }
 },
 ['rx'], function(Rx) {
-    var obs = Rx.Observable.return(42);
-    obs.subscribe(function (x) { console.log(x); });
+  var obs = Rx.Observable.of(42);
+  obs.subscribe(function (x) { console.log(x); });
 });
 ```
 
@@ -364,6 +371,7 @@ require({
 
 The Reactive Extensions for JavaScript have no external dependencies any library, so they'll work well with just about any library.  We provide bridges and support for various libraries including:
 
+- [React (Rx-React)](https://github.com/fdecampredon/rx-react)
 - [AngularJS](https://github.com/Reactive-Extensions/rx.angular.js)
 - [HTML DOM](https://github.com/Reactive-Extensions/RxJS-DOM)
 - [jQuery (1.4+)](https://github.com/Reactive-Extensions/RxJS-jQuery)
