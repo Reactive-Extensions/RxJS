@@ -273,7 +273,7 @@ var browsers = [{
               'src/core/linq/observable/windowwithtime.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/windowwithtimeorcount.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/bufferwithtime.js', // windowwithtime, selectMany, toArray
-              'src/core/linq/observable/bufferwithtimeourcount.js', // windowwithtimeorcount, selectMany, toArray
+              'src/core/linq/observable/bufferwithtimeorcount.js', // windowwithtimeorcount, selectMany, toArray
               'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
@@ -547,7 +547,7 @@ var browsers = [{
               'src/core/linq/observable/windowwithtime.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/windowwithtimeorcount.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/bufferwithtime.js', // windowwithtime, selectMany, toArray
-              'src/core/linq/observable/bufferwithtimeourcount.js', // windowwithtimeorcount, selectMany, toArray
+              'src/core/linq/observable/bufferwithtimeorcount.js', // windowwithtimeorcount, selectMany, toArray
               'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
@@ -1409,7 +1409,7 @@ var browsers = [{
               'src/core/linq/observable/windowwithtime.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/windowwithtimeorcount.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/bufferwithtime.js', // windowwithtime, selectMany, toArray
-              'src/core/linq/observable/bufferwithtimeourcount.js', // windowwithtimeorcount, selectMany, toArray
+              'src/core/linq/observable/bufferwithtimeorcount.js', // windowwithtimeorcount, selectMany, toArray
               'src/core/linq/observable/timeinterval.js', // timeoutScheduler, defer, select
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
