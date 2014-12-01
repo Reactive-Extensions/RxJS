@@ -32,8 +32,6 @@ disposables.dispose();
 
 ## `CompositeDisposable Instance Methods` ##
 - [`add`](#rxcompositedisposableprototypeadditem)
-- [`clear`](#rxcompositedisposableprototypeclear)
-- [`contains`](#rxcompositedisposableprototypecontainsitem)
 - [`dispose`](#rxcompositedisposableprototypedispose)
 - [`remove`](#rxcompositedisposableprototyperemoveitem)
 - [`toArray`](#rxcompositedisposableprototypetoarray)
@@ -99,68 +97,6 @@ disposables.add(d1);
 
 disposables.dispose();
 // => one
-```
-
-### Location
-
-- rx.js
-
-* * *
-
-### <a id="rxcompositedisposableprototypeclear"></a>`Rx.CompositeDisposable.prototype.clear()`
-<a href="#rxcompositedisposableprototypeclear">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/compositedisposable.js#L65-L72 "View in source")
-
-Removes and disposes all disposables from the CompositeDisposable, but does not dispose the CompositeDisposable.
-
-#### Example
-
-```js
-var d1 = Rx.Disposable.create(function () {
-     console.log('one');
-});
-
-var disposables = new Rx.CompositeDisposable(d1);
-
-console.log(disposables.length);
-// => 1
-
-disposables.clear();
-// => one
-
-console.log(disposables.length);
-// => 0
-```
-
-### Location
-
-- rx.js
-
-* * *
-
-### <a id="rxcompositedisposableprototypecontainsitem"></a>`Rx.CompositeDisposable.prototype.contains(item)`
-<a href="#rxcompositedisposableprototypecontainsitem">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/compositedisposable.js#L79-L81 "View in source")
-
-Determines whether the CompositeDisposable contains a specific disposable.
-
-#### Arguments
-1. `item` *(Disposable)*: Disposable to search for.
-
-#### Returns
-*(Boolean)*: `true` if the disposable was found; otherwise, `false`.
-
-#### Example
-
-```js
-var disposables = new Rx.CompositeDisposable();
-
-var d1 = Rx.Disposable.create(function () {
-     console.log('one');
-});
-
-disposables.add(d1);
-
-console.log(disposables.contains(d1));
-// => true
 ```
 
 ### Location
