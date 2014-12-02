@@ -3,9 +3,8 @@
   var slice = Array.prototype.slice,
       Observable = Rx.Observable;
 
-  var dom = {},
-      events = ['resize','keyup','keydown'];
-  events.forEach(function (event) {
+  var dom = {};
+  ['resize','keyup','keydown'].forEach(function (event) {
     dom[event] = function (element) {
       return Observable.fromEvent(element, event);
     };
@@ -13,8 +12,7 @@
 
   // compose functions
   function compose() {
-    var args = slice.call(arguments, 0);
-    return args.reduce(function(f, g) {
+    return slice.call(arguments, 0).reduce(function(f, g) {
       return function () {
         return f(g.apply(null, arguments));
       };
