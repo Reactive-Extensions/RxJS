@@ -15,7 +15,7 @@
     var args = slice.call(arguments, 0);
     return args.reduce(function(f, g) {
       return function () {
-        f(g.apply(null, arguments));
+        return f(g.apply(null, arguments));
       };
     });
   }
@@ -173,8 +173,6 @@
     .combineLatest(arrows, function (dt, keys) { return { dt: dt, keys: keys }; })
     .sample(deltas);
 
-  var marios = input.scan(mario, function (m, c) { return step(c.dt, c.keys)(m); });
-
   var marioImage = document.getElementById('mario');
 
   // mario
@@ -185,6 +183,10 @@
     vy: 0,
     dir: 'right'
   };
+
+  var marios = input.scan(mario, function (m, c) {
+    return step(c.dt, c.keys)(m);
+  });
 
   marios
     .combineLatest(dimensions, function (mario, dimensions) {
