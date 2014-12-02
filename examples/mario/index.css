@@ -1,0 +1,37 @@
+body {
+  font-family: Arial;
+  font-size: 14px;
+  color: #555;
+  padding: 20px;
+  margin: 0;
+  background-color: rgba(174, 238, 238, 1);
+}
+
+nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+nav ul li {
+  margin: 4px 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+}
+
+#grass {
+  position: fixed;
+  background-color: rgba(74, 163, 41, 1);
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 60px;
+}
+
+#mario {
+  position: fixed;
+}
