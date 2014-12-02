@@ -142,15 +142,15 @@
     .distinctUntilChanged()
     .shareValue([]);
 
-  var arrows = {
-    LEFT: 37, UP: 38, RIGHT: 39, DOWN: 40
-  };
-
+  // LEFT: 37
+  // UP: 38
+  // RIGHT: 39
+  // UP: 40
   var arrowsMap = {
-    37:  {x: -1, y: 0},
+    37: {x: -1, y: 0},
     39: {x: 1, y: 0},
-    38:    {x: 0, y: 1},
-    40:  {x: 0, y: -1}
+    38: {x: 0, y: 1},
+    40: {x: 0, y: -1}
   };
 
   // Elm's Keyboard.arrows
