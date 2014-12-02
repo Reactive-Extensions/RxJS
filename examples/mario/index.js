@@ -1,3 +1,4 @@
+// Sample originally from here: http://fudini.github.io/rx/mario.html
 (function () {
   var slice = Array.prototype.slice,
       Observable = Rx.Observable;
@@ -22,10 +23,9 @@
 
   // update record
   function update(r, u) {
-    if (typeof u === 'function') {
-      return update(r, u(r));
-    }
-    return Object.assign({}, r, u);
+    return typeof u === 'function' ?
+      update(r, u(r)) :
+      Object.assign({}, r, u);
   }
 
   // Environment functions
