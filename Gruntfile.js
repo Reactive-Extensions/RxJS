@@ -47,6 +47,11 @@ var browsers = [{
               'src/core/license.js',
               'src/core/intro.js',
               'src/core/basicheader-modern.js',
+
+              // Stack trace start
+              'src/core/longstackbegin.js',
+              'src/core/longstacktraces.js',
+
               'src/core/enumeratorheader.js',
 
               'src/core/deprecate.js',
@@ -312,6 +317,10 @@ var browsers = [{
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
               'src/core/exports.js',
+
+              // Long stacktrace end
+              'src/core/longstackend.js',
+
               'src/core/outro.js'
             ],
             dest: 'dist/rx.all.js'
@@ -321,6 +330,11 @@ var browsers = [{
               'src/core/license.js',
               'src/core/intro.js',
               'src/core/basicheader.js',
+
+              // Stack trace start
+              'src/core/longstackbegin.js',
+              'src/core/longstacktraces.js',
+
               'src/core/enumeratorheader.js',
 
               'src/core/deprecate.js',
@@ -586,6 +600,10 @@ var browsers = [{
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
               'src/core/exports.js',
+
+              // End long stack traces
+              'src/core/longstackend.js',
+
               'src/core/outro.js'
             ],
             dest: 'dist/rx.all.compat.js'
@@ -595,6 +613,11 @@ var browsers = [{
               'src/core/license.js',
               'src/core/intro.js',
               'src/core/basicheader.js',
+
+              // Stack trace start
+              'src/core/longstackbegin.js',
+              'src/core/longstacktraces.js',
+
               'src/core/enumeratorheader.js',
 
               'src/core/deprecate.js',
@@ -717,6 +740,9 @@ var browsers = [{
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
               'src/core/exports.js',
+
+              'src/core/longstackend.js',
+
               'src/core/outro.js'
             ],
             dest: 'dist/rx.compat.js'
@@ -726,6 +752,11 @@ var browsers = [{
               'src/core/license.js',
               'src/core/intro.js',
               'src/core/basicheader-modern.js',
+
+              // Stack trace start
+              'src/core/longstackbegin.js',
+              'src/core/longstacktraces.js',
+
               'src/core/enumeratorheader.js',
 
               'src/core/deprecate.js',
@@ -848,6 +879,10 @@ var browsers = [{
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
               'src/core/exports.js',
+
+              // Long stack trace end
+              'src/core/longstackend.js',
+
               'src/core/outro.js'
             ],
             dest: 'dist/rx.js'
@@ -857,6 +892,11 @@ var browsers = [{
               'src/core/license.js',
               'src/core/intro.js',
               'src/core/liteheader.js',
+
+              // Stack trace start
+              'src/core/longstackbegin.js',
+              'src/core/longstacktraces.js',
+
               'src/core/enumeratorheader.js',
 
               'src/core/deprecate.js',
@@ -1001,6 +1041,10 @@ var browsers = [{
               'src/core/subjects/replaysubject.js',
 
               'src/core/exports.js',
+
+              // End long stack traces
+              'src/core/longstackend.js',
+
               'src/core/outro.js'
             ],
             dest: 'dist/rx.lite.js'
@@ -1010,6 +1054,11 @@ var browsers = [{
               'src/core/license.js',
               'src/core/intro.js',
               'src/core/liteheader-compat.js',
+
+              // Stack trace start
+              'src/core/longstackbegin.js',
+              'src/core/longstacktraces.js',
+
               'src/core/enumeratorheader.js',
 
               'src/core/deprecate.js',
@@ -1153,6 +1202,10 @@ var browsers = [{
               'src/core/subjects/replaysubject.js',
 
               'src/core/exports.js',
+
+              // End long stack traces
+              'src/core/longstackend.js',
+
               'src/core/outro.js'
             ],
             dest: 'dist/rx.lite.compat.js'

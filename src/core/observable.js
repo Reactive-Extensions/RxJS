@@ -6,6 +6,24 @@
   var Observable = Rx.Observable = (function () {
 
     function Observable(subscribe) {
+      if (Rx.config.longStackSupport && hasStacks) {
+        try {
+          throw new Error();
+        } catch (e) {
+          this.stack = e.stack.substring(e.stack.indexOf("\n") + 1);
+        }
+
+        var self = this;
+        this._subscribe = function (observer) {
+          observer.onError = function (err) {
+            makeStackTraceLong(self, err);
+            observer.onError(err);
+          };
+
+          subscribe(observer);
+        };
+      }
+
       this._subscribe = subscribe;
     }
 

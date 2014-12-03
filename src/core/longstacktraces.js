@@ -1,17 +1,17 @@
   var STACK_JUMP_SEPARATOR = "From previous event:";
 
-  function makeStackTraceLong(error, observer) {
+  function makeStackTraceLong(error, observable) {
       // If possible, transform the error stack trace by removing Node and RxJS
       // cruft, then concatenating with the stack trace of `observable`.
       if (hasStacks &&
-          observer.stack &&
+          observable.stack &&
           typeof error === "object" &&
           error !== null &&
           error.stack &&
           error.stack.indexOf(STACK_JUMP_SEPARATOR) === -1
       ) {
         var stacks = [];
-        for (var o = observer; !!o; o = o.source) {
+        for (var o = observable; !!o; o = o.source) {
           if (o.stack) {
             stacks.unshift(o.stack);
           }
@@ -34,6 +34,20 @@
       }
     }
     return desiredLines.join("\n");
+  }
+
+  function isInternalFrame(stackLine) {
+    var fileNameAndLineNumber = getFileNameAndLineNumber(stackLine);
+    if (!fileNameAndLineNumber) {
+      return false;
+    }
+    var fileName = fileNameAndLineNumber[0], lineNumber = fileNameAndLineNumber[1];
+
+    console.log(rFileName, rStartingLine, rEndingLine);
+
+    return fileName === rFileName &&
+      lineNumber >= rStartingLine &&
+      lineNumber <= rEndingLine;
   }
 
   function isNodeFrame(stackLine) {
