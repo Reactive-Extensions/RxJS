@@ -10,7 +10,8 @@
         disposableEmpty;
     }
 
-    function AnonymousObservable(subscribe) {
+    function AnonymousObservable(subscribe, parent) {
+      this.source = parent;
       if (!(this instanceof AnonymousObservable)) {
         return new AnonymousObservable(subscribe);
       }
