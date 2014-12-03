@@ -1,7 +1,7 @@
 var path = require('path');
 var fs = require('fs');
 
-var getFiles = function () {
+function getFiles() {
 	var dir = process.cwd();
 	var symbols = [
 		'AAPL',

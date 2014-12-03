@@ -83,10 +83,9 @@ var source = getStockData(fileserver.loadData()).share();
 
 var groupedTickStream = source
   .flatMap(function (value) {
-    var data = JSON.parse(value.data),
-        date = new Date().getTime();
+    var date = new Date().getTime();
 
-    return Observable.from(data).tap(function(x) {
+    return Observable.from(value).tap(function(x) {
       x.timestamp = date;
     });
   })
@@ -139,7 +138,9 @@ var spikes = groupedTickStream
     return Math.abs(x.spike) >= 0.1;
   })
   .subscribe(function (x) {
-    console.log('Symbol: ' + x.symbol + ' had a price spike of ' + x.spike + ' on ' + x.timestamp + ' with close of ' + x.lastClose);
+    console.log('Symbol:' , x.symbol , 'had a price spike of '
+      , Math.round(x.spike * 100) , '% on'
+      , new Date(x.timestamp) , 'with close of $' , x.lastClose);
   }, function (err) {
-    console.log(err);
+    console.log(err.stack);
   });
