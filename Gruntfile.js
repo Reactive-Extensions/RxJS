@@ -1785,6 +1785,70 @@ var browsers = [{
 
   grunt.registerTask('test', testjobs);
 
+  grunt.registerTask('concat-min', [
+    'concat:all',
+    'concat:allcompat',
+    'concat:basic',
+    'concat:modern',
+    'concat:backpressure',
+    'concat:aggregates',
+    'concat:asyncCompat',
+    'concat:asyncModern',
+    'concat:binding',
+    'concat:coincidence',
+    'concat:experimental',
+    'concat:joinpatterns',
+    'concat:time',
+    'concat:testing',
+    'concat:virtualtime',
+    'concat:lite',
+    'concat:litecompat',
+    'concat:liteextras',
+    'concat:sorting',
+
+    'uglify:all',
+    'uglify:allcompat',
+    'uglify:basic',
+    'uglify:modern',
+    'uglify:backpressure',
+    'uglify:aggregates',
+    'uglify:asyncCompat',
+    'uglify:asyncModern',
+    'uglify:binding',
+    'uglify:coincidence',
+    'uglify:experimental',
+    'uglify:joinpatterns',
+    'uglify:testing',
+    'uglify:time',
+    'uglify:virtualtime',
+    'uglify:lite',
+    'uglify:litecompat',
+    'uglify:liteextras',
+    'uglify:sorting'
+  ]);
+
+  grunt.registerTask('concatall', [
+    'concat:all',
+    'concat:allcompat',
+    'concat:basic',
+    'concat:modern',
+    'concat:backpressure',
+    'concat:aggregates',
+    'concat:asyncCompat',
+    'concat:asyncModern',
+    'concat:binding',
+    'concat:coincidence',
+    'concat:experimental',
+    'concat:joinpatterns',
+    'concat:time',
+    'concat:testing',
+    'concat:virtualtime',
+    'concat:lite',
+    'concat:litecompat',
+    'concat:liteextras',
+    'concat:sorting'
+  ]);
+
   // Default task
   grunt.registerTask('default', [
     'concat:all',
