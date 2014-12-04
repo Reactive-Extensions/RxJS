@@ -18,7 +18,7 @@
       }, observer.onCompleted.bind(observer)));
 
       return subscription;
-    });
+    }, source);
   }
 
   /**

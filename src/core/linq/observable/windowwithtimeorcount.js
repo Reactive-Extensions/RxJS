@@ -56,5 +56,5 @@
         }
       ));
       return refCountDisposable;
-    });
+    }, source);
   };

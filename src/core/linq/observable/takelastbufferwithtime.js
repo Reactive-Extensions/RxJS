@@ -28,5 +28,5 @@
         observer.onNext(res);
         observer.onCompleted();
       });
-    });
+    }, source);
   };

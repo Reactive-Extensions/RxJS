@@ -11,5 +11,5 @@
         source.subscribe(observer),
         other.subscribe(observer.onCompleted.bind(observer), observer.onError.bind(observer), noop)
       );
-    });
+    }, source);
   };

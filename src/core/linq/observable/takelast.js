@@ -17,5 +17,5 @@
         while (q.length > 0) { observer.onNext(q.shift()); }
         observer.onCompleted();
       });
-    });
+    }, source);
   };

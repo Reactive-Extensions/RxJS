@@ -26,7 +26,7 @@
         )
         .observeOn(scheduler)
         .map(selector);
-    });
+    }, source);
   };
 
   var ChainObservable = (function (__super__) {

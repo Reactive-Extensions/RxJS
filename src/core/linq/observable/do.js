@@ -42,7 +42,7 @@
         }
         observer.onCompleted();
       });
-    });
+    }, this);
   };
 
   /** @deprecated use #do or #tap instead. */

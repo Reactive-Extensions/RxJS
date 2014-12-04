@@ -75,5 +75,5 @@
       );
 
       return new CompositeDisposable(leftSubscription, rightSubscription);
-    });
+    }, first);
   };

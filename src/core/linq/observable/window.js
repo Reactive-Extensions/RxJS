@@ -54,7 +54,7 @@
       }));
 
       return r;
-    });
+    }, source);
   }
 
   function observableWindowWithClosingSelector(windowClosingSelector) {
@@ -101,5 +101,5 @@
 
       createWindowClose();
       return r;
-    });
+    }, source);
   }

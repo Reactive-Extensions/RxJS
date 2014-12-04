@@ -52,5 +52,5 @@
         }
       }));
       return new CompositeDisposable(subscription, timer);
-    });
+    }, source);
   };

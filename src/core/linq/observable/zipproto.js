@@ -16,7 +16,7 @@
           observer.onCompleted();
         }
       }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-    });
+    }, first);
   }
 
   /**
@@ -78,5 +78,5 @@
       }
 
       return new CompositeDisposable(subscriptions);
-    });
+    }, parent);
   };

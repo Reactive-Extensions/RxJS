@@ -4,16 +4,16 @@
    * @returns {Observable} An observable sequence that contains the elements that occur after the specified index in the input sequence.
    */
   observableProto.skip = function (count) {
-      if (count < 0) { throw new Error(argumentOutOfRange); }
-      var source = this;
-      return new AnonymousObservable(function (observer) {
-        var remaining = count;
-        return source.subscribe(function (x) {
-          if (remaining <= 0) {
-            observer.onNext(x);
-          } else {
-            remaining--;
-          }
-        }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-      });
+    if (count < 0) { throw new Error(argumentOutOfRange); }
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var remaining = count;
+      return source.subscribe(function (x) {
+        if (remaining <= 0) {
+          observer.onNext(x);
+        } else {
+          remaining--;
+        }
+      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    }, source);
   };

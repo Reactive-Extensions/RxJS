@@ -45,7 +45,7 @@
         id++;
       });
       return new CompositeDisposable(subscription, cancelable);
-    });
+    }, source);
   };
 
   observableProto.throttleWithSelector = function () {

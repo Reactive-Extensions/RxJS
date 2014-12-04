@@ -76,7 +76,7 @@
       new AnonymousObservable(function (observer) {
         var connectable = source.multicast(subjectOrSubjectSelector());
         return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
-      }) :
+      }, source) :
       new ConnectableObservable(source, subjectOrSubjectSelector);
   };
 
@@ -100,10 +100,6 @@
   /**
    * Returns an observable sequence that shares a single subscription to the underlying sequence.
    * This operator is a specialization of publish which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-   *
-   * @example
-   * var res = source.share();
-   *
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
    */
   observableProto.share = function () {
@@ -150,10 +146,6 @@
   /**
    * Returns an observable sequence that shares a single subscription to the underlying sequence and starts with an initialValue.
    * This operator is a specialization of publishValue which creates a subscription when the number of observers goes from zero to one, then shares that subscription with all subsequent observers until the number of observers returns to zero, at which point the subscription is disposed.
-   *
-   * @example
-   * var res = source.shareValue(42);
-   *
    * @param {Mixed} initialValue Initial value received by observers upon subscription.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
    */

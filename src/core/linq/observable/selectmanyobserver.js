@@ -47,5 +47,5 @@
           observer.onNext(result);
           observer.onCompleted();
         });
-    }).mergeAll();
+    }, source).mergeAll();
   };

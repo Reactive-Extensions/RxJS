@@ -181,7 +181,7 @@
     var source = this;
     return new AnonymousObservable(function (observer) {
       return source.subscribe(new ObserveOnObserver(scheduler, observer));
-    });
+    }, source);
   };
 
    /**
@@ -203,7 +203,7 @@
         d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
       }));
       return d;
-    });
+    }, source);
   };
 
   /**
@@ -464,7 +464,7 @@
         }
       ));
       return refCountDisposable;
-    });
+    }, source);
   };
 
   /**
@@ -487,7 +487,7 @@
         observer.onNext(q);
         observer.onCompleted();
       });
-    });
+    }, source);
   };
 
     /**
@@ -501,22 +501,18 @@
      * @returns {Observable} An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself.
      */
     observableProto.defaultIfEmpty = function (defaultValue) {
-        var source = this;
-        if (defaultValue === undefined) {
-            defaultValue = null;
-        }
-        return new AnonymousObservable(function (observer) {
-            var found = false;
-            return source.subscribe(function (x) {
-                found = true;
-                observer.onNext(x);
-            }, observer.onError.bind(observer), function () {
-                if (!found) {
-                    observer.onNext(defaultValue);
-                }
-                observer.onCompleted();
-            });
+      var source = this;
+      defaultValue === undefined && (defaultValue = null);
+      return new AnonymousObservable(function (observer) {
+        var found = false;
+        return source.subscribe(function (x) {
+          found = true;
+          observer.onNext(x);
+        }, observer.onError.bind(observer), function () {
+          !found && observer.onNext(defaultValue);
+          observer.onCompleted();
         });
+      }, this);
     };
 
   // Swap out for Array.findIndex
@@ -569,7 +565,7 @@
       },
       observer.onError.bind(observer),
       observer.onCompleted.bind(observer));
-    });
+    }, this);
   };
 
     return Rx;

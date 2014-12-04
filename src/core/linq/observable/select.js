@@ -19,5 +19,5 @@
         }
         observer.onNext(result);
       }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-    });
+    }, source);
   };

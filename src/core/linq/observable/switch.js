@@ -34,5 +34,5 @@
             !hasLatest && observer.onCompleted();
           });
       return new CompositeDisposable(subscription, innerSubscription);
-    });
+    }, sources);
   };

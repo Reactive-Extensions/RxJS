@@ -1,5 +1,4 @@
   function sampleObservable(source, sampler) {
-
     return new AnonymousObservable(function (observer) {
       var atEnd, value, hasValue;
 
@@ -20,7 +19,7 @@
         }),
         sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleSubscribe)
       );
-    });
+    }, source);
   }
 
   /**

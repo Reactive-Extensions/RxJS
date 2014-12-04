@@ -64,5 +64,5 @@
           observerWins() && observer.onCompleted();
         }));
         return new CompositeDisposable(subscription, timer);
-      });
+      }, source);
     };

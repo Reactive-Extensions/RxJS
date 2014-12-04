@@ -30,5 +30,5 @@
         }
         observer.onCompleted();
       });
-    });
+    }, source);
   };

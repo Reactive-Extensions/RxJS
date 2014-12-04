@@ -22,5 +22,5 @@
       return new CompositeDisposable(
         scheduler.scheduleWithRelative(duration, function () { open = true; }),
         source.subscribe(function (x) { open && observer.onNext(x); }, observer.onError.bind(observer), observer.onCompleted.bind(observer)));
-    });
+    }, source);
   };

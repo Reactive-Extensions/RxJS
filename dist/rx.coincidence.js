@@ -399,7 +399,7 @@
         })
       );
       return group;
-    });
+    }, left);
   };
 
   /**
@@ -511,7 +511,7 @@
       );
 
       return r;
-    });
+    }, left);
   };
 
     /**
@@ -581,7 +581,7 @@
       }));
 
       return r;
-    });
+    }, source);
   }
 
   function observableWindowWithClosingSelector(windowClosingSelector) {
@@ -628,7 +628,7 @@
 
       createWindowClose();
       return r;
-    });
+    }, source);
   }
 
   /**
@@ -652,7 +652,7 @@
         },
         observer.onError.bind(observer),
         observer.onCompleted.bind(observer));
-    });
+    }, source);
   };
 
   /**
@@ -787,7 +787,7 @@
       }));
 
       return refCountDisposable;
-    });
+    }, source);
   };
 
   var GroupedObservable = (function (__super__) {

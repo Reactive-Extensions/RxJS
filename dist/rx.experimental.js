@@ -96,16 +96,16 @@
     });
   }
 
-     /**
-     *  Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
-     *  This operator allows for a fluent style of writing queries that use the same sequence multiple times.
-     *
-     * @param {Function} selector Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.
-     * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
-     */
-    observableProto.letBind = observableProto['let'] = function (func) {
-        return func(this);
-    };
+   /**
+   *  Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
+   *  This operator allows for a fluent style of writing queries that use the same sequence multiple times.
+   *
+   * @param {Function} selector Selector function which can use the source sequence as many times as needed, without sharing subscriptions to the source sequence.
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
+   */
+  observableProto.letBind = observableProto['let'] = function (func) {
+    return func(this);
+  };
 
    /**
    *  Determines whether an observable collection contains values. There is an alias for this method called 'ifThen' for browsers <IE9
@@ -156,16 +156,16 @@
     return enumerableWhile(condition, source).concat();
   };
 
-     /**
-     *  Repeats source as long as condition holds emulating a do while loop.
-     *
-     * @param {Function} condition The condition which determines if the source will be repeated.
-     * @param {Observable} source The observable sequence that will be run if the condition function returns true.
-     * @returns {Observable} An observable sequence which is repeated as long as the condition holds.
-     */
-    observableProto.doWhile = function (condition) {
-        return observableConcat([this, observableWhileDo(condition, this)]);
-    };
+   /**
+   *  Repeats source as long as condition holds emulating a do while loop.
+   *
+   * @param {Function} condition The condition which determines if the source will be repeated.
+   * @param {Observable} source The observable sequence that will be run if the condition function returns true.
+   * @returns {Observable} An observable sequence which is repeated as long as the condition holds.
+   */
+  observableProto.doWhile = function (condition) {
+    return observableConcat([this, observableWhileDo(condition, this)]);
+  };
 
    /**
    *  Uses selector to determine which source in sources to use.
@@ -216,8 +216,8 @@
       var ensureActive = function () {
         var isOwner = false;
         if (q.length > 0) {
-            isOwner = !isAcquired;
-            isAcquired = true;
+          isOwner = !isAcquired;
+          isAcquired = true;
         }
         if (isOwner) {
           m.setDisposable(scheduler.scheduleRecursive(function (self) {
@@ -257,7 +257,7 @@
       activeCount++;
       ensureActive();
       return d;
-    });
+    }, this);
   };
 
    /**
@@ -398,7 +398,7 @@
       );
 
       return new CompositeDisposable(leftSubscription, rightSubscription);
-    });
+    }, first);
   };
 
   /**
@@ -429,7 +429,7 @@
         )
         .observeOn(scheduler)
         .map(selector);
-    });
+    }, source);
   };
 
   var ChainObservable = (function (__super__) {
@@ -515,7 +515,7 @@
         }));
 
       return g;
-    });
+    }, this);
   };
 
   /*
@@ -578,7 +578,7 @@
           }
         }));
       return g;
-    });
+    }, this);
   };
 
     return Rx;

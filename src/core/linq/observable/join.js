@@ -99,5 +99,5 @@
         })
       );
       return group;
-    });
+    }, left);
   };

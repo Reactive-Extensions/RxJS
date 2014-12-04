@@ -42,5 +42,5 @@
           observer.onNext(new ArrayIterable(arr));
           observer.onCompleted();
         });
-    });
+    }, source);
   };

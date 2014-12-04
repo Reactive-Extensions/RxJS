@@ -6,5 +6,5 @@
     var source = this;
     return new AnonymousObservable(function (observer) {
       return source.subscribe(noop, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-    });
+    }, source);
   };

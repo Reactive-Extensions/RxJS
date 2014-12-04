@@ -15,7 +15,7 @@
           observer.onNext(false);
           observer.onCompleted();
         });
-      });
+      }, source);
   };
 
   /** @deprecated use #some instead */

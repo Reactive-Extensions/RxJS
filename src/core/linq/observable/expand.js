@@ -18,8 +18,8 @@
       var ensureActive = function () {
         var isOwner = false;
         if (q.length > 0) {
-            isOwner = !isAcquired;
-            isAcquired = true;
+          isOwner = !isAcquired;
+          isAcquired = true;
         }
         if (isOwner) {
           m.setDisposable(scheduler.scheduleRecursive(function (self) {
@@ -59,5 +59,5 @@
       activeCount++;
       ensureActive();
       return d;
-    });
+    }, this);
   };

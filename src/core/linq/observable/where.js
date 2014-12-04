@@ -9,18 +9,18 @@
    * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.
    */
   observableProto.where = observableProto.filter = function (predicate, thisArg) {
-      var parent = this;
-      return new AnonymousObservable(function (observer) {
-        var count = 0;
-        return parent.subscribe(function (value) {
-          var shouldRun;
-          try {
-            shouldRun = predicate.call(thisArg, value, count++, parent);
-          } catch (e) {
-            observer.onError(e);
-            return;
-          }
-          shouldRun && observer.onNext(value);
-        }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-      });
+    var source = this;
+    return new AnonymousObservable(function (observer) {
+      var count = 0;
+      return source.subscribe(function (value) {
+        var shouldRun;
+        try {
+          shouldRun = predicate.call(thisArg, value, count++, parent);
+        } catch (e) {
+          observer.onError(e);
+          return;
+        }
+        shouldRun && observer.onNext(value);
+      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    }, source);
   };

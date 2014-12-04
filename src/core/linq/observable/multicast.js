@@ -21,6 +21,6 @@
       new AnonymousObservable(function (observer) {
         var connectable = source.multicast(subjectOrSubjectSelector());
         return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
-      }) :
+      }, source) :
       new ConnectableObservable(source, subjectOrSubjectSelector);
   };

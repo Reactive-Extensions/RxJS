@@ -65,7 +65,7 @@
           observer.onNext(isEqual(arr, sorted));
           observer.onCompleted();
         });
-    });
+    }, source);
   };
 
     return Rx;

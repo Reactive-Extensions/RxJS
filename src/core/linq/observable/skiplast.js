@@ -14,5 +14,5 @@
         q.push(x);
         q.length > count && observer.onNext(q.shift());
       }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-    });
+    }, source);
   };

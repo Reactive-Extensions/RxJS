@@ -59,7 +59,7 @@
         }
       });
       return new CompositeDisposable(subscription, cancelable);
-    });
+    }, source);
   }
 
   function observableDelayDate(source, dueTime, scheduler) {

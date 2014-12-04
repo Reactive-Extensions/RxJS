@@ -36,7 +36,7 @@
           id++;
         });
       return new CompositeDisposable(subscription, cancelable);
-    });
+    }, this);
   };
 
   /**

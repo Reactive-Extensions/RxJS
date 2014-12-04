@@ -83,5 +83,5 @@
         }
       });
       return new CompositeDisposable(subscription1, subscription2);
-    });
+    }, first);
   };

@@ -30,5 +30,5 @@
         observer.onNext(list);
         observer.onCompleted();
       });
-    });
+    }, source);
   }

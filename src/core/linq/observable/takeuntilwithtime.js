@@ -13,5 +13,5 @@
       return new CompositeDisposable(
         scheduler[schedulerMethod](endTime, observer.onCompleted.bind(observer)),
         source.subscribe(observer));
-    });
+    }, source);
   };

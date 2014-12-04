@@ -37,5 +37,5 @@
           observer.onNext(m);
           observer.onCompleted();
         });
-    });
+    }, source);
   };

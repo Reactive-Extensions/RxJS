@@ -26,7 +26,7 @@
         group.length === 1 && observer.onCompleted();
       }));
       return group;
-    });
+    }, sources);
   };
 
   /**

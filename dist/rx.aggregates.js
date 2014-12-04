@@ -71,7 +71,7 @@
           observer.onCompleted();
         }
       });
-    });
+    }, source);
   };
 
   function extremaBy(source, keySelector, comparer) {
@@ -106,15 +106,13 @@
         observer.onNext(list);
         observer.onCompleted();
       });
-    });
+    }, source);
   }
 
-    function firstOnly(x) {
-        if (x.length === 0) {
-            throw new Error(sequenceContainsNoElements);
-        }
-        return x[0];
-    }
+  function firstOnly(x) {
+    if (x.length === 0) { throw new Error(sequenceContainsNoElements); }
+    return x[0];
+  }
 
   /**
    * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
@@ -170,7 +168,7 @@
           observer.onNext(false);
           observer.onCompleted();
         });
-      });
+      }, source);
   };
 
   /** @deprecated use #some instead */
@@ -234,7 +232,7 @@
           observer.onNext(false);
           observer.onCompleted();
         });
-    });
+    }, this);
   };
 
     /**
@@ -283,14 +281,11 @@
           observer.onNext(-1);
           observer.onCompleted();
         });
-    });
+    }, source);
   };
 
   /**
    * Computes the sum of a sequence of values that are obtained by invoking an optional transform function on each element of the input sequence, else if not specified computes the sum on each item in the sequence.
-   * @example
-   * var res = source.sum();
-   * var res = source.sum(function (x) { return x.value; });
    * @param {Function} [selector] A transform function to apply to each element.
    * @param {Any} [thisArg] Object to use as this when executing callback.
    * @returns {Observable} An observable sequence containing a single element with the sum of the values in the source sequence.
@@ -462,55 +457,52 @@
         }
       });
       return new CompositeDisposable(subscription1, subscription2);
-    });
+    }, first);
   };
 
-    function elementAtOrDefault(source, index, hasDefault, defaultValue) {
-        if (index < 0) {
-            throw new Error(argumentOutOfRange);
+  function elementAtOrDefault(source, index, hasDefault, defaultValue) {
+    if (index < 0) { throw new Error(argumentOutOfRange); }
+    return new AnonymousObservable(function (observer) {
+      var i = index;
+      return source.subscribe(function (x) {
+        if (i-- === 0) {
+          observer.onNext(x);
+          observer.onCompleted();
         }
-        return new AnonymousObservable(function (observer) {
-            var i = index;
-            return source.subscribe(function (x) {
-                if (i === 0) {
-                    observer.onNext(x);
-                    observer.onCompleted();
-                }
-                i--;
-            }, observer.onError.bind(observer), function () {
-                if (!hasDefault) {
-                    observer.onError(new Error(argumentOutOfRange));
-                } else {
-                    observer.onNext(defaultValue);
-                    observer.onCompleted();
-                }
-            });
-        });
-    }
+      }, observer.onError.bind(observer), function () {
+        if (!hasDefault) {
+          observer.onError(new Error(argumentOutOfRange));
+        } else {
+          observer.onNext(defaultValue);
+          observer.onCompleted();
+        }
+      });
+    }, source);
+  }
 
-    /**
-     * Returns the element at a specified index in a sequence.
-     * @example
-     * var res = source.elementAt(5);
-     * @param {Number} index The zero-based index of the element to retrieve.
-     * @returns {Observable} An observable sequence that produces the element at the specified position in the source sequence.
-     */
-    observableProto.elementAt =  function (index) {
-        return elementAtOrDefault(this, index, false);
-    };
+  /**
+   * Returns the element at a specified index in a sequence.
+   * @example
+   * var res = source.elementAt(5);
+   * @param {Number} index The zero-based index of the element to retrieve.
+   * @returns {Observable} An observable sequence that produces the element at the specified position in the source sequence.
+   */
+  observableProto.elementAt =  function (index) {
+    return elementAtOrDefault(this, index, false);
+  };
 
-    /**
-     * Returns the element at a specified index in a sequence or a default value if the index is out of range.
-     * @example
-     * var res = source.elementAtOrDefault(5);
-     * var res = source.elementAtOrDefault(5, 0);
-     * @param {Number} index The zero-based index of the element to retrieve.
-     * @param [defaultValue] The default value if the index is outside the bounds of the source sequence.
-     * @returns {Observable} An observable sequence that produces the element at the specified position in the source sequence, or a default value if the index is outside the bounds of the source sequence.
-     */
-    observableProto.elementAtOrDefault = function (index, defaultValue) {
-        return elementAtOrDefault(this, index, true, defaultValue);
-    };
+  /**
+   * Returns the element at a specified index in a sequence or a default value if the index is out of range.
+   * @example
+   * var res = source.elementAtOrDefault(5);
+   * var res = source.elementAtOrDefault(5, 0);
+   * @param {Number} index The zero-based index of the element to retrieve.
+   * @param [defaultValue] The default value if the index is outside the bounds of the source sequence.
+   * @returns {Observable} An observable sequence that produces the element at the specified position in the source sequence, or a default value if the index is outside the bounds of the source sequence.
+   */
+  observableProto.elementAtOrDefault = function (index, defaultValue) {
+    return elementAtOrDefault(this, index, true, defaultValue);
+  };
 
   function singleOrDefaultAsync(source, hasDefault, defaultValue) {
     return new AnonymousObservable(function (observer) {
@@ -530,14 +522,11 @@
           observer.onCompleted();
         }
       });
-    });
+    }, source);
   }
 
   /**
    * Returns the only element of an observable sequence that satisfies the condition in the optional predicate, and reports an exception if there is not exactly one element in the observable sequence.
-   * @example
-   * var res = res = source.single();
-   * var res = res = source.single(function (x) { return x === 42; });
    * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
    * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
    * @returns {Observable} Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
@@ -567,149 +556,136 @@
       singleOrDefaultAsync(this, true, defaultValue);
   };
 
-    function firstOrDefaultAsync(source, hasDefault, defaultValue) {
-        return new AnonymousObservable(function (observer) {
-            return source.subscribe(function (x) {
-                observer.onNext(x);
-                observer.onCompleted();
-            }, observer.onError.bind(observer), function () {
-                if (!hasDefault) {
-                    observer.onError(new Error(sequenceContainsNoElements));
-                } else {
-                    observer.onNext(defaultValue);
-                    observer.onCompleted();
-                }
-            });
-        });
-    }
+  function firstOrDefaultAsync(source, hasDefault, defaultValue) {
+    return new AnonymousObservable(function (observer) {
+      return source.subscribe(function (x) {
+        observer.onNext(x);
+        observer.onCompleted();
+      }, observer.onError.bind(observer), function () {
+        if (!hasDefault) {
+          observer.onError(new Error(sequenceContainsNoElements));
+        } else {
+          observer.onNext(defaultValue);
+          observer.onCompleted();
+        }
+      });
+    }, source);
+  }
 
-    /**
-     * Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
-     * @example
-     * var res = res = source.first();
-     * var res = res = source.first(function (x) { return x > 3; });
-     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
-     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
-     * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate if provided, else the first item in the sequence.
-     */
-    observableProto.first = function (predicate, thisArg) {
-        return predicate ?
-            this.where(predicate, thisArg).first() :
-            firstOrDefaultAsync(this, false);
-    };
+  /**
+   * Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
+   * @example
+   * var res = res = source.first();
+   * var res = res = source.first(function (x) { return x > 3; });
+   * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
+   * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate if provided, else the first item in the sequence.
+   */
+  observableProto.first = function (predicate, thisArg) {
+    return predicate ?
+      this.where(predicate, thisArg).first() :
+      firstOrDefaultAsync(this, false);
+  };
 
-    /**
-     * Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
-     * @example
-     * var res = res = source.firstOrDefault();
-     * var res = res = source.firstOrDefault(function (x) { return x > 3; });
-     * var res = source.firstOrDefault(function (x) { return x > 3; }, 0);
-     * var res = source.firstOrDefault(null, 0);
-     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
-     * @param {Any} [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
-     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
-     * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
-     */
-    observableProto.firstOrDefault = function (predicate, defaultValue, thisArg) {
-        return predicate ?
-            this.where(predicate).firstOrDefault(null, defaultValue) :
-            firstOrDefaultAsync(this, true, defaultValue);
-    };
+  /**
+   * Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+   * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+   * @param {Any} [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
+   * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+   */
+  observableProto.firstOrDefault = function (predicate, defaultValue, thisArg) {
+    return predicate ?
+      this.where(predicate).firstOrDefault(null, defaultValue) :
+      firstOrDefaultAsync(this, true, defaultValue);
+  };
 
-    function lastOrDefaultAsync(source, hasDefault, defaultValue) {
-        return new AnonymousObservable(function (observer) {
-            var value = defaultValue, seenValue = false;
-            return source.subscribe(function (x) {
-                value = x;
-                seenValue = true;
-            }, observer.onError.bind(observer), function () {
-                if (!seenValue && !hasDefault) {
-                    observer.onError(new Error(sequenceContainsNoElements));
-                } else {
-                    observer.onNext(value);
-                    observer.onCompleted();
-                }
-            });
-        });
-    }
+  function lastOrDefaultAsync(source, hasDefault, defaultValue) {
+    return new AnonymousObservable(function (observer) {
+      var value = defaultValue, seenValue = false;
+      return source.subscribe(function (x) {
+        value = x;
+        seenValue = true;
+      }, observer.onError.bind(observer), function () {
+        if (!seenValue && !hasDefault) {
+          observer.onError(new Error(sequenceContainsNoElements));
+        } else {
+          observer.onNext(value);
+          observer.onCompleted();
+        }
+      });
+    }, source);
+  }
 
-    /**
-     * Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
-     * @example
-     * var res = source.last();
-     * var res = source.last(function (x) { return x > 3; });
-     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
-     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
-     * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
-     */
-    observableProto.last = function (predicate, thisArg) {
-        return predicate ?
-            this.where(predicate, thisArg).last() :
-            lastOrDefaultAsync(this, false);
-    };
+  /**
+   * Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
+   * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
+   * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
+   */
+  observableProto.last = function (predicate, thisArg) {
+    return predicate ?
+      this.where(predicate, thisArg).last() :
+      lastOrDefaultAsync(this, false);
+  };
 
-    /**
-     * Returns the last element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
-     * @example
-     * var res = source.lastOrDefault();
-     * var res = source.lastOrDefault(function (x) { return x > 3; });
-     * var res = source.lastOrDefault(function (x) { return x > 3; }, 0);
-     * var res = source.lastOrDefault(null, 0);
-     * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
-     * @param [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
-     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
-     * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
-     */
-    observableProto.lastOrDefault = function (predicate, defaultValue, thisArg) {
-        return predicate ?
-            this.where(predicate, thisArg).lastOrDefault(null, defaultValue) :
-            lastOrDefaultAsync(this, true, defaultValue);
-    };
+  /**
+   * Returns the last element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+   * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
+   * @param [defaultValue] The default value if no such element exists.  If not specified, defaults to null.
+   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
+   * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
+   */
+  observableProto.lastOrDefault = function (predicate, defaultValue, thisArg) {
+    return predicate ?
+      this.where(predicate, thisArg).lastOrDefault(null, defaultValue) :
+      lastOrDefaultAsync(this, true, defaultValue);
+  };
 
-    function findValue (source, predicate, thisArg, yieldIndex) {
-        return new AnonymousObservable(function (observer) {
-            var i = 0;
-            return source.subscribe(function (x) {
-                var shouldRun;
-                try {
-                    shouldRun = predicate.call(thisArg, x, i, source);
-                } catch (e) {
-                    observer.onError(e);
-                    return;
-                }
-                if (shouldRun) {
-                    observer.onNext(yieldIndex ? i : x);
-                    observer.onCompleted();
-                } else {
-                    i++;
-                }
-            }, observer.onError.bind(observer), function () {
-                observer.onNext(yieldIndex ? -1 : undefined);
-                observer.onCompleted();
-            });
-        });
-    }
+  function findValue (source, predicate, thisArg, yieldIndex) {
+    return new AnonymousObservable(function (observer) {
+      var i = 0;
+      return source.subscribe(function (x) {
+        var shouldRun;
+        try {
+          shouldRun = predicate.call(thisArg, x, i, source);
+        } catch (e) {
+          observer.onError(e);
+          return;
+        }
+        if (shouldRun) {
+          observer.onNext(yieldIndex ? i : x);
+          observer.onCompleted();
+        } else {
+          i++;
+        }
+      }, observer.onError.bind(observer), function () {
+        observer.onNext(yieldIndex ? -1 : undefined);
+        observer.onCompleted();
+      });
+    }, source);
+  }
 
-    /**
-     * Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire Observable sequence.
-     * @param {Function} predicate The predicate that defines the conditions of the element to search for.
-     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
-     * @returns {Observable} An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
-     */
-    observableProto.find = function (predicate, thisArg) {
-        return findValue(this, predicate, thisArg, false);
-    };
+  /**
+   * Searches for an element that matches the conditions defined by the specified predicate, and returns the first occurrence within the entire Observable sequence.
+   * @param {Function} predicate The predicate that defines the conditions of the element to search for.
+   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
+   * @returns {Observable} An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
+   */
+  observableProto.find = function (predicate, thisArg) {
+    return findValue(this, predicate, thisArg, false);
+  };
 
-    /**
-     * Searches for an element that matches the conditions defined by the specified predicate, and returns
-     * an Observable sequence with the zero-based index of the first occurrence within the entire Observable sequence.
-     * @param {Function} predicate The predicate that defines the conditions of the element to search for.
-     * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
-     * @returns {Observable} An Observable sequence with the zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, –1.
-    */
-    observableProto.findIndex = function (predicate, thisArg) {
-        return findValue(this, predicate, thisArg, true);
-    };
+  /**
+   * Searches for an element that matches the conditions defined by the specified predicate, and returns
+   * an Observable sequence with the zero-based index of the first occurrence within the entire Observable sequence.
+   * @param {Function} predicate The predicate that defines the conditions of the element to search for.
+   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
+   * @returns {Observable} An Observable sequence with the zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, –1.
+  */
+  observableProto.findIndex = function (predicate, thisArg) {
+    return findValue(this, predicate, thisArg, true);
+  };
 
 
   /**
@@ -728,7 +704,7 @@
           observer.onNext(s);
           observer.onCompleted();
         });
-    });
+    }, source);
   };
 
 
@@ -770,7 +746,7 @@
           observer.onNext(m);
           observer.onCompleted();
         });
-    });
+    }, source);
   };
 
     return Rx;

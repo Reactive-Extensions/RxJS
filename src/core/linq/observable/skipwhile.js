@@ -23,5 +23,5 @@
         }
         running && observer.onNext(x);
       }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
-    });
+    }, source);
   };

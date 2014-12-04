@@ -33,5 +33,5 @@
         observer.onError.bind(observer),
         function() { xform.result(observer); }
       );
-    });
+    }, source);
   };

@@ -43,5 +43,5 @@
         activeCount === 0 && observer.onCompleted();
       }));
       return group;
-    });
+    }, sources);
   };

@@ -16,5 +16,5 @@
           observer.onCompleted();
         }
       });
-    });
+    }, source);
   }
