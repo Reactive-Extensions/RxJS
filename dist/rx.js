@@ -4284,7 +4284,7 @@
     };
 
     AutoDetachObserverPrototype.setDisposable = function (value) { this.m.setDisposable(value); };
-    AutoDetachObserverPrototype.getDisposable = function (value) { return this.m.getDisposable(); };
+    AutoDetachObserverPrototype.getDisposable = function () { return this.m.getDisposable(); };
 
     AutoDetachObserverPrototype.dispose = function () {
       __super__.prototype.dispose.call(this);

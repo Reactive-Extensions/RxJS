@@ -3411,12 +3411,12 @@
       var args = slice.call(arguments, 0);
 
       return new AnonymousObservable(function (observer) {
-        function handler(e) {
-          var results = e;
+        function handler() {
+          var results = arguments;
 
           if (selector) {
             try {
-              results = selector(arguments);
+              results = selector(results);
             } catch (err) {
               observer.onError(err);
               return;
@@ -4742,7 +4742,7 @@
     };
 
     AutoDetachObserverPrototype.setDisposable = function (value) { this.m.setDisposable(value); };
-    AutoDetachObserverPrototype.getDisposable = function (value) { return this.m.getDisposable(); };
+    AutoDetachObserverPrototype.getDisposable = function () { return this.m.getDisposable(); };
 
     AutoDetachObserverPrototype.dispose = function () {
       __super__.prototype.dispose.call(this);

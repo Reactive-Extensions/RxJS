@@ -11,12 +11,12 @@
       var args = slice.call(arguments, 0);
 
       return new AnonymousObservable(function (observer) {
-        function handler(e) {
-          var results = e;
+        function handler() {
+          var results = arguments;
 
           if (selector) {
             try {
-              results = selector(arguments);
+              results = selector(results);
             } catch (err) {
               observer.onError(err);
               return;
