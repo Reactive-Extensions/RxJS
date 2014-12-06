@@ -498,7 +498,7 @@ One possible implementation could be as simple as the following:
 ```js
 // String -> Number
 scheduler.toDateTimeOffset = function (absolute) {
-    return return absolute.length;
+    return absolute.length;
 };
 ```
 
