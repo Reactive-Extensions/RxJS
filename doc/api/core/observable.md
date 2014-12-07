@@ -159,7 +159,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`startWith`](operators/startwith.md)
 - [`subscribe`](operators/subscribe.md)
 - [`subscribeOnNext`](operators/subscribeonnext.md)
-- [`subscribeOnError`](operators/subscriboneerror.md)
+- [`subscribeOnError`](operators/subscribeonerror.md)
 - [`subscribeOnCompleted`](operators/subscribeoncompleted.md)
 - [`subscribeOn`](operators/subscribeon.md)
 - [`sum`](operators/sum.md)
