@@ -1,6 +1,6 @@
-  var PausableObservable = (function (_super) {
+  var PausableObservable = (function (__super__) {
 
-    inherits(PausableObservable, _super);
+    inherits(PausableObservable, __super__);
 
     function subscribe(observer) {
       var conn = this.source.publish(),
@@ -29,7 +29,7 @@
         this.pauser = this.controller;
       }
 
-      _super.call(this, subscribe);
+      __super__.call(this, subscribe, source);
     }
 
     PausableObservable.prototype.pause = function () {

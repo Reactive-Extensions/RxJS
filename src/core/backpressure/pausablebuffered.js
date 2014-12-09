@@ -55,7 +55,7 @@
             next(true, 1);
           })
         );
-    });
+    }, source);
   }
 
   var PausableBufferedObservable = (function (__super__) {
@@ -120,7 +120,7 @@
         this.pauser = this.controller;
       }
 
-      __super__.call(this, subscribe);
+      __super__.call(this, subscribe, source);
     }
 
     PausableBufferedObservable.prototype.pause = function () {

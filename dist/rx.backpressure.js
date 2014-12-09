@@ -36,6 +36,7 @@
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,
+    AbstractObserver = Rx.internals.AbstractObserver,
     CompositeDisposable = Rx.CompositeDisposable,
     Subject = Rx.Subject,
     Observer = Rx.Observer,
@@ -44,14 +45,15 @@
     inherits = Rx.internals.inherits,
     addProperties = Rx.internals.addProperties,
     timeoutScheduler = Rx.Scheduler.timeout,
+    currentThreadScheduler = Rx.Scheduler.currentThread,
     identity = Rx.helpers.identity;
 
   var objectDisposed = 'Object has been disposed';
   function checkDisposed() { if (this.isDisposed) { throw new Error(objectDisposed); } }
 
-  var PausableObservable = (function (_super) {
+  var PausableObservable = (function (__super__) {
 
-    inherits(PausableObservable, _super);
+    inherits(PausableObservable, __super__);
 
     function subscribe(observer) {
       var conn = this.source.publish(),
@@ -80,7 +82,7 @@
         this.pauser = this.controller;
       }
 
-      _super.call(this, subscribe);
+      __super__.call(this, subscribe, source);
     }
 
     PausableObservable.prototype.pause = function () {
@@ -164,7 +166,7 @@
             next(true, 1);
           })
         );
-    });
+    }, source);
   }
 
   var PausableBufferedObservable = (function (__super__) {
@@ -229,7 +231,7 @@
         this.pauser = this.controller;
       }
 
-      __super__.call(this, subscribe);
+      __super__.call(this, subscribe, source);
     }
 
     PausableBufferedObservable.prototype.pause = function () {
@@ -257,29 +259,16 @@
     return new PausableBufferedObservable(this, subject);
   };
 
-  /**
-   * Attaches a controller to the observable sequence with the ability to queue.
-   * @example
-   * var source = Rx.Observable.interval(100).controlled();
-   * source.request(3); // Reads 3 values
-   * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
-   * @returns {Observable} The observable sequence which is paused based upon the pauser.
-   */
-  observableProto.controlled = function (enableQueue) {
-    if (enableQueue == null) {  enableQueue = true; }
-    return new ControlledObservable(this, enableQueue);
-  };
+  var ControlledObservable = (function (__super__) {
 
-  var ControlledObservable = (function (_super) {
-
-    inherits(ControlledObservable, _super);
+    inherits(ControlledObservable, __super__);
 
     function subscribe (observer) {
       return this.source.subscribe(observer);
     }
 
     function ControlledObservable (source, enableQueue) {
-      _super.call(this, subscribe);
+      __super__.call(this, subscribe, source);
       this.subject = new ControlledSubject(enableQueue);
       this.source = source.multicast(this.subject).refCount();
     }
@@ -293,132 +282,265 @@
 
   }(Observable));
 
-    var ControlledSubject = Rx.ControlledSubject = (function (_super) {
+  var ControlledSubject = (function (__super__) {
 
-        function subscribe (observer) {
-            return this.subject.subscribe(observer);
+    function subscribe (observer) {
+      return this.subject.subscribe(observer);
+    }
+
+    inherits(ControlledSubject, __super__);
+
+    function ControlledSubject(enableQueue) {
+      enableQueue == null && (enableQueue = true);
+
+      __super__.call(this, subscribe);
+      this.subject = new Subject();
+      this.enableQueue = enableQueue;
+      this.queue = enableQueue ? [] : null;
+      this.requestedCount = 0;
+      this.requestedDisposable = disposableEmpty;
+      this.error = null;
+      this.hasFailed = false;
+      this.hasCompleted = false;
+      this.controlledDisposable = disposableEmpty;
+    }
+
+    addProperties(ControlledSubject.prototype, Observer, {
+      onCompleted: function () {
+        this.hasCompleted = true;
+        (!this.enableQueue || this.queue.length === 0) && this.subject.onCompleted();
+      },
+      onError: function (error) {
+        this.hasFailed = true;
+        this.error = error;
+        (!this.enableQueue || this.queue.length === 0) && this.subject.onError(error);
+      },
+      onNext: function (value) {
+        var hasRequested = false;
+
+        if (this.requestedCount === 0) {
+          this.enableQueue && this.queue.push(value);
+        } else {
+          (this.requestedCount !== -1 && this.requestedCount-- === 0) && this.disposeCurrentRequest();
+          hasRequested = true;
+        }
+        hasRequested && this.subject.onNext(value);
+      },
+      _processRequest: function (numberOfItems) {
+        if (this.enableQueue) {
+          while (this.queue.length >= numberOfItems && numberOfItems > 0) {
+            this.subject.onNext(this.queue.shift());
+            numberOfItems--;
+          }
+
+          return this.queue.length !== 0 ?
+            { numberOfItems: numberOfItems, returnValue: true } :
+            { numberOfItems: numberOfItems, returnValue: false };
         }
 
-        inherits(ControlledSubject, _super);
-
-        function ControlledSubject(enableQueue) {
-            if (enableQueue == null) {
-                enableQueue = true;
-            }
-
-            _super.call(this, subscribe);
-            this.subject = new Subject();
-            this.enableQueue = enableQueue;
-            this.queue = enableQueue ? [] : null;
-            this.requestedCount = 0;
-            this.requestedDisposable = disposableEmpty;
-            this.error = null;
-            this.hasFailed = false;
-            this.hasCompleted = false;
-            this.controlledDisposable = disposableEmpty;
+        if (this.hasFailed) {
+          this.subject.onError(this.error);
+          this.controlledDisposable.dispose();
+          this.controlledDisposable = disposableEmpty;
+        } else if (this.hasCompleted) {
+          this.subject.onCompleted();
+          this.controlledDisposable.dispose();
+          this.controlledDisposable = disposableEmpty;
         }
 
-        addProperties(ControlledSubject.prototype, Observer, {
-            onCompleted: function () {
-                checkDisposed.call(this);
-                this.hasCompleted = true;
+        return { numberOfItems: numberOfItems, returnValue: false };
+      },
+      request: function (number) {
+        this.disposeCurrentRequest();
+        var self = this, r = this._processRequest(number);
 
-                if (!this.enableQueue || this.queue.length === 0) {
-                    this.subject.onCompleted();
-                }
-            },
-            onError: function (error) {
-                checkDisposed.call(this);
-                this.hasFailed = true;
-                this.error = error;
+        var number = r.numberOfItems;
+        if (!r.returnValue) {
+          this.requestedCount = number;
+          this.requestedDisposable = disposableCreate(function () {
+            self.requestedCount = 0;
+          });
 
-                if (!this.enableQueue || this.queue.length === 0) {
-                    this.subject.onError(error);
-                }
-            },
-            onNext: function (value) {
-                checkDisposed.call(this);
-                var hasRequested = false;
+          return this.requestedDisposable
+        } else {
+          return disposableEmpty;
+        }
+      },
+      disposeCurrentRequest: function () {
+        this.requestedDisposable.dispose();
+        this.requestedDisposable = disposableEmpty;
+      }
+    });
 
-                if (this.requestedCount === 0) {
-                    if (this.enableQueue) {
-                        this.queue.push(value);
-                    }
-                } else {
-                    if (this.requestedCount !== -1) {
-                        if (this.requestedCount-- === 0) {
-                            this.disposeCurrentRequest();
-                        }
-                    }
-                    hasRequested = true;
-                }
+    return ControlledSubject;
+  }(Observable));
 
-                if (hasRequested) {
-                    this.subject.onNext(value);
-                }
-            },
-            _processRequest: function (numberOfItems) {
-                if (this.enableQueue) {
-                    //console.log('queue length', this.queue.length);
+  /**
+   * Attaches a controller to the observable sequence with the ability to queue.
+   * @example
+   * var source = Rx.Observable.interval(100).controlled();
+   * source.request(3); // Reads 3 values
+   * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
+   * @returns {Observable} The observable sequence which is paused based upon the pauser.
+   */
+  observableProto.controlled = function (enableQueue) {
+    if (enableQueue == null) {  enableQueue = true; }
+    return new ControlledObservable(this, enableQueue);
+  };
 
-                    while (this.queue.length >= numberOfItems && numberOfItems > 0) {
-                        //console.log('number of items', numberOfItems);
-                        this.subject.onNext(this.queue.shift());
-                        numberOfItems--;
-                    }
+  var StopAndWaitObservable = (function (__super__) {
 
-                    if (this.queue.length !== 0) {
-                        return { numberOfItems: numberOfItems, returnValue: true };
-                    } else {
-                        return { numberOfItems: numberOfItems, returnValue: false };
-                    }
-                }
+    function subscribe (observer) {
+      this.subscription = this.source.subscribe(new StopAndWaitObserver(observer, this, this.subscription));
 
-                if (this.hasFailed) {
-                    this.subject.onError(this.error);
-                    this.controlledDisposable.dispose();
-                    this.controlledDisposable = disposableEmpty;
-                } else if (this.hasCompleted) {
-                    this.subject.onCompleted();
-                    this.controlledDisposable.dispose();
-                    this.controlledDisposable = disposableEmpty;
-                }
+      var self = this;
+      timeoutScheduler.schedule(function () { self.source.request(1); });
 
-                return { numberOfItems: numberOfItems, returnValue: false };
-            },
-            request: function (number) {
-                checkDisposed.call(this);
-                this.disposeCurrentRequest();
-                var self = this,
-                    r = this._processRequest(number);
+      return this.subscription;
+    }
 
-                number = r.numberOfItems;
-                if (!r.returnValue) {
-                    this.requestedCount = number;
-                    this.requestedDisposable = disposableCreate(function () {
-                        self.requestedCount = 0;
-                    });
+    inherits(StopAndWaitObservable, __super__);
 
-                    return this.requestedDisposable
-                } else {
-                    return disposableEmpty;
-                }
-            },
-            disposeCurrentRequest: function () {
-                this.requestedDisposable.dispose();
-                this.requestedDisposable = disposableEmpty;
-            },
+    function StopAndWaitObservable (source) {
+      __super__.call(this, subscribe, source);
+      this.source = source;
+    }
 
-            dispose: function () {
-                this.isDisposed = true;
-                this.error = null;
-                this.subject.dispose();
-                this.requestedDisposable.dispose();
-            }
+    var StopAndWaitObserver = (function (__sub__) {
+
+      inherits(StopAndWaitObserver, __sub__);
+
+      function StopAndWaitObserver (observer, observable, cancel) {
+        __sub__.call(this);
+        this.observer = observer;
+        this.observable = observable;
+        this.cancel = cancel;
+      }
+
+      var stopAndWaitObserverProto = StopAndWaitObserver.prototype;
+
+      stopAndWaitObserverProto.completed = function () {
+        this.observer.onCompleted();
+        this.dispose();
+      };
+
+      stopAndWaitObserverProto.error = function (error) {
+        this.observer.onError(error);
+        this.dispose();
+      }
+
+      stopAndWaitObserverProto.next = function (value) {
+        this.observer.onNext(value);
+
+        var self = this;
+        timeoutScheduler.schedule(function () {
+          self.observable.source.request(1);
         });
+      };
 
-        return ControlledSubject;
-    }(Observable));
+      stopAndWaitObserverProto.dispose = function () {
+        this.observer = null;
+        if (this.cancel) {
+          this.cancel.dispose();
+          this.cancel = null;
+        }
+        __sub__.prototype.dispose.call(this);
+      };
+
+      return StopAndWaitObserver;
+    }(AbstractObserver));
+
+    return StopAndWaitObservable;
+  }(Observable));
+
+
+  /**
+   * Attaches a stop and wait observable to the current observable.
+   * @returns {Observable} A stop and wait observable.
+   */
+  ControlledObservable.prototype.stopAndWait = function () {
+    return new StopAndWaitObservable(this);
+  };
+
+  var WindowedObservable = (function (__super__) {
+
+    function subscribe (observer) {
+      this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
+
+      var self = this;
+      timeoutScheduler.schedule(function () {
+        self.source.request(self.windowSize);
+      });
+
+      return this.subscription;
+    }
+
+    inherits(WindowedObservable, __super__);
+
+    function WindowedObservable(source, windowSize) {
+      __super__.call(this, subscribe, source);
+      this.source = source;
+      this.windowSize = windowSize;
+    }
+
+    var WindowedObserver = (function (__sub__) {
+
+      inherits(WindowedObserver, __sub__);
+
+      function WindowedObserver(observer, observable, cancel) {
+        this.observer = observer;
+        this.observable = observable;
+        this.cancel = cancel;
+        this.received = 0;
+      }
+
+      var windowedObserverPrototype = WindowedObserver.prototype;
+
+      windowedObserverPrototype.completed = function () {
+        this.observer.onCompleted();
+        this.dispose();
+      };
+
+      windowedObserverPrototype.error = function (error) {
+        this.observer.onError(error);
+        this.dispose();
+      };
+
+      windowedObserverPrototype.next = function (value) {
+        this.observer.onNext(value);
+
+        this.received = ++this.received % this.observable.windowSize;
+        if (this.received === 0) {
+          var self = this;
+          timeoutScheduler.schedule(function () {
+            self.observable.source.request(self.observable.windowSize);
+          });
+        }
+      };
+
+      windowedObserverPrototype.dispose = function () {
+        this.observer = null;
+        if (this.cancel) {
+          this.cancel.dispose();
+          this.cancel = null;
+        }
+        __sub__.prototype.dispose.call(this);
+      };
+
+      return WindowedObserver;
+    }(AbstractObserver));
+
+    return WindowedObservable;
+  }(Observable));
+
+  /**
+   * Creates a sliding windowed observable based upon the window size.
+   * @param {Number} windowSize The number of items in the window
+   * @returns {Observable} A windowed observable based upon the window size.
+   */
+  ControlledObservable.prototype.windowed = function (windowSize) {
+    return new WindowedObservable(this, windowSize);
+  };
 
     return Rx;
 }));
