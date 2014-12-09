@@ -19,6 +19,14 @@
     stringProto = String.prototype,
     propertyIsEnumerable = objectProto.propertyIsEnumerable;
 
+  // Fix for Tessel
+  if (!propertyIsEnumerable) {
+    propertyIsEnumerable = objectProto.propertyIsEnumerable = function (key) {
+      for (var k in this) { if (k === key) { return true; } }
+      return false;
+    };
+  }
+
   try {
     supportNodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
   } catch (e) {

@@ -1023,8 +1023,8 @@ var browsers = [{
               'src/core/backpressure/pausable.js',
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',
-              'src/core/backpressure/stopandwait.js',
-              'src/core/backpressure/windowed.js',
+              //'src/core/backpressure/stopandwait.js',
+              //'src/core/backpressure/windowed.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -1184,8 +1184,8 @@ var browsers = [{
               'src/core/backpressure/pausable.js',
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',
-              'src/core/backpressure/stopandwait.js',
-              'src/core/backpressure/windowed.js',
+              //'src/core/backpressure/stopandwait.js',
+              //'src/core/backpressure/windowed.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -1256,8 +1256,8 @@ var browsers = [{
               'src/core/backpressure/pausable.js',
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',
-              'src/core/backpressure/stopandwait.js',
-              'src/core/backpressure/windowed.js',
+              //'src/core/backpressure/stopandwait.js',
+              //'src/core/backpressure/windowed.js',
 
               'src/core/suboutro.js'
             ],
