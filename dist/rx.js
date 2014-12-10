@@ -122,8 +122,6 @@
     }
     var fileName = fileNameAndLineNumber[0], lineNumber = fileNameAndLineNumber[1];
 
-    console.log(rFileName, rStartingLine, rEndingLine);
-
     return fileName === rFileName &&
       lineNumber >= rStartingLine &&
       lineNumber <= rEndingLine;
@@ -2048,16 +2046,18 @@
 
         var self = this;
         this._subscribe = function (observer) {
+          var oldOnError = observer.onError.bind(observer);
+
           observer.onError = function (err) {
-            makeStackTraceLong(self, err);
-            observer.onError(err);
+            makeStackTraceLong(err, self);
+            oldOnError(err);
           };
 
-          subscribe(observer);
+          return subscribe(observer);
         };
+      } else {
+        this._subscribe = subscribe;
       }
-
-      this._subscribe = subscribe;
     }
 
     observableProto = Observable.prototype;

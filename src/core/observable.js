@@ -15,16 +15,18 @@
 
         var self = this;
         this._subscribe = function (observer) {
+          var oldOnError = observer.onError.bind(observer);
+
           observer.onError = function (err) {
-            makeStackTraceLong(self, err);
-            observer.onError(err);
+            makeStackTraceLong(err, self);
+            oldOnError(err);
           };
 
-          subscribe(observer);
+          return subscribe(observer);
         };
+      } else {
+        this._subscribe = subscribe;
       }
-
-      this._subscribe = subscribe;
     }
 
     observableProto = Observable.prototype;

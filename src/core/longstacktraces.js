@@ -43,8 +43,6 @@
     }
     var fileName = fileNameAndLineNumber[0], lineNumber = fileNameAndLineNumber[1];
 
-    console.log(rFileName, rStartingLine, rEndingLine);
-
     return fileName === rFileName &&
       lineNumber >= rStartingLine &&
       lineNumber <= rEndingLine;
