@@ -7,7 +7,7 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
 <tbody>
     <!-- Observable factories -->
     <tr>
-        <td rowspan="24">I want to create a new sequence</td>
+        <td rowspan="25">I want to create a new sequence</td>
         <td rowspan="4">using custom logic</td>
         <td colspan="2"></td>
         <td>
