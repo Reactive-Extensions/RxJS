@@ -12,8 +12,8 @@ Spawns a generator function which allows for Promises, Observable sequences, Arr
 #### Example
 ```js
 var source = Rx.spawn(function* () {
-  yield 1;
-  yield 2;
+  yield Observable.just(1);
+  yield Promise.resolve(2);
   yield 3;
 })();
 
