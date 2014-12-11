@@ -3388,7 +3388,7 @@
       return source.subscribe(function (value) {
         var shouldRun;
         try {
-          shouldRun = predicate.call(thisArg, value, count++, parent);
+          shouldRun = predicate.call(thisArg, value, count++, source);
         } catch (e) {
           observer.onError(e);
           return;
