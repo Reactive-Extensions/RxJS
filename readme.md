@@ -219,7 +219,7 @@ Please check out:
     - [Rx Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
     - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
 
-- Examples
+- Community Examples
     - [React](http://facebook.github.io/react/)
         - [Rx-React](https://github.com/fdecampredon/rx-react)
         - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
@@ -230,9 +230,9 @@ Please check out:
         - [Ninya.io - Angular + RxJS + rx.angular.js](https://github.com/ninya-io/ninya.io) - [Site](http://stackwho.herokuapp.com/)
     - [Cycle](https://github.com/staltz/cycle)
         - [Cycle TODO MVC](https://github.com/staltz/todomvc-cycle)
-    - [jQuery](http://jquery.com)
+    - Everything else
         - [Mario Elm Example](http://fudini.github.io/rx/mario.html)
-    - [Knockout.js](http://knockoutjs.com/)
+        - [Firebase + RxJS](http://blog.cryptoguru.com/2014/11/frp-using-rxjs-and-firebase.html)  
         - [Reactive Trader](https://github.com/AdaptiveConsulting/ReactiveTrader) - [Site](https://reactivetrader.azurewebsites.net/)
 
 - Presentations
