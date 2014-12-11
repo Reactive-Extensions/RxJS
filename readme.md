@@ -67,7 +67,7 @@ var subscription = source
   .map(function (quote) {
     return quote.price;
   })
-  .subscribe(
+  .forEach(
     function (price) {
       console.log('Prices higher than $30: $' + price);
     },
@@ -163,7 +163,7 @@ var suggestions = distinct
 Finally, we call the subscribe method on our observable sequence to start pulling data.
 
 ```js
-suggestions.subscribe(
+suggestions.forEach(
   function (data) {
     $results
       .empty()
@@ -221,9 +221,10 @@ Please check out:
 
 - Examples
     - [React](http://facebook.github.io/react/)
+        - [Rx-React](https://github.com/fdecampredon/rx-react)
+        - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
         - [React RxJS Autocomplete](https://github.com/eliseumds/react-autocomplete)
         - [React RxJS TODO MVC](https://github.com/fdecampredon/react-rxjs-todomvc)
-        - [Rx-React](https://github.com/fdecampredon/rx-react)
         - [React RxJS Router](https://github.com/kmcclosk/reactjs-rxjs-example)
     - [AngularJS](http://angularjs.org)
         - [Ninya.io - Angular + RxJS + rx.angular.js](https://github.com/ninya-io/ninya.io) - [Site](http://stackwho.herokuapp.com/)
@@ -366,7 +367,7 @@ require({
 },
 ['rx'], function(Rx) {
   var obs = Rx.Observable.of(42);
-  obs.subscribe(function (x) { console.log(x); });
+  obs.forEach(function (x) { console.log(x); });
 });
 ```
 
@@ -374,7 +375,9 @@ require({
 
 The Reactive Extensions for JavaScript have no external dependencies any library, so they'll work well with just about any library.  We provide bridges and support for various libraries including:
 
-- [React (Rx-React)](https://github.com/fdecampredon/rx-react)
+- [React](http://facebook.github.io/react/)
+    - [Rx-React](https://github.com/fdecampredon/rx-react)
+    - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
 - [AngularJS](https://github.com/Reactive-Extensions/rx.angular.js)
 - [HTML DOM](https://github.com/Reactive-Extensions/RxJS-DOM)
 - [jQuery (1.4+)](https://github.com/Reactive-Extensions/RxJS-jQuery)
