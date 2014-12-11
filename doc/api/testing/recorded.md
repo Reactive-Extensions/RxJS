@@ -140,7 +140,7 @@ Gets the recorded value.
 ```js
 var r1 = new Recorded(201, 'foo');
 
-console.log(r1.value;
+console.log(r1.value);
 // => foo
 ```
 
