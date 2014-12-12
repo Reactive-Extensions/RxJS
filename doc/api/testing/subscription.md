@@ -32,10 +32,10 @@ Creates a new subscription object with the given virtual subscription and unsubs
 ```js
 var subscription = new Rx.Subscription(200, 1000);
 
-console.log(recorded.time);
+console.log(subscription.subscribe);
 // => 200
 
-console.log(recorded.unsubscribe);
+console.log(subscription.unsubscribe);
 // => 1000
 ```
 
@@ -79,7 +79,7 @@ console.log(s1.equals(s3));
 * * *
 
 ### <a id="rxsubscriptionprototypetostring"></a>`Rx.Subscription.prototype.toString()`
-<a href="#rxsubscriptionprototypeequalsother">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L30-L32 "View in source")
+<a href="#rxsubscriptionprototypetostring">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/testing/subscription.js#L30-L32 "View in source")
 
 Returns a string representation of the current Subscription value.
 
@@ -143,8 +143,8 @@ Gets the unsubscription virtual time.
 ```js
 var s1 = new Subscription(201, 500);
 
-console.log(r1.unsubscribe);
-// => foo
+console.log(s1.unsubscribe);
+// => 500
 ```
 
 ### Location
