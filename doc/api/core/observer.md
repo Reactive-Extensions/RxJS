@@ -28,8 +28,8 @@ Creates an observer from the specified `onNext`, `onError`, and `onCompleted` ac
 
 #### Arguments
 1. `[onNext]` *(Function)*: Observer's onNext action implementation.
-1. `[onError]` *(Function)*: Observer's onError action implementation.
-1. `[onCompleted]` *(Function)*: Observer's onCompleted action implementation.
+2. `[onError]` *(Function)*: Observer's onError action implementation.
+3. `[onCompleted]` *(Function)*: Observer's onCompleted action implementation.
 
 #### Returns
 *(Observer)*: The observer object implemented using the given actions.
