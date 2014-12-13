@@ -161,7 +161,7 @@ var xs = scheduler.createHotObservable(
 );
 
 var res = scheduler.startWithTiming(
-    function () { return xs.map(funxtion (x) { return x; })},
+    function () { return xs.map(function (x) { return x; })},
     Rx.ReactiveTest.created,
     Rx.ReactiveTest.subscribed,
     Rx.ReactiveTest.disposed
@@ -191,7 +191,7 @@ var xs = scheduler.createHotObservable(
 );
 
 var res = scheduler.startWithTiming(
-    function () { return xs.map(funxtion (x) { return x; })},
+    function () { return xs.map(function (x) { return x; })},
     Rx.ReactiveTest.created,
     Rx.ReactiveTest.subscribed,
     Rx.ReactiveTest.disposed
@@ -221,7 +221,7 @@ var xs = scheduler.createHotObservable(
 );
 
 var res = scheduler.startWithTiming(
-    function () { return xs.map(funxtion (x) { return x; })},
+    function () { return xs.map(function (x) { return x; })},
     Rx.ReactiveTest.created,
     Rx.ReactiveTest.subscribed,
     Rx.ReactiveTest.disposed
