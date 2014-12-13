@@ -146,7 +146,7 @@ Invokes the delegate corresponding to the notification or the observer's method 
 1. `[observer]` *(Observer)*: Observer to invoke the notification on.
 1. `[onNext]` *(Function)*: Function to invoke for an OnNext notification.
 2. `[onError]` *(Function)*: Function to invoke for an OnError notification.
-2. `[onError]` *(Function)*: Function to invoke for an OnCompleted notification.
+3. `[OnCompleted]` *(Function)*: Function to invoke for an OnCompleted notification.
 
 #### Returns
 *(Any)*: Result produced by the observation.
