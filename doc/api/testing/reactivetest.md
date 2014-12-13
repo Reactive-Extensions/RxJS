@@ -114,8 +114,6 @@ Factory method for an OnNext notification record at a given time with a given er
 #### Example
 
 ```js
-var ex = new Error('woops');
-
 var onNext = Rx.ReactiveTest.onNext;
 
 var scheduler = new Rx.TestScheduler();
