@@ -31,6 +31,7 @@ The following list of operators natively support Promises:
 - [`Rx.Observable.prototype.timeoutWithSelector`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/timeoutwithselector.md)
 - [`Rx.Observable.while`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/while.md)
 - [`Rx.Observable.prototype.window`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/window.md)
+- [`Rx.Observable.withLatest`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/withlatest.md)
 - [`Rx.Observable.zip`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/zip.md) | [`Rx.Observable.prototype.zip`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/zipproto.md)
 
 Because of this, we can now do a number of very interesting things such as combining Promises and Observable sequences.

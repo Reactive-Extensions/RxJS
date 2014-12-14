@@ -350,7 +350,11 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/sequenceequal.md">sequenceEqual</a></td>
     </tr>
     <tr>
-        <td rowspan="4">I want to combine their values</td>
+        <td rowspan="5">I want to combine their values</td>
+        <td colspan="2">only when the first sequence emits, using the latest value from each</td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/withlatest.md">withLatest</a></td>
+    </tr>
+    <tr>
         <td rowspan="2">in order</td>
         <td>reusing the latest value when unchanged</td>
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/combinelatestproto.md">combineLatest</a></td>

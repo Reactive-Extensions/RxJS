@@ -191,6 +191,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`windowWithCount`](operators/windowwithcount.md)
 - [`windowWithTime`](operators/windowwithtime.md)
 - [`windowWithTimeOrCount`](operators/windowwithtimeorcount.md)
+- [`withLatest`](operators/withlatest.md)
 - [`zip`](operators/zipproto.md)
 
 ## `Deprecated Observable Methods` ##
