@@ -1,0 +1,4 @@
+body { font-family : Courier; background: #000; color: #0f0; }
+li { list-style:none;}
+ul { padding:0;}
+#sidebar { position:absolute; left:520px; top:20px; padding : 10px;}
