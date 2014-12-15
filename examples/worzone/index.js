@@ -1,8 +1,15 @@
-(function (undefined) {
+// Originally from https://github.com/raimohanska/worzone
+
+;(function (undefined) {
 
   dom.ready().subscribe(function () {
     var bounds = Rectangle(0, 0, 500, 450)
     var r = Raphael(20, 20, bounds.width, bounds.height);
+
+    var audio = Audio();
+
+    dom.click(document.querySelector('#sound'))
+      .subscribe(function () { audio.toggle(); });
   });
 
   function Audio () {
@@ -104,6 +111,7 @@
         }
       });
     }
+
     function renderWith(r, blockRenderer) {
       var elements = r.set()
       forEachBlock(function(block) {

@@ -31,7 +31,8 @@
 }.call(this, function (root, exp, Rx, undefined) {
 
   // Header values
-  var AnonymousObservable = Rx.AnonymousObservable;
+  var AnonymousObservable = Rx.AnonymousObservable,
+      fromEvent = Rx.Observable.fromEvent;
 
   function noop () { }
 
@@ -76,6 +77,31 @@
       }).publish().refCount();
     }
   };
+
+  // Add every event possible to dom
+  (function () {
+    var events = "blur focus focusin focusout load resize scroll unload click dblclick " +
+    "mousedown mouseup mousemove mouseover mouseout mouseenter mouseleave " +
+    "change select submit keydown keypress keyup error contextmenu";
+
+    if (root.PointerEvent) {
+      events += " pointerdown pointerup pointermove pointerover pointerout pointerenter pointerleave";
+    }
+
+    if (root.TouchEvent) {
+      events += " touchstart touchend touchmove touchcancel";
+    }
+
+    events = events.split(' ');
+
+    for(var i = 0, len = events.length; i < len; i++) {
+      (function (e) {
+        dom[e] = function (element, selector) {
+          return fromEvent(element, e, selector);
+        };
+      }(events[i]))
+    }
+  }());
 
   return dom;
 }));
