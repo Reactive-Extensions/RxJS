@@ -8,6 +8,6 @@
 
   /** @deprecated Use `concatAll` instead. */
   observableProto.concatObservable = function () {
-    deprecate('concatObservable', 'concatAll');
+    //deprecate('concatObservable', 'concatAll');
     return this.merge(1);
   };

@@ -29,6 +29,6 @@
    * @deprecated use #finally or #ensure instead.
    */
   observableProto.finallyAction = function (action) {
-    deprecate('finallyAction', 'finally or ensure');
+    //deprecate('finallyAction', 'finally or ensure');
     return this.ensure(action);
   };

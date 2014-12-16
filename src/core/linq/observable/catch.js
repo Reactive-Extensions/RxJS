@@ -11,6 +11,6 @@
    * @deprecated use #catch or #catchError instead.
    */
   Observable.catchException = function () {
-    deprecate('catchException', 'catch or catchError');
+    //deprecate('catchException', 'catch or catchError');
     return observableCatch.apply(null, arguments);
   };

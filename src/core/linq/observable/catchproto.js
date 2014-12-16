@@ -39,6 +39,6 @@
    * @deprecated use #catch or #catchError instead.
    */
   observableProto.catchException = function (handlerOrSecond) {
-    deprecate('catchException', 'catch or catchError');
+    //deprecate('catchException', 'catch or catchError');
     return this.catchError(handlerOrSecond);
   };

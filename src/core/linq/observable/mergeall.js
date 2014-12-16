@@ -33,6 +33,6 @@
    * @deprecated use #mergeAll instead.
    */
   observableProto.mergeObservable = function () {
-    deprecate('mergeObservable', 'mergeAll');
+    //deprecate('mergeObservable', 'mergeAll');
     return this.mergeAll.apply(this, arguments);
   };

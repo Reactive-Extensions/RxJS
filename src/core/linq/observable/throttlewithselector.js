@@ -49,6 +49,6 @@
   };
 
   observableProto.throttleWithSelector = function () {
-    deprecate('throttleWithSelector', 'debounceWithSelector');
+    //deprecate('throttleWithSelector', 'debounceWithSelector');
     return this.debounceWithSelector.apply(this, arguments);
   };

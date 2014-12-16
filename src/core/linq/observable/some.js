@@ -20,6 +20,6 @@
 
   /** @deprecated use #some instead */
   observableProto.any = function () {
-    deprecate('any', 'some');
+    //deprecate('any', 'some');
     return this.some.apply(this, arguments);
   };

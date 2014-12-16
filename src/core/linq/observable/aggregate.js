@@ -7,7 +7,7 @@
    * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
    */
   observableProto.aggregate = function () {
-    deprecate('aggregate', 'reduce');
+    //deprecate('aggregate', 'reduce');
     var seed, hasSeed, accumulator;
     if (arguments.length === 2) {
       seed = arguments[0];

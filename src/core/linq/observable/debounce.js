@@ -43,6 +43,6 @@
    * @deprecated use #debounce or #throttleWithTimeout instead.
    */
   observableProto.throttle = function(dueTime, scheduler) {
-    deprecate('throttle', 'debounce or throttleWithTimeout');
+    //deprecate('throttle', 'debounce or throttleWithTimeout');
     return this.debounce(dueTime, scheduler);
   };

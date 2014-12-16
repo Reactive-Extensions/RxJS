@@ -10,6 +10,6 @@
 
   /** @deprecated use #every instead */
   observableProto.all = function () {
-    deprecate('all', 'every');
+    //deprecate('all', 'every');
     return this.every.apply(this, arguments);
   };

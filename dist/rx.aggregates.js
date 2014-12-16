@@ -123,7 +123,7 @@
    * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
    */
   observableProto.aggregate = function () {
-    deprecate('aggregate', 'reduce');
+    //deprecate('aggregate', 'reduce');
     var seed, hasSeed, accumulator;
     if (arguments.length === 2) {
       seed = arguments[0];
@@ -173,7 +173,7 @@
 
   /** @deprecated use #some instead */
   observableProto.any = function () {
-    deprecate('any', 'some');
+    //deprecate('any', 'some');
     return this.some.apply(this, arguments);
   };
 
@@ -197,7 +197,7 @@
 
   /** @deprecated use #every instead */
   observableProto.all = function () {
-    deprecate('all', 'every');
+    //deprecate('all', 'every');
     return this.every.apply(this, arguments);
   };
 

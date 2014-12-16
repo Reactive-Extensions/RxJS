@@ -54,7 +54,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
-              'src/core/deprecate.js',
+              'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/priorityqueue.js',
@@ -338,7 +338,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
-              'src/core/deprecate.js',
+              'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/polyfills.js',
@@ -622,7 +622,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
-              'src/core/deprecate.js',
+              'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/polyfills.js',
@@ -762,7 +762,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
-              'src/core/deprecate.js',
+              'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/priorityqueue.js',
@@ -903,7 +903,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
-              'src/core/deprecate.js',
+              'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/priorityqueue.js',
@@ -1064,7 +1064,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
-              'src/core/deprecate.js',
+              'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/polyfills.js',

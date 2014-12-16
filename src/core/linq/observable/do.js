@@ -47,7 +47,7 @@
 
   /** @deprecated use #do or #tap instead. */
   observableProto.doAction = function () {
-    deprecate('doAction', 'do or tap');
+    //deprecate('doAction', 'do or tap');
     return this.tap.apply(this, arguments);
   };
 

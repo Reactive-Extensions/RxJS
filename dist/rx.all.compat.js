@@ -182,11 +182,15 @@
 
   Rx.helpers.iterator = $iterator$;
 
-  var deprecate = Rx.helpers.deprecate = function (name, alternative) {
-    /*if (typeof console !== "undefined" && typeof console.warn === "function") {
-      console.warn(name + ' is deprecated, use ' + alternative + ' instead.', new Error('').stack);
-    }*/
-  }
+  /** Used to determine if values are of the language type Object */
+  var dontEnums = ['toString',
+    'toLocaleString',
+    'valueOf',
+    'hasOwnProperty',
+    'isPrototypeOf',
+    'propertyIsEnumerable',
+    'constructor'],
+  dontEnumsLength = dontEnums.length;
 
   /** `Object#toString` result shortcuts */
   var argsClass = '[object Arguments]',
@@ -209,23 +213,11 @@
     stringProto = String.prototype,
     propertyIsEnumerable = objectProto.propertyIsEnumerable;
 
-  // Fix for Tessel
-  if (!propertyIsEnumerable) {
-    propertyIsEnumerable = objectProto.propertyIsEnumerable = function (key) {
-      for (var k in this) { if (k === key) { return true; } }
-      return false;
-    };
-  }
-
   try {
     supportNodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
   } catch (e) {
     supportNodeClass = true;
   }
-
-  var shadowedProps = [
-    'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'valueOf'
-  ];
 
   var nonEnumProps = {};
   nonEnumProps[arrayClass] = nonEnumProps[dateClass] = nonEnumProps[numberClass] = { 'constructor': true, 'toLocaleString': true, 'toString': true, 'valueOf': true };
@@ -285,14 +277,14 @@
     if (support.nonEnumShadows && object !== objectProto) {
       var ctor = object.constructor,
           index = -1,
-          length = shadowedProps.length;
+          length = dontEnumsLength;
 
       if (object === (ctor && ctor.prototype)) {
         var className = object === stringProto ? stringClass : object === errorProto ? errorClass : toString.call(object),
             nonEnum = nonEnumProps[className];
       }
       while (++index < length) {
-        key = shadowedProps[index];
+        key = dontEnums[index];
         if (!(nonEnum && nonEnum[key]) && hasOwnProperty.call(object, key)) {
           result.push(key);
         }
@@ -542,37 +534,36 @@
     };
   }
 
-if (!Array.prototype.forEach) {
+  if (!Array.prototype.forEach) {
+    Array.prototype.forEach = function (callback, thisArg) {
+      var T, k;
 
-  Array.prototype.forEach = function (callback, thisArg) {
-    var T, k;
-
-    if (this == null) {
-      throw new TypeError(" this is null or not defined");
-    }
-
-    var O = Object(this);
-    var len = O.length >>> 0;
-
-    if (typeof callback !== "function") {
-      throw new TypeError(callback + " is not a function");
-    }
-
-    if (arguments.length > 1) {
-      T = thisArg;
-    }
-
-    k = 0;
-    while (k < len) {
-      var kValue;
-      if (k in O) {
-        kValue = O[k];
-        callback.call(T, kValue, k, O);
+      if (this == null) {
+        throw new TypeError(" this is null or not defined");
       }
-      k++;
-    }
-  };
-}
+
+      var O = Object(this);
+      var len = O.length >>> 0;
+
+      if (typeof callback !== "function") {
+        throw new TypeError(callback + " is not a function");
+      }
+
+      if (arguments.length > 1) {
+        T = thisArg;
+      }
+
+      k = 0;
+      while (k < len) {
+        var kValue;
+        if (k in O) {
+          kValue = O[k];
+          callback.call(T, kValue, k, O);
+        }
+        k++;
+      }
+    };
+  }
 
   var boxedString = Object("a"),
       splitString = boxedString[0] != "a" || !(0 in boxedString);
@@ -667,6 +658,45 @@ if (!Array.prototype.forEach) {
       }
       return -1;
     };
+  }
+
+  // Fix for Tessel
+  if (!Object.prototype.propertyIsEnumerable) {
+    Object.prototype.propertyIsEnumerable = function (key) {
+      for (var k in this) { if (k === key) { return true; } }
+      return false;
+    };
+  }
+
+  if (!Object.keys) {
+    Object.keys = (function() {
+      'use strict';
+      var hasOwnProperty = Object.prototype.hasOwnProperty,
+      hasDontEnumBug = !({ toString: null }).propertyIsEnumerable('toString');
+
+      return function(obj) {
+        if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
+          throw new TypeError('Object.keys called on non-object');
+        }
+
+        var result = [], prop, i;
+
+        for (prop in obj) {
+          if (hasOwnProperty.call(obj, prop)) {
+            result.push(prop);
+          }
+        }
+
+        if (hasDontEnumBug) {
+          for (i = 0; i < dontEnumsLength; i++) {
+            if (hasOwnProperty.call(obj, dontEnums[i])) {
+              result.push(dontEnums[i]);
+            }
+          }
+        }
+        return result;
+      };
+    }());
   }
 
   // Collections
@@ -2565,7 +2595,7 @@ if (!Array.prototype.forEach) {
    * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
    */
   var observableFromArray = Observable.fromArray = function (array, scheduler) {
-    deprecate('fromArray', 'from');
+    //deprecate('fromArray', 'from');
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
       var count = 0, len = array.length;
@@ -2731,7 +2761,7 @@ if (!Array.prototype.forEach) {
 
   /** @deprecated use return or just */
   Observable.returnValue = function () {
-    deprecate('returnValue', 'return or just');
+    //deprecate('returnValue', 'return or just');
     return observableReturn.apply(null, arguments);
   };
 
@@ -2898,7 +2928,7 @@ if (!Array.prototype.forEach) {
    * @deprecated use #catch or #catchError instead.
    */
   observableProto.catchException = function (handlerOrSecond) {
-    deprecate('catchException', 'catch or catchError');
+    //deprecate('catchException', 'catch or catchError');
     return this.catchError(handlerOrSecond);
   };
 
@@ -2915,7 +2945,7 @@ if (!Array.prototype.forEach) {
    * @deprecated use #catch or #catchError instead.
    */
   Observable.catchException = function () {
-    deprecate('catchException', 'catch or catchError');
+    //deprecate('catchException', 'catch or catchError');
     return observableCatch.apply(null, arguments);
   };
 
@@ -3036,7 +3066,7 @@ if (!Array.prototype.forEach) {
 
   /** @deprecated Use `concatAll` instead. */
   observableProto.concatObservable = function () {
-    deprecate('concatObservable', 'concatAll');
+    //deprecate('concatObservable', 'concatAll');
     return this.merge(1);
   };
 
@@ -3146,7 +3176,7 @@ if (!Array.prototype.forEach) {
    * @deprecated use #mergeAll instead.
    */
   observableProto.mergeObservable = function () {
-    deprecate('mergeObservable', 'mergeAll');
+    //deprecate('mergeObservable', 'mergeAll');
     return this.mergeAll.apply(this, arguments);
   };
 
@@ -3614,7 +3644,7 @@ if (!Array.prototype.forEach) {
 
   /** @deprecated use #do or #tap instead. */
   observableProto.doAction = function () {
-    deprecate('doAction', 'do or tap');
+    //deprecate('doAction', 'do or tap');
     return this.tap.apply(this, arguments);
   };
 
@@ -3682,7 +3712,7 @@ if (!Array.prototype.forEach) {
    * @deprecated use #finally or #ensure instead.
    */
   observableProto.finallyAction = function (action) {
-    deprecate('finallyAction', 'finally or ensure');
+    //deprecate('finallyAction', 'finally or ensure');
     return this.ensure(action);
   };
 
@@ -4549,7 +4579,7 @@ if (!Array.prototype.forEach) {
    * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
    */
   observableProto.aggregate = function () {
-    deprecate('aggregate', 'reduce');
+    //deprecate('aggregate', 'reduce');
     var seed, hasSeed, accumulator;
     if (arguments.length === 2) {
       seed = arguments[0];
@@ -4599,7 +4629,7 @@ if (!Array.prototype.forEach) {
 
   /** @deprecated use #some instead */
   observableProto.any = function () {
-    deprecate('any', 'some');
+    //deprecate('any', 'some');
     return this.some.apply(this, arguments);
   };
 
@@ -4623,7 +4653,7 @@ if (!Array.prototype.forEach) {
 
   /** @deprecated use #every instead */
   observableProto.all = function () {
-    deprecate('all', 'every');
+    //deprecate('all', 'every');
     return this.every.apply(this, arguments);
   };
 
@@ -8003,7 +8033,7 @@ if (!Array.prototype.forEach) {
    * @deprecated use #debounce or #throttleWithTimeout instead.
    */
   observableProto.throttle = function(dueTime, scheduler) {
-    deprecate('throttle', 'debounce or throttleWithTimeout');
+    //deprecate('throttle', 'debounce or throttleWithTimeout');
     return this.debounce(dueTime, scheduler);
   };
 
@@ -8624,7 +8654,7 @@ if (!Array.prototype.forEach) {
   };
 
   observableProto.throttleWithSelector = function () {
-    deprecate('throttleWithSelector', 'debounceWithSelector');
+    //deprecate('throttleWithSelector', 'debounceWithSelector');
     return this.debounceWithSelector.apply(this, arguments);
   };
 

@@ -19,23 +19,11 @@
     stringProto = String.prototype,
     propertyIsEnumerable = objectProto.propertyIsEnumerable;
 
-  // Fix for Tessel
-  if (!propertyIsEnumerable) {
-    propertyIsEnumerable = objectProto.propertyIsEnumerable = function (key) {
-      for (var k in this) { if (k === key) { return true; } }
-      return false;
-    };
-  }
-
   try {
     supportNodeClass = !(toString.call(document) == objectClass && !({ 'toString': 0 } + ''));
   } catch (e) {
     supportNodeClass = true;
   }
-
-  var shadowedProps = [
-    'constructor', 'hasOwnProperty', 'isPrototypeOf', 'propertyIsEnumerable', 'toLocaleString', 'toString', 'valueOf'
-  ];
 
   var nonEnumProps = {};
   nonEnumProps[arrayClass] = nonEnumProps[dateClass] = nonEnumProps[numberClass] = { 'constructor': true, 'toLocaleString': true, 'toString': true, 'valueOf': true };
@@ -95,14 +83,14 @@
     if (support.nonEnumShadows && object !== objectProto) {
       var ctor = object.constructor,
           index = -1,
-          length = shadowedProps.length;
+          length = dontEnumsLength;
 
       if (object === (ctor && ctor.prototype)) {
         var className = object === stringProto ? stringClass : object === errorProto ? errorClass : toString.call(object),
             nonEnum = nonEnumProps[className];
       }
       while (++index < length) {
-        key = shadowedProps[index];
+        key = dontEnums[index];
         if (!(nonEnum && nonEnum[key]) && hasOwnProperty.call(object, key)) {
           result.push(key);
         }
