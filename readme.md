@@ -230,6 +230,7 @@ Please check out:
         - [RxEmber](https://github.com/blesh/RxEmber)
     - [AngularJS](http://angularjs.org)
         - [Ninya.io - Angular + RxJS + rx.angular.js](https://github.com/ninya-io/ninya.io) - [Site](http://stackwho.herokuapp.com/)
+        - [The Car Game](https://github.com/mikkark/TheCarGame) - [Site](https://thecargame.herokuapp.com/) - [Blog Post](https://allthingsarchitectural.wordpress.com/2014/11/24/game-programming-with-angular-rxjs-and-node-js/)
     - [Cycle](https://github.com/staltz/cycle)
         - [Cycle TODO MVC](https://github.com/staltz/todomvc-cycle)
     - Everything else
