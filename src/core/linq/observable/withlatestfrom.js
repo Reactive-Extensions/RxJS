@@ -2,20 +2,20 @@
    * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
    *
    * @example
-   * 1 - obs = obs1.withLatest(obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
-   * 2 - obs = obs1.withLatest([obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
+   * 1 - obs = obs1.withLatestFrom(obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
+   * 2 - obs = obs1.withLatestFrom([obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
-  observableProto.withLatest = function () {
+  observableProto.withLatestFrom = function () {
     var source = this;
     var args = slice.call(arguments);
     var resultSelector = args.pop();
 
     if (typeof source === 'undefined') {
-      throw new Error('Source observable not found for withLatest().');
+      throw new Error('Source observable not found for withLatestFrom().');
     }
     if (typeof resultSelector !== 'function') {
-      throw new Error('withLatest() expects a resultSelector function.');
+      throw new Error('withLatestFrom() expects a resultSelector function.');
     }
     if (Array.isArray(args[0])) {
       args = args[0];

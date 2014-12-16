@@ -97,7 +97,7 @@ NuGet Packages:
 - [`transduce`](../api/core/operators/transduce.md)
 - [`where`](../api/core/operators/where.md)
 - [`windowWithCount`](../api/core/operators/windowwithcount.md)
-- [`withLatest`](../api/core/operators/withlatest.md)
+- [`withLatestFrom`](../api/core/operators/withlatestfrom.md)
 - [`zip`](../api/core/operators/zipproto.md)
 
 ## Included Classes ##

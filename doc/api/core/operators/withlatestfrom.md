@@ -1,5 +1,5 @@
-### `Rx.Observable.prototype.withLatest(...args, resultSelector)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/withlatest.js "View in source")
+### `Rx.Observable.prototype.withLatestFrom(...args, resultSelector)`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/withlatestfrom.js "View in source")
 
 Merges the specified observable sequences into one observable sequence by using the selector function only when the source observable sequence (the instance) produces an element. The other observables can be in the form of an argument list of observables or an array.
 
@@ -20,7 +20,7 @@ var source2 = Rx.Observable.interval(50)
     .map(function (i) { return 'Second: ' + i; });
 
 // When source1 emits a value, combine it with the latest emission from source2.
-var source = source1.withLatest(
+var source = source1.withLatestFrom(
     source2,
     function (s1, s2) { return s1 + ', ' + s2; }
 ).take(4);
@@ -45,7 +45,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/withlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/withlatest.js)
+- [`/src/core/linq/observable/withlatestfrom.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/withlatestfrom.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
@@ -65,4 +65,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/withlatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/withlatest.js)
+- [`/tests/observable/withlatestfrom.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/withlatestfrom.js)
