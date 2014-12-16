@@ -181,6 +181,7 @@ NuGet Packages:
 - [`windowWithCount`](../api/core/operators/rxobservableprototypewindowwithcountcount-skip)
 - [`windowWithTime`](../api/core/operators/rxobservableprototypewindowwithtimetimespan-timeshift--scheduler)
 - [`windowWithTimeOrCount`](../api/core/operators/rxobservableprototypewindowwithtimeorcounttimespan-count-scheduler)
+- [`withLatestFrom`](../api/core/operators/withlatestfrom.md)
 - [`zip`](../api/core/operators/rxobservableprototypezipargs-resultselector)
 ## Included Classes ##
 
