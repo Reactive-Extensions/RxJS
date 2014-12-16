@@ -28,19 +28,6 @@
    */
   Rx.config.useNativeEvents = false;
 
-  // Check for Angular/jQuery/Zepto support
-  var jq =
-   !!root.angular && !!angular.element ? angular.element :
-   (!!root.jQuery ? root.jQuery : (
-     !!root.Zepto ? root.Zepto : null));
-
-  // Check for ember
-  var ember = !!root.Ember && typeof root.Ember.addListener === 'function';
-
-  // Check for Backbone.Marionette. Note if using AMD add Marionette as a dependency of rxjs
-  // for proper loading order!
-  var marionette = !!root.Backbone && !!root.Backbone.Marionette;
-
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
    *
@@ -63,23 +50,17 @@
 
     // Use only if non-native events are allowed
     if (!Rx.config.useNativeEvents) {
-      if (marionette) {
+      // Handles jq, Angular.js, Zepto, Marionette
+      if (element.on === 'function' && element.off === 'function') {
         return fromEventPattern(
           function (h) { element.on(eventName, h); },
           function (h) { element.off(eventName, h); },
           selector);
       }
-      if (ember) {
+      if (!!root.Ember && typeof root.Ember.addListener === 'function') {
         return fromEventPattern(
           function (h) { Ember.addListener(element, eventName, h); },
           function (h) { Ember.removeListener(element, eventName, h); },
-          selector);
-      }
-      if (jq) {
-        var $elem = jq(element);
-        return fromEventPattern(
-          function (h) { $elem.on(eventName, h); },
-          function (h) { $elem.off(eventName, h); },
           selector);
       }
     }

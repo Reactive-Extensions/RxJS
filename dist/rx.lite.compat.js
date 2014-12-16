@@ -3734,19 +3734,6 @@ if (!Array.prototype.forEach) {
    */
   Rx.config.useNativeEvents = false;
 
-  // Check for Angular/jQuery/Zepto support
-  var jq =
-   !!root.angular && !!angular.element ? angular.element :
-   (!!root.jQuery ? root.jQuery : (
-     !!root.Zepto ? root.Zepto : null));
-
-  // Check for ember
-  var ember = !!root.Ember && typeof root.Ember.addListener === 'function';
-
-  // Check for Backbone.Marionette. Note if using AMD add Marionette as a dependency of rxjs
-  // for proper loading order!
-  var marionette = !!root.Backbone && !!root.Backbone.Marionette;
-
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
    *
@@ -3769,25 +3756,19 @@ if (!Array.prototype.forEach) {
 
     // Use only if non-native events are allowed
     if (!Rx.config.useNativeEvents) {
-      if (marionette) {
+      // Handles jq, Angular.js, Zepto, Marionette
+      if (element.on === 'function' && element.off === 'function') {
         return fromEventPattern(
           function (h) { element.on(eventName, h); },
           function (h) { element.off(eventName, h); },
           selector);
       }
-      if (ember) {
+      if (!!root.Ember && typeof root.Ember.addListener === 'function') {
         return fromEventPattern(
           function (h) { Ember.addListener(element, eventName, h); },
           function (h) { Ember.removeListener(element, eventName, h); },
           selector);
-      }
-      if (jq) {
-        var $elem = jq(element);
-        return fromEventPattern(
-          function (h) { $elem.on(eventName, h); },
-          function (h) { $elem.off(eventName, h); },
-          selector);
-      }
+        }
     }
     return new AnonymousObservable(function (observer) {
       return createEventListener(
@@ -5440,23 +5421,23 @@ if (!Array.prototype.forEach) {
     return ReplaySubject;
   }(Observable));
 
-    if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
-        root.Rx = Rx;
+  if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
+    root.Rx = Rx;
 
-        define(function() {
-            return Rx;
-        });
-    } else if (freeExports && freeModule) {
-        // in Node.js or RingoJS
-        if (moduleExports) {
-            (freeModule.exports = Rx).Rx = Rx;
-        } else {
-          freeExports.Rx = Rx;
-        }
+    define(function() {
+      return Rx;
+    });
+  } else if (freeExports && freeModule) {
+    // in Node.js or RingoJS
+    if (moduleExports) {
+      (freeModule.exports = Rx).Rx = Rx;
     } else {
-        // in a browser or Rhino
-        root.Rx = Rx;
+      freeExports.Rx = Rx;
     }
+  } else {
+    // in a browser or Rhino
+    root.Rx = Rx;
+  }
 
   // All code before this point will be filtered from stack traces.
   var rEndingLine = captureLine();

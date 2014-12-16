@@ -4715,23 +4715,23 @@ if (!Array.prototype.forEach) {
     return AnonymousSubject;
   }(Observable));
 
-    if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
-        root.Rx = Rx;
+  if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
+    root.Rx = Rx;
 
-        define(function() {
-            return Rx;
-        });
-    } else if (freeExports && freeModule) {
-        // in Node.js or RingoJS
-        if (moduleExports) {
-            (freeModule.exports = Rx).Rx = Rx;
-        } else {
-          freeExports.Rx = Rx;
-        }
+    define(function() {
+      return Rx;
+    });
+  } else if (freeExports && freeModule) {
+    // in Node.js or RingoJS
+    if (moduleExports) {
+      (freeModule.exports = Rx).Rx = Rx;
     } else {
-        // in a browser or Rhino
-        root.Rx = Rx;
+      freeExports.Rx = Rx;
     }
+  } else {
+    // in a browser or Rhino
+    root.Rx = Rx;
+  }
 
   // All code before this point will be filtered from stack traces.
   var rEndingLine = captureLine();
