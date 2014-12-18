@@ -208,7 +208,7 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>Primitives</td>
    <td>
    <ol>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/empt">empty</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/empty.md">empty</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/never.md">never</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/return.md">return</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/throw.md">throw</a></li>
