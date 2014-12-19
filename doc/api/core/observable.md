@@ -35,6 +35,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 - [`of`](operators/of.md)
 - [`ofWithScheduler`](operators/ofwithscheduler.md)
 - [`onErrorResumeNext`](operators/onerrorresumenext.md)
+- [`pairs`](operators/pairs.md)
 - [`range`](operators/range.md)
 - [`repeat`](operators/repeat.md)
 - [`return`](operators/return.md)

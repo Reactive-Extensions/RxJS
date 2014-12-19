@@ -113,8 +113,13 @@ Converting your existing code from other libraries can be easy.  Many of the con
 
 1. For Bacon.js Users
     - [Why RxJS versus Bacon.js](mapping/bacon.js/whyrx.md)
-2. [For Async.js Users](mapping/asyncjs.md)
-3. [For Highland.js Users](mapping/highlandjs.md)
+    - [Comparing RxJS and Bacon.js](mapping/bacon.js/comparing.md)
+2. For Async.js Users
+    - [Why RxJS versus Async.js](mapping/async/whyrx.md)
+    - [Comparing RxJS and Async.jss](mapping/async/comparing.md)
+3. For Highland.js Users
+    - [Why RxJS versus Highland.js](mapping/highland/whyrx.md)
+    - [Comparing RxJS and Highland.jss](mapping/highland/comparing.md)
 
 ## Reactive Extensions Class Library
 

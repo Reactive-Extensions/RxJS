@@ -7,7 +7,7 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
 <tbody>
     <!-- Observable factories -->
     <tr>
-        <td rowspan="25">I want to create a new sequence</td>
+        <td rowspan="26">I want to create a new sequence</td>
         <td rowspan="4">using custom logic</td>
         <td colspan="2"></td>
         <td>
@@ -30,7 +30,7 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
         <td rowspan="2">that returns a value</td>
         <td colspan="2"></td>
         <td>
-            <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/return.md">Observable.return</a>
+            <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/return.md">Observable.return/just</a>
         </td>
     </tr>
     <tr>
@@ -63,7 +63,7 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/frompromise.md">Observable.fromPromise</a></td>
     </tr>
     <tr>
-        <td rowspan="5">that iterates</td>
+        <td rowspan="6">that iterates</td>
         <td rowspan="2">over the values in an array</td>
         <td></td>
         <td>
@@ -71,12 +71,16 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
         </td>
     </tr>
     <tr>
+      <td>of object key/values</td>
+      <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/pairs.md">Observable.pairs</a></td>
+    </tr>
+    <tr>
         <td>of asynchronous elements</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservableforsources-resultselector">Observable.for</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/for.md">Observable.for</a></td>
     </tr>
     <tr>
         <td colspan="2">over values in a numeric range</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/">Observable.range</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/range.md">Observable.range</a></td>
     </tr>
     <tr>
         <td colspan="2">over the values in an iterable, array or array-like object</a></td>
