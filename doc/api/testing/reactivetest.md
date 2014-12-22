@@ -114,8 +114,6 @@ Factory method for an OnNext notification record at a given time with a given er
 #### Example
 
 ```js
-var ex = new Error('woops');
-
 var onNext = Rx.ReactiveTest.onNext;
 
 var scheduler = new Rx.TestScheduler();
@@ -161,7 +159,7 @@ var xs = scheduler.createHotObservable(
 );
 
 var res = scheduler.startWithTiming(
-    function () { return xs.map(funxtion (x) { return x; })},
+    function () { return xs.map(function (x) { return x; })},
     Rx.ReactiveTest.created,
     Rx.ReactiveTest.subscribed,
     Rx.ReactiveTest.disposed
@@ -191,7 +189,7 @@ var xs = scheduler.createHotObservable(
 );
 
 var res = scheduler.startWithTiming(
-    function () { return xs.map(funxtion (x) { return x; })},
+    function () { return xs.map(function (x) { return x; })},
     Rx.ReactiveTest.created,
     Rx.ReactiveTest.subscribed,
     Rx.ReactiveTest.disposed
@@ -221,7 +219,7 @@ var xs = scheduler.createHotObservable(
 );
 
 var res = scheduler.startWithTiming(
-    function () { return xs.map(funxtion (x) { return x; })},
+    function () { return xs.map(function (x) { return x; })},
     Rx.ReactiveTest.created,
     Rx.ReactiveTest.subscribed,
     Rx.ReactiveTest.disposed
