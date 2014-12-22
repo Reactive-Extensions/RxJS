@@ -53,14 +53,14 @@ Emitter.prototype.emit = function (name, data) {
 Emitter.prototype.on = function (name, handler) {
 	var fnName = createName(name);
 	this.subjects[fnName] || (this.subjects[fnName] = new Rx.Subject());
-	this.subjects[fName].subscribe(handler);
+	this.subjects[fnName].subscribe(handler);
 };
 
 Emitter.prototype.off = function (name, handler) {
 	var fnName = createName(name);
 	if (this.subjects[fnName]) {
-		this.subjects[fName].dispose();
-		delete this.subjects[fName];
+		this.subjects[fnName].dispose();
+		delete this.subjects[fnName];
 	}
 };
 
@@ -98,7 +98,7 @@ Emitter.prototype.emit = function (name, data) {
 Emitter.prototype.listen = function (name, handler) {
 	var fnName = createName(name);
 	this.subjects[fnName] || (this.subjects[fnName] = new Rx.Subject());
-	return this.subjects[fName].subscribe(handler);
+	return this.subjects[fnName].subscribe(handler);
 };
 
 Emitter.prototype.dispose = function () {
