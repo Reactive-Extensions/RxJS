@@ -1,6 +1,6 @@
 # `Rx.TestScheduler` class #
 
-Virtual time scheduler used for testing applications and libraries built using Reactive Extensions.  This inherits from the `Rx.TestScheduler` class.
+Virtual time scheduler used for testing applications and libraries built using Reactive Extensions.  This inherits from the `Rx.VirtualTimeScheduler` class.
 
 ## Usage ##
 
