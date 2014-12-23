@@ -94,6 +94,10 @@ Rx.Node = {
    * @returns {Observable} An observable sequence which fires on each 'data' event as well as handling 'error' and finish events like `end` or `finish`.
    */
   fromStream: function (stream, finishEventName) {
+    stream.pause();
+
+    finishEventName || (finishEventName = 'end');
+
     return Observable.create(function (observer) {
       function dataHandler (data) {
         observer.onNext(data);
@@ -107,13 +111,11 @@ Rx.Node = {
         observer.onCompleted();
       }
 
-      if (!finishEventName) {
-        finishEventName = 'end';
-      }
-
       stream.addListener('data', dataHandler);
       stream.addListener('error', errorHandler);
       stream.addListener(finishEventName, endHandler);
+
+      stream.resume();
 
       return function () {
         stream.removeListener('data', dataHandler);
@@ -158,15 +160,26 @@ Rx.Node = {
    * @returns {Disposable} The subscription handle.
    */
   writeToStream: function (observable, stream, encoding) {
-    return observable.subscribe(
+    var source = observable.pausableBuffered();
+    source.resume();
+
+    function onDrain() {
+      source.resume();
+    }
+
+    stream.addListener('drain', onDrain);
+
+    return source.subscribe(
       function (x) {
-        stream.write(x, encoding);
+        console.log('Writing', x);
+        !stream.write(x, encoding) && source.pause();
       },
       function (err) {
         stream.emit('error', err);
       }, function () {
         // Hack check because STDIO is not closable
         !stream._isStdio && stream.end();
+        stream.removeListener('drain', onDrain);
       });
   }
 };
