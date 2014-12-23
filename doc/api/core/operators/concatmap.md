@@ -8,7 +8,7 @@ Projects each element of an observable sequence to an observable sequence and co
 
 ```js
 source.concatMap(function (x, i) { return Rx.Observable.range(0, x); });
-source.concatMap(function (x, i) { return Promise.resolve(x + 1}; });
+source.concatMap(function (x, i) { return Promise.resolve(x + 1); });
 source.concatMap(function (x, i) { return [x, i]; });
 ```
 
