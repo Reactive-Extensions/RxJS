@@ -33,6 +33,8 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
+// => Next: 1
+// => Next: 2
 // => Next: 3
 // => Completed
 ```
