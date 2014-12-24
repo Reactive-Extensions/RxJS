@@ -160,7 +160,7 @@ var suggestions = distinct
   .flatMapLatest(searchWikipedia);
 ```
 
-Finally, we call the subscribe method on our observable sequence to start pulling data.
+Finally, we call the `forEach` method on our observable sequence to start pulling data.
 
 ```js
 suggestions.forEach(
