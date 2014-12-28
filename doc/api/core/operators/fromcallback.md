@@ -24,7 +24,7 @@ var source = exists('file.txt');
 
 var subscription = source.subscribe(
     function (x) {
-        console.log('Next: ' + result);
+        console.log('Next: ' + x);
     },
     function (err) {
         console.log('Error: ' + err);
