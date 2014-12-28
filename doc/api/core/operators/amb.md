@@ -32,7 +32,7 @@ var subscription = source.subscribe(
 
 /* Using Promises and Observables */
 var source = Rx.Observable.amb(
-    RSVP.Promise.resolve('foo')
+    RSVP.Promise.resolve('foo'),
     Rx.Observable.timer(200).select(function () { return 'bar'; })
 );
 
