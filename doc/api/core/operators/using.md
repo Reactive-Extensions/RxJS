@@ -14,7 +14,7 @@ Constructs an observable sequence that depends on a resource object, whose lifet
 ```js
 /* Using an AsyncSubject as a resource which supports the .dispose method */
 function DisposableResource(value) {
-  this.value = null;
+  this.value = value;
   this.disposed = false;
 }
 
@@ -36,9 +36,9 @@ DisposableResource.prototype.dispose = function () {
 var source = Rx.Observable.using(
   function () { return new DisposableResource(42); },
   function (resource) {
-    var subject = new AsyncSubject();
-    s.onNext(resource.getValue());
-    s.onCompleted();
+    var subject = new Rx.AsyncSubject();
+    subject.onNext(resource.getValue());
+    subject.onCompleted();
     return subject;
   }
 );
