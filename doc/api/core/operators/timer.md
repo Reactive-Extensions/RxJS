@@ -15,6 +15,7 @@ relative time is supported.
 #### Example
 ```js
 var source = Rx.Observable.timer(200, 100)
+    .timeInterval()
     .pluck('interval')
     .take(3);
 
