@@ -66,7 +66,7 @@ Rx.Observable
     .for(files, function (file) {
         return writeFile(file, 'Hello Node')
     })
-    .subscribe(
+    .forEach(
         function () {
             console.log('file written!');
         },
@@ -96,9 +96,11 @@ var async = require('async'),
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 async.map(files, fs.stat, function (err, results) {
-    results.forEach(function (result) {
-        console.log('is file: ' + result.isFile());
-    });
+
+  results.forEach(function (result) {
+    console.log('is file: %s', result.isFile());
+  });
+
 });
 ```
 
@@ -115,18 +117,20 @@ var stat = Rx.Observable.fromNodeCallback(fs.stat);
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 Rx.Observable
-    .for(files, stat)
-    .toArray()
-    .subscribe(
-        function (results) {
-            results.forEach(function (result) {
-                console.log('is file: ' + result.isFile());
-            });
-        },
-        function (err) {
-            console.log('err ' + err);
-        }
-    );
+  .for(files, stat)
+  .toArray()
+  .forEach(
+    function (results) {
+
+      results.forEach(function (result) {
+        console.log('is file: %s', result.isFile());
+      });
+
+    },
+    function (err) {
+      console.log('err %s', err);
+    }
+  );
 ```
 
 * * *
@@ -146,9 +150,11 @@ var async = require('async'),
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 async.filter(files, fs.exists, function (err, results) {
-    results.forEach(function (result) {
-        console.log('exists: ' + result);
-    });
+
+  results.forEach(function (result) {
+    console.log('exists: %s', result);
+  });
+
 });
 ```
 
@@ -163,16 +169,18 @@ var Rx = require('rx'),
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
-    .for(files, exists)
-    .where(function (x) { return x; })
-    .toArray()
-    .subscribe(
-        function (results) {
-            results.forEach(function (result) {
-                console.log('exists: ' + result);
-            });
-        }
-    );
+  .for(files, exists)
+  .where(function (x) { return x; })
+  .toArray()
+  .forEach(
+    function (results) {
+
+      results.forEach(function (result) {
+        console.log('exists: %s', result);
+      });
+
+    }
+  );
 ```
 
 * * *
@@ -192,9 +200,11 @@ var async = require('async'),
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 async.reject(files, fs.exists, function (err, results) {
-    results.forEach(function (result) {
-        console.log('exists: ' + result);
-    });
+
+  results.forEach(function (result) {
+    console.log('exists: %s', result);
+  });
+
 });
 ```
 
@@ -212,12 +222,14 @@ Rx.Observable
     .for(files, exists)
     .where(function (x) { return !x; })
     .toArray()
-    .subscribe(
-        function (results) {
-            results.forEach(function (result) {
-                console.log('exists: ' + result);
-            });
-        }
+    .forEach(
+      function (results) {
+
+        results.forEach(function (result) {
+          console.log('exists: %s', result);
+        });
+
+      }
     );
 ```
 
@@ -250,19 +262,16 @@ async.reduce([1,2,3], 0, fs.reduction, function (err, results) {
 
 #### RxJS version ####
 
-In RxJS, we have a number of ways of doing this including using `Rx.Observable.fromArray` to turn an array into observable sequence, then we can call `reduce` to add the numbers.  To ensure that it is indeed async, we can switch to the `Rx.Scheduler.timeout` to ensure that it is done via a callback.
+In RxJS, we have a number of ways of doing this including using `Rx.Observable.from` to turn an array into observable sequence, then we can call `reduce` to add the numbers.  To ensure that it is indeed async, we can switch to the `Rx.Scheduler.timeout` to ensure that it is done via a `setImmediate` call.
 
 ```js
 var Rx = require('rx'),
     fs = require('fs');
 
 Rx.Observable
-    .fromArray([1,2,3], Rx.Scheduler.timeout)
-    .reduce(function (acc, x) { return acc + x; }, 0)
-    .subscribe(
-        function (results) {
-            console.log(results);
-        });
+  .fromArray([1,2,3], Rx.Scheduler.timeout)
+  .reduce(function (acc, x) { return acc + x; }, 0)
+  .forEach( function (results) { console.log(results); });
 // => 6
 ```
 
@@ -283,13 +292,13 @@ var async = require('async'),
 var files = ['file1','file2','file3'];
 
 async.detect(files, fs.exists, function (result){
-    // result now equals the first file in the list that exists
+  // result now equals the first file in the list that exists
 });
 ```
 
 #### RxJS version ####
 
-In RxJS, we can iterate over the files as above using `Rx.Observable.for` and then calling `first` to get the first matching file project forward the file name and whether the file exists.
+In RxJS, we can iterate over the files as above using `Rx.Observable.from`, calling `concatMap` to call `fs.exists` and then calling `first` to get the first matching file project forward the file name and whether the file exists.
 
 ```js
 var Rx = require('rx'),
@@ -300,14 +309,15 @@ var files = ['file1','file2','file3'];
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
-    .for(files, function (file) {
-        return { file: file, exists: exists(file) };
-    })
-    .first(function (x) { return x.exists; })
-    .subscribe(
-        function (result) {
-            // result now equals the first file in the list that exists
-        });
+  .from(files)
+  .concatMap(
+    function (file) { return exists(file); },
+    function (file, exists) { file: file, exists: exists})
+  .first(function (x) { return x.exists; })
+  .forEach(
+      function (result) {
+        // result now equals the first file in the list that exists
+      });
 ```
 
 * * *
@@ -344,10 +354,10 @@ var exists = Rx.Observable.fromCallback(fs.exists);
 Rx.Observable
     .for(files, exists)
     .some()
-    .subscribe(
-        function (results) {
-            // if result is true then at least one of the files exists
-        });
+    .forEach(
+      function (results) {
+        // if result is true then at least one of the files exists
+      });
 ```
 
 * * *
@@ -367,7 +377,7 @@ var async = require('async'),
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 async.every(files, fs.exists, function (result) {
-    // if result is true then every file exists
+  // if result is true then every file exists
 });
 ```
 
@@ -384,12 +394,12 @@ var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
-    .for(files, exists)
-    .every()
-    .subscribe(
-        function (results) {
-            // if result is true then every file exists
-        });
+  .for(files, exists)
+  .every()
+  .forEach(
+    function (results) {
+        // if result is true then every file exists
+    });
 ```
 
 * * *
@@ -408,8 +418,8 @@ var async = require('async'),
 
 var directories = ['dir1', 'dir2', 'dir3'];
 
-async.concat(files, fs.readdir, function (err, files) {
-    // files is now a list of filenames that exist in the 3 directories
+async.concat(directories, fs.readdir, function (err, files) {
+  // files is now a list of filenames that exist in the 3 directories
 });
 ```
 
@@ -421,18 +431,20 @@ Using RxJS, we can achieve the same results of an array of all of our values by 
 var Rx = require('rx'),
     fs = require('fs');
 
+var directories = ['dir1', 'dir2', 'dir3'];
+
 var readdir = Rx.Observable.fromNodeCallback(fs.readdir);
 
 Rx.Observable
-    .for(files, readdir)
-    .reduce(function (acc, x) { acc.push(x); return acc; }, [])
-    .subscribe(
-        function (files) {
-            // files is now a list of filenames that exist in the 3 directories
-        },
-        function (err) {
-            // handle error
-        });
+  .for(directories, readdir)
+  .toArray()
+  .forEach(
+    function (files) {
+      // files is now a list of filenames that exist in the 3 directories
+    },
+    function (err) {
+      // handle error
+    });
 ```
 
 * * *
@@ -451,118 +463,98 @@ In this example we'll run some examples with both an array or an object.
 var async = require('async');
 
 async.series([
-    function(callback){
-        // do some stuff ...
-        callback(null, 'one');
-    },
-    function(callback){
-        // do some more stuff ...
-        callback(null, 'two');
-    }
+  function(callback){
+    // do some stuff ...
+    callback(null, 'one');
+  },
+  function(callback){
+    // do some more stuff ...
+    callback(null, 'two');
+  }
 ],
 // optional callback
 function(err, results){
-    // results is now equal to ['one', 'two']
+  // results is now equal to ['one', 'two']
 });
 
 // an example using an object instead of an array
 async.series({
-    one: function(callback){
-        setTimeout(function(){
-            callback(null, 1);
-        }, 200);
-    },
-    two: function(callback){
-        setTimeout(function(){
-            callback(null, 2);
-        }, 100);
-    }
+  one: function(callback){
+    setTimeout(function(){
+        callback(null, 1);
+    }, 200);
+  },
+  two: function(callback){
+    setTimeout(function(){
+        callback(null, 2);
+    }, 100);
+  }
 },
 function(err, results) {
-    // results is now equal to: {one: 1, two: 2}
+  // results is now equal to: {one: 1, two: 2}
 });
 ```
 
 #### RxJS version ####
 
-We can achieve the same functionality of `async.series` with an array by simply calling fromArray and calling `flatMap` to give us the observable of the current.  Then we'll call `reduce` to add each item to a new array to return.
+We can achieve the same functionality of `async.series` with an array by simply calling `from` and calling `concatAll` to give us the observable of the current.  Then we'll call `toArray` to add each item to a new array to return.
 
 ```js
 var Rx = require('rx');
 
 function wrapArray (items) {
-    return Rx.Observable
-        .fromArray(items)
-        .flatMap(function (x) { return x; })
-        .reduce(function (acc, x) {
-            var arr = acc.slice(0);
-            arr.push(x);
-            return arr;
-        }, []);
+  return Rx.Observable
+    .from(items)
+    .concatAll()
+    .toArray();
 }
 
 wrapArray([
-        Rx.Observable.return('one'),
-        Rx.Observable.return('two')
-    ])
-    .subscribe(
-        function (results) {
-            console.log(results);
-        },
-        function (err) {
-            console.log('Error: ' + err);
-        }
-    );
+    Rx.Observable.just('one'),
+    Rx.Observable.just('two')
+  ])
+  .forEach(
+    function (results) {
+      console.log(results);
+    },
+    function (err) {
+      console.log('Error: %s', err);
+    }
+  );
 
 // => ['one', 'two']
 ```
 
-Using an object literal can also be achieved with a little bit more work, but totally reasonable.  Instead of just returning the observable in `flatMap`, we'll add a property to a new object which will contain our key moving forward. Then, we'll call `reduce` much as before, copying the values to a new object, and then plucking the value from each time it comes through and adding it to our final object.
+Using an object literal can also be achieved with a little bit more work in which we call `pairs` to get the key/value pairs from the object.  Then we'll call `concatMap` to extract both the key, and the eventual value through the `map` function on the value's `Observable`.  Then we can call `reduce` to build up a new object to return.
 
 ```js
 var Rx = require('rx');
 
 function wrapObject (obj) {
-    var keys = Object.keys(obj),
-        hasOwnProperty = {}.hasOwnProperty;
-
-    return Rx.Observable
-        .fromArray(keys)
-        .flatMap(function (key) {
-
-            return obj[key].map(function (x) {
-                var newObj = {};
-                newObj[key] = x;
-                return newObj;
-            });
-        })
-        .reduce(function (acc, x) {
-            var newObj = {};
-            for (var prop in acc) {
-                if(!hasOwnProperty.call(acc)) {
-                    newObj[prop] = acc[prop];
-                }
-            }
-
-            var xKey = Object.keys(x)[0];
-            newObj[xKey] = x[xKey];
-
-            return newObj;
-        }, {});
+  return Rx.Observable
+    .pairs(obj)
+    .concatMap(function (o) {
+      return o[1].map(function (v) { return [o[0], v]});
+    })
+    .reduce(function (acc, x) {
+      var obj = Object.create(acc);
+      obj[x[0]] = x[1];
+      return obj;
+    }, {});
 }
 
 wrapObject({
-        one: Rx.Observable.return(1),
-        two: Rx.Observable.return(2)
-    })
-    .subscribe(
-        function (results) {
-            console.log(results);
-        },
-        function (err) {
-            console.log('Error: ' + err);
-        }
-    );
+    one: Rx.Observable.just(1),
+    two: Rx.Observable.just(2)
+  })
+  .forEach(
+    function (results) {
+      console.log(results);
+    },
+    function (err) {
+      console.log('Error: %s', err);
+    }
+  );
 
 // => { one: 1, two: 2 }
 ```
@@ -584,39 +576,39 @@ var async = require('async');
 
 async.parallel([
     function(callback){
-        setTimeout(function(){
-            callback(null, 'one');
-        }, 200);
+      setTimeout(function(){
+        callback(null, 'one');
+      }, 200);
     },
     function(callback){
-        setTimeout(function(){
-            callback(null, 'two');
-        }, 100);
+      setTimeout(function(){
+        callback(null, 'two');
+      }, 100);
     }
-],
+  ],
 
-// optional callback
-function(err, results){
-    // the results array will equal ['one','two'] even though
-    // the second function had a shorter timeout.
-});
+  // optional callback
+  function(err, results){
+      // the results array will equal ['one','two'] even though
+      // the second function had a shorter timeout.
+  });
 
 // an example using an object instead of an array
 async.parallel({
     one: function(callback){
-        setTimeout(function(){
-            callback(null, 1);
-        }, 200);
+      setTimeout(function(){
+        callback(null, 1);
+      }, 200);
     },
     two: function(callback){
-        setTimeout(function(){
-            callback(null, 2);
-        }, 100);
+      setTimeout(function(){
+        callback(null, 2);
+      }, 100);
     }
-},
-function(err, results) {
+  },
+  function(err, results) {
     // results is now equals to: {one: 1, two: 2}
-});
+  });
 ```
 
 #### RxJS version ####
@@ -627,21 +619,21 @@ We can achieve the same functionality of `async.series` with an array by calling
 var Rx = require('rx');
 
 function wrapArrayParallel (items) {
-    return Rx.Observable.forkJoin.apply(null, items);
+  return Rx.Observable.forkJoin.apply(null, items);
 }
 
 wrapArrayParallel([
-        Rx.Observable.return('one'),
-        Rx.Observable.return('two')
-    ])
-    .subscribe(
-        function (results) {
-            console.log(results);
-        },
-        function (err) {
-            console.log('Error: ' + err);
-        }
-    );
+    Rx.Observable.just('one'),
+    Rx.Observable.just('two')
+  ])
+  .forEach(
+    function (results) {
+      console.log(results);
+    },
+    function (err) {
+      console.log('Error: %s', err);
+    }
+  );
 
 // => ['one', 'two']
 ```
@@ -652,42 +644,33 @@ Using an object literal can also be achieved with a little bit more work, but to
 var Rx = require('rx');
 
 function wrapObjectParallel (obj) {
-    var keys = Object.keys(obj);
-    var mapped = keys.map(function (key) {
-        return obj[key];
+  var keys = Object.keys(obj);
+  var mapped = keys.map(function (key) {
+    return obj[key];
+  });
+
+  return Rx.Observable.forkJoin.apply(null, mapped)
+    .map(function (arr) {
+      var idx = 0;
+      return arr.reduce(function (acc, x) {
+        var o = Object.create(acc);
+        o[key[idx++]] = x;
+        return o;
+      }, {});
     });
-
-    return Rx.Observable.forkJoin.apply(null, mapped)
-        .map(function (arr) {
-            var idx = 0;
-            return arr.reduce(function (acc, x) {
-                var key = keys[idx++];
-
-                var newObj = {};
-                for (var prop in acc) {
-                    if(!hasOwnProperty.call(acc)) {
-                        newObj[prop] = acc[prop];
-                    }
-                }
-
-                newObj[key] = x;
-
-                return newObj;
-            }, {})
-        });
 }
 
 wrapObjectParallel({
-        one: Rx.Observable.return(1),
-        two: Rx.Observable.return(2)
-    })
-    .subscribe(
-        function (results) {
-            console.log(results);
-        },
-        function (err) {
-            console.log('Error: ' + err);
-        }
+    one: Rx.Observable.just(1),
+    two: Rx.Observable.just(2)
+  })
+  .forEach(
+      function (results) {
+          console.log(results);
+      },
+      function (err) {
+          console.log('Error: ' + err);
+      }
     );
 
 // => { one: 1, two: 2 }
@@ -711,11 +694,11 @@ var count = 0;
 async.whilst(
     function () { return count < 5; },
     function (callback) {
-        count++;
-        setTimeout(callback, 1000);
+      count++;
+      setTimeout(callback, 1000);
     },
     function (err) {
-        // 5 seconds have passed
+      // 5 seconds have passed
     }
 );
 ```
@@ -730,18 +713,16 @@ var Rx = require('rx');
 var count = 0;
 
 Rx.Observable.while(
-        function () { return count < 5; },
-        Rx.Observable.create(function (obs) {
-            setTimeout(function () {
-                observer.onNext(count++);
-            }, 1000)
-        }
-    )
-    .subscribe(
-        function (x) { /* do something with each value */ },
-        function (err) { /* handle errors */ },
-        function () { /* 5 seconds have passed */ }
-    );
+    function () { return count < 5; },
+    Rx.Observable.create(function (obs) {
+      setTimeout(function () {
+        observer.onNext(count++);
+      }, 1000);
+    })
+  )
+  .subscribeOnCompleted(
+    function () { /* 5 seconds have passed */ }
+  );
 ```
 
 * * *
@@ -760,14 +741,14 @@ var async = require('async');
 var count = 0;
 
 async.dowWilst(
-    function () { return count < 5; },
-    function (callback) {
-        count++;
-        setTimeout(callback, 1000);
-    },
-    function (err) {
-        // 5 seconds have passed
-    }
+  function () { return count < 5; },
+  function (callback) {
+    count++;
+    setTimeout(callback, 1000);
+  },
+  function (err) {
+    // 5 seconds have passed
+  }
 );
 ```
 
@@ -780,12 +761,10 @@ var Rx = require('rx');
 
 var i = 0;
 
-var source = Rx.Observable.return(42).doWhile(
-    function () { return ++i < 2; })
-    .subscribe(
-        function (x) { console.log(x); },
-        function (err) { /* handle errors */ },
-        function () { console.log('done'); }
+var source = Rx.Observable.timer(0, 1000).doWhile(
+    function () { return i++ < 5; })
+    .subscribeOnCompleted(
+      // 5 seconds have passed
     );
 ```
 
@@ -805,8 +784,8 @@ var async = require('async');
 var call_order = [];
 
 async.nextTick( function () {
-    call_order.push('two');
-    // call_order now equals ['one','two']
+  call_order.push('two');
+  // call_order now equals ['one','two']
 });
 
 call_order.push('one');
@@ -822,8 +801,8 @@ var Rx = require('rx');
 var call_order = [];
 
 Rx.Scheduler.timeout.schedule(function () {
-    call_order.push('two');
-    // call_order now equals ['one','two']
+  call_order.push('two');
+  // call_order now equals ['one','two']
 });
 
 call_order.push('one');
@@ -850,63 +829,37 @@ var file = path.join(__dirname, 'file.txt'),
 
 async.waterfall([
     function (callback) {
-        fs.exists(file, function (flag) {
-            if (flag) {
-                callback(new Error('File does not exist.'))
-            } else {
-                callback(null);
-            }
-        });
+      fs.exists(file, function (flag) {
+        if (flag) {
+            callback(new Error('File does not exist.'))
+        } else {
+            callback(null);
+        }
+      });
     },
     function (callback) {
-        fs.rename(file, dest, function (err) {
-            callback(err);
-        });
+      fs.rename(file, dest, function (err) {
+        callback(err);
+      });
     },
     function (callback) {
-        fs.stat(dest, function (err, fsStat) {
-            callback(err, fsStat);
-        });
+      fs.stat(dest, function (err, fsStat) {
+        callback(err, fsStat);
+      });
     }
-], function (err, fsStat) {
+  ],
+  function (err, fsStat) {
     if (err) {
-        console.log(err);
+      console.log(err);
     } else {
-        console.log(JSON.stringify(fsStat));
+      console.log(JSON.stringify(fsStat));
     }
-})
+  });
 ```
 
 #### RxJS version ####
 
-We can easily accomplish the same task as above using our wrappers for `Rx.Observable.fromCallback` and `Rx.Observable.fromNodeCallback`, creating a waterfall-like method.  First, let's implement a `waterfall` method using plain RxJS in which we enumerate the functions and call `flatMapLatest` on each resulting observable sequence to ensure we only get one value.
-
-```js
-var Rx = require('rx');
-
-var async = {
-    waterfall: function (series) {
-        return Rx.Observable.defer(function () {
-            var acc = series[0]();
-            for (var i = 1, len = series.length; i < len; i++) {
-
-                // Pass in func to deal with closure capture
-                (function (func) {
-
-                    // Call flatMapLatest on each function
-                    acc = acc.flatMapLatest(function (x) {
-                        return func(x);
-                    });
-                }(series[i]));
-            }
-
-            return acc;
-        });
-    }
-}
-```
-
-Once we've defined this method, we can now use it such as the following, wrapping `fs.exists`, `fs.rename` and `fs.stat`.
+We can easily accomplish the same task as above using our wrappers for `Rx.Observable.fromCallback` and `Rx.Observable.fromNodeCallback`, creating a waterfall-like just using `concatMap`.  We can now use it such as the following, wrapping `fs.exists`, `fs.rename` and `fs.stat`.
 
 ```js
 var Rx = require('rx'),
@@ -919,30 +872,23 @@ var file = path.join(__dirname, 'file.txt'),
     rename = Rx.Observable.fromNodeCallback(fs.rename),
     stat = Rx.Observable.fromNodeCallback(fs.stat);
 
-var obs = async.waterfall([
-    function () {
-        return exists(file);
-    },
-    function (flag) {
-        // Rename or throw computation
-        return flag ?
-            rename(file, dest) :
-            Rx.Observable.throw(new Error('File does not exist.'));
-    },
-    function () {
-        return stat(dest);
-    }
-]);
-
-// Now subscribe to get the results or error
-obs.subscribe(
+exists(file)
+  .concatMap(function (flag) {
+    return flag ?
+      rename(file, dest) :
+      Rx.Observable.throw(new Error('File does not exist.'));
+  })
+  .concatMap(function () {
+    return stat(dest);
+  })
+  .forEach(
     function (fsStat) {
-        console.log(JSON.stringify(fsStat));
+      console.log(JSON.stringify(fsStat));
     },
     function (err) {
-        console.log(err);
+      console.log(err);
     }
-);
+  );
 ```
 
 * * *
@@ -983,44 +929,44 @@ add1mul3(4, function (err, result) {
 
 #### RxJS version ####
 
-Using RxJS, we can accomplish this using the usual composition operator `selectMany` or `flatMap`.  We'll wrap the `setTimeout` with a `wrapTimeout` method and ensure that we do deterministic cleanup via `clearTimeout`.  Then we can compose together our `add1` and `mul3` functions which result in observable sequences.
+Using RxJS, we can accomplish this using the usual composition operator for sequential operations `concatMap`.  We'll wrap the `setTimeout` with a `wrapTimeout` method and ensure that we do deterministic cleanup via `clearTimeout`.  Then we can compose together our `add1` and `mul3` functions which result in observable sequences.
 
 ```js
 var Rx = require('rx');
 
 function wrapTimeout (fn, arg) {
-    return Rx.Observable.create(function (obs) {
+  return Rx.Observable.create(function (obs) {
 
-        // Ensure the composition of the this argument
-        var id = setTimeout(function () {
-            obs.onNext(fn.call(fn, arg));
-            obs.onCompleted();
-        }, 10);
+    // Ensure the composition of the this argument
+    var id = setTimeout(function () {
+        obs.onNext(fn.call(fn, arg));
+        obs.onCompleted();
+    }, 10);
 
-        // Handle cleanup/early disposal
-        return function () {
-            clearTimeout(id);
-        };
-    });
+    // Handle cleanup/early disposal
+    return function () {
+      clearTimeout(id);
+    };
+  });
 }
 
 function add1 (n) {
-    return wrapTimeout(function (x) { return x + 1; }, n);
+  return wrapTimeout(function (x) { return x + 1; }, n);
 }
 
 function mul3 (n) {
-    return wrapTimeout(function (x) { return x * 3; }, n);
+  return wrapTimeout(function (x) { return x * 3; }, n);
 }
 
 add1(4)
-    .flatMap(mul3)
-    .subscribe(
-        function (x) {
-            console.log(x);
-        },
-        function (err) {
-            console.log('Error: ' + e);
-        });
+  .concatMap(mul3)
+  .forEach(
+    function (x) {
+      console.log(x);
+    },
+    function (err) {
+      console.log('Error: %s', e);
+    });
 // => 15
 ```
 
