@@ -13,8 +13,8 @@ A series of plans (specified as an Array of as a series of arguments) created by
 ```js
 // Fire each plan when both are ready
 var source = Rx.Observable.when(
-  Rx.Observable.timer(100).and(Rx.Observable.timer(500)).then(function (x, y) { return 'first'; }),
-  Rx.Observable.timer(400).and(Rx.Observable.timer(300)).then(function (x, y) { return 'second'; })
+  Rx.Observable.timer(100).and(Rx.Observable.timer(500)).thenDo(function (x, y) { return 'first'; }),
+  Rx.Observable.timer(400).and(Rx.Observable.timer(300)).thenDo(function (x, y) { return 'second'; })
 );
 
 var subscription = source.subscribe(
