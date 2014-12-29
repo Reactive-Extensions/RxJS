@@ -1,5 +1,6 @@
   var fnString = 'function',
-      throwString = 'throw';
+      throwString = 'throw',
+      isObject = Rx.internals.isObject;
 
   function toThunk(obj, ctx) {
     if (Array.isArray(obj)) {  return objectToThunk.call(ctx, obj); }
@@ -95,10 +96,6 @@
     return obj && typeof obj.next === fnString && typeof obj[throwString] === fnString;
   }
 
-  function isObject(val) {
-    return val && val.constructor === Object;
-  }
-
   /*
    * Spawns a generator function which allows for Promises, Observable sequences, Arrays, Objects, Generators and functions.
    * @param {Function} The spawning function.
@@ -184,40 +181,6 @@
 
         // Not supported
         next(new TypeError('Rx.spawn only supports a function, Promise, Observable, Object or Array.'));
-      }
-    }
-  };
-
-  /**
-   * Takes a function with a callback and turns it into a thunk.
-   * @param {Function} A function with a callback such as fs.readFile
-   * @returns {Function} A function, when executed will continue the state machine.
-   */
-  Rx.denodify = function (fn) {
-    return function () {
-      var args = slice.call(arguments),
-        results,
-        called,
-        callback;
-
-      args.push(function() {
-        results = arguments;
-
-        if (callback && !called) {
-          called = true;
-          cb.apply(this, results);
-        }
-      });
-
-      fn.apply(this, args);
-
-      return function (fn) {
-        callback = fn;
-
-        if (results && !called) {
-          called = true;
-          fn.apply(this, results);
-        }
       }
     }
   };
