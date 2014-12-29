@@ -165,6 +165,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`subscribeOn`](operators/subscribeon.md)
 - [`sum`](operators/sum.md)
 - [`switch | switchLatest`](operators/switch.md)
+- [`switchMap`](operators/flatmaplatest.md)
 - [`take`](operators/take.md)
 - [`takeLast`](operators/takelast.md)
 - [`takeLastBuffer`](operators/takelastbuffer.md)

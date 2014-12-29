@@ -1,8 +1,11 @@
 ### `Rx.Observable.prototype.flatMapLatest(selector, [thisArg])`
+### `Rx.Observable.prototype.switchMap(selector, [thisArg])`
 ### `Rx.Observable.prototype.selectSwitch(selector, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/flatmaplatest.js "View in source")
 
- Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+Transform the items emitted by an Observable into Observables, and mirror those items emitted by the most-recently transformed Observable.
+
+The `flatMapLatest` operator is similar to the `flatMap` and `concatMap` methods described above, however, rather than emitting all of the items emitted by all of the Observables that the operator generates by transforming items from the source `Observable`, `switchMap` instead emits items from each such transformed `Observable` only until the next such `Observable` is emitted, then it ignores the previous one and begins emitting items emitted by the new one.
 
 #### Arguments
 1. `selector` *(`Function`)*:  A transform function to apply to each source element.  The callback has the following information:
@@ -12,26 +15,26 @@
 2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(`Observable`)*: An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
+*(`Observable`)*: An observable sequence which transforms the items emitted by an Observable into Observables, and mirror those items emitted by the most-recently transformed Observable.
 
 #### Example
 ```js
 var source = Rx.Observable
-    .range(1, 2)
-    .flatMapLatest(function (x) {
-        return Rx.Observable.range(x, 2);
-    });
+  .range(1, 2)
+  .flatMapLatest(function (x) {
+    return Rx.Observable.range(x, 2);
+  });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 1
 // => Next: 2
