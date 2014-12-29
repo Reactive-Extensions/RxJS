@@ -11,7 +11,7 @@
       return scheduler.scheduleRecursive(function (self) {
         if (idx < len) {
           var key = keys[idx++];
-          observer.onNext({key: key, value: obj[key]});
+          observer.onNext([key, obj[key]]);
           self();
         } else {
           observer.onCompleted();

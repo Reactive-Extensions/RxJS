@@ -113,10 +113,10 @@
           len = args.length,
           hasCallback = len && typeof args[len - 1] === fnString;
 
-        done = hasCallback ? args.pop() : error;
+        done = hasCallback ? args.pop() : handleError;
         gen = fn.apply(this, args);
       } else {
-        done = done || error;
+        done = done || handleError;
       }
 
       next();
@@ -185,7 +185,7 @@
     }
   };
 
-  function error(err) {
+  function handleError(err) {
     if (!err) { return; }
     timeoutScheduler.schedule(function() {
       throw err;
