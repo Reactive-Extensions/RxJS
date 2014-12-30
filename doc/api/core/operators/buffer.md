@@ -9,7 +9,7 @@ Note that if the source Observable issues an `onError` notification, `buffer` wi
 
 There are a number of ways with which you can regulate how `buffer` gathers items from the source Observable into buffers:
 
-#### With window closing selector
+#### With buffer closing selector
 ```js
 Rx.Observable.prototype.buffer(bufferClosingSelector);
 ```
@@ -46,7 +46,7 @@ var subscription = source.subscribe(
   // => Completed
 ```
 
-#### With window opening and window closing selector
+#### With buffer opening and buffer closing selector
 ```js
 Rx.Observable.prototype.buffer(bufferOpenings, bufferClosingSelector);
 ```
