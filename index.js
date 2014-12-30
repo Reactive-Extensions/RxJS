@@ -161,7 +161,6 @@ Rx.Node = {
    */
   writeToStream: function (observable, stream, encoding) {
     var source = observable.pausableBuffered();
-    source.resume();
 
     function onDrain() {
       source.resume();
@@ -171,17 +170,51 @@ Rx.Node = {
 
     return source.subscribe(
       function (x) {
-        console.log('Writing', x);
-        !stream.write(x, encoding) && source.pause();
+        !stream.write(String(x), encoding) && source.pause();
       },
       function (err) {
         stream.emit('error', err);
-      }, function () {
+      },
+      function () {
         // Hack check because STDIO is not closable
         !stream._isStdio && stream.end();
         stream.removeListener('drain', onDrain);
       });
+
+    source.resume();
   }
+};
+
+/**
+ * Pipes the existing Observable sequence into a Node.js Stream.
+ * @param {Stream} dest The destination Node.js stream.
+ * @returns {Stream} The destination stream.
+ */
+Rx.Observable.prototype.pipe = function (dest) {
+  var source = this.pausableBuffered();
+
+  function onDrain() {
+    source.resume();
+  }
+
+  dest.addListener('drain', onDrain);
+
+  source.subscribe(
+    function (x) {
+      !dest.write(String(x)) && source.pause();
+    },
+    function (err) {
+      dest.emit('error', err);
+    },
+    function () {
+      // Hack check because STDIO is not closable
+      !dest._isStdio && dest.end();
+      dest.removeListener('drain', onDrain);
+    });
+
+  source.resume();
+
+  return dest;
 };
 
 module.exports = Rx;
