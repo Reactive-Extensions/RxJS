@@ -265,7 +265,7 @@ var browsers = [{
               'src/core/joins/activeplan.js',
               'src/core/joins/joinobserver.js',
               'src/core/linq/observable/and.js', // Pattern
-              'src/core/linq/observable/then.js', // Pattern
+              'src/core/linq/observable/thendo.js', // Pattern
               'src/core/linq/observable/when.js', // CompositeDisposable
 
               // Time based operators
@@ -550,7 +550,7 @@ var browsers = [{
               'src/core/joins/activeplan.js',
               'src/core/joins/joinobserver.js',
               'src/core/linq/observable/and.js', // Pattern
-              'src/core/linq/observable/then.js', // Pattern
+              'src/core/linq/observable/thendo.js', // Pattern
               'src/core/linq/observable/when.js', // CompositeDisposable
 
               // Time based operators
@@ -1426,7 +1426,7 @@ var browsers = [{
               'src/core/joins/activeplan.js',
               'src/core/joins/joinobserver.js',
               'src/core/linq/observable/and.js', // Pattern
-              'src/core/linq/observable/then.js', // Pattern
+              'src/core/linq/observable/thendo.js', // Pattern
               'src/core/linq/observable/when.js', // CompositeDisposable
               'src/core/suboutro.js'
             ],

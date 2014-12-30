@@ -1,9 +1,23 @@
-  /**
-   *  Matches when the observable sequence has an available value and projects the value.
-   *
-   *  @param selector Selector that will be invoked for values in the source sequence.
-   *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator.
-   */
-  observableProto.thenDo = function (selector) {
-    return new Pattern([this]).thenDo(selector);
+  /*
+  * Converts an existing observable sequence to an ES6 Compatible Promise and calls the fulfillment or rejection methods.
+  * @param {Function} [onFulfilled] the handler to call on fulfillment of the Promise.
+  * @param {Function} [onRejected] the handler to call on the rejection of the Promise.
+  * @returns {Promise} An ES6 compatible promise with the last value from the observable sequence and executing the handlers.
+  */
+  observableProto.then = function (onFulfilled, onRejected) {
+    var promiseCtor = Rx.config.Promise;
+    if (!promiseCtor) { throw new TypeError('Promise type not provided in Rx.config.Promise'); }
+    var source = this;
+    var p = new promiseCtor(function (resolve, reject) {
+      // No cancellation can be done
+      var value, hasValue = false;
+      source.subscribe(function (v) {
+        value = v;
+        hasValue = true;
+      }, reject, function () {
+        hasValue && resolve(value);
+      });
+    });
+
+    return p.then(onFulfilled, onRejected);
   };
