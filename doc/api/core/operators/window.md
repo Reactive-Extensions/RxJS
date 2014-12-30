@@ -7,9 +7,9 @@ Window is similar to `buffer`, but rather than emitting packets of items from th
 
 Like `buffer`, `window` has many varieties, each with its own way of subdividing the original `Observable` into the resulting `Observable` emissions, each one of which contains a "window" onto the original emitted items. In the terminology of the `window` method, when a window "opens," this means that a new `Observable` is emitted and that `Observable` will begin emitting items emitted by the source `Observable`. When a window "closes," this means that the emitted Observable stops emitting items from the source Observable and calls its Subscribers' `onCompleted` method and terminates.
 
-
+#### With window closing selector
 ```js
-// With window closing selector
+
 Rx.Observable.prototype.window(windowClosingSelector);
 ```
 
@@ -46,8 +46,8 @@ var subscription = source.subscribe(
   // => Completed
 ```
 
+#### With window opening and window closing selector
 ```js
-// With window opening and window closing selector
 Rx.Observable.prototype.window(windowOpenings, windowClosingSelector);
 ```
 
@@ -87,8 +87,8 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
+#### With boundaries
 ```js
-// With boundaries
 Rx.Observable.prototype.window(windowBoundaries);
 ```
 
