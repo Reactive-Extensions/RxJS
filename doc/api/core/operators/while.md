@@ -17,7 +17,7 @@ var i = 0;
 
 // Repeat until condition no longer holds
 var source = Rx.Observable.while(
-    function () { ++i < 3 },
+    function () { return i++ < 3 },
     Rx.Observable.return(42)
 );
 
