@@ -7,7 +7,7 @@
    */
   observableProto.window = function (windowOpeningsOrClosingSelector, windowClosingSelector) {
     if (arguments.length === 1 && typeof arguments[0] !== 'function') {
-      return observableWindowWithBounaries.call(this, windowOpeningsOrClosingSelector);
+      return observableWindowWithBoundaries.call(this, windowOpeningsOrClosingSelector);
     }
     return typeof windowOpeningsOrClosingSelector === 'function' ?
       observableWindowWithClosingSelector.call(this, windowOpeningsOrClosingSelector) :
@@ -20,7 +20,7 @@
     });
   }
 
-  function observableWindowWithBounaries(windowBoundaries) {
+  function observableWindowWithBoundaries(windowBoundaries) {
     var source = this;
     return new AnonymousObservable(function (observer) {
       var win = new Subject(),
