@@ -99,8 +99,8 @@ var subscription = source.subscribe(
 // => Completed
 
 /* Using an array */
-Rx.Observable.of(1,2,3)
-  .flatMap(
+var source = Rx.Observable.of(1,2,3)
+  .concatMap(
     function (x, i) { return [x,i]; },
     function (x, y, ix, iy) { return x + y + ix + iy; }
   );
