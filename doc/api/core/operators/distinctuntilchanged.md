@@ -35,7 +35,7 @@ var subscription = source.subscribe(
 
 /* With key selector */
 var source = Rx.Observable.fromArray([
-        {value: 42}, {value: 24}, {value: 42}, {value: 24}
+        {value: 42}, {value: 42}, {value: 24}, {value: 24}
     ])
     .distinctUntilChanged(function (x) { return x.value; });
 
