@@ -50,6 +50,7 @@ test('partition_empty', function () {
   );
 
   xs.subscriptions.assertEqual(
+    subscribe(200, 210),
     subscribe(200, 210)
   );
 });
@@ -95,6 +96,7 @@ test('partition_single', function () {
   );
 
   xs.subscriptions.assertEqual(
+    subscribe(200, 220),
     subscribe(200, 220)
   );
 });
@@ -142,6 +144,7 @@ test('partition_each', function () {
   );
 
   xs.subscriptions.assertEqual(
+    subscribe(200, 230),
     subscribe(200, 230)
   );
 });
@@ -193,6 +196,7 @@ test('partition_completed', function () {
   );
 
   xs.subscriptions.assertEqual(
+    subscribe(200, 360),
     subscribe(200, 360)
   );
 });
@@ -241,6 +245,7 @@ test('partition_not_completed', function () {
   );
 
   xs.subscriptions.assertEqual(
+    subscribe(200, 1000),
     subscribe(200, 1000)
   );
 });
@@ -291,6 +296,7 @@ test('partition_error', function () {
   );
 
   xs.subscriptions.assertEqual(
+    subscribe(200, 290),
     subscribe(200, 290)
   );
 });
@@ -338,6 +344,7 @@ test('partition_disposed', function () {
   );
 
   xs.subscriptions.assertEqual(
+    subscribe(200, 280),
     subscribe(200, 280)
   );
 });

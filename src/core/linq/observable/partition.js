@@ -12,9 +12,8 @@
    *    and the second triggers when the predicate returns false.
   */
   observableProto.partition = function(predicate, thisArg) {
-    var published = this.publish().refCount();
     return [
-      published.filter(predicate, thisArg),
-      published.filter(function (x, i, o) { return !predicate.call(thisArg, x, i, o); })
+      this.filter(predicate, thisArg),
+      this.filter(function (x, i, o) { return !predicate.call(thisArg, x, i, o); })
     ];
   };
