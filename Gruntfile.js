@@ -318,6 +318,7 @@ var browsers = [{
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
+              'src/core/backpressure/pauser.js',
               'src/core/exports.js',
 
               // Long stacktrace end
@@ -504,8 +505,8 @@ var browsers = [{
               'src/core/backpressure/pausable.js',
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',
-              'src/core/backpressure/controlledobservable.js',
-              'src/core/backpressure/controlledsubject.js',
+              'src/core/backpressure/stopandwait.js',
+              'src/core/backpressure/windowed.js',
 
               // Binding operators
               'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -603,6 +604,7 @@ var browsers = [{
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
+              'src/core/backpressure/pauser.js',
               'src/core/exports.js',
 
               // End long stack traces
@@ -1045,6 +1047,7 @@ var browsers = [{
               'src/core/subjects/anonymoussubject.js',
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
+              'src/core/backpressure/pauser.js',
 
               'src/core/exports.js',
 
@@ -1206,6 +1209,7 @@ var browsers = [{
               'src/core/subjects/anonymoussubject.js',
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
+              'src/core/backpressure/pauser.js',
 
               'src/core/exports.js',
 
@@ -1261,6 +1265,7 @@ var browsers = [{
               'src/core/backpressureheader.js',
 
               // Backpressure operators
+              'src/core/backpressure/pauser.js',
               'src/core/backpressure/pausable.js',
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',

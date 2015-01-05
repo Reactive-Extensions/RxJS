@@ -268,9 +268,23 @@ source.groupBy(function (stock) { return stock.symbol };)
 
 In our applications, we consume a lot of data from external sources.  But, what if our consumers cannot handle the load from the sequence?  
 
-Highland.js uses the standard backpressure mechanisms such as `pause`/`resume` from standard node.js streams, as well as `throttle` and `debounce` for lossy operations.  The pause/resume from normal node.js streams works great for unicast streams, meaning one sender and one receiver, however does not work well for multicast events.
+Highland.js uses the standard backpressure mechanisms such as `pause`/`resume` from standard node.js streams, as well as `throttle` and `debounce` for lossy operations.  The pause/resume from normal node.js streams work for multicast streams to share backpressure via `fork`, or to keep them separate with `observe`, but this can sometimes lead to confusion, especially when mixed.
 
 RxJS has a number of mechanisms to handle this in the [Backpressure and Observable Sequences](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/gettingstarted/backpressure.md) documentation.  This could come in the form of lossy operations such as `debounce`, `throttleFirst`, `sample`, `pausable`, to loss-less operations such as `pausableBuffered`, `buffer`, `windowed`, `stopAndWait`, etc.  These work on the idea of multicast streams so that one consumer is not punished by another's inability to process the data in a timely manner.
+
+In RxJS, you can synchronize across streams with backpressure with the pause/resume semantics using a `Pauser` or just any ordinary `Subject` with `onNext(true)` to resume and `onNext(false)` to pause:
+```js
+var pauser = new Rx.Pauser();
+
+var source1 = getData().pausableBuffered(pauser);
+var source2 = getOtherData().pausableBuffered(pauser);
+
+// To pause both streams
+pauser.pause();
+
+// To resume both streams
+pauser.resume();
+```
 
 ## Build What You Want ##
 
