@@ -7,7 +7,7 @@
       __super__.call(this, this.observable.subscribe.bind(this.observable));
     }
 
-    addProperties(AnonymousSubject.prototype, Observer, {
+    addProperties(AnonymousSubject.prototype, Observer.prototype, {
       onCompleted: function () {
         this.observer.onCompleted();
       },

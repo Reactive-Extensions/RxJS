@@ -194,23 +194,18 @@
     return this.replay(null, bufferSize, window, scheduler).refCount();
   };
 
-    /** @private */
-    var InnerSubscription = function (subject, observer) {
-        this.subject = subject;
-        this.observer = observer;
-    };
+  var InnerSubscription = function (subject, observer) {
+    this.subject = subject;
+    this.observer = observer;
+  };
 
-    /**
-     * @private
-     * @memberOf InnerSubscription
-     */
-    InnerSubscription.prototype.dispose = function () {
-        if (!this.subject.isDisposed && this.observer !== null) {
-            var idx = this.subject.observers.indexOf(this.observer);
-            this.subject.observers.splice(idx, 1);
-            this.observer = null;
-        }
-    };
+  InnerSubscription.prototype.dispose = function () {
+    if (!this.subject.isDisposed && this.observer !== null) {
+      var idx = this.subject.observers.indexOf(this.observer);
+      this.subject.observers.splice(idx, 1);
+      this.observer = null;
+    }
+  };
 
   /**
    *  Represents a value that changes over time.
@@ -224,9 +219,8 @@
         observer.onNext(this.value);
         return new InnerSubscription(this, observer);
       }
-      var ex = this.exception;
-      if (ex) {
-        observer.onError(ex);
+      if (this.hasError) {
+        observer.onError(this.error);
       } else {
         observer.onCompleted();
       }
@@ -236,7 +230,6 @@
     inherits(BehaviorSubject, __super__);
 
     /**
-     * @constructor
      *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
      *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
      */
@@ -246,7 +239,7 @@
       this.observers = [],
       this.isDisposed = false,
       this.isStopped = false,
-      this.exception = null;
+      this.hasError = false;
     }
 
     addProperties(BehaviorSubject.prototype, Observer, {
@@ -254,9 +247,7 @@
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
        */
-      hasObservers: function () {
-        return this.observers.length > 0;
-      },
+      hasObservers: function () { return this.observers.length > 0; },
       /**
        * Notifies all subscribed observers about the end of the sequence.
        */
@@ -268,7 +259,7 @@
           os[i].onCompleted();
         }
 
-        this.observers = [];
+        this.observers.length = 0;
       },
       /**
        * Notifies all subscribed observers about the exception.
@@ -278,13 +269,14 @@
         checkDisposed.call(this);
         if (this.isStopped) { return; }
         this.isStopped = true;
-        this.exception = error;
+        this.hasError = true;
+        this.error = error;
 
         for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
           os[i].onError(error);
         }
 
-        this.observers = [];
+        this.observers.length = 0;
       },
       /**
        * Notifies all subscribed observers about the arrival of the specified element in the sequence.
@@ -367,7 +359,7 @@
       __super__.call(this, subscribe);
     }
 
-    addProperties(ReplaySubject.prototype, Observer, {
+    addProperties(ReplaySubject.prototype, Observer.prototype, {
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.

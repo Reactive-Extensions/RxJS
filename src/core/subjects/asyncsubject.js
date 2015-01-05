@@ -12,14 +12,10 @@
         return new InnerSubscription(this, observer);
       }
 
-      var ex = this.exception,
-        hv = this.hasValue,
-        v = this.value;
-
-      if (ex) {
-        observer.onError(ex);
-      } else if (hv) {
-        observer.onNext(v);
+      if (this.hasError) {
+        observer.onError(this.error);
+      } else if (this.hasValue) {
+        observer.onNext(this.value);
         observer.onCompleted();
       } else {
         observer.onCompleted();
@@ -39,10 +35,9 @@
 
       this.isDisposed = false;
       this.isStopped = false;
-      this.value = null;
       this.hasValue = false;
       this.observers = [];
-      this.exception = null;
+      this.hasError = false;
     }
 
     addProperties(AsyncSubject.prototype, Observer, {
@@ -58,27 +53,25 @@
        * Notifies all subscribed observers about the end of the sequence, also causing the last received value to be sent out (if any).
        */
       onCompleted: function () {
-        var o, i, len;
+        var i, len;
         checkDisposed.call(this);
         if (!this.isStopped) {
           this.isStopped = true;
-          var os = this.observers.slice(0),
-            v = this.value,
-            hv = this.hasValue;
+          var os = this.observers.slice(0), len = os.length;
 
-          if (hv) {
-            for (i = 0, len = os.length; i < len; i++) {
-              o = os[i];
-              o.onNext(v);
+          if (this.hasValue) {
+            for (i = 0; i < len; i++) {
+              var o = os[i];
+              o.onNext(this.value);
               o.onCompleted();
             }
           } else {
-            for (i = 0, len = os.length; i < len; i++) {
+            for (i = 0; i < len; i++) {
               os[i].onCompleted();
             }
           }
 
-          this.observers = [];
+          this.observers.length = 0;
         }
       },
       /**
@@ -90,13 +83,14 @@
         if (!this.isStopped) {
           var os = this.observers.slice(0);
           this.isStopped = true;
-          this.exception = error;
+          this.hasError = true;
+          this.error = error;
 
           for (var i = 0, len = os.length; i < len; i++) {
             os[i].onError(error);
           }
 
-          this.observers = [];
+          this.observers.length = 0;
         }
       },
       /**

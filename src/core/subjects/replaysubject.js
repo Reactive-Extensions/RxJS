@@ -53,7 +53,7 @@
       __super__.call(this, subscribe);
     }
 
-    addProperties(ReplaySubject.prototype, Observer, {
+    addProperties(ReplaySubject.prototype, Observer.prototype, {
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.

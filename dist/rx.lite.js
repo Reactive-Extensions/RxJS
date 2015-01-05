@@ -4761,130 +4761,124 @@
     return AutoDetachObserver;
   }(AbstractObserver));
 
-    /** @private */
-    var InnerSubscription = function (subject, observer) {
-        this.subject = subject;
-        this.observer = observer;
-    };
+  var InnerSubscription = function (subject, observer) {
+    this.subject = subject;
+    this.observer = observer;
+  };
+
+  InnerSubscription.prototype.dispose = function () {
+    if (!this.subject.isDisposed && this.observer !== null) {
+      var idx = this.subject.observers.indexOf(this.observer);
+      this.subject.observers.splice(idx, 1);
+      this.observer = null;
+    }
+  };
+
+  /**
+   *  Represents an object that is both an observable sequence as well as an observer.
+   *  Each notification is broadcasted to all subscribed observers.
+   */
+  var Subject = Rx.Subject = (function (__super__) {
+    function subscribe(observer) {
+      checkDisposed.call(this);
+      if (!this.isStopped) {
+        this.observers.push(observer);
+        return new InnerSubscription(this, observer);
+      }
+      if (this.hasError) {
+        observer.onError(this.error);
+        return disposableEmpty;
+      }
+      observer.onCompleted();
+      return disposableEmpty;
+    }
+
+    inherits(Subject, __super__);
 
     /**
-     * @private
-     * @memberOf InnerSubscription
+     * Creates a subject.
      */
-    InnerSubscription.prototype.dispose = function () {
-        if (!this.subject.isDisposed && this.observer !== null) {
-            var idx = this.subject.observers.indexOf(this.observer);
-            this.subject.observers.splice(idx, 1);
-            this.observer = null;
+    function Subject() {
+      __super__.call(this, subscribe);
+      this.isDisposed = false,
+      this.isStopped = false,
+      this.observers = [];
+      this.hasError = false;
+    }
+
+    addProperties(Subject.prototype, Observer.prototype, {
+      /**
+       * Indicates whether the subject has observers subscribed to it.
+       * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
+       */
+      hasObservers: function () { return this.observers.length > 0; },
+      /**
+       * Notifies all subscribed observers about the end of the sequence.
+       */
+      onCompleted: function () {
+        checkDisposed.call(this);
+        if (!this.isStopped) {
+          var os = this.observers.slice(0);
+          this.isStopped = true;
+          for (var i = 0, len = os.length; i < len; i++) {
+            os[i].onCompleted();
+          }
+
+          this.observers.length = 0;
         }
-    };
+      },
+      /**
+       * Notifies all subscribed observers about the exception.
+       * @param {Mixed} error The exception to send to all observers.
+       */
+      onError: function (error) {
+        checkDisposed.call(this);
+        if (!this.isStopped) {
+          var os = this.observers.slice(0);
+          this.isStopped = true;
+          this.error = error;
+          this.hasError = true;
+          for (var i = 0, len = os.length; i < len; i++) {
+            os[i].onError(error);
+          }
+
+          this.observers.length = 0;
+        }
+      },
+      /**
+       * Notifies all subscribed observers about the arrival of the specified element in the sequence.
+       * @param {Mixed} value The value to send to all observers.
+       */
+      onNext: function (value) {
+        checkDisposed.call(this);
+        if (!this.isStopped) {
+          var os = this.observers.slice(0);
+          for (var i = 0, len = os.length; i < len; i++) {
+            os[i].onNext(value);
+          }
+        }
+      },
+      /**
+       * Unsubscribe all observers and release resources.
+       */
+      dispose: function () {
+        this.isDisposed = true;
+        this.observers = null;
+      }
+    });
 
     /**
-     *  Represents an object that is both an observable sequence as well as an observer.
-     *  Each notification is broadcasted to all subscribed observers.
+     * Creates a subject from the specified observer and observable.
+     * @param {Observer} observer The observer used to send messages to the subject.
+     * @param {Observable} observable The observable used to subscribe to messages sent from the subject.
+     * @returns {Subject} Subject implemented using the given observer and observable.
      */
-    var Subject = Rx.Subject = (function (_super) {
-        function subscribe(observer) {
-            checkDisposed.call(this);
-            if (!this.isStopped) {
-                this.observers.push(observer);
-                return new InnerSubscription(this, observer);
-            }
-            if (this.exception) {
-                observer.onError(this.exception);
-                return disposableEmpty;
-            }
-            observer.onCompleted();
-            return disposableEmpty;
-        }
+    Subject.create = function (observer, observable) {
+      return new AnonymousSubject(observer, observable);
+    };
 
-        inherits(Subject, _super);
-
-        /**
-         * Creates a subject.
-         * @constructor
-         */
-        function Subject() {
-            _super.call(this, subscribe);
-            this.isDisposed = false,
-            this.isStopped = false,
-            this.observers = [];
-        }
-
-        addProperties(Subject.prototype, Observer, {
-            /**
-             * Indicates whether the subject has observers subscribed to it.
-             * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
-             */
-            hasObservers: function () {
-                return this.observers.length > 0;
-            },
-            /**
-             * Notifies all subscribed observers about the end of the sequence.
-             */
-            onCompleted: function () {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    var os = this.observers.slice(0);
-                    this.isStopped = true;
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onCompleted();
-                    }
-
-                    this.observers = [];
-                }
-            },
-            /**
-             * Notifies all subscribed observers about the exception.
-             * @param {Mixed} error The exception to send to all observers.
-             */
-            onError: function (exception) {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    var os = this.observers.slice(0);
-                    this.isStopped = true;
-                    this.exception = exception;
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onError(exception);
-                    }
-
-                    this.observers = [];
-                }
-            },
-            /**
-             * Notifies all subscribed observers about the arrival of the specified element in the sequence.
-             * @param {Mixed} value The value to send to all observers.
-             */
-            onNext: function (value) {
-                checkDisposed.call(this);
-                if (!this.isStopped) {
-                    var os = this.observers.slice(0);
-                    for (var i = 0, len = os.length; i < len; i++) {
-                        os[i].onNext(value);
-                    }
-                }
-            },
-            /**
-             * Unsubscribe all observers and release resources.
-             */
-            dispose: function () {
-                this.isDisposed = true;
-                this.observers = null;
-            }
-        });
-
-        /**
-         * Creates a subject from the specified observer and observable.
-         * @param {Observer} observer The observer used to send messages to the subject.
-         * @param {Observable} observable The observable used to subscribe to messages sent from the subject.
-         * @returns {Subject} Subject implemented using the given observer and observable.
-         */
-        Subject.create = function (observer, observable) {
-            return new AnonymousSubject(observer, observable);
-        };
-
-        return Subject;
-    }(Observable));
+    return Subject;
+  }(Observable));
 
   /**
    *  Represents the result of an asynchronous operation.
@@ -4900,14 +4894,10 @@
         return new InnerSubscription(this, observer);
       }
 
-      var ex = this.exception,
-        hv = this.hasValue,
-        v = this.value;
-
-      if (ex) {
-        observer.onError(ex);
-      } else if (hv) {
-        observer.onNext(v);
+      if (this.hasError) {
+        observer.onError(this.error);
+      } else if (this.hasValue) {
+        observer.onNext(this.value);
         observer.onCompleted();
       } else {
         observer.onCompleted();
@@ -4927,10 +4917,9 @@
 
       this.isDisposed = false;
       this.isStopped = false;
-      this.value = null;
       this.hasValue = false;
       this.observers = [];
-      this.exception = null;
+      this.hasError = false;
     }
 
     addProperties(AsyncSubject.prototype, Observer, {
@@ -4946,27 +4935,25 @@
        * Notifies all subscribed observers about the end of the sequence, also causing the last received value to be sent out (if any).
        */
       onCompleted: function () {
-        var o, i, len;
+        var i, len;
         checkDisposed.call(this);
         if (!this.isStopped) {
           this.isStopped = true;
-          var os = this.observers.slice(0),
-            v = this.value,
-            hv = this.hasValue;
+          var os = this.observers.slice(0), len = os.length;
 
-          if (hv) {
-            for (i = 0, len = os.length; i < len; i++) {
-              o = os[i];
-              o.onNext(v);
+          if (this.hasValue) {
+            for (i = 0; i < len; i++) {
+              var o = os[i];
+              o.onNext(this.value);
               o.onCompleted();
             }
           } else {
-            for (i = 0, len = os.length; i < len; i++) {
+            for (i = 0; i < len; i++) {
               os[i].onCompleted();
             }
           }
 
-          this.observers = [];
+          this.observers.length = 0;
         }
       },
       /**
@@ -4978,13 +4965,14 @@
         if (!this.isStopped) {
           var os = this.observers.slice(0);
           this.isStopped = true;
-          this.exception = error;
+          this.hasError = true;
+          this.error = error;
 
           for (var i = 0, len = os.length; i < len; i++) {
             os[i].onError(error);
           }
 
-          this.observers = [];
+          this.observers.length = 0;
         }
       },
       /**
@@ -5020,7 +5008,7 @@
       __super__.call(this, this.observable.subscribe.bind(this.observable));
     }
 
-    addProperties(AnonymousSubject.prototype, Observer, {
+    addProperties(AnonymousSubject.prototype, Observer.prototype, {
       onCompleted: function () {
         this.observer.onCompleted();
       },
@@ -5047,9 +5035,8 @@
         observer.onNext(this.value);
         return new InnerSubscription(this, observer);
       }
-      var ex = this.exception;
-      if (ex) {
-        observer.onError(ex);
+      if (this.hasError) {
+        observer.onError(this.error);
       } else {
         observer.onCompleted();
       }
@@ -5059,7 +5046,6 @@
     inherits(BehaviorSubject, __super__);
 
     /**
-     * @constructor
      *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
      *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
      */
@@ -5069,7 +5055,7 @@
       this.observers = [],
       this.isDisposed = false,
       this.isStopped = false,
-      this.exception = null;
+      this.hasError = false;
     }
 
     addProperties(BehaviorSubject.prototype, Observer, {
@@ -5077,9 +5063,7 @@
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
        */
-      hasObservers: function () {
-        return this.observers.length > 0;
-      },
+      hasObservers: function () { return this.observers.length > 0; },
       /**
        * Notifies all subscribed observers about the end of the sequence.
        */
@@ -5091,7 +5075,7 @@
           os[i].onCompleted();
         }
 
-        this.observers = [];
+        this.observers.length = 0;
       },
       /**
        * Notifies all subscribed observers about the exception.
@@ -5101,13 +5085,14 @@
         checkDisposed.call(this);
         if (this.isStopped) { return; }
         this.isStopped = true;
-        this.exception = error;
+        this.hasError = true;
+        this.error = error;
 
         for (var i = 0, os = this.observers.slice(0), len = os.length; i < len; i++) {
           os[i].onError(error);
         }
 
-        this.observers = [];
+        this.observers.length = 0;
       },
       /**
        * Notifies all subscribed observers about the arrival of the specified element in the sequence.
@@ -5190,7 +5175,7 @@
       __super__.call(this, subscribe);
     }
 
-    addProperties(ReplaySubject.prototype, Observer, {
+    addProperties(ReplaySubject.prototype, Observer.prototype, {
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
