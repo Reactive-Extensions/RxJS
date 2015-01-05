@@ -1,7 +1,7 @@
 ### `Rx.Observable.prototype.pluck(property)`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/pluck.js "View in source")
 
-Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+Projects each element of an observable sequence into a new form by incorporating the element's index.
 
 #### Arguments
 1. `property` *(`String`)*: The property to pluck.
