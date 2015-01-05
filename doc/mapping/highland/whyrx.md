@@ -4,30 +4,49 @@
 
 But, before we get started, why use RxJS over Highland.js?
 
-## Why RxJS versus Highland.js ##
+### Uses an Array#extras interface instead of node.js Streams ###
 
-There are a number of reasons why RxJS makes sense to use versus Highland.js.  Some of these include:
-- No reliance on node.js infrastructure or jQuery
-- Interoperability With The Libraries You Use
-- Browser Compatibility
-- A Commitment to Standards
-- Swappable Concurrency Layer
-- Backpressure
-- Build What You Want
-- Many Examples and Tutorials
-- Extensive Documentation
+Highland.js is built upon node.js infrastructure, including Streams.  This is great if you're a node developer using streams, but there are many who do not and simply use callbacks and events.  In addition, Streams are hard to get right, hence the changes between Streams 1, 2 and 3 with regards to pause/resume, high water marks, draining, etc.  The [Streams Handbook](https://github.com/substack/stream-handbook) is a great way to get started looking at streams as an approach.  
 
-### No Reliance on node.js Infrastructure or jQuery ###
+The Reactive Extensions are built on a language and runtime neutral approach that works great across languages, whether it is Java, .NET, Python, Ruby, Scala, Clojure, and JavaScript.  This approach allows you easily to switch between Java, JavaScript, and .NET, and get a familiar feel between all the versions.  RxJS was built upon the concept with the Array#extras in mind, where if you know Arrays in JavaScript, then you know RxJS.  The only real difference is the possible element of time, and a push model instead of the Array's pull model.
 
-Highland.js is built upon node.js infrastructure using both the `EventEmitter` and `Stream` class which bring a number of dependencies with it for Browserify to make it work for the browser., including the many drawbacks of the ever changing Streams designs within node.js.  As it interoperates with existing streams, they may or may not be well behaved in whether they will actually pause or not and whether backpressure actually works.  In addition, for events to work in the browser, jQuery is required to handle events instead of providing raw DOM level events as one might expect.
+For example, you can write the following using Arrays in JavaScript.
+```js
+var source = Array.of(1,2,3,4,5);
+
+source
+  .map(function (x, i, a) { return x * x; })
+  .filter(function (x, i, a) { return x % 3 === 0; })
+  .forEach(function (x, i, a) {
+    console.log('next', x);
+  });
+```
+
+The same can then be done using RxJS with only one small code change of changing `Array` to `Rx.Observable`.
+```js
+var source = Rx.Observable.of(1,2,3,4,5);
+
+source
+  .map(function (x, i, a) { return x * x; })
+  .filter(function (x, i, a) { return x % 3 === 0; })
+  .forEach(function (x, i, a) {
+    console.log('next', x);
+  });
+```
+
+### No Reliance on node.js Infrastructure ###
+
+Highland.js is built upon node.js infrastructure using both the `EventEmitter` and `Stream` class which bring a number of dependencies with it for Browserify to make it work for the browser., including the many drawbacks of the ever changing Streams designs within node.js.  As it interoperates with existing streams, they may or may not be well behaved in whether they will actually pause or not and whether backpressure actually works.  These were key reasons for changes between Streams 1, 2 and 3.
 
 Instead, RxJS takes a clean room approach with no external dependencies, which allows for a cleaner design without the technical debt of the `Stream` and `EventEmitter` designs in node.js.   RxJS is built from scratch on a solid platform of the core objects of `Observer`, `Observable`, operators for composition, and `Scheduler` for controlling concurrency.  
 
-## Interoperability With The Libraries You Use ##
+## Interoperability With Libraries and the DOM ##
 
-One of the most important parts of when choosing a library is how well it works with the libraries you already use. Highland.js ties itself directly to [jQuery](http://jquery.com) for all DOM event binding.   Not only that, but adding support for your own custom library's binding is difficult, whereas with RxJS it couldn't be easier.
+One of the most important parts of when choosing a library is how well it works with the libraries you already use. Highland.js, by default, ties itself directly to [jQuery](http://jquery.com) or any kind of event emitter with an `on` method, such as [Zepto.js](http://zeptojs.com) for all DOM event binding, with no deterministic way of unbinding that added event handler.  For everything else, `EventEmitters` are used for eventing.
 
-RxJS, on the other hand is more flexible about binding to the libraries you use.  For example, if you use [jQuery](http://jquery.com) or [Zepto.js](http://zeptojs.com), `Rx.Observable.fromEvent` will work perfectly for you. In addition, we also support the other libraries out of the box:
+RxJS, on the other hand is more flexible about binding to the libraries you use or to the plain old DOM.  You can bind directly to the DOM elements using `Rx.Observable.fromEvent` which binds not only to a standard DOM Element, but also DOM NodeLists, etc directly, with deterministic disposal of events.
+
+For external libraries, if you use [jQuery](http://jquery.com) or [Zepto.js](http://zeptojs.com), `Rx.Observable.fromEvent` will work perfectly for you. In addition, we also support the other libraries out of the box:
 - [AngularJS](http://angularjs.org)
 - [Backbone.js](http://backbonejs.org)
 - [Ember.js](http://emberjs.org)
@@ -89,7 +108,7 @@ We also want to build RxJS for speed with asynchronous operations, so we optimiz
 
 These `compat` files are important as we will shim behavior that we require such as `Array#extras`, `Function#bind` and so forth, so there is no need to bring in your own compatibility library such as html5shiv, although if they do exist already, we will use the native or shimmed methods directly.
 
-## A Commitment to Standards ##
+## Standards Based ##
 
 ### Iterables and Array#extras ###
 
@@ -245,13 +264,13 @@ source.groupBy(function (stock) { return stock.symbol };)
   });
 ```
 
-## Backpressure ##
+## Multicast Backpressure ##
 
 In our applications, we consume a lot of data from external sources.  But, what if our consumers cannot handle the load from the sequence?  
 
-Highland.js uses the standard backpressure mechanisms such as `pause`/`resume` from standard node.js streams, as well as `throttle` and `debounce` for lossy operations.
+Highland.js uses the standard backpressure mechanisms such as `pause`/`resume` from standard node.js streams, as well as `throttle` and `debounce` for lossy operations.  The pause/resume from normal node.js streams works great for unicast streams, meaning one sender and one receiver, however does not work well for multicast events.
 
-RxJS has a number of mechanisms to handle this in the [Backpressure and Observable Sequences](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/gettingstarted/backpressure.md) documentation.  This could come in the form of lossy operations such as `debounce`, `throttleFirst`, `sample`, `pausable`, to loss-less operations such as `pausableBuffered`, `buffer`, `windowed`, `stopAndWait`, etc.
+RxJS has a number of mechanisms to handle this in the [Backpressure and Observable Sequences](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/gettingstarted/backpressure.md) documentation.  This could come in the form of lossy operations such as `debounce`, `throttleFirst`, `sample`, `pausable`, to loss-less operations such as `pausableBuffered`, `buffer`, `windowed`, `stopAndWait`, etc.  These work on the idea of multicast streams so that one consumer is not punished by another's inability to process the data in a timely manner.
 
 ## Build What You Want ##
 
@@ -259,6 +278,62 @@ RxJS has a rather large surface area, so we give you the ability to build RxJS w
 
 ```js
 rx --lite --compat --methods map,flatmap,takeuntil,fromevent
+```
+
+## Long Stack Trace Support ##
+
+Debugging programming with callbacks can be quite cumbersome.  To that end, RxJS has introduced a notion of "Long Stack Traces" which allows you to quickly isolate your code from the plumbing not only of RxJS, but also node.js and the browser cruft, thus getting you to the real cause of the issue.
+
+For example, without "long stack trace" support, typically, an error would look like the following:
+
+```js
+var Rx = require('rx');
+
+var source = Rx.Observable.range(0, 100)
+  .timestamp()
+  .map(function (x) {
+    if (x.value > 98) throw new Error();
+    return x;
+});
+
+source.subscribeOnError(
+  function (err) {
+    console.log(err.stack);
+  });
+```
+
+```bash
+$ node example.js
+
+  Error
+  at C:\GitHub\example.js:6:29
+  at AnonymousObserver._onNext (C:\GitHub\rxjs\dist\rx.all.js:4013:31)
+  at AnonymousObserver.Rx.AnonymousObserver.AnonymousObserver.next (C:\GitHub\rxjs\dist\rx.all.js:1863:12)
+  at AnonymousObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+  at AutoDetachObserverPrototype.next (C:\GitHub\rxjs\dist\rx.all.js:9226:23)
+  at AutoDetachObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+  at AnonymousObserver._onNext (C:\GitHub\rxjs\dist\rx.all.js:4018:18)
+  at AnonymousObserver.Rx.AnonymousObserver.AnonymousObserver.next (C:\GitHub\rxjs\dist\rx.all.js:1863:12)
+  at AnonymousObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+  at AutoDetachObserverPrototype.next (C:\GitHub\rxjs\dist\rx.all.js:9226:23)
+```
+
+This can be remedied using "long stack trace" support by setting the following flag:
+```js
+Rx.config.longStackSupport = true;
+```
+
+Then we can run our program again using this support
+```bash
+$ node example.js
+  Error
+  at C:\GitHub\example.js:6:29
+  From previous event:
+  at Object.<anonymous> (C:\GitHub\example.js:3:28)
+  From previous event:
+  at Object.<anonymous> (C:\GitHub\example.js:4:4)
+  From previous event:
+  at Object.<anonymous> (C:\GitHub\example.js:5:4)
 ```
 
 ## Many Examples and Tutorials ##

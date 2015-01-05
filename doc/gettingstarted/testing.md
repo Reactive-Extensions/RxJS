@@ -136,6 +136,66 @@ By using the `timestamp` operator, we have verified that the first item is indee
 
 You can remove any `do` and `map` or `select` calls after you finish debugging.
 
+## Long Stack Traces Support
+
+When dealing with large RxJS applications, debugging and finding where the error occurred can be a difficult operation. As you chain more and more operators together, the longer the stack trace gets, and the harder it is to find out where things went wrong. Inspiration for this feature came from the [Q library](https://github.com/kriskowal/q) from [@kriskowal](https://github.com/kriskowal) which helped us get started.
+
+RxJS comes with optional support for "long stack traces" where the stack property of Error from onError calls is rewritten to be traced along asynchronous jumps instead of stopping at the most recent one. As an example:
+```js
+var Rx = require('rx');
+
+var source = Rx.Observable.range(0, 100)
+  .timestamp()
+  .map(function (x) {
+    if (x.value > 98) throw new Error();
+    return x;
+  });
+
+source.subscribeOnError(
+  function (err) {
+    console.log(err.stack);
+  });
+```
+The error stack easily becomes unreadable and hard to find where the error actually occurred:
+```bash
+$ node example.js
+
+  Error
+  at C:\GitHub\example.js:6:29
+  at AnonymousObserver._onNext (C:\GitHub\rxjs\dist\rx.all.js:4013:31)
+  at AnonymousObserver.Rx.AnonymousObserver.AnonymousObserver.next (C:\GitHub\rxjs\dist\rx.all.js:1863:12)
+  at AnonymousObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+  at AutoDetachObserverPrototype.next (C:\GitHub\rxjs\dist\rx.all.js:9226:23)
+  at AutoDetachObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+  at AnonymousObserver._onNext (C:\GitHub\rxjs\dist\rx.all.js:4018:18)
+  at AnonymousObserver.Rx.AnonymousObserver.AnonymousObserver.next (C:\GitHub\rxjs\dist\rx.all.js:1863:12)
+  at AnonymousObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+  at AutoDetachObserverPrototype.next (C:\GitHub\rxjs\dist\rx.all.js:9226:23)
+```
+Instead, we can turn on this feature by setting the following flag:
+```js
+Rx.config.longStackSupport = true;
+```
+When running the same example again with the flag set at the top, our stack trace looks much nicer and indicates exactly where the error occurred:
+```bash
+$ node example.js
+
+  Error
+  at C:\GitHub\example.js:6:29
+  From previous event:
+  at Object.<anonymous> (C:\GitHub\example.js:3:28)
+  From previous event:
+  at Object.<anonymous> (C:\GitHub\example.js:4:4)
+  From previous event:
+  at Object.<anonymous> (C:\GitHub\example.js:5:4)
+```
+
+Now, it is more clear that the error did occur exactly at line 6 with throwing an error and only shows the user code in this point. This is very helpful for debugging, as otherwise you end up getting only the first line, plus a bunch of RxJS internals, with no sign of where the operation started.
+
+This feature does come with a serious performance and memory overhead, however, If you're working with lots of RxJS code, or trying to scale a server to many users, you should probably keep it off. In development, this is perfectly fine for finding those pesky errors!
+
+In a future release, we may also release support for a node.js environment variable so that you can set it and unset it fairly easily.
+
 ## See Also ##
 
 **Concepts**

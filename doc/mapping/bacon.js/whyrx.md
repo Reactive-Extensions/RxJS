@@ -4,19 +4,6 @@
 
 But, before we get started, why use RxJS over Bacon.js?
 
-## Why RxJS versus Bacon.js ##
-
-There are a number of reasons why RxJS makes sense to use versus Bacon.js.  Some of these include:
-- Performance
-- Interoperability With The Libraries You Use
-- Browser Compatibility
-- A Commitment to Standards
-- Swappable Concurrency Layer
-- Backpressure
-- Build What You Want
-- Many Examples and Tutorials
-- Extensive Documentation
-
 ### Performance ###
 
 RxJS has always been committed to providing the best performance available on any given JavaScript platform.  Whether it is providing a small footprint for an `Observable` instance, to providing the capability of using `setImmediate` versus `setTimeout` versus `requestAnimationFrame`, all by choosing a different scheduler.  In addition, since RxJS is written in regular JavaScript versus CoffeeScript, there are a lot more optimizations that can be made by hand to ensure performance.
@@ -125,7 +112,7 @@ We also want to build RxJS for speed with asynchronous operations, so we optimiz
 
 These `compat` files are important as we will shim behavior that we require such as `Array#extras`, `Function#bind` and so forth, so there is no need to bring in your own compatibility library such as html5shiv, although if they do exist already, we will use the native or shimmed methods directly.
 
-## A Commitment to Standards ##
+## Standards Based ##
 
 ### Iterables and Array#extras ###
 
@@ -292,6 +279,63 @@ RxJS has a rather large surface area, so we give you the ability to build RxJS w
 ```js
 rx --lite --compat --methods map,flatmap,takeuntil,fromevent
 ```
+
+## Long Stack Trace Support ##
+
+Debugging programming with callbacks can be quite cumbersome.  To that end, RxJS has introduced a notion of "Long Stack Traces" which allows you to quickly isolate your code from the plumbing not only of RxJS, but also node.js and the browser cruft, thus getting you to the real cause of the issue.
+
+For example, without "long stack trace" support, typically, an error would look like the following:
+
+```js
+var Rx = require('rx');
+
+var source = Rx.Observable.range(0, 100)
+  .timestamp()
+  .map(function (x) {
+    if (x.value > 98) throw new Error();
+    return x;
+  });
+
+source.subscribeOnError(
+  function (err) {
+    console.log(err.stack);
+  });
+  ```
+
+  ```bash
+  $ node example.js
+
+    Error
+    at C:\GitHub\example.js:6:29
+    at AnonymousObserver._onNext (C:\GitHub\rxjs\dist\rx.all.js:4013:31)
+    at AnonymousObserver.Rx.AnonymousObserver.AnonymousObserver.next (C:\GitHub\rxjs\dist\rx.all.js:1863:12)
+    at AnonymousObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+    at AutoDetachObserverPrototype.next (C:\GitHub\rxjs\dist\rx.all.js:9226:23)
+    at AutoDetachObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+    at AnonymousObserver._onNext (C:\GitHub\rxjs\dist\rx.all.js:4018:18)
+    at AnonymousObserver.Rx.AnonymousObserver.AnonymousObserver.next (C:\GitHub\rxjs\dist\rx.all.js:1863:12)
+    at AnonymousObserver.Rx.internals.AbstractObserver.AbstractObserver.onNext (C:\GitHub\rxjs\dist\rx.all.js:1795:35)
+    at AutoDetachObserverPrototype.next (C:\GitHub\rxjs\dist\rx.all.js:9226:23)
+  ```
+
+  This can be remedied using "long stack trace" support by setting the following flag:
+  ```js
+  Rx.config.longStackSupport = true;
+  ```
+
+  Then we can run our program again using this support
+  ```bash
+  $ node example.js
+  
+    Error
+    at C:\GitHub\example.js:6:29
+    From previous event:
+    at Object.<anonymous> (C:\GitHub\example.js:3:28)
+    From previous event:
+    at Object.<anonymous> (C:\GitHub\example.js:4:4)
+    From previous event:
+    at Object.<anonymous> (C:\GitHub\example.js:5:4)
+  ```
 
 ## Many Examples and Tutorials ##
 

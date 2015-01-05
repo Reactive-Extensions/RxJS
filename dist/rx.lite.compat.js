@@ -5259,18 +5259,22 @@
   var AnonymousSubject = Rx.AnonymousSubject = (function (__super__) {
     inherits(AnonymousSubject, __super__);
 
+    function subscribe(observer) {
+      this.observable.subscribe(observer);
+    }
+
     function AnonymousSubject(observer, observable) {
       this.observer = observer;
       this.observable = observable;
-      __super__.call(this, this.observable.subscribe.bind(this.observable));
+      __super__.call(this, subscribe);
     }
 
     addProperties(AnonymousSubject.prototype, Observer.prototype, {
       onCompleted: function () {
         this.observer.onCompleted();
       },
-      onError: function (exception) {
-        this.observer.onError(exception);
+      onError: function (error) {
+        this.observer.onError(error);
       },
       onNext: function (value) {
         this.observer.onNext(value);
