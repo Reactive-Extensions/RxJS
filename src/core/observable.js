@@ -22,7 +22,7 @@
             oldOnError(err);
           };
 
-          return subscribe(observer);
+          return subscribe.call(self, observer);
         };
       } else {
         this._subscribe = subscribe;
