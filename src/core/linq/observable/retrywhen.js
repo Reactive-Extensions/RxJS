@@ -1,13 +1,13 @@
   /**
-   *  Repeats the source observable sequence the specified number of times or until it successfully terminates. If the retry count is not specified, it retries indefinitely.
-   *  Note if you encounter an error and want it to retry once, then you must use .retry(2);
+   *  Repeats the source observable sequence upon error each time the notifier emits or until it successfully terminates. 
+   *  if the notifier completes, the observable sequence completes.
    *
    * @example
-   *  var res = retried = retry.repeat();
-   *  var res = retried = retry.repeat(2);
-   * @param {Number} [retryCount]  Number of times to retry the sequence. If not provided, retry the sequence indefinitely.
+   *  var timer = Observable.timer(500);
+   *  var source = observable.retryWhen(timer);
+   * @param {Observable} [notifier] An observable that triggers the retries or completes the observable with onNext or onCompleted respectively.
    * @returns {Observable} An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully.
    */
-  observableProto.retryWhen = function (retry) {
-    return enumerableRepeat(this).catchErrorWhen(retry);
+  observableProto.retryWhen = function (notifier) {
+    return enumerableRepeat(this).catchErrorWhen(notifier);
   };

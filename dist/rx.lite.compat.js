@@ -1755,7 +1755,7 @@
     });
   };
 
-  Enumerable.prototype.catchErrorWhen = function (retry) {
+  Enumerable.prototype.catchErrorWhen = function (notifier) {
     var sources = this;
     return new AnonymousObservable(function (observer) {
       var e;
@@ -1800,12 +1800,12 @@
           observer.onNext.bind(observer),
           function (exn) {
             lastException = exn;
-            inner.setDisposable(retry.subscribe(function(){
+            inner.setDisposable(notifier.subscribe(function(){
               self();
             }, function(ex) {
               observer.onError(ex);
             }, function() {
-              self();
+              observer.onCompleted();
             }));
           },
           observer.onCompleted.bind(observer)));
