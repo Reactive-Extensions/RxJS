@@ -1566,6 +1566,67 @@
     });
   };
 
+  Enumerable.prototype.catchErrorWhen = function (retry) {
+    var sources = this;
+    return new AnonymousObservable(function (observer) {
+      var e;
+      try {
+        e = sources[$iterator$]();
+      } catch (err) {
+        observer.onError(err);
+        return;
+      }
+
+      var isDisposed,
+        lastException,
+        subscription = new SerialDisposable();
+      var cancelable = immediateScheduler.scheduleRecursive(function (self) {
+        if (isDisposed) { return; }
+
+        var currentItem;
+        try {
+          currentItem = e.next();
+        } catch (ex) {
+          observer.onError(ex);
+          return;
+        }
+
+        if (currentItem.done) {
+          if (lastException) {
+            observer.onError(lastException);
+          } else {
+            observer.onCompleted();
+          }
+          return;
+        }
+
+        // Check if promise
+        var currentValue = currentItem.value;
+        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
+        var outer = new SingleAssignmentDisposable();
+        var inner = new SingleAssignmentDisposable();
+        subscription.setDisposable(new CompositeDisposable(inner, outer));
+        outer.setDisposable(currentValue.subscribe(
+          observer.onNext.bind(observer),
+          function (exn) {
+            lastException = exn;
+            inner.setDisposable(retry.subscribe(function(){
+              self();
+            }, function(ex) {
+              observer.onError(ex);
+            }, function() {
+              self();
+            }));
+          },
+          observer.onCompleted.bind(observer)));
+      });
+      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
+        isDisposed = true;
+      }));
+    });
+  };
+
   var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
     if (repeatCount == null) { repeatCount = -1; }
     return new Enumerable(function () {
