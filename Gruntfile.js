@@ -143,6 +143,7 @@ var browsers = [{
               'src/core/linq/observable/materialize.js',
               'src/core/linq/observable/repeatproto.js',
               'src/core/linq/observable/retry.js',
+              'src/core/linq/observable/retryWhen.js',
               'src/core/linq/observable/scan.js',
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
