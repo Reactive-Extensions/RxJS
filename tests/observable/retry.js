@@ -18,7 +18,7 @@ test('Retry_Observable_Basic', function () {
         return xs.retry();
     });
     results.messages.assertEqual(onNext(300, 1), onNext(350, 2), onNext(400, 3), onCompleted(450));
-    xs.subscriptions.assertEqual(subscribe(200, 450));
+    xs.subscriptions.assertEqual(subscribe(250, 450));
 });
 
 test('Retry_Observable_Infinite', function () {

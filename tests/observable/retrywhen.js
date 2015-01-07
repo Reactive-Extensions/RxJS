@@ -1,45 +1,38 @@
 QUnit.module('RetryWhen');
 
 
-asyncTest('RetryWhen_Observable_Basic', function () {
-    // a notifier to notify of the retry.
-    var notifier = new Rx.Subject();
+var Observable = Rx.Observable,
+    TestScheduler = Rx.TestScheduler,
+    onNext = Rx.ReactiveTest.onNext,
+    onError = Rx.ReactiveTest.onError,
+    onCompleted = Rx.ReactiveTest.onCompleted,
+    subscribe = Rx.ReactiveTest.subscribe,
+    created = Rx.ReactiveTest.created,
+    subscribed = Rx.ReactiveTest.subscribed,
+    disposed = Rx.ReactiveTest.disposed;
 
-    // a basic source that will crap out after 6 items.
-    var source = Rx.Observable.range(0, 10).map(function(n) {
-        if(n > 5) {
-            throw 'nope';
-        }
-        return n;
+test('RetryWhen_Observable_Cold_Basic', function () {
+    var results, scheduler, xs, retry;
+    scheduler = new TestScheduler();
+    retry = new Subject();
+    xs = scheduler.createColdObservable(onNext(100, 1), onNext(150, 2), onNext(200, 3), onCompleted(250));
+    results = scheduler.startWithCreate(function () {
+        return xs.retryWhen(retry);
     });
+    results.messages.assertEqual(onNext(300, 1), onNext(350, 2), onNext(400, 3), onCompleted(450));
+    xs.subscriptions.assertEqual(subscribe(200, 450));
+});
 
-    var once = false;
-    var results = [];
-
-    source.doOnError(function(err){
-        // trigger the notifier to next the first time
-        // or complete after that.
-
-        // this is done async to ensure it happens after
-        // the retryWhen handler subscribes internally
-        setTimeout(function(){
-            if(!once) {
-                notifier.onNext(); // retry once
-                once = true;
-            } else {
-                notifier.onCompleted(); // not twice
-            }
-        }, 0);
-    })
-    .retryWhen(notifier)
-    .subscribe(function(n) {
-        results.push(n); // record what has been emitted
-    }, function(err) {
-        isEqual(false, true, 'this should not happen');
-        start();
-    }, function() {
-        deepEqual(results, [0,1,2,3,4,5,0,1,2,3,4,5]);
-        start();
+test('RetryWhen_Observable_Cold_Error', function () {
+    var results, scheduler, xs, retry, ex;
+    ex = 'ex';
+    scheduler = new TestScheduler();
+    retry = scheduler.createHotObservable(onNext(240));
+    xs = scheduler.createColdObservable(onNext(10, 1), onNext(20, 2), onError(30, ex), onCompleted(40));
+    results = scheduler.startWithCreate(function () {
+        return xs.retryWhen(retry);
     });
+    results.messages.assertEqual(onNext(210, 1), onNext(220, 2), onNext(250, 1), onNext(260, 2));
+    xs.subscriptions.assertEqual(subscribe(200, 240), subscribe(240, 1000));
 });
 
