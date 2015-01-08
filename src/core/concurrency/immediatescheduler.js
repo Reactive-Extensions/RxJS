@@ -4,7 +4,7 @@
     function scheduleNow(state, action) { return action(this, state); }
 
     function scheduleRelative(state, dueTime, action) {
-      var dt = normalizeTime(dueTime);
+      var dt = this.now() + normalizeTime(dueTime);
       while (dt - this.now() > 0) { }
       return action(this, state);
     }
