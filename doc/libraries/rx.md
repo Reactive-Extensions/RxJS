@@ -69,6 +69,7 @@ NuGet Packages:
 - [`onErrorResumeNext`](../api/core/operators/onerrorresumenext.md)
 - [`repeat`](../api/core/operators/repeatproto.md)
 - [`retry`](../api/core/operators/retry.md)
+- [`retryWhen`](../api/core/operators/retrywhen.md)
 - [`scan`](../api/core/operators/scan.md)
 - [`select`](../api/core/operators/select.md)
 - [`selectConcat`](../api/core/operators/concatmap.md)
