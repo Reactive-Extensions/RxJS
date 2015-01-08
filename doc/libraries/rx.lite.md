@@ -76,6 +76,7 @@ NuGet Packages:
 - [`repeat`](../api/core/operators/repeat.md)
 - [`replay`](../api/core/operators/replay.md)
 - [`retry`](../api/core/operators/retry.md)
+- [`retryWhen`](../api/core/operators/retrywhen.md)
 - [`sample`](../api/core/operators/sample.md)
 - [`scan`](../api/core/operators/scan.md)
 - [`select`](../api/core/operators/select.md)

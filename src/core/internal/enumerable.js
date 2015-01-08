@@ -108,10 +108,20 @@
     });
   };
 
-  Enumerable.prototype.catchErrorWhen = function (notifier) {
+
+  Enumerable.prototype.catchErrorWhen = function (notificationHandler) {
     var sources = this;
     return new AnonymousObservable(function (observer) {
       var e;
+
+      var exceptions = new Subject();
+
+      var handled = notificationHandler(exceptions);
+
+      var notifier = new Subject();
+
+      var disp = handled.subscribe(notifier);
+
       try {
         e = sources[$iterator$]();
       } catch (err) {
@@ -152,7 +162,6 @@
         outer.setDisposable(currentValue.subscribe(
           observer.onNext.bind(observer),
           function (exn) {
-            lastException = exn;
             inner.setDisposable(notifier.subscribe(function(){
               self();
             }, function(ex) {
@@ -160,9 +169,12 @@
             }, function() {
               observer.onCompleted();
             }));
+
+            exceptions.onNext(exn);
           },
           observer.onCompleted.bind(observer)));
       });
+
       return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
         isDisposed = true;
       }));

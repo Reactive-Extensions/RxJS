@@ -139,6 +139,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`repeat`](operators/repeatproto.md)
 - [`replay`](operators/replay.md)
 - [`retry`](operators/retry.md)
+- [`retryWhen`](operators/retrywhen.md)
 - [`sample`](operators/sample.md)
 - [`scan`](operators/scan.md)
 - [`select`](operators/select.md)
