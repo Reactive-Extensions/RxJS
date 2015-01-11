@@ -85,14 +85,14 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
-// => Next: 4
-// => Next: 4
-// => Next: 4
-// => Next: 4
+// => Next: 1
+// => Next: 3
+// => Next: 5
+// => Next: 7
 // => Completed
 
 /* Using an array */
-Rx.Observable.of(1,2,3)
+var source = Rx.Observable.of(1,2,3)
   .flatMap(
     function (x, i) { return [x,i]; },
     function (x, y, ix, iy) { return x + y + ix + iy; }
