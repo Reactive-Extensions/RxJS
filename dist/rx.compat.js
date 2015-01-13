@@ -1866,7 +1866,7 @@
 
       var notifier = new Subject();
 
-      var disp = handled.subscribe(notifier);
+      var notificationDisposable = handled.subscribe(notifier);
 
       try {
         e = sources[$iterator$]();
@@ -1921,7 +1921,7 @@
           observer.onCompleted.bind(observer)));
       });
 
-      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
+      return new CompositeDisposable(notificationDisposable, subscription, cancelable, disposableCreate(function () {
         isDisposed = true;
       }));
     });
