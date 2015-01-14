@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.skipUntilWithTime(startTime, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntilwithtime.js "View in source")
 
 Skips elements from the observable source sequence until the specified start time, using the specified scheduler to run timers.
 
