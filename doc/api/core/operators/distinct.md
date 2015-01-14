@@ -1,4 +1,4 @@
-### `Rx.Observable.prototype.distinct([keySelector], [keySerializer])`
+### `Rx.Observable.prototype.distinct([keySelector], [comparer])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/distinct.js "View in source")
 
 Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer. Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large.
