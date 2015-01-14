@@ -6,7 +6,7 @@ Helper functions for the Reactive Extensions for JavaScript
 
 - [`Rx.helpers.defaultComparer`](#rxhelpersdefaultcomparerx-y)
 - [`Rx.helpers.defaultSubComparer`](#rxhelpersdefaultsubscomparerx-y)
-- ['Rx.helpers.defaultError'](#rxhelpersdefaulterror)
+- [`Rx.helpers.defaultError`](#rxhelpersdefaulterror)
 - [`Rx.helpers.identity`](#rxhelpersidentityx)
 - [`Rx.helpers.isPromise`](#rxhelpersispromisep)
 - [`Rx.helpers.just`](#rxhelpersjustvalue)
