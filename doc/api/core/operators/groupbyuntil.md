@@ -62,7 +62,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/groupby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupby.js)
+- [`/src/core/linq/observable/groupbyuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/groupbyuntil.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -77,4 +77,4 @@ NuGet Packages:
 - [`RxJS-Coincidence`](http://www.nuget.org/packages/RxJS-Coincidence/)
 
 Unit Tests:
-- [`/tests/observable/groupby.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/groupby.js)
+- [`/tests/observable/groupbyuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/groupbyuntil.js)

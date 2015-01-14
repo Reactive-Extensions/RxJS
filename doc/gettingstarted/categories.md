@@ -151,7 +151,7 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/flatmaplatest.md">selectSwitch</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/single.md">single</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/singleordefault.md">singleOrDefault</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservableprototypeskipcount">skip</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/skip.md">skip</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/skiplast.md">skipLast</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/skiplastwithtime.md">skipLastWithTime</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/skipuntil.md">skipUntil</a></li>
@@ -177,7 +177,7 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupbyuntil.md">groupByUntil</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupjoin.md">groupJoin</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/join.md">join</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/window">window</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/window.md">window</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/windowwithcount.md">windowWithCount</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/windowwithtime.md">windowWithTime</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/windowwithtimeorcount.md">windowWithTimeOrCount</a></li>
@@ -194,8 +194,8 @@ This topic lists all major operators implemented by the [`Observable`](https://g
   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/doonerror.md">doOnError</a></li>
   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/dooncompleted.md">doOnCompleted</a></li>
   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/dowhile.md">doWhile</a></li>
-  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservableforsources-resultselector">for</a></li>
-  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservableifcondition-thensource-elsesource">if</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/for.md">for</a></li>
+  <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/if.md">if</a></li>
   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/do.md">tap</a></li>
   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/doonnext.md">tapOnNext</a></li>
   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/doonerror.md">tapOnError</a></li>
