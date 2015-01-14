@@ -6,10 +6,35 @@
    * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
    */
   observableProto.reduce = function (accumulator) {
-    var seed, hasSeed;
+    var hasSeed = false, seed, source = this;
     if (arguments.length === 2) {
       hasSeed = true;
       seed = arguments[1];
     }
-    return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
+    return new AnonymousObservable(function (o) {
+      var hasAccumulation, accumulation, hasValue;
+      return source.subscribe (
+        function (x) {
+          !hasValue && (hasValue = true);
+          try {
+            if (hasAccumulation) {
+              accumulation = accumulator(accumulation, x);
+            } else {
+              accumulation = hasSeed ? accumulator(seed, x) : x;
+              hasAccumulation = true;
+            }
+          } catch (e) {
+            o.onError(e);
+            return;
+          }
+        },
+        function (e) { o.onError(e); },
+        function () {
+          hasValue && o.onNext(accumulation);
+          !hasValue && hasSeed && o.onNext(seed);
+          !hasValue && !hasSeed && o.onError(new Error(sequenceContainsNoElements));
+          o.onCompleted();
+        }
+      );
+    }, source);
   };

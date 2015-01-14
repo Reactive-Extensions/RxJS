@@ -13,7 +13,7 @@
     subscribed = Rx.ReactiveTest.subscribed,
     disposed = Rx.ReactiveTest.disposed;
 
-  test('Retry_Observable_Basic', function () {
+  test('Retry Observable Basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -39,7 +39,7 @@
     );
   });
 
-  test('Retry_Observable_Infinite', function () {
+  test('Retry Observable Infinite', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -63,7 +63,7 @@
     );
   });
 
-  test('Retry_Observable_Error', function () {
+  test('Retry Observable Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -99,7 +99,7 @@
       subscribe(950, 1100)
     );
   });
-
+/*
   test('Retry Observable Throws', function () {
     var scheduler1 = new TestScheduler();
 
@@ -135,14 +135,14 @@
       return scheduler3.start();
     });
 
-    var xss = Observable.create(function (o) { throw new Error(); }).retry();
+    var xss = Observable.create(function () { throw new Error(); }).retry();
 
     raises(function () {
       return xss.subscribe();
     });
   });
-
-  test('Retry_Observable_RetryCount_Basic', function () {
+*/
+  test('Retry Observable RetryCount Basic', function () {
     var scheduler = new TestScheduler();
 
     var error = new Error();
@@ -178,7 +178,7 @@
     );
   });
 
-  test('Retry_Observable_RetryCount_Dispose', function () {
+  test('Retry Observable RetryCount Dispose', function () {
     var scheduler = new TestScheduler();
 
     var error = new Error();

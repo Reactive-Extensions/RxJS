@@ -4,7 +4,7 @@
    */
   observableProto.mergeAll = function () {
     var sources = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var group = new CompositeDisposable(),
         isStopped = false,
         m = new SingleAssignmentDisposable();
@@ -17,13 +17,13 @@
         // Check for promises support
         isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
-        innerSubscription.setDisposable(innerSource.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
+        innerSubscription.setDisposable(innerSource.subscribe(function (x) { o.onNext(x); }, function (e) { o.onError(e); }, function () {
           group.remove(innerSubscription);
-          isStopped && group.length === 1 && observer.onCompleted();
+          isStopped && group.length === 1 && o.onCompleted();
         }));
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         isStopped = true;
-        group.length === 1 && observer.onCompleted();
+        group.length === 1 && o.onCompleted();
       }));
       return group;
     }, sources);

@@ -11,7 +11,7 @@
   observableProto.merge = function (maxConcurrentOrOther) {
     if (typeof maxConcurrentOrOther !== 'number') { return observableMerge(this, maxConcurrentOrOther); }
     var sources = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var activeCount = 0, group = new CompositeDisposable(), isStopped = false, q = [];
 
       function subscribe(xs) {
@@ -21,13 +21,13 @@
         // Check for promises support
         isPromise(xs) && (xs = observableFromPromise(xs));
 
-        subscription.setDisposable(xs.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
+        subscription.setDisposable(xs.subscribe(function (x) { o.onNext(x); }, function (e) { o.onError(e); }, function () {
           group.remove(subscription);
           if (q.length > 0) {
             subscribe(q.shift());
           } else {
             activeCount--;
-            isStopped && activeCount === 0 && observer.onCompleted();
+            isStopped && activeCount === 0 && o.onCompleted();
           }
         }));
       }
@@ -38,9 +38,9 @@
         } else {
           q.push(innerSource);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         isStopped = true;
-        activeCount === 0 && observer.onCompleted();
+        activeCount === 0 && o.onCompleted();
       }));
       return group;
     }, sources);

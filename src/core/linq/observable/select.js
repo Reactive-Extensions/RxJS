@@ -7,17 +7,17 @@
   observableProto.select = observableProto.map = function (selector, thisArg) {
     var selectorFn = isFunction(selector) ? selector : function () { return selector; },
         source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var count = 0;
       return source.subscribe(function (value) {
         var result;
         try {
           result = selectorFn.call(thisArg, value, count++, source);
         } catch (e) {
-          observer.onError(e);
+          o.onError(e);
           return;
         }
-        observer.onNext(result);
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        o.onNext(result);
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };

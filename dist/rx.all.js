@@ -2981,7 +2981,7 @@
   observableProto.merge = function (maxConcurrentOrOther) {
     if (typeof maxConcurrentOrOther !== 'number') { return observableMerge(this, maxConcurrentOrOther); }
     var sources = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var activeCount = 0, group = new CompositeDisposable(), isStopped = false, q = [];
 
       function subscribe(xs) {
@@ -2991,13 +2991,13 @@
         // Check for promises support
         isPromise(xs) && (xs = observableFromPromise(xs));
 
-        subscription.setDisposable(xs.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
+        subscription.setDisposable(xs.subscribe(function (x) { o.onNext(x); }, function (e) { o.onError(e); }, function () {
           group.remove(subscription);
           if (q.length > 0) {
             subscribe(q.shift());
           } else {
             activeCount--;
-            isStopped && activeCount === 0 && observer.onCompleted();
+            isStopped && activeCount === 0 && o.onCompleted();
           }
         }));
       }
@@ -3008,9 +3008,9 @@
         } else {
           q.push(innerSource);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         isStopped = true;
-        activeCount === 0 && observer.onCompleted();
+        activeCount === 0 && o.onCompleted();
       }));
       return group;
     }, sources);
@@ -3045,7 +3045,7 @@
    */
   observableProto.mergeAll = function () {
     var sources = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var group = new CompositeDisposable(),
         isStopped = false,
         m = new SingleAssignmentDisposable();
@@ -3058,13 +3058,13 @@
         // Check for promises support
         isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
-        innerSubscription.setDisposable(innerSource.subscribe(observer.onNext.bind(observer), observer.onError.bind(observer), function () {
+        innerSubscription.setDisposable(innerSource.subscribe(function (x) { o.onNext(x); }, function (e) { o.onError(e); }, function () {
           group.remove(innerSubscription);
-          isStopped && group.length === 1 && observer.onCompleted();
+          isStopped && group.length === 1 && o.onCompleted();
         }));
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         isStopped = true;
-        group.length === 1 && observer.onCompleted();
+        group.length === 1 && o.onCompleted();
       }));
       return group;
     }, sources);
@@ -4162,18 +4162,18 @@
   observableProto.select = observableProto.map = function (selector, thisArg) {
     var selectorFn = isFunction(selector) ? selector : function () { return selector; },
         source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var count = 0;
       return source.subscribe(function (value) {
         var result;
         try {
           result = selectorFn.call(thisArg, value, count++, source);
         } catch (e) {
-          observer.onError(e);
+          o.onError(e);
           return;
         }
-        observer.onNext(result);
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        o.onNext(result);
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };
 
@@ -4408,18 +4408,18 @@
    */
   observableProto.where = observableProto.filter = function (predicate, thisArg) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var count = 0;
       return source.subscribe(function (value) {
         var shouldRun;
         try {
           shouldRun = predicate.call(thisArg, value, count++, source);
         } catch (e) {
-          observer.onError(e);
+          o.onError(e);
           return;
         }
-        shouldRun && observer.onNext(value);
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        shouldRun && o.onNext(value);
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };
 
@@ -4510,12 +4510,37 @@
    * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
    */
   observableProto.reduce = function (accumulator) {
-    var seed, hasSeed;
+    var hasSeed = false, seed, source = this;
     if (arguments.length === 2) {
       hasSeed = true;
       seed = arguments[1];
     }
-    return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
+    return new AnonymousObservable(function (o) {
+      var hasAccumulation, accumulation, hasValue;
+      return source.subscribe (
+        function (x) {
+          !hasValue && (hasValue = true);
+          try {
+            if (hasAccumulation) {
+              accumulation = accumulator(accumulation, x);
+            } else {
+              accumulation = hasSeed ? accumulator(seed, x) : x;
+              hasAccumulation = true;
+            }
+          } catch (e) {
+            o.onError(e);
+            return;
+          }
+        },
+        function (e) { o.onError(e); },
+        function () {
+          hasValue && o.onNext(accumulation);
+          !hasValue && hasSeed && o.onNext(seed);
+          !hasValue && !hasSeed && o.onError(new Error(sequenceContainsNoElements));
+          o.onCompleted();
+        }
+      );
+    }, source);
   };
 
   /**
