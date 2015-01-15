@@ -26,7 +26,7 @@ var codes = [
     { keyCode: 65}  // a
 ];
 
-var source = Rx.Observable.fromArray(codes)
+var source = Rx.Observable.from(codes)
     .groupBy(
         function (x) { return x.keyCode; },
         function (x) { return x.keyCode; });

@@ -82,7 +82,7 @@ In the following example, we project a sequence of strings into an a series of i
 ```js
 var array = ['Reactive', 'Extensions', 'RxJS'];
 
-var seqString = Rx.Observable.fromArray(array);
+var seqString = Rx.Observable.from(array);
 
 var seqNum = seqString.map(function (x) { return x.length; });
 

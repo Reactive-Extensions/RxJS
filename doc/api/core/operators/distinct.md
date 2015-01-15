@@ -13,7 +13,7 @@ Returns an observable sequence that contains only distinct elements according to
 #### Example
 ```js
 /* Without key selector */
-var source = Rx.Observable.fromArray([
+var source = Rx.Observable.from([
         42, 24, 42, 24
     ])
     .distinct();
@@ -34,7 +34,7 @@ var subscription = source.subscribe(
 // => Completed
 
 /* With key selector */
-var source = Rx.Observable.fromArray([
+var source = Rx.Observable.from([
         {value: 42}, {value: 24}, {value: 42}, {value: 24}
     ])
     .distinct(function (x) { return x.value; });

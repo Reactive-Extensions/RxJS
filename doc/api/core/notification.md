@@ -30,7 +30,7 @@ Creates an object that represents an OnCompleted notification to an observer.
 #### Example
 ```js
 var source = Rx.Observable
-    .fromArray([
+    .from([
         Rx.Notification.createOnCompleted()
     ])
     .dematerialize();
@@ -69,7 +69,7 @@ Creates an object that represents an OnError notification to an observer.
 #### Example
 ```js
 var source = Rx.Observable
-    .fromArray([
+    .from([
         Rx.Notification.createOnError(new Error('woops'))
     ])
     .dematerialize();
@@ -108,7 +108,7 @@ Creates an object that represents an OnNext notification to an observer.
 #### Example
 ```js
 var source = Rx.Observable
-    .fromArray([
+    .from([
         Rx.Notification.createOnNext(42),
         Rx.Notification.createOnCompleted()
     ])

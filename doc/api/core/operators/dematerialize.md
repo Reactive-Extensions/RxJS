@@ -9,7 +9,7 @@ Dematerializes the explicit notification values of an observable sequence as imp
 #### Example
 ```js
 var source = Rx.Observable
-    .fromArray([
+    .from([
         Rx.Notification.createOnNext(42),
         Rx.Notification.createOnError(new Error('woops'))
     ])

@@ -18,7 +18,7 @@ Searches for an element that matches the conditions defined by the specified pre
 /* Found an element */
 var array = [1,2,3,4];
 
-var source = Rx.Observable.fromArray(array)
+var source = Rx.Observable.from(array)
     .findIndex(function (x, i, obs) {
         return x === 1;
     });
@@ -40,7 +40,7 @@ var subscription = source.subscribe(
 /* Not found */
 var array = [1,2,3,4];
 
-var source = Rx.Observable.fromArray(array)
+var source = Rx.Observable.from(array)
     .findIndex(function (x, i, obs) {
         return x === 5;
     });

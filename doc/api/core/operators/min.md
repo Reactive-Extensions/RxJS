@@ -12,7 +12,7 @@ Returns the minimum element in an observable sequence according to the optional 
 #### Example
 ```js
 /* Without comparer */
-var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8])
+var source = Rx.Observable.from([1,3,5,7,9,2,4,6,8])
     .min();
 
 var subscription = source.subscribe(
@@ -39,7 +39,7 @@ function comparer (x, y) {
     return 0;
 }
 
-var source = Rx.Observable.fromArray([1,3,5,7,9,2,4,6,8])
+var source = Rx.Observable.from([1,3,5,7,9,2,4,6,8])
     .min(comparer);
 
 var subscription = source.subscribe(

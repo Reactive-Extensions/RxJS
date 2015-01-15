@@ -40,7 +40,7 @@ var array = [
 ];
 
 var source = Rx.Observable
-    .fromArray(array)
+    .from(array)
     .sum(function (x, idx, obs) {
         return x.value;
     });
