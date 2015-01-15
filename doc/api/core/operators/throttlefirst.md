@@ -1,7 +1,7 @@
 ### `Rx.Observable.prototype.throttleFirst(windowDuration, [scheduler])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlefirst.js "View in source")
 
-Ignores values from an observable sequence which are followed by another value before dueTime.
+Returns an Observable that emits only the first item emitted by the source Observable during sequential time windows of a specified duration.
 
 #### Arguments
 1. `windowDuration` *(`Number`)*: Time to wait before emitting another item after emitting the last item (specified as an integer denoting milliseconds).
@@ -27,7 +27,7 @@ var source = Rx.Observable.from(times)
       .of(item.value)
       .delay(item.time);
   })
-  .throttleFirst(500 /* ms */);
+  .throttleFirst(300 /* ms */);
 
 var subscription = source.subscribe(
   function (x) {
