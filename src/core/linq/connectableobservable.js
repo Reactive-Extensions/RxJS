@@ -16,7 +16,7 @@
         return subscription;
       };
 
-      __super__.call(this, subject.subscribe.bind(subject));
+      __super__.call(this, function (o) { return subject.subscribe(o); });
     }
 
     ConnectableObservable.prototype.refCount = function () {

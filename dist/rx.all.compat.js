@@ -5816,7 +5816,7 @@
     // Use only if non-native events are allowed
     if (!Rx.config.useNativeEvents) {
       // Handles jq, Angular.js, Zepto, Marionette
-      if (element.on === 'function' && element.off === 'function') {
+      if (typeof element.on === 'function' && typeof element.off === 'function') {
         return fromEventPattern(
           function (h) { element.on(eventName, h); },
           function (h) { element.off(eventName, h); },
@@ -6794,7 +6794,7 @@
         return subscription;
       };
 
-      __super__.call(this, subject.subscribe.bind(subject));
+      __super__.call(this, function (o) { return subject.subscribe(o); });
     }
 
     ConnectableObservable.prototype.refCount = function () {
