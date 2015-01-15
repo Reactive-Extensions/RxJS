@@ -104,7 +104,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`groupByUntil`](operators/groupbyuntil.md)
 - [`groupJoin`](operators/groupjoin.md)
 - [`ignoreElements`](operators/ignoreelements.md)
-- [`indexOf`](operators/indexOf.md)
+- [`indexOf`](operators/indexof.md)
 - [`isEmpty`](operators/isempty.md)
 - [`join`](operators/join.md)
 - [`jortSort`](operators/jortsort.md)
