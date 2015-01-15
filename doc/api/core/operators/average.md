@@ -35,7 +35,7 @@ var arr = [
     { value: 3 }
 ];
 
-var source = Rx.Observable.fromArray(arr).average(function (x) {
+var source = Rx.Observable.from(arr).average(function (x) {
     return x.value;
 });
 

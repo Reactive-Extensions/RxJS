@@ -15,7 +15,7 @@ Runs all observable sequences in parallel and collect their last elements.
 var source = Rx.Observable.forkJoin(
     Rx.Observable.return(42),
     Rx.Observable.range(0, 10),
-    Rx.Observable.fromArray([1,2,3]),
+    Rx.Observable.from([1,2,3]),
     RSVP.Promise.resolve(56)
 );
 

@@ -13,7 +13,7 @@ Returns an observable sequence that contains only distinct contiguous elements a
 #### Example
 ```js
 /* Without key selector */
-var source = Rx.Observable.fromArray([
+var source = Rx.Observable.from([
         42, 42, 24, 24
     ])
     .distinctUntilChanged();
@@ -34,7 +34,7 @@ var subscription = source.subscribe(
 // => Completed
 
 /* With key selector */
-var source = Rx.Observable.fromArray([
+var source = Rx.Observable.from([
         {value: 42}, {value: 42}, {value: 24}, {value: 24}
     ])
     .distinctUntilChanged(function (x) { return x.value; });

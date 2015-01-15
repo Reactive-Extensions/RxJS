@@ -13,8 +13,8 @@ Returns the element at a specified index in a sequence.
 #### Example
 ```js
 /* Finds an index */
-var source = Rx.Observable.fromArray([1,2,3,4])
-    .elementAt(1);
+var source = Rx.Observable.from([1,2,3,4])
+    .elementAtOrDefault(1);
 
 var subscription = source.subscribe(
     function (x) {
@@ -31,8 +31,8 @@ var subscription = source.subscribe(
 // => Completed
 
 /* Not found */
-var source = Rx.Observable.fromArray([1,2,3,4])
-    .elementAt(4, 0);
+var source = Rx.Observable.from([1,2,3,4])
+    .elementAtOrDefault(4, 0);
 
 var subscription = source.subscribe(
     function (x) {

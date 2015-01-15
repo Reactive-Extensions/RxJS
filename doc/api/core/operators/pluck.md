@@ -12,7 +12,7 @@ Projects each element of an observable sequence into a new form by incorporating
 #### Example
 ```js
 var source = Rx.Observable
-    .fromArray([
+    .from([
         { value: 0 },
         { value: 1 },
         { value: 2 }

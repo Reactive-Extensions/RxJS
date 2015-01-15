@@ -1,7 +1,7 @@
 ### `Rx.Observable.prototype.debounce(dueTime, [scheduler])` ###
 ### `Rx.Observable.prototype.throttleWithTimeout(dueTime, [scheduler])` ###
 ### `Rx.Observable.prototype.throttle(dueTime, [scheduler])` **DEPRECATED** ###
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttle.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/debounce.js "View in source")
 
 Emits an item from the source Observable after a particular timespan has passed without the Observable emitting any other items.
 

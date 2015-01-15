@@ -269,7 +269,7 @@ var Rx = require('rx'),
     fs = require('fs');
 
 Rx.Observable
-  .fromArray([1,2,3], Rx.Scheduler.timeout)
+  .from([1,2,3], Rx.Scheduler.timeout)
   .reduce(function (acc, x) { return acc + x; }, 0)
   .forEach( function (results) { console.log(results); });
 // => 6

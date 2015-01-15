@@ -18,7 +18,6 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`for | forIn`](operators/for.md)
 - [`forkJoin`](operators/forkjoin.md)
 - [`from`](operators/from.md)
-- [`fromArray`](operators/fromarray.md)
 - [`fromCallback`](operators/fromcallback.md)
 - [`fromEvent`](operators/fromevent.md)
 - [`fromEventPattern`](operators/fromeventpattern.md)
@@ -199,6 +198,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 
 ## `Deprecated Observable Methods` ##
 - [`catchException`](operators/catch.md)
+- [`fromArray`](operators/fromarray.md)
 - [`returnValue`](operators/return.md)
 - [`throwException`](operators/throw.md)
 
