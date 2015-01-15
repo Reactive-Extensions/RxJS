@@ -9,18 +9,16 @@
     var duration = +windowDuration || 0;
     if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var lastOnNext = 0;
       return source.subscribe(
         function (x) {
           var now = scheduler.now();
           if (lastOnNext === 0 || now - lastOnNext >= duration) {
             lastOnNext = now;
-            observer.onNext(x);
+            o.onNext(x);
           }
-        },
-        observer.onError.bind(observer),
-        observer.onCompleted.bind(observer)
+        },function (e) { o.onError(e); }, function () { o.onCompleted(); }
       );
     }, source);
   };

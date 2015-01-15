@@ -13,7 +13,7 @@
   observableProto.sequenceEqual = function (second, comparer) {
     var first = this;
     comparer || (comparer = defaultComparer);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var donel = false, doner = false, ql = [], qr = [];
       var subscription1 = first.subscribe(function (x) {
         var equal, v;
@@ -22,28 +22,28 @@
           try {
             equal = comparer(v, x);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
           if (!equal) {
-            observer.onNext(false);
-            observer.onCompleted();
+            o.onNext(false);
+            o.onCompleted();
           }
         } else if (doner) {
-          observer.onNext(false);
-          observer.onCompleted();
+          o.onNext(false);
+          o.onCompleted();
         } else {
           ql.push(x);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function(e) { o.onError(e); }, function () {
         donel = true;
         if (ql.length === 0) {
           if (qr.length > 0) {
-            observer.onNext(false);
-            observer.onCompleted();
+            o.onNext(false);
+            o.onCompleted();
           } else if (doner) {
-            observer.onNext(true);
-            observer.onCompleted();
+            o.onNext(true);
+            o.onCompleted();
           }
         }
       });
@@ -57,28 +57,28 @@
           try {
             equal = comparer(v, x);
           } catch (exception) {
-            observer.onError(exception);
+            o.onError(exception);
             return;
           }
           if (!equal) {
-            observer.onNext(false);
-            observer.onCompleted();
+            o.onNext(false);
+            o.onCompleted();
           }
         } else if (donel) {
-          observer.onNext(false);
-          observer.onCompleted();
+          o.onNext(false);
+          o.onCompleted();
         } else {
           qr.push(x);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function(e) { o.onError(e); }, function () {
         doner = true;
         if (qr.length === 0) {
           if (ql.length > 0) {
-            observer.onNext(false);
-            observer.onCompleted();
+            o.onNext(false);
+            o.onCompleted();
           } else if (donel) {
-            observer.onNext(true);
-            observer.onCompleted();
+            o.onNext(true);
+            o.onCompleted();
           }
         }
       });

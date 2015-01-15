@@ -5,11 +5,11 @@
    */
   observableProto.takeUntil = function (other) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       isPromise(other) && (other = observableFromPromise(other));
       return new CompositeDisposable(
-        source.subscribe(observer),
-        other.subscribe(observer.onCompleted.bind(observer), observer.onError.bind(observer), noop)
+        source.subscribe(o),
+        other.subscribe(function () { o.onCompleted(); }, function (e) { o.onError(e); }, noop)
       );
     }, source);
   };

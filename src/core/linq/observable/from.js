@@ -107,6 +107,9 @@
     if (mapFn && !isFunction(mapFn)) {
       throw new Error('mapFn when provided must be a function');
     }
+    if (mapFn) {
+      var mapper = bindCallback(mapFn, thisArg, 2);
+    }
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     var list = Object(iterable), it = getIterable(list);
     return new AnonymousObservable(function (observer) {
@@ -126,9 +129,9 @@
 
         var result = next.value;
 
-        if (mapFn && isFunction(mapFn)) {
+        if (mapper) {
           try {
-            result = mapFn.call(thisArg, result, i);
+            result = mapper(result, i);
           } catch (e) {
             observer.onError(e);
             return;

@@ -14,7 +14,7 @@
   observableProto.takeWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, observer.onCompleted.bind(observer)), source.subscribe(observer));
+    return new AnonymousObservable(function (o) {
+      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, function () { o.onCompleted(); }), source.subscribe(o));
     }, source);
   };

@@ -11,7 +11,7 @@
         return source.subscribe(function () {
           observer.onNext(true);
           observer.onCompleted();
-        }, observer.onError.bind(observer), function () {
+        }, function (e) { observer.onError(e); }, function () {
           observer.onNext(false);
           observer.onCompleted();
         });

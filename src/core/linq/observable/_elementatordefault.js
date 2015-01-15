@@ -1,18 +1,18 @@
   function elementAtOrDefault(source, index, hasDefault, defaultValue) {
     if (index < 0) { throw new Error(argumentOutOfRange); }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var i = index;
       return source.subscribe(function (x) {
         if (i-- === 0) {
-          observer.onNext(x);
-          observer.onCompleted();
+          o.onNext(x);
+          o.onCompleted();
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         if (!hasDefault) {
-          observer.onError(new Error(argumentOutOfRange));
+          o.onError(new Error(argumentOutOfRange));
         } else {
-          observer.onNext(defaultValue);
-          observer.onCompleted();
+          o.onNext(defaultValue);
+          o.onCompleted();
         }
       });
     }, source);

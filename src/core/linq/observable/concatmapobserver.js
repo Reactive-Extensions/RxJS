@@ -7,15 +7,17 @@
    * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function corresponding to each notification in the input sequence.
    */
   observableProto.concatMapObserver = observableProto.selectConcatObserver = function(onNext, onError, onCompleted, thisArg) {
-    var source = this;
+    var source = this,
+        onNextFunc = bindCallback(onNext, thisArg, 2),
+        onErrorFunc = bindCallback(onError, thisArg, 1),
+        onCompletedFunc = bindCallback(onCompleted, thisArg, 0);
     return new AnonymousObservable(function (observer) {
       var index = 0;
-
       return source.subscribe(
         function (x) {
           var result;
           try {
-            result = onNext.call(thisArg, x, index++);
+            result = onNextFunc(x, index++);
           } catch (e) {
             observer.onError(e);
             return;
@@ -26,7 +28,7 @@
         function (err) {
           var result;
           try {
-            result = onError.call(thisArg, err);
+            result = onErrorFunc(err);
           } catch (e) {
             observer.onError(e);
             return;
@@ -38,7 +40,7 @@
         function () {
           var result;
           try {
-            result = onCompleted.call(thisArg);
+            result = onCompletedFunc();
           } catch (e) {
             observer.onError(e);
             return;

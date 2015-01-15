@@ -18,6 +18,7 @@
     AsyncSubject = Rx.AsyncSubject,
     Observer = Rx.Observer,
     inherits = Rx.internals.inherits,
+    bindCallback = Rx.internals.bindCallback,
     addProperties = Rx.internals.addProperties,
     helpers = Rx.helpers,
     noop = helpers.noop,

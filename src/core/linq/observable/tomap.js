@@ -1,4 +1,3 @@
-
   /**
   * Converts the observable sequence to a Map if it exists.
   * @param {Function} keySelector A function which produces the key for the Map.
@@ -8,7 +7,7 @@
   observableProto.toMap = function (keySelector, elementSelector) {
     if (typeof root.Map === 'undefined') { throw new TypeError(); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var m = new root.Map();
       return source.subscribe(
         function (x) {
@@ -16,7 +15,7 @@
           try {
             key = keySelector(x);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
 
@@ -25,17 +24,17 @@
             try {
               element = elementSelector(x);
             } catch (e) {
-              observer.onError(e);
+              o.onError(e);
               return;
             }
           }
 
           m.set(key, element);
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
-          observer.onNext(m);
-          observer.onCompleted();
+          o.onNext(m);
+          o.onCompleted();
         });
     }, source);
   };

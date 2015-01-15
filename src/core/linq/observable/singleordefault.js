@@ -13,6 +13,6 @@
    */
   observableProto.singleOrDefault = function (predicate, defaultValue, thisArg) {
     return predicate && isFunction(predicate) ?
-      this.where(predicate, thisArg).singleOrDefault(null, defaultValue) :
+      this.filter(predicate, thisArg).singleOrDefault(null, defaultValue) :
       singleOrDefaultAsync(this, true, defaultValue);
   };

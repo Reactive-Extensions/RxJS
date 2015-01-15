@@ -8,11 +8,11 @@
    */
   observableProto.skipLast = function (count) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         q.push(x);
-        q.length > count && observer.onNext(q.shift());
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        q.length > count && o.onNext(q.shift());
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };

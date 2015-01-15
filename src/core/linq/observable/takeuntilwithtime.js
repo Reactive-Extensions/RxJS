@@ -9,9 +9,9 @@
     var source = this, schedulerMethod = endTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       return new CompositeDisposable(
-        scheduler[schedulerMethod](endTime, observer.onCompleted.bind(observer)),
-        source.subscribe(observer));
+        scheduler[schedulerMethod](endTime, function () { o.onCompleted(); }),
+        source.subscribe(o));
     }, source);
   };

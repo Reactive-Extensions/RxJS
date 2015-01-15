@@ -6,7 +6,8 @@
    * @returns {Observable} An exclusive observable with only the results that happen when subscribed.
    */
   observableProto.exclusiveMap = function (selector, thisArg) {
-    var sources = this;
+    var sources = this,
+        selectorFunc = bindCallback(selector, thisArg, 3);
     return new AnonymousObservable(function (observer) {
       var index = 0,
         hasCurrent = false,
@@ -31,7 +32,7 @@
               function (x) {
                 var result;
                 try {
-                  result = selector.call(thisArg, x, index++, innerSource);
+                  result = selectorFunc(x, index++, innerSource);
                 } catch (e) {
                   observer.onError(e);
                   return;
@@ -39,7 +40,7 @@
 
                 observer.onNext(result);
               },
-              observer.onError.bind(observer),
+              function (e) { observer.onError(e); },
               function () {
                 g.remove(innerSubscription);
                 hasCurrent = false;
@@ -50,7 +51,7 @@
               }));
           }
         },
-        observer.onError.bind(observer),
+        function (e) { observer.onError(e); },
         function () {
           isStopped = true;
           if (g.length === 1 && !hasCurrent) {

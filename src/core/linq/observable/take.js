@@ -11,13 +11,13 @@
     if (count < 0) { throw new RangeError(argumentOutOfRange); }
     if (count === 0) { return observableEmpty(scheduler); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var remaining = count;
       return source.subscribe(function (x) {
         if (remaining-- > 0) {
-          observer.onNext(x);
-          remaining === 0 && observer.onCompleted();
+          o.onNext(x);
+          remaining === 0 && o.onCompleted();
         }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };

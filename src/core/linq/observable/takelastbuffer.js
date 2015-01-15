@@ -9,14 +9,14 @@
    */
   observableProto.takeLastBuffer = function (count) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         q.push(x);
         q.length > count && q.shift();
-      }, observer.onError.bind(observer), function () {
-        observer.onNext(q);
-        observer.onCompleted();
+      }, function (e) { o.onError(e); }, function () {
+        o.onNext(q);
+        o.onCompleted();
       });
     }, source);
   };

@@ -5,14 +5,13 @@
    * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source.
    */
   observableProto.select = observableProto.map = function (selector, thisArg) {
-    var selectorFn = isFunction(selector) ? selector : function () { return selector; },
+    var selectorFn = isFunction(selector) ? bindCallback(selector, thisArg, 3) : function () { return selector; },
         source = this;
     return new AnonymousObservable(function (o) {
       var count = 0;
       return source.subscribe(function (value) {
-        var result;
         try {
-          result = selectorFn.call(thisArg, value, count++, source);
+          var result = selectorFn(value, count++, source);
         } catch (e) {
           o.onError(e);
           return;

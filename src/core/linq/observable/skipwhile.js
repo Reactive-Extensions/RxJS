@@ -9,19 +9,20 @@
    * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
    */
   observableProto.skipWhile = function (predicate, thisArg) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
+    var source = this,
+        callback = bindCallback(predicate, thisArg, 3);
+    return new AnonymousObservable(function (o) {
       var i = 0, running = false;
       return source.subscribe(function (x) {
         if (!running) {
           try {
-            running = !predicate.call(thisArg, x, i++, source);
+            running = !callback(x, i++, source);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
         }
-        running && observer.onNext(x);
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        running && o.onNext(x);
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };

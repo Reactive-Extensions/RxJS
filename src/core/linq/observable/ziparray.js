@@ -35,16 +35,12 @@
           subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
             queues[i].push(x);
             next(i);
-          }, observer.onError.bind(observer), function () {
+          }, function (e) { observer.onError(e); }, function () {
             done(i);
           }));
         })(idx);
       }
 
-      var compositeDisposable = new CompositeDisposable(subscriptions);
-      compositeDisposable.add(disposableCreate(function () {
-        for (var qIdx = 0, qLen = queues.length; qIdx < qLen; qIdx++) { queues[qIdx] = []; }
-      }));
-      return compositeDisposable;
+      return new CompositeDisposable(subscriptions);
     });
   };

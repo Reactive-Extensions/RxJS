@@ -15,7 +15,7 @@
         } else {
           observer.onCompleted();
         }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { observer.onError(e); }, function () { observer.onCompleted(); });
     }, first);
   }
 
@@ -70,7 +70,7 @@
           sad.setDisposable(source.subscribe(function (x) {
             queues[i].push(x);
             next(i);
-          }, observer.onError.bind(observer), function () {
+          }, function (e) { observer.onError(e); }, function () {
             done(i);
           }));
           subscriptions[i] = sad;

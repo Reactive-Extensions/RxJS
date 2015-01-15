@@ -6,16 +6,14 @@
    */
   observableProto.average = function (keySelector, thisArg) {
     return keySelector && isFunction(keySelector) ?
-      this.select(keySelector, thisArg).average() :
-      this.scan({sum: 0, count: 0 }, function (prev, cur) {
+      this.map(keySelector, thisArg).average() :
+      this.reduce(function (prev, cur) {
         return {
           sum: prev.sum + cur,
           count: prev.count + 1
         };
-      }).finalValue().map(function (s) {
-        if (s.count === 0) {
-          throw new Error('The input sequence was empty');
-        }
+      }, {sum: 0, count: 0 }).map(function (s) {
+        if (s.count === 0) { throw new Error(sequenceContainsNoElements); }
         return s.sum / s.count;
       });
   };

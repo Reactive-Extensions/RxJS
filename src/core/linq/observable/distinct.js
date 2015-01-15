@@ -31,7 +31,7 @@
   observableProto.distinct = function (keySelector, comparer) {
     var source = this;
     comparer || (comparer = defaultComparer);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hashSet = new HashSet(comparer);
       return source.subscribe(function (x) {
         var key = x;
@@ -40,13 +40,12 @@
           try {
             key = keySelector(x);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
         }
-        hashSet.push(key) && observer.onNext(x);
+        hashSet.push(key) && o.onNext(x);
       },
-      observer.onError.bind(observer),
-      observer.onCompleted.bind(observer));
+      function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, this);
   };

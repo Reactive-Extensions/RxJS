@@ -1,14 +1,14 @@
   function firstOrDefaultAsync(source, hasDefault, defaultValue) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       return source.subscribe(function (x) {
-        observer.onNext(x);
-        observer.onCompleted();
-      }, observer.onError.bind(observer), function () {
+        o.onNext(x);
+        o.onCompleted();
+      }, function (e) { o.onError(e); }, function () {
         if (!hasDefault) {
-          observer.onError(new Error(sequenceContainsNoElements));
+          o.onError(new Error(sequenceContainsNoElements));
         } else {
-          observer.onNext(defaultValue);
-          observer.onCompleted();
+          o.onNext(defaultValue);
+          o.onCompleted();
         }
       });
     }, source);

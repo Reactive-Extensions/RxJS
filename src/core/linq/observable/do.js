@@ -11,9 +11,9 @@
     if (typeof observerOrOnNext === 'function') {
       onNextFunc = observerOrOnNext;
     } else {
-      onNextFunc = observerOrOnNext.onNext.bind(observerOrOnNext);
-      onError = observerOrOnNext.onError.bind(observerOrOnNext);
-      onCompleted = observerOrOnNext.onCompleted.bind(observerOrOnNext);
+      onNextFunc = function (x) { observerOrOnNext.onNext(x); };
+      onError = function (e) { observerOrOnNext.onError(e); };
+      onCompleted = function () { observerOrOnNext.onCompleted(); }
     }
     return new AnonymousObservable(function (observer) {
       return source.subscribe(function (x) {
@@ -59,7 +59,7 @@
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
   observableProto.doOnNext = observableProto.tapOnNext = function (onNext, thisArg) {
-    return this.tap(arguments.length === 2 ? function (x) { onNext.call(thisArg, x); } : onNext);
+    return this.tap(typeof thisArg !== 'undefined' ? function (x) { onNext.call(thisArg, x); } : onNext);
   };
 
   /**
@@ -70,7 +70,7 @@
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
   observableProto.doOnError = observableProto.tapOnError = function (onError, thisArg) {
-    return this.tap(noop, arguments.length === 2 ? function (e) { onError.call(thisArg, e); } : onError);
+    return this.tap(noop, typeof thisArg !== 'undefined' ? function (e) { onError.call(thisArg, e); } : onError);
   };
 
   /**
@@ -81,5 +81,5 @@
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
   observableProto.doOnCompleted = observableProto.tapOnCompleted = function (onCompleted, thisArg) {
-    return this.tap(noop, null, arguments.length === 2 ? function () { onCompleted.call(thisArg); } : onCompleted);
+    return this.tap(noop, null, typeof thisArg !== 'undefined' ? function () { onCompleted.call(thisArg); } : onCompleted);
   };

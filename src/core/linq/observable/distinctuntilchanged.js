@@ -13,29 +13,29 @@
     var source = this;
     keySelector || (keySelector = identity);
     comparer || (comparer = defaultComparer);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hasCurrentKey = false, currentKey;
       return source.subscribe(function (value) {
           var comparerEquals = false, key;
           try {
             key = keySelector(value);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
           if (hasCurrentKey) {
             try {
               comparerEquals = comparer(currentKey, key);
             } catch (e) {
-              observer.onError(e);
+              o.onError(e);
               return;
             }
           }
           if (!hasCurrentKey || !comparerEquals) {
             hasCurrentKey = true;
             currentKey = key;
-            observer.onNext(value);
+            o.onNext(value);
           }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, this);
   };

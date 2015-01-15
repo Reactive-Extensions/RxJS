@@ -15,20 +15,20 @@
   observableProto.skipLastWithTime = function (duration, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         var now = scheduler.now();
         q.push({ interval: now, value: x });
         while (q.length > 0 && now - q[0].interval >= duration) {
-          observer.onNext(q.shift().value);
+          o.onNext(q.shift().value);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         var now = scheduler.now();
         while (q.length > 0 && now - q[0].interval >= duration) {
-          observer.onNext(q.shift().value);
+          o.onNext(q.shift().value);
         }
-        observer.onCompleted();
+        o.onCompleted();
       });
     }, source);
   };

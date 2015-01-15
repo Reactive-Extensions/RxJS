@@ -10,12 +10,12 @@
    */
   observableProto.where = observableProto.filter = function (predicate, thisArg) {
     var source = this;
+    predicate = bindCallback(predicate, thisArg, 3);
     return new AnonymousObservable(function (o) {
       var count = 0;
       return source.subscribe(function (value) {
-        var shouldRun;
         try {
-          shouldRun = predicate.call(thisArg, value, count++, source);
+          var shouldRun = predicate(value, count++, source);
         } catch (e) {
           o.onError(e);
           return;

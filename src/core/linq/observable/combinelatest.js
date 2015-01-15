@@ -50,11 +50,12 @@
           var source = args[i], sad = new SingleAssignmentDisposable();
           isPromise(source) && (source = observableFromPromise(source));
           sad.setDisposable(source.subscribe(function (x) {
-            values[i] = x;
-            next(i);
-          }, observer.onError.bind(observer), function () {
-            done(i);
-          }));
+              values[i] = x;
+              next(i);
+            },
+            function(e) { observer.onError(e); },
+            function () { done(i); }
+          ));
           subscriptions[i] = sad;
         }(idx));
       }

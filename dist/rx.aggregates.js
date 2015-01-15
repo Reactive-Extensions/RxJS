@@ -50,39 +50,21 @@
     isIterable = helpers.isIterable,
     observableFromPromise = Observable.fromPromise,
     observableFrom = Observable.from,
-    deprecate = helpers.deprecate;
+    bindCallback = Rx.internals.bindCallback;
 
   // Defaults
   var argumentOutOfRange = 'Argument out of range',
     sequenceContainsNoElements = "Sequence contains no elements.";
 
-  observableProto.finalValue = function () {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
-      var hasValue = false, value;
-      return source.subscribe(function (x) {
-        hasValue = true;
-        value = x;
-      }, observer.onError.bind(observer), function () {
-        if (!hasValue) {
-          observer.onError(new Error(sequenceContainsNoElements));
-        } else {
-          observer.onNext(value);
-          observer.onCompleted();
-        }
-      });
-    }, source);
-  };
-
   function extremaBy(source, keySelector, comparer) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hasValue = false, lastKey = null, list = [];
       return source.subscribe(function (x) {
         var comparison, key;
         try {
           key = keySelector(x);
         } catch (ex) {
-          observer.onError(ex);
+          o.onError(ex);
           return;
         }
         comparison = 0;
@@ -93,7 +75,7 @@
           try {
             comparison = comparer(key, lastKey);
           } catch (ex1) {
-            observer.onError(ex1);
+            o.onError(ex1);
             return;
           }
         }
@@ -102,9 +84,9 @@
           list = [];
         }
         if (comparison >= 0) { list.push(x); }
-      }, observer.onError.bind(observer), function () {
-        observer.onNext(list);
-        observer.onCompleted();
+      }, function (e) { o.onError(e); }, function () {
+        o.onNext(list);
+        o.onCompleted();
       });
     }, source);
   }
@@ -124,15 +106,40 @@
    */
   observableProto.aggregate = function () {
     //deprecate('aggregate', 'reduce');
-    var seed, hasSeed, accumulator;
+    var hasSeed = false, accumulator, seed, source = this;
     if (arguments.length === 2) {
-      seed = arguments[0];
       hasSeed = true;
+      seed = arguments[0];
       accumulator = arguments[1];
     } else {
       accumulator = arguments[0];
     }
-    return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
+    return new AnonymousObservable(function (o) {
+      var hasAccumulation, accumulation, hasValue;
+      return source.subscribe (
+        function (x) {
+          !hasValue && (hasValue = true);
+          try {
+            if (hasAccumulation) {
+              accumulation = accumulator(accumulation, x);
+            } else {
+              accumulation = hasSeed ? accumulator(seed, x) : x;
+              hasAccumulation = true;
+            }
+          } catch (e) {
+            o.onError(e);
+            return;
+          }
+        },
+        function (e) { o.onError(e); },
+        function () {
+          hasValue && o.onNext(accumulation);
+          !hasValue && hasSeed && o.onNext(seed);
+          !hasValue && !hasSeed && o.onError(new Error(sequenceContainsNoElements));
+          o.onCompleted();
+        }
+      );
+    }, source);
   };
 
   /**
@@ -189,7 +196,7 @@
         return source.subscribe(function () {
           observer.onNext(true);
           observer.onCompleted();
-        }, observer.onError.bind(observer), function () {
+        }, function (e) { observer.onError(e); }, function () {
           observer.onNext(false);
           observer.onCompleted();
         });
@@ -237,45 +244,43 @@
     function comparer(a, b) {
       return (a === 0 && b === 0) || (a === b || (isNaN(a) && isNaN(b)));
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var i = 0, n = +fromIndex || 0;
       Math.abs(n) === Infinity && (n = 0);
       if (n < 0) {
-        observer.onNext(false);
-        observer.onCompleted();
+        o.onNext(false);
+        o.onCompleted();
         return disposableEmpty;
       }
       return source.subscribe(
         function (x) {
           if (i++ >= n && comparer(x, searchElement)) {
-            observer.onNext(true);
-            observer.onCompleted();
+            o.onNext(true);
+            o.onCompleted();
           }
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
-          observer.onNext(false);
-          observer.onCompleted();
+          o.onNext(false);
+          o.onCompleted();
         });
     }, this);
   };
 
-    /**
-     * Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
-     * @example
-     * res = source.count();
-     * res = source.count(function (x) { return x > 3; });
-     * @param {Function} [predicate]A function to test each element for a condition.
-     * @param {Any} [thisArg] Object to use as this when executing callback.
-     * @returns {Observable} An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
-     */
-    observableProto.count = function (predicate, thisArg) {
-        return predicate ?
-            this.where(predicate, thisArg).count() :
-            this.aggregate(0, function (count) {
-                return count + 1;
-            });
-    };
+  /**
+   * Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
+   * @example
+   * res = source.count();
+   * res = source.count(function (x) { return x > 3; });
+   * @param {Function} [predicate]A function to test each element for a condition.
+   * @param {Any} [thisArg] Object to use as this when executing callback.
+   * @returns {Observable} An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
+   */
+  observableProto.count = function (predicate, thisArg) {
+    return predicate ?
+      this.filter(predicate, thisArg).count() :
+      this.reduce(function (count) { return count + 1; }, 0);
+  };
 
   /**
    * Returns the first index at which a given element can be found in the observable sequence, or -1 if it is not present.
@@ -285,26 +290,26 @@
    */
   observableProto.indexOf = function(searchElement, fromIndex) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var i = 0, n = +fromIndex || 0;
       Math.abs(n) === Infinity && (n = 0);
       if (n < 0) {
-        observer.onNext(-1);
-        observer.onCompleted();
+        o.onNext(-1);
+        o.onCompleted();
         return disposableEmpty;
       }
       return source.subscribe(
         function (x) {
           if (i >= n && x === searchElement) {
-            observer.onNext(i);
-            observer.onCompleted();
+            o.onNext(i);
+            o.onCompleted();
           }
           i++;
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
-          observer.onNext(-1);
-          observer.onCompleted();
+          o.onNext(-1);
+          o.onCompleted();
         });
     }, source);
   };
@@ -318,9 +323,7 @@
   observableProto.sum = function (keySelector, thisArg) {
     return keySelector && isFunction(keySelector) ?
       this.map(keySelector, thisArg).sum() :
-      this.reduce(function (prev, curr) {
-        return prev + curr;
-      }, 0);
+      this.reduce(function (prev, curr) { return prev + curr; }, 0);
   };
 
   /**
@@ -383,16 +386,14 @@
    */
   observableProto.average = function (keySelector, thisArg) {
     return keySelector && isFunction(keySelector) ?
-      this.select(keySelector, thisArg).average() :
-      this.scan({sum: 0, count: 0 }, function (prev, cur) {
+      this.map(keySelector, thisArg).average() :
+      this.reduce(function (prev, cur) {
         return {
           sum: prev.sum + cur,
           count: prev.count + 1
         };
-      }).finalValue().map(function (s) {
-        if (s.count === 0) {
-          throw new Error('The input sequence was empty');
-        }
+      }, {sum: 0, count: 0 }).map(function (s) {
+        if (s.count === 0) { throw new Error(sequenceContainsNoElements); }
         return s.sum / s.count;
       });
   };
@@ -412,7 +413,7 @@
   observableProto.sequenceEqual = function (second, comparer) {
     var first = this;
     comparer || (comparer = defaultComparer);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var donel = false, doner = false, ql = [], qr = [];
       var subscription1 = first.subscribe(function (x) {
         var equal, v;
@@ -421,28 +422,28 @@
           try {
             equal = comparer(v, x);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
           if (!equal) {
-            observer.onNext(false);
-            observer.onCompleted();
+            o.onNext(false);
+            o.onCompleted();
           }
         } else if (doner) {
-          observer.onNext(false);
-          observer.onCompleted();
+          o.onNext(false);
+          o.onCompleted();
         } else {
           ql.push(x);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function(e) { o.onError(e); }, function () {
         donel = true;
         if (ql.length === 0) {
           if (qr.length > 0) {
-            observer.onNext(false);
-            observer.onCompleted();
+            o.onNext(false);
+            o.onCompleted();
           } else if (doner) {
-            observer.onNext(true);
-            observer.onCompleted();
+            o.onNext(true);
+            o.onCompleted();
           }
         }
       });
@@ -456,28 +457,28 @@
           try {
             equal = comparer(v, x);
           } catch (exception) {
-            observer.onError(exception);
+            o.onError(exception);
             return;
           }
           if (!equal) {
-            observer.onNext(false);
-            observer.onCompleted();
+            o.onNext(false);
+            o.onCompleted();
           }
         } else if (donel) {
-          observer.onNext(false);
-          observer.onCompleted();
+          o.onNext(false);
+          o.onCompleted();
         } else {
           qr.push(x);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function(e) { o.onError(e); }, function () {
         doner = true;
         if (qr.length === 0) {
           if (ql.length > 0) {
-            observer.onNext(false);
-            observer.onCompleted();
+            o.onNext(false);
+            o.onCompleted();
           } else if (donel) {
-            observer.onNext(true);
-            observer.onCompleted();
+            o.onNext(true);
+            o.onCompleted();
           }
         }
       });
@@ -487,19 +488,19 @@
 
   function elementAtOrDefault(source, index, hasDefault, defaultValue) {
     if (index < 0) { throw new Error(argumentOutOfRange); }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var i = index;
       return source.subscribe(function (x) {
         if (i-- === 0) {
-          observer.onNext(x);
-          observer.onCompleted();
+          o.onNext(x);
+          o.onCompleted();
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         if (!hasDefault) {
-          observer.onError(new Error(argumentOutOfRange));
+          o.onError(new Error(argumentOutOfRange));
         } else {
-          observer.onNext(defaultValue);
-          observer.onCompleted();
+          o.onNext(defaultValue);
+          o.onCompleted();
         }
       });
     }, source);
@@ -530,21 +531,21 @@
   };
 
   function singleOrDefaultAsync(source, hasDefault, defaultValue) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var value = defaultValue, seenValue = false;
       return source.subscribe(function (x) {
         if (seenValue) {
-          observer.onError(new Error('Sequence contains more than one element'));
+          o.onError(new Error('Sequence contains more than one element'));
         } else {
           value = x;
           seenValue = true;
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         if (!seenValue && !hasDefault) {
-          observer.onError(new Error(sequenceContainsNoElements));
+          o.onError(new Error(sequenceContainsNoElements));
         } else {
-          observer.onNext(value);
-          observer.onCompleted();
+          o.onNext(value);
+          o.onCompleted();
         }
       });
     }, source);
@@ -577,21 +578,21 @@
    */
   observableProto.singleOrDefault = function (predicate, defaultValue, thisArg) {
     return predicate && isFunction(predicate) ?
-      this.where(predicate, thisArg).singleOrDefault(null, defaultValue) :
+      this.filter(predicate, thisArg).singleOrDefault(null, defaultValue) :
       singleOrDefaultAsync(this, true, defaultValue);
   };
 
   function firstOrDefaultAsync(source, hasDefault, defaultValue) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       return source.subscribe(function (x) {
-        observer.onNext(x);
-        observer.onCompleted();
-      }, observer.onError.bind(observer), function () {
+        o.onNext(x);
+        o.onCompleted();
+      }, function (e) { o.onError(e); }, function () {
         if (!hasDefault) {
-          observer.onError(new Error(sequenceContainsNoElements));
+          o.onError(new Error(sequenceContainsNoElements));
         } else {
-          observer.onNext(defaultValue);
-          observer.onCompleted();
+          o.onNext(defaultValue);
+          o.onCompleted();
         }
       });
     }, source);
@@ -626,17 +627,17 @@
   };
 
   function lastOrDefaultAsync(source, hasDefault, defaultValue) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var value = defaultValue, seenValue = false;
       return source.subscribe(function (x) {
         value = x;
         seenValue = true;
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         if (!seenValue && !hasDefault) {
-          observer.onError(new Error(sequenceContainsNoElements));
+          o.onError(new Error(sequenceContainsNoElements));
         } else {
-          observer.onNext(value);
-          observer.onCompleted();
+          o.onNext(value);
+          o.onCompleted();
         }
       });
     }, source);
@@ -668,25 +669,26 @@
   };
 
   function findValue (source, predicate, thisArg, yieldIndex) {
-    return new AnonymousObservable(function (observer) {
+    var callback = bindCallback(predicate, thisArg, 3);
+    return new AnonymousObservable(function (o) {
       var i = 0;
       return source.subscribe(function (x) {
         var shouldRun;
         try {
-          shouldRun = predicate.call(thisArg, x, i, source);
+          shouldRun = callback(x, i, source);
         } catch (e) {
-          observer.onError(e);
+          o.onError(e);
           return;
         }
         if (shouldRun) {
-          observer.onNext(yieldIndex ? i : x);
-          observer.onCompleted();
+          o.onNext(yieldIndex ? i : x);
+          o.onCompleted();
         } else {
           i++;
         }
-      }, observer.onError.bind(observer), function () {
-        observer.onNext(yieldIndex ? -1 : undefined);
-        observer.onCompleted();
+      }, function (e) { o.onError(e); }, function () {
+        o.onNext(yieldIndex ? -1 : undefined);
+        o.onCompleted();
       });
     }, source);
   }
@@ -712,7 +714,6 @@
     return findValue(this, predicate, thisArg, true);
   };
 
-
   /**
    * Converts the observable sequence to a Set if it exists.
    * @returns {Observable} An observable sequence with a single value of a Set containing the values from the observable sequence.
@@ -720,18 +721,17 @@
   observableProto.toSet = function () {
     if (typeof root.Set === 'undefined') { throw new TypeError(); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var s = new root.Set();
       return source.subscribe(
-        s.add.bind(s),
-        observer.onError.bind(observer),
+        function (x) { s.add(x); },
+        function (e) { o.onError(e); },
         function () {
-          observer.onNext(s);
-          observer.onCompleted();
+          o.onNext(s);
+          o.onCompleted();
         });
     }, source);
   };
-
 
   /**
   * Converts the observable sequence to a Map if it exists.
@@ -742,7 +742,7 @@
   observableProto.toMap = function (keySelector, elementSelector) {
     if (typeof root.Map === 'undefined') { throw new TypeError(); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var m = new root.Map();
       return source.subscribe(
         function (x) {
@@ -750,7 +750,7 @@
           try {
             key = keySelector(x);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
 
@@ -759,17 +759,17 @@
             try {
               element = elementSelector(x);
             } catch (e) {
-              observer.onError(e);
+              o.onError(e);
               return;
             }
           }
 
           m.set(key, element);
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
-          observer.onNext(m);
-          observer.onCompleted();
+          o.onNext(m);
+          o.onCompleted();
         });
     }, source);
   };

@@ -182,6 +182,32 @@
 
   Rx.helpers.iterator = $iterator$;
 
+  var bindCallback = Rx.internals.bindCallback = function (func, thisArg, argCount) {
+    if (typeof thisArg === 'undefined') { return func; }
+    switch(argCount) {
+      case 0:
+        return function() {
+          return func.call(thisArg)
+        };
+      case 1:
+        return function(arg) {
+          return func.call(thisArg, arg);
+        }
+      case 2:
+        return function(value, index) {
+          return func.call(thisArg, value, index);
+        };
+      case 3:
+        return function(value, index, collection) {
+          return func.call(thisArg, value, index, collection);
+        };
+    }
+
+    return function() {
+      return func.apply(thisArg, arguments);
+    };
+  };
+
   /** Used to determine if values are of the language type Object */
   var dontEnums = ['toString',
     'toLocaleString',
@@ -1859,23 +1885,6 @@
   var Observer = Rx.Observer = function () { };
 
   /**
-   *  Creates a notification callback from an observer.
-   * @returns The action that forwards its input notification to the underlying observer.
-   */
-  Observer.prototype.toNotifier = function () {
-    var observer = this;
-    return function (n) { return n.accept(observer); };
-  };
-
-  /**
-   *  Hides the identity of an observer.
-   * @returns An observer that hides the identity of the specified observer.
-   */
-  Observer.prototype.asObserver = function () {
-      return new AnonymousObserver(this.onNext.bind(this), this.onError.bind(this), this.onCompleted.bind(this));
-  };
-
-  /**
    *  Creates an observer from the specified OnNext, along with optional OnError, and OnCompleted actions.
    * @param {Function} [onNext] Observer's OnNext action implementation.
    * @param {Function} [onError] Observer's OnError action implementation.
@@ -1887,21 +1896,6 @@
     onError || (onError = defaultError);
     onCompleted || (onCompleted = noop);
     return new AnonymousObserver(onNext, onError, onCompleted);
-  };
-
-  /**
-   *  Creates an observer from a notification callback.
-   * @param {Function} handler Action that handles a notification.
-   * @returns The observer object that invokes the specified handler using a notification corresponding to each message it receives.
-   */
-  Observer.fromNotifier = function (handler, thisArg) {
-    return new AnonymousObserver(function (x) {
-      return handler.call(thisArg, notificationCreateOnNext(x));
-    }, function (e) {
-      return handler.call(thisArg, notificationCreateOnError(e));
-    }, function () {
-      return handler.call(thisArg, notificationCreateOnCompleted());
-    });
   };
 
   /**
@@ -2164,8 +2158,8 @@
     return new AnonymousObservable(function(observer) {
       var arr = [];
       return source.subscribe(
-        arr.push.bind(arr),
-        observer.onError.bind(observer),
+        function (x) { arr.push(x); },
+        function (e) { observer.onError(e); },
         function () {
           observer.onNext(arr);
           observer.onCompleted();
@@ -2334,6 +2328,9 @@
     if (mapFn && !isFunction(mapFn)) {
       throw new Error('mapFn when provided must be a function');
     }
+    if (mapFn) {
+      var mapper = bindCallback(mapFn, thisArg, 2);
+    }
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     var list = Object(iterable), it = getIterable(list);
     return new AnonymousObservable(function (observer) {
@@ -2353,9 +2350,9 @@
 
         var result = next.value;
 
-        if (mapFn && isFunction(mapFn)) {
+        if (mapper) {
           try {
-            result = mapFn.call(thisArg, result, i);
+            result = mapper(result, i);
           } catch (e) {
             observer.onError(e);
             return;
@@ -2524,17 +2521,23 @@
   /**
    *  Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
    *  There is an alias to this method called 'throwError' for browsers <IE9.
-   * @param {Mixed} exception An object used for the sequence's termination.
+   * @param {Mixed} error An object used for the sequence's termination.
    * @param {Scheduler} scheduler Scheduler to send the exceptional termination call on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} The observable sequence that terminates exceptionally with the specified exception object.
    */
-  var observableThrow = Observable['throw'] = Observable.throwException = Observable.throwError = function (exception, scheduler) {
+  var observableThrow = Observable['throw'] = Observable.throwError = function (error, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
       return scheduler.schedule(function () {
-        observer.onError(exception);
+        observer.onError(error);
       });
     });
+  };
+
+  /** @deprecated use #some instead */
+  Observable.throwException = function () {
+    //deprecate('throwException', 'throwError');
+    return Observable.throwError.apply(null, arguments);
   };
 
   function observableCatchHandler(source, handler) {
@@ -2670,11 +2673,12 @@
           var source = args[i], sad = new SingleAssignmentDisposable();
           isPromise(source) && (source = observableFromPromise(source));
           sad.setDisposable(source.subscribe(function (x) {
-            values[i] = x;
-            next(i);
-          }, observer.onError.bind(observer), function () {
-            done(i);
-          }));
+              values[i] = x;
+              next(i);
+            },
+            function(e) { observer.onError(e); },
+            function () { done(i); }
+          ));
           subscriptions[i] = sad;
         }(idx));
       }
@@ -2683,19 +2687,15 @@
     }, this);
   };
 
-    /**
-     * Concatenates all the observable sequences.  This takes in either an array or variable arguments to concatenate.
-     *
-     * @example
-     * 1 - concatenated = xs.concat(ys, zs);
-     * 2 - concatenated = xs.concat([ys, zs]);
-     * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order.
-     */
-    observableProto.concat = function () {
-        var items = slice.call(arguments, 0);
-        items.unshift(this);
-        return observableConcat.apply(this, items);
-    };
+  /**
+   * Concatenates all the observable sequences.  This takes in either an array or variable arguments to concatenate.
+   * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order.
+   */
+  observableProto.concat = function () {
+    var items = slice.call(arguments, 0);
+    items.unshift(this);
+    return observableConcat.apply(this, items);
+  };
 
   /**
    * Concatenates all the observable sequences.
@@ -2837,12 +2837,12 @@
    */
   observableProto.skipUntil = function (other) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var isOpen = false;
       var disposables = new CompositeDisposable(source.subscribe(function (left) {
-        isOpen && observer.onNext(left);
-      }, observer.onError.bind(observer), function () {
-        isOpen && observer.onCompleted();
+        isOpen && o.onNext(left);
+      }, function (e) { o.onError(e); }, function () {
+        isOpen && o.onCompleted();
       }));
 
       isPromise(other) && (other = observableFromPromise(other));
@@ -2852,7 +2852,7 @@
       rightSubscription.setDisposable(other.subscribe(function () {
         isOpen = true;
         rightSubscription.dispose();
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         rightSubscription.dispose();
       }));
 
@@ -2906,11 +2906,11 @@
    */
   observableProto.takeUntil = function (other) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       isPromise(other) && (other = observableFromPromise(other));
       return new CompositeDisposable(
-        source.subscribe(observer),
-        other.subscribe(observer.onCompleted.bind(observer), observer.onError.bind(observer), noop)
+        source.subscribe(o),
+        other.subscribe(function () { o.onCompleted(); }, function (e) { o.onError(e); }, noop)
       );
     }, source);
   };
@@ -2997,7 +2997,7 @@
         } else {
           observer.onCompleted();
         }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { observer.onError(e); }, function () { observer.onCompleted(); });
     }, first);
   }
 
@@ -3052,7 +3052,7 @@
           sad.setDisposable(source.subscribe(function (x) {
             queues[i].push(x);
             next(i);
-          }, observer.onError.bind(observer), function () {
+          }, function (e) { observer.onError(e); }, function () {
             done(i);
           }));
           subscriptions[i] = sad;
@@ -3111,17 +3111,13 @@
           subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
             queues[i].push(x);
             next(i);
-          }, observer.onError.bind(observer), function () {
+          }, function (e) { observer.onError(e); }, function () {
             done(i);
           }));
         })(idx);
       }
 
-      var compositeDisposable = new CompositeDisposable(subscriptions);
-      compositeDisposable.add(disposableCreate(function () {
-        for (var qIdx = 0, qLen = queues.length; qIdx < qLen; qIdx++) { queues[qIdx] = []; }
-      }));
-      return compositeDisposable;
+      return new CompositeDisposable(subscriptions);
     });
   };
 
@@ -3130,7 +3126,8 @@
    * @returns {Observable} An observable sequence that hides the identity of the source sequence.
    */
   observableProto.asObservable = function () {
-    return new AnonymousObservable(this.subscribe.bind(this), this);
+    var source = this;
+    return new AnonymousObservable(function (o) { return source.subscribe(o); }, this);
   };
 
   /**
@@ -3139,8 +3136,8 @@
    */
   observableProto.dematerialize = function () {
     var source = this;
-    return new AnonymousObservable(function (observer) {
-      return source.subscribe(function (x) { return x.accept(observer); }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    return new AnonymousObservable(function (o) {
+      return source.subscribe(function (x) { return x.accept(o); }, function(e) { o.onError(e); }, function () { o.onCompleted(); });
     }, this);
   };
 
@@ -3159,30 +3156,30 @@
     var source = this;
     keySelector || (keySelector = identity);
     comparer || (comparer = defaultComparer);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hasCurrentKey = false, currentKey;
       return source.subscribe(function (value) {
           var comparerEquals = false, key;
           try {
             key = keySelector(value);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
           if (hasCurrentKey) {
             try {
               comparerEquals = comparer(currentKey, key);
             } catch (e) {
-              observer.onError(e);
+              o.onError(e);
               return;
             }
           }
           if (!hasCurrentKey || !comparerEquals) {
             hasCurrentKey = true;
             currentKey = key;
-            observer.onNext(value);
+            o.onNext(value);
           }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, this);
   };
 
@@ -3199,9 +3196,9 @@
     if (typeof observerOrOnNext === 'function') {
       onNextFunc = observerOrOnNext;
     } else {
-      onNextFunc = observerOrOnNext.onNext.bind(observerOrOnNext);
-      onError = observerOrOnNext.onError.bind(observerOrOnNext);
-      onCompleted = observerOrOnNext.onCompleted.bind(observerOrOnNext);
+      onNextFunc = function (x) { observerOrOnNext.onNext(x); };
+      onError = function (e) { observerOrOnNext.onError(e); };
+      onCompleted = function () { observerOrOnNext.onCompleted(); }
     }
     return new AnonymousObservable(function (observer) {
       return source.subscribe(function (x) {
@@ -3247,7 +3244,7 @@
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
   observableProto.doOnNext = observableProto.tapOnNext = function (onNext, thisArg) {
-    return this.tap(arguments.length === 2 ? function (x) { onNext.call(thisArg, x); } : onNext);
+    return this.tap(typeof thisArg !== 'undefined' ? function (x) { onNext.call(thisArg, x); } : onNext);
   };
 
   /**
@@ -3258,7 +3255,7 @@
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
   observableProto.doOnError = observableProto.tapOnError = function (onError, thisArg) {
-    return this.tap(noop, arguments.length === 2 ? function (e) { onError.call(thisArg, e); } : onError);
+    return this.tap(noop, typeof thisArg !== 'undefined' ? function (e) { onError.call(thisArg, e); } : onError);
   };
 
   /**
@@ -3269,7 +3266,7 @@
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
   observableProto.doOnCompleted = observableProto.tapOnCompleted = function (onCompleted, thisArg) {
-    return this.tap(noop, null, arguments.length === 2 ? function () { onCompleted.call(thisArg); } : onCompleted);
+    return this.tap(noop, null, typeof thisArg !== 'undefined' ? function () { onCompleted.call(thisArg); } : onCompleted);
   };
 
   /**
@@ -3313,8 +3310,8 @@
    */
   observableProto.ignoreElements = function () {
     var source = this;
-    return new AnonymousObservable(function (observer) {
-      return source.subscribe(noop, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    return new AnonymousObservable(function (o) {
+      return source.subscribe(noop, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };
 
@@ -3392,7 +3389,7 @@
     } else {
       accumulator = arguments[0];
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hasAccumulation, accumulation, hasValue;
       return source.subscribe (
         function (x) {
@@ -3405,16 +3402,16 @@
               hasAccumulation = true;
             }
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
 
-          observer.onNext(accumulation);
+          o.onNext(accumulation);
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
-          !hasValue && hasSeed && observer.onNext(seed);
-          observer.onCompleted();
+          !hasValue && hasSeed && o.onNext(seed);
+          o.onCompleted();
         }
       );
     }, source);
@@ -3430,12 +3427,12 @@
    */
   observableProto.skipLast = function (count) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         q.push(x);
-        q.length > count && observer.onNext(q.shift());
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        q.length > count && o.onNext(q.shift());
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };
 
@@ -3469,21 +3466,22 @@
    */
   observableProto.takeLast = function (count) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         q.push(x);
         q.length > count && q.shift();
-      }, observer.onError.bind(observer), function () {
-        while (q.length > 0) { observer.onNext(q.shift()); }
-        observer.onCompleted();
+      }, function (e) { o.onError(e); }, function () {
+        while (q.length > 0) { o.onNext(q.shift()); }
+        o.onCompleted();
       });
     }, source);
   };
 
   function concatMap(source, selector, thisArg) {
+    var selectorFunc = bindCallback(selector, thisArg, 3);
     return source.map(function (x, i) {
-      var result = selector.call(thisArg, x, i, source);
+      var result = selectorFunc(x, i, source);
       isPromise(result) && (result = observableFromPromise(result));
       (isArrayLike(result) || isIterable(result)) && (result = observableFrom(result));
       return result;
@@ -3533,14 +3531,13 @@
    * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source.
    */
   observableProto.select = observableProto.map = function (selector, thisArg) {
-    var selectorFn = isFunction(selector) ? selector : function () { return selector; },
+    var selectorFn = isFunction(selector) ? bindCallback(selector, thisArg, 3) : function () { return selector; },
         source = this;
     return new AnonymousObservable(function (o) {
       var count = 0;
       return source.subscribe(function (value) {
-        var result;
         try {
-          result = selectorFn.call(thisArg, value, count++, source);
+          var result = selectorFn(value, count++, source);
         } catch (e) {
           o.onError(e);
           return;
@@ -3560,8 +3557,9 @@
   };
 
   function flatMap(source, selector, thisArg) {
+    var selectorFunc = bindCallback(selector, thisArg, 3);
     return source.map(function (x, i) {
-      var result = selector.call(thisArg, x, i, source);
+      var result = selectorFunc(x, i, source);
       isPromise(result) && (result = observableFromPromise(result));
       (isArrayLike(result) || isIterable(result)) && (result = observableFrom(result));
       return result;
@@ -3624,15 +3622,15 @@
   observableProto.skip = function (count) {
     if (count < 0) { throw new Error(argumentOutOfRange); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var remaining = count;
       return source.subscribe(function (x) {
         if (remaining <= 0) {
-          observer.onNext(x);
+          o.onNext(x);
         } else {
           remaining--;
         }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };
 
@@ -3647,20 +3645,21 @@
    * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
    */
   observableProto.skipWhile = function (predicate, thisArg) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
+    var source = this,
+        callback = bindCallback(predicate, thisArg, 3);
+    return new AnonymousObservable(function (o) {
       var i = 0, running = false;
       return source.subscribe(function (x) {
         if (!running) {
           try {
-            running = !predicate.call(thisArg, x, i++, source);
+            running = !callback(x, i++, source);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
         }
-        running && observer.onNext(x);
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+        running && o.onNext(x);
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };
 
@@ -3677,14 +3676,14 @@
     if (count < 0) { throw new RangeError(argumentOutOfRange); }
     if (count === 0) { return observableEmpty(scheduler); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var remaining = count;
       return source.subscribe(function (x) {
         if (remaining-- > 0) {
-          observer.onNext(x);
-          remaining === 0 && observer.onCompleted();
+          o.onNext(x);
+          remaining === 0 && o.onCompleted();
         }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };
 
@@ -3696,24 +3695,25 @@
    * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
    */
   observableProto.takeWhile = function (predicate, thisArg) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
+    var source = this,
+        callback = bindCallback(predicate, thisArg, 3);
+    return new AnonymousObservable(function (o) {
       var i = 0, running = true;
       return source.subscribe(function (x) {
         if (running) {
           try {
-            running = predicate.call(thisArg, x, i++, source);
+            running = callback(x, i++, source);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
           if (running) {
-            observer.onNext(x);
+            o.onNext(x);
           } else {
-            observer.onCompleted();
+            o.onCompleted();
           }
         }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };
 
@@ -3729,12 +3729,12 @@
    */
   observableProto.where = observableProto.filter = function (predicate, thisArg) {
     var source = this;
+    predicate = bindCallback(predicate, thisArg, 3);
     return new AnonymousObservable(function (o) {
       var count = 0;
       return source.subscribe(function (value) {
-        var shouldRun;
         try {
-          shouldRun = predicate.call(thisArg, value, count++, source);
+          var shouldRun = predicate(value, count++, source);
         } catch (e) {
           o.onError(e);
           return;
@@ -4613,18 +4613,16 @@
     var duration = +windowDuration || 0;
     if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var lastOnNext = 0;
       return source.subscribe(
         function (x) {
           var now = scheduler.now();
           if (lastOnNext === 0 || now - lastOnNext >= duration) {
             lastOnNext = now;
-            observer.onNext(x);
+            o.onNext(x);
           }
-        },
-        observer.onError.bind(observer),
-        observer.onCompleted.bind(observer)
+        },function (e) { o.onError(e); }, function () { o.onCompleted(); }
       );
     }, source);
   };
@@ -4688,7 +4686,7 @@
   };
 
   function combineLatestSource(source, subject, resultSelector) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hasValue = [false, false],
         hasValueAll = false,
         isDone = false,
@@ -4701,20 +4699,20 @@
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
           if (err) {
-            observer.onError(err);
+            o.onError(err);
             return;
           }
 
           try {
             res = resultSelector.apply(null, values);
           } catch (ex) {
-            observer.onError(ex);
+            o.onError(ex);
             return;
           }
-          observer.onNext(res);
+          o.onNext(res);
         }
         if (isDone && values[1]) {
-          observer.onCompleted();
+          o.onCompleted();
         }
       }
 
@@ -4725,20 +4723,20 @@
           },
           function (e) {
             if (values[1]) {
-              observer.onError(e);
+              o.onError(e);
             } else {
               err = e;
             }
           },
           function () {
             isDone = true;
-            values[1] && observer.onCompleted();
+            values[1] && o.onCompleted();
           }),
         subject.subscribe(
           function (x) {
             next(x, 1);
           },
-          observer.onError.bind(observer),
+          function (e) { o.onError(e); },
           function () {
             isDone = true;
             next(true, 1);
@@ -4751,7 +4749,7 @@
 
     inherits(PausableBufferedObservable, __super__);
 
-    function subscribe(observer) {
+    function subscribe(o) {
       var q = [], previousShouldFire;
 
       var subscription =
@@ -4768,14 +4766,14 @@
                 // change in shouldFire
                 if (results.shouldFire) {
                   while (q.length > 0) {
-                    observer.onNext(q.shift());
+                    o.onNext(q.shift());
                   }
                 }
               } else {
                 previousShouldFire = results.shouldFire;
                 // new data
                 if (results.shouldFire) {
-                  observer.onNext(results.data);
+                  o.onNext(results.data);
                 } else {
                   q.push(results.data);
                 }
@@ -4784,16 +4782,16 @@
             function (err) {
               // Empty buffer before sending error
               while (q.length > 0) {
-                observer.onNext(q.shift());
+                o.onNext(q.shift());
               }
-              observer.onError(err);
+              o.onError(err);
             },
             function () {
               // Empty buffer before sending completion
               while (q.length > 0) {
-                observer.onNext(q.shift());
+                o.onNext(q.shift());
               }
-              observer.onCompleted();
+              o.onCompleted();
             }
           );
       return subscription;

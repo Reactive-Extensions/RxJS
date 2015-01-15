@@ -8,14 +8,14 @@
    */
   observableProto.takeLast = function (count) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         q.push(x);
         q.length > count && q.shift();
-      }, observer.onError.bind(observer), function () {
-        while (q.length > 0) { observer.onNext(q.shift()); }
-        observer.onCompleted();
+      }, function (e) { o.onError(e); }, function () {
+        while (q.length > 0) { o.onNext(q.shift()); }
+        o.onCompleted();
       });
     }, source);
   };

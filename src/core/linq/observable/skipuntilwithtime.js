@@ -14,14 +14,13 @@
     var source = this, schedulerMethod = startTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var open = false;
 
       return new CompositeDisposable(
         scheduler[schedulerMethod](startTime, function () { open = true; }),
         source.subscribe(
-          function (x) { open && observer.onNext(x); },
-          observer.onError.bind(observer),
-          observer.onCompleted.bind(observer)));
+          function (x) { open && o.onNext(x); },
+          function (e) { o.onError(e); }, function () { o.onCompleted(); }));
     }, source);
   };

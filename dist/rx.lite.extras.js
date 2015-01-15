@@ -38,6 +38,10 @@
     observableNever = Observable.never,
     observableThrow = Observable.throwException,
     AnonymousObservable = Rx.AnonymousObservable,
+    AnonymousObserver = Rx.AnonymousObserver,
+    notificationCreateOnNext = Rx.Notification.createOnNext,
+    notificationCreateOnError = Rx.Notification.createOnError,
+    notificationCreateOnCompleted = Rx.Notification.createOnCompleted,
     Observer = Rx.Observer,
     Subject = Rx.Subject,
     internals = Rx.internals,
@@ -54,6 +58,7 @@
     identity = helpers.identity,
     isPromise = helpers.isPromise,
     inherits = internals.inherits,
+    bindCallback = internals.bindCallback,
     noop = helpers.noop,
     isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise,
@@ -167,6 +172,61 @@
 
     return ObserveOnObserver;
   })(ScheduledObserver);
+
+  /**
+   *  Checks access to the observer for grammar violations. This includes checking for multiple OnError or OnCompleted calls, as well as reentrancy in any of the observer methods.
+   *  If a violation is detected, an Error is thrown from the offending observer method call.
+   *
+   * @returns An observer that checks callbacks invocations against the observer grammar and, if the checks pass, forwards those to the specified observer.
+   */
+  Observer.prototype.checked = function () { return new CheckedObserver(this); };
+
+  /**
+   * Schedules the invocation of observer methods on the given scheduler.
+   * @param {Scheduler} scheduler Scheduler to schedule observer messages on.
+   * @returns {Observer} Observer whose messages are scheduled on the given scheduler.
+   */
+  Observer.notifyOn = function (scheduler) {
+    return new ObserveOnObserver(scheduler, this);
+  };
+
+  /**
+  *  Creates an observer from a notification callback.
+  * @param {Function} handler Action that handles a notification.
+  * @returns The observer object that invokes the specified handler using a notification corresponding to each message it receives.
+  */
+  Observer.fromNotifier = function (handler, thisArg) {
+    var handlerFunc = bindCallback(handler, thisArg, 1);
+    return new AnonymousObserver(function (x) {
+      return handlerFunc(notificationCreateOnNext(x));
+    }, function (e) {
+      return handlerFunc(notificationCreateOnError(e));
+    }, function () {
+      return handlerFunc(notificationCreateOnCompleted());
+    });
+  };
+
+  /**
+  *  Creates a notification callback from an observer.
+  * @returns The action that forwards its input notification to the underlying observer.
+  */
+  Observer.prototype.toNotifier = function () {
+    var observer = this;
+    return function (n) { return n.accept(observer); };
+  };
+
+  /**
+  *  Hides the identity of an observer.
+  * @returns An observer that hides the identity of the specified observer.
+  */
+  Observer.prototype.asObserver = function () {
+    var source = this;
+    return new AnonymousObserver(
+      function (x) { source.onNext(x); },
+      function (e) { source.onError(e); },
+      function () { source.onCompleted(); }
+    );
+  };
 
    /**
    *  Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
@@ -478,14 +538,14 @@
    */
   observableProto.takeLastBuffer = function (count) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         q.push(x);
         q.length > count && q.shift();
-      }, observer.onError.bind(observer), function () {
-        observer.onNext(q);
-        observer.onCompleted();
+      }, function (e) { o.onError(e); }, function () {
+        o.onNext(q);
+        o.onCompleted();
       });
     }, source);
   };
@@ -508,11 +568,13 @@
         return source.subscribe(function (x) {
           found = true;
           observer.onNext(x);
-        }, observer.onError.bind(observer), function () {
+        },
+        function (e) { observer.onError(e); }, 
+        function () {
           !found && observer.onNext(defaultValue);
           observer.onCompleted();
         });
-      }, this);
+      }, source);
     };
 
   // Swap out for Array.findIndex
@@ -548,7 +610,7 @@
   observableProto.distinct = function (keySelector, comparer) {
     var source = this;
     comparer || (comparer = defaultComparer);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hashSet = new HashSet(comparer);
       return source.subscribe(function (x) {
         var key = x;
@@ -557,14 +619,13 @@
           try {
             key = keySelector(x);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
         }
-        hashSet.push(key) && observer.onNext(x);
+        hashSet.push(key) && o.onNext(x);
       },
-      observer.onError.bind(observer),
-      observer.onCompleted.bind(observer));
+      function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, this);
   };
 

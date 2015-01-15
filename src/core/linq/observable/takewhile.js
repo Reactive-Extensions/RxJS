@@ -6,23 +6,24 @@
    * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
    */
   observableProto.takeWhile = function (predicate, thisArg) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
+    var source = this,
+        callback = bindCallback(predicate, thisArg, 3);
+    return new AnonymousObservable(function (o) {
       var i = 0, running = true;
       return source.subscribe(function (x) {
         if (running) {
           try {
-            running = predicate.call(thisArg, x, i++, source);
+            running = callback(x, i++, source);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
           if (running) {
-            observer.onNext(x);
+            o.onNext(x);
           } else {
-            observer.onCompleted();
+            o.onCompleted();
           }
         }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };

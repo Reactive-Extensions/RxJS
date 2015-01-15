@@ -9,25 +9,25 @@
     function comparer(a, b) {
       return (a === 0 && b === 0) || (a === b || (isNaN(a) && isNaN(b)));
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var i = 0, n = +fromIndex || 0;
       Math.abs(n) === Infinity && (n = 0);
       if (n < 0) {
-        observer.onNext(false);
-        observer.onCompleted();
+        o.onNext(false);
+        o.onCompleted();
         return disposableEmpty;
       }
       return source.subscribe(
         function (x) {
           if (i++ >= n && comparer(x, searchElement)) {
-            observer.onNext(true);
-            observer.onCompleted();
+            o.onNext(true);
+            o.onCompleted();
           }
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
-          observer.onNext(false);
-          observer.onCompleted();
+          o.onNext(false);
+          o.onCompleted();
         });
     }, this);
   };

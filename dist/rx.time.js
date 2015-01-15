@@ -921,20 +921,20 @@
   observableProto.skipLastWithTime = function (duration, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         var now = scheduler.now();
         q.push({ interval: now, value: x });
         while (q.length > 0 && now - q[0].interval >= duration) {
-          observer.onNext(q.shift().value);
+          o.onNext(q.shift().value);
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         var now = scheduler.now();
         while (q.length > 0 && now - q[0].interval >= duration) {
-          observer.onNext(q.shift().value);
+          o.onNext(q.shift().value);
         }
-        observer.onCompleted();
+        o.onCompleted();
       });
     }, source);
   };
@@ -952,7 +952,7 @@
   observableProto.takeLastWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         var now = scheduler.now();
@@ -960,13 +960,13 @@
         while (q.length > 0 && now - q[0].interval >= duration) {
           q.shift();
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         var now = scheduler.now();
         while (q.length > 0) {
           var next = q.shift();
-          if (now - next.interval <= duration) { observer.onNext(next.value); }
+          if (now - next.interval <= duration) { o.onNext(next.value); }
         }
-        observer.onCompleted();
+        o.onCompleted();
       });
     }, source);
   };
@@ -984,7 +984,7 @@
   observableProto.takeLastBufferWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         var now = scheduler.now();
@@ -992,14 +992,14 @@
         while (q.length > 0 && now - q[0].interval >= duration) {
           q.shift();
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         var now = scheduler.now(), res = [];
         while (q.length > 0) {
           var next = q.shift();
-          if (now - next.interval <= duration) { res.push(next.value); }
+          now - next.interval <= duration && res.push(next.value);
         }
-        observer.onNext(res);
-        observer.onCompleted();
+        o.onNext(res);
+        o.onCompleted();
       });
     }, source);
   };
@@ -1020,8 +1020,8 @@
   observableProto.takeWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, observer.onCompleted.bind(observer)), source.subscribe(observer));
+    return new AnonymousObservable(function (o) {
+      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, function () { o.onCompleted(); }), source.subscribe(o));
     }, source);
   };
 
@@ -1068,15 +1068,14 @@
     var source = this, schedulerMethod = startTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var open = false;
 
       return new CompositeDisposable(
         scheduler[schedulerMethod](startTime, function () { open = true; }),
         source.subscribe(
-          function (x) { open && observer.onNext(x); },
-          observer.onError.bind(observer),
-          observer.onCompleted.bind(observer)));
+          function (x) { open && o.onNext(x); },
+          function (e) { o.onError(e); }, function () { o.onCompleted(); }));
     }, source);
   };
 
@@ -1091,10 +1090,10 @@
     var source = this, schedulerMethod = endTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       return new CompositeDisposable(
-        scheduler[schedulerMethod](endTime, observer.onCompleted.bind(observer)),
-        source.subscribe(observer));
+        scheduler[schedulerMethod](endTime, function () { o.onCompleted(); }),
+        source.subscribe(o));
     }, source);
   };
 
@@ -1109,18 +1108,16 @@
     var duration = +windowDuration || 0;
     if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var lastOnNext = 0;
       return source.subscribe(
         function (x) {
           var now = scheduler.now();
           if (lastOnNext === 0 || now - lastOnNext >= duration) {
             lastOnNext = now;
-            observer.onNext(x);
+            o.onNext(x);
           }
-        },
-        observer.onError.bind(observer),
-        observer.onCompleted.bind(observer)
+        },function (e) { o.onError(e); }, function () { o.onCompleted(); }
       );
     }, source);
   };

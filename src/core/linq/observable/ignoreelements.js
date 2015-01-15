@@ -4,7 +4,7 @@
    */
   observableProto.ignoreElements = function () {
     var source = this;
-    return new AnonymousObservable(function (observer) {
-      return source.subscribe(noop, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+    return new AnonymousObservable(function (o) {
+      return source.subscribe(noop, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };

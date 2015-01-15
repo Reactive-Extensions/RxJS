@@ -8,13 +8,38 @@
    */
   observableProto.aggregate = function () {
     //deprecate('aggregate', 'reduce');
-    var seed, hasSeed, accumulator;
+    var hasSeed = false, accumulator, seed, source = this;
     if (arguments.length === 2) {
-      seed = arguments[0];
       hasSeed = true;
+      seed = arguments[0];
       accumulator = arguments[1];
     } else {
       accumulator = arguments[0];
     }
-    return hasSeed ? this.scan(seed, accumulator).startWith(seed).finalValue() : this.scan(accumulator).finalValue();
+    return new AnonymousObservable(function (o) {
+      var hasAccumulation, accumulation, hasValue;
+      return source.subscribe (
+        function (x) {
+          !hasValue && (hasValue = true);
+          try {
+            if (hasAccumulation) {
+              accumulation = accumulator(accumulation, x);
+            } else {
+              accumulation = hasSeed ? accumulator(seed, x) : x;
+              hasAccumulation = true;
+            }
+          } catch (e) {
+            o.onError(e);
+            return;
+          }
+        },
+        function (e) { o.onError(e); },
+        function () {
+          hasValue && o.onNext(accumulation);
+          !hasValue && hasSeed && o.onNext(seed);
+          !hasValue && !hasSeed && o.onError(new Error(sequenceContainsNoElements));
+          o.onCompleted();
+        }
+      );
+    }, source);
   };

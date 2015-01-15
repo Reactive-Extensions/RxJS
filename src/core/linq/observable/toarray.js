@@ -7,8 +7,8 @@
     return new AnonymousObservable(function(observer) {
       var arr = [];
       return source.subscribe(
-        arr.push.bind(arr),
-        observer.onError.bind(observer),
+        function (x) { arr.push(x); },
+        function (e) { observer.onError(e); },
         function () {
           observer.onNext(arr);
           observer.onCompleted();

@@ -17,7 +17,7 @@
     } else {
       accumulator = arguments[0];
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hasAccumulation, accumulation, hasValue;
       return source.subscribe (
         function (x) {
@@ -30,16 +30,16 @@
               hasAccumulation = true;
             }
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
             return;
           }
 
-          observer.onNext(accumulation);
+          o.onNext(accumulation);
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
-          !hasValue && hasSeed && observer.onNext(seed);
-          observer.onCompleted();
+          !hasValue && hasSeed && o.onNext(seed);
+          o.onCompleted();
         }
       );
     }, source);

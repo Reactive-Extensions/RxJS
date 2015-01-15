@@ -6,14 +6,14 @@
   observableProto.skip = function (count) {
     if (count < 0) { throw new Error(argumentOutOfRange); }
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var remaining = count;
       return source.subscribe(function (x) {
         if (remaining <= 0) {
-          observer.onNext(x);
+          o.onNext(x);
         } else {
           remaining--;
         }
-      }, observer.onError.bind(observer), observer.onCompleted.bind(observer));
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);
   };

@@ -5,12 +5,12 @@
    */
   observableProto.skipUntil = function (other) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var isOpen = false;
       var disposables = new CompositeDisposable(source.subscribe(function (left) {
-        isOpen && observer.onNext(left);
-      }, observer.onError.bind(observer), function () {
-        isOpen && observer.onCompleted();
+        isOpen && o.onNext(left);
+      }, function (e) { o.onError(e); }, function () {
+        isOpen && o.onCompleted();
       }));
 
       isPromise(other) && (other = observableFromPromise(other));
@@ -20,7 +20,7 @@
       rightSubscription.setDisposable(other.subscribe(function () {
         isOpen = true;
         rightSubscription.dispose();
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         rightSubscription.dispose();
       }));
 

@@ -16,7 +16,7 @@
     isIterable = helpers.isIterable,
     observableFromPromise = Observable.fromPromise,
     observableFrom = Observable.from,
-    deprecate = helpers.deprecate;
+    bindCallback = Rx.internals.bindCallback;
 
   // Defaults
   var argumentOutOfRange = 'Argument out of range',

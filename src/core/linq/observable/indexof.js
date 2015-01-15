@@ -6,26 +6,26 @@
    */
   observableProto.indexOf = function(searchElement, fromIndex) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var i = 0, n = +fromIndex || 0;
       Math.abs(n) === Infinity && (n = 0);
       if (n < 0) {
-        observer.onNext(-1);
-        observer.onCompleted();
+        o.onNext(-1);
+        o.onCompleted();
         return disposableEmpty;
       }
       return source.subscribe(
         function (x) {
           if (i >= n && x === searchElement) {
-            observer.onNext(i);
-            observer.onCompleted();
+            o.onNext(i);
+            o.onCompleted();
           }
           i++;
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
-          observer.onNext(-1);
-          observer.onCompleted();
+          o.onNext(-1);
+          o.onCompleted();
         });
     }, source);
   };

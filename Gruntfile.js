@@ -54,6 +54,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
+              'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
@@ -170,7 +171,6 @@ var browsers = [{
               'src/core/linq/observable/where.js',
 
               // Aggregate Operators
-              'src/core/linq/observable/finalvalue.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
@@ -341,6 +341,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
+              'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
@@ -457,7 +458,6 @@ var browsers = [{
               'src/core/linq/observable/where.js',
 
               // Aggregate Operators
-              'src/core/linq/observable/finalvalue.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
@@ -628,6 +628,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
+              'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
@@ -770,6 +771,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
+              'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
@@ -913,6 +915,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
+              'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
@@ -1075,6 +1078,7 @@ var browsers = [{
 
               'src/core/enumeratorheader.js',
 
+              'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
@@ -1235,7 +1239,7 @@ var browsers = [{
               'src/core/disposables/scheduleddisposable.js',
               'src/core/checkedobserver.js',
               'src/core/observeonobserver.js',
-              'src/core/observer-extras',
+              'src/core/observer-extras.js',
 
               // Concurrency
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
@@ -1287,7 +1291,6 @@ var browsers = [{
               'src/core/license.js',
               'src/core/subintro.js',
               'src/core/aggregatesheader.js',
-              'src/core/linq/observable/finalvalue.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue

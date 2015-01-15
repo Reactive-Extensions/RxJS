@@ -11,7 +11,7 @@
   observableProto.takeLastWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
         var now = scheduler.now();
@@ -19,13 +19,13 @@
         while (q.length > 0 && now - q[0].interval >= duration) {
           q.shift();
         }
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { o.onError(e); }, function () {
         var now = scheduler.now();
         while (q.length > 0) {
           var next = q.shift();
-          if (now - next.interval <= duration) { observer.onNext(next.value); }
+          if (now - next.interval <= duration) { o.onNext(next.value); }
         }
-        observer.onCompleted();
+        o.onCompleted();
       });
     }, source);
   };

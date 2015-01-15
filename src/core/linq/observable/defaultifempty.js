@@ -16,9 +16,11 @@
         return source.subscribe(function (x) {
           found = true;
           observer.onNext(x);
-        }, observer.onError.bind(observer), function () {
+        },
+        function (e) { observer.onError(e); }, 
+        function () {
           !found && observer.onNext(defaultValue);
           observer.onCompleted();
         });
-      }, this);
+      }, source);
     };
