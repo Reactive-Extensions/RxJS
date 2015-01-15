@@ -28,7 +28,7 @@ NuGet Dependencies:
 - [`publish`](../api/core/operators/publish.md)
 - [`publishLast`](../api/core/operators/publishlast.md)
 - [`publishValue`](../api/core/operators/publishvalue.md)
-- [`refCount`](../api/core/operators/reccount.md)
+- [`refCount`](../api/core/operators/refcount.md)
 - [`replay`](../api/core/operators/replay.md)
 - [`share`](../api/core/operators/share.md)
 - [`shareLast`](../api/core/operators/sharelast.md)
