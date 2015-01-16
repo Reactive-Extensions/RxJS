@@ -67,3 +67,7 @@
   Observer.prototype.notifyOn = function (scheduler) {
     return new ObserveOnObserver(scheduler, this);
   };
+
+  Observer.prototype.makeSafe = function(disposable) {
+    return new AnonymousSafeObserver(this._onNext, this._onError, this._onCompleted, disposable);
+  };
