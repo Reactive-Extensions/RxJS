@@ -405,8 +405,8 @@ var xs = Rx.Observable.create(function (observer) {
 });
 
 xs.publish(function (sharedXs) {
-  sharedXs.subscribe(console.log);
-  sharedXs.subscribe(console.log);
+  sharedXs.subscribe(console.log.bind(console));
+  sharedXs.subscribe(console.log.bind(console));
   return sharedXs;
 }).subscribe();
 ```
