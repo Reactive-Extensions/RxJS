@@ -5,7 +5,7 @@ The Reactive Extensions for JavaScript has a built-in mechanism for testing all 
 ## Details ##
 
 Files:
-- [`rx.testing.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.testing.js)
+- [`rx.testing.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.testing.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)

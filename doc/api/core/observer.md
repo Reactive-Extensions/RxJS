@@ -22,7 +22,7 @@ The Observer and Objects interfaces provide a generalized mechanism for push-bas
 ## _Observer Methods_ ##
 
 ### <a id="rxobservercreateonnext-onerror-oncompleted"></a>`Rx.Observer.create([onNext], [onError], [onCompleted])`
-<a href="#rxobservercreateonnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobservercreateonnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1828-L1833 "View in source") [&#x24C9;][1]
 
 Creates an observer from the specified `onNext`, `onError`, and `onCompleted` actions.
 
@@ -63,7 +63,7 @@ var subscription = source.subscribe(observer);
 * * *
 
 ### <a id="rxobserverfromotifierhandler"></a>`Rx.Observer.fromNotifier(handler)`
-<a href="#rxobserverfromotifierhandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobserverfromotifierhandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1843-L1851 "View in source") [&#x24C9;][1]
 
 Creates an observer from a notification callback.
 
@@ -111,7 +111,7 @@ Rx.Observer.fromNotifier(handler).onCompleted();
 ## _Observer Instance Methods_ ##
 
 ### <a id="rxobserverprototypeasobserver"></a>`Rx.Observer.prototype.asObserver()`
-<a href="#rxobserverprototypeasobserver">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobserverprototypeasobserver">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1810-L1812 "View in source") [&#x24C9;][1]
 
 Hides the identity of an observer.
 
@@ -169,7 +169,7 @@ console.log(source === sampleObserver);
 * * *
 
 ### <a id="rxobserverprototypechecked"></a>`Rx.Observer.prototype.checked()`
-<a href="#rxobserverprototypechecked">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobserverprototypechecked">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1819 "View in source") [&#x24C9;][1]
 
 Checks access to the observer for grammar violations. This includes checking for multiple `onError` or `onCompleted` calls, as well as reentrancy in any of the observer methods.
 
@@ -211,7 +211,7 @@ checked.onNext(42);
 * * *
 
 ### <a id="rxobserverprototypenotifyonscheduler"></a>`Rx.Observer.prototype.notifyOn(scheduler)`
-<a href="#rxobserverprototypenotifyonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobserverprototypenotifyonscheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1858-1860 "View in source") [&#x24C9;][1]
 
 Schedules the invocation of observer methods on the given scheduler.
 
@@ -249,7 +249,7 @@ timeoutObserver.onNext(42);
 * * *
 
 ### <a id="rxobserverprototypeoncompleted"></a>`Rx.Observer.prototype.onCompleted()`
-<a href="#rxobserverprototypeoncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobserverprototypeoncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1899-L1904 "View in source") [&#x24C9;][1]
 
 Notifies the observer of the end of the sequence.
 
@@ -278,7 +278,7 @@ observer.onCompleted();
 * * *
 
 ### <a id="rxobserverprototypeonerrorerror"></a>`Rx.Observer.prototype.onError(error)`
-<a href="#rxobserverprototypeonerrorerror">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobserverprototypeonerrorerror">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1889-L1894 "View in source") [&#x24C9;][1]
 
 Notifies the observer that an exception has occurred.
 
@@ -310,7 +310,7 @@ observer.onError(new Error('error!!'));
 * * *
 
 ### <a id="rxobserverprototypeonnextvalue"></a>`Rx.Observer.prototype.onNext(value)`
-<a href="#rxobserverprototypeonnextvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobserverprototypeonnextvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1881-L1883 "View in source") [&#x24C9;][1]
 
 Notifies the observer of a new element in the sequence.
 
@@ -342,7 +342,7 @@ observer.onNext(42);
 * * *
 
 ### <a id="rxobserverprototypetonotifier"></a>`Rx.Observer.prototype.toNotifier()`
-<a href="#rxobserverprototypetonotifier">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.js#L2862-L2872 "View in source") [&#x24C9;][1]
+<a href="#rxobserverprototypetonotifier">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1801-L1804 "View in source") [&#x24C9;][1]
 
 Creates a notification callback from an observer.
 

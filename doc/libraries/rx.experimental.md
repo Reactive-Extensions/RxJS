@@ -5,7 +5,7 @@ The Reactive Extensions for JavaScript has a number of operators that are consid
 ## Details ##
 
 Files:
-- [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.experimental.js)
+- [`rx.experimental.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.experimental.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
@@ -15,7 +15,7 @@ NuGet Packages:
 - [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental/)
 
 File Dependencies:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/rx.lite.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 NuGet Dependencies:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
