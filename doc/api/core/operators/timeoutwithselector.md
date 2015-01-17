@@ -1,4 +1,4 @@
-### `Rx.Observable.prototype.timeoutwithselector([firstTimeout], timeoutDurationSelector, [other])`
+### `Rx.Observable.prototype.timeoutWithSelector([firstTimeout], timeoutDurationSelector, [other])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeoutwithselector.js "View in source")
 
 Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
