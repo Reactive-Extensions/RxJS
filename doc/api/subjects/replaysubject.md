@@ -98,7 +98,7 @@ subject.onNext('d');
 ## _ReplaySubject Instance Methods_ ##
 
 ### <a id="rxreplaysubjectprototypedispose"></a>`Rx.ReplaySubject.prototype.dispose()`
-<a href="#rxreplaysubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/ReplaySubject.js#L147-L150 "View in source")
+<a href="#rxreplaysubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/replaysubject.js#L130-L133 "View in source")
 
 Unsubscribe all observers and release resources.
 
@@ -141,7 +141,7 @@ try {
 * * *
 
 ### <a id="rxreplaysubjectprototypehasobservers"></a>`Rx.ReplaySubject.prototype.hasObservers()`
-<a href="#rxreplaysubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/ReplaySubject.js#L71-L73 "View in source")
+<a href="#rxreplaysubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/replaysubject.js#L61-L63 "View in source")
 
 Indicates whether the subject has observers subscribed to it.
 
