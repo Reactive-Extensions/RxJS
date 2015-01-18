@@ -59,7 +59,7 @@ test('buffer should join strings', function () {
     var results = scheduler.startWithTiming(
         function () {
             return input.buffer(function () {
-                return input.throttle(100, scheduler);
+                return input.debounce(100, scheduler);
             })
             .map(function (b) {
                 return b.join(',');

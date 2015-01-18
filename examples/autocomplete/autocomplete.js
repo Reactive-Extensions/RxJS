@@ -25,7 +25,7 @@
       .filter(function (text) {
         return text.length > 2; // Only if the text is longer than 2 characters
       })
-      .throttle(750 /* Pause for 750ms */ )
+      .debounce(750 /* Pause for 750ms */ )
       .distinctUntilChanged(); // Only if the value has changed
 
     var searcher = keyup.flatMapLatest(searchWikipedia);

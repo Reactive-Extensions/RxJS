@@ -69,7 +69,7 @@ var dictionarySuggest = Rx.Observable.fromEvent(input, 'keyup')
   .map(function () { return input.value; })
   .filter(function (text) { return !!text; })
   .distinctUntilChanged()
-  .throttle(250)
+  .debounce(250)
   .flatMapLatest(searchWikipedia)
   .subscribe(
     function (results) {
@@ -88,9 +88,9 @@ RxJS creates an observable sequence that models an existing `keyup` event on the
 
 It then places several filters and projections on top of the event to make the event only fire if a unique value has come through. (The `keyup` event fires for every key stroke, so also if the user presses left or right arrow, moving the cursor but not changing the input text).
 
-Next it makes sure the event only gets fired after 250 milliseconds of activity by using the `throttle` operator. (If the user is still typing characters, this saves a potentially expensive lookup that will be ignored immediately).
+Next it makes sure the event only gets fired after 250 milliseconds of activity by using the `debounce` operator. (If the user is still typing characters, this saves a potentially expensive lookup that will be ignored immediately).
 
-In traditionally written programs, this throttling would introduce separate callbacks through a timer. This timer could potentially throw exceptions (certain timers have a maximum amount of operations in flight).
+In traditionally written programs, this debouncing would introduce separate callbacks through a timer. This timer could potentially throw exceptions (certain timers have a maximum amount of operations in flight).
 
 Once the user input has been filtered down it is time to perform the dictionary lookup. As this is usually an expensive operation (e.g. a request to a server on the other side of the world), this operation is itself asynchronous as well.
 
@@ -268,12 +268,12 @@ A marble-diagram is a diagram that shows event occurring over time. A marble dia
 
 <img src="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/designguidelines/images/throttleWithTimeout.png" alt="throttleWithSelector">
 
-By drawing the diagram we can see that we will need some kind of delay after the user input, before firing of another asynchronous call. The delay in this sample maps to the `throttle` operator. To create another observable sequence from an observable sequence we will use the `flatMap` or `selectMany` operator. This
+By drawing the diagram we can see that we will need some kind of delay after the user input, before firing of another asynchronous call. The delay in this sample maps to the `debounce` operator. To create another observable sequence from an observable sequence we will use the `flatMap` or `selectMany` operator. This
 will lead to the following code:
 
 ```js
 var dictionarySuggest = userInput
-  .throttle(250)
+  .debounce(250)
   .flatMap(function (input) { return serverCall(input); });
 ```
 
@@ -330,7 +330,7 @@ By using the `observeOn` operator, an action is scheduled for each message that 
 #### Sample ####
 
 ```js
-var result = xs.throttle(1000)
+var result = xs.debounce(1000)
   .flatMap(function (x) {
     return ys.takeUntil(zs).sample(250).map(function (y) { return x + y });
   })
