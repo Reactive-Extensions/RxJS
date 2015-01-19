@@ -69,7 +69,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`concatMap`](operators/concatmap.md)
 - [`concatMapObserver`](operators/concatmapobserver.md)
 - [`connect`](operators/connect.md)
-- [`contains`](operators/contains.md)
+- [`includes`](operators/includes.md)
 - [`controlled`](operators/controlled.md)
 - [`count`](operators/count.md)
 - [`debounce`](operators/debounce.md)

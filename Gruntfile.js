@@ -178,7 +178,7 @@ var browsers = [{
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
               'src/core/linq/observable/every.js', // where, any
-              'src/core/linq/observable/contains.js', // where, any
+              'src/core/linq/observable/includes.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
               'src/core/linq/observable/indexof.js',
               'src/core/linq/observable/sum.js', // select, aggregate
@@ -465,7 +465,7 @@ var browsers = [{
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
               'src/core/linq/observable/every.js', // where, any
-              'src/core/linq/observable/contains.js', // where, any
+              'src/core/linq/observable/includes.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
               'src/core/linq/observable/indexof.js',
               'src/core/linq/observable/sum.js', // select, aggregate
@@ -1298,7 +1298,7 @@ var browsers = [{
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
               'src/core/linq/observable/every.js', // where, any
-              'src/core/linq/observable/contains.js', // where, any
+              'src/core/linq/observable/includes.js', // where, any
               'src/core/linq/observable/count.js', // where, aggregate
               'src/core/linq/observable/indexof.js',
               'src/core/linq/observable/sum.js', // select, aggregate

@@ -234,12 +234,12 @@
   };
 
   /**
-   * Determines whether an observable sequence contains a specified element with an optional equality comparer.
+   * Determines whether an observable sequence includes a specified element with an optional equality comparer.
    * @param searchElement The value to locate in the source sequence.
    * @param {Number} [fromIndex] An equality comparer to compare elements.
-   * @returns {Observable} An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value from the given index.
+   * @returns {Observable} An observable sequence containing a single element determining whether the source sequence includes an element that has the specified value from the given index.
    */
-  observableProto.contains = function (searchElement, fromIndex) {
+  observableProto.includes = function (searchElement, fromIndex) {
     var source = this;
     function comparer(a, b) {
       return (a === 0 && b === 0) || (a === b || (isNaN(a) && isNaN(b)));
@@ -267,6 +267,13 @@
     }, this);
   };
 
+  /**
+   * @deprecated use #includes instead.
+   */
+  observableProto.contains = function (searchElement, fromIndex) {
+    //deprecate('contains', 'includes');
+    observableProto.includes(searchElement, fromIndex);
+  };
   /**
    * Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
    * @example
