@@ -78,7 +78,7 @@ NuGet Packages:
 - [`concatAll`](../api/core/operators/concatallproto.md)
 - [`concatMap`](../api/core/operators/concatmap.md)
 - [`connect`](../api/core/operators/connect.md)
-- [`contains`](../api/core/operators/contains.md)
+- [`includes`](../api/core/operators/includes.md)
 - [`controlled`](../api/core/operators/controlled.md)
 - [`count`](../api/core/operators/count.md)
 - [`defaultIfEmpty`](../api/core/operators/defaultifempty.md)

@@ -1,20 +1,21 @@
-### `Rx.Observable.prototype.contains(searchElement, [fromIndex])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/contains.js "View in source")
+### `Rx.Observable.prototype.includes(searchElement, [fromIndex])` ###
+### `Rx.Observable.prototype.includes(searchElement, [fromIndex])` **DEPRECATED** ###
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/includes.js "View in source")
 
-Determines whether an observable sequence contains a specified element with an optional from index.
+Determines whether an observable sequence includes a specified element with an optional from index.
 
 #### Arguments
 1. `searchElement` *(`Any`)*: The value to locate in the source sequence.
 2. `[fromIndex]` *(`Number`)*: The index to start the search.  If not specified, defaults to 0.
 
 #### Returns
-*(`Observable`)*: An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value with an optional from index.
+*(`Observable`)*: An observable sequence containing a single element determining whether the source sequence includes an element that has the specified value with an optional from index.
 
 #### Example
 ```js
 /* Without an index */
 var source = Rx.Observable.of(42)
-  .contains(42);
+  .includes(42);
 
 var subscription = source.subscribe(
   function (x) {
@@ -32,7 +33,7 @@ var subscription = source.subscribe(
 
 /* With an index */
 var source = Rx.Observable.of(1,2,3)
-  .contains(2, 1);
+  .includes(2, 1);
 
 var subscription = source.subscribe(
   function (x) {
@@ -51,7 +52,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/contains.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/contains.js)
+- [`/src/core/linq/observable/includes.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/includes.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -69,4 +70,4 @@ NuGet Packages:
 - [`RxJS-Aggregates`](http://www.nuget.org/packages/RxJS-Aggregates/)
 
 Unit Tests:
-- [`/tests/observable/contains.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/contains.js)
+- [`/tests/observable/includes.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/includes.js)

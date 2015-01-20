@@ -1,4 +1,4 @@
-QUnit.module('Contains');
+QUnit.module('Includes');
 
 var TestScheduler = Rx.TestScheduler,
   onNext = Rx.ReactiveTest.onNext,
@@ -6,7 +6,7 @@ var TestScheduler = Rx.TestScheduler,
   onCompleted = Rx.ReactiveTest.onCompleted,
   subscribe = Rx.ReactiveTest.subscribe;
 
-test('Contains_Empty', function () {
+test('Includes_Empty', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -15,7 +15,7 @@ test('Contains_Empty', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(42);
+    return xs.includes(42);
   });
 
   results.messages.assertEqual(
@@ -24,7 +24,7 @@ test('Contains_Empty', function () {
   );
 });
 
-test('Contains_ReturnPositive', function () {
+test('Includes_ReturnPositive', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -34,7 +34,7 @@ test('Contains_ReturnPositive', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(2);
+    return xs.includes(2);
   });
 
   results.messages.assertEqual(
@@ -43,7 +43,7 @@ test('Contains_ReturnPositive', function () {
   );
 });
 
-test('Contains_ReturnNegative', function () {
+test('Includes_ReturnNegative', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -53,7 +53,7 @@ test('Contains_ReturnNegative', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(-2);
+    return xs.includes(-2);
   });
 
   results.messages.assertEqual(
@@ -62,7 +62,7 @@ test('Contains_ReturnNegative', function () {
   );
 });
 
-test('Contains_SomePositive', function () {
+test('Includes_SomePositive', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -74,7 +74,7 @@ test('Contains_SomePositive', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(3);
+    return xs.includes(3);
   });
 
   results.messages.assertEqual(
@@ -83,7 +83,7 @@ test('Contains_SomePositive', function () {
   );
 });
 
-test('Contains_SomeNegative', function () {
+test('Includes_SomeNegative', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -95,7 +95,7 @@ test('Contains_SomeNegative', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(-3);
+    return xs.includes(-3);
   });
 
   results.messages.assertEqual(
@@ -104,7 +104,7 @@ test('Contains_SomeNegative', function () {
   );
 });
 
-test('Contains_Throw', function () {
+test('Includes_Throw', function () {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -115,7 +115,7 @@ test('Contains_Throw', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(42);
+    return xs.includes(42);
   });
 
   results.messages.assertEqual(
@@ -123,7 +123,7 @@ test('Contains_Throw', function () {
   );
 });
 
-test('Contains_Never', function () {
+test('Includes_Never', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -131,13 +131,13 @@ test('Contains_Never', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(42);
+    return xs.includes(42);
   });
 
   results.messages.assertEqual();
 });
 
-test('contains fromIndex less than zero', function () {
+test('includes fromIndex less than zero', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -145,7 +145,7 @@ test('contains fromIndex less than zero', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(42, -1);
+    return xs.includes(42, -1);
   });
 
   results.messages.assertEqual(
@@ -154,7 +154,7 @@ test('contains fromIndex less than zero', function () {
   );
 });
 
-test('contains fromIndex Infinity', function () {
+test('includes fromIndex Infinity', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -164,7 +164,7 @@ test('contains fromIndex Infinity', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(2, Infinity);
+    return xs.includes(2, Infinity);
   });
 
   results.messages.assertEqual(
@@ -173,7 +173,7 @@ test('contains fromIndex Infinity', function () {
   );
 });
 
-test('contains fromIndex zero', function () {
+test('includes fromIndex zero', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -183,7 +183,7 @@ test('contains fromIndex zero', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(2, 0);
+    return xs.includes(2, 0);
   });
 
   results.messages.assertEqual(
@@ -192,7 +192,7 @@ test('contains fromIndex zero', function () {
   );
 });
 
-test('contains fromIndex greater than zero misses', function () {
+test('includes fromIndex greater than zero misses', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -205,7 +205,7 @@ test('contains fromIndex greater than zero misses', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(2, 1);
+    return xs.includes(2, 1);
   });
 
   results.messages.assertEqual(
@@ -214,7 +214,7 @@ test('contains fromIndex greater than zero misses', function () {
   );
 });
 
-test('contains fromIndex greater than zero no end', function () {
+test('includes fromIndex greater than zero no end', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -226,14 +226,14 @@ test('contains fromIndex greater than zero no end', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(2, 1);
+    return xs.includes(2, 1);
   });
 
   results.messages.assertEqual(
   );
 });
 
-test('contains fromIndex greater than zero hits', function () {
+test('includes fromIndex greater than zero hits', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -246,7 +246,7 @@ test('contains fromIndex greater than zero hits', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(3, 1);
+    return xs.includes(3, 1);
   });
 
   results.messages.assertEqual(
@@ -255,7 +255,7 @@ test('contains fromIndex greater than zero hits', function () {
   );
 });
 
-test('contains -0 equals 0', function () {
+test('includes -0 equals 0', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -265,7 +265,7 @@ test('contains -0 equals 0', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(0);
+    return xs.includes(0);
   });
 
   results.messages.assertEqual(
@@ -274,7 +274,7 @@ test('contains -0 equals 0', function () {
   );
 });
 
-test('contains +0 equals 0', function () {
+test('includes +0 equals 0', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -284,7 +284,7 @@ test('contains +0 equals 0', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(0);
+    return xs.includes(0);
   });
 
   results.messages.assertEqual(
@@ -293,7 +293,7 @@ test('contains +0 equals 0', function () {
   );
 });
 
-test('contains NaN equals NaN', function () {
+test('includes NaN equals NaN', function () {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -303,7 +303,7 @@ test('contains NaN equals NaN', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.contains(NaN);
+    return xs.includes(NaN);
   });
 
   results.messages.assertEqual(

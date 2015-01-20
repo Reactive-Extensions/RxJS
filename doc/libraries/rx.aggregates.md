@@ -26,7 +26,7 @@ NuGet Dependencies:
 - [`all`](../api/core/operators/every.md)
 - [`any`](../api/core/operators/some.md)
 - [`average`](../api/core/operators/average.md)
-- [`contains`](../api/core/operators/contains.md)
+- [`includes`](../api/core/operators/includes.md)
 - [`count`](../api/core/operators/count.md)
 - [`elementAt`](../api/core/operators/elementat.md)
 - [`elementAtOrDefault`](../api/core/operators/elementatordefault.md)

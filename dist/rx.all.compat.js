@@ -2048,6 +2048,10 @@
     return new ObserveOnObserver(scheduler, this);
   };
 
+  Observer.prototype.makeSafe = function(disposable) {
+    return new AnonymousSafeObserver(this._onNext, this._onError, this._onCompleted, disposable);
+  };
+
   /**
    * Abstract base class for implementations of the Observer class.
    * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages.
@@ -4825,12 +4829,12 @@
   };
 
   /**
-   * Determines whether an observable sequence contains a specified element with an optional equality comparer.
+   * Determines whether an observable sequence includes a specified element with an optional equality comparer.
    * @param searchElement The value to locate in the source sequence.
    * @param {Number} [fromIndex] An equality comparer to compare elements.
-   * @returns {Observable} An observable sequence containing a single element determining whether the source sequence contains an element that has the specified value from the given index.
+   * @returns {Observable} An observable sequence containing a single element determining whether the source sequence includes an element that has the specified value from the given index.
    */
-  observableProto.contains = function (searchElement, fromIndex) {
+  observableProto.includes = function (searchElement, fromIndex) {
     var source = this;
     function comparer(a, b) {
       return (a === 0 && b === 0) || (a === b || (isNaN(a) && isNaN(b)));
@@ -4858,6 +4862,13 @@
     }, this);
   };
 
+  /**
+   * @deprecated use #includes instead.
+   */
+  observableProto.contains = function (searchElement, fromIndex) {
+    //deprecate('contains', 'includes');
+    observableProto.includes(searchElement, fromIndex);
+  };
   /**
    * Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
    * @example
@@ -8805,7 +8816,7 @@
     /**
      *  Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
      * @param {Observable} [firstTimeout]  Observable sequence that represents the timeout for the first element. If not provided, this defaults to Observable.never().
-     * @param {Function} [timeoutDurationSelector] Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
+     * @param {Function} timeoutDurationSelector Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
      * @param {Observable} [other]  Sequence to return in case of a timeout. If not provided, this is set to Observable.throwException().
      * @returns {Observable} The source sequence switching to the other sequence in case of a timeout.
      */

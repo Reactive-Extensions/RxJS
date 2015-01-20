@@ -2048,6 +2048,10 @@
     return new ObserveOnObserver(scheduler, this);
   };
 
+  Observer.prototype.makeSafe = function(disposable) {
+    return new AnonymousSafeObserver(this._onNext, this._onError, this._onCompleted, disposable);
+  };
+
   /**
    * Abstract base class for implementations of the Observer class.
    * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages.
