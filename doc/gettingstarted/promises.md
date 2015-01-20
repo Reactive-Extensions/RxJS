@@ -27,7 +27,7 @@ The following list of operators natively support Promises:
 - [`Rx.Observable.startAsync`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/startasync.md)
 - [`Rx.Observable.prototype.switch`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/switch.md)
 - [`Rx.Observable.prototype.takeUntil`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/takeuntil.md)
-- [`Rx.Observable.prototype.throttleWithSelector`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/throttlewithselector.md)
+- [`Rx.Observable.prototype.debounceWithSelector`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/debouncewithselector.md)
 - [`Rx.Observable.prototype.timeoutWithSelector`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/timeoutwithselector.md)
 - [`Rx.Observable.while`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/while.md)
 - [`Rx.Observable.prototype.window`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/window.md)

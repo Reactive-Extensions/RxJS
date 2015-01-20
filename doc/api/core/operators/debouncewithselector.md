@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.debounceWithSelector(durationSelector)` ###
 ### `Rx.Observable.prototype.throttleWithSelector(durationSelector)` **DEPRECATED** ###
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/debouncewithselector.js "View in source")
 
 Ignores values from an observable sequence which are followed by another value within a computed debounced duration.
 
@@ -25,7 +25,7 @@ var source = Rx.Observable.for(
         return Rx.Observable.timer(x)
     })
     .map(function(x, i) { return i; })
-    .throttleWithSelector(function (x) {
+    .debounceWithSelector(function (x) {
         return Rx.Observable.timer(700);
     });
 
@@ -48,7 +48,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/throttlewithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throttlewithselector.js)
+- [`/src/core/linq/observable/debouncewithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/debouncewithselector.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -69,4 +69,4 @@ NuGet Packages:
 - [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
 
 Unit Tests:
-- [`/tests/observable/throttlewithselector.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/throttlewithselector.js)
+- [`/tests/observable/debounce.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/debouncewithselector.js)

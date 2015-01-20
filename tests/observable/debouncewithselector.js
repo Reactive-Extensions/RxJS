@@ -1,4 +1,4 @@
-QUnit.module('Throttle');
+QUnit.module('Debounce');
 
 var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
@@ -7,7 +7,7 @@ var Observable = Rx.Observable,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-test('Throttle_TimeSpan_AllPass', function () {
+test('Debounce_TimeSpan_AllPass', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -20,7 +20,7 @@ test('Throttle_TimeSpan_AllPass', function () {
     );
 
     var res = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function () { return Observable.timer(20, scheduler); });
+        return xs.debounceWithSelector(function () { return Observable.timer(20, scheduler); });
     });
 
     res.messages.assertEqual(
@@ -36,7 +36,7 @@ test('Throttle_TimeSpan_AllPass', function () {
     );
 });
 
-test('Throttle_TimeSpan_AllPass_ErrorEnd', function () {
+test('Debounce_TimeSpan_AllPass_ErrorEnd', function () {
     var ex = new Error();
 
     var scheduler = new TestScheduler();
@@ -51,7 +51,7 @@ test('Throttle_TimeSpan_AllPass_ErrorEnd', function () {
     );
 
     var res = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function () { return Observable.timer(20, scheduler); });
+        return xs.debounceWithSelector(function () { return Observable.timer(20, scheduler); });
     });
 
     res.messages.assertEqual(
@@ -67,7 +67,7 @@ test('Throttle_TimeSpan_AllPass_ErrorEnd', function () {
     );
 });
 
-test('Throttle_TimeSpan_AllDrop', function () {
+test('Debounce_TimeSpan_AllDrop', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -83,7 +83,7 @@ test('Throttle_TimeSpan_AllDrop', function () {
     );
 
     var res = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function () { return Observable.timer(40, scheduler); });
+        return xs.debounceWithSelector(function () { return Observable.timer(40, scheduler); });
     });
 
     res.messages.assertEqual(
@@ -96,7 +96,7 @@ test('Throttle_TimeSpan_AllDrop', function () {
     );
 });
 
-test('Throttle_TimeSpan_AllDrop_ErrorEnd', function () {
+test('Debounce_TimeSpan_AllDrop_ErrorEnd', function () {
     var ex = new Error();
 
     var scheduler = new TestScheduler();
@@ -114,7 +114,7 @@ test('Throttle_TimeSpan_AllDrop_ErrorEnd', function () {
     );
 
     var res = scheduler.startWithCreate(function () {
-        return xs.throttle(40, scheduler)
+        return xs.debounce(40, scheduler)
     });
 
     res.messages.assertEqual(
@@ -126,7 +126,7 @@ test('Throttle_TimeSpan_AllDrop_ErrorEnd', function () {
     );
 });
 
-test('Throttle_Duration_DelayBehavior', function () {
+test('Debounce_Duration_DelayBehavior', function () {
     var results, scheduler, xs, ys;
     scheduler = new TestScheduler();
     xs = scheduler.createHotObservable(
@@ -147,7 +147,7 @@ test('Throttle_Duration_DelayBehavior', function () {
     ];
 
     results = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector((function (x) {
+        return xs.debounceWithSelector((function (x) {
             return ys[x];
         }));
     });
@@ -168,13 +168,13 @@ test('Throttle_Duration_DelayBehavior', function () {
     ys[4].subscriptions.assertEqual(subscribe(400, 400 + 20));
 });
 
-test('Throttle_Duration_ThrottleBehavior', function () {
+test('Debounce_Duration_DebounceBehavior', function () {
     var results, scheduler, xs, ys;
     scheduler = new TestScheduler();
     xs = scheduler.createHotObservable(onNext(150, -1), onNext(250, 0), onNext(280, 1), onNext(310, 2), onNext(350, 3), onNext(400, 4), onCompleted(550));
     ys = [scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), scheduler.createColdObservable(onNext(40, 42), onNext(45, 99)), scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), scheduler.createColdObservable(onNext(60, 42), onNext(65, 99)), scheduler.createColdObservable(onNext(20, 42), onNext(25, 99))];
     results = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function (x) {
+        return xs.debounceWithSelector(function (x) {
             return ys[x];
         });
     });
@@ -187,13 +187,13 @@ test('Throttle_Duration_ThrottleBehavior', function () {
     ys[4].subscriptions.assertEqual(subscribe(400, 400 + 20));
 });
 
-test('Throttle_Duration_EarlyCompletion', function () {
+test('Debounce_Duration_EarlyCompletion', function () {
     var results, scheduler, xs, ys;
     scheduler = new TestScheduler();
     xs = scheduler.createHotObservable(onNext(150, -1), onNext(250, 0), onNext(280, 1), onNext(310, 2), onNext(350, 3), onNext(400, 4), onCompleted(410));
     ys = [scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), scheduler.createColdObservable(onNext(40, 42), onNext(45, 99)), scheduler.createColdObservable(onNext(20, 42), onNext(25, 99)), scheduler.createColdObservable(onNext(60, 42), onNext(65, 99)), scheduler.createColdObservable(onNext(20, 42), onNext(25, 99))];
     results = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function (x) {
+        return xs.debounceWithSelector(function (x) {
             return ys[x];
         });
     });
@@ -206,13 +206,13 @@ test('Throttle_Duration_EarlyCompletion', function () {
     ys[4].subscriptions.assertEqual(subscribe(400, 410));
 });
 
-test('Throttle_Duration_InnerError', function () {
+test('Debounce_Duration_InnerError', function () {
     var ex, results, scheduler, xs;
     scheduler = new TestScheduler();
     xs = scheduler.createHotObservable(onNext(150, 1), onNext(250, 2), onNext(350, 3), onNext(450, 4), onCompleted(550));
     ex = 'ex';
     results = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function (x) {
+        return xs.debounceWithSelector(function (x) {
             if (x < 4) {
                 return scheduler.createColdObservable(onNext(x * 10, "Ignore"), onNext(x * 10 + 5, "Aargh!"));
             } else {
@@ -224,13 +224,13 @@ test('Throttle_Duration_InnerError', function () {
     xs.subscriptions.assertEqual(subscribe(200, 490));
 });
 
-test('Throttle_Duration_OuterError', function () {
+test('Debounce_Duration_OuterError', function () {
     var ex, results, scheduler, xs;
     ex = 'ex';
     scheduler = new TestScheduler();
     xs = scheduler.createHotObservable(onNext(150, 1), onNext(250, 2), onNext(350, 3), onNext(450, 4), onError(460, ex));
     results = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function (x) {
+        return xs.debounceWithSelector(function (x) {
             return scheduler.createColdObservable(onNext(x * 10, "Ignore"), onNext(x * 10 + 5, "Aargh!"));
         });
     });
@@ -238,13 +238,13 @@ test('Throttle_Duration_OuterError', function () {
     xs.subscriptions.assertEqual(subscribe(200, 460));
 });
 
-test('Throttle_Duration_SelectorThrows', function () {
+test('Debounce_Duration_SelectorThrows', function () {
     var ex, results, scheduler, xs;
     ex = 'ex';
     scheduler = new TestScheduler();
     xs = scheduler.createHotObservable(onNext(150, 1), onNext(250, 2), onNext(350, 3), onNext(450, 4), onCompleted(550));
     results = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function (x) {
+        return xs.debounceWithSelector(function (x) {
             if (x < 4) {
                 return scheduler.createColdObservable(onNext(x * 10, "Ignore"), onNext(x * 10 + 5, "Aargh!"));
             } else {
@@ -256,12 +256,12 @@ test('Throttle_Duration_SelectorThrows', function () {
     xs.subscriptions.assertEqual(subscribe(200, 450));
 });
 
-test('Throttle_Duration_InnerDone_DelayBehavior', function () {
+test('Debounce_Duration_InnerDone_DelayBehavior', function () {
     var results, scheduler, xs;
     scheduler = new TestScheduler();
     xs = scheduler.createHotObservable(onNext(150, 1), onNext(250, 2), onNext(350, 3), onNext(450, 4), onCompleted(550));
     results = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function (x) {
+        return xs.debounceWithSelector(function (x) {
             return scheduler.createColdObservable(onCompleted(x * 10));
         });
     });
@@ -269,12 +269,12 @@ test('Throttle_Duration_InnerDone_DelayBehavior', function () {
     xs.subscriptions.assertEqual(subscribe(200, 550));
 });
 
-test('Throttle_Duration_InnerDone_ThrottleBehavior', function () {
+test('Debounce_Duration_InnerDone_DebounceBehavior', function () {
     var results, scheduler, xs;
     scheduler = new TestScheduler();
     xs = scheduler.createHotObservable(onNext(150, 1), onNext(250, 2), onNext(280, 3), onNext(300, 4), onNext(400, 5), onNext(410, 6), onCompleted(550));
     results = scheduler.startWithCreate(function () {
-        return xs.throttleWithSelector(function (x) {
+        return xs.debounceWithSelector(function (x) {
             return scheduler.createColdObservable(onCompleted(x * 10));
         });
     });
