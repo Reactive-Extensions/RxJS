@@ -1,20 +1,21 @@
-### `Rx.Observable.prototype.and(rightSource)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/and.js "View in source")
+### `Rx.Observable.prototype.thenDo(selector)`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/thendo.js "View in source")
 
-Propagates the observable sequence that reacts first.
+Matches when the observable sequence has an available value and projects the value.
 
 #### Arguments
-1. `right` *(`Observable`)*: Observable sequence to match with the current sequence.
+1. `selector` *(`Function`)*: Selector that will be invoked for values in the source sequence.
 
 #### Returns
-*(`Pattern`)*: Pattern object that matches when both observable sequences have an available value.
+*(`Plan`)*: Plan that produces the projected values, to be fed (with other plans) to the when operator.
 
 #### Example
 ```js
-// Choice of either plan, the first set of timers or second set
+var selector = function (x, y) { return x + ", " + y; };
+
 var source = Rx.Observable.when(
-    Rx.Observable.timer(200).and(Rx.Observable.timer(300)).thenDo(function (x, y) { return 'first'; }),
-    Rx.Observable.timer(400).and(Rx.Observable.timer(500)).thenDo(function (x, y) { return 'second'; }),
+    Rx.Observable.interval(250).and(Rx.Observable.of("A", "B", "C")).thenDo(selector),
+    Rx.Observable.interval(300).and(Rx.Observable.of("a", "b")).thenDo(selector)
 );
 
 var subscription = source.subscribe(
@@ -28,15 +29,18 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
-// => Next: first
-// => Next: second
+// => Next: 0, A 
+// => Next: 0, a
+// => Next: 1, B
+// => Next: 1, b
+// => Next: 2, C
 // => Completed
 ```
 
 ### Location
 
 File:
-- [/src/core/linq/observable/and.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/and.js)
+- [/src/core/linq/observable/thendo.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/thendo.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

@@ -30,4 +30,4 @@ NuGet Dependencies:
 - [`and`](../api/core/operators/and.md)
 
 ### `Pattern Instance Methods`
-- [`then`](../api/core/operators/thendo.md)
+- [`thenDo`](../api/core/operators/thendo.md)
