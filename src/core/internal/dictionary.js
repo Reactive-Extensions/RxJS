@@ -66,7 +66,7 @@
           // Hack check for valueOf
           var valueOf = obj.valueOf();
           if (typeof valueOf === 'number') { return numberHashFn(valueOf); }
-          if (typeof obj === 'string') { return stringHashFn(valueOf); }
+          if (typeof valueOf === 'string') { return stringHashFn(valueOf); }
         }
         if (obj.hashCode) { return obj.hashCode(); }
 
