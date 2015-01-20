@@ -54,4 +54,4 @@ NuGet Packages:
 - [`RxJS-JoinPatterns`](http://www.nuget.org/packages/RxJS-JoinPatterns)
 
 Unit Tests:
-- [/tests/observable/and.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/and.js)
+- [/tests/observable/when.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/when.js)
