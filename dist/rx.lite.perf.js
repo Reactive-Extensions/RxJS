@@ -1956,7 +1956,14 @@
     if (typeof this.subscribeRaw === 'function') {
       return this.subscribeRaw(observer, false);
     }
-    return this.subscribe(observer);
+    var d = disposableEmpty;
+    try {
+      d = this.subscribe(observer);
+    } catch (e) {
+      observer.onError(e);
+    }
+
+    return d;
   };
 
   function SafeObserver(observer, disposable) {

@@ -24,7 +24,7 @@
   var Rx = {
       internals: {},
       config: {
-        Promise: root.Promise,
+        Promise: root.Promise
       },
       helpers: { }
   };
@@ -6635,7 +6635,7 @@
           // Hack check for valueOf
           var valueOf = obj.valueOf();
           if (typeof valueOf === 'number') { return numberHashFn(valueOf); }
-          if (typeof obj === 'string') { return stringHashFn(valueOf); }
+          if (typeof valueOf === 'string') { return stringHashFn(valueOf); }
         }
         if (obj.hashCode) { return obj.hashCode(); }
 
@@ -7784,7 +7784,7 @@
   /**
    *  Matches when the observable sequence has an available value and projects the value.
    *
-   *  @param selector Selector that will be invoked for values in the source sequence.
+   *  @param {Function} selector Selector that will be invoked for values in the source sequence.
    *  @returns {Plan} Plan that produces the projected values, to be fed (with other plans) to the when operator.
    */
   observableProto.thenDo = function (selector) {

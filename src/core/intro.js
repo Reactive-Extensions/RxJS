@@ -22,7 +22,7 @@
   var Rx = {
       internals: {},
       config: {
-        Promise: root.Promise,
+        Promise: root.Promise
       },
       helpers: { }
   };
