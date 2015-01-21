@@ -1,52 +1,56 @@
-  var MapProducer = (function (__super__) {
-    inherits(MapProducer, __super__);
+  var MapObservable = (function (__super__) {
+    inherits(MapObservable, __super__);
 
-    function MapProducer(source, selector, thisArg) {
-      __super__.call(this);
+    function MapObservable(source, selector, thisArg) {
       this.source = source;
-      this._selector = bindCallback(selector, thisArg, 3);
+      this.selector = bindCallback(selector, thisArg, 3);
+      __super__.call(this);
     }
 
-    MapProducer.prototype.run = function(observer, cancel, setSink) {
-      var sink = new MapImpl(this, observer, cancel);
-      setSink(sink);
-      return this.source.subscribeSafe(sink);
+    MapObservable.prototype.internalMap = function (selector, thisArg) {
+      var self = this;
+      return new MapObservable(this.source, function (x, i, o) { return selector(self.selector(x, i, o), i, o); }, thisArg)
     };
 
-    var MapImpl = (function (__sub__) {
-      inherits(MapImpl, __sub__);
+    MapObservable.prototype.subscribeCore = function (observer) {
+      return this.source.subscribe(new MapObserver(observer, this.selector, this));
+    };
 
-      function MapImpl(parent, observer, cancel) {
-        __sub__.call(this, observer, cancel);
-        this._parent = parent;
-        this._index = 0;
+    return MapObservable;
+
+  }(ObservableBase));
+
+  var MapObserver = (function (__super__) {
+    inherits(MapObserver, __super__);
+
+    function MapObserver(observer, selector, source) {
+      this.observer = observer;
+      this.selector = selector;
+      this.source = source;
+      this.index = 0;
+      __super__.call(this);
+    }
+
+    MapObserver.prototype.next = function(x) {
+      try {
+        var result = this.selector(x, this.index++, this.source);
+      } catch(e) {
+        this.observer.onError(e);
+        return;
       }
+      this.observer.onNext(result);
+    };
 
-      MapImpl.prototype.onNext = function(x) {
-        try {
-          var result = this._parent._selector(x, this._index++, this._parent);
-        } catch (e) {
-          this._observer.onError(e);
-          this.dispose();
-        }
-        this._observer.onNext(result);
-      };
+    MapObserver.prototype.error = function (e) {
+      this.observer.onError(e);
+    };
 
-      MapImpl.prototype.onError = function(e) {
-        this._observer.onError(e);
-        this.dispose();
-      };
+    MapObserver.prototype.completed = function () {
+      this.observer.onCompleted();
+    };
 
-      MapImpl.prototype.onCompleted = function () {
-        this._observer.onCompleted();
-        this.dispose();
-      };
-
-      return MapImpl;
-    }(Sink));
-
-    return MapProducer;
-  }(Producer));
+    return MapObserver;
+  }(AbstractObserver));
 
   /**
   * Projects each element of an observable sequence into a new form by incorporating the element's index.
@@ -56,5 +60,7 @@
   */
   observableProto.map = observableProto.select = function (selector, thisArg) {
     var selectorFn = typeof selector === 'function' ? selector : function () { return selector; };
-    return new MapProducer(this, selectorFn, thisArg);
+    return this instanceof MapObservable ?
+      this.internalMap(selector, thisArg) :
+      new MapObservable(this, selectorFn, thisArg);
   };

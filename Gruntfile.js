@@ -1560,15 +1560,10 @@ var browsers = [{
             'src/core/internal/enumerator.js',
             'src/core/internal/enumerable.js',
             'src/core/observer-lite.js',
-            'src/core/perf/observers.js',
             'src/core/abstractobserver.js',
             'src/core/anonymousobserver.js',
-            'src/core/anonymousobserver-extensions.js',
             'src/core/observable.js',
-            'src/core/perf/observable-extensions.js',
-            'src/core/perf/safeobserver.js',
-            'src/core/perf/producer.js',
-            'src/core/perf/sink.js',
+            'src/core/perf/observablebase.js',
             'src/core/scheduledobserver.js',
 
             // Creation
@@ -1631,7 +1626,7 @@ var browsers = [{
             'src/core/linq/observable/skipwhile.js',
             'src/core/linq/observable/take.js',
             'src/core/linq/observable/takewhile.js',
-            'src/core/linq/observable/where.js',
+            'src/core/perf/operators/filter.js',
 
             // Async Operators
             'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable

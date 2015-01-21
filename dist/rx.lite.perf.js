@@ -24,7 +24,7 @@
   var Rx = {
       internals: {},
       config: {
-        Promise: root.Promise,
+        Promise: root.Promise
       },
       helpers: { }
   };
@@ -1709,56 +1709,6 @@
     return new AnonymousObserver(onNext, onError, onCompleted);
   };
 
-  // NoOp
-  function NoOpObserver() { }
-  NoOpObserver.prototype.onNext = noop;
-  NoOpObserver.prototype.onError = noop;
-  NoOpObserver.prototype.onCompleted = noop;
-  NoOpObserver.instance = new NoOpObserver();
-
-  // Done Observer
-  function DoneObserver() { this.error = null; }
-  DoneObserver.prototype.onNext = noop;
-  DoneObserver.prototype.onError = noop;
-  DoneObserver.prototype.onCompleted = noop;
-  DoneObserver.instance = new DoneObserver();
-
-  // Disposed Observer
-  function objDisposed() { throw new Error('Object has been disposed'); }
-  function DisposedObserver() { }
-  DisposedObserver.prototype.onNext = objDisposed;
-  DisposedObserver.prototype.onError = objDisposed;
-  DisposedObserver.prototype.onCompleted = objDisposed;
-  DisposedObserver.instance = new DisposedObserver();
-
-  // Main observer
-  function InternalObserver(observers) { this._observers = observers; }
-  InternalObserver.prototype.onNext = function (x) {
-    for(var i = 0, len = this._observers.length; i < len; i++) {
-      this._observers[i].onNext(x);
-    }
-  };
-  InternalObserver.prototype.onError = function (e) {
-    for(var i = 0, len = this._observers.length; i < len; i++) {
-      this._observers[i].onError(e);
-    }
-  };
-  InternalObserver.prototype.onCompleted = function () {
-    for(var i = 0, len = this._observers.length; i < len; i++) {
-      this._observers[i].onCompleted();
-    }
-  };
-  InternalObserver.prototype.concat = function (o) {
-    return new InternalObserver(this._observers.concat(o));
-  };
-  InternalObserver.prototype.remove = function (o) {
-    var os = this._observers.slice(0),i = os.indexOf(o);
-    if (i === -1) { return this; }
-    os.length === 2 ?
-      os[1 - i] :
-      new InternalObserver(os.splice(i, 1));
-  };
-
   /**
    * Abstract base class for implementations of the Observer class.
    * This base class enforces the grammar of observers where OnError and OnCompleted are terminal messages.
@@ -1947,136 +1897,49 @@
     return Observable;
   })();
 
-  /**
-  * Subscribes to the specified source, re-routing synchronous exceptions during invocation of the Subscribe method to the observer's OnError channel.
-  * @param {Observer} observer Observer that will be passed to the observable sequence, and that will be used for exception propagation.
-  * @returns {Disposable} Disposable object used to unsubscribe from the observable sequence.
-  */
-  observableProto.subscribeSafe = function(observer) {
-    if (typeof this.subscribeRaw === 'function') {
-      return this.subscribeRaw(observer, false);
+  var ObservableBase = Rx.ObservableBase = (function (__super__) {
+
+  inherits(ObservableBase, __super__);
+
+  // Fix subscriber to check for undefined or function returned to decorate as Disposable
+  function fixSubscriber(subscriber) {
+    if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
+
+      return typeof subscriber === 'function' ?
+        disposableCreate(subscriber) :
+        disposableEmpty;
     }
-    var d = disposableEmpty;
-    try {
-      d = this.subscribe(observer);
-    } catch (e) {
-      observer.onError(e);
-    }
-
-    return d;
-  };
-
-  function SafeObserver(observer, disposable) {
-    this._observer = observer;
-    this._disposable = disposable;
-  }
-
-  SafeObserver.create = function (observer, disposable) {
-    if (typeof observer.makeSafe === 'function') {
-      return observer.makeSafe(disposable);
-    }
-    return new SafeObserver(observer, disposable);
-  };
-
-  SafeObserver.prototype.onNext = function(x) {
-    var noError = false;
-    try {
-      this._observer.onNext(x);
-      noError = true;
-    } catch (e) {
-      throw e;
-    } finally {
-      !noError && this._disposable.dispose();
-    }
-  };
-
-  SafeObserver.prototype.onError = function(e) {
-    try {
-      this._observer.onError(e);
-    } catch (e) {
-      throw e;
-    } finally {
-      this._disposable.dispose();
-    }
-  };
-
-  SafeObserver.prototype.onCompleted = function() {
-    try {
-      this._observer.onCompleted();
-    } catch (e) {
-      throw e;
-    } finally {
-      this._disposable.dispose();
-    }
-  };
-
-  var Producer = Rx.internals.Producer = (function (__super__) {
-
-    inherits(Producer, __super__);
 
     function subscribe(observer) {
-      this.subscribeRaw(observer, true);
+      var self = this;
+      var ado = new AutoDetachObserver(observer);
+      if (currentThreadScheduler.scheduleRequired()) {
+        currentThreadScheduler.scheduleWithState(ado, function (_, ado) { return self.scheduledSubscribe(_, ado); })
+      } else {
+        ado.setDisposable(fixSubscriber(this.subscribeCore(ado)));
+      }
+
+      return ado;
     }
 
-    function Producer() {
+    function ObservableBase() {
       __super__.call(this, subscribe);
     }
 
-    Producer.prototype.subscribeRaw = function (observer, enableSafeguard) {
-      var sink = new SingleAssignmentDisposable(),
-        subscription = new SingleAssignmentDisposable(),
-        d = new CompositeDisposable(sink, subscription);
-
-      function setDisposable(s) {
-        sink.setDisposable(s);
+    ObservableBase.prototype.scheduledSubscribe = function (_, autoDetachObserver) {
+      try {
+        autoDetachObserver.setDisposable(fixSubscriber(this.subscribeCore(autoDetachObserver)));
+      } catch (e) {
+        if (!autoDetachObserver.fail(e)) {
+          throw e;
+        }
       }
-
-      enableSafeguard && (observer = SafeObserver.create(observer, d));
-
-      if (currentThreadScheduler.scheduleRequired()) {
-        currentThreadScheduler.scheduleWithState(this, function (_, me) {
-          subscription.setDisposable(me.run(observer, subscription, setDisposable));
-        });
-      } else {
-        subscription.setDisposable(this.run(observer, subscription, setDisposable));
-      }
-
-      return d;
+      return disposableEmpty;
     };
 
-    return Producer;
+    return ObservableBase;
 
   }(Observable));
-
-  var Sink = Rx.internals.Sink = (function () {
-    function Sink(observer, cancel) {
-      this._observer = observer;
-      this._cancel = cancel;
-    }
-
-    Sink.prototype.dispose = function () {
-      this._observer = NoOpObserver.instance;
-      if (this._cancel) {
-        this._cancel.dispose();
-        this._cancel = null;
-      }
-    };
-
-    Sink.prototype.getForwarder = function () { return new _(this); };
-
-    function _(forward) { this._forward = forward; }
-    _.prototype.onNext = function (x) { this._forward.onNext(x); };
-    _.prototype.onError = function (e) {
-      this._forward.onError(e);
-      this._forward.dispose();
-    };
-    _.prototype.onCompleted = function () {
-      this._forward.onCompleted();
-      this._forward.dispose();
-    };
-
-    return Sink;
-  }());
 
   var ScheduledObserver = Rx.internals.ScheduledObserver = (function (__super__) {
     inherits(ScheduledObserver, __super__);
@@ -3516,55 +3379,59 @@
       concatMap(this, function () { return selector; });
   };
 
-  var MapProducer = (function (__super__) {
-    inherits(MapProducer, __super__);
+  var MapObservable = (function (__super__) {
+    inherits(MapObservable, __super__);
 
-    function MapProducer(source, selector, thisArg) {
-      __super__.call(this);
+    function MapObservable(source, selector, thisArg) {
       this.source = source;
-      this._selector = bindCallback(selector, thisArg, 3);
+      this.selector = bindCallback(selector, thisArg, 3);
+      __super__.call(this);
     }
 
-    MapProducer.prototype.run = function(observer, cancel, setSink) {
-      var sink = new MapImpl(this, observer, cancel);
-      setSink(sink);
-      return this.source.subscribeSafe(sink);
+    MapObservable.prototype.internalMap = function (selector, thisArg) {
+      var self = this;
+      return new MapObservable(this.source, function (x, i, o) { return selector(self.selector(x, i, o), i, o); }, thisArg)
     };
 
-    var MapImpl = (function (__sub__) {
-      inherits(MapImpl, __sub__);
+    MapObservable.prototype.subscribeCore = function (observer) {
+      return this.source.subscribe(new MapObserver(observer, this.selector, this));
+    };
 
-      function MapImpl(parent, observer, cancel) {
-        __sub__.call(this, observer, cancel);
-        this._parent = parent;
-        this._index = 0;
+    return MapObservable;
+
+  }(ObservableBase));
+
+  var MapObserver = (function (__super__) {
+    inherits(MapObserver, __super__);
+
+    function MapObserver(observer, selector, source) {
+      this.observer = observer;
+      this.selector = selector;
+      this.source = source;
+      this.index = 0;
+      __super__.call(this);
+    }
+
+    MapObserver.prototype.next = function(x) {
+      try {
+        var result = this.selector(x, this.index++, this.source);
+      } catch(e) {
+        this.observer.onError(e);
+        return;
       }
+      this.observer.onNext(result);
+    };
 
-      MapImpl.prototype.onNext = function(x) {
-        try {
-          var result = this._parent._selector(x, this._index++, this._parent);
-        } catch (e) {
-          this._observer.onError(e);
-          this.dispose();
-        }
-        this._observer.onNext(result);
-      };
+    MapObserver.prototype.error = function (e) {
+      this.observer.onError(e);
+    };
 
-      MapImpl.prototype.onError = function(e) {
-        this._observer.onError(e);
-        this.dispose();
-      };
+    MapObserver.prototype.completed = function () {
+      this.observer.onCompleted();
+    };
 
-      MapImpl.prototype.onCompleted = function () {
-        this._observer.onCompleted();
-        this.dispose();
-      };
-
-      return MapImpl;
-    }(Sink));
-
-    return MapProducer;
-  }(Producer));
+    return MapObserver;
+  }(AbstractObserver));
 
   /**
   * Projects each element of an observable sequence into a new form by incorporating the element's index.
@@ -3574,7 +3441,9 @@
   */
   observableProto.map = observableProto.select = function (selector, thisArg) {
     var selectorFn = typeof selector === 'function' ? selector : function () { return selector; };
-    return new MapProducer(this, selectorFn, thisArg);
+    return this instanceof MapObservable ?
+      this.internalMap(selector, thisArg) :
+      new MapObservable(this, selectorFn, thisArg);
   };
 
   /**
@@ -3747,31 +3616,70 @@
     }, source);
   };
 
+  var FilterObservable = (function (__super__) {
+    inherits(FilterObservable, __super__);
+
+    function FilterObservable(source, predicate, thisArg) {
+      this.source = source;
+      this.predicate = bindCallback(predicate, thisArg, 3);
+      __super__.call(this);
+    }
+
+    FilterObservable.prototype.subscribeCore = function (observer) {
+      return this.source.subscribe(new FilterObserver(observer, this.predicate, this));
+    };
+
+    FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
+      var self = this;
+      return new FilterObservable(this.source, function(x, i, o) { return self.predciate(x, i, o) && predicate(x, i, o); }, thisArg);
+    };
+
+    return FilterObservable;
+
+  }(ObservableBase));
+
+  var FilterObserver = (function (__super__) {
+    inherits(FilterObserver, __super__);
+
+    function FilterObserver(observer, predicate, source) {
+      this.observer = observer;
+      this.predicate = predicate;
+      this.source = source;
+      this.index = 0;
+      __super__.call(this);
+    }
+
+    FilterObserver.prototype.next = function(x) {
+      try {
+        var shouldYield = this.predicate(x, this.index++, this.source);
+      } catch(e) {
+        this.observer.onError(e);
+        return;
+      }
+      shouldYield && this.observer.onNext(x);
+    };
+
+    FilterObserver.prototype.error = function (e) {
+      this.observer.onError(e);
+    };
+
+    FilterObserver.prototype.completed = function () {
+      this.observer.onCompleted();
+    };
+
+    return FilterObserver;
+  }(AbstractObserver));
+
   /**
-   *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
-   *
-   * @example
-   *  var res = source.where(function (value) { return value < 10; });
-   *  var res = source.where(function (value, index) { return value < 10 || index < 10; });
-   * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
-   * @param {Any} [thisArg] Object to use as this when executing callback.
-   * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.
-   */
-  observableProto.where = observableProto.filter = function (predicate, thisArg) {
-    var source = this;
-    predicate = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      var count = 0;
-      return source.subscribe(function (value) {
-        try {
-          var shouldRun = predicate(value, count++, source);
-        } catch (e) {
-          o.onError(e);
-          return;
-        }
-        shouldRun && o.onNext(value);
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, source);
+  *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
+  * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
+  * @param {Any} [thisArg] Object to use as this when executing callback.
+  * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.
+  */
+  observableProto.filter = observableProto.where = function (predicate, thisArg) {
+    return this instanceof FilterObservable ?
+      this.internalFilter(predicate, thisArg) :
+      new FilterObservable(this, predicate, thisArg);
   };
 
   /**
