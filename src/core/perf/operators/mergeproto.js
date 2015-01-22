@@ -36,7 +36,7 @@
 
       // Check for promises support
       isPromise(xs) && (xs = observableFromPromise(xs));
-      subscription.setDisposable(xs.subscribe(new InnerObserver(xs, this)));
+      subscription.setDisposable(xs.subscribe(new InnerObserver(xs, this, subscription)));
     };
 
     MergeObserver.prototype.next = function (innerSource) {
@@ -49,7 +49,7 @@
     };
 
     MergeObserver.prototype.error = function (e) {
-      this.observer.onError(error);
+      this.observer.onError(e);
     };
 
     MergeObserver.prototype.completed = function () {
@@ -59,17 +59,18 @@
 
     var InnerObserver = (function(__base__) {
       inherits(InnerObserver, __base__);
-      function InnerObserver(xs, self) {
+      function InnerObserver(xs, self, subscription) {
         this.xs = xs;
         this.self = self;
+        this.subscription = subscription;
         __base__.call(this);
       }
       InnerObserver.prototype.next = function(x) { this.self.observer.onNext(x); };
       InnerObserver.prototype.error = function(e) { this.self.observer.onError(e); };
       InnerObserver.prototype.completed = function () {
-        this.self.g.remove(subscription);
+        this.self.g.remove(this.subscription);
         if (this.self.q.length > 0) {
-          this.self.handleSubscribe(q.shift());
+          this.self.handleSubscribe(this.self.q.shift());
         } else {
           this.self.activeCount--;
           this.self.stopped && this.self.activeCount === 0 && this.self.observer.onCompleted();
