@@ -40,7 +40,7 @@ Because of this, we can now do a number of very interesting things such as combi
 var source = Rx.Observable.range(0, 3)
   .flatMap(function (x) { return Promise.resolve(x * x); });
 
-var subscription = source1.subscribe(
+var subscription = source.subscribe(
   function (x) { console.log('onNext: %s', x); },
   function (e) { console.log('onError: %s', e); },
   function () { console.log('onCompleted'); });
