@@ -2199,6 +2199,50 @@
     return Observable;
   })();
 
+  var ObservableBase = Rx.ObservableBase = (function (__super__) {
+
+  inherits(ObservableBase, __super__);
+
+  // Fix subscriber to check for undefined or function returned to decorate as Disposable
+  function fixSubscriber(subscriber) {
+    if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
+
+      return typeof subscriber === 'function' ?
+        disposableCreate(subscriber) :
+        disposableEmpty;
+    }
+
+    function subscribe(observer) {
+      var self = this;
+      var ado = new AutoDetachObserver(observer);
+      if (currentThreadScheduler.scheduleRequired()) {
+        currentThreadScheduler.scheduleWithState(ado, function (_, ado) { return self.scheduledSubscribe(_, ado); })
+      } else {
+        ado.setDisposable(fixSubscriber(this.subscribeCore(ado)));
+      }
+
+      return ado;
+    }
+
+    function ObservableBase() {
+      __super__.call(this, subscribe);
+    }
+
+    ObservableBase.prototype.scheduledSubscribe = function (_, autoDetachObserver) {
+      try {
+        autoDetachObserver.setDisposable(fixSubscriber(this.subscribeCore(autoDetachObserver)));
+      } catch (e) {
+        if (!autoDetachObserver.fail(e)) {
+          throw e;
+        }
+      }
+      return disposableEmpty;
+    };
+
+    return ObservableBase;
+
+  }(Observable));
+
    /**
    *  Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
    *
@@ -4076,27 +4120,71 @@
     }, this);
   };
 
+  var MapObservable = (function (__super__) {
+    inherits(MapObservable, __super__);
+
+    function MapObservable(source, selector, thisArg) {
+      this.source = source;
+      this.selector = bindCallback(selector, thisArg, 3);
+      __super__.call(this);
+    }
+
+    MapObservable.prototype.internalMap = function (selector, thisArg) {
+      var self = this;
+      return new MapObservable(this.source, function (x, i, o) { return selector(self.selector(x, i, o), i, o); }, thisArg)
+    };
+
+    MapObservable.prototype.subscribeCore = function (observer) {
+      return this.source.subscribe(new MapObserver(observer, this.selector, this));
+    };
+
+    return MapObservable;
+
+  }(ObservableBase));
+
+  var MapObserver = (function (__super__) {
+    inherits(MapObserver, __super__);
+
+    function MapObserver(observer, selector, source) {
+      this.observer = observer;
+      this.selector = selector;
+      this.source = source;
+      this.index = 0;
+      __super__.call(this);
+    }
+
+    MapObserver.prototype.next = function(x) {
+      try {
+        var result = this.selector(x, this.index++, this.source);
+      } catch(e) {
+        this.observer.onError(e);
+        return;
+      }
+      this.observer.onNext(result);
+    };
+
+    MapObserver.prototype.error = function (e) {
+      this.observer.onError(e);
+    };
+
+    MapObserver.prototype.completed = function () {
+      this.observer.onCompleted();
+    };
+
+    return MapObserver;
+  }(AbstractObserver));
+
   /**
-   * Projects each element of an observable sequence into a new form by incorporating the element's index.
-   * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
-   * @param {Any} [thisArg] Object to use as this when executing callback.
-   * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source.
-   */
-  observableProto.select = observableProto.map = function (selector, thisArg) {
-    var selectorFn = isFunction(selector) ? bindCallback(selector, thisArg, 3) : function () { return selector; },
-        source = this;
-    return new AnonymousObservable(function (o) {
-      var count = 0;
-      return source.subscribe(function (value) {
-        try {
-          var result = selectorFn(value, count++, source);
-        } catch (e) {
-          o.onError(e);
-          return;
-        }
-        o.onNext(result);
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, source);
+  * Projects each element of an observable sequence into a new form by incorporating the element's index.
+  * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+  * @param {Any} [thisArg] Object to use as this when executing callback.
+  * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source.
+  */
+  observableProto.map = observableProto.select = function (selector, thisArg) {
+    var selectorFn = typeof selector === 'function' ? selector : function () { return selector; };
+    return this instanceof MapObservable ?
+      this.internalMap(selector, thisArg) :
+      new MapObservable(this, selectorFn, thisArg);
   };
 
   /**
@@ -4321,31 +4409,70 @@
     }, source);
   };
 
+  var FilterObservable = (function (__super__) {
+    inherits(FilterObservable, __super__);
+
+    function FilterObservable(source, predicate, thisArg) {
+      this.source = source;
+      this.predicate = bindCallback(predicate, thisArg, 3);
+      __super__.call(this);
+    }
+
+    FilterObservable.prototype.subscribeCore = function (observer) {
+      return this.source.subscribe(new FilterObserver(observer, this.predicate, this));
+    };
+
+    FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
+      var self = this;
+      return new FilterObservable(this.source, function(x, i, o) { return self.predciate(x, i, o) && predicate(x, i, o); }, thisArg);
+    };
+
+    return FilterObservable;
+
+  }(ObservableBase));
+
+  var FilterObserver = (function (__super__) {
+    inherits(FilterObserver, __super__);
+
+    function FilterObserver(observer, predicate, source) {
+      this.observer = observer;
+      this.predicate = predicate;
+      this.source = source;
+      this.index = 0;
+      __super__.call(this);
+    }
+
+    FilterObserver.prototype.next = function(x) {
+      try {
+        var shouldYield = this.predicate(x, this.index++, this.source);
+      } catch(e) {
+        this.observer.onError(e);
+        return;
+      }
+      shouldYield && this.observer.onNext(x);
+    };
+
+    FilterObserver.prototype.error = function (e) {
+      this.observer.onError(e);
+    };
+
+    FilterObserver.prototype.completed = function () {
+      this.observer.onCompleted();
+    };
+
+    return FilterObserver;
+  }(AbstractObserver));
+
   /**
-   *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
-   *
-   * @example
-   *  var res = source.where(function (value) { return value < 10; });
-   *  var res = source.where(function (value, index) { return value < 10 || index < 10; });
-   * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
-   * @param {Any} [thisArg] Object to use as this when executing callback.
-   * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.
-   */
-  observableProto.where = observableProto.filter = function (predicate, thisArg) {
-    var source = this;
-    predicate = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      var count = 0;
-      return source.subscribe(function (value) {
-        try {
-          var shouldRun = predicate(value, count++, source);
-        } catch (e) {
-          o.onError(e);
-          return;
-        }
-        shouldRun && o.onNext(value);
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, source);
+  *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
+  * @param {Function} predicate A function to test each source element for a condition; the second parameter of the function represents the index of the source element.
+  * @param {Any} [thisArg] Object to use as this when executing callback.
+  * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.
+  */
+  observableProto.filter = observableProto.where = function (predicate, thisArg) {
+    return this instanceof FilterObservable ?
+      this.internalFilter(predicate, thisArg) :
+      new FilterObservable(this, predicate, thisArg);
   };
 
   /**

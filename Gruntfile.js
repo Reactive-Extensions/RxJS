@@ -84,6 +84,7 @@ var browsers = [{
               'src/core/scheduledobserver.js',
               'src/core/observeonobserver.js',
               'src/core/observable.js',
+              'src/core/perf/observablebase.js',
 
               // Concurrency
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
@@ -159,7 +160,7 @@ var browsers = [{
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
               'src/core/linq/observable/groupbyuntil.js',
-              'src/core/linq/observable/select.js',
+              'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
@@ -168,7 +169,7 @@ var browsers = [{
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
               'src/core/linq/observable/takewhile.js',
-              'src/core/linq/observable/where.js',
+              'src/core/perf/operators/filter.js',
 
               // Aggregate Operators
               'src/core/linq/observable/_extremaby.js',
@@ -372,6 +373,7 @@ var browsers = [{
               'src/core/scheduledobserver.js',
               'src/core/observeonobserver.js',
               'src/core/observable.js',
+              'src/core/perf/observablebase.js',
 
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
@@ -446,7 +448,7 @@ var browsers = [{
               'src/core/linq/observable/distinct.js',
               'src/core/linq/observable/groupby.js',
               'src/core/linq/observable/groupbyuntil.js',
-              'src/core/linq/observable/select.js',
+              'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
@@ -455,7 +457,7 @@ var browsers = [{
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
               'src/core/linq/observable/takewhile.js',
-              'src/core/linq/observable/where.js',
+              'src/core/perf/operators/filter.js',
 
               // Aggregate Operators
               'src/core/linq/observable/_extremaby.js',
@@ -659,6 +661,7 @@ var browsers = [{
               'src/core/scheduledobserver.js',
               'src/core/observeonobserver.js',
               'src/core/observable.js',
+              'src/core/perf/observablebase.js',
 
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
@@ -731,7 +734,7 @@ var browsers = [{
               'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
-              'src/core/linq/observable/select.js',
+              'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
@@ -740,7 +743,7 @@ var browsers = [{
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
               'src/core/linq/observable/takewhile.js',
-              'src/core/linq/observable/where.js',
+              'src/core/perf/operators/filter.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -801,6 +804,7 @@ var browsers = [{
               'src/core/scheduledobserver.js',
               'src/core/observeonobserver.js',
               'src/core/observable.js',
+              'src/core/perf/observablebase.js',
 
               // Concurrency
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
@@ -874,7 +878,7 @@ var browsers = [{
               'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
-              'src/core/linq/observable/select.js',
+              'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectmany.js',
@@ -883,7 +887,7 @@ var browsers = [{
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
               'src/core/linq/observable/takewhile.js',
-              'src/core/linq/observable/where.js',
+              'src/core/perf/operators/filter.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -942,6 +946,7 @@ var browsers = [{
               'src/core/anonymousobserver.js',
               'src/core/observable.js',
               'src/core/scheduledobserver.js',
+              'src/core/perf/observablebase.js',
 
               // Creation
               'src/core/linq/observable/toarray.js',
@@ -995,7 +1000,7 @@ var browsers = [{
 
               // Standard Query Operators
               'src/core/linq/observable/concatmap.js',
-              'src/core/linq/observable/select.js',
+              'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectswitch.js',
@@ -1003,7 +1008,7 @@ var browsers = [{
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
               'src/core/linq/observable/takewhile.js',
-              'src/core/linq/observable/where.js',
+              'src/core/perf/operators/filter.js',
 
               // Async Operators
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
@@ -1105,6 +1110,7 @@ var browsers = [{
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
               'src/core/observable.js',
+              'src/core/perf/observablebase.js',
               'src/core/scheduledobserver.js',
 
               // Creation
@@ -1159,7 +1165,7 @@ var browsers = [{
 
               // Standard Query Operators
               'src/core/linq/observable/concatmap.js',
-              'src/core/linq/observable/select.js',
+              'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectswitch.js',
@@ -1167,7 +1173,7 @@ var browsers = [{
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
               'src/core/linq/observable/takewhile.js',
-              'src/core/linq/observable/where.js',
+              'src/core/perf/operators/filter.js',
 
               // Async Operators
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
@@ -1524,170 +1530,6 @@ var browsers = [{
               'src/core/suboutro.js'
             ],
             dest: 'dist/rx.sorting.js'
-          },
-          liteperf: {
-            src: [
-            'src/core/license.js',
-            'src/core/intro.js',
-            'src/core/liteheader.js',
-
-            // Stack trace start
-            'src/core/longstackbegin.js',
-            'src/core/longstacktraces.js',
-
-            'src/core/enumeratorheader.js',
-
-            'src/core/internal/bindcallback.js',
-            'src/core/internal/dontenums.js',
-            'src/core/internal/isequal.js',
-            'src/core/internal/util.js',
-            'src/core/internal/priorityqueue.js',
-            'src/core/disposables/compositedisposable.js',
-            'src/core/disposables/disposable.js',
-            'src/core/disposables/booleandisposable.js',
-            'src/core/disposables/refcountdisposable.js',
-
-            'src/core/concurrency/scheduleditem.js',
-            'src/core/concurrency/scheduler.js',
-            'src/core/concurrency/scheduler.recursive.js',
-            'src/core/concurrency/scheduler.periodic.js',
-            'src/core/concurrency/immediatescheduler.js',
-            'src/core/concurrency/currentthreadscheduler.js',
-            'src/core/concurrency/scheduleperiodicrecursive.js',
-            'src/core/concurrency/timeoutscheduler.js',
-
-            'src/core/notification.js',
-            'src/core/internal/enumerator.js',
-            'src/core/internal/enumerable.js',
-            'src/core/observer-lite.js',
-            'src/core/abstractobserver.js',
-            'src/core/anonymousobserver.js',
-            'src/core/observable.js',
-            'src/core/perf/observablebase.js',
-            'src/core/scheduledobserver.js',
-
-            // Creation
-            'src/core/linq/observable/toarray.js',
-            'src/core/linq/observable/create.js',
-            'src/core/linq/observable/defer.js',
-            'src/core/linq/observable/empty.js',
-            'src/core/linq/observable/from.js',
-            'src/core/linq/observable/fromarray.js',
-            'src/core/linq/observable/never.js',
-            'src/core/linq/observable/of.js',
-            'src/core/linq/observable/pairs.js',
-            'src/core/linq/observable/range.js',
-            'src/core/linq/observable/repeat.js',
-            'src/core/linq/observable/return.js',
-            'src/core/linq/observable/throw.js',
-
-            // Multiple
-            'src/core/linq/observable/catchproto.js',
-            'src/core/linq/observable/catch.js',
-            'src/core/linq/observable/combinelatestproto.js',
-            'src/core/linq/observable/combinelatest.js',
-            'src/core/linq/observable/concatproto.js',
-            'src/core/linq/observable/concat.js',
-            'src/core/linq/observable/concatall.js',
-            'src/core/linq/observable/mergeproto.js',
-            'src/core/linq/observable/merge.js',
-            'src/core/linq/observable/mergeall.js',
-            'src/core/linq/observable/skipuntil.js',
-            'src/core/linq/observable/switch.js',
-            'src/core/linq/observable/takeuntil.js',
-            'src/core/linq/observable/withlatestfrom.js',
-            'src/core/linq/observable/zipproto.js',
-            'src/core/linq/observable/zip.js',
-            'src/core/linq/observable/ziparray.js',
-
-            // Single
-            'src/core/linq/observable/asobservable.js',
-            'src/core/linq/observable/dematerialize.js',
-            'src/core/linq/observable/distinctuntilchanged.js',
-            'src/core/linq/observable/do.js',
-            'src/core/linq/observable/finally.js',
-            'src/core/linq/observable/ignoreelements.js',
-            'src/core/linq/observable/materialize.js',
-            'src/core/linq/observable/repeatproto.js',
-            'src/core/linq/observable/retry.js',
-            'src/core/linq/observable/retrywhen.js',
-            'src/core/linq/observable/scan.js',
-            'src/core/linq/observable/skiplast.js',
-            'src/core/linq/observable/startwith.js',
-            'src/core/linq/observable/takelast.js',
-
-            // Standard Query Operators
-            'src/core/linq/observable/concatmap.js',
-            'src/core/perf/operators/map.js',
-            'src/core/linq/observable/pluck.js',
-            'src/core/linq/observable/selectmany.js',
-            'src/core/linq/observable/selectswitch.js',
-            'src/core/linq/observable/skip.js',
-            'src/core/linq/observable/skipwhile.js',
-            'src/core/linq/observable/take.js',
-            'src/core/linq/observable/takewhile.js',
-            'src/core/perf/operators/filter.js',
-
-            // Async Operators
-            'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-            'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
-            'src/core/linq/observable/fromevent-modern.js', // publish
-            'src/core/linq/observable/fromeventpattern.js', // publish
-            'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
-            'src/core/linq/observable/topromise.js',
-            'src/core/linq/observable/startasync.js',
-
-            // Binding Operators
-            'src/core/linq/observable/multicast.js', // ConnectableObservable
-            'src/core/linq/observable/publish.js',   // mulitcast, Subject
-            'src/core/linq/observable/share.js',   // mulitcast, Subject, Reference counted
-            'src/core/linq/observable/publishlast.js', // multicast, AsyncSubject
-            'src/core/linq/observable/publishvalue.js', // multicast, BehaviorSubject
-            'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
-            'src/core/linq/observable/replay.js', // multicast, ReplaySubject
-            'src/core/linq/observable/sharereplay.js',
-            'src/core/linq/connectableobservable.js',
-
-            // Time operators
-            'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
-            'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
-            'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
-            'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
-            'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
-            'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
-            'src/core/linq/observable/delay.js', // AnonymousObservable, timeoutScheduler, SerialDisposable, materialize, timestamp
-            'src/core/linq/observable/debounce.js', // AnonymousObservable, SerialDisposable, timeoutScheduler, SingleAssignmentDisposable, CompositeDisposable
-            'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
-            'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
-            'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-            'src/core/linq/observable/throttlefirst.js',
-
-            // Backpressure operators
-            'src/core/backpressure/pausable.js',
-            'src/core/backpressure/pausablebuffered.js',
-            'src/core/backpressure/controlled.js',
-
-            // Transducers
-            'src/core/linq/observable/transduce.js',
-
-            'src/core/anonymousobservable.js',
-            'src/core/autodetachobserver.js',
-            'src/core/subjects/innersubscription.js',
-            'src/core/subjects/subject.js',
-            'src/core/subjects/asyncsubject.js',
-            'src/core/subjects/anonymoussubject.js',
-            'src/core/subjects/behaviorsubject.js',
-            'src/core/subjects/replaysubject.js',
-            'src/core/backpressure/pauser.js',
-
-            'src/core/exports.js',
-
-            // End long stack traces
-            'src/core/longstackend.js',
-
-            'src/core/outro.js'
-            ],
-            dest: 'dist/rx.lite.perf.js'
           }
       },
       uglify: {
@@ -1827,13 +1669,6 @@ var browsers = [{
             sourceMapName: 'dist/rx.sorting.map'
           },
           files: {'dist/rx.sorting.min.js': ['dist/rx.sorting.js'] }
-        },
-        liteperf: {
-          options: {
-            sourceMap: true,
-            sourceMapName: 'dist/rx.lite.perf.map'
-          },
-          files: {'dist/rx.lite.perf.min.js': ['dist/rx.lite.perf.js'] }
         }
       },
       qunit: {
@@ -2134,11 +1969,6 @@ var browsers = [{
     'uglify:sorting',
 
     'qunit'
-  ]);
-
-  grunt.registerTask('perf', [
-    'concat:liteperf',
-    'uglify:liteperf'
   ]);
 
 };
