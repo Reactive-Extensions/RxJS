@@ -165,16 +165,16 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
     </tr>
     <tr>
         <td colspan="2">using each value only once</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/operators/zip.md">Observable.zip</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/zip.md">Observable.zip</a></td>
     </tr>
     <tr>
         <td rowspan="3">by subscribing to each in order</td>
         <td colspan="2">when the previous sequence completes</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/operators/concat.md">Observable.concat</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/concat.md">Observable.concat</a></td>
     </tr>
     <tr>
         <td colspan="2">when the previous sequence errors</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/operators/catch.md">Observable.catch</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/catch.md">Observable.catch</a></td>
     </tr>
     <tr>
         <td colspan="2">regardless of whether the previous sequence completes or errors</td>
