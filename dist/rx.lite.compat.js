@@ -5344,7 +5344,7 @@
     inherits(AnonymousSubject, __super__);
 
     function subscribe(observer) {
-      this.observable.subscribe(observer);
+      return this.observable.subscribe(observer);
     }
 
     function AnonymousSubject(observer, observable) {
