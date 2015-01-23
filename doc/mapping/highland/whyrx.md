@@ -115,7 +115,7 @@ These `compat` files are important as we will shim behavior that we require such
 RxJS has a firm commitment to standards in JavaScript.  Whether it is supporting the `Array#extras` standard method signatures such as `map`, `filter`, `reduce`, `every` and `some`, or to some new emerging standard on collections, RxJS will implement these features accordingly from pull collections to push.  Unlike Highland.js, RxJS conforms to `Array#extras` syntax to have the callback style of `function (item, index, collection)` in addition to accepting a `thisArg` for the calling context of the callback.  This helps as you can easily reuse your code from the Array version to Observable version.
 
 An example of forward thinking is the introduction of ES6+ operators on Array with implementations on Observable such as:
-- `contains`
+- `includes`
 - `find`
 - `findIndex`
 - `from`
@@ -128,7 +128,7 @@ This makes the following code possible to yield an array from an observable sequ
 ```js
 Rx.Observable.range(1, 3)
   .flatMap(function (x, i) { return [x, i]; })
-  .subscribeNext(function (value) {
+  .subscribeOnNext(function (value) {
     console.log('Value: %o', value);
   });
 // => 1
@@ -148,7 +148,7 @@ var source = Rx.Observable.from(
   function* () { yield 1; yield 2; yield 3; }()
 );
 
-source.subscribeNext(function (value) {
+source.subscribeOnNext(function (value) {
   console.log('Next: %s', value);
 });
 
