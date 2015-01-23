@@ -38,7 +38,7 @@ Cleaning up of the event handler is taken care of by the `Disposable` object ret
 
 The `fromEvent` method also supports adding event handlers to multiple items, for example a DOM NodeList.  This example will add the 'click' to each element in the list.
 
-```
+```js
 var result = document.getElementById('result');
 var sources = document.querySelectorAll('div');
 
@@ -51,7 +51,7 @@ var subscription = source.subscribe(function (e) {
 
 In addition, `fromEvent` also supports libraries such as [jQuery](http://jquery.com/), [Zepto.js](http://zeptojs.com/), [AngularJS](https://angularjs.org/), [Ember.js](http://emberjs.com/) and [Backbone.js](http://backbonejs.org):
 
-```
+```js
 var $result = $('#result');
 var $sources = $('div');
 
