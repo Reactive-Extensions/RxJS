@@ -2328,22 +2328,43 @@
     });
   };
 
+  var ToArrayObservable = (function(__super__) {
+    inherits(ToArrayObservable, __super__);
+    function ToArrayObservable(source) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    ToArrayObservable.prototype.subscribeCore = function(observer) {
+      return this.source.subscribe(new ToArrayObserver(observer));
+    };
+
+    return ToArrayObservable;
+  }(ObservableBase));
+
+  var ToArrayObserver = (function(__super__) {
+    inherits(ToArrayObserver, __super__);
+    function ToArrayObserver(observer) {
+      this.observer = observer;
+      this.a = [];
+      __super__.call(this);
+    }
+    ToArrayObserver.prototype.next = function (x) { this.a.push(x); };
+    ToArrayObserver.prototype.error = function (e) { this.observer.onError(e); };
+    ToArrayObserver.prototype.completed = function () {
+      this.observer.onNext(this.a);
+      this.observer.onCompleted();
+    };
+
+    return ToArrayObserver;
+  }(AbstractObserver));
+
   /**
-   * Creates an array from an observable sequence.
-   * @returns {Observable} An observable sequence containing a single element with a list containing all the elements of the source sequence.
-   */
+  * Creates an array from an observable sequence.
+  * @returns {Observable} An observable sequence containing a single element with a list containing all the elements of the source sequence.
+  */
   observableProto.toArray = function () {
-    var source = this;
-    return new AnonymousObservable(function(observer) {
-      var arr = [];
-      return source.subscribe(
-        function (x) { arr.push(x); },
-        function (e) { observer.onError(e); },
-        function () {
-          observer.onNext(arr);
-          observer.onCompleted();
-        });
-    }, source);
+    return new ToArrayObservable(this);
   };
 
   /**
@@ -2515,9 +2536,8 @@
     return new AnonymousObservable(function (observer) {
       var i = 0;
       return scheduler.scheduleRecursive(function (self) {
-        var next;
         try {
-          next = it.next();
+          var next = it.next();
         } catch (e) {
           observer.onError(e);
           return;
@@ -2674,29 +2694,55 @@
     });
   };
 
+    var RangeObservable = (function(__super__) {
+    inherits(RangeObservable, __super__);
+    function RangeObservable(start, count, scheduler) {
+      this.start = start;
+      this.count = count;
+      this.scheduler = scheduler;
+      __super__.call(this);
+    }
+
+    RangeObservable.prototype.subscribeCore = function (observer) {
+      var sink = new RangeSink(observer, this);
+      return sink.run();
+    };
+
+    return RangeObservable;
+  }(ObservableBase));
+
+  var RangeSink = (function () {
+    function RangeSink(observer, parent) {
+      this.observer = observer;
+      this.parent = parent;
+    }
+
+    RangeSink.prototype.run = function () {
+      return this.parent.scheduler.scheduleRecursiveWithState(0, this.loopRecursive.bind(this));
+    };
+
+    RangeSink.prototype.loopRecursive = function(i, recurse) {
+      if(i < this.parent.count) {
+        this.observer.onNext(this.parent.start + i);
+        recurse.call(this, i + 1);
+      } else {
+        this.observer.onCompleted();
+      }
+    };
+
+    return RangeSink;
+  }());
+
   /**
-   *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
-   *
-   * @example
-   *  var res = Rx.Observable.range(0, 10);
-   *  var res = Rx.Observable.range(0, 10, Rx.Scheduler.timeout);
-   * @param {Number} start The value of the first integer in the sequence.
-   * @param {Number} count The number of sequential integers to generate.
-   * @param {Scheduler} [scheduler] Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
-   * @returns {Observable} An observable sequence that contains a range of sequential integral numbers.
-   */
+  *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
+  * @param {Number} start The value of the first integer in the sequence.
+  * @param {Number} count The number of sequential integers to generate.
+  * @param {Scheduler} [scheduler] Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
+  * @returns {Observable} An observable sequence that contains a range of sequential integral numbers.
+  */
   Observable.range = function (start, count, scheduler) {
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
-        if (i < count) {
-          observer.onNext(start + i);
-          self(i + 1);
-        } else {
-          observer.onCompleted();
-        }
-      });
-    });
+    return new RangeObservable(start, count, scheduler);
   };
 
   /**
@@ -3319,43 +3365,81 @@
     }, source);
   };
 
-  /**
-   * Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-   * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.
-   */
-  observableProto['switch'] = observableProto.switchLatest = function () {
-    var sources = this;
-    return new AnonymousObservable(function (observer) {
-      var hasLatest = false,
-        innerSubscription = new SerialDisposable(),
-        isStopped = false,
-        latest = 0,
-        subscription = sources.subscribe(
-          function (innerSource) {
-            var d = new SingleAssignmentDisposable(), id = ++latest;
-            hasLatest = true;
-            innerSubscription.setDisposable(d);
+  var SwitchObservable = (function(__super__) {
+    inherits(SwitchObservable, __super__);
+    function SwitchObservable(source) {
+      this.source = source;
+      __super__.call(this);
+    }
 
-            // Check if Promise or Observable
-            isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
-
-            d.setDisposable(innerSource.subscribe(
-              function (x) { latest === id && observer.onNext(x); },
-              function (e) { latest === id && observer.onError(e); },
-              function () {
-                if (latest === id) {
-                  hasLatest = false;
-                  isStopped && observer.onCompleted();
-                }
-              }));
-          },
-          function (e) { observer.onError(e); },
-          function () {
-            isStopped = true;
-            !hasLatest && observer.onCompleted();
-          });
+    SwitchObservable.prototype.subscribeCore = function (observer) {
+      var innerSubscription = new SerialDisposable(),
+        subscription = this.source.subscribe(new SwitchObserver(observer, innerSubscription));
       return new CompositeDisposable(subscription, innerSubscription);
-    }, sources);
+    };
+
+    return SwitchObservable;
+  }(ObservableBase));
+
+  var SwitchObserver = (function(__super__) {
+    inherits(SwitchObserver, __super__);
+    function SwitchObserver(observer, innerSubscription) {
+      this.observer = observer;
+      this.innerSubscription = innerSubscription;
+      this.stopped = false;
+      this.latest = 0;
+      this.hasLatest = false;
+      __super__.call(this);
+    }
+
+    SwitchObserver.prototype.next = function (innerSource) {
+      var d = new SingleAssignmentDisposable(), id = ++this.latest;
+      this.hasLatest = true;
+      this.innerSubscription.setDisposable(d);
+
+      // Check if Promise or Observable
+      isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
+
+      d.setDisposable(innerSource.subscribe(new InnerObserver(this, id)));
+    };
+
+    SwitchObserver.prototype.error = function (e) {
+      this.observer.onError(e);
+    };
+
+    SwitchObserver.prototype.completed = function () {
+      this.stopped = true;
+      !this.hasLatest && this.observer.onCompleted();
+    };
+
+    var InnerObserver = (function(__base__) {
+      inherits(InnerObserver, __base__);
+      function InnerObserver(parent, id) {
+        this.parent = parent;
+        this.id = id;
+        __base__.call(this);
+      }
+      InnerObserver.prototype.next = function (x) { this.parent.latest === this.id && this.parent.observer.onNext(x); };
+      InnerObserver.prototype.error = function (e) { this.parent.latest === this.id && this.parent.observer.onError(e); };
+      InnerObserver.prototype.completed = function () {
+        if (this.parent.latest === this.id) {
+          this.parent.hasLatest = false;
+          this.parent.isStopped && this.parent.observer.onCompleted();
+        }
+      };
+
+      return InnerObserver;
+    }(AbstractObserver));
+
+    return SwitchObserver;
+  }(AbstractObserver));
+
+  /**
+  * Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+  * @returns {Observable} The observable sequence that at any point in time produces the elements of the most recent inner observable sequence that has been received.
+  */
+  observableProto['switch'] = observableProto.switchLatest = function () {
+    return new SwitchObservable(this);
   };
 
   /**
@@ -4341,6 +4425,11 @@
       return new MapObservable(this.source, function (x, i, o) { return selector(self.selector(x, i, o), i, o); }, thisArg)
     };
 
+    MapObservable.prototype.internalMapFilter = function (predicate, thisArg) {
+      var self = this;
+      return new FilterObservable(this.source, function (x, i, o) { return predicate(self.selector(x, i, o), i, o); }, thisArg);
+    };
+
     MapObservable.prototype.subscribeCore = function (observer) {
       return this.source.subscribe(new MapObserver(observer, this.selector, this));
     };
@@ -4677,8 +4766,8 @@
   * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.
   */
   observableProto.filter = observableProto.where = function (predicate, thisArg) {
-    return this instanceof FilterObservable ?
-      this.internalFilter(predicate, thisArg) :
+    return this instanceof FilterObservable ? this.internalFilter(predicate, thisArg) :
+      this instanceof MapObservable ? this.internalMapFilter(predicate, thisArg) :
       new FilterObservable(this, predicate, thisArg);
   };
 

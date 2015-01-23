@@ -115,9 +115,8 @@
     return new AnonymousObservable(function (observer) {
       var i = 0;
       return scheduler.scheduleRecursive(function (self) {
-        var next;
         try {
-          next = it.next();
+          var next = it.next();
         } catch (e) {
           observer.onError(e);
           return;

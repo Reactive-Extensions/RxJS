@@ -12,6 +12,11 @@
       return new MapObservable(this.source, function (x, i, o) { return selector(self.selector(x, i, o), i, o); }, thisArg)
     };
 
+    MapObservable.prototype.internalMapFilter = function (predicate, thisArg) {
+      var self = this;
+      return new FilterObservable(this.source, function (x, i, o) { return predicate(self.selector(x, i, o), i, o); }, thisArg);
+    };
+
     MapObservable.prototype.subscribeCore = function (observer) {
       return this.source.subscribe(new MapObserver(observer, this.selector, this));
     };
