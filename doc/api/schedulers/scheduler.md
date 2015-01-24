@@ -9,7 +9,7 @@ The follow example shows the basic usage of an `Rx.Scheduler`.
 ```js
 var disposable = Rx.Scheduler.timeout.scheduleWithState(
      'world',
-     function (x) {
+     function (scheduler, x) {
           console.log('hello ' + x);
      }
 );
@@ -82,7 +82,7 @@ function schedule(state, action) {
           }
      }, 0);
 
-     return new CompositeDisposable(disposable, disposableCreate(function () {
+     return new Rx.CompositeDisposable(disposable, Rx.Disposable.create(function () {
           clearMethod(id);
      }));
 }
@@ -262,7 +262,7 @@ Schedules an action to be executed with state.
 #### Example
 
 ```js
-var disposable = Rx.Scheduler.immediate.scheduleWithState('world', function (x) {
+var disposable = Rx.Scheduler.immediate.scheduleWithState('world', function (scheduler, x) {
      console.log('hello ' + x);
 });
 
@@ -328,7 +328,7 @@ Schedules an action to be executed at the specified absolute due time. Note this
 var disposable = Rx.Scheduler.timeout.scheduleWithAbsoluteAndState(
      'world',
      Date.now() + 5000, /* 5 seconds in the future */
-     function (x) {
+     function (scheduler, x) {
           console.log('hello ' + x);
      }
 );
@@ -392,7 +392,7 @@ Schedules an action to be executed at the specified relative due time. Note this
 var disposable = Rx.Scheduler.timeout.scheduleWithRelativeAndState(
      'world',
      5000, /* 5 seconds in the future */
-     function (x) {
+     function (scheduler, x) {
           console.log('hello ' + x);
      }
 );
@@ -741,7 +741,7 @@ console.log(r1);
 // => 0
 
 var r2 = Rx.Scheduler.normalize(255);
-console.log(r1);
+console.log(r2);
 // => 255
 ```
 
@@ -764,7 +764,7 @@ var scheduler = Rx.Scheduler.currentThread;
 
 var disposable = scheduler.scheduleWithState(
      'world',
-     function (x) {
+     function (scheduler, x) {
           console.log('hello ' + x);
      });
 
@@ -825,7 +825,7 @@ var scheduler = Rx.Scheduler.timeout;
 
 var disposable = scheduler.scheduleWithState(
      0,
-     function (x) {
+     function (scheduler, x) {
           console.log(x);
      }
 );
