@@ -264,4 +264,55 @@
     );
   });
 
+  test('Map and Map Optimization', function () {
+    var scheduler = new TestScheduler();
+
+    var invoked1 = 0;
+    var invoked2 = 0;
+
+    var xs = scheduler.createHotObservable(
+      onNext(110, 1),
+      onNext(180, 2),
+      onNext(230, 3),
+      onNext(270, 4),
+      onNext(340, 5),
+      onNext(380, 6),
+      onNext(390, 7),
+      onNext(450, 8),
+      onNext(470, 9),
+      onNext(560, 10),
+      onNext(580, 11),
+      onCompleted(600),
+      onNext(610, 12),
+      onError(620, new Error()),
+      onCompleted(630)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs
+      .map(function(x) { invoked1++; return x * 2; })
+      .map(function(x) { invoked2++; return x / 2; })
+    });
+
+    results.messages.assertEqual(
+      onNext(230, 3),
+      onNext(270, 4),
+      onNext(340, 5),
+      onNext(380, 6),
+      onNext(390, 7),
+      onNext(450, 8),
+      onNext(470, 9),
+      onNext(560, 10),
+      onNext(580, 11),
+      onCompleted(600)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 600)
+    );
+
+    equal(9, invoked1);
+    equal(9, invoked2);
+  });
+
 }());

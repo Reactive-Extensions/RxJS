@@ -11,31 +11,32 @@
    */
   observableProto.distinctUntilChanged = function (keySelector, comparer) {
     var source = this;
-    keySelector || (keySelector = identity);
     comparer || (comparer = defaultComparer);
     return new AnonymousObservable(function (o) {
       var hasCurrentKey = false, currentKey;
       return source.subscribe(function (value) {
-          var comparerEquals = false, key;
+        var key = value;
+        if (keySelector) {
           try {
             key = keySelector(value);
           } catch (e) {
             o.onError(e);
             return;
           }
-          if (hasCurrentKey) {
-            try {
-              comparerEquals = comparer(currentKey, key);
-            } catch (e) {
-              o.onError(e);
-              return;
-            }
+        }
+        if (hasCurrentKey) {
+          try {
+            var comparerEquals = comparer(currentKey, key);
+          } catch (e) {
+            o.onError(e);
+            return;
           }
-          if (!hasCurrentKey || !comparerEquals) {
-            hasCurrentKey = true;
-            currentKey = key;
-            o.onNext(value);
-          }
+        }
+        if (!hasCurrentKey || !comparerEquals) {
+          hasCurrentKey = true;
+          currentKey = key;
+          o.onNext(value);
+        }
       }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, this);
   };

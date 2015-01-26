@@ -40,8 +40,7 @@
       try {
         var result = this.selector(x, this.index++, this.source);
       } catch(e) {
-        this.observer.onError(e);
-        return;
+        return this.observer.onError(e);
       }
       this.observer.onNext(result);
     };

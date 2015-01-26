@@ -2241,26 +2241,54 @@
     });
   };
 
+  var FromArrayObservable = (function(__super__) {
+    inherits(FromArrayObservable, __super__);
+    function FromArrayObservable(args, scheduler) {
+      this.args = args;
+      this.scheduler = scheduler || currentThreadScheduler;
+      __super__.call(this);
+    }
+
+    FromArrayObservable.prototype.subscribeCore = function (observer) {
+      var sink = new FromArraySink(observer, this);
+      return sink.run();
+    };
+
+    return FromArrayObservable;
+  }(ObservableBase));
+
+  var FromArraySink = (function () {
+    function FromArraySink(observer, parent) {
+      this.observer = observer;
+      this.parent = parent;
+    }
+
+    function loopRecursive(state, recurse) {
+      if (state.i < state.len) {
+        state.observer.onNext(state.args[state.i++]);
+        recurse(state);
+      } else {
+        state.observer.onCompleted();
+      }
+    }
+
+    FromArraySink.prototype.run = function () {
+      return this.parent.scheduler.scheduleRecursiveWithState(
+        {i: 0, args: this.parent.args, len: this.parent.args.length, observer: this.observer },
+        loopRecursive);
+    };
+
+    return FromArraySink;
+  }());
+
   /**
-   *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
-   * @deprecated use Observable.from or Observable.of
-   * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
-   * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
-   */
+  *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
+  * @deprecated use Observable.from or Observable.of
+  * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
+  * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
+  */
   var observableFromArray = Observable.fromArray = function (array, scheduler) {
-    //deprecate('fromArray', 'from');
-    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      var count = 0, len = array.length;
-      return scheduler.scheduleRecursive(function (self) {
-        if (count < len) {
-          observer.onNext(array[count++]);
-          self();
-        } else {
-          observer.onCompleted();
-        }
-      });
-    });
+    return new FromArrayObservable(array, scheduler)
   };
 
   /**
@@ -2274,35 +2302,28 @@
   };
 
   function observableOf (scheduler, array) {
-    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      var count = 0, len = array.length;
-      return scheduler.scheduleRecursive(function (self) {
-        if (count < len) {
-          observer.onNext(array[count++]);
-          self();
-        } else {
-          observer.onCompleted();
-        }
-      });
-    });
+    return new FromArrayObservable(array, scheduler);
   }
 
   /**
-   *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
-   * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
-   */
+  *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
+  * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
+  */
   Observable.of = function () {
-    return observableOf(null, arguments);
+    var args = [];
+    for(var i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    return new FromArrayObservable(args);
   };
 
   /**
-   *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
-   * @param {Scheduler} scheduler A scheduler to use for scheduling the arguments.
-   * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
-   */
+  *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
+  * @param {Scheduler} scheduler A scheduler to use for scheduling the arguments.
+  * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
+  */
   Observable.ofWithScheduler = function (scheduler) {
-    return observableOf(scheduler, slice.call(arguments, 1));
+    var args = [];
+    for(var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    return new FromArrayObservable(args, scheduler);
   };
 
   /**
@@ -3160,31 +3181,32 @@
    */
   observableProto.distinctUntilChanged = function (keySelector, comparer) {
     var source = this;
-    keySelector || (keySelector = identity);
     comparer || (comparer = defaultComparer);
     return new AnonymousObservable(function (o) {
       var hasCurrentKey = false, currentKey;
       return source.subscribe(function (value) {
-          var comparerEquals = false, key;
+        var key = value;
+        if (keySelector) {
           try {
             key = keySelector(value);
           } catch (e) {
             o.onError(e);
             return;
           }
-          if (hasCurrentKey) {
-            try {
-              comparerEquals = comparer(currentKey, key);
-            } catch (e) {
-              o.onError(e);
-              return;
-            }
+        }
+        if (hasCurrentKey) {
+          try {
+            var comparerEquals = comparer(currentKey, key);
+          } catch (e) {
+            o.onError(e);
+            return;
           }
-          if (!hasCurrentKey || !comparerEquals) {
-            hasCurrentKey = true;
-            currentKey = key;
-            o.onNext(value);
-          }
+        }
+        if (!hasCurrentKey || !comparerEquals) {
+          hasCurrentKey = true;
+          currentKey = key;
+          o.onNext(value);
+        }
       }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, this);
   };
@@ -3572,8 +3594,7 @@
       try {
         var result = this.selector(x, this.index++, this.source);
       } catch(e) {
-        this.observer.onError(e);
-        return;
+        return this.observer.onError(e);
       }
       this.observer.onNext(result);
     };
@@ -3787,7 +3808,7 @@
 
     FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
       var self = this;
-      return new FilterObservable(this.source, function(x, i, o) { return self.predciate(x, i, o) && predicate(x, i, o); }, thisArg);
+      return new FilterObservable(this.source, function(x, i, o) { return self.predicate(x, i, o) && predicate(x, i, o); }, thisArg);
     };
 
     return FilterObservable;
@@ -3809,8 +3830,7 @@
       try {
         var shouldYield = this.predicate(x, this.index++, this.source);
       } catch(e) {
-        this.observer.onError(e);
-        return;
+        return this.observer.onError(e);
       }
       shouldYield && this.observer.onNext(x);
     };

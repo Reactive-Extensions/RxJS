@@ -13,7 +13,7 @@
 
     FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
       var self = this;
-      return new FilterObservable(this.source, function(x, i, o) { return self.predciate(x, i, o) && predicate(x, i, o); }, thisArg);
+      return new FilterObservable(this.source, function(x, i, o) { return self.predicate(x, i, o) && predicate(x, i, o); }, thisArg);
     };
 
     return FilterObservable;
@@ -35,8 +35,7 @@
       try {
         var shouldYield = this.predicate(x, this.index++, this.source);
       } catch(e) {
-        this.observer.onError(e);
-        return;
+        return this.observer.onError(e);
       }
       shouldYield && this.observer.onNext(x);
     };

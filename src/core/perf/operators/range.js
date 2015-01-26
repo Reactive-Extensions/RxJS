@@ -21,17 +21,19 @@
       this.parent = parent;
     }
 
-    RangeSink.prototype.run = function () {
-      return this.parent.scheduler.scheduleRecursiveWithState(0, this.loopRecursive.bind(this));
-    };
-
-    RangeSink.prototype.loopRecursive = function(i, recurse) {
-      if(i < this.parent.count) {
-        this.observer.onNext(this.parent.start + i);
-        recurse.call(this, i + 1);
+    function loopRecursive(state, recurse) {
+      if (state.i < state.count) {
+        state.observer.onNext(state.start + state.i++);
+        recurse(state);
       } else {
-        this.observer.onCompleted();
+        state.observer.onCompleted();
       }
+    }
+
+    RangeSink.prototype.run = function () {
+      return this.parent.scheduler.scheduleRecursiveWithState(
+        {i: 0, start: this.parent.start, count: this.parent.count, observer: this.observer },
+        loopRecursive);
     };
 
     return RangeSink;
