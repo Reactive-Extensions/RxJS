@@ -19,9 +19,9 @@
      * @param {Disposable} value The new underlying disposable.
      */
     booleanDisposablePrototype.setDisposable = function (value) {
-      var shouldDispose = this.isDisposed, old;
+      var shouldDispose = this.isDisposed;
       if (!shouldDispose) {
-        old = this.current;
+        var old = this.current;
         this.current = value;
       }
       old && old.dispose();
@@ -32,10 +32,9 @@
      * Disposes the underlying disposable as well as all future replacements.
      */
     booleanDisposablePrototype.dispose = function () {
-      var old;
       if (!this.isDisposed) {
         this.isDisposed = true;
-        old = this.current;
+        var old = this.current;
         this.current = null;
       }
       old && old.dispose();

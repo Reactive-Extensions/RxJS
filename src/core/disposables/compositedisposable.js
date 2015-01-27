@@ -3,7 +3,13 @@
    * @constructor
    */
   var CompositeDisposable = Rx.CompositeDisposable = function () {
-    this.disposables = argsOrArray(arguments, 0);
+    var disposables = [];
+    if (Array.isArray(arguments[0])) {
+      disposables = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { disposables.push(arguments[i]); }
+    }
+    this.disposables = disposables;
     this.isDisposed = false;
     this.length = this.disposables.length;
   };
@@ -48,11 +54,11 @@
   CompositeDisposablePrototype.dispose = function () {
     if (!this.isDisposed) {
       this.isDisposed = true;
-      var currentDisposables = this.disposables.slice(0);
+      for(var currentDisposables = [], i = 0, len = this.disposables.length; i < len; i++) { currentDisposables.push(this.disposables[i]); }
       this.disposables = [];
       this.length = 0;
 
-      for (var i = 0, len = currentDisposables.length; i < len; i++) {
+      for (i = 0, len = currentDisposables.length; i < len; i++) {
         currentDisposables[i].dispose();
       }
     }
@@ -63,5 +69,6 @@
    * @returns {Array} An array of disposable objects.
    */
   CompositeDisposablePrototype.toArray = function () {
-    return this.disposables.slice(0);
+    for(var currentDisposables = [], ix = 0, len = this.disposables.length; i < len; i++) { currentDisposables.push(this.disposables[i]); }
+    return currentDisposables;
   };

@@ -57,7 +57,7 @@
 
   priorityProto.removeAt = function (index) {
     this.items[index] = this.items[--this.length];
-    delete this.items[this.length];
+    this.items[this.length] = undefined;
     this.heapify();
   };
 
