@@ -62,13 +62,14 @@ var subscription = source.subscribe(observer);
 
 * * *
 
-### <a id="rxobserverfromotifierhandler"></a>`Rx.Observer.fromNotifier(handler)`
+### <a id="rxobserverfromotifierhandler"></a>`Rx.Observer.fromNotifier(handler, [thisArg])`
 <a href="#rxobserverfromotifierhandler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js#L1843-L1851 "View in source") [&#x24C9;][1]
 
 Creates an observer from a notification callback.
 
 #### Arguments
 1. `handler` *(Function)*: Function that handles a notification.
+2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing `handler`.
 
 #### Returns
 *(Observer)*: The observer object that invokes the specified handler using a notification corresponding to each message it receives.
