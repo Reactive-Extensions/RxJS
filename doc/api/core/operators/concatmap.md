@@ -1,5 +1,5 @@
-### `Rx.Observable.prototype.concatMap(selector, [resultSelector])`
-### `Rx.Observable.prototype.selectConcat(selector, [resultSelector])`
+### `Rx.Observable.prototype.concatMap(selector, [resultSelector], [thisArg])`
+### `Rx.Observable.prototype.selectConcat(selector, [resultSelector], [thisArg])`
 [&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js "View in source")
 
 This is an alias for the `selectConcat` method.  This can be one of the following:
@@ -39,6 +39,8 @@ source.concatMap([1,2,3]);
     2. the value of the inner element
     3. the index of the outer element
     4. the index of the inner element
+
+3. `[thisArg]` *(`Any`)*: If `resultSelector` is not `Function`, Object to use as `this` when executing `selector`.
 
 #### Returns
 *(`Observable`)*: An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
