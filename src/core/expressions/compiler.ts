@@ -21,6 +21,11 @@ class Expression
     return new ParameterExpression(name);
   }
 
+  static Condition(test: Expression, ifTrue: Expression, ifFalse: Expression) : ConditionalExpression
+  {
+	return new ConditionalExpression(test, ifTrue, ifFalse);
+  }
+
   static Add(left: Expression, right: Expression) : BinaryExpression
   {
     return new BinaryExpression(ExpressionType.Add, left, right);
@@ -100,6 +105,36 @@ class Expression
   {
     return new BinaryExpression(ExpressionType.GreaterThanOrEqual, left, right);
   }
+  
+  static LeftShift(left: Expression, right: Expression) : BinaryExpression
+  {
+    return new BinaryExpression(ExpressionType.LeftShift, left, right);
+  }
+  
+  static RightShift(left: Expression, right: Expression) : BinaryExpression
+  {
+    return new BinaryExpression(ExpressionType.RightShift, left, right);
+  }
+  
+  static Not(operand: Expression) : UnaryExpression
+  {
+	  return new UnaryExpression(ExpressionType.Not, operand);
+  }
+  
+  static UnaryPlus(operand: Expression) : UnaryExpression
+  {
+	  return new UnaryExpression(ExpressionType.UnaryPlus, operand);
+  }
+  
+  static Negate(operand: Expression) : UnaryExpression
+  {
+	  return new UnaryExpression(ExpressionType.Negate, operand);
+  }
+  
+  static OnesComplement(operand: Expression) : UnaryExpression
+  {
+	  return new UnaryExpression(ExpressionType.OnesComplement, operand);
+  }
 
   static Lambda<T extends Function>(body: Expression, ... parameters: ParameterExpression[]) : LambdaExpression<T>
   {
@@ -132,6 +167,16 @@ class ExpressionVisitor
   VisitBinary(node: BinaryExpression) : Expression
   {
     return node.Update(this.Visit(node.left), this.Visit(node.right));
+  }
+  
+  VisitUnary(node: UnaryExpression) : Expression
+  {
+	return node.Update(this.Visit(node.operand));
+  }
+  
+  VisitConditional(node: ConditionalExpression) : Expression
+  {
+	return node.Update(this.Visit(node.test), this.Visit(node.ifTrue), this.Visit(node.ifFalse));
   }
 
   VisitLambda<T extends Function>(node: LambdaExpression<T>) : Expression
@@ -201,6 +246,37 @@ class ParameterExpression extends Expression
   }
 }
 
+class UnaryExpression extends Expression
+{
+  _operand: Expression;
+
+  constructor(nodeType: ExpressionType, operand: Expression)
+  {
+    super(nodeType);
+    this._operand = operand;
+  }
+
+  get operand(): Expression
+  {
+    return this._operand;
+  }
+
+  Accept(visitor: ExpressionVisitor) : Expression
+  {
+    return visitor.VisitUnary(this);
+  }
+
+  Update(operand: Expression) : UnaryExpression
+  {
+    if (operand !== this._operand)
+    {
+      return new UnaryExpression(this.nodeType, operand);
+    }
+
+    return this;
+  }
+}
+
 class BinaryExpression extends Expression
 {
   _left: Expression;
@@ -233,6 +309,51 @@ class BinaryExpression extends Expression
     if (left !== this._left || right !== this._right)
     {
       return new BinaryExpression(this.nodeType, left, right);
+    }
+
+    return this;
+  }
+}
+
+class ConditionalExpression extends Expression
+{
+  _test: Expression;
+  _ifTrue: Expression;
+  _ifFalse: Expression;
+
+  constructor(test: Expression, ifTrue: Expression, ifFalse: Expression)
+  {
+    super(ExpressionType.Condition);
+    this._test = test;
+    this._ifTrue = ifTrue;
+	this._ifFalse = ifFalse;
+  }
+
+  get test(): Expression
+  {
+    return this._test;
+  }
+
+  get ifTrue(): Expression
+  {
+    return this._ifTrue;
+  }
+  
+  get ifFalse(): Expression
+  {
+    return this._ifTrue;
+  }
+
+  Accept(visitor: ExpressionVisitor) : Expression
+  {
+    return visitor.VisitConditional(this);
+  }
+
+  Update(test: Expression, ifTrue: Expression, ifFalse: Expression) : ConditionalExpression
+  {
+    if (test !== this._test || ifTrue !== this._ifTrue || ifFalse !== this._ifFalse)
+    {
+      return new ConditionalExpression(test, ifTrue, ifFalse);
     }
 
     return this;
@@ -366,6 +487,35 @@ class LambdaCompiler extends ExpressionVisitor
     return node;
   }
 
+  VisitUnary(node: UnaryExpression) : Expression
+  {
+    this.Visit(node.operand);
+	
+	var o = this._stack.pop();
+    var i = "";
+
+    switch (node.nodeType)
+    {
+      case ExpressionType.Negate:
+        i = "-";
+        break;
+      case ExpressionType.UnaryPlus:
+        i = "+";
+        break;
+	  case ExpressionType.Not:
+        i = "!";
+        break;
+      case ExpressionType.OnesComplement:
+        i = "~";
+        break;
+	}
+	
+	var res = i + "" + o;
+    this._stack.push(res);
+
+    return node;
+  }
+  
   VisitBinary(node: BinaryExpression) : Expression
   {
     this.Visit(node.left);
@@ -425,12 +575,35 @@ class LambdaCompiler extends ExpressionVisitor
       case ExpressionType.GreaterThanOrEqual:
         i = ">=";
         break;
+	  case ExpressionType.LeftShift:
+        i = "<<";
+        break;
+      case ExpressionType.RightShift:
+        i = ">>";
+        break;
     }
 
     var res = "(" + l + " " + i + " " + r + ")";
     this._stack.push(res);
 
     return node;
+  }
+  
+  VisitConditional(node: ConditionalExpression) : Expression
+  {
+	this.Visit(node.test);
+	this.Visit(node.ifTrue);
+	this.Visit(node.ifFalse);
+	
+	var f = this._stack.pop();
+	var t = this._stack.pop();
+	var c = this._stack.pop();
+	
+	var res = "(" + c +  " ? " + t + " : " + f + ")";
+	
+	this._stack.push(res);
+	
+	return node;
   }
 
   VisitParameter(node: ParameterExpression) : Expression
@@ -558,7 +731,14 @@ enum ExpressionType
   LessThanOrEqual,
   GreaterThan,
   GreaterThanOrEqual,
+  LeftShift,
+  RightShift,
   Invoke,
+  Not,
+  Negate,
+  UnaryPlus,
+  OnesComplement,
+  Condition,
 }
 
 class Binder extends ExpressionVisitor
@@ -611,7 +791,7 @@ var f =
   Expression.Invoke(
     Expression.Parameter("rx://operators/map"),
     Expression.Invoke(
-      Expression.Parameter("rx://operators/where"),
+      Expression.Parameter("rx://operators/filter"),
       Expression.Parameter("my://xs"),
       Expression.Lambda<(number) => boolean>(
         Expression.Equal(
@@ -637,12 +817,11 @@ var fvs = new FreeVariableScanner();
 fvs.Visit(f);
 
 var unbound = fvs.result;
-alert(unbound.join(", "));
 
 var resources =
 {
   "my://xs": [1, 2, 3, 4, 5],
-  "rx://operators/where": function(xs : any[], f: (any) => boolean) { return xs.filter(f); },
+  "rx://operators/filter": function(xs : any[], f: (any) => boolean) { return xs.filter(f); },
   "rx://operators/map": function(xs : any[], f: (any) => any) { return xs.map(f); },
 };
 
