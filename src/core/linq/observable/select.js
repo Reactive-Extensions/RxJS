@@ -13,8 +13,7 @@
         try {
           var result = selectorFn(value, count++, source);
         } catch (e) {
-          o.onError(e);
-          return;
+          return o.onError(e);
         }
         o.onNext(result);
       }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
