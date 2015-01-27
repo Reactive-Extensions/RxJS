@@ -2981,7 +2981,7 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   observableProto.combineLatest = function () {
-    var args = slice.call(arguments);
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
     if (Array.isArray(args[0])) {
       args[0].unshift(this);
     } else {
@@ -2990,70 +2990,85 @@
     return combineLatest.apply(this, args);
   };
 
-  /**
-   * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
-   *
-   * @example
-   * 1 - obs = Rx.Observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
-   * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
-   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
-   */
-  var combineLatest = Observable.combineLatest = function () {
-    var args = slice.call(arguments), resultSelector = args.pop();
+  function falseFactory() { return false; }
 
-    if (Array.isArray(args[0])) {
-      args = args[0];
+  var CombineLatestObservable = (function(__super__) {
+    inherits(CombineLatestObservable, __super__);
+    function CombineLatestObservable(parameters, resultSelector) {
+      this.parameters = parameters;
+      this.resultSelector = resultSelector;
+      this.length = parameters.length;
+      this.hasValue = arrayInitialize(this.length, falseFactory);
+      this.hasValueAll = false;
+      this.isDone = arrayInitialize(this.length, falseFactory);
+      this.values = new Array(this.length);
+      __super__.call(this);
     }
 
-    return new AnonymousObservable(function (observer) {
-      var falseFactory = function () { return false; },
-        n = args.length,
-        hasValue = arrayInitialize(n, falseFactory),
-        hasValueAll = false,
-        isDone = arrayInitialize(n, falseFactory),
-        values = new Array(n);
+    CombineLatestObservable.prototype.subscribeCore = function(observer) {
+      var self = this, n = this.length, subscriptions = new Array(n);
 
-      function next(i) {
-        var res;
-        hasValue[i] = true;
-        if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
-          try {
-            res = resultSelector.apply(null, values);
-          } catch (ex) {
-            observer.onError(ex);
-            return;
-          }
-          observer.onNext(res);
-        } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-          observer.onCompleted();
-        }
-      }
-
-      function done (i) {
-        isDone[i] = true;
-        if (isDone.every(identity)) {
-          observer.onCompleted();
-        }
-      }
-
-      var subscriptions = new Array(n);
       for (var idx = 0; idx < n; idx++) {
         (function (i) {
-          var source = args[i], sad = new SingleAssignmentDisposable();
+          var source = self.parameters[i], sad = new SingleAssignmentDisposable();
           isPromise(source) && (source = observableFromPromise(source));
-          sad.setDisposable(source.subscribe(function (x) {
-              values[i] = x;
-              next(i);
-            },
-            function(e) { observer.onError(e); },
-            function () { done(i); }
-          ));
+          sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, self)));
           subscriptions[i] = sad;
         }(idx));
       }
 
       return new CompositeDisposable(subscriptions);
-    }, this);
+    };
+
+    return CombineLatestObservable;
+  }(ObservableBase));
+
+  var CombineLatestObserver = (function(__super__) {
+    inherits(CombineLatestObserver, __super__);
+    function CombineLatestObserver(observer, i, parent) {
+      this.observer = observer;
+      this.i = i;
+      this.parent = parent;
+      __super__.call(this);
+    }
+
+    CombineLatestObserver.prototype.next = function(x) {
+      var i = this.i;
+      this.parent.values[i] = x;
+      this.parent.hasValue[i] = true;
+      if (this.parent.hasValueAll || (this.parent.hasValueAll = this.parent.hasValue.every(identity))) {
+        try {
+          var res = this.parent.resultSelector.apply(null, this.parent.values);
+        } catch (e) {
+          return this.observer.onError(e);
+        }
+        this.observer.onNext(res);
+      } else if (this.parent.isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+        this.observer.onCompleted();
+      }
+    };
+    CombineLatestObserver.prototype.error = function(e) { this.observer.onError(e); };
+    CombineLatestObserver.prototype.completed = function() {
+      this.parent.isDone[this.i] = true;
+      this.parent.isDone.every(identity) && this.observer.onCompleted();
+    };
+
+    return CombineLatestObserver;
+  }(AbstractObserver));
+
+  /**
+  * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
+  *
+  * @example
+  * 1 - obs = Rx.Observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
+  * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
+  * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+  */
+  var combineLatest = Observable.combineLatest = function () {
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var resultSelector = args.pop();
+    Array.isArray(args[0]) && (args = args[0]);
+    return new CombineLatestObservable(args, resultSelector);
   };
 
   /**
