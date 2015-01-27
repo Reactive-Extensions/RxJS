@@ -1,4 +1,4 @@
-### `Rx.Observable.for(sources, resultSelector)`
+### `Rx.Observable.for(sources, resultSelector, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/for.js "View in source")
 
 Concatenates the observable sequences or Promises obtained by running the specified result selector for each element in source.
@@ -7,6 +7,7 @@ There is an alias for this method called `forIn` for browsers <IE9
 #### Arguments
 1. `sources` *(Array)*: An array of values to turn into an observable sequence.
 2. `resultSelector` *(`Function`)*: A function to apply to each item in the sources array to turn it into an observable sequence.
+3. `[thisArg]` *(`Any`)*: Object to use as `this` when executing `resultSelector`.
 
 #### Returns
 *(`Observable`)*: An observable sequence from the concatenated observable sequences or Promises.
