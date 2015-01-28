@@ -15,6 +15,5 @@
 
   // Utilities
   var objectDisposed = 'Object has been disposed';
-  function checkDisposed() {
-    if (this.isDisposed) { throw new Error(objectDisposed); }
-  }
+  function checkDisposed(self) { if (self.isDisposed) { throw new Error(objectDisposed); } }
+  function cloneArray(arr) { for(var a = [], i = 0, len = arr.length; i < len; i++) { a.push(arr[i]); } return a;}
