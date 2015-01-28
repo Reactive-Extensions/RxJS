@@ -992,7 +992,7 @@
       recursiveAction = function (state1) {
         action(state1, function (state2, dueTime1) {
           var isAdded = false, isDone = false,
-          d = scheduler[method].call(scheduler, state2, dueTime1, function (scheduler1, state3) {
+          d = scheduler[method](state2, dueTime1, function (scheduler1, state3) {
             if (isAdded) {
               group.remove(d);
             } else {
@@ -1587,31 +1587,20 @@
 
   Enumerable.prototype.concat = function () {
     var sources = this;
-    return new AnonymousObservable(function (observer) {
-      var e;
-      try {
-        e = sources[$iterator$]();
-      } catch (err) {
-        observer.onError(err);
-        return;
-      }
+    return new AnonymousObservable(function (o) {
+      var e = sources[$iterator$]();
 
-      var isDisposed,
-        subscription = new SerialDisposable();
+      var isDisposed, subscription = new SerialDisposable();
       var cancelable = immediateScheduler.scheduleRecursive(function (self) {
-        var currentItem;
         if (isDisposed) { return; }
-
         try {
-          currentItem = e.next();
+          var currentItem = e.next();
         } catch (ex) {
-          observer.onError(ex);
-          return;
+          return o.onError(ex);
         }
 
         if (currentItem.done) {
-          observer.onCompleted();
-          return;
+          return o.onCompleted();
         }
 
         // Check if promise
@@ -1621,9 +1610,9 @@
         var d = new SingleAssignmentDisposable();
         subscription.setDisposable(d);
         d.setDisposable(currentValue.subscribe(
-          observer.onNext.bind(observer),
-          observer.onError.bind(observer),
-          function () { self(); })
+          function(x) { o.onNext(x); },
+          function(err) { o.onError(err); },
+          self)
         );
       });
 
@@ -1635,34 +1624,24 @@
 
   Enumerable.prototype.catchError = function () {
     var sources = this;
-    return new AnonymousObservable(function (observer) {
-      var e;
-      try {
-        e = sources[$iterator$]();
-      } catch (err) {
-        observer.onError(err);
-        return;
-      }
+    return new AnonymousObservable(function (o) {
+      var e = sources[$iterator$]();
 
-      var isDisposed,
-        lastException,
-        subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursive(function (self) {
+      var isDisposed, subscription = new SerialDisposable();
+      var cancelable = immediateScheduler.scheduleRecursiveWithState(null, function (lastException, self) {
         if (isDisposed) { return; }
 
-        var currentItem;
         try {
-          currentItem = e.next();
+          var currentItem = e.next();
         } catch (ex) {
-          observer.onError(ex);
-          return;
+          return observer.onError(ex);
         }
 
         if (currentItem.done) {
-          if (lastException) {
-            observer.onError(lastException);
+          if (lastException !== null) {
+            o.onError(lastException);
           } else {
-            observer.onCompleted();
+            o.onCompleted();
           }
           return;
         }
@@ -1674,12 +1653,9 @@
         var d = new SingleAssignmentDisposable();
         subscription.setDisposable(d);
         d.setDisposable(currentValue.subscribe(
-          observer.onNext.bind(observer),
-          function (exn) {
-            lastException = exn;
-            self();
-          },
-          observer.onCompleted.bind(observer)));
+          function(x) { o.onNext(x); },
+          self,
+          function() { o.onCompleted(); }));
       });
       return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
         isDisposed = true;
@@ -1690,23 +1666,13 @@
 
   Enumerable.prototype.catchErrorWhen = function (notificationHandler) {
     var sources = this;
-    return new AnonymousObservable(function (observer) {
-      var e;
+    return new AnonymousObservable(function (o) {
+      var exceptions = new Subject(),
+        notifier = new Subject(),
+        handled = notificationHandler(exceptions),
+        notificationDisposable = handled.subscribe(notifier);
 
-      var exceptions = new Subject();
-
-      var handled = notificationHandler(exceptions);
-
-      var notifier = new Subject();
-
-      var notificationDisposable = handled.subscribe(notifier);
-
-      try {
-        e = sources[$iterator$]();
-      } catch (err) {
-        observer.onError(err);
-        return;
-      }
+      var e = sources[$iterator$]();
 
       var isDisposed,
         lastException,
@@ -1714,19 +1680,17 @@
       var cancelable = immediateScheduler.scheduleRecursive(function (self) {
         if (isDisposed) { return; }
 
-        var currentItem;
         try {
-          currentItem = e.next();
+          var currentItem = e.next();
         } catch (ex) {
-          observer.onError(ex);
-          return;
+          return o.onError(ex);
         }
 
         if (currentItem.done) {
           if (lastException) {
-            observer.onError(lastException);
+            o.onError(lastException);
           } else {
-            observer.onCompleted();
+            o.onCompleted();
           }
           return;
         }
@@ -1739,19 +1703,17 @@
         var inner = new SingleAssignmentDisposable();
         subscription.setDisposable(new CompositeDisposable(inner, outer));
         outer.setDisposable(currentValue.subscribe(
-          observer.onNext.bind(observer),
+          function(x) { o.onNext(x); },
           function (exn) {
-            inner.setDisposable(notifier.subscribe(function(){
-              self();
-            }, function(ex) {
-              observer.onError(ex);
+            inner.setDisposable(notifier.subscribe(self, function(ex) {
+              o.onError(ex);
             }, function() {
-              observer.onCompleted();
+              o.onCompleted();
             }));
 
             exceptions.onNext(exn);
           },
-          observer.onCompleted.bind(observer)));
+          function() { o.onCompleted(); }));
       });
 
       return new CompositeDisposable(notificationDisposable, subscription, cancelable, disposableCreate(function () {
@@ -1773,13 +1735,15 @@
   };
 
   var enumerableOf = Enumerable.of = function (source, selector, thisArg) {
-    selector || (selector = identity);
+    if (selector) {
+      var selectorFn = bindCallback(selector, thisArg, 3);
+    }
     return new Enumerable(function () {
       var index = -1;
       return new Enumerator(
         function () {
           return ++index < source.length ?
-            { done: false, value: selector.call(thisArg, source[index], index, source) } :
+            { done: false, value: !selector ? source[index] : selectorFn(source[index], index, source) } :
             doneEnumerator;
         });
     });

@@ -28,7 +28,7 @@
       recursiveAction = function (state1) {
         action(state1, function (state2, dueTime1) {
           var isAdded = false, isDone = false,
-          d = scheduler[method].call(scheduler, state2, dueTime1, function (scheduler1, state3) {
+          d = scheduler[method](state2, dueTime1, function (scheduler1, state3) {
             if (isAdded) {
               group.remove(d);
             } else {
