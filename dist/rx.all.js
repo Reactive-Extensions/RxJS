@@ -494,13 +494,8 @@
     return result;
   }
 
-  var slice = Array.prototype.slice;
-  function argsOrArray(args, idx) {
-    return args.length === 1 && Array.isArray(args[idx]) ?
-      args[idx] :
-      slice.call(args);
-  }
-  var hasProp = {}.hasOwnProperty;
+  var hasProp = {}.hasOwnProperty,
+      slice = Array.prototype.slice;
 
   var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
     function __() { this.constructor = child; }
@@ -509,9 +504,9 @@
   };
 
   var addProperties = Rx.internals.addProperties = function (obj) {
-    var sources = slice.call(arguments, 1);
-    for (var i = 0, len = sources.length; i < len; i++) {
-      var source = sources[i];
+    for(var sources = [], i = 1, len = arguments.length; i < len; i++) { sources.push(arguments[i]); }
+    for (var idx = 0, ln = sources.length; idx < ln; idx++) {
+      var source = sources[idx];
       for (var prop in source) {
         obj[prop] = source[prop];
       }
@@ -2627,7 +2622,8 @@
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
   Observable.of = function () {
-    return observableOf(null, arguments);
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    return observableOf(null, args);
   };
 
   /**
@@ -2636,7 +2632,8 @@
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
   Observable.ofWithScheduler = function (scheduler) {
-    return observableOf(scheduler, slice.call(arguments, 1));
+    for(var args = [], i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    return observableOf(scheduler, args);
   };
 
   /**
@@ -2658,12 +2655,12 @@
   Observable.pairs = function (obj, scheduler) {
     scheduler || (scheduler = Rx.Scheduler.currentThread);
     return new AnonymousObservable(function (observer) {
-      var idx = 0, keys = Object.keys(obj), len = keys.length;
-      return scheduler.scheduleRecursive(function (self) {
+      var keys = Object.keys(obj), len = keys.length;
+      return scheduler.scheduleRecursiveWithState(0, function (idx, self) {
         if (idx < len) {
-          var key = keys[idx++];
+          var key = keys[idx];
           observer.onNext([key, obj[key]]);
-          self();
+          self(idx + 1);
         } else {
           observer.onCompleted();
         }
@@ -2854,8 +2851,13 @@
    * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
    */
   Observable.amb = function () {
-    var acc = observableNever(),
-      items = argsOrArray(arguments, 0);
+    var acc = observableNever(), items = [];
+    if (Array.isArray(arguments[0])) {
+      items = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { items.push(arguments[i]); }
+    }
+
     function func(previous, current) {
       return previous.amb(current);
     }
@@ -2915,16 +2917,14 @@
    * @param {Array | Arguments} args Arguments or an array to use as the next sequence if an error occurs.
    * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
    */
-  var observableCatch = Observable.catchError = Observable['catch'] = function () {
-    return enumerableOf(argsOrArray(arguments, 0)).catchError();
-  };
-
-  /**
-   * @deprecated use #catch or #catchError instead.
-   */
-  Observable.catchException = function () {
-    //deprecate('catchException', 'catch or catchError');
-    return observableCatch.apply(null, arguments);
+  var observableCatch = Observable.catchError = Observable['catch'] = Observable.catchException = function () {
+    var items = [];
+    if (Array.isArray(arguments[0])) {
+      items = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { items.push(arguments[i]); }
+    }
+    return enumerableOf(items).catchError();
   };
 
   /**
@@ -2955,7 +2955,8 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   var combineLatest = Observable.combineLatest = function () {
-    var args = slice.call(arguments), resultSelector = args.pop();
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var resultSelector = args.pop();
 
     if (Array.isArray(args[0])) {
       args = args[0];
@@ -3028,7 +3029,13 @@
    * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order.
    */
   var observableConcat = Observable.concat = function () {
-    return enumerableOf(argsOrArray(arguments, 0)).concat();
+    var items = [];
+    if (Array.isArray(arguments[0])) {
+      items = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { items.push(arguments[i]); }
+    }
+    return enumerableOf(items).concat();
   };
 
   /**
@@ -3093,16 +3100,16 @@
    * @returns {Observable} The observable sequence that merges the elements of the observable sequences.
    */
   var observableMerge = Observable.merge = function () {
-    var scheduler, sources;
+    var scheduler, sources = [], i, len = arguments.length;
     if (!arguments[0]) {
       scheduler = immediateScheduler;
-      sources = slice.call(arguments, 1);
+      for(i = 1; i < len; i++) { sources.push(arguments[i]); }
     } else if (isScheduler(arguments[0])) {
       scheduler = arguments[0];
-      sources = slice.call(arguments, 1);
+      for(i = 1; i < len; i++) { sources.push(arguments[i]); }
     } else {
       scheduler = immediateScheduler;
-      sources = slice.call(arguments, 0);
+      for(i = 0; i < len; i++) { sources.push(arguments[i]); }
     }
     if (Array.isArray(sources[0])) {
       sources = sources[0];
@@ -3168,7 +3175,12 @@
    * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.
    */
   var onErrorResumeNext = Observable.onErrorResumeNext = function () {
-    var sources = argsOrArray(arguments, 0);
+    var sources = [];
+    if (Array.isArray(arguments[0])) {
+      sources = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { sources.push(arguments[i]); }
+    }
     return new AnonymousObservable(function (observer) {
       var pos = 0, subscription = new SerialDisposable(),
       cancelable = immediateScheduler.scheduleRecursive(function (self) {
@@ -3281,9 +3293,8 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   observableProto.withLatestFrom = function () {
-    var source = this;
-    var args = slice.call(arguments);
-    var resultSelector = args.pop();
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var resultSelector = args.pop(), source = this;
 
     if (typeof source === 'undefined') {
       throw new Error('Source observable not found for withLatestFrom().');
@@ -3439,7 +3450,12 @@
    * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
    */
   Observable.zipArray = function () {
-    var sources = argsOrArray(arguments, 0);
+    var sources = [];
+    if (Array.isArray(arguments[0])) {
+      sources = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { sources.push(arguments[i]); }
+    }
     return new AnonymousObservable(function (observer) {
       var n = sources.length,
         queues = arrayInitialize(n, function () { return []; }),
@@ -3818,8 +3834,8 @@
     } else {
       scheduler = immediateScheduler;
     }
-    values = slice.call(arguments, start);
-    return enumerableOf([observableFromArray(values, scheduler), this]).concat();
+    for(var args = [], i = start, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    return enumerableOf([observableFromArray(args, scheduler), this]).concat();
   };
 
   /**
@@ -5407,8 +5423,8 @@
         gen = fn;
 
       if (isGenFun) {
-        var args = slice.call(arguments),
-          len = args.length,
+        for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+        var len = args.length,
           hasCallback = len && typeof args[len - 1] === fnString;
 
         done = hasCallback ? args.pop() : handleError;
@@ -5428,7 +5444,7 @@
 
         // multiple args
         if (arguments.length > 2) {
-          res = slice.call(arguments, 1);
+          for(var res = [], i = 1, len = arguments.length; i < len; i++) { res.push(arguments[i]); }
         }
 
         if (err) {
@@ -5549,7 +5565,7 @@
    */
   Observable.fromCallback = function (func, context, selector) {
     return function () {
-      var args = slice.call(arguments, 0);
+      for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
 
       return new AnonymousObservable(function (observer) {
         function handler() {
@@ -5559,8 +5575,7 @@
             try {
               results = selector(results);
             } catch (err) {
-              observer.onError(err);
-              return;
+              return observer.onError(err);
             }
 
             observer.onNext(results);
@@ -5590,7 +5605,7 @@
    */
   Observable.fromNodeCallback = function (func, context, selector) {
     return function () {
-      var args = slice.call(arguments, 0);
+      for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
 
       return new AnonymousObservable(function (observer) {
         function handler(err) {
@@ -5599,14 +5614,13 @@
             return;
           }
 
-          var results = slice.call(arguments, 1);
+          for(var results = [], i = 1, len = arguments.length; i < len; i++) { results.push(arguments[i]); }
 
           if (selector) {
             try {
               results = selector(results);
             } catch (e) {
-              observer.onError(e);
-              return;
+              return observer.onError(e);
             }
             observer.onNext(results);
           } else {
@@ -7481,7 +7495,12 @@
    * @returns {Observable} An observable sequence with an array collecting the last elements of all the input sequences.
    */
   Observable.forkJoin = function () {
-    var allSources = argsOrArray(arguments, 0);
+    var allSources = [];
+    if (Array.isArray(arguments[0])) {
+      allSources = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { allSources.push(arguments[i]); }
+    }
     return new AnonymousObservable(function (subscriber) {
       var count = allSources.length;
       if (count === 0) {
@@ -7542,7 +7561,6 @@
    */
   observableProto.forkJoin = function (second, resultSelector) {
     var first = this;
-
     return new AnonymousObservable(function (observer) {
       var leftStopped = false, rightStopped = false,
         hasLeft = false, hasRight = false,
@@ -7904,7 +7922,12 @@
    *  @returns {Observable} Observable sequence with the results form matching several patterns.
    */
   Observable.when = function () {
-    var plans = argsOrArray(arguments, 0);
+    var plans = [];
+    if (Array.isArray(arguments[0])) {
+      plans = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { plans.push(arguments[i]); }
+    }
     return new AnonymousObservable(function (observer) {
       var activePlans = [],
           externalSubscriptions = new Map();

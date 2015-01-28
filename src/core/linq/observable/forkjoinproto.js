@@ -7,7 +7,6 @@
    */
   observableProto.forkJoin = function (second, resultSelector) {
     var first = this;
-
     return new AnonymousObservable(function (observer) {
       var leftStopped = false, rightStopped = false,
         hasLeft = false, hasRight = false,

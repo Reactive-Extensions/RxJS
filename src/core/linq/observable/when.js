@@ -5,7 +5,12 @@
    *  @returns {Observable} Observable sequence with the results form matching several patterns.
    */
   Observable.when = function () {
-    var plans = argsOrArray(arguments, 0);
+    var plans = [];
+    if (Array.isArray(arguments[0])) {
+      plans = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { plans.push(arguments[i]); }
+    }
     return new AnonymousObservable(function (observer) {
       var activePlans = [],
           externalSubscriptions = new Map();

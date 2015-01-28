@@ -158,8 +158,8 @@
         gen = fn;
 
       if (isGenFun) {
-        var args = slice.call(arguments),
-          len = args.length,
+        for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+        var len = args.length,
           hasCallback = len && typeof args[len - 1] === fnString;
 
         done = hasCallback ? args.pop() : handleError;
@@ -179,7 +179,7 @@
 
         // multiple args
         if (arguments.length > 2) {
-          res = slice.call(arguments, 1);
+          for(var res = [], i = 1, len = arguments.length; i < len; i++) { res.push(arguments[i]); }
         }
 
         if (err) {
@@ -300,7 +300,7 @@
    */
   Observable.fromCallback = function (func, context, selector) {
     return function () {
-      var args = slice.call(arguments, 0);
+      for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
 
       return new AnonymousObservable(function (observer) {
         function handler() {
@@ -310,8 +310,7 @@
             try {
               results = selector(results);
             } catch (err) {
-              observer.onError(err);
-              return;
+              return observer.onError(err);
             }
 
             observer.onNext(results);
@@ -341,7 +340,7 @@
    */
   Observable.fromNodeCallback = function (func, context, selector) {
     return function () {
-      var args = slice.call(arguments, 0);
+      for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
 
       return new AnonymousObservable(function (observer) {
         function handler(err) {
@@ -350,14 +349,13 @@
             return;
           }
 
-          var results = slice.call(arguments, 1);
+          for(var results = [], i = 1, len = arguments.length; i < len; i++) { results.push(arguments[i]); }
 
           if (selector) {
             try {
               results = selector(results);
             } catch (e) {
-              observer.onError(e);
-              return;
+              return observer.onError(e);
             }
             observer.onNext(results);
           } else {

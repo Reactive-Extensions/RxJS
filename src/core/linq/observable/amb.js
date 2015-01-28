@@ -6,8 +6,13 @@
    * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
    */
   Observable.amb = function () {
-    var acc = observableNever(),
-      items = argsOrArray(arguments, 0);
+    var acc = observableNever(), items = [];
+    if (Array.isArray(arguments[0])) {
+      items = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { items.push(arguments[i]); }
+    }
+
     function func(previous, current) {
       return previous.amb(current);
     }

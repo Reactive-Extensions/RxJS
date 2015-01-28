@@ -7,9 +7,8 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   observableProto.withLatestFrom = function () {
-    var source = this;
-    var args = slice.call(arguments);
-    var resultSelector = args.pop();
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var resultSelector = args.pop(), source = this;
 
     if (typeof source === 'undefined') {
       throw new Error('Source observable not found for withLatestFrom().');

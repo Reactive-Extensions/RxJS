@@ -1,5 +1,4 @@
   var JoinObserver = (function (__super__) {
-
     inherits(JoinObserver, __super__);
 
     function JoinObserver(source, onError) {
@@ -17,8 +16,7 @@
     JoinObserverPrototype.next = function (notification) {
       if (!this.isDisposed) {
         if (notification.kind === 'E') {
-          this.onError(notification.exception);
-          return;
+          return this.onError(notification.exception);
         }
         this.queue.push(notification);
         var activePlans = this.activePlans.slice(0);

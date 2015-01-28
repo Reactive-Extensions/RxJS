@@ -7,7 +7,12 @@
    * @returns {Observable} An observable sequence with an array collecting the last elements of all the input sequences.
    */
   Observable.forkJoin = function () {
-    var allSources = argsOrArray(arguments, 0);
+    var allSources = [];
+    if (Array.isArray(arguments[0])) {
+      allSources = arguments[0];
+    } else {
+      for(var i = 0, len = arguments.length; i < len; i++) { allSources.push(arguments[i]); }
+    }
     return new AnonymousObservable(function (subscriber) {
       var count = allSources.length;
       if (count === 0) {

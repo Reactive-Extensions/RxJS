@@ -109,8 +109,8 @@
         gen = fn;
 
       if (isGenFun) {
-        var args = slice.call(arguments),
-          len = args.length,
+        for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+        var len = args.length,
           hasCallback = len && typeof args[len - 1] === fnString;
 
         done = hasCallback ? args.pop() : handleError;
@@ -130,7 +130,7 @@
 
         // multiple args
         if (arguments.length > 2) {
-          res = slice.call(arguments, 1);
+          for(var res = [], i = 1, len = arguments.length; i < len; i++) { res.push(arguments[i]); }
         }
 
         if (err) {
