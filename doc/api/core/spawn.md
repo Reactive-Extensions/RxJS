@@ -13,16 +13,16 @@ Spawns a generator function which allows for Promises, Observable sequences, Arr
 ```js
 Rx.spawn(function* () {
   var data1 = yield Promise.resolve('A');
-  console.log('Generator1: ' + data1)
+  console.log('Generator1: ' + data1);
   var data2 = yield Rx.Observable.return('B').delay(1000).map(function(x) {
     console.log('Map: ' + x);
     return x;
   });
-  console.log('Generator2: ' + data2)
-  return data2
+  console.log('Generator2: ' + data2);
+  return data2;
 })(function(err, res) {
     console.log('Done: ' + res);
-})
+});
 
 // => Generator1: A
 // => Map: B
