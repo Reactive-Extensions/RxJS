@@ -5,16 +5,13 @@
     var queue;
 
     function runTrampoline (q) {
-      var item;
       while (q.length > 0) {
-        item = q.dequeue();
+        var item = q.dequeue();
         if (!item.isCancelled()) {
           // Note, do not schedule blocking work!
           while (item.dueTime - Scheduler.now() > 0) {
           }
-          if (!item.isCancelled()) {
-            item.invoke();
-          }
+          !item.isCancelled() && item.invoke();
         }
       }
     }

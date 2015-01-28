@@ -6,49 +6,34 @@
    * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto['do'] = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
-    var source = this, onNextFunc;
-    if (typeof observerOrOnNext === 'function') {
-      onNextFunc = observerOrOnNext;
-    } else {
-      onNextFunc = function (x) { observerOrOnNext.onNext(x); };
-      onError = function (e) { observerOrOnNext.onError(e); };
-      onCompleted = function () { observerOrOnNext.onCompleted(); }
-    }
+  observableProto['do'] = observableProto.tap = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
+    var source = this, tapObserver = typeof observerOrOnNext === 'function' || typeof observerOrOnNext === 'undefined'?
+      observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
+      observerOrOnNext;
     return new AnonymousObservable(function (observer) {
       return source.subscribe(function (x) {
         try {
-          onNextFunc(x);
+          tapObserver.onNext(x);
         } catch (e) {
           observer.onError(e);
         }
         observer.onNext(x);
       }, function (err) {
-        if (onError) {
           try {
-            onError(err);
+            tapObserver.onError(err);
           } catch (e) {
             observer.onError(e);
           }
-        }
         observer.onError(err);
       }, function () {
-        if (onCompleted) {
-          try {
-            onCompleted();
-          } catch (e) {
-            observer.onError(e);
-          }
+        try {
+          tapObserver.onCompleted();
+        } catch (e) {
+          observer.onError(e);
         }
         observer.onCompleted();
       });
     }, this);
-  };
-
-  /** @deprecated use #do or #tap instead. */
-  observableProto.doAction = function () {
-    //deprecate('doAction', 'do or tap');
-    return this.tap.apply(this, arguments);
   };
 
   /**

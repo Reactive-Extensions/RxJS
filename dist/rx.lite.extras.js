@@ -72,21 +72,22 @@
 
   var argumentOutOfRange = 'Argument out of range';
 
-    function ScheduledDisposable(scheduler, disposable) {
-        this.scheduler = scheduler;
-        this.disposable = disposable;
-        this.isDisposed = false;
-    }
+  function ScheduledDisposable(scheduler, disposable) {
+    this.scheduler = scheduler;
+    this.disposable = disposable;
+    this.isDisposed = false;
+  }
 
-    ScheduledDisposable.prototype.dispose = function () {
-        var parent = this;
-        this.scheduler.schedule(function () {
-            if (!parent.isDisposed) {
-                parent.isDisposed = true;
-                parent.disposable.dispose();
-            }
-        });
-    };
+  function scheduleItem(s, self) {
+    if (!self.isDisposed) {
+      self.isDisposed = true;
+      self.disposable.dispose();
+    }
+  }
+
+  ScheduledDisposable.prototype.dispose = function () {
+    this.scheduler.scheduleWithState(this, scheduleItem);
+  };
 
     var CheckedObserver = (function (_super) {
         inherits(CheckedObserver, _super);

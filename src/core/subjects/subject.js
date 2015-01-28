@@ -4,7 +4,7 @@
    */
   var Subject = Rx.Subject = (function (__super__) {
     function subscribe(observer) {
-      checkDisposed.call(this);
+      checkDisposed(this);
       if (!this.isStopped) {
         this.observers.push(observer);
         return new InnerSubscription(this, observer);
@@ -40,11 +40,10 @@
        * Notifies all subscribed observers about the end of the sequence.
        */
       onCompleted: function () {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (!this.isStopped) {
-          var os = this.observers.slice(0);
           this.isStopped = true;
-          for (var i = 0, len = os.length; i < len; i++) {
+          for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
             os[i].onCompleted();
           }
 
@@ -56,13 +55,12 @@
        * @param {Mixed} error The exception to send to all observers.
        */
       onError: function (error) {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (!this.isStopped) {
-          var os = this.observers.slice(0);
           this.isStopped = true;
           this.error = error;
           this.hasError = true;
-          for (var i = 0, len = os.length; i < len; i++) {
+          for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
             os[i].onError(error);
           }
 
@@ -74,10 +72,9 @@
        * @param {Mixed} value The value to send to all observers.
        */
       onNext: function (value) {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (!this.isStopped) {
-          var os = this.observers.slice(0);
-          for (var i = 0, len = os.length; i < len; i++) {
+          for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
             os[i].onNext(value);
           }
         }

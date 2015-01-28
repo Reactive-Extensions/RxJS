@@ -5,7 +5,7 @@
   var AsyncSubject = Rx.AsyncSubject = (function (__super__) {
 
     function subscribe(observer) {
-      checkDisposed.call(this);
+      checkDisposed(this);
 
       if (!this.isStopped) {
         this.observers.push(observer);
@@ -46,7 +46,7 @@
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
        */
       hasObservers: function () {
-        checkDisposed.call(this);
+        checkDisposed(this);
         return this.observers.length > 0;
       },
       /**
@@ -54,10 +54,10 @@
        */
       onCompleted: function () {
         var i, len;
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (!this.isStopped) {
           this.isStopped = true;
-          var os = this.observers.slice(0), len = os.length;
+          var os = cloneArray(this.observers), len = os.length;
 
           if (this.hasValue) {
             for (i = 0; i < len; i++) {
@@ -79,14 +79,13 @@
        * @param {Mixed} error The Error to send to all observers.
        */
       onError: function (error) {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (!this.isStopped) {
-          var os = this.observers.slice(0);
           this.isStopped = true;
           this.hasError = true;
           this.error = error;
 
-          for (var i = 0, len = os.length; i < len; i++) {
+          for (var i = 0, os = cloneArray(this.observers), len = os.length; i < len; i++) {
             os[i].onError(error);
           }
 
@@ -98,7 +97,7 @@
        * @param {Mixed} value The value to store in the subject.
        */
       onNext: function (value) {
-        checkDisposed.call(this);
+        checkDisposed(this);
         if (this.isStopped) { return; }
         this.value = value;
         this.hasValue = true;

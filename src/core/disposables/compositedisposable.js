@@ -3,13 +3,13 @@
    * @constructor
    */
   var CompositeDisposable = Rx.CompositeDisposable = function () {
-    var disposables = [];
+    var args = [];
     if (Array.isArray(arguments[0])) {
-      disposables = arguments[0];
+      args = arguments[0];
     } else {
-      for(var i = 0, len = arguments.length; i < len; i++) { disposables.push(arguments[i]); }
+      for(var i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
     }
-    this.disposables = disposables;
+    this.disposables = args;
     this.isDisposed = false;
     this.length = this.disposables.length;
   };

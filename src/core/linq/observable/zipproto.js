@@ -8,8 +8,7 @@
           try {
             result = resultSelector(left, right);
           } catch (e) {
-            observer.onError(e);
-            return;
+            return observer.onError(e);
           }
           observer.onNext(result);
         } else {
@@ -19,25 +18,27 @@
     }, first);
   }
 
+  function falseFactory() { return false; }
+  function emptyArrayFactory() { return []; }
+
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
-   * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the sources.
+   * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
    *
    * @example
    * 1 - res = obs1.zip(obs2, fn);
    * 1 - res = x1.zip([1,2,3], fn);
-   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+   * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
    */
   observableProto.zip = function () {
-    if (Array.isArray(arguments[0])) {
-      return zipArray.apply(this, arguments);
-    }
-    var parent = this, sources = slice.call(arguments), resultSelector = sources.pop();
-    sources.unshift(parent);
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    if (Array.isArray(args[0])) { return zipArray.apply(this, args); }
+    var parent = this, resultSelector = args.pop();
+    args.unshift(parent);
     return new AnonymousObservable(function (observer) {
-      var n = sources.length,
-        queues = arrayInitialize(n, function () { return []; }),
-        isDone = arrayInitialize(n, function () { return false; });
+      var n = args.length,
+        queues = arrayInitialize(n, emptyArrayFactory),
+        isDone = arrayInitialize(n, falseFactory);
 
       function next(i) {
         var res, queuedValues;
@@ -65,7 +66,7 @@
       var subscriptions = new Array(n);
       for (var idx = 0; idx < n; idx++) {
         (function (i) {
-          var source = sources[i], sad = new SingleAssignmentDisposable();
+          var source = args[i], sad = new SingleAssignmentDisposable();
           isPromise(source) && (source = observableFromPromise(source));
           sad.setDisposable(source.subscribe(function (x) {
             queues[i].push(x);

@@ -5,14 +5,13 @@
    * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
    */
   var observableFromArray = Observable.fromArray = function (array, scheduler) {
-    //deprecate('fromArray', 'from');
+    var len = array.length;
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
-      var count = 0, len = array.length;
-      return scheduler.scheduleRecursive(function (self) {
-        if (count < len) {
-          observer.onNext(array[count++]);
-          self();
+      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
+        if (i < len) {
+          observer.onNext(array[i]);
+          self(i + 1);
         } else {
           observer.onCompleted();
         }

@@ -113,8 +113,7 @@
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     var list = Object(iterable), it = getIterable(list);
     return new AnonymousObservable(function (observer) {
-      var i = 0;
-      return scheduler.scheduleRecursive(function (self) {
+      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
         try {
           var next = it.next();
         } catch (e) {
@@ -138,8 +137,7 @@
         }
 
         observer.onNext(result);
-        i++;
-        self();
+        self(i + 1);
       });
     });
   };

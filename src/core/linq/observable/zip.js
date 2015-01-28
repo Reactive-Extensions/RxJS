@@ -5,6 +5,7 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   Observable.zip = function () {
-    var args = slice.call(arguments, 0), first = args.shift();
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var first = args.shift();
     return first.zip.apply(first, args);
   };

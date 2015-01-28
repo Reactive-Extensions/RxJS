@@ -3,7 +3,7 @@
    * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order.
    */
   observableProto.concat = function () {
-    var items = slice.call(arguments, 0);
-    items.unshift(this);
-    return observableConcat.apply(this, items);
+    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    args.unshift(this);
+    return observableConcat.apply(null, args);
   };
