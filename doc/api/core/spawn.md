@@ -11,27 +11,23 @@ Spawns a generator function which allows for Promises, Observable sequences, Arr
 
 #### Example
 ```js
-var source = Rx.spawn(function* () {
-  yield Observable.just(1);
-  yield Promise.resolve(2);
-  yield 3;
-})();
-
-var subscription = source.subscribe(
-  function (x) {
-    console.log('Next: %s', x);
-  },
-  function (err) {
-    console.log('Error: %s', err);
-  },
-  function () {
-    console.log('Completed');
+Rx.spawn(function* () {
+  var data1 = yield Promise.resolve('A');
+  console.log('Generator1: ' + data1)
+  var data2 = yield Rx.Observable.return('B').delay(1000).map(function(x) {
+    console.log('Map: ' + x);
+    return x;
   });
+  console.log('Generator2: ' + data2)
+  return data2
+})(function(err, res) {
+    console.log('Done: ' + res);
+})
 
-// => Next: 1
-// => Next: 2
-// => Next: 3
-// => Completed
+// => Generator1: A
+// => Map: B
+// => Generator2: B
+// => Done: B
 ```
 
 ### Location
