@@ -24,7 +24,7 @@ Rx.spawn(function* () {
   } 
 
   console.log(data);
-}());
+})();
 ```
 
 ### Location
