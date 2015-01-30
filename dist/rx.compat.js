@@ -2322,7 +2322,7 @@
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeOnNext = function (onNext, thisArg) {
-      return this._subscribe(observerCreate(arguments.length === 2 ? function(x) { onNext.call(thisArg, x); } : onNext));
+      return this._subscribe(observerCreate(typeof thisArg !== 'undefined' ? function(x) { onNext.call(thisArg, x); } : onNext));
     };
 
     /**
@@ -2332,7 +2332,7 @@
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeOnError = function (onError, thisArg) {
-      return this._subscribe(observerCreate(null, arguments.length === 2 ? function(e) { onError.call(thisArg, e); } : onError));
+      return this._subscribe(observerCreate(null, typeof thisArg !== 'undefined' ? function(e) { onError.call(thisArg, e); } : onError));
     };
 
     /**
@@ -2342,7 +2342,7 @@
      * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
      */
     observableProto.subscribeOnCompleted = function (onCompleted, thisArg) {
-      return this._subscribe(observerCreate(null, null, arguments.length === 2 ? function() { onCompleted.call(thisArg); } : onCompleted));
+      return this._subscribe(observerCreate(null, null, typeof thisArg !== 'undefined' ? function() { onCompleted.call(thisArg); } : onCompleted));
     };
 
     return Observable;
@@ -4705,35 +4705,37 @@
         disposableEmpty;
     }
 
-    function AnonymousObservable(subscribe, parent) {
-      this.source = parent;
-      if (!(this instanceof AnonymousObservable)) {
-        return new AnonymousObservable(subscribe);
-      }
-
-      function s(observer) {
-        var setDisposable = function () {
-          try {
-            autoDetachObserver.setDisposable(fixSubscriber(subscribe(autoDetachObserver)));
-          } catch (e) {
-            if (!autoDetachObserver.fail(e)) {
-              throw e;
-            }
-          }
-        };
-
-        var autoDetachObserver = new AutoDetachObserver(observer);
-        if (currentThreadScheduler.scheduleRequired()) {
-          currentThreadScheduler.schedule(setDisposable);
-        } else {
-          setDisposable();
+    function subscribe(observer) {
+      var self = this;
+      var ado = new AutoDetachObserver(observer);
+      if (currentThreadScheduler.scheduleRequired()) {
+        currentThreadScheduler.scheduleWithState(ado, function (x, ado) { return self.scheduledSubscribe(x, ado); })
+      } else {
+        try {
+          ado.setDisposable(fixSubscriber(this.subscribeCore(ado)));
+        } catch (e) {
+          if (!ado.fail(e)) { throw e; }
         }
-
-        return autoDetachObserver;
       }
 
-      __super__.call(this, s);
+      return ado;
     }
+
+    function AnonymousObservable(subscribeMethod, parent) {
+      this.source = parent;
+      this.subscribeCore = subscribeMethod;
+
+      __super__.call(this, subscribe);
+    }
+
+    AnonymousObservable.prototype.scheduledSubscribe = function (x, ado) {
+      try {
+        ado.setDisposable(fixSubscriber(this.subscribeCore(ado)));
+      } catch (e) {
+        if (!ado.fail(e)) { throw e; }
+      }
+      return disposableEmpty;
+    };
 
     return AnonymousObservable;
 

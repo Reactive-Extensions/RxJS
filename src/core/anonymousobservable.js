@@ -1,7 +1,6 @@
   var AnonymousObservable = Rx.AnonymousObservable = (function (__super__) {
     inherits(AnonymousObservable, __super__);
 
-    // Fix subscriber to check for undefined or function returned to decorate as Disposable
     function fixSubscriber(subscriber) {
       if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
 
@@ -10,35 +9,37 @@
         disposableEmpty;
     }
 
-    function AnonymousObservable(subscribe, parent) {
-      this.source = parent;
-      if (!(this instanceof AnonymousObservable)) {
-        return new AnonymousObservable(subscribe);
-      }
-
-      function s(observer) {
-        var setDisposable = function () {
-          try {
-            autoDetachObserver.setDisposable(fixSubscriber(subscribe(autoDetachObserver)));
-          } catch (e) {
-            if (!autoDetachObserver.fail(e)) {
-              throw e;
-            }
-          }
-        };
-
-        var autoDetachObserver = new AutoDetachObserver(observer);
-        if (currentThreadScheduler.scheduleRequired()) {
-          currentThreadScheduler.schedule(setDisposable);
-        } else {
-          setDisposable();
+    function subscribe(observer) {
+      var self = this;
+      var ado = new AutoDetachObserver(observer);
+      if (currentThreadScheduler.scheduleRequired()) {
+        currentThreadScheduler.scheduleWithState(ado, function (x, ado) { return self.scheduledSubscribe(x, ado); })
+      } else {
+        try {
+          ado.setDisposable(fixSubscriber(this.subscribeCore(ado)));
+        } catch (e) {
+          if (!ado.fail(e)) { throw e; }
         }
-
-        return autoDetachObserver;
       }
 
-      __super__.call(this, s);
+      return ado;
     }
+
+    function AnonymousObservable(subscribeMethod, parent) {
+      this.source = parent;
+      this.subscribeCore = subscribeMethod;
+
+      __super__.call(this, subscribe);
+    }
+
+    AnonymousObservable.prototype.scheduledSubscribe = function (x, ado) {
+      try {
+        ado.setDisposable(fixSubscriber(this.subscribeCore(ado)));
+      } catch (e) {
+        if (!ado.fail(e)) { throw e; }
+      }
+      return disposableEmpty;
+    };
 
     return AnonymousObservable;
 
