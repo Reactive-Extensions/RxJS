@@ -269,8 +269,7 @@ Two observers then subscribe to this sequence and print out its values. You will
 
 First, we need to ensure we reference the proper files if in the browser.  Note that the RxJS NPM Package already includes all operators by default.
 
-html
-```
+```html
 <script src="rx.lite.js"></script>
 ```
 
@@ -322,8 +321,8 @@ In the following example, we convert the previous cold observable sequence sourc
 ```
 
 First, we need to ensure we reference the proper files if in the browser.  Note that the RxJS NPM Package already includes all operators by default.
-html
-```
+
+```html
 <script src="rx.lite.js"></script>
 ```
 
