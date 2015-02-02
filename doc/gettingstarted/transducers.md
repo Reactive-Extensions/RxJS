@@ -1,6 +1,6 @@
 # Transducers with Observable Sequences #
 
-Much like Language Integrated Query (LINQ), Transducers are composable algorithmic transformations. They, like LINQ, are independent from the context of their input and output sources and specify only the essence of the transformation in terms of an individual element. Because transducers are decoupled from input or output sources, they can be used in many different processes - collections, streams, observables, etc. Transducers compose directly, without awareness of input or creation of intermediate aggregates.  There are two major libraries currently out there, Cognitect's [`transduce.js`](https://github.com/cognitect-labs/transducers-js) and James Long's [`transduce-js`](https://github.com/jlongster/transducers.js) which are both great for getting high performance over large amounts of data.  Because it is collection type neutral, it is a perfect fit for RxJS to do transformations over large collections.
+Much like Language Integrated Query (LINQ), Transducers are composable algorithmic transformations. They, like LINQ, are independent from the context of their input and output sources and specify only the essence of the transformation in terms of an individual element. Because transducers are decoupled from input or output sources, they can be used in many different processes - collections, streams, observables, etc. Transducers compose directly, without awareness of input or creation of intermediate aggregates.  There are two major libraries currently out there, Cognitect's [`transducer-js`](https://github.com/cognitect-labs/transducers-js) and James Long's [`transducers.js`](https://github.com/jlongster/transducers.js) which are both great for getting high performance over large amounts of data.  Because it is collection type neutral, it is a perfect fit for RxJS to do transformations over large collections.
 
 The word `transduce` is just a combination of `transform` and `reduce`. The reduce function is the base transformation; any other transformation can be expressed in terms of it (`map`, `filter`, etc).
 ```js
@@ -25,7 +25,7 @@ transduce(map(increment), concatItem, [], arr);
 // => [ 2, 3, 4, 5 ]
 ```
 
-Using Cognitect's [`transduce.js`](https://github.com/cognitect-labs/transducers-js) library, we can easily accomplish what we had above.  
+Using Cognitect's [`transducers-js`](https://github.com/cognitect-labs/transducers-js) library, we can easily accomplish what we had above.  
 
 ```js
 var t = transducers;
