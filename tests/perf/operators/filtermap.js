@@ -1,20 +1,29 @@
 var RxOld = require('../old/rx.lite');
 var RxNew = require('../../../dist/rx.lite');
+var Benchmark = require('benchmark');
 
-var oldStart = new Date();
-RxOld.Observable.range(0, 2500000)
-  .map(function (x) { return x * x; })
-  .filter(function (x) { return x % 3 === 0; })
-  .subscribeOnCompleted(function () {
-    var elapsed = new Date() - oldStart;
-    console.log('Old time elapsed:', elapsed);
-  });
+var suite = new Benchmark.Suite;
 
-var newStart = new Date();
-RxNew.Observable.range(0, 2500000)
-  .map(function (x) { return x * x; })
-  .filter(function (x) { return x % 3 === 0; })
-  .subscribeOnCompleted(function () {
-    var elapsed = new Date() - newStart;
-    console.log('New time elapsed:', elapsed);
-  });
+// add tests
+suite.add('old', function() {
+  RxOld.Observable.range(0, 25)
+    .map(double)
+    .filter(mod3).subscribe();
+})
+.add('new', function() {
+  RxNew.Observable.range(0, 25)
+    .map(double)
+    .filter(mod3).subscribe();
+})
+// add listeners
+.on('cycle', function(event) {
+  console.log(String(event.target));
+})
+.on('complete', function() {
+  console.log('Fastest is ' + this.filter('fastest').pluck('name'));
+})
+// run async
+.run({ 'async': true });
+
+function double(x) { return x * x; }
+function mod3(x) { return x % 3 === 0; }

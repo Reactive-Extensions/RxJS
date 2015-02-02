@@ -11,17 +11,22 @@
         disposableEmpty;
     }
 
+    function setDisposable(s, state) {
+      var ado = state[0], self = state[1];
+      try {
+        ado.setDisposable(fixSubscriber(self.subscribeCore(ado)));
+      } catch (e) {
+        if (!ado.fail(e)) { throw e; }
+      }
+    }
+
     function subscribe(observer) {
-      var self = this;
-      var ado = new AutoDetachObserver(observer);
+      var ado = new AutoDetachObserver(observer), state = [ado, this];
+
       if (currentThreadScheduler.scheduleRequired()) {
-        currentThreadScheduler.scheduleWithState(ado, function (_, ado) { return self.scheduledSubscribe(_, ado); })
+        currentThreadScheduler.scheduleWithState(state, setDisposable);
       } else {
-        try {
-          ado.setDisposable(fixSubscriber(this.subscribeCore(ado)));
-        } catch (e) {
-          if (!ado.fail(e)) { throw e; }
-        }    
+        setDisposable(null, state);
       }
 
       return ado;
@@ -30,15 +35,6 @@
     function ObservableBase() {
       __super__.call(this, subscribe);
     }
-
-    ObservableBase.prototype.scheduledSubscribe = function (_, ado) {
-      try {
-        ado.setDisposable(fixSubscriber(this.subscribeCore(ado)));
-      } catch (e) {
-        if (!ado.fail(e)) { throw e; }
-      }
-      return disposableEmpty;
-    };
 
     return ObservableBase;
 
