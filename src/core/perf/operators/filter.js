@@ -59,6 +59,5 @@
   */
   observableProto.filter = observableProto.where = function (predicate, thisArg) {
     return this instanceof FilterObservable ? this.internalFilter(predicate, thisArg) :
-      this instanceof MapObservable ? this.internalMapFilter(predicate, thisArg) :
       new FilterObservable(this, predicate, thisArg);
   };

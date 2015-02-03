@@ -11,6 +11,7 @@
     observerCreate = Rx.Observer.create,
     addRef = Rx.internals.addRef,
     defaultComparer = Rx.internals.isEqual,
+    inherits = Rx.internals.inherits,
     noop = Rx.helpers.noop,
     identity = Rx.helpers.identity,
     isPromise = Rx.helpers.isPromise,
