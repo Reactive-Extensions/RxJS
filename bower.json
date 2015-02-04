@@ -21,7 +21,7 @@
     "dist/rx.async.map",
     "dist/rx.async.min.js",
     "dist/rx.async.compat.js",
-    "dist/rx.async.compat.map.js",
+    "dist/rx.async.compat.map",
     "dist/rx.async.compat.min.js",
     "dist/rx.backpressure.js",
     "dist/rx.backpressure.map",
