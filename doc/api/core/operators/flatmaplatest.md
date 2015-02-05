@@ -27,7 +27,7 @@ var source = Rx.Observable
 
 var subscription = source.subscribe(
   function (x) {
-    console.log('Next: %', x);
+    console.log('Next: %s', x);
   },
   function (err) {
     console.log('Error: %s', err);

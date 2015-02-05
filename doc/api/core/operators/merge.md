@@ -21,7 +21,8 @@ var source2 = Rx.Observable.interval(150)
 
 var source = Rx.Observable.merge(
     source1,
-    source2);
+    source2)
+    .take(5);
 
 var subscription = source.subscribe(
     function (x) {
