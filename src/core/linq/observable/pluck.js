@@ -1,17 +1,13 @@
   /**
    * Retrieves the value of a specified nested property from all elements in
    * the Observable sequence.
-   * @param {String} nestedProps The nested property to pluck.
+   * @param {Arguments} arguments The nested properties to pluck.
    * @returns {Observable} Returns a new Observable sequence of property values.
    */
   observableProto.pluck = function () {
-    var args = [].slice.call(arguments);
-    var len = args.length;
+    var args = arguments, len = arguments.length;
+    if (len === 0) { throw new Error('List of properties cannot be empty.'); }
     return this.map(function (x) {
-      if (len === 0) {
-        return undefined;
-      }
-
       var currentProp = x;
       for (var i = 0; i < len; i++) {
         var p = currentProp[args[i]];

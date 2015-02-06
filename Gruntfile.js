@@ -103,6 +103,8 @@ var browsers = [{
               'src/core/perf/operators/fromarray.js',
               'src/core/linq/observable/generate.js',
               'src/core/linq/observable/of.js',
+              'src/core/linq/observable/ofarraychanges.js',
+              'src/core/linq/observable/ofobjectchanges.js',
               'src/core/linq/observable/never.js',
               'src/core/linq/observable/pairs.js',
               'src/core/linq/observable/range.js',

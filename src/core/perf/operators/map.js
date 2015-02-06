@@ -20,36 +20,39 @@
 
   }(ObservableBase));
 
-  var MapObserver = (function (__super__) {
-    inherits(MapObserver, __super__);
+  function MapObserver(observer, selector, source) {
+    this.observer = observer;
+    this.selector = selector;
+    this.source = source;
+    this.index = 0;
+    this.isStopped = false;
+  }
 
-    function MapObserver(observer, selector, source) {
-      this.observer = observer;
-      this.selector = selector;
-      this.source = source;
-      this.index = 0;
-      __super__.call(this);
+  MapObserver.prototype.onNext = function(x) {
+    if (this.isStopped) { return; }
+    try {
+      var result = this.selector(x, this.index++, this.source);
+    } catch(e) {
+      return this.observer.onError(e);
+    }
+    this.observer.onNext(result);
+  };
+  MapObserver.prototype.onError = function (e) {
+    if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
+  };
+  MapObserver.prototype.onCompleted = function () {
+    if(!this.isStopped) { this.isStopped = true; this.observer.onCompleted(); }
+  };
+  MapObserver.prototype.dispose = function() { this.isStopped = true; };
+  MapObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+      return true;
     }
 
-    MapObserver.prototype.next = function(x) {
-      try {
-        var result = this.selector(x, this.index++, this.source);
-      } catch(e) {
-        return this.observer.onError(e);
-      }
-      this.observer.onNext(result);
-    };
-
-    MapObserver.prototype.error = function (e) {
-      this.observer.onError(e);
-    };
-
-    MapObserver.prototype.completed = function () {
-      this.observer.onCompleted();
-    };
-
-    return MapObserver;
-  }(AbstractObserver));
+    return false;
+  };
 
   /**
   * Projects each element of an observable sequence into a new form by incorporating the element's index.

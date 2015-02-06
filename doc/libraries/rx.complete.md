@@ -44,6 +44,8 @@ NuGet Packages:
 - [`merge`](../api/core/operators/merge.md)
 - [`never`](../api/core/operators/never.md)
 - [`of`](../api/core/operators/of.md)
+- [`ofArrayChanges`](../api/core/operators/ofarraychanges.md)
+- [`ofObjectChanges`](../api/core/operators/ofobjectchanges.md)
 - [`ofWithScheduler`](../api/core/operators/ofwithscheduler.md)
 - [`onErrorResumeNext`](../api/core/operators/onerrorresumenext.md)
 - [`range`](../api/core/operators/range.md)

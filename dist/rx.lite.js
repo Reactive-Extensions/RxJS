@@ -1957,6 +1957,10 @@
       __super__.call(this, subscribe);
     }
 
+    ObservableBase.prototype.subscribeCore = function(observer) {
+      throw new Error('Not implemeneted');
+    }
+
     return ObservableBase;
 
   }(Observable));
@@ -3376,36 +3380,39 @@
 
   }(ObservableBase));
 
-  var MapObserver = (function (__super__) {
-    inherits(MapObserver, __super__);
+  function MapObserver(observer, selector, source) {
+    this.observer = observer;
+    this.selector = selector;
+    this.source = source;
+    this.index = 0;
+    this.isStopped = false;
+  }
 
-    function MapObserver(observer, selector, source) {
-      this.observer = observer;
-      this.selector = selector;
-      this.source = source;
-      this.index = 0;
-      __super__.call(this);
+  MapObserver.prototype.onNext = function(x) {
+    if (this.isStopped) { return; }
+    try {
+      var result = this.selector(x, this.index++, this.source);
+    } catch(e) {
+      return this.observer.onError(e);
+    }
+    this.observer.onNext(result);
+  };
+  MapObserver.prototype.onError = function (e) {
+    if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
+  };
+  MapObserver.prototype.onCompleted = function () {
+    if(!this.isStopped) { this.isStopped = true; this.observer.onCompleted(); }
+  };
+  MapObserver.prototype.dispose = function() { this.isStopped = true; };
+  MapObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+      return true;
     }
 
-    MapObserver.prototype.next = function(x) {
-      try {
-        var result = this.selector(x, this.index++, this.source);
-      } catch(e) {
-        return this.observer.onError(e);
-      }
-      this.observer.onNext(result);
-    };
-
-    MapObserver.prototype.error = function (e) {
-      this.observer.onError(e);
-    };
-
-    MapObserver.prototype.completed = function () {
-      this.observer.onCompleted();
-    };
-
-    return MapObserver;
-  }(AbstractObserver));
+    return false;
+  };
 
   /**
   * Projects each element of an observable sequence into a new form by incorporating the element's index.
@@ -3421,12 +3428,26 @@
   };
 
   /**
-   * Retrieves the value of a specified property from all elements in the Observable sequence.
-   * @param {String} prop The property to pluck.
+   * Retrieves the value of a specified nested property from all elements in
+   * the Observable sequence.
+   * @param {Arguments} arguments The nested properties to pluck.
    * @returns {Observable} Returns a new Observable sequence of property values.
    */
-  observableProto.pluck = function (prop) {
-    return this.map(function (x) { return x[prop]; });
+  observableProto.pluck = function () {
+    var args = arguments, len = arguments.length;
+    if (len === 0) { throw new Error('List of properties cannot be empty.'); }
+    return this.map(function (x) {
+      var currentProp = x;
+      for (var i = 0; i < len; i++) {
+        var p = currentProp[args[i]];
+        if (typeof p !== 'undefined') {
+          currentProp = p;
+        } else {
+          return undefined;
+        }
+      }
+      return currentProp;
+    });
   };
 
   function flatMap(source, selector, thisArg) {
@@ -3612,36 +3633,41 @@
 
   }(ObservableBase));
 
-  var FilterObserver = (function (__super__) {
-    inherits(FilterObserver, __super__);
+  function FilterObserver(observer, predicate, source) {
+    this.observer = observer;
+    this.predicate = predicate;
+    this.source = source;
+    this.index = 0;
+    this.isStopped = false;
+  }
 
-    function FilterObserver(observer, predicate, source) {
-      this.observer = observer;
-      this.predicate = predicate;
-      this.source = source;
-      this.index = 0;
-      __super__.call(this);
+  FilterObserver.prototype.onNext = function(x) {
+    try {
+      var shouldYield = this.predicate(x, this.index++, this.source);
+    } catch(e) {
+      return this.observer.onError(e);
+    }
+    shouldYield && this.observer.onNext(x);
+  };
+
+  FilterObserver.prototype.onError = function (e) {
+    if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
+  };
+  FilterObserver.prototype.onCompleted = function () {
+    if(!this.isStopped) { this.isStopped = true; this.observer.onCompleted(); }
+  };
+  FilterObserver.prototype.dispose = function() { this.isStopped = true; };
+  FilterObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+      return true;
     }
 
-    FilterObserver.prototype.next = function(x) {
-      try {
-        var shouldYield = this.predicate(x, this.index++, this.source);
-      } catch(e) {
-        return this.observer.onError(e);
-      }
-      shouldYield && this.observer.onNext(x);
-    };
+    return false;
+  };
 
-    FilterObserver.prototype.error = function (e) {
-      this.observer.onError(e);
-    };
 
-    FilterObserver.prototype.completed = function () {
-      this.observer.onCompleted();
-    };
-
-    return FilterObserver;
-  }(AbstractObserver));
 
   /**
   *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.

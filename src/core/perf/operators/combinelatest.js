@@ -31,16 +31,16 @@
     return CombineLatestObservable;
   }(ObservableBase));
 
-  var CombineLatestObserver = (function(__super__) {
-    inherits(CombineLatestObserver, __super__);
+  var CombineLatestObserver = (function() {
     function CombineLatestObserver(observer, i, parent) {
       this.observer = observer;
       this.i = i;
       this.parent = parent;
-      __super__.call(this);
+      this.isStopped = false;
     }
 
-    CombineLatestObserver.prototype.next = function(x) {
+    CombineLatestObserver.prototype.onNext = function(x) {
+      if (this.isStopped) { return; }
       var i = this.i;
       this.parent.values[i] = x;
       this.parent.hasValue[i] = true;
@@ -55,14 +55,29 @@
         this.observer.onCompleted();
       }
     };
-    CombineLatestObserver.prototype.error = function(e) { this.observer.onError(e); };
-    CombineLatestObserver.prototype.completed = function() {
-      this.parent.isDone[this.i] = true;
-      this.parent.isDone.every(identity) && this.observer.onCompleted();
+    CombineLatestObserver.prototype.onError = function(e) {
+      if (!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
+    };
+    CombineLatestObserver.prototype.onCompleted = function() {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.parent.isDone[this.i] = true;
+        this.parent.isDone.every(identity) && this.observer.onCompleted();
+      }
+    };
+    CombineLatestObserver.prototype.dispose = function() { this.isStopped = true; };
+    CombineLatestObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.observer.onError(e);
+        return true;
+      }
+
+      return false;
     };
 
     return CombineLatestObserver;
-  }(AbstractObserver));
+  }());
 
   /**
   * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.

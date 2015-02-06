@@ -20,36 +20,41 @@
 
   }(ObservableBase));
 
-  var FilterObserver = (function (__super__) {
-    inherits(FilterObserver, __super__);
+  function FilterObserver(observer, predicate, source) {
+    this.observer = observer;
+    this.predicate = predicate;
+    this.source = source;
+    this.index = 0;
+    this.isStopped = false;
+  }
 
-    function FilterObserver(observer, predicate, source) {
-      this.observer = observer;
-      this.predicate = predicate;
-      this.source = source;
-      this.index = 0;
-      __super__.call(this);
+  FilterObserver.prototype.onNext = function(x) {
+    try {
+      var shouldYield = this.predicate(x, this.index++, this.source);
+    } catch(e) {
+      return this.observer.onError(e);
+    }
+    shouldYield && this.observer.onNext(x);
+  };
+
+  FilterObserver.prototype.onError = function (e) {
+    if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
+  };
+  FilterObserver.prototype.onCompleted = function () {
+    if(!this.isStopped) { this.isStopped = true; this.observer.onCompleted(); }
+  };
+  FilterObserver.prototype.dispose = function() { this.isStopped = true; };
+  FilterObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+      return true;
     }
 
-    FilterObserver.prototype.next = function(x) {
-      try {
-        var shouldYield = this.predicate(x, this.index++, this.source);
-      } catch(e) {
-        return this.observer.onError(e);
-      }
-      shouldYield && this.observer.onNext(x);
-    };
+    return false;
+  };
 
-    FilterObserver.prototype.error = function (e) {
-      this.observer.onError(e);
-    };
 
-    FilterObserver.prototype.completed = function () {
-      this.observer.onCompleted();
-    };
-
-    return FilterObserver;
-  }(AbstractObserver));
 
   /**
   *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.

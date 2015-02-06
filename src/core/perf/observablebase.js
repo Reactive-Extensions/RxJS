@@ -36,6 +36,10 @@
       __super__.call(this, subscribe);
     }
 
+    ObservableBase.prototype.subscribeCore = function(observer) {
+      throw new Error('Not implemeneted');
+    }
+
     return ObservableBase;
 
   }(Observable));
