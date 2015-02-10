@@ -63,6 +63,6 @@
   observableProto.map = observableProto.select = function (selector, thisArg) {
     var selectorFn = typeof selector === 'function' ? selector : function () { return selector; };
     return this instanceof MapObservable ?
-      this.internalMap(selector, thisArg) :
+      this.internalMap(selectorFn, thisArg) :
       new MapObservable(this, selectorFn, thisArg);
   };

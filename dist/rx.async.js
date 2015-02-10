@@ -427,17 +427,11 @@
 
     // Use only if non-native events are allowed
     if (!Rx.config.useNativeEvents) {
-      // Handles jq, Angular.js, Zepto, Marionette
+      // Handles jq, Angular.js, Zepto, Marionette, Ember.js
       if (typeof element.on === 'function' && typeof element.off === 'function') {
         return fromEventPattern(
           function (h) { element.on(eventName, h); },
           function (h) { element.off(eventName, h); },
-          selector);
-      }
-      if (!!root.Ember && typeof root.Ember.addListener === 'function') {
-        return fromEventPattern(
-          function (h) { Ember.addListener(element, eventName, h); },
-          function (h) { Ember.removeListener(element, eventName, h); },
           selector);
       }
     }
