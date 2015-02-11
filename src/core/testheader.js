@@ -11,9 +11,3 @@
       slice = Array.prototype.slice,
       inherits = Rx.internals.inherits,
       defaultComparer = Rx.internals.isEqual;
-
-  function argsOrArray(args, idx) {
-    return args.length === 1 && Array.isArray(args[idx]) ?
-      args[idx] :
-      slice.call(args);
-  }

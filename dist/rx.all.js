@@ -3382,8 +3382,10 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
    */
   observableProto.zip = function () {
-    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-    if (Array.isArray(args[0])) { return zipArray.apply(this, args); }
+    if (Array.isArray(arguments[0])) { return zipArray.apply(this, arguments); }
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+
     var parent = this, resultSelector = args.pop();
     args.unshift(parent);
     return new AnonymousObservable(function (observer) {
@@ -3440,7 +3442,8 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   Observable.zip = function () {
-    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     var first = args.shift();
     return first.zip.apply(first, args);
   };
@@ -3451,11 +3454,13 @@
    * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
    */
   Observable.zipArray = function () {
-    var sources = [];
+    var sources;
     if (Array.isArray(arguments[0])) {
       sources = arguments[0];
     } else {
-      for(var i = 0, len = arguments.length; i < len; i++) { sources.push(arguments[i]); }
+      var len = arguments.length;
+      sources = new Array(len);
+      for(var i = 0; i < len; i++) { sources[i] = arguments[i]; }
     }
     return new AnonymousObservable(function (observer) {
       var n = sources.length,
@@ -7931,33 +7936,34 @@
    *  @returns {Observable} Observable sequence with the results form matching several patterns.
    */
   Observable.when = function () {
-    var plans = [];
+    var len = arguments.length, plans;
     if (Array.isArray(arguments[0])) {
       plans = arguments[0];
     } else {
-      for(var i = 0, len = arguments.length; i < len; i++) { plans.push(arguments[i]); }
+      plans = new Array(len);
+      for(var i = 0; i < len; i++) { plans[i] = arguments[i]; }
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var activePlans = [],
           externalSubscriptions = new Map();
       var outObserver = observerCreate(
-        observer.onNext.bind(observer),
+        function (x) { o.onNext(x); },
         function (err) {
           externalSubscriptions.forEach(function (v) { v.onError(err); });
-          observer.onError(err);
+          o.onError(err);
         },
-        observer.onCompleted.bind(observer)
+        function (x) { o.onCompleted(); }
       );
       try {
         for (var i = 0, len = plans.length; i < len; i++) {
           activePlans.push(plans[i].activate(externalSubscriptions, outObserver, function (activePlan) {
             var idx = activePlans.indexOf(activePlan);
             activePlans.splice(idx, 1);
-            activePlans.length === 0 && observer.onCompleted();
+            activePlans.length === 0 && o.onCompleted();
           }));
         }
       } catch (e) {
-        observableThrow(e).subscribe(observer);
+        observableThrow(e).subscribe(o);
       }
       var group = new CompositeDisposable();
       externalSubscriptions.forEach(function (joinObserver) {

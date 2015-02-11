@@ -47,12 +47,6 @@
       inherits = Rx.internals.inherits,
       defaultComparer = Rx.internals.isEqual;
 
-  function argsOrArray(args, idx) {
-    return args.length === 1 && Array.isArray(args[idx]) ?
-      args[idx] :
-      slice.call(args);
-  }
-
 function OnNextPredicate(predicate) {
     this.predicate = predicate;
 };
@@ -196,20 +190,15 @@ var ReactiveTest = Rx.ReactiveTest = {
     return '(' + this.subscribe + ', ' + (this.unsubscribe === Number.MAX_VALUE ? 'Infinite' : this.unsubscribe) + ')';
   };
 
-    /** @private */
-    var MockDisposable = Rx.MockDisposable = function (scheduler) {
-        this.scheduler = scheduler;
-        this.disposes = [];
-        this.disposes.push(this.scheduler.clock);
-    };
+  var MockDisposable = Rx.MockDisposable = function (scheduler) {
+    this.scheduler = scheduler;
+    this.disposes = [];
+    this.disposes.push(this.scheduler.clock);
+  };
 
-    /*
-     * @memberOf MockDisposable#
-     * @prviate
-     */
-    MockDisposable.prototype.dispose = function () {
-        this.disposes.push(this.scheduler.clock);
-    };
+  MockDisposable.prototype.dispose = function () {
+    this.disposes.push(this.scheduler.clock);
+  };
 
   var MockObserver = (function (__super__) {
     inherits(MockObserver, __super__);
@@ -481,8 +470,14 @@ var ReactiveTest = Rx.ReactiveTest = {
      * @return Hot observable sequence that can be used to assert the timing of subscriptions and notifications.
      */
     TestScheduler.prototype.createHotObservable = function () {
-        var messages = argsOrArray(arguments, 0);
-        return new HotObservable(this, messages);
+      var len = arguments.length, args;
+      if (Array.isArray(arguments[0])) {
+        args = arguments[0];
+      } else {
+        args = new Array(len);
+        for (var i = 0; i < len; i++) { args[i] = arguments[i]; }
+      }
+      return new HotObservable(this, args);
     };
 
     /**
@@ -491,8 +486,14 @@ var ReactiveTest = Rx.ReactiveTest = {
      * @return Cold observable sequence that can be used to assert the timing of subscriptions and notifications.
      */
     TestScheduler.prototype.createColdObservable = function () {
-        var messages = argsOrArray(arguments, 0);
-        return new ColdObservable(this, messages);
+      var len = arguments.length, args;
+      if (Array.isArray(arguments[0])) {
+        args = arguments[0];
+      } else {
+        args = new Array(len);
+        for (var i = 0; i < len; i++) { args[i] = arguments[i]; }
+      }
+      return new ColdObservable(this, args);
     };
 
     /**

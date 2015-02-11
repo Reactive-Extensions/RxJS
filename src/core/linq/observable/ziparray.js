@@ -4,11 +4,13 @@
    * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
    */
   Observable.zipArray = function () {
-    var sources = [];
+    var sources;
     if (Array.isArray(arguments[0])) {
       sources = arguments[0];
     } else {
-      for(var i = 0, len = arguments.length; i < len; i++) { sources.push(arguments[i]); }
+      var len = arguments.length;
+      sources = new Array(len);
+      for(var i = 0; i < len; i++) { sources[i] = arguments[i]; }
     }
     return new AnonymousObservable(function (observer) {
       var n = sources.length,

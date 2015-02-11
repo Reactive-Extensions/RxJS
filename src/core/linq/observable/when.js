@@ -5,33 +5,34 @@
    *  @returns {Observable} Observable sequence with the results form matching several patterns.
    */
   Observable.when = function () {
-    var plans = [];
+    var len = arguments.length, plans;
     if (Array.isArray(arguments[0])) {
       plans = arguments[0];
     } else {
-      for(var i = 0, len = arguments.length; i < len; i++) { plans.push(arguments[i]); }
+      plans = new Array(len);
+      for(var i = 0; i < len; i++) { plans[i] = arguments[i]; }
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var activePlans = [],
           externalSubscriptions = new Map();
       var outObserver = observerCreate(
-        observer.onNext.bind(observer),
+        function (x) { o.onNext(x); },
         function (err) {
           externalSubscriptions.forEach(function (v) { v.onError(err); });
-          observer.onError(err);
+          o.onError(err);
         },
-        observer.onCompleted.bind(observer)
+        function (x) { o.onCompleted(); }
       );
       try {
         for (var i = 0, len = plans.length; i < len; i++) {
           activePlans.push(plans[i].activate(externalSubscriptions, outObserver, function (activePlan) {
             var idx = activePlans.indexOf(activePlan);
             activePlans.splice(idx, 1);
-            activePlans.length === 0 && observer.onCompleted();
+            activePlans.length === 0 && o.onCompleted();
           }));
         }
       } catch (e) {
-        observableThrow(e).subscribe(observer);
+        observableThrow(e).subscribe(o);
       }
       var group = new CompositeDisposable();
       externalSubscriptions.forEach(function (joinObserver) {

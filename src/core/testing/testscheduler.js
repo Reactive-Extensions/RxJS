@@ -110,8 +110,14 @@
      * @return Hot observable sequence that can be used to assert the timing of subscriptions and notifications.
      */
     TestScheduler.prototype.createHotObservable = function () {
-        var messages = argsOrArray(arguments, 0);
-        return new HotObservable(this, messages);
+      var len = arguments.length, args;
+      if (Array.isArray(arguments[0])) {
+        args = arguments[0];
+      } else {
+        args = new Array(len);
+        for (var i = 0; i < len; i++) { args[i] = arguments[i]; }
+      }
+      return new HotObservable(this, args);
     };
 
     /**
@@ -120,8 +126,14 @@
      * @return Cold observable sequence that can be used to assert the timing of subscriptions and notifications.
      */
     TestScheduler.prototype.createColdObservable = function () {
-        var messages = argsOrArray(arguments, 0);
-        return new ColdObservable(this, messages);
+      var len = arguments.length, args;
+      if (Array.isArray(arguments[0])) {
+        args = arguments[0];
+      } else {
+        args = new Array(len);
+        for (var i = 0; i < len; i++) { args[i] = arguments[i]; }
+      }
+      return new ColdObservable(this, args);
     };
 
     /**

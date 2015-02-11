@@ -31,8 +31,10 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
    */
   observableProto.zip = function () {
-    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-    if (Array.isArray(args[0])) { return zipArray.apply(this, args); }
+    if (Array.isArray(arguments[0])) { return zipArray.apply(this, arguments); }
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+
     var parent = this, resultSelector = args.pop();
     args.unshift(parent);
     return new AnonymousObservable(function (observer) {
