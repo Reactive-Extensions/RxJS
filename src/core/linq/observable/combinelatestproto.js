@@ -8,7 +8,8 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   observableProto.combineLatest = function () {
-    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     if (Array.isArray(args[0])) {
       args[0].unshift(this);
     } else {

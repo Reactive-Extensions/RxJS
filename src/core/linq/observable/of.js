@@ -1,11 +1,11 @@
   function observableOf (scheduler, array) {
+    var len = array.length;
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
-      var count = 0, len = array.length;
-      return scheduler.scheduleRecursive(function (self) {
-        if (count < len) {
-          observer.onNext(array[count++]);
-          self();
+      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
+        if (i < len) {
+          observer.onNext(array[i]);
+          self(i + 1);
         } else {
           observer.onCompleted();
         }
@@ -18,7 +18,8 @@
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
   Observable.of = function () {
-    for(var args = new Array(arguments.length), i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     return observableOf(null, args);
   };
 
@@ -28,6 +29,7 @@
    * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
    */
   Observable.ofWithScheduler = function (scheduler) {
-    for(var args = new Array(arguments.length - 1), i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var len = arguments.length, args = new Array(len - 1);
+    for(var i = 0; i < len - 1; i++) { args[i] = arguments[i + 1]; }
     return observableOf(scheduler, args);
   };

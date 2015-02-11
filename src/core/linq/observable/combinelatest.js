@@ -7,46 +7,41 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   var combineLatest = Observable.combineLatest = function () {
-    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     var resultSelector = args.pop();
+    len--;
+    Array.isArray(args[0]) && (args = args[0]);
 
-    if (Array.isArray(args[0])) {
-      args = args[0];
-    }
-
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var falseFactory = function () { return false; },
-        n = args.length,
-        hasValue = arrayInitialize(n, falseFactory),
+        hasValue = arrayInitialize(len, falseFactory),
         hasValueAll = false,
-        isDone = arrayInitialize(n, falseFactory),
-        values = new Array(n);
+        isDone = arrayInitialize(len, falseFactory),
+        values = new Array(len);
 
       function next(i) {
-        var res;
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
           try {
-            res = resultSelector.apply(null, values);
+            var res = resultSelector.apply(null, values);
           } catch (ex) {
-            observer.onError(ex);
+            o.onError(ex);
             return;
           }
-          observer.onNext(res);
+          o.onNext(res);
         } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-          observer.onCompleted();
+          o.onCompleted();
         }
       }
 
       function done (i) {
         isDone[i] = true;
-        if (isDone.every(identity)) {
-          observer.onCompleted();
-        }
+        isDone.every(identity) && o.onCompleted();
       }
 
-      var subscriptions = new Array(n);
-      for (var idx = 0; idx < n; idx++) {
+      var subscriptions = new Array(len);
+      for (var idx = 0; idx < len; idx++) {
         (function (i) {
           var source = args[i], sad = new SingleAssignmentDisposable();
           isPromise(source) && (source = observableFromPromise(source));
@@ -54,7 +49,7 @@
               values[i] = x;
               next(i);
             },
-            function(e) { observer.onError(e); },
+            function(e) { o.onError(e); },
             function () { done(i); }
           ));
           subscriptions[i] = sad;

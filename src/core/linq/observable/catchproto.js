@@ -1,21 +1,19 @@
   function observableCatchHandler(source, handler) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var d1 = new SingleAssignmentDisposable(), subscription = new SerialDisposable();
       subscription.setDisposable(d1);
-      d1.setDisposable(source.subscribe(observer.onNext.bind(observer), function (exception) {
-        var d, result;
+      d1.setDisposable(source.subscribe(function (x) { o.onNext(x); }, function (e) {
         try {
-          result = handler(exception);
+          var result = handler(e);
         } catch (ex) {
-          observer.onError(ex);
-          return;
+          return o.onError(ex);
         }
         isPromise(result) && (result = observableFromPromise(result));
 
-        d = new SingleAssignmentDisposable();
+        var d = new SingleAssignmentDisposable();
         subscription.setDisposable(d);
-        d.setDisposable(result.subscribe(observer));
-      }, observer.onCompleted.bind(observer)));
+        d.setDisposable(result.subscribe(o));
+      }, function (x) { o.onCompleted(x); }));
 
       return subscription;
     }, source);
@@ -29,16 +27,8 @@
    * @param {Mixed} handlerOrSecond Exception handler function that returns an observable sequence given the error that occurred in the first sequence, or a second observable sequence used to produce results when an error occurred in the first sequence.
    * @returns {Observable} An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
    */
-  observableProto['catch'] = observableProto.catchError = function (handlerOrSecond) {
+  observableProto['catch'] = observableProto.catchError = observableProto.catchException = function (handlerOrSecond) {
     return typeof handlerOrSecond === 'function' ?
       observableCatchHandler(this, handlerOrSecond) :
       observableCatch([this, handlerOrSecond]);
-  };
-
-  /**
-   * @deprecated use #catch or #catchError instead.
-   */
-  observableProto.catchException = function (handlerOrSecond) {
-    //deprecate('catchException', 'catch or catchError');
-    return this.catchError(handlerOrSecond);
   };
