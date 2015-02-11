@@ -1,57 +1,57 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 ;(function (factory) {
-    var objectTypes = {
-        'boolean': false,
-        'function': true,
-        'object': true,
-        'number': false,
-        'string': false,
-        'undefined': false
-    };
+  var objectTypes = {
+    'boolean': false,
+    'function': true,
+    'object': true,
+    'number': false,
+    'string': false,
+    'undefined': false
+  };
 
-    var root = (objectTypes[typeof window] && window) || this,
-        freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
-        freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
-        moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
-        freeGlobal = objectTypes[typeof global] && global;
+  var root = (objectTypes[typeof window] && window) || this,
+      freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
+      freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
+      moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
+      freeGlobal = objectTypes[typeof global] && global;
 
-    if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
-        root = freeGlobal;
-    }
+  if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
+    root = freeGlobal;
+  }
 
-    // Because of build optimizers
-    if (typeof define === 'function' && define.amd) {
-        define(['rx.virtualtime', 'exports'], function (Rx, exports) {
-            root.Rx = factory(root, exports, Rx);
-            return root.Rx;
-        });
-    } else if (typeof module === 'object' && module && module.exports === freeExports) {
-        module.exports = factory(root, module.exports, require('./rx.all'));
-    } else {
-        root.Rx = factory(root, {}, root.Rx);
-    }
+  // Because of build optimizers
+  if (typeof define === 'function' && define.amd) {
+    define(['rx.virtualtime', 'exports'], function (Rx, exports) {
+      root.Rx = factory(root, exports, Rx);
+      return root.Rx;
+    });
+  } else if (typeof module === 'object' && module && module.exports === freeExports) {
+    module.exports = factory(root, module.exports, require('./rx'));
+  } else {
+    root.Rx = factory(root, {}, root.Rx);
+  }
 }.call(this, function (root, exp, Rx, undefined) {
 
-    // Defaults
-    var Observer = Rx.Observer,
-        Observable = Rx.Observable,
-        Notification = Rx.Notification,
-        VirtualTimeScheduler = Rx.VirtualTimeScheduler,
-        Disposable = Rx.Disposable,
-        disposableEmpty = Disposable.empty,
-        disposableCreate = Disposable.create,
-        CompositeDisposable = Rx.CompositeDisposable,
-        SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
-        slice = Array.prototype.slice,
-        inherits = Rx.internals.inherits,
-        defaultComparer = Rx.internals.isEqual;
+  // Defaults
+  var Observer = Rx.Observer,
+      Observable = Rx.Observable,
+      Notification = Rx.Notification,
+      VirtualTimeScheduler = Rx.VirtualTimeScheduler,
+      Disposable = Rx.Disposable,
+      disposableEmpty = Disposable.empty,
+      disposableCreate = Disposable.create,
+      CompositeDisposable = Rx.CompositeDisposable,
+      SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
+      slice = Array.prototype.slice,
+      inherits = Rx.internals.inherits,
+      defaultComparer = Rx.internals.isEqual;
 
-    function argsOrArray(args, idx) {
-        return args.length === 1 && Array.isArray(args[idx]) ?
-            args[idx] :
-            slice.call(args);
-    }
+  function argsOrArray(args, idx) {
+    return args.length === 1 && Array.isArray(args[idx]) ?
+      args[idx] :
+      slice.call(args);
+  }
 
 function OnNextPredicate(predicate) {
     this.predicate = predicate;
