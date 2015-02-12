@@ -6,12 +6,12 @@ var suite = new Benchmark.Suite;
 
 // add tests
 suite.add('old', function() {
-  RxOld.Observable.range(0, 25)
+  RxOld.Observable.range(0, 2500)
   .map(square)
   .map(double).subscribe();
 })
 .add('new', function() {
-  RxNew.Observable.range(0, 25)
+  RxNew.Observable.range(0, 2500)
   .map(square)
   .map(double).subscribe();
 })
