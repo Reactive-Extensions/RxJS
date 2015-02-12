@@ -19,12 +19,7 @@
   };
 
   StringIterator.prototype.next = function () {
-    if (this._i < this._l) {
-      var val = this._s.charAt(this._i++);
-      return { done: false, value: val };
-    } else {
-      return doneEnumerator;
-    }
+    return this._i < this._l ? { done: false, value: this._s.charAt(this._i++) } : doneEnumerator;
   };
 
   function ArrayIterable(a) {
@@ -46,12 +41,7 @@
   };
 
   ArrayIterator.prototype.next = function () {
-    if (this._i < this._l) {
-      var val = this._a[this._i++];
-      return { done: false, value: val };
-    } else {
-      return doneEnumerator;
-    }
+    return this._i < this._l ? { done: false, value: this._a[this._i++] } : doneEnumerator;
   };
 
   function numberIsFinite(value) {
@@ -117,13 +107,9 @@
         try {
           var next = it.next();
         } catch (e) {
-          observer.onError(e);
-          return;
+          return observer.onError(e);
         }
-        if (next.done) {
-          observer.onCompleted();
-          return;
-        }
+        if (next.done) { return observer.onCompleted(); }
 
         var result = next.value;
 
@@ -131,8 +117,7 @@
           try {
             result = mapper(result, i);
           } catch (e) {
-            observer.onError(e);
-            return;
+            return observer.onError(e);
           }
         }
 

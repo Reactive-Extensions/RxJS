@@ -264,6 +264,47 @@
     );
   });
 
+  test('Select thisArg', function () {
+    var scheduler = new TestScheduler();
+
+    var invoked = 0;
+    var foo = 42;
+
+    var xs = scheduler.createHotObservable(
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onNext(290, 2),
+      onNext(350, 1),
+      onCompleted(400),
+      onNext(410, -1),
+      onCompleted(420),
+      onError(430, new Error())
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.map(function (x, index) {
+        invoked++;
+        equal(this, foo);
+        return (x + 1) + (index * 10);
+      }, 42);
+    });
+
+    results.messages.assertEqual(
+      onNext(210, 5),
+      onNext(240, 14),
+      onNext(290, 23),
+      onNext(350, 32),
+      onCompleted(400)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 400)
+    );
+
+    equal(4, invoked);
+  });
+
   test('Map and Map Optimization', function () {
     var scheduler = new TestScheduler();
 

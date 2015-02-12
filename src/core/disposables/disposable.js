@@ -1,7 +1,5 @@
   /**
    * Provides a set of static methods for creating Disposables.
-   *
-   * @constructor
    * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
    */
   var Disposable = Rx.Disposable = function (action) {

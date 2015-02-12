@@ -8,13 +8,13 @@
     var selectorFn = isFunction(selector) ? bindCallback(selector, thisArg, 3) : function () { return selector; },
         source = this;
     return new AnonymousObservable(function (o) {
-      var count = 0;
-      return source.subscribe(function (value) {
-        try {
-          var result = selectorFn(value, count++, source);
-        } catch (e) {
-          return o.onError(e);
+      var i = 0;
+      return source.subscribe(function (x) {
+        var result = tryCatch(selectorFn).call(void 0, x, i++, source);
+        if (result === errorObj) {
+          return o.onError(errorObj.e);
         }
+
         o.onNext(result);
       }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);

@@ -494,6 +494,22 @@
     return result;
   }
 
+  var errorObj = {e: {}};
+  var tryCatchTarget;
+  function tryCatcher() {
+    try {
+      return tryCatchTarget.apply(this, arguments);
+    } catch (e) {
+      errorObj.e = e;
+      return errorObj;
+    }
+  }
+  function tryCatch(fn) {
+    if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
+    tryCatchTarget = fn;
+    return tryCatcher;
+  }
+
   var hasProp = {}.hasOwnProperty,
       slice = Array.prototype.slice;
 
@@ -623,11 +639,13 @@
     if (Array.isArray(arguments[0])) {
       args = arguments[0];
     } else {
-      for(var i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+      var len = arguments.length;
+      args = new Array(len);
+      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     }
     this.disposables = args;
     this.isDisposed = false;
-    this.length = this.disposables.length;
+    this.length = args.length;
   };
 
   var CompositeDisposablePrototype = CompositeDisposable.prototype;
@@ -670,29 +688,19 @@
   CompositeDisposablePrototype.dispose = function () {
     if (!this.isDisposed) {
       this.isDisposed = true;
-      for(var currentDisposables = [], i = 0, len = this.disposables.length; i < len; i++) { currentDisposables.push(this.disposables[i]); }
+      var len = this.disposables.length, currentDisposables = new Array(len);
+      for(var i = 0; i < len; i++) { currentDisposables[i] = this.disposables[i]; }
       this.disposables = [];
       this.length = 0;
 
-      for (i = 0, len = currentDisposables.length; i < len; i++) {
+      for (i = 0; i < len; i++) {
         currentDisposables[i].dispose();
       }
     }
   };
 
   /**
-   * Converts the existing CompositeDisposable to an array of disposables
-   * @returns {Array} An array of disposable objects.
-   */
-  CompositeDisposablePrototype.toArray = function () {
-    for(var currentDisposables = [], ix = 0, len = this.disposables.length; i < len; i++) { currentDisposables.push(this.disposables[i]); }
-    return currentDisposables;
-  };
-
-  /**
    * Provides a set of static methods for creating Disposables.
-   *
-   * @constructor
    * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
    */
   var Disposable = Rx.Disposable = function (action) {
@@ -2056,12 +2064,7 @@
   };
 
   StringIterator.prototype.next = function () {
-    if (this._i < this._l) {
-      var val = this._s.charAt(this._i++);
-      return { done: false, value: val };
-    } else {
-      return doneEnumerator;
-    }
+    return this._i < this._l ? { done: false, value: this._s.charAt(this._i++) } : doneEnumerator;
   };
 
   function ArrayIterable(a) {
@@ -2083,12 +2086,7 @@
   };
 
   ArrayIterator.prototype.next = function () {
-    if (this._i < this._l) {
-      var val = this._a[this._i++];
-      return { done: false, value: val };
-    } else {
-      return doneEnumerator;
-    }
+    return this._i < this._l ? { done: false, value: this._a[this._i++] } : doneEnumerator;
   };
 
   function numberIsFinite(value) {
@@ -2154,13 +2152,9 @@
         try {
           var next = it.next();
         } catch (e) {
-          observer.onError(e);
-          return;
+          return observer.onError(e);
         }
-        if (next.done) {
-          observer.onCompleted();
-          return;
-        }
+        if (next.done) { return observer.onCompleted(); }
 
         var result = next.value;
 
@@ -2168,8 +2162,7 @@
           try {
             result = mapper(result, i);
           } catch (e) {
-            observer.onError(e);
-            return;
+            return observer.onError(e);
           }
         }
 
@@ -3355,10 +3348,9 @@
 
   MapObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    try {
-      var result = this.selector(x, this.index++, this.source);
-    } catch(e) {
-      return this.observer.onError(e);
+    var result = tryCatch(this.selector).call(this, x, this.index++, this.source);
+    if (result === errorObj) {
+      return this.observer.onError(errorObj.e);
     }
     this.observer.onNext(result);
   };
@@ -3607,14 +3599,13 @@
   }
 
   FilterObserver.prototype.onNext = function(x) {
-    try {
-      var shouldYield = this.predicate(x, this.index++, this.source);
-    } catch(e) {
-      return this.observer.onError(e);
+    if (this.isStopped) { return; }
+    var shouldYield = tryCatch(this.predicate).call(this, x, this.index++, this.source);
+    if (shouldYield === errorObj) {
+      return this.observer.onError(errorObj.e);
     }
     shouldYield && this.observer.onNext(x);
   };
-
   FilterObserver.prototype.onError = function (e) {
     if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
   };
@@ -3628,11 +3619,8 @@
       this.observer.onError(e);
       return true;
     }
-
     return false;
   };
-
-
 
   /**
   *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.

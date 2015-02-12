@@ -29,14 +29,13 @@
   }
 
   FilterObserver.prototype.onNext = function(x) {
-    try {
-      var shouldYield = this.predicate(x, this.index++, this.source);
-    } catch(e) {
-      return this.observer.onError(e);
+    if (this.isStopped) { return; }
+    var shouldYield = tryCatch(this.predicate).call(this, x, this.index++, this.source);
+    if (shouldYield === errorObj) {
+      return this.observer.onError(errorObj.e);
     }
     shouldYield && this.observer.onNext(x);
   };
-
   FilterObserver.prototype.onError = function (e) {
     if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
   };
@@ -50,11 +49,8 @@
       this.observer.onError(e);
       return true;
     }
-
     return false;
   };
-
-
 
   /**
   *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.

@@ -7,11 +7,13 @@
     if (Array.isArray(arguments[0])) {
       args = arguments[0];
     } else {
-      for(var i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+      var len = arguments.length;
+      args = new Array(len);
+      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     }
     this.disposables = args;
     this.isDisposed = false;
-    this.length = this.disposables.length;
+    this.length = args.length;
   };
 
   var CompositeDisposablePrototype = CompositeDisposable.prototype;
@@ -54,21 +56,13 @@
   CompositeDisposablePrototype.dispose = function () {
     if (!this.isDisposed) {
       this.isDisposed = true;
-      for(var currentDisposables = [], i = 0, len = this.disposables.length; i < len; i++) { currentDisposables.push(this.disposables[i]); }
+      var len = this.disposables.length, currentDisposables = new Array(len);
+      for(var i = 0; i < len; i++) { currentDisposables[i] = this.disposables[i]; }
       this.disposables = [];
       this.length = 0;
 
-      for (i = 0, len = currentDisposables.length; i < len; i++) {
+      for (i = 0; i < len; i++) {
         currentDisposables[i].dispose();
       }
     }
-  };
-
-  /**
-   * Converts the existing CompositeDisposable to an array of disposables
-   * @returns {Array} An array of disposable objects.
-   */
-  CompositeDisposablePrototype.toArray = function () {
-    for(var currentDisposables = [], ix = 0, len = this.disposables.length; i < len; i++) { currentDisposables.push(this.disposables[i]); }
-    return currentDisposables;
   };
