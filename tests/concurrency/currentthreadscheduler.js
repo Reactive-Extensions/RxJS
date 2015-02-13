@@ -80,18 +80,3 @@ test('CurrentThread_EnsureTrampolineAndCancel', function () {
     ok(ran1);
     ok(!ran2);
 });
-
-test('CurrentThread_EnsureTrampolineAndCancelTimed', function () {
-    var ran1 = false, ran2 = false;
-    Scheduler.currentThread.ensureTrampoline(function () {
-        return Scheduler.currentThread.schedule(function () {
-            ran1 = true;
-            var d = Scheduler.currentThread.scheduleWithRelative(1000, function () {
-                ran2 = true;
-            });
-            d.dispose();
-        });
-    });
-    ok(ran1);
-    ok(!ran2);
-});

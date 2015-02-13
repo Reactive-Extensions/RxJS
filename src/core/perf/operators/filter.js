@@ -24,15 +24,16 @@
     this.observer = observer;
     this.predicate = predicate;
     this.source = source;
-    this.index = 0;
+    this.i = 0;
     this.isStopped = false;
   }
 
   FilterObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    var shouldYield = tryCatch(this.predicate).call(this, x, this.index++, this.source);
-    if (shouldYield === errorObj) {
-      return this.observer.onError(errorObj.e);
+    try {
+      var shouldYield = this.predicate(x, this.i++, this.source);
+    } catch (e) {
+      return this.observer.onError(e);
     }
     shouldYield && this.observer.onNext(x);
   };

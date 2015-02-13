@@ -13,6 +13,15 @@
       __super__.call(this);
     }
 
+    function notImplemented() {
+      throw new Error('Method not implemented');
+    }
+
+    // Must be implemented by other observers
+    AbstractObserver.prototype.next = notImplemented;
+    AbstractObserver.prototype.error = notImplemented;
+    AbstractObserver.prototype.completed = notImplemented;
+
     /**
      * Notifies the observer of a new element in the sequence.
      * @param {Any} value Next element in the sequence.

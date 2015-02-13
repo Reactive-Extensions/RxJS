@@ -13,3 +13,6 @@
     tryCatchTarget = fn;
     return tryCatcher;
   }
+  function thrower(e) {
+    throw e;
+  }

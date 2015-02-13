@@ -2,16 +2,7 @@
   var immediateScheduler = Scheduler.immediate = (function () {
 
     function scheduleNow(state, action) { return action(this, state); }
+    function notSupported() { throw new Error('Not supported'); }
 
-    function scheduleRelative(state, dueTime, action) {
-      var dt = this.now() + normalizeTime(dueTime);
-      while (dt - this.now() > 0) { }
-      return action(this, state);
-    }
-
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
-    }
-
-    return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
+    return new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
   }());

@@ -4,85 +4,41 @@ var scheduler = Rx.Scheduler.immediate,
     disposableEmpty = Rx.Disposable.empty;
 
 test('Immediate_Now', function () {
-    var res = scheduler.now() - new Date().getTime();
-    ok(res < 1000);
+  var res = scheduler.now() - new Date().getTime();
+  ok(res < 1000);
 });
 
 test('Immediate_ScheduleAction', function () {
-    var ran = false;
-    scheduler.schedule(function () {
-        ran = true;
-    });
-    ok(ran);
+  var ran = false;
+  scheduler.schedule(function () { ran = true; });
+  ok(ran);
 });
 
 test('Immediate_ScheduleActionError', function () {
-    var ex = 'ex';
-    try {
-        return scheduler.schedule(function () {
-            throw ex;
-        });
-    } catch (e) {
-        equal(e, ex);
-    }
+  var ex = new Error();
+  try {
+    return scheduler.schedule(function () { throw ex; });
+  } catch (e) {
+    equal(e, ex);
+  }
 });
 
 test('Immediate_Simple1', function () {
-    var xx = 0;
-    scheduler.scheduleWithState(42, function (self, x) { xx = x; return disposableEmpty; });
-    equal(42, xx);
-});
-
-test('Immediate_Simple2', function () {
-    var xx = 0;
-    scheduler.scheduleWithAbsoluteAndState(42, new Date().getTime(), function (self, x) { xx = x; return disposableEmpty; });
-    equal(42, xx);
-});
-
-test('Immediate_Simple3', function () {
-    var xx = 0;
-    scheduler.scheduleWithRelativeAndState(42, 0, function (self, x) { xx = x; return disposableEmpty; });
-    equal(42, xx);
+  var xx = 0;
+  scheduler.scheduleWithState(42, function (self, x) { xx = x; return disposableEmpty; });
+  equal(42, xx);
 });
 
 test('Immediate_Recursive1', function () {
-    var xx = 0;
-    var yy = 0;
-    scheduler.scheduleWithState(42, function (self, x) {
-        xx = x;
-        return self.scheduleWithState(43, function (self2, y) {
-            yy = y;
-            return disposableEmpty;
-        })
+  var xx = 0;
+  var yy = 0;
+  scheduler.scheduleWithState(42, function (self, x) {
+    xx = x;
+    return self.scheduleWithState(43, function (self2, y) {
+      yy = y;
+      return disposableEmpty;
     });
-    equal(42, xx);
-    equal(43, yy);
-});
-
-test('Immediate_Recursive2', function () {
-    var xx = 0;
-    var yy = 0;
-    scheduler.scheduleWithAbsoluteAndState(42, new Date().getTime(), function (self, x) {
-        xx = x;
-        return self.scheduleWithAbsoluteAndState(43, new Date().getTime(), function (self2, y) {
-            yy = y;
-            return disposableEmpty;
-        })
-    });
-    equal(42, xx);
-    equal(43, yy);
-});
-
-test('Immediate_Recursive3', function () {
-    var xx = 0;
-    var yy = 0;
-    scheduler.scheduleWithRelativeAndState(42, 0, function (self, x) {
-        xx = x;
-        return self.scheduleWithRelativeAndState(43, 0, function (self2, y) {
-            yy = y;
-            return disposableEmpty;
-        })
-    });
-    equal(42, xx);
-    equal(43, yy);
+  });
+  equal(42, xx);
+  equal(43, yy);
 });

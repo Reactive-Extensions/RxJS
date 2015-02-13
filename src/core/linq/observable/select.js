@@ -10,9 +10,10 @@
     return new AnonymousObservable(function (o) {
       var i = 0;
       return source.subscribe(function (x) {
-        var result = tryCatch(selectorFn).call(void 0, x, i++, source);
-        if (result === errorObj) {
-          return o.onError(errorObj.e);
+        try {
+          var result = selector(x, i++, source);
+        } catch (e) {
+          return observer.onError(e);
         }
 
         o.onNext(result);

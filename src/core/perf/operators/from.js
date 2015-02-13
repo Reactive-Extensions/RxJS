@@ -21,40 +21,37 @@
       this.parent = parent;
     }
 
-    function loopRecursive(state, recurse) {
-      try {
-        var next = state.it.next();
-      } catch (e) {
-        state.observer.onError(e);
-        return;
-      }
-      if (next.done) {
-        state.observer.onCompleted();
-        return;
-      }
-
-      var result = next.value;
-
-      if (state.mapper) {
-        try {
-          result = state.mapper(result, state.i);
-        } catch (e) {
-          state.observer.onError(e);
-          return;
-        }
-      }
-
-      state.observer.onNext(result);
-      state.i++;
-      recurse(state);
-    }
-
     FromSink.prototype.run = function () {
-      var list = Object(this.parent.iterable), it = getIterable(list);
+      var list = Object(this.parent.iterable),
+          it = getIterable(list),
+          observer = this.observer,
+          mapper = this.parent.mapper;
 
-      return this.parent.scheduler.scheduleRecursiveWithState(
-        {i: 0, it: it, mapper: this.parent.mapper, observer: this.observer },
-        loopRecursive);
+      function loopRecursive(i, recurse) {
+        try {
+          var next = it.next();
+        } catch (e) {
+          return observer.onError(e);
+        }
+        if (next.done) {
+          return observer.onCompleted();
+        }
+
+        var result = next.value;
+
+        if (mapper) {
+          try {
+            result = mapper(result, i);
+          } catch (e) {
+            return observer.onError(e);
+          }
+        }
+
+        observer.onNext(result);
+        recurse(i + 1);
+      }
+
+      return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
     };
 
     return FromSink;
@@ -81,12 +78,7 @@
   };
 
   StringIterator.prototype.next = function () {
-    if (this._i < this._l) {
-      var val = this._s.charAt(this._i++);
-      return { done: false, value: val };
-    } else {
-      return doneEnumerator;
-    }
+    return this._i < this._l ? { done: false, value: this._s.charAt(this._i++) } : doneEnumerator;
   };
 
   function ArrayIterable(a) {
@@ -108,12 +100,7 @@
   };
 
   ArrayIterator.prototype.next = function () {
-    if (this._i < this._l) {
-      var val = this._a[this._i++];
-      return { done: false, value: val };
-    } else {
-      return doneEnumerator;
-    }
+    return this._i < this._l ? { done: false, value: this._a[this._i++] } : doneEnumerator;
   };
 
   function numberIsFinite(value) {

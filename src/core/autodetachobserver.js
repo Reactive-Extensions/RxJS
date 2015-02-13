@@ -15,7 +15,7 @@
         this.observer.onNext(value);
         noError = true;
       } catch (e) {
-        throw e;
+        return thrower(e);
       } finally {
         !noError && this.dispose();
       }
@@ -25,7 +25,7 @@
       try {
         this.observer.onError(err);
       } catch (e) {
-        throw e;
+        return thrower(e);
       } finally {
         this.dispose();
       }
@@ -35,7 +35,7 @@
       try {
         this.observer.onCompleted();
       } catch (e) {
-        throw e;
+        return thrower(e);
       } finally {
         this.dispose();
       }

@@ -543,6 +543,9 @@
     tryCatchTarget = fn;
     return tryCatcher;
   }
+  function thrower(e) {
+    throw e;
+  }
 
   // Utilities
   if (!Function.prototype.bind) {
@@ -1357,18 +1360,9 @@
   var immediateScheduler = Scheduler.immediate = (function () {
 
     function scheduleNow(state, action) { return action(this, state); }
+    function notSupported() { throw new Error('Not supported'); }
 
-    function scheduleRelative(state, dueTime, action) {
-      var dt = this.now() + normalizeTime(dueTime);
-      while (dt - this.now() > 0) { }
-      return action(this, state);
-    }
-
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
-    }
-
-    return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
+    return new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
   }());
 
   /**
@@ -1381,21 +1375,13 @@
       while (q.length > 0) {
         var item = q.dequeue();
         if (!item.isCancelled()) {
-          // Note, do not schedule blocking work!
-          while (item.dueTime - Scheduler.now() > 0) {
-          }
           !item.isCancelled() && item.invoke();
         }
       }
     }
 
     function scheduleNow(state, action) {
-      return this.scheduleWithRelativeAndState(state, 0, action);
-    }
-
-    function scheduleRelative(state, dueTime, action) {
-      var dt = this.now() + Scheduler.normalize(dueTime),
-          si = new ScheduledItem(this, state, action, dt);
+      var si = new ScheduledItem(this, state, action, this.now());
 
       if (!queue) {
         queue = new PriorityQueue(4);
@@ -1413,11 +1399,9 @@
       return si.disposable;
     }
 
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
-    }
+    function notSupported() { throw new Error('Not supported'); }
 
-    var currentScheduler = new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
+    var currentScheduler = new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
 
     currentScheduler.scheduleRequired = function () { return !queue; };
     currentScheduler.ensureTrampoline = function (action) {
@@ -2035,6 +2019,15 @@
       __super__.call(this);
     }
 
+    function notImplemented() {
+      throw new Error('Method not implemented');
+    }
+
+    // Must be implemented by other observers
+    AbstractObserver.prototype.next = notImplemented;
+    AbstractObserver.prototype.error = notImplemented;
+    AbstractObserver.prototype.completed = notImplemented;
+
     /**
      * Notifies the observer of a new element in the sequence.
      * @param {Any} value Next element in the sequence.
@@ -2487,22 +2480,56 @@
     });
   };
 
+  var ToArrayObservable = (function(__super__) {
+    inherits(ToArrayObservable, __super__);
+    function ToArrayObservable(source) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    ToArrayObservable.prototype.subscribeCore = function(observer) {
+      return this.source.subscribe(new ToArrayObserver(observer));
+    };
+
+    return ToArrayObservable;
+  }(ObservableBase));
+
+  function ToArrayObserver(observer) {
+    this.observer = observer;
+    this.a = [];
+    this.isStopped = false;
+  }
+  ToArrayObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.a.push(x); } };
+  ToArrayObserver.prototype.onError = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+    }
+  };
+  ToArrayObserver.prototype.onCompleted = function () {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onNext(this.a);
+      this.observer.onCompleted();
+    }
+  };
+  ToArrayObserver.prototype.dispose = function () { this.isStopped = true; }
+  ToArrayObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+      return true;
+    }
+
+    return false;
+  };
+
   /**
-   * Creates an array from an observable sequence.
-   * @returns {Observable} An observable sequence containing a single element with a list containing all the elements of the source sequence.
-   */
+  * Creates an array from an observable sequence.
+  * @returns {Observable} An observable sequence containing a single element with a list containing all the elements of the source sequence.
+  */
   observableProto.toArray = function () {
-    var source = this;
-    return new AnonymousObservable(function(observer) {
-      var arr = [];
-      return source.subscribe(
-        function (x) { arr.push(x); },
-        function (e) { observer.onError(e); },
-        function () {
-          observer.onNext(arr);
-          observer.onCompleted();
-        });
-    }, source);
+    return new ToArrayObservable(this);
   };
 
   /**
@@ -2556,6 +2583,65 @@
       });
     });
   };
+
+  var FromObservable = (function(__super__) {
+    inherits(FromObservable, __super__);
+    function FromObservable(iterable, mapper, scheduler) {
+      this.iterable = iterable;
+      this.mapper = mapper;
+      this.scheduler = scheduler;
+      __super__.call(this);
+    }
+
+    FromObservable.prototype.subscribeCore = function (observer) {
+      var sink = new FromSink(observer, this);
+      return sink.run();
+    };
+
+    return FromObservable;
+  }(ObservableBase));
+
+  var FromSink = (function () {
+    function FromSink(observer, parent) {
+      this.observer = observer;
+      this.parent = parent;
+    }
+
+    FromSink.prototype.run = function () {
+      var list = Object(this.parent.iterable),
+          it = getIterable(list),
+          observer = this.observer,
+          mapper = this.parent.mapper;
+
+      function loopRecursive(i, recurse) {
+        try {
+          var next = it.next();
+        } catch (e) {
+          return observer.onError(e);
+        }
+        if (next.done) {
+          return observer.onCompleted();
+        }
+
+        var result = next.value;
+
+        if (mapper) {
+          try {
+            result = mapper(result, i);
+          } catch (e) {
+            return observer.onError(e);
+          }
+        }
+
+        observer.onNext(result);
+        recurse(i + 1);
+      }
+
+      return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
+    };
+
+    return FromSink;
+  }());
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
 
@@ -2643,12 +2729,12 @@
   }
 
   /**
-   * This method creates a new Observable sequence from an array-like or iterable object.
-   * @param {Any} arrayLike An array-like or iterable object to convert to an Observable sequence.
-   * @param {Function} [mapFn] Map function to call on every element of the array.
-   * @param {Any} [thisArg] The context to use calling the mapFn if provided.
-   * @param {Scheduler} [scheduler] Optional scheduler to use for scheduling.  If not provided, defaults to Scheduler.currentThread.
-   */
+  * This method creates a new Observable sequence from an array-like or iterable object.
+  * @param {Any} arrayLike An array-like or iterable object to convert to an Observable sequence.
+  * @param {Function} [mapFn] Map function to call on every element of the array.
+  * @param {Any} [thisArg] The context to use calling the mapFn if provided.
+  * @param {Scheduler} [scheduler] Optional scheduler to use for scheduling.  If not provided, defaults to Scheduler.currentThread.
+  */
   var observableFrom = Observable.from = function (iterable, mapFn, thisArg, scheduler) {
     if (iterable == null) {
       throw new Error('iterable cannot be null.')
@@ -2660,51 +2746,52 @@
       var mapper = bindCallback(mapFn, thisArg, 2);
     }
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    var list = Object(iterable), it = getIterable(list);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
-        try {
-          var next = it.next();
-        } catch (e) {
-          return observer.onError(e);
-        }
-        if (next.done) { return observer.onCompleted(); }
+    return new FromObservable(iterable, mapper, scheduler);
+  }
 
-        var result = next.value;
+  var FromArrayObservable = (function(__super__) {
+    inherits(FromArrayObservable, __super__);
+    function FromArrayObservable(args, scheduler) {
+      this.args = args;
+      this.scheduler = scheduler || currentThreadScheduler;
+      __super__.call(this);
+    }
 
-        if (mapper) {
-          try {
-            result = mapper(result, i);
-          } catch (e) {
-            return observer.onError(e);
-          }
-        }
+    FromArrayObservable.prototype.subscribeCore = function (observer) {
+      var sink = new FromArraySink(observer, this);
+      return sink.run();
+    };
 
-        observer.onNext(result);
-        self(i + 1);
-      });
-    });
+    return FromArrayObservable;
+  }(ObservableBase));
+
+  function FromArraySink(observer, parent) {
+    this.observer = observer;
+    this.parent = parent;
+  }
+
+  FromArraySink.prototype.run = function () {
+    var observer = this.observer, args = this.parent.args, len = args.length;
+    function loopRecursive(i, recurse) {
+      if (i < len) {
+        observer.onNext(args[i]);
+        recurse(i + 1);
+      } else {
+        observer.onCompleted();
+      }
+    }
+
+    return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
   };
 
   /**
-   *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
-   * @deprecated use Observable.from or Observable.of
-   * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
-   * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
-   */
+  *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
+  * @deprecated use Observable.from or Observable.of
+  * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
+  * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
+  */
   var observableFromArray = Observable.fromArray = function (array, scheduler) {
-    var len = array.length;
-    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
-        if (i < len) {
-          observer.onNext(array[i]);
-          self(i + 1);
-        } else {
-          observer.onCompleted();
-        }
-      });
-    });
+    return new FromArrayObservable(array, scheduler)
   };
 
   /**
@@ -2761,39 +2848,28 @@
   };
 
   function observableOf (scheduler, array) {
-    var len = array.length;
-    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
-        if (i < len) {
-          observer.onNext(array[i]);
-          self(i + 1);
-        } else {
-          observer.onCompleted();
-        }
-      });
-    });
+    return new FromArrayObservable(array, scheduler);
   }
 
   /**
-   *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
-   * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
-   */
+  *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
+  * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
+  */
   Observable.of = function () {
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-    return observableOf(null, args);
+    return new FromArrayObservable(args);
   };
 
   /**
-   *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
-   * @param {Scheduler} scheduler A scheduler to use for scheduling the arguments.
-   * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
-   */
+  *  This method creates a new Observable instance with a variable number of arguments, regardless of number or type of the arguments.
+  * @param {Scheduler} scheduler A scheduler to use for scheduling the arguments.
+  * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
+  */
   Observable.ofWithScheduler = function (scheduler) {
     var len = arguments.length, args = new Array(len - 1);
-    for(var i = 0; i < len - 1; i++) { args[i] = arguments[i + 1]; }
-    return observableOf(scheduler, args);
+    for(var i = 1; i < len; i++) { args[i - 1] = arguments[i]; }
+    return new FromArrayObservable(args, scheduler);
   };
 
   /**
@@ -2818,29 +2894,56 @@
     });
   };
 
-  /**
-   *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
-   *
-   * @example
-   *  var res = Rx.Observable.range(0, 10);
-   *  var res = Rx.Observable.range(0, 10, Rx.Scheduler.timeout);
-   * @param {Number} start The value of the first integer in the sequence.
-   * @param {Number} count The number of sequential integers to generate.
-   * @param {Scheduler} [scheduler] Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
-   * @returns {Observable} An observable sequence that contains a range of sequential integral numbers.
-   */
-  Observable.range = function (start, count, scheduler) {
-    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
+    var RangeObservable = (function(__super__) {
+    inherits(RangeObservable, __super__);
+    function RangeObservable(start, count, scheduler) {
+      this.start = start;
+      this.count = count;
+      this.scheduler = scheduler;
+      __super__.call(this);
+    }
+
+    RangeObservable.prototype.subscribeCore = function (observer) {
+      var sink = new RangeSink(observer, this);
+      return sink.run();
+    };
+
+    return RangeObservable;
+  }(ObservableBase));
+
+  var RangeSink = (function () {
+    function RangeSink(observer, parent) {
+      this.observer = observer;
+      this.parent = parent;
+    }
+
+    RangeSink.prototype.run = function () {
+      var start = this.parent.start, count = this.parent.count, observer = this.observer;
+      function loopRecursive(i, recurse) {
         if (i < count) {
           observer.onNext(start + i);
-          self(i + 1);
+          recurse(i + 1);
         } else {
           observer.onCompleted();
         }
-      });
-    });
+      }
+
+      return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
+    };
+
+    return RangeSink;
+  }());
+
+  /**
+  *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
+  * @param {Number} start The value of the first integer in the sequence.
+  * @param {Number} count The number of sequential integers to generate.
+  * @param {Scheduler} [scheduler] Scheduler to run the generator loop on. If not specified, defaults to Scheduler.currentThread.
+  * @returns {Observable} An observable sequence that contains a range of sequential integral numbers.
+  */
+  Observable.range = function (start, count, scheduler) {
+    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
+    return new RangeObservable(start, count, scheduler);
   };
 
   /**
@@ -4283,15 +4386,16 @@
     this.observer = observer;
     this.selector = selector;
     this.source = source;
-    this.index = 0;
+    this.i = 0;
     this.isStopped = false;
   }
 
   MapObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    var result = tryCatch(this.selector).call(this, x, this.index++, this.source);
-    if (result === errorObj) {
-      return this.observer.onError(errorObj.e);
+    try {
+      var result = this.selector(x, this.i++, this.source);
+    } catch (e) {
+      return this.observer.onError(e);
     }
     this.observer.onNext(result);
   };
@@ -4587,15 +4691,16 @@
     this.observer = observer;
     this.predicate = predicate;
     this.source = source;
-    this.index = 0;
+    this.i = 0;
     this.isStopped = false;
   }
 
   FilterObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    var shouldYield = tryCatch(this.predicate).call(this, x, this.index++, this.source);
-    if (shouldYield === errorObj) {
-      return this.observer.onError(errorObj.e);
+    try {
+      var shouldYield = this.predicate(x, this.i++, this.source);
+    } catch (e) {
+      return this.observer.onError(e);
     }
     shouldYield && this.observer.onNext(x);
   };
@@ -4725,7 +4830,7 @@
         this.observer.onNext(value);
         noError = true;
       } catch (e) {
-        throw e;
+        return thrower(e);
       } finally {
         !noError && this.dispose();
       }
@@ -4735,7 +4840,7 @@
       try {
         this.observer.onError(err);
       } catch (e) {
-        throw e;
+        return thrower(e);
       } finally {
         this.dispose();
       }
@@ -4745,7 +4850,7 @@
       try {
         this.observer.onCompleted();
       } catch (e) {
-        throw e;
+        return thrower(e);
       } finally {
         this.dispose();
       }

@@ -8,21 +8,13 @@
       while (q.length > 0) {
         var item = q.dequeue();
         if (!item.isCancelled()) {
-          // Note, do not schedule blocking work!
-          while (item.dueTime - Scheduler.now() > 0) {
-          }
           !item.isCancelled() && item.invoke();
         }
       }
     }
 
     function scheduleNow(state, action) {
-      return this.scheduleWithRelativeAndState(state, 0, action);
-    }
-
-    function scheduleRelative(state, dueTime, action) {
-      var dt = this.now() + Scheduler.normalize(dueTime),
-          si = new ScheduledItem(this, state, action, dt);
+      var si = new ScheduledItem(this, state, action, this.now());
 
       if (!queue) {
         queue = new PriorityQueue(4);
@@ -40,11 +32,9 @@
       return si.disposable;
     }
 
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
-    }
+    function notSupported() { throw new Error('Not supported'); }
 
-    var currentScheduler = new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
+    var currentScheduler = new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
 
     currentScheduler.scheduleRequired = function () { return !queue; };
     currentScheduler.ensureTrampoline = function (action) {

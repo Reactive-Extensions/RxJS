@@ -7,8 +7,8 @@
   * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
   */
   Observable.of = function () {
-    var args = [];
-    for(var i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     return new FromArrayObservable(args);
   };
 
@@ -18,7 +18,7 @@
   * @returns {Observable} The observable sequence whose elements are pulled from the given arguments.
   */
   Observable.ofWithScheduler = function (scheduler) {
-    var args = [];
-    for(var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var len = arguments.length, args = new Array(len - 1);
+    for(var i = 1; i < len; i++) { args[i - 1] = arguments[i]; }
     return new FromArrayObservable(args, scheduler);
   };

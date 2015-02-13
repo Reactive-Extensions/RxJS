@@ -12,22 +12,35 @@
     return ToArrayObservable;
   }(ObservableBase));
 
-  var ToArrayObserver = (function(__super__) {
-    inherits(ToArrayObserver, __super__);
-    function ToArrayObserver(observer) {
-      this.observer = observer;
-      this.a = [];
-      __super__.call(this);
+  function ToArrayObserver(observer) {
+    this.observer = observer;
+    this.a = [];
+    this.isStopped = false;
+  }
+  ToArrayObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.a.push(x); } };
+  ToArrayObserver.prototype.onError = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
     }
-    ToArrayObserver.prototype.next = function (x) { this.a.push(x); };
-    ToArrayObserver.prototype.error = function (e) { this.observer.onError(e); };
-    ToArrayObserver.prototype.completed = function () {
+  };
+  ToArrayObserver.prototype.onCompleted = function () {
+    if (!this.isStopped) {
+      this.isStopped = true;
       this.observer.onNext(this.a);
       this.observer.onCompleted();
-    };
+    }
+  };
+  ToArrayObserver.prototype.dispose = function () { this.isStopped = true; }
+  ToArrayObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+      return true;
+    }
 
-    return ToArrayObserver;
-  }(AbstractObserver));
+    return false;
+  };
 
   /**
   * Creates an array from an observable sequence.

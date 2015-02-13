@@ -24,15 +24,16 @@
     this.observer = observer;
     this.selector = selector;
     this.source = source;
-    this.index = 0;
+    this.i = 0;
     this.isStopped = false;
   }
 
   MapObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    var result = tryCatch(this.selector).call(this, x, this.index++, this.source);
-    if (result === errorObj) {
-      return this.observer.onError(errorObj.e);
+    try {
+      var result = this.selector(x, this.i++, this.source);
+    } catch (e) {
+      return this.observer.onError(e);
     }
     this.observer.onNext(result);
   };
