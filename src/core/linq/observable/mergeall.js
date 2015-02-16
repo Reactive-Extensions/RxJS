@@ -2,7 +2,7 @@
    * Merges an observable sequence of observable sequences into an observable sequence.
    * @returns {Observable} The observable sequence that merges the elements of the inner sequences.
    */
-  observableProto.mergeAll = function () {
+  observableProto.mergeAll = observableProto.mergeObservable = function () {
     var sources = this;
     return new AnonymousObservable(function (o) {
       var group = new CompositeDisposable(),
@@ -27,12 +27,4 @@
       }));
       return group;
     }, sources);
-  };
-
-  /**
-   * @deprecated use #mergeAll instead.
-   */
-  observableProto.mergeObservable = function () {
-    //deprecate('mergeObservable', 'mergeAll');
-    return this.mergeAll.apply(this, arguments);
   };
