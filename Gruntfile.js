@@ -1,29 +1,5 @@
 module.exports = function (grunt) {
 
-var browsers = [{
-      browserName: 'firefox',
-      version: '19',
-      platform: 'XP'
-  }, {
-      browserName: 'chrome',
-      platform: 'XP'
-  }, {
-      browserName: 'chrome',
-      platform: 'linux'
-  }, {
-      browserName: 'internet explorer',
-      platform: 'WIN8',
-      version: '10'
-  }, {
-      browserName: 'internet explorer',
-      platform: 'VISTA',
-      version: '9'
-  }, {
-      browserName: 'opera',
-      platform: 'Windows 2008',
-      version: '12'
-  }];
-
   grunt.initConfig({
       pkg: grunt.file.readJSON('package.json'),
       meta: {
@@ -127,6 +103,7 @@ var browsers = [{
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
               'src/core/linq/observable/mergeall.js',
+              'src/core/linq/observable/mergedelayerror.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
               'src/core/linq/observable/skipuntil.js',
@@ -416,6 +393,7 @@ var browsers = [{
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
               'src/core/linq/observable/mergeall.js',
+              'src/core/linq/observable/mergedelayerror.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
               'src/core/linq/observable/skipuntil.js',
@@ -705,6 +683,7 @@ var browsers = [{
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
               'src/core/linq/observable/mergeall.js',
+              'src/core/linq/observable/mergedelayerror.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
               'src/core/linq/observable/skipuntil.js',
@@ -849,6 +828,7 @@ var browsers = [{
               'src/core/linq/observable/concatall.js',
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
+              'src/core/linq/observable/mergedelayerror.js',
               'src/core/linq/observable/mergeall.js',
               'src/core/linq/observable/onerrorresumenextproto.js',
               'src/core/linq/observable/onerrorresumenext.js',
@@ -980,6 +960,7 @@ var browsers = [{
               'src/core/linq/observable/concatall.js',
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
+              'src/core/linq/observable/mergedelayerror.js',
               'src/core/linq/observable/mergeall.js',
               'src/core/linq/observable/skipuntil.js',
               'src/core/linq/observable/switch.js',
@@ -1147,6 +1128,7 @@ var browsers = [{
               'src/core/linq/observable/mergeproto.js',
               'src/core/linq/observable/merge.js',
               'src/core/linq/observable/mergeall.js',
+              'src/core/linq/observable/mergedelayerror.js',
               'src/core/linq/observable/skipuntil.js',
               'src/core/linq/observable/switch.js',
               'src/core/linq/observable/takeuntil.js',
@@ -1719,41 +1701,6 @@ var browsers = [{
             interrupt: true
           }
         }
-      },
-      connect: {
-        server: {
-          options: {
-            base: 'tests',
-            port: 9999
-          }
-        }
-      },
-      'saucelabs-qunit': {
-        all: {
-          options: {
-            urls: [
-              'http://127.0.0.1:9999/rx.aggregates.html',
-              'http://127.0.0.1:9999/rx.async.html',
-              'http://127.0.0.1:9999/rx.async.compat.html',
-              'http://127.0.0.1:9999/rx.binding.html',
-              'http://127.0.0.1:9999/rx.coincidence.html',
-              'http://127.0.0.1:9999/rx.experimental.html',
-              'http://127.0.0.1:9999/rx.experimental.html',
-              'http://127.0.0.1:9999/rx.html',
-              'http://127.0.0.1:9999/rx.modern.html',
-              'http://127.0.0.1:9999/rx.lite.html',
-              'http://127.0.0.1:9999/rx.lite.compat.html',
-              'http://127.0.0.1:9999/rx.joinpatterns.html',
-              'http://127.0.0.1:9999/rx.time.html',
-              'http://127.0.0.1:9999/rx.virtualtime.html'
-            ],
-            tunnelTimeout: 5,
-            build: process.env.TRAVIS_JOB_ID,
-            concurrency: 3,
-            browsers: browsers,
-            testname: "qunit tests"
-          }
-        }
       }
   });
 
@@ -1862,13 +1809,6 @@ var browsers = [{
     'nuget-time',
     'nuget-virtualtime'
   ]);
-
-  var testjobs = ['connect'];
-  if (typeof process.env.SAUCE_ACCESS_KEY !== 'undefined'){
-      testjobs = testjobs.concat(['saucelabs-qunit']);
-  }
-
-  grunt.registerTask('test', testjobs);
 
   grunt.registerTask('concat-min', [
     'concat:all',
