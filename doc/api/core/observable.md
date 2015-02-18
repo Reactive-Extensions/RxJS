@@ -30,6 +30,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`interval`](operators/interval.md)
 - [`just`](operators/return.md)
 - [`merge`](operators/merge.md)
+- [`mergeDelayError`](operators/mergedelayerror.md)
 - [`never`](operators/never.md)
 - [`of`](operators/of.md)
 - [`ofWithScheduler`](operators/ofwithscheduler.md)

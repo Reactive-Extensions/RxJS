@@ -42,6 +42,7 @@ NuGet Packages:
 - [`interval`](../api/core/operators/interval.md)
 - [`just`](../api/core/operators/return.md)
 - [`merge`](../api/core/operators/merge.md)
+- [`mergeDelayError`](../api/core/operators/mergedelayerror.md)
 - [`never`](../api/core/operators/never.md)
 - [`of`](../api/core/operators/of.md)
 - [`ofArrayChanges`](../api/core/operators/ofarraychanges.md)

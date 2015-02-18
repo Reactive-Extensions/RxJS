@@ -66,4 +66,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/merge.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/merge.js)
+- [`/tests/observable/merge.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/merge.js)
