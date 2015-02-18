@@ -17,91 +17,96 @@
 
   }(ObservableBase));
 
-  function MergeObserver(observer, maxConcurrent, g) {
-    this.observer = observer;
-    this.maxConcurrent = maxConcurrent;
-    this.g = g;
-    this.stopped = false;
-    this.q = [];
-    this.activeCount = 0;
-    this.isStopped = false;
-  }
+  var MergeObserver = (function () {
+    function MergeObserver(o, max, g) {
+      this.o = o;
+      this.max = max;
+      this.g = g;
+      this.done = false;
+      this.q = [];
+      this.activeCount = 0;
+      this.isStopped = false;
+    }
+    MergeObserver.prototype.handleSubscribe = function (xs) {
+      var sad = new SingleAssignmentDisposable();
+      this.g.add(sad);
+      isPromise(xs) && (xs = observableFromPromise(xs));
+      sad.setDisposable(xs.subscribe(new InnerObserver(this, sad)));
+    };
+    MergeObserver.prototype.onNext = function (innerSource) {
+      if (this.isStopped) { return; }
+        if(this.activeCount < this.max) {
+          this.activeCount++;
+          this.handleSubscribe(innerSource);
+        } else {
+          this.q.push(innerSource);
+        }
+      };
+      MergeObserver.prototype.onError = function (e) {
+        if (!this.isStopped) {
+          this.isStopped = true;
+          this.o.onError(e);
+        }
+      };
+      MergeObserver.prototype.onCompleted = function () {
+        if (!this.isStopped) {
+          this.isStopped = true;
+          this.done = true;
+          this.activeCount === 0 && this.o.onCompleted();
+        }
+      };
+      MergeObserver.prototype.dispose = function() { this.isStopped = true; };
+      MergeObserver.prototype.fail = function (e) {
+        if (!this.isStopped) {
+          this.isStopped = true;
+          this.o.onError(e);
+          return true;
+        }
 
-  MergeObserver.prototype.handleSubscribe = function (xs) {
-    var subscription = new SingleAssignmentDisposable();
-    this.g.add(subscription);
-    isPromise(xs) && (xs = observableFromPromise(xs));
-    subscription.setDisposable(xs.subscribe(new MergeObserverInnerObserver(xs, this, subscription)));
-  };
-  MergeObserver.prototype.onNext = function (innerSource) {
-    if (this.isStopped) { return; }
-    if(this.activeCount < this.maxConcurrent) {
-      this.activeCount++;
-      this.handleSubscribe(innerSource);
-    } else {
-      this.q.push(innerSource);
-    }
-  };
-  MergeObserver.prototype.onError = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-    }
-  };
-  MergeObserver.prototype.onCompleted = function () {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.stopped = true;
-      this.activeCount === 0 && this.observer.onCompleted();
-    }
-  };
-  MergeObserver.prototype.dispose = function() { this.isStopped = true; };
-  MergeObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
+        return false;
+      };
 
-    return false;
-  };
-
-  function MergeObserverInnerObserver(xs, self, subscription) {
-    this.xs = xs;
-    this.self = self;
-    this.subscription = subscription;
-    this.isStopped = false;
-  }
-  MergeObserverInnerObserver.prototype.oNext = function(x) { if(!this.isStopped) { this.self.observer.onNext(x); } };
-  MergeObserverInnerObserver.prototype.onError = function(e) {
-    if(!this.isStopped) {
-      this.isStopped = true;
-      this.self.observer.onError(e);
-    }
-  };
-  MergeObserverInnerObserver.prototype.onCompleted = function () {
-    if(!this.isStopped) {
-      this.isStopped = true;
-      this.self.g.remove(this.subscription);
-      if (this.self.q.length > 0) {
-        this.self.handleSubscribe(this.self.q.shift());
-      } else {
-        this.self.activeCount--;
-        this.self.stopped && this.self.activeCount === 0 && this.self.observer.onCompleted();
+      function InnerObserver(parent, sad) {
+        this.parent = parent;
+        this.sad = sad;
+        this.isStopped = false;
       }
-    }
+      InnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.parent.o.onNext(x); } };
+      InnerObserver.prototype.onError = function (e) {
+        if (!this.isStopped) {
+          this.isStopped = true;
+          this.parent.o.onError(e);
+        }
+      };
+      InnerObserver.prototype.onCompleted = function () {
+        if(!this.isStopped) {
+          var parent = this.parent;
+          parent.g.remove(this.sad);
+          if (parent.q.length > 0) {
+            parent.handleSubscribe(parent.q.shift());
+          } else {
+            parent.activeCount--;
+            parent.done && parent.activeCount === 0 && parent.o.onCompleted();
+          }
+        }
+      };
+      InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+      InnerObserver.prototype.fail = function (e) {
+        if (!this.isStopped) {
+          this.isStopped = true;
+          this.parent.o.onError(e);
+          return true;
+        }
 
-  };
-  MergeObserverInnerObserver.prototype.dispose = function() { this.isStopped = true; };
-  MergeObserverInnerObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
+        return false;
+      };
 
-    return false;
-  };
+      return MergeObserver;
+  }());
+
+
+
+
 
   /**
   * Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.

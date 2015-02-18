@@ -16,74 +16,82 @@
     return MergeAllObservable;
   }(ObservableBase));
 
-  function MergeAllObserver(observer, group) {
-    this.observer = observer;
-    this.group = group;
-    this.stopped = false;
-    this.istStopped = false;
-  }
+  var MergeAllObserver = (function() {
 
-  MergeAllObserver.prototype.onNext = function (innerSource) {
-    if (this.isStopped) { return; }
-    var innerSubscription = new SingleAssignmentDisposable();
-    this.group.add(innerSubscription);
-    isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
-    innerSubscription.setDisposable(innerSource.subscribe(new MergeAllObserverInnerObserver(this, innerSubscription)));
-  };
-  MergeAllObserver.prototype.onError = function (e) {
-    if(!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
+    function MergeAllObserver(o, g) {
+      this.o = o;
+      this.g = g;
+      this.isStopped = false;
+      this.done = false;
     }
-  };
-  MergeAllObserver.prototype.onCompleted = function () {
-    if(!this.isStopped) {
-      this.isStopped = true;
-      this.stopped = true;
-      this.group.length === 1 && this.observer.onCompleted();
-    }
-  };
-  MergeAllObserver.prototype.dispose = function() { this.isStopped = true; };
-  MergeAllObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
+    MergeAllObserver.prototype.onNext = function(innerSource) {
+      if(this.isStopped) { return; }
+      var sad = new SingleAssignmentDisposable();
+      this.g.add(sad);
 
-    return false;
-  };
+      isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
-  function MergeAllObserverInnerObserver(parent, innerSubscription) {
-    this.parent = parent;
-    this.innerSubscription = innerSubscription;
-    this.isStopped = false;
-  }
-  MergeAllObserverInnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.parent.observer.onNext(x); } };
-  MergeAllObserverInnerObserver.prototype.onError = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.parent.observer.onError(e);
-    }
-  };
-  MergeAllObserverInnerObserver.prototype.onCompleted = function () {
-    if(!this.isStopped) {
-      this.isStopped = true;
-      this.parent.group.remove(this.innerSubscription);
-      this.parent.stopped && this.parent.group.length === 1 && this.parent.observer.onCompleted();
-    }
-  };
-  InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-  InnerObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
+      sad.setDisposable(innerSource.subscribe(new InnerObserver(this, this.g, sad)));
+    };
+    MergeAllObserver.prototype.onError = function (e) {
+      if(!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+      }
+    };
+    MergeAllObserver.prototype.onCompleted = function () {
+      if(!this.isStopped) {
+        this.isStopped = true;
+        this.done = true;
+        this.g.length === 1 && this.o.onCompleted();
+      }
+    };
+    MergeAllObserver.prototype.dispose = function() { this.isStopped = true; };
+    MergeAllObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+        return true;
+      }
 
-    return false;
-  };
+      return false;
+    };
 
+    function InnerObserver(parent, g, sad) {
+      this.parent = parent;
+      this.g = g;
+      this.sad = sad;
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = function (x) { if (!this.isStopped) { this.parent.o.onNext(x); } };
+    InnerObserver.prototype.onError = function (e) {
+      if(!this.isStopped) {
+        this.isStopped = true;
+        this.parent.o.onError(e);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function () {
+      if(!this.isStopped) {
+        var parent = this.parent;
+        this.isStopped = true;
+        parent.g.remove(this.sad);
+        parent.done && parent.g.length === 1 && parent.o.onCompleted();
+      }
+    };
+    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.parent.o.onError(e);
+        return true;
+      }
+
+      return false;
+    };
+
+    return MergeAllObserver;
+
+  }());
 
   /**
   * Merges an observable sequence of observable sequences into an observable sequence.
