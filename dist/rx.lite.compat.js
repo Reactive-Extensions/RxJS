@@ -2909,7 +2909,7 @@
     }, sources);
   };
 
-  function CompositeError(errors) {
+  var CompositeError = Rx.CompositeError = function(errors) {
     this.name = "NotImplementedError";
     this.innerErrors = errors;
     this.message = 'This contains multiple errors. Check the innerErrors';

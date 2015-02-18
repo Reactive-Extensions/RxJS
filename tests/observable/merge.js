@@ -128,71 +128,92 @@ test('Merge_NeverEmpty', function () {
 });
 
 test('Merge_ReturnNever', function () {
-    var msgs1, n1, r1, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onCompleted(245)];
-    r1 = scheduler.createHotObservable(msgs1);
-    n1 = Observable.never();
-    results = scheduler.startWithCreate(function () {
-        return Observable.merge(scheduler, r1, n1);
+    var scheduler = new TestScheduler();
+
+    var r1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(245)
+    );
+    var n1 = Observable.never();
+
+    var results = scheduler.startWithCreate(function () {
+      return Observable.merge(scheduler, r1, n1);
     });
+
     results.messages.assertEqual(onNext(210, 2));
 });
 
 test('Merge_NeverReturn', function () {
-    var msgs1, n1, r1, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onCompleted(245)];
-    r1 = scheduler.createHotObservable(msgs1);
-    n1 = Observable.never();
-    results = scheduler.startWithCreate(function () {
+    var scheduler = new TestScheduler();
+
+    var r1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(245)
+    );
+
+    var n1 = Observable.never();
+
+    var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, n1, r1);
     });
+
     results.messages.assertEqual(onNext(210, 2));
 });
 
 test('Merge_ErrorNever', function () {
-    var e1, ex, msgs1, n1, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onError(245, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    n1 = Observable.never();
-    results = scheduler.startWithCreate(function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onError(245, error)
+    );
+    var n1 = Observable.never();
+
+    var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, e1, n1);
     });
-    results.messages.assertEqual(onNext(210, 2), onError(245, ex));
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onError(245, error)
+    );
 });
 
 test('Merge_NeverError', function () {
-    var e1, ex, msgs1, n1, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onError(245, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    n1 = Observable.never();
-    results = scheduler.startWithCreate(function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onError(245, error));
+    var n1 = Observable.never();
+
+    var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, n1, e1);
     });
-    results.messages.assertEqual(onNext(210, 2), onError(245, ex));
+    results.messages.assertEqual(onNext(210, 2), onError(245, error));
 });
 
 test('Merge_EmptyReturn', function () {
-    var e1, msgs1, msgs2, r1, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onCompleted(245)];
-    msgs2 = [onNext(150, 1), onNext(210, 2), onCompleted(250)];
-    e1 = scheduler.createHotObservable(msgs1);
-    r1 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(245));
+    var r1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onCompleted(250));
+
+    var results = scheduler.startWithCreate(function () {
         return Observable.merge(scheduler, e1, r1);
     });
+
     results.messages.assertEqual(onNext(210, 2), onCompleted(250));
 });
 
 test('Merge_ReturnEmpty', function () {
     var e1, msgs1, msgs2, r1, results, scheduler;
-    scheduler = new TestScheduler();
+    var scheduler = new TestScheduler();
     msgs1 = [onNext(150, 1), onCompleted(245)];
     msgs2 = [onNext(150, 1), onNext(210, 2), onCompleted(250)];
     e1 = scheduler.createHotObservable(msgs1);
@@ -205,7 +226,7 @@ test('Merge_ReturnEmpty', function () {
 
 test('Merge_Lots2', function () {
     var i, msgs1, msgs2, o1, o2, results, scheduler;
-    scheduler = new TestScheduler();
+    var scheduler = new TestScheduler();
     msgs1 = [onNext(150, 1), onNext(210, 2), onNext(220, 4), onNext(230, 6), onNext(240, 8), onCompleted(245)];
     msgs2 = [onNext(150, 1), onNext(215, 3), onNext(225, 5), onNext(235, 7), onNext(245, 9), onCompleted(250)];
     o1 = scheduler.createHotObservable(msgs1);
@@ -222,7 +243,7 @@ test('Merge_Lots2', function () {
 
 test('Merge_Lots3', function () {
     var i, msgs1, msgs2, msgs3, o1, o2, o3, results, scheduler;
-    scheduler = new TestScheduler();
+    var scheduler = new TestScheduler();
     msgs1 = [onNext(150, 1), onNext(210, 2), onNext(225, 5), onNext(240, 8), onCompleted(245)];
     msgs2 = [onNext(150, 1), onNext(215, 3), onNext(230, 6), onNext(245, 9), onCompleted(250)];
     msgs3 = [onNext(150, 1), onNext(220, 4), onNext(235, 7), onCompleted(240)];
@@ -240,33 +261,43 @@ test('Merge_Lots3', function () {
 });
 
 test('Merge_ErrorLeft', function () {
-    var ex, msgs1, msgs2, o1, o2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onError(245, ex)];
-    msgs2 = [onNext(150, 1), onNext(215, 3), onCompleted(250)];
-    o1 = scheduler.createHotObservable(msgs1);
-    o2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return Observable.merge(scheduler, o1, o2);
-    });
-    results.messages.assertEqual(onNext(210, 2), onNext(215, 3), onError(245, ex));
+  var error = new Error();
+
+  var scheduler = new TestScheduler();
+
+  var o1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onError(245, error));
+  var o2 = scheduler.createHotObservable(onNext(150, 1), onNext(215, 3), onCompleted(250));
+
+  var results = scheduler.startWithCreate(function () {
+      return Observable.merge(scheduler, o1, o2);
+  });
+
+  results.messages.assertEqual(onNext(210, 2), onNext(215, 3), onError(245, error));
 });
 
 test('Merge_ErrorCausesDisposal', function () {
-    var ex, msgs1, msgs2, o1, o2, results, scheduler, sourceNotDisposed;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onError(210, ex)];
-    msgs2 = [onNext(150, 1), onNext(220, 1), onCompleted(250)];
-    sourceNotDisposed = false;
-    o1 = scheduler.createHotObservable(msgs1);
-    o2 = scheduler.createHotObservable(msgs2).doAction(function () {
-        return sourceNotDisposed = true;
-    });
-    results = scheduler.startWithCreate(function () {
-        return Observable.merge(scheduler, o1, o2);
-    });
-    results.messages.assertEqual(onError(210, ex));
-    ok(!sourceNotDisposed);
+  var error = new Error();
+
+  var scheduler = new TestScheduler();
+
+  var sourceNotDisposed = false;
+
+  var o1 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onError(210, error)
+  );
+  var o2 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(220, 1),
+    onCompleted(250))
+    .tap(function () {
+      return sourceNotDisposed = true;
+  });
+
+  var results = scheduler.startWithCreate(function () {
+    return Observable.merge(scheduler, o1, o2);
+  });
+
+  results.messages.assertEqual(onError(210, error));
+  ok(!sourceNotDisposed);
 });
