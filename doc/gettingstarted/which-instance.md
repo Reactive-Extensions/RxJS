@@ -25,7 +25,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
     <tr>
         <td rowspan="6">I want to include values</td>
         <td colspan="2">based on custom logic</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/filter.md">filter/where</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/where.md">filter/where</a></td>
     </tr>
     <tr>
         <td rowspan="2">from the start of the sequence</td>
@@ -117,7 +117,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
     </tr>
     <tr>
         <td colspan="2">I want to switch to another sequence</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/timeout">timeout</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/timeout.md">timeout</a></td>
     </tr>
     <tr>
         <td rowspan="2">I want ensure there is only one value</td>
@@ -155,8 +155,8 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/count.md">count</a></td>
     </tr>
     <tr>
-        <td colspan="3">I want to know if it contains a value</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/contains">contains</a></td>
+        <td colspan="3">I want to know if it includes a value</td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/includes.md">contains</a></td>
     </tr>
     <tr>
         <td rowspan="2">I want to know if a condition is satisfied</td>
@@ -165,7 +165,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
     </tr>
     <tr>
         <td colspan="2">by all of its values</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/all.md">all/every</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/every.md">all/every</a></td>
     </tr>
     <tr>
         <td rowspan="2" colspan="2">I want to delay messages by a specific amount of time</td>
@@ -180,7 +180,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
         <td rowspan="11">I want to group the values</td>
         <td colspan="2">until the sequence completes</td>
         <td>
-          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/toArray.md">toArray</a><br>
+          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/toarray.md">toArray</a><br>
           <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/tomap.md">toMap</a><br>
           <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/toset.md">toSet</a>
         </td>
@@ -241,7 +241,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
     </tr>
     <tr>
         <td colspan="2">and cancel the previous sequence when a new value arrives</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/flatmaplastest">flatMapLatest/selectSwitch</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/flatmaplatest.md">flatMapLatest/selectSwitch</a></td>
     </tr>
     <tr>
         <td colspan="2">and recursively start a new sequence for each new value</td>
@@ -343,7 +343,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
         <td rowspan="9">Using two sequences</td>
         <td>I want to decide which to receive values from</td>
         <td colspan="2">based on which one has values first</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/amproto.md">amb</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/ambproto.md">amb</a></td>
     </tr>
     <tr>
         <td colspan="3">I want to determine if their values are equal</td>
@@ -370,7 +370,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
     </tr>
     <tr>
         <td>and be given a sequence of “rights” for each “left”</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupJoin.md">groupJoin</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupjoin.md">groupJoin</a></td>
     </tr>
     <tr>
         <td colspan="3">I want to include values from both</td>
