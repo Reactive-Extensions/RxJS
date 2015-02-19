@@ -84,6 +84,7 @@ NuGet Packages:
 - [`selectConcat`](../api/core/operators/concatmap.md)
 - [`selectMany`](../api/core/operators/selectmany.md)
 - [`selectSwitch`](../api/core/operators/flatmaplatest.md)
+- [`singleInstance`](../api/core/operators/singleinstance.md)
 - [`skip`](../api/core/operators/skip.md)
 - [`skipLast`](../api/core/operators/skiplast.md)
 - [`skipUntil`](../api/core/operators/skipuntil.md)

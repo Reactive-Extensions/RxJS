@@ -156,6 +156,7 @@ NuGet Packages:
 - [`selectSwitch`](../api/core/operators/selectswitch.md)
 - [`sequenceEqual`](../api/core/operators/sequenceequal.md)
 - [`single`](../api/core/operators/single.md)
+- [`singleInstance`](../api/core/operators/singleinstance.md)
 - [`singleOrDefault`](../api/core/operators/singleordefault.md)
 - [`skip`](../api/core/operators/skip.md)
 - [`skipLast`](../api/core/operators/skiplast.md)
