@@ -17,10 +17,10 @@ disposable.dispose();
 
 ## `Disposable Class Methods` ##
 - [`create`](#rxdisposablecreateaction)
+- [`isDisposable`](#rxdisposableisdisposabled)
 
 ## `Disposable Class Properties` ##
 - [`empty`](#rxdisposableempty)
-- [`isDisposable`](#rxdisposableisdisposabled)
 
 ## `Disposable Instance Methods` ##
 - [`dispose`](#rxdisposableprototypedispose)
