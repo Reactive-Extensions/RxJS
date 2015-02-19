@@ -15,10 +15,6 @@ disposable.dispose();
 // => disposed
 ```
 
-### Location
-
-- rx.js
-
 ## `Disposable Class Methods` ##
 - [`create`](#rxdisposablecreateaction)
 
