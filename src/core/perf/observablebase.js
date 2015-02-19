@@ -13,11 +13,12 @@
 
     function setDisposable(s, state) {
       var ado = state[0], self = state[1];
-      try {
-        ado.setDisposable(fixSubscriber(self.subscribeCore(ado)));
-      } catch (e) {
-        if (!ado.fail(e)) { throw e; }
+      var sub = tryCatch(self.subscribeCore).call(self, ado);
+
+      if (sub === errorObj) {
+        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
       }
+      ado.setDisposable(fixSubscriber(sub));
     }
 
     function subscribe(observer) {

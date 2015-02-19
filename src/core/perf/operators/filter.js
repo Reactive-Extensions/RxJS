@@ -30,10 +30,9 @@
 
   FilterObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    try {
-      var shouldYield = this.predicate(x, this.i++, this.source);
-    } catch (e) {
-      return this.observer.onError(e);
+    var shouldYield = tryCatch(this.predicate).call(this, x, this.i++, this.source);
+    if (shouldYield === errorObj) {
+      return this.observer.onError(shouldYield.e);
     }
     shouldYield && this.observer.onNext(x);
   };

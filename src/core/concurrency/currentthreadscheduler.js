@@ -4,9 +4,9 @@
   var currentThreadScheduler = Scheduler.currentThread = (function () {
     var queue;
 
-    function runTrampoline (q) {
-      while (q.length > 0) {
-        var item = q.dequeue();
+    function runTrampoline () {
+      while (queue.length > 0) {
+        var item = queue.dequeue();
         if (!item.isCancelled()) {
           !item.isCancelled() && item.invoke();
         }
@@ -19,13 +19,10 @@
       if (!queue) {
         queue = new PriorityQueue(4);
         queue.enqueue(si);
-        try {
-          runTrampoline(queue);
-        } catch (e) {
-          throw e;
-        } finally {
-          queue = null;
-        }
+
+        var result = tryCatch(runTrampoline)();
+        queue = null;
+        if (result === errorObj) { return thrower(result.e); }
       } else {
         queue.enqueue(si);
       }

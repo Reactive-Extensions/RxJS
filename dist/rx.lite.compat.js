@@ -1314,9 +1314,9 @@
   var currentThreadScheduler = Scheduler.currentThread = (function () {
     var queue;
 
-    function runTrampoline (q) {
-      while (q.length > 0) {
-        var item = q.dequeue();
+    function runTrampoline () {
+      while (queue.length > 0) {
+        var item = queue.dequeue();
         if (!item.isCancelled()) {
           !item.isCancelled() && item.invoke();
         }
@@ -1329,13 +1329,10 @@
       if (!queue) {
         queue = new PriorityQueue(4);
         queue.enqueue(si);
-        try {
-          runTrampoline(queue);
-        } catch (e) {
-          throw e;
-        } finally {
-          queue = null;
-        }
+
+        var result = tryCatch(runTrampoline)();
+        queue = null;
+        if (result === errorObj) { return thrower(result.e); }
       } else {
         queue.enqueue(si);
       }
@@ -2061,11 +2058,12 @@
 
     function setDisposable(s, state) {
       var ado = state[0], self = state[1];
-      try {
-        ado.setDisposable(fixSubscriber(self.subscribeCore(ado)));
-      } catch (e) {
-        if (!ado.fail(e)) { throw e; }
+      var sub = tryCatch(self.subscribeCore).call(self, ado);
+
+      if (sub === errorObj) {
+        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
       }
+      ado.setDisposable(fixSubscriber(sub));
     }
 
     function subscribe(observer) {
@@ -3863,12 +3861,17 @@
 
   MapObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    try {
+    var result = tryCatch(this.selector).call(this, x, this.i++, this.source);
+    if (result === errorObj) {
+      return this.observer.onError(result.e);
+    }
+    this.observer.onNext(result);
+    /*try {
       var result = this.selector(x, this.i++, this.source);
     } catch (e) {
       return this.observer.onError(e);
     }
-    this.observer.onNext(result);
+    this.observer.onNext(result);*/
   };
   MapObserver.prototype.onError = function (e) {
     if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
@@ -4116,10 +4119,9 @@
 
   FilterObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    try {
-      var shouldYield = this.predicate(x, this.i++, this.source);
-    } catch (e) {
-      return this.observer.onError(e);
+    var shouldYield = tryCatch(this.predicate).call(this, x, this.i++, this.source);
+    if (shouldYield === errorObj) {
+      return this.observer.onError(shouldYield.e);
     }
     shouldYield && this.observer.onNext(x);
   };
@@ -5456,34 +5458,26 @@
     var AutoDetachObserverPrototype = AutoDetachObserver.prototype;
 
     AutoDetachObserverPrototype.next = function (value) {
-      var noError = false;
-      try {
-        this.observer.onNext(value);
-        noError = true;
-      } catch (e) {
-        return thrower(e);
-      } finally {
-        !noError && this.dispose();
+      var result = tryCatch(this.observer.onNext).call(this.observer, value);
+      if (result === errorObj) {
+        this.dispose();
+        return thrower(result.e);
       }
     };
 
     AutoDetachObserverPrototype.error = function (err) {
-      try {
-        this.observer.onError(err);
-      } catch (e) {
-        return thrower(e);
-      } finally {
-        this.dispose();
+      var result = tryCatch(this.observer.onError).call(this.observer, err);
+      this.dispose();
+      if (result === errorObj) {
+        return thrower(result.e);
       }
     };
 
     AutoDetachObserverPrototype.completed = function () {
-      try {
-        this.observer.onCompleted();
-      } catch (e) {
-        return thrower(e);
-      } finally {
-        this.dispose();
+      var result = tryCatch(this.observer.onCompleted).call(this.observer);
+      this.dispose();
+      if (result === errorObj) {
+        return thrower(result.e);
       }
     };
 

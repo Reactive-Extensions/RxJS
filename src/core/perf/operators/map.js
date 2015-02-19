@@ -30,12 +30,17 @@
 
   MapObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    try {
+    var result = tryCatch(this.selector).call(this, x, this.i++, this.source);
+    if (result === errorObj) {
+      return this.observer.onError(result.e);
+    }
+    this.observer.onNext(result);
+    /*try {
       var result = this.selector(x, this.i++, this.source);
     } catch (e) {
       return this.observer.onError(e);
     }
-    this.observer.onNext(result);
+    this.observer.onNext(result);*/
   };
   MapObserver.prototype.onError = function (e) {
     if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
