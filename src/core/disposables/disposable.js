@@ -26,3 +26,12 @@
    * Gets the disposable that does nothing when disposed.
    */
   var disposableEmpty = Disposable.empty = { dispose: noop };
+
+  /**
+   * Validates whether the given object is a disposable
+   * @param {Object} Object to test whether it has a dispose method
+   * @returns {Boolean} true if a disposable object, else false.
+   */
+  var isDisposable = Disposable.isDisposable = function (d) {
+    return d && isFunction(d.dispose);
+  };

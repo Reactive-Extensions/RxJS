@@ -24,6 +24,7 @@ disposable.dispose();
 
 ## `Disposable Class Properties` ##
 - [`empty`](#rxdisposableempty)
+- [`isDisposable`](#rxdisposableisdisposabled)
 
 ## `Disposable Instance Methods` ##
 - [`dispose`](#rxdisposableprototypedispose)
@@ -31,7 +32,7 @@ disposable.dispose();
 ## _Class Methods_ ##
 
 ### <a id="rxdisposablecreateaction"></a>`Rx.Disposable.create(action)`
-<a href="#rxdisposablecreateaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js#L25 "View in source")
+<a href="#rxdisposablecreateaction">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js"View in source")
 
 Creates a disposable object that invokes the specified action when disposed.
 
@@ -53,7 +54,77 @@ disposable.dispose();
 
 ### Location
 
-- rx.js
+File:
+- [`/src/core/disposables/disposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/disposables/disposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/disposables/disposable.js)
+
+* * *
+
+### <a id="rxdisposableisdisposabled"></a>`Rx.Disposable.isDisposable(d)`
+<a href="#rxdisposableisdisposabled">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js"View in source")
+
+Creates a disposable object that invokes the specified action when disposed.
+
+#### Arguments
+1. `d` *(Object)*: Object to validate whether it has a dispose method.
+
+#### Returns
+*(Boolean)*: `true` if is a disposable object, else `false`.
+
+#### Example
+```js
+var disposable = Rx.Disposable.empty;
+console.log(disposable.isDisposable(disposable));
+// => true
+```
+
+### Location
+
+File:
+- [`/src/core/disposables/disposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/disposables/disposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/disposables/disposable.js)
 
 * * *
 
@@ -77,7 +148,30 @@ disposable.dispose(); // Does nothing
 
 ### Location
 
-- rx.js
+File:
+- [`/src/core/disposables/disposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/disposables/disposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/disposables/disposable.js)
 
 * * *
 
@@ -101,6 +195,31 @@ disposable.dispose();
 
 ### Location
 
-- rx.js
+### Location
+
+File:
+- [`/src/core/disposables/disposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/disposables/disposable.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
+- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
+- [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
+- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js)
+- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
+
+Prerequisites:
+- None
+
+NPM Packages:
+- [`rx`](https://www.npmjs.org/package/rx)
+
+NuGet Packages:
+- [`RxJS-Complete`](http://www.nuget.org/packages/RxJS-Complete)
+- [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
+- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
+
+Unit Tests:
+- [`/tests/disposables/disposable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/disposables/disposable.js)
 
 * * *

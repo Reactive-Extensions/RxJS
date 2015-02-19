@@ -638,13 +638,17 @@
    * @constructor
    */
   var CompositeDisposable = Rx.CompositeDisposable = function () {
-    var args = [];
+    var args = [], i, len;
     if (Array.isArray(arguments[0])) {
       args = arguments[0];
+      len = args.length;
     } else {
-      var len = arguments.length;
+      len = arguments.length;
       args = new Array(len);
-      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+      for(i = 0; i < len; i++) { args[i] = arguments[i]; }
+    }
+    for(i = 0; i < len; i++) {
+      if (!isDisposable(args[i])) { throw new TypeError('Not a disposable'); }
     }
     this.disposables = args;
     this.isDisposed = false;
@@ -730,6 +734,15 @@
    * Gets the disposable that does nothing when disposed.
    */
   var disposableEmpty = Disposable.empty = { dispose: noop };
+
+  /**
+   * Validates whether the given object is a disposable
+   * @param {Object} Object to test whether it has a dispose method
+   * @returns {Boolean} true if a disposable object, else false.
+   */
+  var isDisposable = Disposable.isDisposable = function (d) {
+    return d && isFunction(d.dispose);
+  };
 
   var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable = (function () {
     function BooleanDisposable () {
