@@ -34,6 +34,7 @@ NuGet Dependencies:
 - [`shareLast`](../api/core/operators/sharelast.md)
 - [`shareReplay`](../api/core/operators/sharereplay.md)
 - [`shareValue`](../api/core/operators/sharevalue.md)
+- [`singleInstance`](../api/core/operators/singleinstance.md)
 
 ## Included Classes ##
 

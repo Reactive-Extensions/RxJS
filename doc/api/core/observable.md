@@ -151,6 +151,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`sequenceEqual`](operators/sequenceequal.md)
 - [`single`](operators/single.md)
 - [`singleOrDefault`](operators/singleordefault.md)
+- [`singleInstance`](operators/singleinstance.md)
 - [`skip`](operators/skip.md)
 - [`skipLast`](operators/skiplast.md)
 - [`skipLastWithTime`](operators/skiplastwithtime.md)
