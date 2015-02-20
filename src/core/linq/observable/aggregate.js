@@ -7,7 +7,6 @@
    * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
    */
   observableProto.aggregate = function () {
-    //deprecate('aggregate', 'reduce');
     var hasSeed = false, accumulator, seed, source = this;
     if (arguments.length === 2) {
       hasSeed = true;
@@ -29,15 +28,14 @@
               hasAccumulation = true;
             }
           } catch (e) {
-            o.onError(e);
-            return;
+            return o.onError(e);
           }
         },
         function (e) { o.onError(e); },
         function () {
           hasValue && o.onNext(accumulation);
           !hasValue && hasSeed && o.onNext(seed);
-          !hasValue && !hasSeed && o.onError(new Error(sequenceContainsNoElements));
+          !hasValue && !hasSeed && o.onError(new EmptyError());
           o.onCompleted();
         }
       );

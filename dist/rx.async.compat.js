@@ -37,7 +37,7 @@
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     observableFromPromise = Observable.fromPromise,
-    observableThrow = Observable.throwException,
+    observableThrow = Observable.throwError,
     AnonymousObservable = Rx.AnonymousObservable,
     AsyncSubject = Rx.AsyncSubject,
     disposableCreate = Rx.Disposable.create,

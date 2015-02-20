@@ -13,24 +13,20 @@
       var result = tryCatch(this.observer.onNext).call(this.observer, value);
       if (result === errorObj) {
         this.dispose();
-        return thrower(result.e);
+        thrower(result.e);
       }
     };
 
     AutoDetachObserverPrototype.error = function (err) {
       var result = tryCatch(this.observer.onError).call(this.observer, err);
       this.dispose();
-      if (result === errorObj) {
-        return thrower(result.e);
-      }
+      result === errorObj && thrower(result.e);
     };
 
     AutoDetachObserverPrototype.completed = function () {
       var result = tryCatch(this.observer.onCompleted).call(this.observer);
       this.dispose();
-      if (result === errorObj) {
-        return thrower(result.e);
-      }
+      result === errorObj && thrower(result.e);
     };
 
     AutoDetachObserverPrototype.setDisposable = function (value) { this.m.setDisposable(value); };

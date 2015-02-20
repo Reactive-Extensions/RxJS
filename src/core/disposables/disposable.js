@@ -35,3 +35,7 @@
   var isDisposable = Disposable.isDisposable = function (d) {
     return d && isFunction(d.dispose);
   };
+
+  var checkDisposed = Disposable.checkDisposed = function (disposable) {
+    if (disposable.isDisposed) { throw new ObjectDisposedError(); }
+  };

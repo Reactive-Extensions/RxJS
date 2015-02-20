@@ -1,14 +1,9 @@
   var ObservableBase = Rx.ObservableBase = (function (__super__) {
+    inherits(ObservableBase, __super__);
 
-  inherits(ObservableBase, __super__);
-
-  // Fix subscriber to check for undefined or function returned to decorate as Disposable
-  function fixSubscriber(subscriber) {
-    if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
-
-      return typeof subscriber === 'function' ?
-        disposableCreate(subscriber) :
-        disposableEmpty;
+    function fixSubscriber(subscriber) {
+      return subscriber && isFunction(subscriber.dispose) ? subscriber :
+        isFunction(subscriber) ? disposableCreate(subscriber) : disposableEmpty;
     }
 
     function setDisposable(s, state) {
@@ -29,7 +24,6 @@
       } else {
         setDisposable(null, state);
       }
-
       return ado;
     }
 
@@ -37,10 +31,7 @@
       __super__.call(this, subscribe);
     }
 
-    ObservableBase.prototype.subscribeCore = function(observer) {
-      throw new Error('Not implemeneted');
-    }
+    ObservableBase.prototype.subscribeCore = notImplemented;
 
     return ObservableBase;
-
   }(Observable));

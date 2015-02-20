@@ -45,12 +45,15 @@
     currentThreadScheduler = Rx.Scheduler.currentThread,
     isFunction = Rx.helpers.isFunction,
     inherits = Rx.internals.inherits,
-    addProperties = Rx.internals.addProperties;
+    addProperties = Rx.internals.addProperties,
+    checkDisposed = Rx.Disposable.checkDisposed;
 
   // Utilities
-  var objectDisposed = 'Object has been disposed';
-  function checkDisposed(self) { if (self.isDisposed) { throw new Error(objectDisposed); } }
-  function cloneArray(arr) { for(var a = [], i = 0, len = arr.length; i < len; i++) { a.push(arr[i]); } return a;}
+  function cloneArray(arr) {
+    var len = arr.length, a = new Array(len);
+    for(var i = 0; i < len; i++) { a[i] = arr[i]; }
+    return a;
+  }
 
   /**
    * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each

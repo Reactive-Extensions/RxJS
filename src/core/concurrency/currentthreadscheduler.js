@@ -29,8 +29,6 @@
       return si.disposable;
     }
 
-    function notSupported() { throw new Error('Not supported'); }
-
     var currentScheduler = new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
 
     currentScheduler.scheduleRequired = function () { return !queue; };

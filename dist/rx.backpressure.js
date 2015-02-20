@@ -46,10 +46,8 @@
     addProperties = Rx.internals.addProperties,
     timeoutScheduler = Rx.Scheduler.timeout,
     currentThreadScheduler = Rx.Scheduler.currentThread,
-    identity = Rx.helpers.identity;
-
-  var objectDisposed = 'Object has been disposed';
-  function checkDisposed() { if (this.isDisposed) { throw new Error(objectDisposed); } }
+    identity = Rx.helpers.identity,
+    checkDisposed = Rx.Disposable.checkDisposed;
 
   /**
   * Used to pause and resume streams.

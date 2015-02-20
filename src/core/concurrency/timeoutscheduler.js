@@ -10,7 +10,7 @@
       localSetTimeout = root.setTimeout;
       localClearTimeout = root.clearTimeout;
     } else {
-      throw new Error('No concurrency detected!');
+      throw new NotSupportedError();
     }
 
     return {

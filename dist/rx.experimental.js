@@ -60,13 +60,6 @@
     isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise;
 
-  // Utilities
-  function argsOrArray(args, idx) {
-    return args.length === 1 && Array.isArray(args[idx]) ?
-      args[idx] :
-      slice.call(args);
-  }
-
   // Shim in iterator support
   var $iterator$ = (typeof Symbol === 'function' && Symbol.iterator) ||
     '_es6shim_iterator_';
@@ -462,7 +455,7 @@
         this.onNext(Observable.empty());
       },
       onError: function (e) {
-        this.onNext(Observable.throwException(e));
+        this.onNext(Observable.throwError(e));
       },
       onNext: function (v) {
         this.tail.onNext(v);

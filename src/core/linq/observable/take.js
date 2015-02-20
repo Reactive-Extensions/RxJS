@@ -8,7 +8,7 @@
    * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.
    */
   observableProto.take = function (count, scheduler) {
-    if (count < 0) { throw new RangeError(argumentOutOfRange); }
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     if (count === 0) { return observableEmpty(scheduler); }
     var source = this;
     return new AnonymousObservable(function (o) {

@@ -7,6 +7,7 @@
    * @returns {Observable} An observable sequence containing the source sequence elements except for the bypassed ones at the end.
    */
   observableProto.skipLast = function (count) {
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
       var q = [];

@@ -5,7 +5,7 @@
         o.onCompleted();
       }, function (e) { o.onError(e); }, function () {
         if (!hasDefault) {
-          o.onError(new Error(sequenceContainsNoElements));
+          o.onError(new EmptyError());
         } else {
           o.onNext(defaultValue);
           o.onCompleted();

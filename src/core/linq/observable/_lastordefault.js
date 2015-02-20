@@ -6,7 +6,7 @@
         seenValue = true;
       }, function (e) { o.onError(e); }, function () {
         if (!seenValue && !hasDefault) {
-          o.onError(new Error(sequenceContainsNoElements));
+          o.onError(new EmptyError());
         } else {
           o.onNext(value);
           o.onCompleted();

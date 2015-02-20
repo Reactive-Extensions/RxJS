@@ -50,11 +50,9 @@
     isIterable = helpers.isIterable,
     observableFromPromise = Observable.fromPromise,
     observableFrom = Observable.from,
-    bindCallback = Rx.internals.bindCallback;
-
-  // Defaults
-  var argumentOutOfRange = 'Argument out of range',
-    sequenceContainsNoElements = "Sequence contains no elements.";
+    bindCallback = Rx.internals.bindCallback,
+    EmptyError = Rx.EmptyError,
+    ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;
 
   function extremaBy(source, keySelector, comparer) {
     return new AnonymousObservable(function (o) {
@@ -92,7 +90,7 @@
   }
 
   function firstOnly(x) {
-    if (x.length === 0) { throw new Error(sequenceContainsNoElements); }
+    if (x.length === 0) { throw new EmptyError(); }
     return x[0];
   }
 
@@ -105,7 +103,6 @@
    * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
    */
   observableProto.aggregate = function () {
-    //deprecate('aggregate', 'reduce');
     var hasSeed = false, accumulator, seed, source = this;
     if (arguments.length === 2) {
       hasSeed = true;
@@ -127,15 +124,14 @@
               hasAccumulation = true;
             }
           } catch (e) {
-            o.onError(e);
-            return;
+            return o.onError(e);
           }
         },
         function (e) { o.onError(e); },
         function () {
           hasValue && o.onNext(accumulation);
           !hasValue && hasSeed && o.onNext(seed);
-          !hasValue && !hasSeed && o.onError(new Error(sequenceContainsNoElements));
+          !hasValue && !hasSeed && o.onError(new EmptyError());
           o.onCompleted();
         }
       );
@@ -168,15 +164,14 @@
               hasAccumulation = true;
             }
           } catch (e) {
-            o.onError(e);
-            return;
+            return o.onError(e);
           }
         },
         function (e) { o.onError(e); },
         function () {
           hasValue && o.onNext(accumulation);
           !hasValue && hasSeed && o.onNext(seed);
-          !hasValue && !hasSeed && o.onError(new Error(sequenceContainsNoElements));
+          !hasValue && !hasSeed && o.onError(new EmptyError());
           o.onCompleted();
         }
       );
@@ -400,7 +395,7 @@
           count: prev.count + 1
         };
       }, {sum: 0, count: 0 }).map(function (s) {
-        if (s.count === 0) { throw new Error(sequenceContainsNoElements); }
+        if (s.count === 0) { throw new EmptyError(); }
         return s.sum / s.count;
       });
   };
@@ -494,7 +489,7 @@
   };
 
   function elementAtOrDefault(source, index, hasDefault, defaultValue) {
-    if (index < 0) { throw new Error(argumentOutOfRange); }
+    if (index < 0) { throw new ArgumentOutOfRangeError(); }
     return new AnonymousObservable(function (o) {
       var i = index;
       return source.subscribe(function (x) {
@@ -504,7 +499,7 @@
         }
       }, function (e) { o.onError(e); }, function () {
         if (!hasDefault) {
-          o.onError(new Error(argumentOutOfRange));
+          o.onError(new ArgumentOutOfRangeError());
         } else {
           o.onNext(defaultValue);
           o.onCompleted();
@@ -549,7 +544,7 @@
         }
       }, function (e) { o.onError(e); }, function () {
         if (!seenValue && !hasDefault) {
-          o.onError(new Error(sequenceContainsNoElements));
+          o.onError(new EmptyError());
         } else {
           o.onNext(value);
           o.onCompleted();
@@ -596,7 +591,7 @@
         o.onCompleted();
       }, function (e) { o.onError(e); }, function () {
         if (!hasDefault) {
-          o.onError(new Error(sequenceContainsNoElements));
+          o.onError(new EmptyError());
         } else {
           o.onNext(defaultValue);
           o.onCompleted();
@@ -641,7 +636,7 @@
         seenValue = true;
       }, function (e) { o.onError(e); }, function () {
         if (!seenValue && !hasDefault) {
-          o.onError(new Error(sequenceContainsNoElements));
+          o.onError(new EmptyError());
         } else {
           o.onNext(value);
           o.onCompleted();

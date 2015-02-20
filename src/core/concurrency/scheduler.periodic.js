@@ -18,7 +18,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
      */
     Scheduler.prototype.schedulePeriodicWithState = function(state, period, action) {
-      if (typeof root.setInterval === 'undefined') { throw new Error('Periodic scheduling not supported.'); }
+      if (typeof root.setInterval === 'undefined') { throw new NotSupportedError(); }
       var s = state;
 
       var id = root.setInterval(function () {

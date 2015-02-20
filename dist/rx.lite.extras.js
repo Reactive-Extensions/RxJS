@@ -62,15 +62,7 @@
     noop = helpers.noop,
     isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise,
-    slice = Array.prototype.slice;
-
-  function argsOrArray(args, idx) {
-    return args.length === 1 && Array.isArray(args[idx]) ?
-      args[idx] :
-      slice.call(args);
-  }
-
-  var argumentOutOfRange = 'Argument out of range';
+    ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;
 
   function ScheduledDisposable(scheduler, disposable) {
     this.scheduler = scheduler;
@@ -89,58 +81,46 @@
     this.scheduler.scheduleWithState(this, scheduleItem);
   };
 
-    var CheckedObserver = (function (_super) {
-        inherits(CheckedObserver, _super);
+  var CheckedObserver = (function (__super__) {
+    inherits(CheckedObserver, __super__);
 
-        function CheckedObserver(observer) {
-            _super.call(this);
-            this._observer = observer;
-            this._state = 0; // 0 - idle, 1 - busy, 2 - done
-        }
+    function CheckedObserver(observer) {
+      __super__.call(this);
+      this._observer = observer;
+      this._state = 0; // 0 - idle, 1 - busy, 2 - done
+    }
 
-        var CheckedObserverPrototype = CheckedObserver.prototype;
+    var CheckedObserverPrototype = CheckedObserver.prototype;
 
-        CheckedObserverPrototype.onNext = function (value) {
-            this.checkAccess();
-            try {
-                this._observer.onNext(value);
-            } catch (e) {
-                throw e;
-            } finally {
-                this._state = 0;
-            }
-        };
+    CheckedObserverPrototype.onNext = function (value) {
+      this.checkAccess();
+      var res = tryCatch(this._observer.onNext).call(this._observer, value);
+      this._state = 0;
+      res === errorObj && thrower(res.e);
+    };
 
-        CheckedObserverPrototype.onError = function (err) {
-            this.checkAccess();
-            try {
-                this._observer.onError(err);
-            } catch (e) {
-                throw e;
-            } finally {
-                this._state = 2;
-            }
-        };
+    CheckedObserverPrototype.onError = function (err) {
+      this.checkAccess();
+      var res = tryCatch(this._observer.onError).call(this._observer, err);
+      this._state = 2;
+      res === errorObj && thrower(res.e);
+    };
 
-        CheckedObserverPrototype.onCompleted = function () {
-            this.checkAccess();
-            try {
-                this._observer.onCompleted();
-            } catch (e) {
-                throw e;
-            } finally {
-                this._state = 2;
-            }
-        };
+    CheckedObserverPrototype.onCompleted = function () {
+      this.checkAccess();
+      var res = tryCatch(this._observer.onCompleted).call(this._observer);
+      this._state = 2;
+      res === errorObj && thrower(res.e);
+    };
 
-        CheckedObserverPrototype.checkAccess = function () {
-            if (this._state === 1) { throw new Error('Re-entrancy detected'); }
-            if (this._state === 2) { throw new Error('Observer completed'); }
-            if (this._state === 0) { this._state = 1; }
-        };
+    CheckedObserverPrototype.checkAccess = function () {
+      if (this._state === 1) { throw new Error('Re-entrancy detected'); }
+      if (this._state === 2) { throw new Error('Observer completed'); }
+      if (this._state === 0) { this._state = 1; }
+    };
 
-        return CheckedObserver;
-    }(Observer));
+    return CheckedObserver;
+  }(Observer));
 
   var ObserveOnObserver = (function (__super__) {
     inherits(ObserveOnObserver, __super__);
@@ -498,12 +478,12 @@
     var source = this;
     +count || (count = 0);
     Math.abs(count) === Infinity && (count = 0);
-    if (count <= 0) { throw new Error(argumentOutOfRange); }
+    if (count <= 0) { throw new ArgumentOutOfRangeError(); }
     skip == null && (skip = count);
     +skip || (skip = 0);
     Math.abs(skip) === Infinity && (skip = 0);
 
-    if (skip <= 0) { throw new Error(argumentOutOfRange); }
+    if (skip <= 0) { throw new ArgumentOutOfRangeError(); }
     return new AnonymousObservable(function (observer) {
       var m = new SingleAssignmentDisposable(),
         refCountDisposable = new RefCountDisposable(m),

@@ -2,9 +2,13 @@
    *  Represents a notification to an observer.
    */
   var Notification = Rx.Notification = (function () {
-    function Notification(kind, hasValue) {
-      this.hasValue = hasValue == null ? false : hasValue;
+    function Notification(kind, value, exception, accept, acceptObservable, toString) {
       this.kind = kind;
+      this.value = value;
+      this.exception = exception;
+      this._accept = accept;
+      this._acceptObservable = acceptObservable;
+      this.toString = toString;
     }
 
     /**
@@ -30,10 +34,10 @@
      * @returns {Observable} The observable sequence that surfaces the behavior of the notification upon subscription.
      */
     Notification.prototype.toObservable = function (scheduler) {
-      var notification = this;
+      var self = this;
       isScheduler(scheduler) || (scheduler = immediateScheduler);
       return new AnonymousObservable(function (observer) {
-        return scheduler.schedule(function () {
+        return scheduler.scheduleWithState(self, function (_, notification) {
           notification._acceptObservable(observer);
           notification.kind === 'N' && observer.onCompleted();
         });
@@ -49,18 +53,12 @@
    * @returns {Notification} The OnNext notification containing the value.
    */
   var notificationCreateOnNext = Notification.createOnNext = (function () {
-
-      function _accept (onNext) { return onNext(this.value); }
+      function _accept(onNext) { return onNext(this.value); }
       function _acceptObservable(observer) { return observer.onNext(this.value); }
-      function toString () { return 'OnNext(' + this.value + ')'; }
+      function toString() { return 'OnNext(' + this.value + ')'; }
 
       return function (value) {
-        var notification = new Notification('N', true);
-        notification.value = value;
-        notification._accept = _accept;
-        notification._acceptObservable = _acceptObservable;
-        notification.toString = toString;
-        return notification;
+        return new Notification('N', value, null, _accept, _acceptObservable, toString);
       };
   }());
 
@@ -70,18 +68,12 @@
    * @returns {Notification} The OnError notification containing the exception.
    */
   var notificationCreateOnError = Notification.createOnError = (function () {
-
     function _accept (onNext, onError) { return onError(this.exception); }
     function _acceptObservable(observer) { return observer.onError(this.exception); }
     function toString () { return 'OnError(' + this.exception + ')'; }
 
     return function (e) {
-      var notification = new Notification('E');
-      notification.exception = e;
-      notification._accept = _accept;
-      notification._acceptObservable = _acceptObservable;
-      notification.toString = toString;
-      return notification;
+      return new Notification('E', null, e, _accept, _acceptObservable, toString);
     };
   }());
 
@@ -90,16 +82,11 @@
    * @returns {Notification} The OnCompleted notification.
    */
   var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
-
     function _accept (onNext, onError, onCompleted) { return onCompleted(); }
     function _acceptObservable(observer) { return observer.onCompleted(); }
     function toString () { return 'OnCompleted()'; }
 
     return function () {
-      var notification = new Notification('C');
-      notification._accept = _accept;
-      notification._acceptObservable = _acceptObservable;
-      notification.toString = toString;
-      return notification;
+      return new Notification('C', null, null, _accept, _acceptObservable, toString);
     };
   }());

@@ -24,15 +24,14 @@
               hasAccumulation = true;
             }
           } catch (e) {
-            o.onError(e);
-            return;
+            return o.onError(e);
           }
         },
         function (e) { o.onError(e); },
         function () {
           hasValue && o.onNext(accumulation);
           !hasValue && hasSeed && o.onNext(seed);
-          !hasValue && !hasSeed && o.onError(new Error(sequenceContainsNoElements));
+          !hasValue && !hasSeed && o.onError(new EmptyError());
           o.onCompleted();
         }
       );

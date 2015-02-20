@@ -5,130 +5,138 @@ var Observer = Rx.Observer,
     createOnError = Rx.Notification.createOnError,
     createOnCompleted = Rx.Notification.createOnCompleted;
 
-test('ToObserver_NotificationOnNext', function () {
-    var i = 0;
-    var next = function (n) {
-        equal(i++, 0);
-        equal(n.kind, 'N');
-        equal(n.value, 42);
-        equal(n.exception, undefined);
-        ok(n.hasValue);
-    };
-    Observer.fromNotifier(next).onNext(42);
+test('fromNotifier NotificationOnNext', function () {
+  var i = 0;
+  var next = function (n) {
+      equal(i++, 0);
+      equal(n.kind, 'N');
+      equal(n.value, 42);
+      equal(n.exception, undefined);
+  };
+  Observer.fromNotifier(next).onNext(42);
 });
 
-test('ToObserver_NotificationOnError', function () {
-    var ex = 'ex';
-    var i = 0;
-    var next = function (n) {
-        equal(i++, 0);
-        equal(n.kind, 'E');
-        equal(n.exception, ex);
-        ok(!n.hasValue);
-    };
-    Observer.fromNotifier(next).onError(ex);
+test('fromNotifier NotificationOnError', function () {
+  var ex = 'ex';
+  var i = 0;
+  var next = function (n) {
+    equal(i++, 0);
+    equal(n.kind, 'E');
+    equal(n.exception, ex);
+  };
+  Observer.fromNotifier(next).onError(ex);
 });
 
-test('ToObserver_NotificationOnCompleted', function () {
-    var i = 0;
-    var next = function (n) {
-        equal(i++, 0);
-        equal(n.kind, 'C');
-        ok(!n.hasValue);
-    };
-    Observer.fromNotifier(next).onCompleted();
+test('fromNotifier NotificationOnCompleted', function () {
+  var i = 0;
+  var next = function (n) {
+    equal(i++, 0);
+    equal(n.kind, 'C');
+    ok(!n.hasValue);
+  };
+  Observer.fromNotifier(next).onCompleted();
 });
 
 test('ToNotifier_Forwards', function () {
-    var obsn = new MyObserver();
-    obsn.toNotifier()(createOnNext(42));
-    equal(obsn.hasOnNext, 42);
+  var obsn = new MyObserver();
+  obsn.toNotifier()(createOnNext(42));
+  equal(obsn.hasOnNext, 42);
 
-    var ex = 'ex';
-    var obse = new MyObserver();
-    obse.toNotifier()(createOnError(ex));
-    equal(ex, obse.hasOnError);
+  var ex = 'ex';
+  var obse = new MyObserver();
+  obse.toNotifier()(createOnError(ex));
+  equal(ex, obse.hasOnError);
 
-    obsc = new MyObserver();
-    obsc.toNotifier()(createOnCompleted());
-    ok(obsc.hasOnCompleted);
+  obsc = new MyObserver();
+  obsc.toNotifier()(createOnCompleted());
+  ok(obsc.hasOnCompleted);
 });
 
 test('Create_OnNext', function () {
-    var next, res;
-    next = false;
-    res = Observer.create(function (x) {
-        equal(42, x);
-        next = true;
-    });
-    res.onNext(42);
-    ok(next);
-    return res.onCompleted();
+  var next, res;
+  next = false;
+  res = Observer.create(function (x) {
+      equal(42, x);
+      next = true;
+  });
+  res.onNext(42);
+  ok(next);
+  return res.onCompleted();
 });
 
 test('Create_OnNext_HasError', function () {
-    var e_;
-    var ex = 'ex';
-    var next = false;
-    var res = Observer.create(function (x) {
-        equal(42, x);
-        next = true;
-    });
+  var e_;
+  var ex = 'ex';
+  var next = false;
+  var res = Observer.create(function (x) {
+      equal(42, x);
+      next = true;
+  });
 
-    res.onNext(42);
-    ok(next);
+  res.onNext(42);
+  ok(next);
 
-    try {
-        res.onError(ex);
-        ok(false);
-    } catch (e) {
-        e_ = e;
-    }
-    equal(ex, e_);
+  try {
+      res.onError(ex);
+      ok(false);
+  } catch (e) {
+      e_ = e;
+  }
+  equal(ex, e_);
 });
 
 test('Create_OnNextOnCompleted', function () {
-    var next = false;
-    var completed = false;
-    var res = Observer.create(function (x) {
-        equal(42, x);
-        return next = true;
-    }, undefined, function () {
-        return completed = true;
-    });
+  var next = false;
+  var completed = false;
+  var res = Observer.create(function (x) {
+      equal(42, x);
+      return next = true;
+  }, undefined, function () {
+      return completed = true;
+  });
 
-    res.onNext(42);
+  res.onNext(42);
 
-    ok(next);
-    ok(!completed);
+  ok(next);
+  ok(!completed);
 
-    res.onCompleted();
+  res.onCompleted();
 
-    ok(completed);
+  ok(completed);
 });
 
 test('Create_OnNextOnCompleted_HasError', function () {
-    var e_;
-    var ex = 'ex';
-    var next = false;
-    var completed = false;
-    var res = Observer.create(function (x) {
-        equal(42, x);
-        next = true;
-    }, undefined, function () {
-        completed = true;
-    });
-    res.onNext(42);
-    ok(next);
-    ok(!completed);
-    try {
-        res.onError(ex);
-        ok(false);
-    } catch (e) {
-        e_ = e;
+  var e_;
+  var ex = 'ex';
+
+  var next = false;
+
+  var completed = false;
+
+  var res = Observer.create(
+    function (x) {
+      equal(42, x);
+      next = true;
+    },
+    null,
+    function () {
+      completed = true;
     }
-    equal(ex, e_);
-    ok(!completed);
+  );
+
+  res.onNext(42);
+  ok(next);
+  ok(!completed);
+
+  try {
+      res.onError(ex);
+      ok(false);
+  } catch (e) {
+      e_ = e;
+  }
+
+  equal(ex, e_);
+  ok(!completed);
 });
 
 test('Create_OnNextOnError', function () {

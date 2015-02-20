@@ -20,15 +20,17 @@ module.exports = function (grunt) {
       concat: {
           all: {
             src: [
-              'src/core/license.js',
-              'src/core/intro.js',
-              'src/core/basicheader-modern.js',
+              'src/core/headers/license.js',
+              'src/core/headers/intro.js',
+              'src/core/headers/basicheader-modern.js',
 
               // Stack trace start
-              'src/core/longstackbegin.js',
-              'src/core/longstacktraces.js',
+              'src/core/longstacktraces/longstackbegin.js',
+              'src/core/longstacktraces/longstacktraces.js',
 
-              'src/core/enumeratorheader.js',
+              'src/core/internal/errors.js',
+
+              'src/core/headers/enumeratorheader.js',
 
               'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
@@ -52,8 +54,8 @@ module.exports = function (grunt) {
               'src/core/concurrency/timeoutscheduler.js',
               'src/core/concurrency/catchscheduler.js',
               'src/core/notification.js',
-              'src/core/internal/enumerator.js',
-              'src/core/internal/enumerable.js',
+              'src/core/enumerator.js',
+              'src/core/enumerable.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -301,26 +303,28 @@ module.exports = function (grunt) {
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
               'src/core/backpressure/pauser.js',
-              'src/core/exports.js',
+              'src/core/headers/exports.js',
 
               // Long stacktrace end
-              'src/core/longstackend.js',
+              'src/core/longstacktraces/longstackend.js',
 
-              'src/core/outro.js'
+              'src/core/headers/outro.js',
             ],
             dest: 'dist/rx.all.js'
           },
           allcompat: {
             src: [
-              'src/core/license.js',
-              'src/core/intro.js',
-              'src/core/basicheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/intro.js',
+              'src/core/headers/basicheader.js',
 
               // Stack trace start
-              'src/core/longstackbegin.js',
-              'src/core/longstacktraces.js',
+              'src/core/longstacktraces/longstackbegin.js',
+              'src/core/longstacktraces/longstacktraces.js',
 
-              'src/core/enumeratorheader.js',
+              'src/core/internal/errors.js',
+
+              'src/core/headers/enumeratorheader.js',
 
               'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
@@ -345,8 +349,8 @@ module.exports = function (grunt) {
               'src/core/concurrency/timeoutscheduler.js',
               'src/core/concurrency/catchscheduler.js',
               'src/core/notification.js',
-              'src/core/internal/enumerator.js',
-              'src/core/internal/enumerable.js',
+              'src/core/enumerator.js',
+              'src/core/enumerable.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -591,26 +595,28 @@ module.exports = function (grunt) {
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
               'src/core/backpressure/pauser.js',
-              'src/core/exports.js',
+              'src/core/headers/exports.js',
 
               // End long stack traces
-              'src/core/longstackend.js',
+              'src/core/longstacktraces/longstackend.js',
 
-              'src/core/outro.js'
+              'src/core/headers/outro.js',
             ],
             dest: 'dist/rx.all.compat.js'
           },
           basic: {
             src: [
-              'src/core/license.js',
-              'src/core/intro.js',
-              'src/core/basicheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/intro.js',
+              'src/core/headers/basicheader.js',
 
               // Stack trace start
-              'src/core/longstackbegin.js',
-              'src/core/longstacktraces.js',
+              'src/core/longstacktraces/longstackbegin.js',
+              'src/core/longstacktraces/longstacktraces.js',
 
-              'src/core/enumeratorheader.js',
+              'src/core/internal/errors.js',
+
+              'src/core/headers/enumeratorheader.js',
 
               'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
@@ -635,8 +641,8 @@ module.exports = function (grunt) {
               'src/core/concurrency/timeoutscheduler.js',
               'src/core/concurrency/catchscheduler.js',
               'src/core/notification.js',
-              'src/core/internal/enumerator.js',
-              'src/core/internal/enumerable.js',
+              'src/core/enumerator.js',
+              'src/core/enumerable.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -738,25 +744,27 @@ module.exports = function (grunt) {
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
-              'src/core/exports.js',
+              'src/core/headers/exports.js',
 
-              'src/core/longstackend.js',
+              'src/core/longstacktraces/longstackend.js',
 
-              'src/core/outro.js'
+              'src/core/headers/outro.js',
             ],
             dest: 'dist/rx.compat.js'
           },
           modern: {
             src: [
-              'src/core/license.js',
-              'src/core/intro.js',
-              'src/core/basicheader-modern.js',
+              'src/core/headers/license.js',
+              'src/core/headers/intro.js',
+              'src/core/headers/basicheader-modern.js',
 
               // Stack trace start
-              'src/core/longstackbegin.js',
-              'src/core/longstacktraces.js',
+              'src/core/longstacktraces/longstackbegin.js',
+              'src/core/longstacktraces/longstacktraces.js',
 
-              'src/core/enumeratorheader.js',
+              'src/core/internal/errors.js',
+
+              'src/core/headers/enumeratorheader.js',
 
               'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
@@ -780,8 +788,8 @@ module.exports = function (grunt) {
               'src/core/concurrency/timeoutscheduler.js',
               'src/core/concurrency/catchscheduler.js',
               'src/core/notification.js',
-              'src/core/internal/enumerator.js',
-              'src/core/internal/enumerable.js',
+              'src/core/enumerator.js',
+              'src/core/enumerable.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -884,26 +892,28 @@ module.exports = function (grunt) {
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
-              'src/core/exports.js',
+              'src/core/headers/exports.js',
 
               // Long stack trace end
-              'src/core/longstackend.js',
+              'src/core/longstacktraces/longstackend.js',
 
-              'src/core/outro.js'
+              'src/core/headers/outro.js',
             ],
             dest: 'dist/rx.js'
           },
           lite: {
             src: [
-              'src/core/license.js',
-              'src/core/intro.js',
-              'src/core/liteheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/intro.js',
+              'src/core/headers/liteheader.js',
 
               // Stack trace start
-              'src/core/longstackbegin.js',
-              'src/core/longstacktraces.js',
+              'src/core/longstacktraces/longstackbegin.js',
+              'src/core/longstacktraces/longstacktraces.js',
 
-              'src/core/enumeratorheader.js',
+              'src/core/internal/errors.js',
+
+              'src/core/headers/enumeratorheader.js',
 
               'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
@@ -926,8 +936,8 @@ module.exports = function (grunt) {
               'src/core/concurrency/timeoutscheduler.js',
 
               'src/core/notification.js',
-              'src/core/internal/enumerator.js',
-              'src/core/internal/enumerable.js',
+              'src/core/enumerator.js',
+              'src/core/enumerable.js',
               'src/core/observer-lite.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -1050,26 +1060,28 @@ module.exports = function (grunt) {
               'src/core/subjects/replaysubject.js',
               'src/core/backpressure/pauser.js',
 
-              'src/core/exports.js',
+              'src/core/headers/exports.js',
 
               // End long stack traces
-              'src/core/longstackend.js',
+              'src/core/longstacktraces/longstackend.js',
 
-              'src/core/outro.js'
+              'src/core/headers/outro.js',
             ],
             dest: 'dist/rx.lite.js'
           },
           litecompat: {
             src: [
-              'src/core/license.js',
-              'src/core/intro.js',
-              'src/core/liteheader-compat.js',
+              'src/core/headers/license.js',
+              'src/core/headers/intro.js',
+              'src/core/headers/liteheader-compat.js',
 
               // Stack trace start
-              'src/core/longstackbegin.js',
-              'src/core/longstacktraces.js',
+              'src/core/longstacktraces/longstackbegin.js',
+              'src/core/longstacktraces/longstacktraces.js',
 
-              'src/core/enumeratorheader.js',
+              'src/core/internal/errors.js',
+
+              'src/core/headers/enumeratorheader.js',
 
               'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
@@ -1093,8 +1105,8 @@ module.exports = function (grunt) {
               'src/core/concurrency/timeoutscheduler.js',
 
               'src/core/notification.js',
-              'src/core/internal/enumerator.js',
-              'src/core/internal/enumerable.js',
+              'src/core/enumerator.js',
+              'src/core/enumerable.js',
               'src/core/observer-lite.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -1217,20 +1229,20 @@ module.exports = function (grunt) {
               'src/core/subjects/replaysubject.js',
               'src/core/backpressure/pauser.js',
 
-              'src/core/exports.js',
+              'src/core/headers/exports.js',
 
               // End long stack traces
-              'src/core/longstackend.js',
+              'src/core/longstacktraces/longstackend.js',
 
-              'src/core/outro.js'
+              'src/core/headers/outro.js',
             ],
             dest: 'dist/rx.lite.compat.js'
           },
           liteextras: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/liteextrasheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/liteextrasheader.js',
 
               'src/core/disposables/scheduleddisposable.js',
               'src/core/checkedobserver.js',
@@ -1260,15 +1272,15 @@ module.exports = function (grunt) {
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
 
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.lite.extras.js'
           },
           backpressure: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/backpressureheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/backpressureheader.js',
 
               // Backpressure operators
               'src/core/backpressure/pauser.js',
@@ -1278,15 +1290,15 @@ module.exports = function (grunt) {
               'src/core/backpressure/stopandwait.js',
               'src/core/backpressure/windowed.js',
 
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.backpressure.js'
           },
           aggregates: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/aggregatesheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/aggregatesheader.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
@@ -1321,15 +1333,15 @@ module.exports = function (grunt) {
               'src/core/linq/observable/findindex.js', // _findvalue, where
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.aggregates.js'
           },
           asyncCompat: {
             src: [
-              'src/core/license.js',
-              'src/core/asyncintro.js',
-              'src/core/asyncheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/asyncintro.js',
+              'src/core/headers/asyncheader.js',
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
@@ -1338,15 +1350,15 @@ module.exports = function (grunt) {
               'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.async.compat.js'
           },
           asyncModern: {
             src: [
-              'src/core/license.js',
-              'src/core/asyncintro.js',
-              'src/core/asyncheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/asyncintro.js',
+              'src/core/headers/asyncheader.js',
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable
@@ -1355,15 +1367,15 @@ module.exports = function (grunt) {
               'src/core/linq/observable/fromevent-modern.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.async.js'
           },
           binding: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/bindingheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/bindingheader.js',
               'src/core/linq/observable/multicast.js', // ConnectableObservable
               'src/core/linq/observable/publish.js',   // mulitcast, Subject
               'src/core/linq/observable/share.js',   // mulitcast, Subject, Reference counted
@@ -1376,15 +1388,15 @@ module.exports = function (grunt) {
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
               'src/core/linq/connectableobservable.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.binding.js'
           },
           coincidence: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/coincidenceheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/coincidenceheader.js',
               'src/core/internal/dictionary.js',
               'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
@@ -1395,16 +1407,16 @@ module.exports = function (grunt) {
               'src/core/linq/observable/groupby.js',
               'src/core/linq/observable/groupbyuntil.js',
               'src/core/linq/groupedobservable.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.coincidence.js'
           },
           experimental: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/experimentalheader.js',
-              'src/core/enumeratorheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/experimentalheader.js',
+              'src/core/headers/enumeratorheader.js',
               'src/core/linq/enumerable/while.js', // Enumerable
               'src/core/linq/observable/let.js',
               'src/core/linq/observable/if.js', // defer, empty
@@ -1421,15 +1433,15 @@ module.exports = function (grunt) {
               'src/core/linq/observable/exclusive.js',
               'src/core/linq/observable/exclusivemap.js',
 
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.experimental.js'
           },
           joinpatterns: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/joinpatternsheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/joinpatternsheader.js',
               'src/core/internal/map.js',
               'src/core/joins/pattern.js',
               'src/core/joins/plan.js',
@@ -1438,15 +1450,15 @@ module.exports = function (grunt) {
               'src/core/linq/observable/and.js', // Pattern
               'src/core/linq/observable/thendo.js', // Pattern
               'src/core/linq/observable/when.js', // CompositeDisposable
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.joinpatterns.js'
           },
           testing: {
             src: [
-              'src/core/license.js',
-              'src/core/testintro.js',
-              'src/core/testheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/testintro.js',
+              'src/core/headers/testheader.js',
               'src/core/testing/reactivetest.js',
               'src/core/testing/recorded.js',
               'src/core/testing/subscription.js',
@@ -1456,15 +1468,15 @@ module.exports = function (grunt) {
               'src/core/testing/hotobservable.js',
               'src/core/testing/coldobservable.js',
               'src/core/testing/testscheduler.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.testing.js'
           },
           time: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/timeheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/timeheader.js',
               'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
               'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
               'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
@@ -1495,29 +1507,29 @@ module.exports = function (grunt) {
               'src/core/linq/observable/skipuntilwithtime.js',
               'src/core/linq/observable/takeuntilwithtime.js',
               'src/core/linq/observable/throttlefirst.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.time.js'
           },
           virtualtime: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/virtualtimeheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/virtualtimeheader.js',
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.virtualtime.js'
           },
           sorting: {
             src: [
-              'src/core/license.js',
-              'src/core/subintro.js',
-              'src/core/sortingheader.js',
+              'src/core/headers/license.js',
+              'src/core/headers/subintro.js',
+              'src/core/headers/sortingheader.js',
               'src/core/linq/observable/jortsort.js',
               'src/core/linq/observable/jortsortuntil.js',
-              'src/core/suboutro.js'
+              'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.sorting.js'
           }

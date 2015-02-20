@@ -60,12 +60,11 @@
       return isFn;
     }());
 
-  // Errors
-  var sequenceContainsNoElements = 'Sequence contains no elements.';
-  var argumentOutOfRange = 'Argument out of range';
-  var objectDisposed = 'Object has been disposed';
-  function checkDisposed(self) { if (self.isDisposed) { throw new Error(objectDisposed); } }
-  function cloneArray(arr) { for(var a = [], i = 0, len = arr.length; i < len; i++) { a.push(arr[i]); } return a;}
+    function cloneArray(arr) {
+      var len = arr.length, a = new Array(len);
+      for(var i = 0; i < len; i++) { a[i] = arr[i]; }
+      return a;
+    }
 
   Rx.config.longStackSupport = false;
   var hasStacks = false;
@@ -162,6 +161,44 @@
     var attempt3 = /.*@(.+):(\d+)$/.exec(stackLine);
     if (attempt3) { return [attempt3[1], Number(attempt3[2])]; }
   }
+
+  var EmptyError = Rx.EmptyError = function() {
+    this.message = 'Sequence contains no elements.';
+    Error.call(this);
+  };
+  EmptyError.prototype = Error.prototype;
+
+  var ObjectDisposedError = Rx.ObjectDisposedError = function() {
+    this.message = 'Object has been disposed';
+    Error.call(this);
+  };
+  ObjectDisposedError.prototype = Error.prototype;
+
+  var ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError = function () {
+    this.message = 'Argument out of range';
+    Error.call(this);
+  };
+  ArgumentOutOfRangeError.prototype = Error.prototype;
+
+  var NotSupportedError = Rx.NotSupportedError = function (message) {
+    this.message = message || 'This operation is not supported';
+    Error.call(this);
+  };
+  NotSupportedError.prototype = Error.prototype;
+
+  var NotImplementedError = Rx.NotImplementedError = function (message) {
+    this.message = message || 'This operation is not implemented';
+    Error.call(this);
+  };
+  NotImplementedError.prototype = Error.prototype;
+
+  var notImplemented = Rx.helpers.notImplemented = function () {
+    throw new NotImplementedError();
+  };
+
+  var notSupported = Rx.helpers.notSupported = function () {
+    throw new NotSupportedError();
+  };
 
   // Shim in iterator support
   var $iterator$ = (typeof Symbol === 'function' && Symbol.iterator) ||
@@ -933,6 +970,10 @@
     return d && isFunction(d.dispose);
   };
 
+  var checkDisposed = Disposable.checkDisposed = function (disposable) {
+    if (disposable.isDisposed) { throw new ObjectDisposedError(); }
+  };
+
   var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable = (function () {
     function BooleanDisposable () {
       this.isDisposed = false;
@@ -1298,7 +1339,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
      */
     Scheduler.prototype.schedulePeriodicWithState = function(state, period, action) {
-      if (typeof root.setInterval === 'undefined') { throw new Error('Periodic scheduling not supported.'); }
+      if (typeof root.setInterval === 'undefined') { throw new NotSupportedError(); }
       var s = state;
 
       var id = root.setInterval(function () {
@@ -1314,10 +1355,7 @@
 
   /** Gets a scheduler that schedules work immediately on the current thread. */
   var immediateScheduler = Scheduler.immediate = (function () {
-
     function scheduleNow(state, action) { return action(this, state); }
-    function notSupported() { throw new Error('Not supported'); }
-
     return new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
   }());
 
@@ -1351,8 +1389,6 @@
       }
       return si.disposable;
     }
-
-    function notSupported() { throw new Error('Not supported'); }
 
     var currentScheduler = new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
 
@@ -1405,7 +1441,7 @@
       localSetTimeout = root.setTimeout;
       localClearTimeout = root.clearTimeout;
     } else {
-      throw new Error('No concurrency detected!');
+      throw new NotSupportedError();
     }
 
     return {
@@ -1556,9 +1592,13 @@
    *  Represents a notification to an observer.
    */
   var Notification = Rx.Notification = (function () {
-    function Notification(kind, hasValue) {
-      this.hasValue = hasValue == null ? false : hasValue;
+    function Notification(kind, value, exception, accept, acceptObservable, toString) {
       this.kind = kind;
+      this.value = value;
+      this.exception = exception;
+      this._accept = accept;
+      this._acceptObservable = acceptObservable;
+      this.toString = toString;
     }
 
     /**
@@ -1584,10 +1624,10 @@
      * @returns {Observable} The observable sequence that surfaces the behavior of the notification upon subscription.
      */
     Notification.prototype.toObservable = function (scheduler) {
-      var notification = this;
+      var self = this;
       isScheduler(scheduler) || (scheduler = immediateScheduler);
       return new AnonymousObservable(function (observer) {
-        return scheduler.schedule(function () {
+        return scheduler.scheduleWithState(self, function (_, notification) {
           notification._acceptObservable(observer);
           notification.kind === 'N' && observer.onCompleted();
         });
@@ -1603,18 +1643,12 @@
    * @returns {Notification} The OnNext notification containing the value.
    */
   var notificationCreateOnNext = Notification.createOnNext = (function () {
-
-      function _accept (onNext) { return onNext(this.value); }
+      function _accept(onNext) { return onNext(this.value); }
       function _acceptObservable(observer) { return observer.onNext(this.value); }
-      function toString () { return 'OnNext(' + this.value + ')'; }
+      function toString() { return 'OnNext(' + this.value + ')'; }
 
       return function (value) {
-        var notification = new Notification('N', true);
-        notification.value = value;
-        notification._accept = _accept;
-        notification._acceptObservable = _acceptObservable;
-        notification.toString = toString;
-        return notification;
+        return new Notification('N', value, null, _accept, _acceptObservable, toString);
       };
   }());
 
@@ -1624,18 +1658,12 @@
    * @returns {Notification} The OnError notification containing the exception.
    */
   var notificationCreateOnError = Notification.createOnError = (function () {
-
     function _accept (onNext, onError) { return onError(this.exception); }
     function _acceptObservable(observer) { return observer.onError(this.exception); }
     function toString () { return 'OnError(' + this.exception + ')'; }
 
     return function (e) {
-      var notification = new Notification('E');
-      notification.exception = e;
-      notification._accept = _accept;
-      notification._acceptObservable = _acceptObservable;
-      notification.toString = toString;
-      return notification;
+      return new Notification('E', null, e, _accept, _acceptObservable, toString);
     };
   }());
 
@@ -1644,17 +1672,12 @@
    * @returns {Notification} The OnCompleted notification.
    */
   var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
-
     function _accept (onNext, onError, onCompleted) { return onCompleted(); }
     function _acceptObservable(observer) { return observer.onCompleted(); }
     function toString () { return 'OnCompleted()'; }
 
     return function () {
-      var notification = new Notification('C');
-      notification._accept = _accept;
-      notification._acceptObservable = _acceptObservable;
-      notification.toString = toString;
-      return notification;
+      return new Notification('C', null, null, _accept, _acceptObservable, toString);
     };
   }());
 
@@ -1874,10 +1897,6 @@
       __super__.call(this);
     }
 
-    function notImplemented() {
-      throw new Error('Method not implemented');
-    }
-
     // Must be implemented by other observers
     AbstractObserver.prototype.next = notImplemented;
     AbstractObserver.prototype.error = notImplemented;
@@ -2057,16 +2076,11 @@
   })();
 
   var ObservableBase = Rx.ObservableBase = (function (__super__) {
+    inherits(ObservableBase, __super__);
 
-  inherits(ObservableBase, __super__);
-
-  // Fix subscriber to check for undefined or function returned to decorate as Disposable
-  function fixSubscriber(subscriber) {
-    if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
-
-      return typeof subscriber === 'function' ?
-        disposableCreate(subscriber) :
-        disposableEmpty;
+    function fixSubscriber(subscriber) {
+      return subscriber && isFunction(subscriber.dispose) ? subscriber :
+        isFunction(subscriber) ? disposableCreate(subscriber) : disposableEmpty;
     }
 
     function setDisposable(s, state) {
@@ -2087,7 +2101,6 @@
       } else {
         setDisposable(null, state);
       }
-
       return ado;
     }
 
@@ -2095,12 +2108,9 @@
       __super__.call(this, subscribe);
     }
 
-    ObservableBase.prototype.subscribeCore = function(observer) {
-      throw new Error('Not implemeneted');
-    }
+    ObservableBase.prototype.subscribeCore = notImplemented;
 
     return ObservableBase;
-
   }(Observable));
 
   var ScheduledObserver = Rx.internals.ScheduledObserver = (function (__super__) {
@@ -3245,7 +3255,8 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   observableProto.withLatestFrom = function () {
-    for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+    var len = arguments.length, args = new Array(len)
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     var resultSelector = args.pop(), source = this;
 
     if (typeof source === 'undefined') {
@@ -3744,6 +3755,7 @@
    * @returns {Observable} An observable sequence containing the source sequence elements except for the bypassed ones at the end.
    */
   observableProto.skipLast = function (count) {
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
       var q = [];
@@ -3783,6 +3795,7 @@
    * @returns {Observable} An observable sequence containing the specified number of elements from the end of the source sequence.
    */
   observableProto.takeLast = function (count) {
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
       var q = [];
@@ -4003,7 +4016,7 @@
    * @returns {Observable} An observable sequence that contains the elements that occur after the specified index in the input sequence.
    */
   observableProto.skip = function (count) {
-    if (count < 0) { throw new Error(argumentOutOfRange); }
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
       var remaining = count;
@@ -4056,7 +4069,7 @@
    * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.
    */
   observableProto.take = function (count, scheduler) {
-    if (count < 0) { throw new RangeError(argumentOutOfRange); }
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     if (count === 0) { return observableEmpty(scheduler); }
     var source = this;
     return new AnonymousObservable(function (o) {
@@ -4463,7 +4476,7 @@
    */
   observableProto.toPromise = function (promiseCtor) {
     promiseCtor || (promiseCtor = Rx.config.Promise);
-    if (!promiseCtor) { throw new TypeError('Promise type not provided nor in Rx.config.Promise'); }
+    if (!promiseCtor) { throw new NotSupportedError('Promise type not provided nor in Rx.config.Promise'); }
     var source = this;
     return new promiseCtor(function (resolve, reject) {
       // No cancellation can be done
@@ -5420,27 +5433,24 @@
 
     // Fix subscriber to check for undefined or function returned to decorate as Disposable
     function fixSubscriber(subscriber) {
-      if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
-
-      return typeof subscriber === 'function' ?
-        disposableCreate(subscriber) :
-        disposableEmpty;
+      return subscriber && isFunction(subscriber.dispose) ? subscriber :
+        isFunction(subscriber) ? disposableCreate(subscriber) : disposableEmpty;
     }
 
     function setDisposable(s, state) {
       var ado = state[0], subscribe = state[1];
-      try {
-        ado.setDisposable(fixSubscriber(subscribe(ado)));
-      } catch (e) {
-        if (!ado.fail(e)) { throw e; }
+      var sub = tryCatch(subscribe)(ado);
+
+      if (sub === errorObj) {
+        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
       }
+      ado.setDisposable(fixSubscriber(sub));
     }
 
     function AnonymousObservable(subscribe, parent) {
       this.source = parent;
 
       function s(observer) {
-
         var ado = new AutoDetachObserver(observer), state = [ado, subscribe];
 
         if (currentThreadScheduler.scheduleRequired()) {
@@ -5448,7 +5458,6 @@
         } else {
           setDisposable(null, state);
         }
-
         return ado;
       }
 
@@ -5474,24 +5483,20 @@
       var result = tryCatch(this.observer.onNext).call(this.observer, value);
       if (result === errorObj) {
         this.dispose();
-        return thrower(result.e);
+        thrower(result.e);
       }
     };
 
     AutoDetachObserverPrototype.error = function (err) {
       var result = tryCatch(this.observer.onError).call(this.observer, err);
       this.dispose();
-      if (result === errorObj) {
-        return thrower(result.e);
-      }
+      result === errorObj && thrower(result.e);
     };
 
     AutoDetachObserverPrototype.completed = function () {
       var result = tryCatch(this.observer.onCompleted).call(this.observer);
       this.dispose();
-      if (result === errorObj) {
-        return thrower(result.e);
-      }
+      result === errorObj && thrower(result.e);
     };
 
     AutoDetachObserverPrototype.setDisposable = function (value) { this.m.setDisposable(value); };

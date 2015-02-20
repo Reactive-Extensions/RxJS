@@ -13,10 +13,6 @@
       __super__.call(this);
     }
 
-    function notImplemented() {
-      throw new Error('Method not implemented');
-    }
-
     // Must be implemented by other observers
     AbstractObserver.prototype.next = notImplemented;
     AbstractObserver.prototype.error = notImplemented;

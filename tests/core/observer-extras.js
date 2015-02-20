@@ -12,22 +12,20 @@
       equal(i++, 0);
       equal(n.kind, 'N');
       equal(n.value, 42);
-      equal(n.exception, undefined);
-      ok(n.hasValue);
+      equal(n.exception, null);
     };
     Observer.fromNotifier(next).onNext(42);
   });
 
   test('ToObserver_NotificationOnError', function () {
-    var ex = 'ex';
+    var error = new Error();
     var i = 0;
     var next = function (n) {
       equal(i++, 0);
       equal(n.kind, 'E');
-      equal(n.exception, ex);
-      ok(!n.hasValue);
+      equal(n.exception, error);
     };
-    Observer.fromNotifier(next).onError(ex);
+    Observer.fromNotifier(next).onError(error);
   });
 
   test('ToObserver_NotificationOnCompleted', function () {
@@ -35,7 +33,6 @@
     var next = function (n) {
       equal(i++, 0);
       equal(n.kind, 'C');
-      ok(!n.hasValue);
     };
     Observer.fromNotifier(next).onCompleted();
   });
@@ -45,10 +42,10 @@
     obsn.toNotifier()(createOnNext(42));
     equal(obsn.hasOnNext, 42);
 
-    var ex = 'ex';
+    var error = new Error();
     var obse = new MyObserver();
-    obse.toNotifier()(createOnError(ex));
-    equal(ex, obse.hasOnError);
+    obse.toNotifier()(createOnError(error));
+    equal(error, obse.hasOnError);
 
     obsc = new MyObserver();
     obsc.toNotifier()(createOnCompleted());
@@ -56,9 +53,10 @@
   });
 
   test('AsObserver_Hides', function () {
-    var obs, res;
-    obs = new MyObserver();
-    res = obs.asObserver();
+    var obs = new MyObserver();
+
+    var res = obs.asObserver();
+
     notDeepEqual(obs, res);
   });
 
@@ -67,10 +65,10 @@
     obsn.asObserver().onNext(42);
     equal(obsn.hasOnNext, 42);
 
-    var ex = 'ex';
+    var error = new Error();
     obse = new MyObserver();
-    obse.asObserver().onError(ex);
-    equal(obse.hasOnError, ex);
+    obse.asObserver().onError(error);
+    equal(obse.hasOnError, error);
 
     var obsc = new MyObserver();
     obsc.asObserver().onCompleted();

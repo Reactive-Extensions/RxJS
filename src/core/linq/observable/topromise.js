@@ -11,7 +11,7 @@
    */
   observableProto.toPromise = function (promiseCtor) {
     promiseCtor || (promiseCtor = Rx.config.Promise);
-    if (!promiseCtor) { throw new TypeError('Promise type not provided nor in Rx.config.Promise'); }
+    if (!promiseCtor) { throw new NotSupportedError('Promise type not provided nor in Rx.config.Promise'); }
     var source = this;
     return new promiseCtor(function (resolve, reject) {
       // No cancellation can be done

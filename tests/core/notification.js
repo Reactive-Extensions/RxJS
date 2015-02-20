@@ -1,337 +1,378 @@
-﻿QUnit.module('NotificationTest');
+(function () {
+  QUnit.module('NotificationTest');
 
-var createOnNext = Rx.Notification.createOnNext,
-    createOnError = Rx.Notification.createOnError,
-    createOnCompleted = Rx.Notification.createOnCompleted;
+  var createOnNext = Rx.Notification.createOnNext,
+      createOnError = Rx.Notification.createOnError,
+      createOnCompleted = Rx.Notification.createOnCompleted,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      inherits = Rx.internals.inherits;
 
-var inherits = Rx.internals.inherits;
-
-test('OnNext_CtorAndProps', function () {
+  test('onNext constructor and properties', function () {
     var n = createOnNext(42);
+
     equal('N', n.kind);
-    ok(n.hasValue);
+
     equal(42, n.value);
-    ok(n.exception === undefined);
-});
 
-test('OnNext_ToString', function () {
-    var n1 = createOnNext(42);
-    ok(n1.toString().indexOf('OnNext') !== -1);
-    ok(n1.toString().indexOf('42') !== -1);
-});
+    ok(n.exception === null);
+  });
 
-var CheckOnNextObserver = (function (super_) {
+  test('onNext toString', function () {
+      var n1 = createOnNext(42);
 
-    inherits(CheckOnNextObserver, super_);
+      ok(n1.toString().indexOf('OnNext') !== -1);
+      ok(n1.toString().indexOf('42') !== -1);
+  });
+
+  var CheckOnNextObserver = (function (__super__) {
+    inherits(CheckOnNextObserver, __super__);
 
     function CheckOnNextObserver() {
-        super_.call(this);
+      __super__.call(this);
+      this.value = null;
     }
-    CheckOnNextObserver.prototype.Value = null;
 
     CheckOnNextObserver.prototype.onNext = function (value) {
-        return this.Value = value;
-    };
-
-    CheckOnNextObserver.prototype.onError = function () {
-        throw new Error('not implemented');
-    };
-
-    CheckOnNextObserver.prototype.onCompleted = function () {
-        return function () {
-            throw new Error('not implemented');
-        };
+      return this.value = value;
     };
 
     return CheckOnNextObserver;
-}(Rx.Observer));
+  }(Rx.Observer));
 
-test('OnNext_AcceptObserver', function () {
-    var con, n1;
-    con = new CheckOnNextObserver();
-    n1 = createOnNext(42);
+  test('onNext acceptObserver', function () {
+    var con = new CheckOnNextObserver();
+
+    var n1 = createOnNext(42);
     n1.accept(con);
-    equal(42, con.Value);
-});
 
-var AcceptObserver = (function (super_) {
+    equal(42, con.value);
+  });
 
-    inherits(AcceptObserver, super_);
+  var AcceptObserver = (function (__super__) {
+    inherits(AcceptObserver, __super__);
 
     function AcceptObserver(onNext, onError, onCompleted) {
-        super_.call(this);
-        this._onNext = onNext;
-        this._onError = onError;
-        this._onCompleted = onCompleted;
+      __super__.call(this);
+      this._onNext = onNext;
+      this._onError = onError;
+      this._onCompleted = onCompleted;
     }
 
     AcceptObserver.prototype.onNext = function (value) {
-        return this._onNext(value);
+      return this._onNext(value);
     };
 
     AcceptObserver.prototype.onError = function (exception) {
-        return this._onError(exception);
+      return this._onError(exception);
     };
 
     AcceptObserver.prototype.onCompleted = function () {
-        return this._onCompleted();
+      return this._onCompleted();
     };
 
     return AcceptObserver;
-}(Rx.Observer));
+  }(Rx.Observer));
 
-test('OnNext_AcceptObserverWithResult', function () {
-    var n1, res;
-    n1 = createOnNext(42);
-    res = n1.accept(new AcceptObserver(function (x) {
+  test('onNext accept Observer with result', function () {
+    var n1 = createOnNext(42);
+
+    var results = n1.accept(new AcceptObserver(
+      function (x) {
         return 'OK';
-    }, function () {
+      },
+      function () {
         ok(false);
         return false;
-    }, function () {
+      },
+      function () {
         ok(false);
         return false;
     }));
-    equal('OK', res);
-});
 
-test('OnNext_AcceptAction', function () {
-    var n1, obs;
-    obs = false;
-    n1 = createOnNext(42);
-    n1.accept(function () {
+    equal('OK', results);
+  });
+
+  test('onNext accept action', function () {
+    var obs = false;
+
+    var n1 = createOnNext(42);
+
+    n1.accept(
+      function () {
         return obs = true;
-    }, function () {
+      },
+      function () {
         return ok(false);
-    }, function () {
+      },
+      function () {
         return ok(false);
-    });
+      }
+    );
+
     ok(obs);
-});
+  });
 
-test('OnNext_AcceptActionWithResult', function () {
-    var n1, res;
-    n1 = createOnNext(42);
-    res = n1.accept(function (x) {
+  test('onNext accept action with result', function () {
+    var n1 = createOnNext(42);
+
+    var results = n1.accept(
+      function (x) {
         return 'OK';
-    }, function (_) {
+      },
+      function () {
         return ok(false);
-    }, function () {
+      },
+      function () {
         return ok(false);
-    });
-    equal('OK', res);
-});
+      }
+    );
 
-test('OnError_CtorAndProps', function () {
-    var e, n;
-    e = 'e';
-    n = createOnError(e);
+    equal('OK', results);
+  });
+
+  test('onError constructor and properties', function () {
+    var error = new Error();
+
+    var n = createOnError(error);
+
     equal('E', n.kind);
-    ok(!n.hasValue);
-    equal(e, n.exception);
-});
+    equal(error, n.exception);
+  });
 
-test('OnError_ToString', function () {
-    var ex, n1;
-    ex = 'ex';
-    n1 = createOnError(ex);
+  test('onError ToString', function () {
+    var error = new Error('woops');
+
+    var n1 = createOnError(error);
+
     ok(n1.toString().indexOf('OnError') !== -1);
-    return ok(n1.toString().indexOf('ex') !== -1);
-});
+    ok(n1.toString().indexOf('woops') !== -1);
+  });
 
-var CheckOnErrorObserver = (function (super_) {
+  var CheckOnErrorObserver = (function (__super__) {
 
-    inherits(CheckOnErrorObserver, super_);
+    inherits(CheckOnErrorObserver, __super__);
 
     function CheckOnErrorObserver() {
-        super_.call(this);
+      __super__.call(this);
+      this.exception = null;
     }
 
-    CheckOnErrorObserver.prototype.Error = null;
-
-    CheckOnErrorObserver.prototype.onNext = function (value) {
-        throw new Error('not implemented');
-    };
-
     CheckOnErrorObserver.prototype.onError = function (exception) {
-        this.Error = exception;
-    };
-
-    CheckOnErrorObserver.prototype.onCompleted = function () {
-        throw new Error('not implemented');
+      this.exception = exception;
     };
 
     return CheckOnErrorObserver;
 
-}(Rx.Observer));
+  }(Rx.Observer));
 
-test('OnError_AcceptObserver', function () {
-    var ex, n1, obs;
-    ex = 'ex';
-    obs = new CheckOnErrorObserver();
-    n1 = createOnError(ex);
+  test('onError accept observer', function () {
+    var error = new Error();
+
+    var obs = new CheckOnErrorObserver();
+
+    var n1 = createOnError(error);
+
     n1.accept(obs);
-    equal(ex, obs.Error);
-});
 
-test('OnError_AcceptObserverWithResult', function () {
-    var ex, n1, res;
-    ex = 'ex';
-    n1 = createOnError(ex);
-    res = n1.accept(new AcceptObserver(function (x) {
+    equal(error, obs.exception);
+  });
+
+  test('onError accept observer with result', function () {
+    var error = new Error();
+
+    var n1 = createOnError(error);
+
+    var results = n1.accept(new AcceptObserver(
+      function () {
         ok(false);
-        return null;
-    }, function () {
+      },
+      function () {
         return 'OK';
-    }, function () {
+      },
+      function () {
         ok(false);
-        return null;
-    }));
-    equal('OK', res);
-});
+      }
+    ));
 
-test('OnError_AcceptAction', function () {
-    var ex, n1, obs;
-    ex = 'ex';
-    obs = false;
-    n1 = createOnError(ex);
-    n1.accept(function () {
-        return ok(false);
-    }, function () {
-        return obs = true;
-    }, function () {
-        return ok(false);
-    });
+    equal('OK', results);
+  });
+
+  test('onError accept action', function () {
+    var error = new Error();
+
+    var obs = false;
+
+    var n1 = createOnError(error);
+
+    n1.accept(
+      function () {
+        ok(false);
+      },
+      function () {
+        obs = true;
+      },
+      function () {
+        ok(false);
+      }
+    );
+
     ok(obs);
-});
+  });
 
-test('OnError_AcceptActionWithResult', function () {
-    var ex, n1, res;
-    ex = 'ex';
-    n1 = createOnError(ex);
-    res = n1.accept(function () {
+  test('onError accept action with result', function () {
+    var error = new Error();
+
+    var n1 = createOnError(error);
+
+    var results = n1.accept(
+      function () {
         ok(false);
-        return null;
-    }, function () {
+      },
+      function () {
         return 'OK';
-    }, function () {
+      },
+      function () {
         ok(false);
-        return null;
-    });
-    equal('OK', res);
-});
+      }
+    );
+    equal('OK', results);
+  });
 
-test('OnCompleted_CtorAndProps', function () {
-    var n;
-    n = createOnCompleted();
+  test('onCompleted constructor and properties', function () {
+    var n = createOnCompleted();
+
     equal('C', n.kind);
-    ok(!n.hasValue);
-    ok(n.exception === undefined);
-});
+    equal(null, n.exception);
+    equal(null, n.value);
+  });
 
-test('OnCompleted_ToString', function () {
-    var n1;
-    n1 = createOnCompleted();
+  test('onCompleted toString', function () {
+    var n1 = createOnCompleted();
+
     ok(n1.toString().indexOf('OnCompleted') !== -1);
-});
+  });
 
-var CheckOnCompletedObserver = (function (super_) {
+  var CheckOnCompletedObserver = (function (__super__) {
 
-    inherits(CheckOnCompletedObserver, super_);
+    inherits(CheckOnCompletedObserver, __super__);
 
     function CheckOnCompletedObserver() {
-        super_.call(this);
+      __super__.call(this);
+      this.completed = false;
     }
 
-    CheckOnCompletedObserver.prototype.Completed = false;
-
-    CheckOnCompletedObserver.prototype.onNext = function () {
-        throw new Error('not implemented');
-    };
-
-    CheckOnCompletedObserver.prototype.onError = function () {
-        throw new Error('not implemented');
-    };
-
     CheckOnCompletedObserver.prototype.onCompleted = function () {
-        return this.Completed = true;
+      this.completed = true;
     };
 
     return CheckOnCompletedObserver;
-}(Rx.Observer));
+  }(Rx.Observer));
 
-test('OnCompleted_AcceptObserver', function () {
-    var n1, obs;
-    obs = new CheckOnCompletedObserver();
-    n1 = createOnCompleted();
+  test('onCompleted accept observer', function () {
+    var obs = new CheckOnCompletedObserver();
+
+    var n1 = createOnCompleted();
+
     n1.accept(obs);
-    ok(obs.Completed);
-});
 
-test('OnCompleted_AcceptObserverWithResult', function () {
-    var n1, res;
-    n1 = createOnCompleted();
-    res = n1.accept(new AcceptObserver(function (x) {
-        return ok(false);
-    }, function (e) {
-        return ok(false);
-    }, function () {
+    ok(obs.completed);
+  });
+
+  test('onCompleted accept observer with result', function () {
+    var n1 = createOnCompleted();
+
+    var results = n1.accept(new AcceptObserver(
+      function () {
+        ok(false);
+      },
+      function () {
+        ok(false);
+      },
+      function () {
         return 'OK';
-    }));
-    equal('OK', res);
-});
+      }
+    ));
 
-test('OnCompleted_AcceptAction', function () {
-    var n1, obs;
-    obs = false;
-    n1 = createOnCompleted();
-    n1.accept(function (x) {
-        return ok(false);
-    }, function (e) {
-        return ok(false);
-    }, function () {
-        return obs = true;
-    });
+    equal('OK', results);
+  });
+
+  test('onCompleted accept action', function () {
+    var obs = false;
+
+    var n1 = createOnCompleted();
+
+    n1.accept(
+      function () {
+        ok(false);
+      },
+      function () {
+        ok(false);
+      },
+      function () {
+        obs = true;
+      }
+    );
+
     ok(obs);
-});
+  });
 
-test('OnCompleted_AcceptActionWithResult', function () {
-    var n1, res;
-    n1 = createOnCompleted();
-    res = n1.accept(function (x) {
-        return ok(false);
-    }, function (e) {
-        return ok(false);
-    }, function () {
+  test('onCompleted accept action with result', function () {
+    var n1 = createOnCompleted();
+
+    var results = n1.accept(
+      function () {
+        ok(false);
+      },
+      function () {
+        ok(false);
+      },
+      function () {
         return 'OK';
-    });
-    equal('OK', res);
-});
+      }
+    );
 
-test('ToObservable_Empty', function () {
-    var res, scheduler;
-    scheduler = new Rx.TestScheduler();
-    res = scheduler.startWithCreate(function () {
-        return createOnCompleted().toObservable(scheduler);
-    });
-    res.messages.assertEqual(Rx.ReactiveTest.onCompleted(201));
-});
+    equal('OK', results);
+  });
 
-test('ToObservable_Return', function () {
-    var res, scheduler;
-    scheduler = new Rx.TestScheduler();
-    res = scheduler.startWithCreate(function () {
+  test('toObservable empty', function () {
+    var scheduler = new Rx.TestScheduler();
+
+    var results = scheduler.startWithCreate(function () {
+      return createOnCompleted().toObservable(scheduler);
+    });
+
+    results.messages.assertEqual(
+      onCompleted(201)
+    );
+  });
+
+  test('toObservable just', function () {
+    var scheduler = new Rx.TestScheduler();
+
+    var results = scheduler.startWithCreate(function () {
         return createOnNext(42).toObservable(scheduler);
     });
-    res.messages.assertEqual(Rx.ReactiveTest.onNext(201, 42), Rx.ReactiveTest.onCompleted(201));
-});
 
-test('ToObservable_Throw', function () {
-    var ex, res, scheduler;
-    ex = 'ex';
-    scheduler = new Rx.TestScheduler();
-    res = scheduler.startWithCreate(function () {
-        return createOnError(ex).toObservable(scheduler);
+    results.messages.assertEqual(
+      onNext(201, 42),
+      onCompleted(201)
+    );
+  });
+
+  test('toObservable throwError', function () {
+    var error = new Error();
+
+    var scheduler = new Rx.TestScheduler();
+
+    var results = scheduler.startWithCreate(function () {
+      return createOnError(error).toObservable(scheduler);
     });
-    res.messages.assertEqual(Rx.ReactiveTest.onError(201, ex));
-});
+
+    results.messages.assertEqual(
+      onError(201, error)
+    );
+  });
+
+}());

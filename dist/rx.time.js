@@ -52,8 +52,7 @@
     helpers = Rx.helpers,
     isPromise = helpers.isPromise,
     isScheduler = helpers.isScheduler,
-    observableFromPromise = Observable.fromPromise,
-    deprecate = helpers.deprecate;
+    observableFromPromise = Observable.fromPromise;
 
   function observableTimerDate(dueTime, scheduler) {
     return new AnonymousObservable(function (observer) {

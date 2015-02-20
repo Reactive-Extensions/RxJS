@@ -11,12 +11,12 @@
     var source = this;
     +count || (count = 0);
     Math.abs(count) === Infinity && (count = 0);
-    if (count <= 0) { throw new Error(argumentOutOfRange); }
+    if (count <= 0) { throw new ArgumentOutOfRangeError(); }
     skip == null && (skip = count);
     +skip || (skip = 0);
     Math.abs(skip) === Infinity && (skip = 0);
 
-    if (skip <= 0) { throw new Error(argumentOutOfRange); }
+    if (skip <= 0) { throw new ArgumentOutOfRangeError(); }
     return new AnonymousObservable(function (observer) {
       var m = new SingleAssignmentDisposable(),
         refCountDisposable = new RefCountDisposable(m),

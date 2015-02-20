@@ -39,14 +39,11 @@
 		SchedulePeriodicRecursive  = Rx.internals.SchedulePeriodicRecursive,
 		disposableEmpty = Rx.Disposable.empty,
 		inherits = Rx.internals.inherits,
-    defaultSubComparer = Rx.helpers.defaultSubComparer;
+    defaultSubComparer = Rx.helpers.defaultSubComparer,
+		notImplemented = Rx.helpers.notImplemented;
 
   /** Provides a set of extension methods for virtual time scheduling. */
   Rx.VirtualTimeScheduler = (function (__super__) {
-
-    function notImplemented() {
-        throw new Error('Not implemented');
-    }
 
     function localNow() {
       return this.toDateTimeOffset(this.clock);
@@ -175,12 +172,8 @@
      */
     VirtualTimeSchedulerPrototype.advanceTo = function (time) {
       var dueToClock = this.comparer(this.clock, time);
-      if (this.comparer(this.clock, time) > 0) {
-        throw new Error(argumentOutOfRange);
-      }
-      if (dueToClock === 0) {
-        return;
-      }
+      if (this.comparer(this.clock, time) > 0) { throw new ArgumentOutOfRangeError(); }
+      if (dueToClock === 0) { return; }
       if (!this.isEnabled) {
         this.isEnabled = true;
         do {
@@ -203,7 +196,7 @@
     VirtualTimeSchedulerPrototype.advanceBy = function (time) {
       var dt = this.add(this.clock, time),
           dueToClock = this.comparer(this.clock, dt);
-      if (dueToClock > 0) { throw new Error(argumentOutOfRange); }
+      if (dueToClock > 0) { throw new ArgumentOutOfRangeError(); }
       if (dueToClock === 0) {  return; }
 
       this.advanceTo(dt);
@@ -215,7 +208,7 @@
      */
     VirtualTimeSchedulerPrototype.sleep = function (time) {
       var dt = this.add(this.clock, time);
-      if (this.comparer(this.clock, dt) >= 0) { throw new Error(argumentOutOfRange); }
+      if (this.comparer(this.clock, dt) >= 0) { throw new ArgumentOutOfRangeError(); }
 
       this.clock = dt;
     };

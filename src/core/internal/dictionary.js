@@ -81,7 +81,7 @@
     }
 
     function Dictionary(capacity, comparer) {
-      if (capacity < 0) { throw new Error('out of range'); }
+      if (capacity < 0) { throw new ArgumentOutOfRangeError(); }
       if (capacity > 0) { this._initialize(capacity); }
 
       this.comparer = comparer || defaultComparer;

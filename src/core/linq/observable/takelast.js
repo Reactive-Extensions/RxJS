@@ -7,6 +7,7 @@
    * @returns {Observable} An observable sequence containing the specified number of elements from the end of the source sequence.
    */
   observableProto.takeLast = function (count) {
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
       var q = [];

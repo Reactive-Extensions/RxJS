@@ -13,7 +13,7 @@
           count: prev.count + 1
         };
       }, {sum: 0, count: 0 }).map(function (s) {
-        if (s.count === 0) { throw new Error(sequenceContainsNoElements); }
+        if (s.count === 0) { throw new EmptyError(); }
         return s.sum / s.count;
       });
   };

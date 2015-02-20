@@ -54,7 +54,7 @@
         this.onNext(Observable.empty());
       },
       onError: function (e) {
-        this.onNext(Observable.throwException(e));
+        this.onNext(Observable.throwError(e));
       },
       onNext: function (v) {
         this.tail.onNext(v);

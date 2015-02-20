@@ -3,27 +3,24 @@
 
     // Fix subscriber to check for undefined or function returned to decorate as Disposable
     function fixSubscriber(subscriber) {
-      if (subscriber && typeof subscriber.dispose === 'function') { return subscriber; }
-
-      return typeof subscriber === 'function' ?
-        disposableCreate(subscriber) :
-        disposableEmpty;
+      return subscriber && isFunction(subscriber.dispose) ? subscriber :
+        isFunction(subscriber) ? disposableCreate(subscriber) : disposableEmpty;
     }
 
     function setDisposable(s, state) {
       var ado = state[0], subscribe = state[1];
-      try {
-        ado.setDisposable(fixSubscriber(subscribe(ado)));
-      } catch (e) {
-        if (!ado.fail(e)) { throw e; }
+      var sub = tryCatch(subscribe)(ado);
+
+      if (sub === errorObj) {
+        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
       }
+      ado.setDisposable(fixSubscriber(sub));
     }
 
     function AnonymousObservable(subscribe, parent) {
       this.source = parent;
 
       function s(observer) {
-
         var ado = new AutoDetachObserver(observer), state = [ado, subscribe];
 
         if (currentThreadScheduler.scheduleRequired()) {
@@ -31,7 +28,6 @@
         } else {
           setDisposable(null, state);
         }
-
         return ado;
       }
 
