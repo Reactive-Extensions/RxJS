@@ -42,7 +42,7 @@ var subscription = source.subscribe(
 
   // => Next: 0,1,2
   // => Next: 3,4,5
-  // => Next: 6,7,8
+  // => Next: 6,7
   // => Completed
 ```
 

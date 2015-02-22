@@ -11,7 +11,7 @@ For example, let's see how we might implement the [_.where](http://lodash.com/do
 ```js
 Rx.Observable.prototype.whereProperties = function (properties) {
 	var source = this,
-		comparer = Rx.Internals.equals;
+		comparer = Rx.internals.isEqual;
 
 	return Rx.Observable.filterByProperties(function (observer) {
 		// Our disposable is the subscription from the parent
@@ -55,7 +55,7 @@ We could rewrite it as the following to take advantage of already built in opera
 
 ```js
 Rx.Observable.prototype.filterByProperties = function (properties) {
-	var comparer = Rx.Internals.equals;
+	var comparer = Rx.internals.isEqual;
 
 	return this.filter(function (data) {
 
