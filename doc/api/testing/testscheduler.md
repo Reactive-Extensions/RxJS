@@ -14,7 +14,7 @@ function createMessage(expected, actual) {
 // Using QUnit testing for assertions
 var collectionAssert = {
   assertEqual: function (expected, actual) {
-    var comparer = Rx.Internals.isEqual, isOk = true;
+    var comparer = Rx.internals.isEqual, isOk = true;
 
     if (expected.length !== actual.length) {
       ok(false, 'Not equal length. Expected: ' + expected.length + ' Actual: ' + actual.length);
@@ -95,7 +95,8 @@ Creates a new virtual time test scheduler.
 #### Example
 ```js
 var onNext = Rx.ReactiveTest.onNext,
-    onCompleted = Rx.ReactiveTest.onCompleted;
+    onCompleted = Rx.ReactiveTest.onCompleted,
+    subscribe = Rx.ReactiveTest.subscribe;
 
 var scheduler = new Rx.TestScheduler();
 

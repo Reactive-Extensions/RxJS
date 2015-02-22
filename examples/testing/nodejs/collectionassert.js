@@ -8,7 +8,7 @@ function createMessage(actual, expected) {
 var collectionAssert = {
     /* Assertion for collections of notification messages */
     assertEqual: function (expected, actual, comparer, message) {
-        comparer || (comparer = Rx.Internals.isEqual);
+        comparer || (comparer = Rx.internals.isEqual);
         var isOk = true, i, len;
 
         if (expected.length !== actual.length) {

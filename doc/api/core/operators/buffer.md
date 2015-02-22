@@ -26,7 +26,7 @@ Returns an Observable that emits buffers of items it collects from the source `O
 ```js
 // With closings
 var source = Rx.Observable.timer(0, 50)
-  .window(function () { return Rx.Observable.timer(125); })
+  .buffer(function () { return Rx.Observable.timer(125); })
   .take(3);
 
 var subscription = source.subscribe(
@@ -42,7 +42,7 @@ var subscription = source.subscribe(
 
   // => Next: 0,1,2
   // => Next: 3,4,5
-  // => Next: 6,7,8
+  // => Next: 6,7
   // => Completed
 ```
 

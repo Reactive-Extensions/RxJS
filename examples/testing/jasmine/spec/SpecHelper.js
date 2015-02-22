@@ -2,7 +2,7 @@ var slice = Array.prototype.slice;
 
 function areElementsEqual(expected, actual, comparer) {
     var i, isOk = true;
-    comparer || (comparer = Rx.Internals.isEqual);
+    comparer || (comparer = Rx.internals.isEqual);
     if (expected.length !== actual.length) {
         return false;
     }

@@ -20,7 +20,7 @@ function createMessage(actual, expected) {
 // Using QUnit testing for assertions
 var collectionAssert = {
     assertEqual: function (expected, actual) {
-        var comparer = Rx.Internals.isEqual,
+        var comparer = Rx.internals.isEqual,
             isOk = true;
 
         if (expected.length !== actual.length) {

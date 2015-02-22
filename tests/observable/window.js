@@ -10,23 +10,6 @@ var Observable = Rx.Observable,
     subscribed = Rx.ReactiveTest.subscribed,
     disposed = Rx.ReactiveTest.disposed;
 
-function defaultEqualityComparer (x, y) {
-    return Rx.Internals.isEqual(x, y);
-}
-
-function sequenceEqual(arr1, arr2, comparer) {
-    comparer || (comparer = defaultEqualityComparer);
-    if (arr1.length !== arr2.length) {
-        return false;
-    }
-    for (var i = 0, len = arr1.length; i < len; i++) {
-        if (!comparer(arr1[i], arr2[i])) {
-            return false;
-        }
-    }
-    return true;
-}
-
 test('Window_Closings_Basic', function () {
 
     var scheduler = new TestScheduler();
