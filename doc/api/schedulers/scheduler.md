@@ -90,7 +90,7 @@ function schedule(state, action) {
 // Used for scheduling relative to now
 function scheduleRelative(state, dueTime, action) {
      var scheduler = this,
-          dt = Scheduler.normalize(dueTime);
+          dt = Rx.Scheduler.normalize(dueTime);
 
      // Shortcut if already 0
      if (dt === 0) {
@@ -104,7 +104,7 @@ function scheduleRelative(state, dueTime, action) {
           }
      }, dt);
 
-     return new CompositeDisposable(disposable, disposableCreate(function () {
+     return new Rx.CompositeDisposable(disposable, Rx.Disposable.create(function () {
           window.clearTimeout(id);
      }));
 }
