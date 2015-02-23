@@ -13,8 +13,7 @@
           try {
             result = selector(arguments);
           } catch (err) {
-            observer.onError(err);
-            return;
+            return observer.onError(err);
           }
         }
         observer.onNext(result);

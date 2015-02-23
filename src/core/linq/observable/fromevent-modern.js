@@ -69,8 +69,7 @@
             try {
               results = selector(arguments);
             } catch (err) {
-              observer.onError(err);
-              return
+              return observer.onError(err);
             }
           }
 

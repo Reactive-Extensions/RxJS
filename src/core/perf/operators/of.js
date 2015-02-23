@@ -1,4 +1,5 @@
   function observableOf (scheduler, array) {
+    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new FromArrayObservable(array, scheduler);
   }
 
@@ -9,7 +10,7 @@
   Observable.of = function () {
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-    return new FromArrayObservable(args);
+    return new FromArrayObservable(args, currentThreadScheduler);
   };
 
   /**

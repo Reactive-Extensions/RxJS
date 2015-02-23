@@ -5,5 +5,6 @@
   * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
   */
   var observableFromArray = Observable.fromArray = function (array, scheduler) {
+    isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new FromArrayObservable(array, scheduler)
   };

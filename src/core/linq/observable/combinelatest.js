@@ -10,24 +10,23 @@
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     var resultSelector = args.pop();
-    len--;
     Array.isArray(args[0]) && (args = args[0]);
 
     return new AnonymousObservable(function (o) {
-      var falseFactory = function () { return false; },
-        hasValue = arrayInitialize(len, falseFactory),
+      var n = args.length,
+        falseFactory = function () { return false; },
+        hasValue = arrayInitialize(n, falseFactory),
         hasValueAll = false,
-        isDone = arrayInitialize(len, falseFactory),
-        values = new Array(len);
+        isDone = arrayInitialize(n, falseFactory),
+        values = new Array(n);
 
       function next(i) {
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
           try {
             var res = resultSelector.apply(null, values);
-          } catch (ex) {
-            o.onError(ex);
-            return;
+          } catch (e) {
+            return o.onError(e);
           }
           o.onNext(res);
         } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
@@ -40,8 +39,8 @@
         isDone.every(identity) && o.onCompleted();
       }
 
-      var subscriptions = new Array(len);
-      for (var idx = 0; idx < len; idx++) {
+      var subscriptions = new Array(n);
+      for (var idx = 0; idx < n; idx++) {
         (function (i) {
           var source = args[i], sad = new SingleAssignmentDisposable();
           isPromise(source) && (source = observableFromPromise(source));

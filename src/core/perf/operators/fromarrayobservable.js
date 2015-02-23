@@ -2,7 +2,7 @@
     inherits(FromArrayObservable, __super__);
     function FromArrayObservable(args, scheduler) {
       this.args = args;
-      this.scheduler = scheduler || currentThreadScheduler;
+      this.scheduler = scheduler;
       __super__.call(this);
     }
 
