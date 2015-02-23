@@ -17,8 +17,8 @@
           if (selector) {
             try {
               results = selector(results);
-            } catch (err) {
-              return observer.onError(err);
+            } catch (e) {
+              return observer.onError(e);
             }
 
             observer.onNext(results);
