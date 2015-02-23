@@ -1,6 +1,6 @@
 {
   "name": "rxjs",
-  "version": "2.4.0",
+  "version": "2.4.1",
   "main": [
     "dist/rx.all.js",
     "dist/rx.all.map",
