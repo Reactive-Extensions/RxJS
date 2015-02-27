@@ -41,24 +41,31 @@
       this.error = null;
       this.hasFailed = false;
       this.hasCompleted = false;
-      this.controlledDisposable = disposableEmpty;
     }
 
     addProperties(ControlledSubject.prototype, Observer, {
       onCompleted: function () {
         this.hasCompleted = true;
-        (!this.enableQueue || this.queue.length === 0) && this.subject.onCompleted();
+        if (!this.enableQueue || this.queue.length === 0)
+          this.subject.onCompleted();
+        else
+          this.queue.push(Rx.Notification.createOnCompleted());
+        //(!this.enableQueue || this.queue.length === 0) && this.subject.onCompleted();
       },
       onError: function (error) {
         this.hasFailed = true;
         this.error = error;
-        (!this.enableQueue || this.queue.length === 0) && this.subject.onError(error);
+        if (!this.enableQueue || this.queue.length === 0)
+          this.subject.onError(error);
+        else
+          this.queue.push(Rx.Notification.createOnError(error));
+        //(!this.enableQueue || this.queue.length === 0) && this.subject.onError(error);
       },
       onNext: function (value) {
         var hasRequested = false;
 
         if (this.requestedCount === 0) {
-          this.enableQueue && this.queue.push(value);
+          this.enableQueue && this.queue.push(Rx.Notification.createOnNext(value));
         } else {
           (this.requestedCount !== -1 && this.requestedCount-- === 0) && this.disposeCurrentRequest();
           hasRequested = true;
@@ -67,9 +74,16 @@
       },
       _processRequest: function (numberOfItems) {
         if (this.enableQueue) {
-          while (this.queue.length >= numberOfItems && numberOfItems > 0) {
-            this.subject.onNext(this.queue.shift());
-            numberOfItems--;
+          //while (this.queue.length >= numberOfItems && numberOfItems > 0) {
+          //  this.subject.onNext(this.queue.shift());
+          //  numberOfItems--;
+          //}
+
+          while ((this.queue.length > 0 && this.queue[0].kind !== 'N') || (this.queue.length >= numberOfItems && numberOfItems > 0)) {
+            var first = this.queue.shift();
+            first.accept(this.subject);
+            if (first.kind === 'N') numberOfItems--;
+            else { this.disposeCurrentRequest(); this.queue = []; }
           }
 
           return this.queue.length !== 0 ?
@@ -79,12 +93,8 @@
 
         if (this.hasFailed) {
           this.subject.onError(this.error);
-          this.controlledDisposable.dispose();
-          this.controlledDisposable = disposableEmpty;
         } else if (this.hasCompleted) {
           this.subject.onCompleted();
-          this.controlledDisposable.dispose();
-          this.controlledDisposable = disposableEmpty;
         }
 
         return { numberOfItems: numberOfItems, returnValue: false };

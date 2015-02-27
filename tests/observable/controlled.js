@@ -95,3 +95,29 @@ test('controlled gets two sets of values', function () {
     onCompleted(500)
   );
 });
+
+test('controlled fires on completed', function(){
+
+    var scheduler = new TestScheduler();
+    var results = scheduler.createObserver();
+
+    var source = Rx.Observable.range(1, 2).controlled();
+
+    scheduler.scheduleAbsolute(200, function(){
+        source.subscribe(results);
+    });
+
+
+    scheduler.scheduleAbsolute(300, function () {
+        source.request(3);
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+        onNext(300, 1),
+        onNext(300, 2),
+        onCompleted(300)
+    );
+
+});
