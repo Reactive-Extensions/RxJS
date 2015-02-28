@@ -80,16 +80,15 @@
             else { this.disposeCurrentRequest(); this.queue = []; }
           }
 
-          return this.queue.length !== 0 ?
-            { numberOfItems: numberOfItems, returnValue: true } :
-            { numberOfItems: numberOfItems, returnValue: false };
+          return { numberOfItems : numberOfItems, returnValue: this.queue.length !== 0};
         }
 
-        if (this.hasFailed) {
-          this.subject.onError(this.error);
-        } else if (this.hasCompleted) {
-          this.subject.onCompleted();
-        }
+        //TODO I don't think this is ever necessary, since termination of a sequence without a queue occurs in the onCompletion or onError function
+        //if (this.hasFailed) {
+        //  this.subject.onError(this.error);
+        //} else if (this.hasCompleted) {
+        //  this.subject.onCompleted();
+        //}
 
         return { numberOfItems: numberOfItems, returnValue: false };
       },
