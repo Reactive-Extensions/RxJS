@@ -50,7 +50,6 @@
           this.subject.onCompleted();
         else
           this.queue.push(Rx.Notification.createOnCompleted());
-        //(!this.enableQueue || this.queue.length === 0) && this.subject.onCompleted();
       },
       onError: function (error) {
         this.hasFailed = true;
@@ -59,7 +58,6 @@
           this.subject.onError(error);
         else
           this.queue.push(Rx.Notification.createOnError(error));
-        //(!this.enableQueue || this.queue.length === 0) && this.subject.onError(error);
       },
       onNext: function (value) {
         var hasRequested = false;
@@ -74,12 +72,8 @@
       },
       _processRequest: function (numberOfItems) {
         if (this.enableQueue) {
-          //while (this.queue.length >= numberOfItems && numberOfItems > 0) {
-          //  this.subject.onNext(this.queue.shift());
-          //  numberOfItems--;
-          //}
-
-          while ((this.queue.length > 0 && this.queue[0].kind !== 'N') || (this.queue.length >= numberOfItems && numberOfItems > 0)) {
+          while ((this.queue.length >= numberOfItems && numberOfItems > 0) ||
+          (this.queue.length > 0 && this.queue[0].kind !== 'N')) {
             var first = this.queue.shift();
             first.accept(this.subject);
             if (first.kind === 'N') numberOfItems--;
@@ -110,7 +104,7 @@
             self.requestedCount = 0;
           });
 
-          return this.requestedDisposable
+          return this.requestedDisposable;
         } else {
           return disposableEmpty;
         }

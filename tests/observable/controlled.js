@@ -107,7 +107,6 @@ test('controlled fires on completed', function(){
         source.subscribe(results);
     });
 
-
     scheduler.scheduleAbsolute(300, function () {
         source.request(3);
     });
@@ -119,5 +118,102 @@ test('controlled fires on completed', function(){
         onNext(300, 2),
         onCompleted(300)
     );
+});
+
+test('controlled cancels inflight request', function(){
+
+    var scheduler = new TestScheduler();
+
+    var source = scheduler.createHotObservable(
+        onNext(400, 2),
+        onNext(410, 3),
+        onNext(420, 4)
+    ).controlled();
+
+    var results = scheduler.createObserver();
+
+    scheduler.scheduleAbsolute(200, function(){
+        source.request(3);
+    });
+
+    scheduler.scheduleAbsolute(200, function(){
+        source.request(2);
+    });
+
+    scheduler.scheduleAbsolute(300, function(){
+        source.subscribe(results);
+    });
+
+    scheduler.advanceBy(420);
+
+
+    results.messages.assertEqual(
+        onNext(400, 2),
+        onNext(410, 3)
+    );
+
+
+});
+
+test('controlled fires onError', function(){
+
+    var scheduler = new TestScheduler();
+    var results = scheduler.createObserver();
+
+    var error = new Error("expected");
+    var source = Rx.Observable.range(1, 2, scheduler)
+        .concat(Rx.Observable.throw(error, scheduler))
+        .controlled();
+
+    scheduler.scheduleAbsolute(200, function(){
+        source.subscribe(results);
+    });
+
+
+    scheduler.scheduleAbsolute(300, function () {
+        source.request(3);
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+        onNext(300, 1),
+        onNext(300, 2),
+        onError(300, error)
+    );
+
+});
+
+test('controlled drops messages with queue disabled', function(){
+
+    var scheduler = new TestScheduler();
+
+    var source = scheduler.createHotObservable(
+        onNext(400, 1),
+        onNext(410, 2),
+        onNext(420, 3),
+        onNext(430, 4),
+        onCompleted(500)
+    ).controlled(false);
+
+    var results = scheduler.createObserver();
+
+
+    scheduler.scheduleAbsolute(415, function(){
+        source.request(2);
+    });
+
+    scheduler.scheduleAbsolute(200, function(){
+        source.subscribe(results);
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+      onNext(420, 3),
+      onNext(430, 4),
+      onCompleted(500)
+    );
+
 
 });
