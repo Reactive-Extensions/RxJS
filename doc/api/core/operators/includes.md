@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.includes(searchElement, [fromIndex])` ###
-### `Rx.Observable.prototype.includes(searchElement, [fromIndex])` **DEPRECATED** ###
+### `Rx.Observable.prototype.contains(searchElement, [fromIndex])` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/includes.js "View in source")
 
 Determines whether an observable sequence includes a specified element with an optional from index.
