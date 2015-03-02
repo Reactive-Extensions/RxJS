@@ -1674,8 +1674,7 @@ module.exports = function (grunt) {
         }
       },
       qunit: {
-          all: ['tests/*.html'],
-          controlled : ['tests/rx.backpressure.html']
+          all: ['tests/*.html']
       },
       jshint: {
         all: [
