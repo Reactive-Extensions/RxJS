@@ -61,7 +61,7 @@ For example, we could get the HTML from Bing.com and write it to the console, wi
 
 ```js
 var Rx = require('rx');
-var request = require('request').request;
+var request = require('request');
 var get = Rx.Observable.fromNodeCallback(request);
 
 Rx.spawn(function* () {
@@ -73,7 +73,7 @@ Rx.spawn(function* () {
   } 
 
   console.log(data);
-}());
+})();
 ```
 
 ## Mixing Operators with Generators ##

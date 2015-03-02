@@ -12,7 +12,7 @@ Spawns a generator function which allows for Promises, Observable sequences, Arr
 #### Example
 ```js
 var Rx = require('rx');
-var request = require('request').request;
+var request = require('request');
 var get = Rx.Observable.fromNodeCallback(request);
 
 Rx.spawn(function* () {
