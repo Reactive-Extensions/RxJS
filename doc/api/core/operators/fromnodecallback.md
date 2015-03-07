@@ -17,7 +17,7 @@ Converts a Node.js callback style function to an observable sequence.  This must
 var fs = require('fs'),
     Rx = require('rx');
 
-// Wrap fs.exists
+// Wrap fs.rename
 var rename = Rx.Observable.fromNodeCallback(fs.rename);
 
 // Rename file which returns no parameters except an error
