@@ -1,4 +1,4 @@
-### `Rx.Observable.prototype.skipLastWithTime(duration)`
+### `Rx.Observable.prototype.skipLastWithTime(duration, [scheduler])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skiplastwithtime.js "View in source")
 
 Bypasses a specified number of elements at the end of an observable sequence.
