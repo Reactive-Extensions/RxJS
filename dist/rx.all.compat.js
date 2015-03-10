@@ -3376,6 +3376,7 @@
       };
       InnerObserver.prototype.onCompleted = function () {
         if(!this.isStopped) {
+          this.isStopped = true;
           var parent = this.parent;
           parent.g.remove(this.sad);
           if (parent.q.length > 0) {
