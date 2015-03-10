@@ -18,7 +18,7 @@
 **[Contributing](#contributing)** |
 **[License](#license)**
 
-# The Reactive Extensions for JavaScript (RxJS) <sup>2.3</sup>... #
+# The Reactive Extensions for JavaScript (RxJS) <sup>2.4</sup>... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
 The project is actively developed by [Microsoft Open Technologies, Inc.](http://msopentech.com/), in collaboration with a community of open source developers.
@@ -223,12 +223,16 @@ Please check out:
 - Community Examples
     - [React](http://facebook.github.io/react/)
         - [Rx-React](https://github.com/fdecampredon/rx-react)
-        - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
+        - [RxReact](https://github.com/AlexMost/RxReact)
         - [React RxJS Autocomplete](https://github.com/eliseumds/react-autocomplete)
         - [React RxJS TODO MVC](https://github.com/fdecampredon/react-rxjs-todomvc)
         - [Rx TODO MVC](https://github.com/footballradar/rx-todomvc)
         - [React RxJS Router](https://github.com/kmcclosk/reactjs-rxjs-example)
         - [React + RxJS + Angular 2.0 di.js TODO MVC](https://github.com/joelhooks/react-rxjs-angular-di-todomvc)
+    - [Flux](http://facebook.github.io/flux/)
+        - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
+        - [ReactiveFlux](https://github.com/codesuki/reactive-flux)
+        - [Thundercats.js](https://github.com/r3dm/thundercats)
     - [Ember](http://emberjs.com/)
         - [RxEmber](https://github.com/blesh/RxEmber)
     - [AngularJS](http://angularjs.org)
@@ -247,6 +251,9 @@ Please check out:
     - Streaming and event-based programming using FRP and RxJS - FutureJS 2014 [slides/demos](https://github.com/Reactive-Extensions/FutureJS) | [video](https://www.youtube.com/watch?v=zlERo_JMGCw)
     - [Tyrannosaurus Rx](http://yobriefca.se/presentations/tyrannosaurus-rx.pdf) - [James Hughes](http://twitter.com/kouphax)
     - Taming Asynchronous Workflows with Functional Reactive Programming - EuroClojure - [Leonardo Borges](https://twitter.com/leonardo_borges) [slides](http://www.slideshare.net/borgesleonardo/functional-reactive-programming-compositional-event-systems) | [video](http://www.slideshare.net/borgesleonardo/functional-reactive-programming-compositional-event-systems)
+- Reactive All the Things - ng-conf 2015 - [Martin Gontovnikas](https://twitter.com/mgonto/) & [Ben Lesh](https://twitter.com/BenLesh)
+    - [Slides](http://mgonto.github.io/reactive-all-the-things-talk/#1)
+    - [Video](https://www.youtube.com/watch?v=zbBVG8bOoXk&feature=youtu.be&app=desktop)
 
 - Videos
     - [Practical Rx with Matthew Podwysocki, Bart de Smet and Jafar Husain](http://channel9.msdn.com/posts/Bart-De-Smet-Jafar-Hussain-Matthew-Podwysocki-Pragmatic-Rx)
@@ -383,7 +390,11 @@ The Reactive Extensions for JavaScript have no external dependencies any library
 
 - [React](http://facebook.github.io/react/)
     - [Rx-React](https://github.com/fdecampredon/rx-react)
+    - [RxReact](https://github.com/AlexMost/RxReact)
+- [Flux](http://facebook.github.io/flux/)
     - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
+    - [ReactiveFlux](https://github.com/codesuki/reactive-flux)
+    - [Thundercats.js](https://github.com/r3dm/thundercats)
 - [Ember](http://emberjs.com/)
     - [RxEmber](https://github.com/blesh/RxEmber)
 - [AngularJS](https://github.com/Reactive-Extensions/rx.angular.js)

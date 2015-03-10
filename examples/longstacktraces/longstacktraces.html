@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="utf-8">
+    <meta name="description" content="RxJS Long Stack Traces Example">
+    <meta name="author" content="Rx Team">
+    <title>Long Stack Traces Example</title>
+    <link rel="stylesheet" href="../assets/bootstrap/css/bootstrap.min.css">
+</head>
+<body>
+  <div class="container-fluid">
+      <div class="page-header">
+          <h1>RxJS Long Stack Traces Example</h1>
+          <p class="lead">Example to show getting only the user code stack trace.</p>
+      </div>
+      <div class="row">
+        <code>
+          <pre>
+            var results = document.getElementById('results');
+
+            Rx.config.longStackSupport = true;
+
+            var source = Rx.Observable.of(1,2,3);
+            source
+              .flatMap(function () {
+                return Rx.Observable.throwError(new Error());
+              })
+              .subscribe(
+                function (x) { results.innerHTML = x; },
+                function (err) { results.innerHTML = err.stack; }
+              );
+          </pre>
+        </code>
+        <div id="results"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../../dist/rx.lite.compat.js"></script>
+  <script>
+  function ready(callback) {
+    if (document.readyState === 'complete') {
+      setTimeout(callback, 0);
+    } else {
+      document.addEventListener( 'DOMContentLoaded', callback, false );
+      window.addEventListener( 'load', callback, false );
+    }
+  }
+
+  ready(function () {
+    var results = document.getElementById('results');
+
+    Rx.config.longStackSupport = true;
+
+    var source = Rx.Observable.of(1,2,3);
+    source.flatMap(function () {
+      return Rx.Observable.throwError(new Error());
+    }).subscribe(
+      function (x) { results.innerHTML = x; },
+      function (err) { results.innerHTML = err.stack; }
+    );
+  });
+  </script>
+</body>
