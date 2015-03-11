@@ -1241,7 +1241,7 @@ module.exports = function (grunt) {
           liteextras: {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/subintro.js',
+              'src/core/headers/liteintro.js',
               'src/core/headers/liteextrasheader.js',
 
               'src/core/disposables/scheduleddisposable.js',
@@ -1275,6 +1275,44 @@ module.exports = function (grunt) {
               'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.lite.extras.js'
+          },
+          liteextrascompat: {
+            src: [
+              'src/core/headers/license.js',
+              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteextrasheader.js',
+
+              'src/core/disposables/scheduleddisposable.js',
+              'src/core/checkedobserver.js',
+              'src/core/observeonobserver.js',
+              'src/core/observer-extras.js',
+
+              // Concurrency
+              'src/core/linq/observable/observeon.js', // ObserveOnObserver
+              'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
+
+              // Creation
+              'src/core/linq/observable/generate.js',
+              'src/core/linq/observable/using.js',
+
+              // Multiple
+              'src/core/linq/observable/ambproto.js',
+              'src/core/linq/observable/amb.js',
+              'src/core/linq/observable/onerrorresumenextproto.js',
+              'src/core/linq/observable/onerrorresumenext.js',
+
+              // Single
+              'src/core/linq/observable/bufferwithcount.js',
+              'src/core/linq/observable/windowwithcount.js',
+              'src/core/linq/observable/takelastbuffer.js',
+
+              // Standard Query Operators
+              'src/core/linq/observable/defaultifempty.js',
+              'src/core/linq/observable/distinct.js',
+
+              'src/core/headers/suboutro.js'
+            ],
+            dest: 'dist/rx.lite.extras.compat.js'
           },
           backpressure: {
             src: [
@@ -1588,6 +1626,13 @@ module.exports = function (grunt) {
           },
           files: {'dist/rx.lite.extras.min.js': ['dist/rx.lite.extras.js'] }
         },
+        liteextrascompat: {
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.lite.extras.compat.map'
+          },
+          files: {'dist/rx.lite.extras.compat.min.js': ['dist/rx.lite.extras.compat.js'] }
+        },
         backpressure: {
           options: {
             sourceMap: true,
@@ -1713,6 +1758,52 @@ module.exports = function (grunt) {
             interrupt: true
           }
         }
+      },
+      copy: {
+        rxlite: {
+          flatten: true,
+          filter: 'isFile',
+          expand: true,
+          src: [
+            'dist/rx.lite.js',
+            'dist/rx.lite.map',
+            'dist/rx.lite.min.js'
+          ],
+          dest: 'modules/rx-lite/'
+        },
+        rxlitecompat: {
+          flatten: true,
+          filter: 'isFile',
+          expand: true,
+          src: [
+            'dist/rx.lite.compat.js',
+            'dist/rx.lite.compat.map',
+            'dist/rx.lite.compat.min.js'
+          ],
+          dest: 'modules/rx-lite-compat/'
+        },
+        rxliteextras: {
+          flatten: true,
+          filter: 'isFile',
+          expand: true,
+          src: [
+            'dist/rx.lite.extras.js',
+            'dist/rx.lite.extras.map',
+            'dist/rx.lite.extras.min.js'
+          ],
+          dest: 'modules/rx-lite-extras/'
+        },
+        rxliteextrascompat: {
+          flatten: true,
+          filter: 'isFile',
+          expand: true,
+          src: [
+            'dist/rx.lite.extras.compat.js',
+            'dist/rx.lite.extras.compat.map',
+            'dist/rx.lite.extras.compat.min.js'
+          ],
+          dest: 'modules/rx-lite-extras-compat/'
+        },
       }
   });
 
@@ -1841,6 +1932,7 @@ module.exports = function (grunt) {
     'concat:lite',
     'concat:litecompat',
     'concat:liteextras',
+    'concat:liteextrascompat',
     'concat:sorting',
 
     'uglify:all',
@@ -1861,6 +1953,7 @@ module.exports = function (grunt) {
     'uglify:lite',
     'uglify:litecompat',
     'uglify:liteextras',
+    'uglify:liteextrascompat',
     'uglify:sorting'
   ]);
 
@@ -1883,7 +1976,15 @@ module.exports = function (grunt) {
     'concat:lite',
     'concat:litecompat',
     'concat:liteextras',
+    'concat:liteextrascompat',
     'concat:sorting'
+  ]);
+
+  grunt.registerTask('copy-lite', [
+    'copy:rxlite',
+    'copy:rxlitecompat',
+    'copy:rxliteextras',
+    'copy:rxliteextrascompat'
   ]);
 
   // Default task
@@ -1906,6 +2007,7 @@ module.exports = function (grunt) {
     'concat:lite',
     'concat:litecompat',
     'concat:liteextras',
+    'concat:liteextrascompat',
     'concat:sorting',
 
     'uglify:all',
@@ -1926,9 +2028,14 @@ module.exports = function (grunt) {
     'uglify:lite',
     'uglify:litecompat',
     'uglify:liteextras',
+    'uglify:liteextrascompat',
     'uglify:sorting',
+
+    'copy:rxlite',
+    'copy:rxlitecompat',
+    'copy:rxliteextras',
+    'copy:rxliteextrascompat',
 
     'qunit'
   ]);
-
 };
