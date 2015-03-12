@@ -43,7 +43,7 @@
        */
       getValue: function () {
           checkDisposed(this);
-          if (this.error) {
+          if (this.hasError) {
               throw this.error;
           }
           return this.value;
