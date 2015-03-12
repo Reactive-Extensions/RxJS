@@ -246,6 +246,20 @@
 
     addProperties(BehaviorSubject.prototype, Observer, {
       /**
+       * Gets the current value or throws an exception.
+       * Value is frozen after onCompleted is called.
+       * After onError is called Value always throws the specified exception.
+       * An exception is always thrown after dispose is called.
+       * @returns {Mixed} The initial value passed to the constructor until OnNext is called; after which, the last value passed to OnNext.
+       */
+      getValue: function () {
+          checkDisposed(this);
+          if (this.hasError) {
+              throw this.error;
+          }
+          return this.value;
+      },
+      /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
        */

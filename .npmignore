@@ -1,4 +1,5 @@
 node_modules/
+modules/
 .npm-debug.log
 .nuget/
 nuget/
@@ -11,4 +12,4 @@ tests/
 .travis.yml
 CHANGELOG.*
 Gruntfile.js
-gruntfile.js
+travis.sh
