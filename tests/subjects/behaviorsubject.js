@@ -287,3 +287,67 @@ test('SubjectDisposed', function () {
         onNext(550, 5)
     );
 });
+
+test('value vs getValue()', function () {
+    var scheduler = new TestScheduler();
+
+    var subject;
+
+    var resultsGetValue = scheduler.createObserver();
+    var resultsValue = scheduler.createObserver();
+
+    // create and dispose
+    scheduler.scheduleAbsolute(100, function () { subject = new BehaviorSubject(0); });
+    scheduler.scheduleAbsolute(650, function () { subject.dispose(); });
+
+    // fill the subject with values
+    scheduler.scheduleAbsolute(150, function () { subject.onNext(1); });
+    scheduler.scheduleAbsolute(250, function () { subject.onNext(2); });
+    scheduler.scheduleAbsolute(350, function () { subject.onNext(3); });
+    scheduler.scheduleAbsolute(450, function () { subject.onNext(4); });
+    scheduler.scheduleAbsolute(550, function () { subject.onError(new Error('Subject onError() method has been called')); });
+
+    // getValue()
+    scheduler.scheduleAbsolute(200, function () { resultsGetValue.onNext(subject.getValue()); });
+    scheduler.scheduleAbsolute(300, function () { resultsGetValue.onNext(subject.getValue()); });
+    scheduler.scheduleAbsolute(400, function () { resultsGetValue.onNext(subject.getValue()); });
+    scheduler.scheduleAbsolute(500, function () { resultsGetValue.onNext(subject.getValue()); });
+    scheduler.scheduleAbsolute(600, function () { raises(function () { resultsGetValue.onNext(subject.getValue()); }); });
+    scheduler.scheduleAbsolute(700, function () { raises(function () { resultsGetValue.onNext(subject.getValue()); }); });
+
+    // value
+    scheduler.scheduleAbsolute(200, function () { resultsValue.onNext(subject.value); });
+    scheduler.scheduleAbsolute(300, function () { resultsValue.onNext(subject.value); });
+    scheduler.scheduleAbsolute(400, function () { resultsValue.onNext(subject.value); });
+    scheduler.scheduleAbsolute(500, function () { resultsValue.onNext(subject.value); });
+    scheduler.scheduleAbsolute(600, function () { resultsValue.onNext(subject.value); });
+    scheduler.scheduleAbsolute(700, function () { resultsValue.onNext(subject.value); });
+
+    scheduler.start();
+
+    resultsGetValue.messages.assertEqual(
+        onNext(200, 1),
+        onNext(300, 2),
+        onNext(400, 3),
+        onNext(500, 4)
+
+        // getValue() throws an exception if BehaviorSubject.onError() has been called
+        //onNext(600)
+
+        // getValue() throws an exception if BehaviorSubject has been disposed
+        //onNext(700)
+    );
+
+    resultsValue.messages.assertEqual(
+        onNext(200, 1),
+        onNext(300, 2),
+        onNext(400, 3),
+        onNext(500, 4),
+
+        // value is frozen if BehaviorSubject.onError() has been called
+        onNext(600, 4),
+
+        // value returns null if BehaviorSubject has been disposed
+        onNext(700, null)
+    );
+});
