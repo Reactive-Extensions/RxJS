@@ -9,7 +9,7 @@ Determines whether any element of an observable sequence satisfies a condition i
 2. `[thisArg]` *(`Any`)*: Object to use as this when executing callback.
 
 #### Returns
-*(`Observable`)*: An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
+*(`Observable`)*: An observable sequence containing a single element determining whether one of the elements in the source sequence pass the test in the specified predicate.
 
 #### Example
 ```js
