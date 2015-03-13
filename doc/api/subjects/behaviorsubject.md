@@ -41,6 +41,7 @@ subject.onCompleted();
 
 ## `BehaviorSubject Instance Methods` ##
 - [`dispose`](#rxbehaviorsubjectprototypedispose)
+- [`getValue`] (#rxbehaviorsubjectprototypegetvalue)
 - [`hasObservers`](#rxbehaviorsubjectprototypehasobservers)
 
 ## Inherited Classes ##
@@ -50,7 +51,7 @@ subject.onCompleted();
 ## _BehaviorSubject Constructor_ ##
 
 ### <a id="rxbehaviorsubjectintialvalue"></a>`Rx.BehaviorSubject(initialValue)`
-<a href="#rxbehaviorsubjectintialvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L30-L37 "View in source")
+<a href="#rxbehaviorsubjectintialvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L27-L34 "View in source")
 
 Initializes a new instance of the `Rx.BehaviorSubject` class which creates a subject that caches its last value and starts with the specified value.
 
@@ -92,7 +93,7 @@ subject.onCompleted();
 ## _BehaviorSubject Instance Methods_ ##
 
 ### <a id="rxbehaviorsubjectprototypedispose"></a>`Rx.BehaviorSubject.prototype.dispose()`
-<a href="#rxbehaviorsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L97-L102 "View in source")
+<a href="#rxbehaviorsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L101-L106 "View in source")
 
 Unsubscribe all observers and release resources.
 
@@ -134,8 +135,58 @@ try {
 
 * * *
 
+### <a id="rxbehaviorsubjectprototypegetvalue"></a>`Rx.BehaviorSubject.prototype.getValue()`
+<a href="#rxbehaviorsubjectprototypegetvalue">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L44-L50 "View in source")
+
+Gets the current value or throws an exception.
+Value is frozen after `onCompleted` is called.
+After `onError` is called always throws the specified exception.
+An exception is always thrown after `dispose` is called.
+
+#### Returns
+*(Mixed)*: The initial `value` passed to the constructor until `onNext` is called; after which, the last value passed to `onNext`.
+
+#### Example
+```js
+var subject = new Rx.BehaviorSubject(56);
+
+console.log('Value is: ' + subject.getValue());
+
+// => Value is: 56
+
+subject.onNext(42);
+
+console.log('Value is: ' + subject.getValue());
+
+// => Value is: 42
+
+subject.onCompleted();
+
+subject.onNext(100);
+
+console.log('Value is frozen: ' + subject.getValue());
+
+// => Value is frozen: 42
+
+subject.dispose();
+
+try {
+    subject.getValue();
+} catch (e) {
+    console.log(e.message);
+}
+
+// => Object has been disposed
+```
+
+### Location
+
+= rx.binding.js
+
+* * *
+
 ### <a id="rxbehaviorsubjectprototypehasobservers"></a>`Rx.BehaviorSubject.prototype.hasObservers()`
-<a href="#rxbehaviorsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L44-L46 "View in source")
+<a href="#rxbehaviorsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/behaviorsubject.js#L55 "View in source")
 
 Indicates whether the subject has observers subscribed to it.
 
