@@ -167,7 +167,7 @@ NuGet Packages:
 - [`skipWhile`](../api/core/operators/skipwhile.md)
 - [`some`](../api/core/operators/some.md)
 - [`startWith`](../api/core/operators/startwith.md)
-- [`subscribe`](../api/core/operators/subscribeo.md)
+- [`subscribe | forEach`](../api/core/operators/subscribe.md)
 - [`subscribeOn`](../api/core/operators/subscribeon.md)
 - [`sum`](../api/core/operators/sum.md)
 - [`switch | switchLatest`](../api/core/operators/switch.md)
