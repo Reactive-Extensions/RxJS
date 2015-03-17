@@ -101,7 +101,7 @@ var Rx = require('rx-lite');
 - [`skipUntil`](../../doc/api/core/operators/skipuntil.md)
 - [`skipWhile`](../../doc/api/core/operators/skipwhile.md)
 - [`startWith`](../../doc/api/core/operators/startwith.md)
-- [`subscribe`](../../doc/api/core/operators/subscribe.md)
+- [`subscribe | forEach`](../../doc/api/core/operators/subscribe.md)
 - [`subscribeOnNext`](../../doc/api/core/operators/subscribeonnext.md)
 - [`subscribeOnError`](../../doc/api/core/operators/subscribeonerror.md)
 - [`subscribeOnCompleted`](../../doc/api/core/operators/subscribeoncompleted.md)
