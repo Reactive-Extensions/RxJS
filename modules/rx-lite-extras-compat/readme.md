@@ -30,20 +30,20 @@ var Rx = require('rx-lite-extras-compat');
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`amb`](../doc/api/core/operators/amb.md)
-- [`generate`](../core/operators/generate.md)
-- [`onErrorResumeNext`](../doc/api/core/operators/onerrorresumenext.md)
-- [`using`](../doc/api/core/ooperators/using.md)
+- [`amb`](../../doc/api/core/operators/amb.md)
+- [`generate`](../../core/operators/generate.md)
+- [`onErrorResumeNext`](../../doc/api/core/operators/onerrorresumenext.md)
+- [`using`](../../doc/api/core/ooperators/using.md)
 
 ### `Observable Instance Methods`
-- [`amb`](../doc/api/core/operators/ambproto.md)
-- [`bufferWithCount`](../doc/api/core/operators/bufferwithcount.md)
-- [`distinct`](../doc/api/core/operators/distinct.md)
-- [`observeOn`](../doc/api/core/operators/observeon.md)
-- [`onErrorResumeNext`](../doc/api/core/operators/onerrorresumenext.md)
-- [`subscribeOn`](../doc/api/core/operators/subscribeon.md)
-- [`takeLastBuffer`](../doc/api/core/operators/takelastbuffer.md)
-- [`windowWithCount`](../doc/api/core/operators/windowwithcount.md)
+- [`amb`](../../doc/api/core/operators/ambproto.md)
+- [`bufferWithCount`](../../doc/api/core/operators/bufferwithcount.md)
+- [`distinct`](../../doc/api/core/operators/distinct.md)
+- [`observeOn`](../../doc/api/core/operators/observeon.md)
+- [`onErrorResumeNext`](../../doc/api/core/operators/onerrorresumenext.md)
+- [`subscribeOn`](../../doc/api/core/operators/subscribeon.md)
+- [`takeLastBuffer`](../../doc/api/core/operators/takelastbuffer.md)
+- [`windowWithCount`](../../doc/api/core/operators/windowwithcount.md)
 
 ## Contributing ##
 
