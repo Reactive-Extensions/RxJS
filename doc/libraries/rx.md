@@ -84,7 +84,7 @@ NuGet Packages:
 - [`skipUntil`](../api/core/operators/skipuntil.md)
 - [`skipWhile`](../api/core/operators/skipwhile.md)
 - [`startWith`](../api/core/operators/startwith.md)
-- [`subscribe`](../api/core/operators/subscribe.md)
+- [`subscribe | forEach`](../api/core/operators/subscribe.md)
 - [`subscribeOnNext`](../api/core/operators/subscribeonnext.md)
 - [`subscribeOnError`](../api/core/operators/subscribeonerror.md)
 - [`subscribeOnCompleted`](../api/core/operators/subscribeoncompleted.md)
