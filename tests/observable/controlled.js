@@ -217,3 +217,43 @@ test('controlled drops messages with queue disabled', function(){
 
 
 });
+asyncTest('controlled handles synchronous and asynchronous requests', function(assert, done){
+
+    expect(0);
+
+    var subject = new Rx.Subject();
+    var count = 0;
+
+    function createEvents() {
+        subject.onNext(count++);
+        subject.onNext(count++);
+    }
+
+    setInterval(createEvents, 100);
+
+    var source = subject.timestamp().take(10).controlled();
+
+    // process one event at a time
+    var subscription = source.subscribe(
+        function (x) {
+            console.log(x.value + ': ' + x.timestamp);
+            // alternate between immediate and delayed request(1), causes hanging
+            if (x.value % 2) {
+                console.log('immediate request');
+                source.request(1); // request next
+            } else {
+                console.log('delayed request');
+                setTimeout(function () {
+                    source.request(1); // request next
+                }, 0);
+            }
+        },
+        function (err) { console.error('err', err); },
+        function () { console.log('completed'); QUnit.stop(); }
+    );
+
+    QUnit.start();
+
+    source.request(1); // start by requesting first item
+
+});
