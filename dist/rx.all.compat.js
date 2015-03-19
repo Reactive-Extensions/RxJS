@@ -1215,9 +1215,11 @@
   var normalizeTime = Scheduler.normalize;
 
   (function (schedulerProto) {
+
     function invokeRecImmediate(scheduler, pair) {
-      var state = pair.first, action = pair.second, group = new CompositeDisposable(),
-      recursiveAction = function (state1) {
+      var state = pair[0], action = pair[1], group = new CompositeDisposable();
+
+      function recursiveAction(state1) {
         action(state1, function (state2) {
           var isAdded = false, isDone = false,
           d = scheduler.scheduleWithState(state2, function (scheduler1, state3) {
@@ -1234,14 +1236,15 @@
             isAdded = true;
           }
         });
-      };
+      }
+
       recursiveAction(state);
       return group;
     }
 
     function invokeRecDate(scheduler, pair, method) {
-      var state = pair.first, action = pair.second, group = new CompositeDisposable(),
-      recursiveAction = function (state1) {
+      var state = pair[0], action = pair[1], group = new CompositeDisposable();
+      function recursiveAction(state1) {
         action(state1, function (state2, dueTime1) {
           var isAdded = false, isDone = false,
           d = scheduler[method](state2, dueTime1, function (scheduler1, state3) {
@@ -1284,7 +1287,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithState = function (state, action) {
-      return this.scheduleWithState({ first: state, second: action }, invokeRecImmediate);
+      return this.scheduleWithState([state, action], invokeRecImmediate);
     };
 
     /**
@@ -1305,7 +1308,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithRelativeAndState = function (state, dueTime, action) {
-      return this._scheduleRelative({ first: state, second: action }, dueTime, function (s, p) {
+      return this._scheduleRelative([state, action], dueTime, function (s, p) {
         return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
       });
     };
@@ -1328,7 +1331,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithAbsoluteAndState = function (state, dueTime, action) {
-      return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
+      return this._scheduleAbsolute([state, action], dueTime, function (s, p) {
         return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
       });
     };
@@ -1423,9 +1426,7 @@
     function runTrampoline () {
       while (queue.length > 0) {
         var item = queue.dequeue();
-        if (!item.isCancelled()) {
-          !item.isCancelled() && item.invoke();
-        }
+        !item.isCancelled() && item.invoke();
       }
     }
 
@@ -6935,14 +6936,14 @@
    *
    * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
    * @param bufferSize [Optional] Maximum element count of the replay buffer.
-   * @param window [Optional] Maximum time length of the replay buffer.
+   * @param windowSize [Optional] Maximum time length of the replay buffer.
    * @param scheduler [Optional] Scheduler where connected observers within the selector function will be invoked on.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
    */
-  observableProto.replay = function (selector, bufferSize, window, scheduler) {
+  observableProto.replay = function (selector, bufferSize, windowSize, scheduler) {
     return selector && isFunction(selector) ?
-      this.multicast(function () { return new ReplaySubject(bufferSize, window, scheduler); }, selector) :
-      this.multicast(new ReplaySubject(bufferSize, window, scheduler));
+      this.multicast(function () { return new ReplaySubject(bufferSize, windowSize, scheduler); }, selector) :
+      this.multicast(new ReplaySubject(bufferSize, windowSize, scheduler));
   };
 
   /**
@@ -6960,8 +6961,8 @@
    * @param scheduler [Optional] Scheduler where connected observers within the selector function will be invoked on.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
    */
-  observableProto.shareReplay = function (bufferSize, window, scheduler) {
-    return this.replay(null, bufferSize, window, scheduler).refCount();
+  observableProto.shareReplay = function (bufferSize, windowSize, scheduler) {
+    return this.replay(null, bufferSize, windowSize, scheduler).refCount();
   };
 
   var InnerSubscription = function (subject, observer) {
@@ -7016,9 +7017,9 @@
       /**
        * Gets the current value or throws an exception.
        * Value is frozen after onCompleted is called.
-       * After onError is called Value always throws the specified exception.
+       * After onError is called always throws the specified exception.
        * An exception is always thrown after dispose is called.
-       * @returns {Mixed} The initial value passed to the constructor until OnNext is called; after which, the last value passed to OnNext.
+       * @returns {Mixed} The initial value passed to the constructor until onNext is called; after which, the last value passed to onNext.
        */
       getValue: function () {
           checkDisposed(this);
@@ -7094,6 +7095,8 @@
    */
   var ReplaySubject = Rx.ReplaySubject = (function (__super__) {
 
+    var maxSafeInteger = Math.pow(2, 53) - 1;
+
     function createRemovableDisposable(subject, observer) {
       return disposableCreate(function () {
         observer.dispose();
@@ -7131,8 +7134,8 @@
      *  @param {Scheduler} [scheduler] Scheduler the observers are invoked on.
      */
     function ReplaySubject(bufferSize, windowSize, scheduler) {
-      this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
-      this.windowSize = windowSize == null ? Number.MAX_VALUE : windowSize;
+      this.bufferSize = bufferSize == null ? maxSafeInteger : bufferSize;
+      this.windowSize = windowSize == null ? maxSafeInteger : windowSize;
       this.scheduler = scheduler || currentThreadScheduler;
       this.q = [];
       this.observers = [];
