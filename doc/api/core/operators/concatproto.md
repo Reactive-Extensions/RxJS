@@ -47,7 +47,7 @@ var subscription = source.subscribe(
     });
 
 // => Next: 42
-// => Next: 542
+// => Next: 42
 // => Completed
 ```
 ### Location
