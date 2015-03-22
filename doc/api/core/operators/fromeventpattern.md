@@ -1,11 +1,11 @@
-### `Rx.Observable.fromEventPattern(addHandler, removeHandler, [selector])`
+### `Rx.Observable.fromEventPattern(addHandler, [removeHandler], [selector])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromeventpattern.js "View in source")
 
 Creates an observable sequence by using the addHandler and removeHandler functions to add and remove the handlers, with an optional selector function to project the event arguments.
 
 #### Arguments
 1. `addHandler` *(`Function`)*: The DOMElement, NodeList or EventEmitter to attach a listener.
-2. `removeHandler` *(`Function`)*: The event name to attach the observable sequence.
+2. `[removeHandler]` *(`Function`)*: The optional function to remove a handler from an emitter.
 3. `[selector]` *(`Function`)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
 
 #### Returns
