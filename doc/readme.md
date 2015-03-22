@@ -1,4 +1,4 @@
-# RxJS <sup>v2.3</sup>
+# RxJS <sup>v2.4</sup>
 
 Reactive Extensions (Rx) is a library for composing asynchronous and event-based programs using observable sequences and LINQ-style query operators.
 
@@ -116,10 +116,10 @@ Converting your existing code from other libraries can be easy.  Many of the con
     - [Comparing RxJS and Bacon.js](mapping/bacon.js/comparing.md)
 2. For Async.js Users
     - [Why RxJS versus Async.js](mapping/async/whyrx.md)
-    - [Comparing RxJS and Async.jss](mapping/async/comparing.md)
+    - [Comparing RxJS and Async.js](mapping/async/comparing.md)
 3. For Highland.js Users
     - [Why RxJS versus Highland.js](mapping/highland/whyrx.md)
-    - [Comparing RxJS and Highland.jss](mapping/highland/comparing.md)
+    - [Comparing RxJS and Highland.js](mapping/highland/comparing.md)
 
 ## Reactive Extensions Class Library
 
