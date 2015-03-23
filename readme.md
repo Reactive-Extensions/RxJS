@@ -229,6 +229,7 @@ Please check out:
         - [Rx TODO MVC](https://github.com/footballradar/rx-todomvc)
         - [React RxJS Router](https://github.com/kmcclosk/reactjs-rxjs-example)
         - [React + RxJS + Angular 2.0 di.js TODO MVC](https://github.com/joelhooks/react-rxjs-angular-di-todomvc)
+        - [React + RxJS Reactive Cube](https://github.com/hugobessaa/cubactive)
     - [Flux](http://facebook.github.io/flux/)
         - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
         - [ReactiveFlux](https://github.com/codesuki/reactive-flux)

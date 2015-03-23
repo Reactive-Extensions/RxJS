@@ -1,4 +1,5 @@
   var scheduleMethod, clearMethod = noop;
+
   var localTimer = (function () {
     var localSetTimeout, localClearTimeout = noop;
     if ('WScript' in this) {
@@ -23,6 +24,8 @@
 
   (function () {
 
+    var taskId = 0, tasks = new Array(1000);
+
     var reNative = RegExp('^' +
       String(toString)
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -37,8 +40,7 @@
     function postMessageSupported () {
       // Ensure not in a worker
       if (!root.postMessage || root.importScripts) { return false; }
-      var isAsync = false,
-          oldHandler = root.onmessage;
+      var isAsync = false, oldHandler = root.onmessage;
       // Test for async
       root.onmessage = function () { isAsync = true; };
       root.postMessage('', '*');
@@ -54,17 +56,14 @@
     } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
       scheduleMethod = process.nextTick;
     } else if (postMessageSupported()) {
-      var MSG_PREFIX = 'ms.rx.schedule' + Math.random(),
-        tasks = {},
-        taskId = 0;
+      var MSG_PREFIX = 'ms.rx.schedule' + Math.random();
 
       var onGlobalPostMessage = function (event) {
         // Only if we're a match to avoid any other global events
         if (typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
-          var handleId = event.data.substring(MSG_PREFIX.length),
-            action = tasks[handleId];
+          var handleId = event.data.substring(MSG_PREFIX.length), action = tasks[handleId];
           action();
-          delete tasks[handleId];
+          tasks[handleId] = undefined;
         }
       }
 
@@ -80,20 +79,17 @@
         root.postMessage(MSG_PREFIX + currentId, '*');
       };
     } else if (!!root.MessageChannel) {
-      var channel = new root.MessageChannel(),
-        channelTasks = {},
-        channelTaskId = 0;
+      var channel = new root.MessageChannel();
 
       channel.port1.onmessage = function (event) {
-        var id = event.data,
-          action = channelTasks[id];
+        var id = event.data, action = tasks[id];
         action();
-        delete channelTasks[id];
+        tasks[id] = undefined;
       };
 
       scheduleMethod = function (action) {
-        var id = channelTaskId++;
-        channelTasks[id] = action;
+        var id = taskId++;
+        tasks[id] = action;
         channel.port2.postMessage(id);
       };
     } else if ('document' in root && 'onreadystatechange' in root.document.createElement('script')) {
@@ -134,11 +130,8 @@
     }
 
     function scheduleRelative(state, dueTime, action) {
-      var scheduler = this,
-        dt = Scheduler.normalize(dueTime);
-      if (dt === 0) {
-        return scheduler.scheduleWithState(state, action);
-      }
+      var scheduler = this, dt = Scheduler.normalize(dueTime);
+      if (dt === 0) { return scheduler.scheduleWithState(state, action); }
       var disposable = new SingleAssignmentDisposable();
       var id = localSetTimeout(function () {
         if (!disposable.isDisposed) {
