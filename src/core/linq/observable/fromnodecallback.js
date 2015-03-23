@@ -17,7 +17,7 @@
             return;
           }
 
-          var len = arguments.length, results = new Array(len - 1);
+          var len = arguments.length, results = [];
           for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
 
           if (selector) {
