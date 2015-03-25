@@ -94,7 +94,7 @@ In traditionally written programs, this debouncing would introduce separate call
 
 Once the user input has been filtered down it is time to perform the dictionary lookup. As this is usually an expensive operation (e.g. a request to a server on the other side of the world), this operation is itself asynchronous as well.
 
-The `flatMap`/`selectMany` operator allows for easy combining of multiple asynchronous operations. It doesn’t only combine success values; it also tracks any exceptions that happen in each individual operation.
+The `flatMap` or `selectMany` operator allows for easy combining of multiple asynchronous operations. It doesn’t only combine success values; it also tracks any exceptions that happen in each individual operation.
 
 In traditionally written programs, this would introduce separate callbacks and a place for exceptions occurring.
 
@@ -431,7 +431,7 @@ Rx.Observable.prototype.flatMap = function (selector) {
 };
 ```
 
-In this sample, the SelectMany operator uses two existing operators: `map` and `mergeAll`. The `map` operator already deals with any issues around the selector function throwing an exception. The `mergeAll` operator already deals with concurrency issues of multiple observable sequences firing at the same time.
+In this sample, the `flatMap` or `selectMany` operator uses two existing operators: `map` and `mergeAll`. The `map` operator already deals with any issues around the selector function throwing an exception. The `mergeAll` operator already deals with concurrency issues of multiple observable sequences firing at the same time.
 
 #### When to ignore this guideline ####
 
