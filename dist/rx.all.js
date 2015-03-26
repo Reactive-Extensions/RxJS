@@ -1255,7 +1255,7 @@
     return currentScheduler;
   }());
 
-  var scheduleMethod, clearMethod = noop;
+  var scheduleMethod;
 
   var localTimer = (function () {
     var localSetTimeout, localClearTimeout = noop;
@@ -1281,7 +1281,30 @@
 
   (function () {
 
-    var taskId = 0, tasks = new Array(1000);
+    var nextHandle = 1, tasksByHandle = {}, currentlyRunning = false;
+
+    function clearMethod(handle) {
+      delete tasksByHandle[handle];
+    }
+
+    function runTask(handle) {
+      if (currentlyRunning) {
+        root.setTimeout(function () { runTask(handle) }, 0);
+      } else {
+        var task = tasksByHandle[handle];
+        if (task) {
+          currentlyRunning = true;
+          try {
+            task();
+          } catch (e) {
+            throw e;
+          } finally {
+            clearMethod(handle);
+            currentlyRunning = false;
+          }
+        }
+      }
+    }
 
     var reNative = RegExp('^' +
       String(toString)
@@ -1290,9 +1313,7 @@
     );
 
     var setImmediate = typeof (setImmediate = freeGlobal && moduleExports && freeGlobal.setImmediate) == 'function' &&
-      !reNative.test(setImmediate) && setImmediate,
-      clearImmediate = typeof (clearImmediate = freeGlobal && moduleExports && freeGlobal.clearImmediate) == 'function' &&
-      !reNative.test(clearImmediate) && clearImmediate;
+      !reNative.test(setImmediate) && setImmediate;
 
     function postMessageSupported () {
       // Ensure not in a worker
@@ -1307,20 +1328,33 @@
     }
 
     // Use in order, setImmediate, nextTick, postMessage, MessageChannel, script readystatechanged, setTimeout
-    if (typeof setImmediate === 'function') {
-      scheduleMethod = setImmediate;
-      clearMethod = clearImmediate;
+    if (isFunction(setImmediate)) {
+      scheduleMethod = function (action) {
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
+        setImmediate(function () {
+          runTask(id);
+        });
+
+        return id;
+      };
     } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
-      scheduleMethod = process.nextTick;
+      scheduleMethod = function (action) {
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
+        process.nextTick(function () {
+          runTask(id);
+        });
+
+        return id;
+      };
     } else if (postMessageSupported()) {
       var MSG_PREFIX = 'ms.rx.schedule' + Math.random();
 
-      var onGlobalPostMessage = function (event) {
+      function onGlobalPostMessage(event) {
         // Only if we're a match to avoid any other global events
         if (typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
-          var handleId = event.data.substring(MSG_PREFIX.length), action = tasks[handleId];
-          action();
-          tasks[handleId] = undefined;
+          runTask(event.data.substring(MSG_PREFIX.length));
         }
       }
 
@@ -1331,40 +1365,49 @@
       }
 
       scheduleMethod = function (action) {
-        var currentId = taskId++;
-        tasks[currentId] = action;
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
         root.postMessage(MSG_PREFIX + currentId, '*');
+        return id;
       };
     } else if (!!root.MessageChannel) {
       var channel = new root.MessageChannel();
 
-      channel.port1.onmessage = function (event) {
-        var id = event.data, action = tasks[id];
-        action();
-        tasks[id] = undefined;
-      };
+      channel.port1.onmessage = function (event) { runTask(event.data); };
 
       scheduleMethod = function (action) {
-        var id = taskId++;
-        tasks[id] = action;
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
         channel.port2.postMessage(id);
+        return id;
       };
     } else if ('document' in root && 'onreadystatechange' in root.document.createElement('script')) {
 
       scheduleMethod = function (action) {
         var scriptElement = root.document.createElement('script');
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
+
         scriptElement.onreadystatechange = function () {
-          action();
+          runTask(id);
           scriptElement.onreadystatechange = null;
           scriptElement.parentNode.removeChild(scriptElement);
           scriptElement = null;
         };
         root.document.documentElement.appendChild(scriptElement);
+        return id;
       };
 
     } else {
-      scheduleMethod = function (action) { return localSetTimeout(action, 0); };
-      clearMethod = localClearTimeout;
+      scheduleMethod = function (action) {
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
+        localSetTimeout(function () {
+          runTask(id);
+        }, 0);
+
+        return id;
+      };
     }
   }());
 
