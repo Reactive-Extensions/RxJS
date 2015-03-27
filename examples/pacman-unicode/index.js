@@ -15,13 +15,11 @@
       } else {
         addedHandlers = true;
         document.addEventListener( 'DOMContentLoaded', handler, false );
-        window.addEventListener( 'load', handler, false );
       }
 
       return function () {
         if (!addedHandlers) { return; }
         document.removeEventListener( 'DOMContentLoaded', handler, false );
-        window.removeEventListener( 'load', handler, false );
       };
     });
   };
