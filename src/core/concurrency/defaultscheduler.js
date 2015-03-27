@@ -32,19 +32,15 @@
 
     function runTask(handle) {
       if (currentlyRunning) {
-        root.setTimeout(function () { runTask(handle) }, 0);
+        localSetTimeout(function () { runTask(handle) }, 0);
       } else {
         var task = tasksByHandle[handle];
         if (task) {
           currentlyRunning = true;
-          try {
-            task();
-          } catch (e) {
-            throw e;
-          } finally {
-            clearMethod(handle);
-            currentlyRunning = false;
-          }
+          var result = tryCatch(task)();
+          clearMethod(handle);
+          currentlyRunning = false;
+          if (result === errorObj) { return thrower(result.e); }
         }
       }
     }
@@ -75,9 +71,7 @@
       scheduleMethod = function (action) {
         var id = nextHandle++;
         tasksByHandle[id] = action;
-        setImmediate(function () {
-          runTask(id);
-        });
+        setImmediate(function () { runTask(id); });
 
         return id;
       };
@@ -85,9 +79,7 @@
       scheduleMethod = function (action) {
         var id = nextHandle++;
         tasksByHandle[id] = action;
-        process.nextTick(function () {
-          runTask(id);
-        });
+        process.nextTick(function () { runTask(id); });
 
         return id;
       };
@@ -116,7 +108,7 @@
     } else if (!!root.MessageChannel) {
       var channel = new root.MessageChannel();
 
-      channel.port1.onmessage = function (event) { runTask(event.data); };
+      channel.port1.onmessage = function (e) { runTask(e.data); };
 
       scheduleMethod = function (action) {
         var id = nextHandle++;
