@@ -20,9 +20,9 @@ The `flatMapLatest` operator is similar to the `flatMap` and `concatMap` methods
 #### Example
 ```js
 var source = Rx.Observable
-  .range(1, 2)
-  .flatMapLatest(function (x) {
-    return Rx.Observable.range(x, 2);
+  .range(1, 3)
+  .flatMapLatest(function(x) {
+    return Rx.Observable.from([x + 'a', x + 'b']);
   });
 
 var subscription = source.subscribe(
@@ -36,10 +36,11 @@ var subscription = source.subscribe(
     console.log('Completed');
   });
 
-// => Next: 1
-// => Next: 2
-// => Next: 3
-// => Completed
+// Next: 1a
+// Next: 2a
+// Next: 3a
+// Next: 3b
+// Completed
 ```
 
 ### Location

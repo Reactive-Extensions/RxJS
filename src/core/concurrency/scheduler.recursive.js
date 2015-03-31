@@ -1,7 +1,9 @@
   (function (schedulerProto) {
+
     function invokeRecImmediate(scheduler, pair) {
-      var state = pair.first, action = pair.second, group = new CompositeDisposable(),
-      recursiveAction = function (state1) {
+      var state = pair[0], action = pair[1], group = new CompositeDisposable();
+
+      function recursiveAction(state1) {
         action(state1, function (state2) {
           var isAdded = false, isDone = false,
           d = scheduler.scheduleWithState(state2, function (scheduler1, state3) {
@@ -18,14 +20,15 @@
             isAdded = true;
           }
         });
-      };
+      }
+
       recursiveAction(state);
       return group;
     }
 
     function invokeRecDate(scheduler, pair, method) {
-      var state = pair.first, action = pair.second, group = new CompositeDisposable(),
-      recursiveAction = function (state1) {
+      var state = pair[0], action = pair[1], group = new CompositeDisposable();
+      function recursiveAction(state1) {
         action(state1, function (state2, dueTime1) {
           var isAdded = false, isDone = false,
           d = scheduler[method](state2, dueTime1, function (scheduler1, state3) {
@@ -68,7 +71,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithState = function (state, action) {
-      return this.scheduleWithState({ first: state, second: action }, invokeRecImmediate);
+      return this.scheduleWithState([state, action], invokeRecImmediate);
     };
 
     /**
@@ -89,7 +92,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithRelativeAndState = function (state, dueTime, action) {
-      return this._scheduleRelative({ first: state, second: action }, dueTime, function (s, p) {
+      return this._scheduleRelative([state, action], dueTime, function (s, p) {
         return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
       });
     };
@@ -112,7 +115,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithAbsoluteAndState = function (state, dueTime, action) {
-      return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
+      return this._scheduleAbsolute([state, action], dueTime, function (s, p) {
         return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
       });
     };

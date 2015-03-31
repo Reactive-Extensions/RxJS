@@ -7,9 +7,7 @@
     function runTrampoline () {
       while (queue.length > 0) {
         var item = queue.dequeue();
-        if (!item.isCancelled()) {
-          !item.isCancelled() && item.invoke();
-        }
+        !item.isCancelled() && item.invoke();
       }
     }
 
@@ -30,11 +28,7 @@
     }
 
     var currentScheduler = new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
-
     currentScheduler.scheduleRequired = function () { return !queue; };
-    currentScheduler.ensureTrampoline = function (action) {
-      if (!queue) { this.schedule(action); } else { action(); }
-    };
 
     return currentScheduler;
   }());

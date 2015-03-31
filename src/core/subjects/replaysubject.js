@@ -4,6 +4,8 @@
    */
   var ReplaySubject = Rx.ReplaySubject = (function (__super__) {
 
+    var maxSafeInteger = Math.pow(2, 53) - 1;
+
     function createRemovableDisposable(subject, observer) {
       return disposableCreate(function () {
         observer.dispose();
@@ -41,8 +43,8 @@
      *  @param {Scheduler} [scheduler] Scheduler the observers are invoked on.
      */
     function ReplaySubject(bufferSize, windowSize, scheduler) {
-      this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
-      this.windowSize = windowSize == null ? Number.MAX_VALUE : windowSize;
+      this.bufferSize = bufferSize == null ? maxSafeInteger : bufferSize;
+      this.windowSize = windowSize == null ? maxSafeInteger : windowSize;
       this.scheduler = scheduler || currentThreadScheduler;
       this.q = [];
       this.observers = [];

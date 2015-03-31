@@ -1200,9 +1200,11 @@
   var normalizeTime = Scheduler.normalize;
 
   (function (schedulerProto) {
+
     function invokeRecImmediate(scheduler, pair) {
-      var state = pair.first, action = pair.second, group = new CompositeDisposable(),
-      recursiveAction = function (state1) {
+      var state = pair[0], action = pair[1], group = new CompositeDisposable();
+
+      function recursiveAction(state1) {
         action(state1, function (state2) {
           var isAdded = false, isDone = false,
           d = scheduler.scheduleWithState(state2, function (scheduler1, state3) {
@@ -1219,14 +1221,15 @@
             isAdded = true;
           }
         });
-      };
+      }
+
       recursiveAction(state);
       return group;
     }
 
     function invokeRecDate(scheduler, pair, method) {
-      var state = pair.first, action = pair.second, group = new CompositeDisposable(),
-      recursiveAction = function (state1) {
+      var state = pair[0], action = pair[1], group = new CompositeDisposable();
+      function recursiveAction(state1) {
         action(state1, function (state2, dueTime1) {
           var isAdded = false, isDone = false,
           d = scheduler[method](state2, dueTime1, function (scheduler1, state3) {
@@ -1269,7 +1272,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithState = function (state, action) {
-      return this.scheduleWithState({ first: state, second: action }, invokeRecImmediate);
+      return this.scheduleWithState([state, action], invokeRecImmediate);
     };
 
     /**
@@ -1290,7 +1293,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithRelativeAndState = function (state, dueTime, action) {
-      return this._scheduleRelative({ first: state, second: action }, dueTime, function (s, p) {
+      return this._scheduleRelative([state, action], dueTime, function (s, p) {
         return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
       });
     };
@@ -1313,7 +1316,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithAbsoluteAndState = function (state, dueTime, action) {
-      return this._scheduleAbsolute({ first: state, second: action }, dueTime, function (s, p) {
+      return this._scheduleAbsolute([state, action], dueTime, function (s, p) {
         return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
       });
     };
@@ -1340,15 +1343,9 @@
      */
     Scheduler.prototype.schedulePeriodicWithState = function(state, period, action) {
       if (typeof root.setInterval === 'undefined') { throw new NotSupportedError(); }
-      var s = state;
-
-      var id = root.setInterval(function () {
-        s = action(s);
-      }, period);
-
-      return disposableCreate(function () {
-        root.clearInterval(id);
-      });
+      period = normalizeTime(period);
+      var s = state, id = root.setInterval(function () { s = action(s); }, period);
+      return disposableCreate(function () { root.clearInterval(id); });
     };
 
   }(Scheduler.prototype));
@@ -1368,9 +1365,7 @@
     function runTrampoline () {
       while (queue.length > 0) {
         var item = queue.dequeue();
-        if (!item.isCancelled()) {
-          !item.isCancelled() && item.invoke();
-        }
+        !item.isCancelled() && item.invoke();
       }
     }
 
@@ -1391,11 +1386,7 @@
     }
 
     var currentScheduler = new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
-
     currentScheduler.scheduleRequired = function () { return !queue; };
-    currentScheduler.ensureTrampoline = function (action) {
-      if (!queue) { this.schedule(action); } else { action(); }
-    };
 
     return currentScheduler;
   }());
@@ -1429,7 +1420,8 @@
     return SchedulePeriodicRecursive;
   }());
 
-  var scheduleMethod, clearMethod = noop;
+  var scheduleMethod;
+
   var localTimer = (function () {
     var localSetTimeout, localClearTimeout = noop;
     if ('WScript' in this) {
@@ -1454,6 +1446,27 @@
 
   (function () {
 
+    var nextHandle = 1, tasksByHandle = {}, currentlyRunning = false;
+
+    function clearMethod(handle) {
+      delete tasksByHandle[handle];
+    }
+
+    function runTask(handle) {
+      if (currentlyRunning) {
+        localSetTimeout(function () { runTask(handle) }, 0);
+      } else {
+        var task = tasksByHandle[handle];
+        if (task) {
+          currentlyRunning = true;
+          var result = tryCatch(task)();
+          clearMethod(handle);
+          currentlyRunning = false;
+          if (result === errorObj) { return thrower(result.e); }
+        }
+      }
+    }
+
     var reNative = RegExp('^' +
       String(toString)
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -1461,15 +1474,12 @@
     );
 
     var setImmediate = typeof (setImmediate = freeGlobal && moduleExports && freeGlobal.setImmediate) == 'function' &&
-      !reNative.test(setImmediate) && setImmediate,
-      clearImmediate = typeof (clearImmediate = freeGlobal && moduleExports && freeGlobal.clearImmediate) == 'function' &&
-      !reNative.test(clearImmediate) && clearImmediate;
+      !reNative.test(setImmediate) && setImmediate;
 
     function postMessageSupported () {
       // Ensure not in a worker
       if (!root.postMessage || root.importScripts) { return false; }
-      var isAsync = false,
-          oldHandler = root.onmessage;
+      var isAsync = false, oldHandler = root.onmessage;
       // Test for async
       root.onmessage = function () { isAsync = true; };
       root.postMessage('', '*');
@@ -1479,23 +1489,29 @@
     }
 
     // Use in order, setImmediate, nextTick, postMessage, MessageChannel, script readystatechanged, setTimeout
-    if (typeof setImmediate === 'function') {
-      scheduleMethod = setImmediate;
-      clearMethod = clearImmediate;
-    } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
-      scheduleMethod = process.nextTick;
-    } else if (postMessageSupported()) {
-      var MSG_PREFIX = 'ms.rx.schedule' + Math.random(),
-        tasks = {},
-        taskId = 0;
+    if (isFunction(setImmediate)) {
+      scheduleMethod = function (action) {
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
+        setImmediate(function () { runTask(id); });
 
-      var onGlobalPostMessage = function (event) {
+        return id;
+      };
+    } else if (typeof process !== 'undefined' && {}.toString.call(process) === '[object process]') {
+      scheduleMethod = function (action) {
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
+        process.nextTick(function () { runTask(id); });
+
+        return id;
+      };
+    } else if (postMessageSupported()) {
+      var MSG_PREFIX = 'ms.rx.schedule' + Math.random();
+
+      function onGlobalPostMessage(event) {
         // Only if we're a match to avoid any other global events
         if (typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
-          var handleId = event.data.substring(MSG_PREFIX.length),
-            action = tasks[handleId];
-          action();
-          delete tasks[handleId];
+          runTask(event.data.substring(MSG_PREFIX.length));
         }
       }
 
@@ -1506,50 +1522,56 @@
       }
 
       scheduleMethod = function (action) {
-        var currentId = taskId++;
-        tasks[currentId] = action;
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
         root.postMessage(MSG_PREFIX + currentId, '*');
+        return id;
       };
     } else if (!!root.MessageChannel) {
-      var channel = new root.MessageChannel(),
-        channelTasks = {},
-        channelTaskId = 0;
+      var channel = new root.MessageChannel();
 
-      channel.port1.onmessage = function (event) {
-        var id = event.data,
-          action = channelTasks[id];
-        action();
-        delete channelTasks[id];
-      };
+      channel.port1.onmessage = function (e) { runTask(e.data); };
 
       scheduleMethod = function (action) {
-        var id = channelTaskId++;
-        channelTasks[id] = action;
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
         channel.port2.postMessage(id);
+        return id;
       };
     } else if ('document' in root && 'onreadystatechange' in root.document.createElement('script')) {
 
       scheduleMethod = function (action) {
         var scriptElement = root.document.createElement('script');
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
+
         scriptElement.onreadystatechange = function () {
-          action();
+          runTask(id);
           scriptElement.onreadystatechange = null;
           scriptElement.parentNode.removeChild(scriptElement);
           scriptElement = null;
         };
         root.document.documentElement.appendChild(scriptElement);
+        return id;
       };
 
     } else {
-      scheduleMethod = function (action) { return localSetTimeout(action, 0); };
-      clearMethod = localClearTimeout;
+      scheduleMethod = function (action) {
+        var id = nextHandle++;
+        tasksByHandle[id] = action;
+        localSetTimeout(function () {
+          runTask(id);
+        }, 0);
+
+        return id;
+      };
     }
   }());
 
   /**
    * Gets a scheduler that schedules work via a timed callback based upon platform.
    */
-  var timeoutScheduler = Scheduler.timeout = (function () {
+  var timeoutScheduler = Scheduler.timeout = Scheduler.default = (function () {
 
     function scheduleNow(state, action) {
       var scheduler = this,
@@ -1565,11 +1587,8 @@
     }
 
     function scheduleRelative(state, dueTime, action) {
-      var scheduler = this,
-        dt = Scheduler.normalize(dueTime);
-      if (dt === 0) {
-        return scheduler.scheduleWithState(state, action);
-      }
+      var scheduler = this, dt = Scheduler.normalize(dueTime);
+      if (dt === 0) { return scheduler.scheduleWithState(state, action); }
       var disposable = new SingleAssignmentDisposable();
       var id = localSetTimeout(function () {
         if (!disposable.isDisposed) {
@@ -4240,7 +4259,7 @@
             return;
           }
 
-          var len = arguments.length, results = new Array(len - 1);
+          var len = arguments.length, results = [];
           for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
 
           if (selector) {
@@ -4619,14 +4638,14 @@
    *
    * @param selector [Optional] Selector function which can use the multicasted source sequence as many times as needed, without causing multiple subscriptions to the source sequence. Subscribers to the given source will receive all the notifications of the source subject to the specified replay buffer trimming policy.
    * @param bufferSize [Optional] Maximum element count of the replay buffer.
-   * @param window [Optional] Maximum time length of the replay buffer.
+   * @param windowSize [Optional] Maximum time length of the replay buffer.
    * @param scheduler [Optional] Scheduler where connected observers within the selector function will be invoked on.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
    */
-  observableProto.replay = function (selector, bufferSize, window, scheduler) {
+  observableProto.replay = function (selector, bufferSize, windowSize, scheduler) {
     return selector && isFunction(selector) ?
-      this.multicast(function () { return new ReplaySubject(bufferSize, window, scheduler); }, selector) :
-      this.multicast(new ReplaySubject(bufferSize, window, scheduler));
+      this.multicast(function () { return new ReplaySubject(bufferSize, windowSize, scheduler); }, selector) :
+      this.multicast(new ReplaySubject(bufferSize, windowSize, scheduler));
   };
 
   /**
@@ -4644,8 +4663,8 @@
    * @param scheduler [Optional] Scheduler where connected observers within the selector function will be invoked on.
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence.
    */
-  observableProto.shareReplay = function (bufferSize, window, scheduler) {
-    return this.replay(null, bufferSize, window, scheduler).refCount();
+  observableProto.shareReplay = function (bufferSize, windowSize, scheduler) {
+    return this.replay(null, bufferSize, windowSize, scheduler).refCount();
   };
 
   var ConnectableObservable = Rx.ConnectableObservable = (function (__super__) {
@@ -5816,9 +5835,9 @@
       /**
        * Gets the current value or throws an exception.
        * Value is frozen after onCompleted is called.
-       * After onError is called Value always throws the specified exception.
+       * After onError is called always throws the specified exception.
        * An exception is always thrown after dispose is called.
-       * @returns {Mixed} The initial value passed to the constructor until OnNext is called; after which, the last value passed to OnNext.
+       * @returns {Mixed} The initial value passed to the constructor until onNext is called; after which, the last value passed to onNext.
        */
       getValue: function () {
           checkDisposed(this);
@@ -5894,6 +5913,8 @@
    */
   var ReplaySubject = Rx.ReplaySubject = (function (__super__) {
 
+    var maxSafeInteger = Math.pow(2, 53) - 1;
+
     function createRemovableDisposable(subject, observer) {
       return disposableCreate(function () {
         observer.dispose();
@@ -5931,8 +5952,8 @@
      *  @param {Scheduler} [scheduler] Scheduler the observers are invoked on.
      */
     function ReplaySubject(bufferSize, windowSize, scheduler) {
-      this.bufferSize = bufferSize == null ? Number.MAX_VALUE : bufferSize;
-      this.windowSize = windowSize == null ? Number.MAX_VALUE : windowSize;
+      this.bufferSize = bufferSize == null ? maxSafeInteger : bufferSize;
+      this.windowSize = windowSize == null ? maxSafeInteger : windowSize;
       this.scheduler = scheduler || currentThreadScheduler;
       this.q = [];
       this.observers = [];

@@ -7,15 +7,6 @@
 </head>
 <body>
   <div id="qunit"></div>
-  <script src="./vendor/qunit-1.11.0.js"></script>
-  <script src="./vendor/rsvp.js"></script>
-  <script src="./vendor/transducers-0.4.135.js"></script>
-  <script src="../dist/rx.js"></script>
-  <script src="../dist/rx.time.js"></script>
-  <script src="../dist/rx.virtualtime.js"></script>
-  <script src="../dist/rx.testing.js"></script>
-  <script src="helpers/reactiveassert.js"></script>
-
   <script>
     // Backfill for Phantom.js / JSCore
     if (!Function.prototype.bind) {
@@ -92,6 +83,15 @@
       }());
     }
   </script>
+  <script src="./vendor/qunit-1.11.0.js"></script>
+
+  <script src="./vendor/rsvp.js"></script>
+  <script src="./vendor/transducers-0.4.135.js"></script>
+  <script src="../dist/rx.compat.js"></script>
+  <script src="../dist/rx.virtualtime.js"></script>
+  <script src="../dist/rx.time.js"></script>
+  <script src="../dist/rx.testing.js"></script>
+  <script src="helpers/reactiveassert.js"></script>
 
   <!-- Individual Tests -->
   <script src="internal/isequal.js"></script>
@@ -101,7 +101,7 @@
   <script src="concurrency/scheduler.js"></script>
   <script src="concurrency/immediatescheduler.js"></script>
   <script src="concurrency/currentthreadscheduler.js"></script>
-  <script src="concurrency/timeoutscheduler.js"></script>
+  <script src="concurrency/defaultscheduler.js"></script>
 
   <script src="disposables/compositedisposable.js"></script>
   <script src="disposables/disposable.js"></script>
@@ -114,17 +114,15 @@
   <script src="core/observer.js"></script>
 
   <!-- Concurrency -->
-
   <script src="observable/observeon.js"></script>
   <script src="observable/subscribeon.js"></script>
 
   <!-- Creation -->
-
   <script src="observable/create.js"></script>
   <script src="observable/defer.js"></script>
   <script src="observable/empty.js"></script>
-  <script src="observable/fromarray.js"></script>
   <script src="observable/from.js"></script>
+  <script src="observable/fromarray.js"></script>
   <script src="observable/generate.js"></script>
   <script src="observable/never.js"></script>
   <script src="observable/of.js"></script>
@@ -150,6 +148,7 @@
   <script src="observable/skipuntil.js"></script>
   <script src="observable/switch.js"></script>
   <script src="observable/takeuntil.js"></script>
+  <script src="observable/withlatestfrom.js"></script>
   <script src="observable/zip.js"></script>
   <script src="observable/zipproto.js"></script>
 

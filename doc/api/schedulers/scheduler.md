@@ -7,11 +7,11 @@ Provides a set of static methods to access commonly used schedulers and a base c
 The follow example shows the basic usage of an `Rx.Scheduler`.
 
 ```js
-var disposable = Rx.Scheduler.timeout.scheduleWithState(
-     'world',
-     function (scheduler, x) {
-          console.log('hello ' + x);
-     }
+var disposable = Rx.Scheduler.default.scheduleWithState(
+   'world',
+   function (scheduler, x) {
+      console.log('hello ' + x);
+   }
 );
 
 // => hello world
@@ -54,7 +54,8 @@ var disposable = Rx.Scheduler.timeout.scheduleWithState(
 ## `Scheduler Class Properties` ##
 - [`currentThread`](#rxschedulercurrentthread)
 - [`immediate`](#rxschedulerimmediate)
-- [`timeout`](#rxschedulertimeout)
+- [`default`](#rxschedulerdefault)
+- [`timeout`](#rxschedulerdefault) **DEPRECATED**
 
 ## _Scheduler Constructor_ ##
 
@@ -73,18 +74,17 @@ Initializes a new instance of the `Rx.Scheduler`.  This is meant for Scheduler i
 ```js
 // Used for scheduling immediately
 function schedule(state, action) {
-     var scheduler = this,
-          disposable = new Rx.SingleAssignmentDisposable();
+  var scheduler = this, disposable = new Rx.SingleAssignmentDisposable();
 
-     var id = setTimeout(function () {
-          if (!disposable.isDisposed) {
-               disposable.setDisposable(action(scheduler, state));
-          }
-     }, 0);
+  var id = setTimeout(function () {
+    if (!disposable.isDisposed) {
+       disposable.setDisposable(action(scheduler, state));
+    }
+  }, 0);
 
-     return new Rx.CompositeDisposable(disposable, Rx.Disposable.create(function () {
-          clearMethod(id);
-     }));
+  return new Rx.CompositeDisposable(disposable, Rx.Disposable.create(function () {
+    clearMethod(id);
+  }));
 }
 
 // Used for scheduling relative to now
@@ -94,7 +94,7 @@ function scheduleRelative(state, dueTime, action) {
 
      // Shortcut if already 0
      if (dt === 0) {
-          return scheduler.scheduleWithState(state, action);
+        return scheduler.scheduleWithState(state, action);
      }
 
      var disposable = new Rx.SingleAssignmentDisposable();
@@ -203,7 +203,7 @@ Gets the current time according to the Scheduler implementation.
 #### Example
 
 ```js
-var now = Rx.Scheduler.timeout.now();
+var now = Rx.Scheduler.default.now();
 
 console.log(now);
 // => 1381806323143
@@ -293,7 +293,7 @@ Schedules an action to be executed at the specified absolute due time. Note this
 #### Example
 
 ```js
-var disposable = Rx.Scheduler.timeout.scheduleWithAbsolute(
+var disposable = Rx.Scheduler.default.scheduleWithAbsolute(
      Date.now() + 5000, /* 5 seconds in the future */
      function () {
           console.log('hello');
@@ -325,7 +325,7 @@ Schedules an action to be executed at the specified absolute due time. Note this
 #### Example
 
 ```js
-var disposable = Rx.Scheduler.timeout.scheduleWithAbsoluteAndState(
+var disposable = Rx.Scheduler.default.scheduleWithAbsoluteAndState(
      'world',
      Date.now() + 5000, /* 5 seconds in the future */
      function (scheduler, x) {
@@ -357,7 +357,7 @@ Schedules an action to be executed after the specified relative due time. Note t
 #### Example
 
 ```js
-var disposable = Rx.Scheduler.timeout.scheduleWithRelative(
+var disposable = Rx.Scheduler.default.scheduleWithRelative(
      5000, /* 5 seconds in the future */
      function () {
           console.log('hello');
@@ -389,7 +389,7 @@ Schedules an action to be executed at the specified relative due time. Note this
 #### Example
 
 ```js
-var disposable = Rx.Scheduler.timeout.scheduleWithRelativeAndState(
+var disposable = Rx.Scheduler.default.scheduleWithRelativeAndState(
      'world',
      5000, /* 5 seconds in the future */
      function (scheduler, x) {
@@ -497,7 +497,7 @@ Schedules an action to be executed recursively at a specified absolute due time.
 ```js
 var i = 0;
 
-var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithAbsolute(
+var disposable = Rx.Scheduler.default.scheduleRecursiveWithAbsolute(
      Date.now() + 5000, /* 5 seconds in the future */
      function (self) {
           console.log(i);
@@ -535,7 +535,7 @@ Schedules an action to be executed recursively at a specified absolute due time.
 #### Example
 
 ```js
-var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithAbsoluteAndState(
+var disposable = Rx.Scheduler.default.scheduleRecursiveWithAbsoluteAndState(
      0,
      Date.now() + 5000, /* 5 seconds in the future */
      function (i, self) {
@@ -575,7 +575,7 @@ Schedules an action to be executed recursively at a specified relative due time.
 ```js
 var i = 0;
 
-var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithRelative(
+var disposable = Rx.Scheduler.default.scheduleRecursiveWithRelative(
      5000, /* 5 seconds in the future */
      function (self) {
           console.log(i);
@@ -613,7 +613,7 @@ Schedules an action to be executed recursively at a specified relative due time.
 #### Example
 
 ```js
-var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithRelativeAndState(
+var disposable = Rx.Scheduler.default.scheduleRecursiveWithRelativeAndState(
      0,
      5000, /* 5 seconds in the future */
      function (i, self) {
@@ -655,7 +655,7 @@ var disposable = Rx.Scheduler.timeout.scheduleRecursiveWithRelativeAndState(
 ```js
 var i = 0;
 
-var disposable = Rx.Scheduler.timeout.schedulePeriodic(
+var disposable = Rx.Scheduler.default.schedulePeriodic(
      1000, /* 1 second */
      function () {
           console.log(i);
@@ -694,7 +694,7 @@ Schedules a periodic piece of work by dynamically discovering the scheduler's ca
 #### Example
 
 ```js
-var disposable = Rx.Scheduler.timeout.schedulePeriodicWithState(
+var disposable = Rx.Scheduler.default.schedulePeriodicWithState(
      0,
      1000, /* 1 second */
      function (i) {
@@ -807,8 +807,8 @@ var disposable = scheduler.scheduleRecursiveWithState(
 
 * * *
 
-### <a id="rxschedulertimeout"></a>`Rx.Scheduler.timeout`
-<a href="#rxschedulertimeout">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/timeoutscheduler.js "View in source")
+### <a id="rxschedulerdefault"></a>`Rx.Scheduler.default`
+<a href="#rxschedulerdefault">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/defaultscheduler.js "View in source")
 
 Gets a scheduler that schedules work via a timed callback based upon platform.
 
@@ -817,11 +817,11 @@ For all schedule calls, it defaults to:
  - Node.js: uses `setImmediate` for newer builds, and `process.nextTick` for older versions.
  - Browser: depending on platform may use `setImmediate`, `MessageChannel`, `window.postMessage` and for older versions of IE, it will default to `script.onreadystatechanged`, else falls back to `window.setTimeout`.
 
-For all relative and absolute scheduling, it defaults to using `window.setTimeout`.
+For all relative and absolute scheduling, it defaults to using `window.setTimeout`.  This is now called the default scheduler and the usage of `Scheduler.timeout` is now deprecated.
 
 #### Example
 ```js
-var scheduler = Rx.Scheduler.timeout;
+var scheduler = Rx.Scheduler.default;
 
 var disposable = scheduler.scheduleWithState(
      0,
