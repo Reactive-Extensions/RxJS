@@ -13,7 +13,7 @@
 
     FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
       var self = this;
-      return new FilterObservable(this.source, function(x, i, o) { return self.predicate(x, i, o) && predicate(x, i, o); }, thisArg);
+      return new FilterObservable(this.source, function(x, i, o) { return self.predicate(x, i, o) && predicate.call(this, x, i, o); }, thisArg);
     };
 
     return FilterObservable;

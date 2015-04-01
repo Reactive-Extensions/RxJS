@@ -356,4 +356,38 @@
     equal(9, invoked2);
   });
 
+  test('Map and Map thisArg', function(){
+
+    var scheduler = new TestScheduler();
+
+    function Filterer() {
+      this.selector1 = function(item) {return item + 2};
+      this.selector2 = function(item) {return item * 3};
+    }
+
+    var filterer = new Filterer();
+
+    var xs = scheduler.createColdObservable(
+        onNext(10, 1),
+        onNext(20, 2),
+        onNext(30, 3),
+        onNext(40, 4),
+        onCompleted(100)
+    );
+
+    var results = scheduler.startWithCreate(function() {
+      return xs
+          .map(function(x){ return this.selector1(x);}, filterer)
+          .map(function(x){ return this.selector2(x);}, filterer)
+          .map(function(x){ return this.selector1(x);}, filterer);
+    });
+
+    results.messages.assertEqual(
+        onNext(210, 11),
+        onNext(220, 14),
+        onNext(230, 17),
+        onNext(240, 20),
+        onCompleted(300));
+  });
+
 }());

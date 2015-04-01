@@ -9,7 +9,7 @@
 
     MapObservable.prototype.internalMap = function (selector, thisArg) {
       var self = this;
-      return new MapObservable(this.source, function (x, i, o) { return selector(self.selector(x, i, o), i, o); }, thisArg)
+      return new MapObservable(this.source, function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); }, thisArg)
     };
 
     MapObservable.prototype.subscribeCore = function (observer) {

@@ -728,6 +728,40 @@
     equal(4, invoked2);
   });
 
+  test('Filter and Filter ThisArg', function() {
+    var scheduler = new TestScheduler();
+
+    function Filterer() {
+      this.filter1 = function(item) {return item % 2 == 0};
+      this.filter2 = function(item) {return item % 3 == 0};
+    }
+
+    var filterer = new Filterer();
+
+    var xs = scheduler.createColdObservable(
+        onNext(10, 1),
+        onNext(20, 2),
+        onNext(30, 3),
+        onNext(40, 4),
+        onNext(50, 5),
+        onNext(60, 6),
+        onNext(70, 7),
+        onNext(80, 8),
+        onNext(90, 9),
+        onCompleted(100)
+    );
+
+    var results = scheduler.startWithCreate(function() {
+      return xs
+          .filter(function(x){ return this.filter1(x);}, filterer)
+          .filter(function(x){ return this.filter2(x);}, filterer)
+          .filter(function(x){ return this.filter1(x);}, filterer);
+    });
+
+    results.messages.assertEqual(onNext(260, 6), onCompleted(300));
+
+  });
+
   test('Filter and Map Optimization', function () {
     var scheduler = new TestScheduler();
 
