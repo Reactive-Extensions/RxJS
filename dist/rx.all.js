@@ -1259,9 +1259,9 @@
 
   var localTimer = (function () {
     var localSetTimeout, localClearTimeout = noop;
-    if ('WScript' in this) {
+    if (!!root.WScript) {
       localSetTimeout = function (fn, time) {
-        WScript.Sleep(time);
+        root.WScript.Sleep(time);
         fn();
       };
     } else if (!!root.setTimeout) {
