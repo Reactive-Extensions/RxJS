@@ -24,7 +24,7 @@
             return factory(root, exports, Rx);
         });
     } else if (typeof module === 'object' && module && module.exports === freeExports) {
-        module.exports = factory(root, module.exports, require('./rx-lite'));
+        module.exports = factory(root, module.exports, require('rx-lite'));
     } else {
         root.Rx = factory(root, {}, root.Rx);
     }
