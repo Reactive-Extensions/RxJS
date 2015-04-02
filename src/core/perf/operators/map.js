@@ -35,12 +35,6 @@
       return this.observer.onError(result.e);
     }
     this.observer.onNext(result);
-    /*try {
-      var result = this.selector(x, this.i++, this.source);
-    } catch (e) {
-      return this.observer.onError(e);
-    }
-    this.observer.onNext(result);*/
   };
   MapObserver.prototype.onError = function (e) {
     if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }

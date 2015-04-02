@@ -4,7 +4,7 @@ The Reactive Extensions for JavaScript Lite version is a lightweight version of 
 
 ## Getting Started
 
-There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/libraries/rxjs/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
+There are a number of ways to get started with RxJS. 
 
 ### Installing with [NPM](https://npmjs.org/)
 

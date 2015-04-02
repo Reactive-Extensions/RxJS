@@ -898,9 +898,12 @@
     }, source);
   };
 
-  observableProto.throttleWithSelector = function () {
+  /**
+   * @deprecated use #debounceWithSelector instead.
+   */
+  observableProto.throttleWithSelector = function (durationSelector) {
     //deprecate('throttleWithSelector', 'debounceWithSelector');
-    return this.debounceWithSelector.apply(this, arguments);
+    return this.debounceWithSelector(durationSelector);
   };
 
   /**

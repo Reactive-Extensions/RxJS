@@ -1255,7 +1255,7 @@
     return currentScheduler;
   }());
 
-  var scheduleMethod;
+  var scheduleMethod, clearMethod;
 
   var localTimer = (function () {
     var localSetTimeout, localClearTimeout = noop;
@@ -1283,9 +1283,9 @@
 
     var nextHandle = 1, tasksByHandle = {}, currentlyRunning = false;
 
-    function clearMethod(handle) {
+    clearMethod = function (handle) {
       delete tasksByHandle[handle];
-    }
+    };
 
     function runTask(handle) {
       if (currentlyRunning) {
@@ -4434,7 +4434,7 @@
 
     MapObservable.prototype.internalMap = function (selector, thisArg) {
       var self = this;
-      return new MapObservable(this.source, function (x, i, o) { return selector(self.selector(x, i, o), i, o); }, thisArg)
+      return new MapObservable(this.source, function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); }, thisArg)
     };
 
     MapObservable.prototype.subscribeCore = function (observer) {
@@ -4460,12 +4460,6 @@
       return this.observer.onError(result.e);
     }
     this.observer.onNext(result);
-    /*try {
-      var result = this.selector(x, this.i++, this.source);
-    } catch (e) {
-      return this.observer.onError(e);
-    }
-    this.observer.onNext(result);*/
   };
   MapObserver.prototype.onError = function (e) {
     if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
@@ -4748,7 +4742,7 @@
 
     FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
       var self = this;
-      return new FilterObservable(this.source, function(x, i, o) { return self.predicate(x, i, o) && predicate(x, i, o); }, thisArg);
+      return new FilterObservable(this.source, function(x, i, o) { return self.predicate(x, i, o) && predicate.call(this, x, i, o); }, thisArg);
     };
 
     return FilterObservable;

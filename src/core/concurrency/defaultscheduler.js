@@ -1,4 +1,4 @@
-  var scheduleMethod;
+  var scheduleMethod, clearMethod;
 
   var localTimer = (function () {
     var localSetTimeout, localClearTimeout = noop;
@@ -26,9 +26,9 @@
 
     var nextHandle = 1, tasksByHandle = {}, currentlyRunning = false;
 
-    function clearMethod(handle) {
+    clearMethod = function (handle) {
       delete tasksByHandle[handle];
-    }
+    };
 
     function runTask(handle) {
       if (currentlyRunning) {
