@@ -10,7 +10,7 @@
   var observableEmpty = Observable.empty = function (scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
-      return scheduler.schedule(function () {
+      return scheduler.scheduleWithState(null, function () {
         observer.onCompleted();
       });
     });

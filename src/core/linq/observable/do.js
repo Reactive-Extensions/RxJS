@@ -7,10 +7,12 @@
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
   observableProto['do'] = observableProto.tap = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
-    var source = this, tapObserver = typeof observerOrOnNext === 'function' || typeof observerOrOnNext === 'undefined'?
-      observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
-      observerOrOnNext;
+    var source = this;
     return new AnonymousObservable(function (observer) {
+      var tapObserver = !observerOrOnNext || isFunction(observerOrOnNext) ?
+        observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
+        observerOrOnNext;
+
       return source.subscribe(function (x) {
         try {
           tapObserver.onNext(x);

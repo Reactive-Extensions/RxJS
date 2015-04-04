@@ -13,9 +13,9 @@
    */
   Observable.generate = function (initialState, condition, iterate, resultSelector, scheduler) {
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      var first = true, state = initialState;
-      return scheduler.scheduleRecursive(function (self) {
+    return new AnonymousObservable(function (o) {
+      var first = true;
+      return scheduler.scheduleRecursiveWithState(initialState, function (state, self) {
         var hasResult, result;
         try {
           if (first) {
@@ -24,18 +24,15 @@
             state = iterate(state);
           }
           hasResult = condition(state);
-          if (hasResult) {
-            result = resultSelector(state);
-          }
-        } catch (exception) {
-          observer.onError(exception);
-          return;
+          hasResult && (result = resultSelector(state));
+        } catch (e) {
+          return o.onError(e);
         }
         if (hasResult) {
-          observer.onNext(result);
-          self();
+          o.onNext(result);
+          self(state);
         } else {
-          observer.onCompleted();
+          o.onCompleted();
         }
       });
     });

@@ -2604,7 +2604,7 @@
   var observableEmpty = Observable.empty = function (scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
-      return scheduler.schedule(function () {
+      return scheduler.scheduleWithState(null, function () {
         observer.onCompleted();
       });
     });
@@ -2836,9 +2836,9 @@
    */
   Observable.generate = function (initialState, condition, iterate, resultSelector, scheduler) {
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      var first = true, state = initialState;
-      return scheduler.scheduleRecursive(function (self) {
+    return new AnonymousObservable(function (o) {
+      var first = true;
+      return scheduler.scheduleRecursiveWithState(initialState, function (state, self) {
         var hasResult, result;
         try {
           if (first) {
@@ -2847,18 +2847,16 @@
             state = iterate(state);
           }
           hasResult = condition(state);
-          if (hasResult) {
-            result = resultSelector(state);
-          }
-        } catch (exception) {
-          observer.onError(exception);
+          hasResult && (result = resultSelector(state));
+        } catch (e) {
+          o.onError(e);
           return;
         }
         if (hasResult) {
-          observer.onNext(result);
-          self();
+          o.onNext(result);
+          self(state);
         } else {
-          observer.onCompleted();
+          o.onCompleted();
         }
       });
     });
@@ -2994,25 +2992,19 @@
 
   /**
    *  Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
-   *  There is an alias called 'just', and 'returnValue' for browsers <IE9.
+   *  There is an alias called 'just' or browsers <IE9.
    * @param {Mixed} value Single element in the resulting observable sequence.
    * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} An observable sequence containing the single specified element.
    */
-  var observableReturn = Observable['return'] = Observable.just = function (value, scheduler) {
+  var observableReturn = Observable['return'] = Observable.just = Observable.returnValue = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
-      return scheduler.schedule(function () {
-        observer.onNext(value);
+      return scheduler.scheduleWithState(value, function (_, v) {
+        observer.onNext(v);
         observer.onCompleted();
       });
     });
-  };
-
-  /** @deprecated use return or just */
-  Observable.returnValue = function () {
-    //deprecate('returnValue', 'return or just');
-    return observableReturn.apply(null, arguments);
   };
 
   /**
@@ -4086,10 +4078,12 @@
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
   observableProto['do'] = observableProto.tap = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
-    var source = this, tapObserver = typeof observerOrOnNext === 'function' || typeof observerOrOnNext === 'undefined'?
-      observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
-      observerOrOnNext;
+    var source = this;
     return new AnonymousObservable(function (observer) {
+      var tapObserver = !observerOrOnNext || isFunction(observerOrOnNext) ?
+        observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
+        observerOrOnNext;
+
       return source.subscribe(function (x) {
         try {
           tapObserver.onNext(x);
