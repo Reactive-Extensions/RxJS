@@ -9765,32 +9765,32 @@
   observableProto.transduce = function(transducer) {
     var source = this;
 
-    function transformForObserver(observer) {
+    function transformForObserver(o) {
       return {
-        init: function() {
-          return observer;
+        '@@transducer/init': function() {
+          return o;
         },
-        step: function(obs, input) {
+        '@@transducer/step': function(obs, input) {
           return obs.onNext(input);
         },
-        result: function(obs) {
+        '@@transducer/result': function(obs) {
           return obs.onCompleted();
         }
       };
     }
 
-    return new AnonymousObservable(function(observer) {
-      var xform = transducer(transformForObserver(observer));
+    return new AnonymousObservable(function(o) {
+      var xform = transducer(transformForObserver(o));
       return source.subscribe(
         function(v) {
           try {
-            xform.step(observer, v);
+            xform['@@transducer/step'](o, v);
           } catch (e) {
-            observer.onError(e);
+            o.onError(e);
           }
         },
-        observer.onError.bind(observer),
-        function() { xform.result(observer); }
+        function (e) { o.onError(e); },
+        function() { xform['@@transducer/result'](o); }
       );
     }, source);
   };

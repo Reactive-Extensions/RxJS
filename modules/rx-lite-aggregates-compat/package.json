@@ -1,5 +1,5 @@
 {
-  "name": "rx-lite-aggregates",
+  "name": "rx-lite-aggregates-compat",
   "title": "Reactive Extensions for JavaScript (RxJS) Aggregates",
   "description": "Lightweight older browser compatible library with aggregate functions for composing asynchronous and event-based operations in JavaScript",
   "version": "2.5.0",
