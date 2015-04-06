@@ -20,7 +20,7 @@ An example using ES6 syntax:
 let [odds, evens] = Rx.Observable.range(0, 10)
   .partition(x => x % 2 === 0);
 
-let subscription1 = odds.subscribe(
+let subscription1 = evens.subscribe(
   x  => console.log('Evens: %s', x),
   e  => console.log('Error: %s', e),
   () => console.log('Completed')
