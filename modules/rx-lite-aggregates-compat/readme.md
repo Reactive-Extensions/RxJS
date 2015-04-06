@@ -1,4 +1,4 @@
-# RxJS Aggregates Module #
+# RxJS Aggregates Compat Module #
 
 The Reactive Extensions for JavaScript has a number of aggregation operators including those you might already know from the Array#extras and the upcoming ES6 standard such as `reduce`, `find` and `findIndex`.  This module is used exclusively for aggregation operations used on finite observable sequences.  In addition to the aforementioned operators, there are many useful operators such as `count`, `sum`, `average` and determining whether two sequences are equal via the `sequenceEqual` method.  This requires `rx.lite.compat.js` from the [`rx-lite-compat`](https://www.npmjs.com/package/rx-lite) NPM module.  This module has support for older browsers which do not support ES5 functionality, hence the name `compat`.
 

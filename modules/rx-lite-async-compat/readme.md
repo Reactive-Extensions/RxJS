@@ -1,6 +1,6 @@
-# RxJS Aggregates Module #
+# RxJS Async Compat Module #
 
-The Reactive Extensions for JavaScript has a number of aggregation operators including those you might already know from the Array#extras and the upcoming ES6 standard such as `reduce`, `find` and `findIndex`.  This module is used exclusively for aggregation operations used on finite observable sequences.  In addition to the aforementioned operators, there are many useful operators such as `count`, `sum`, `average` and determining whether two sequences are equal via the `sequenceEqual` method.  This requires `rx.lite.js` from the [`rx-lite`](https://www.npmjs.com/package/rx-lite) NPM module.
+The Reactive Extensions for JavaScript provides support for bridging to events, promises, callbacks, Node.js-style callbacks and more.  This module includes all of that functionality.  In addition, this also supports taking ordinary functions and turning them into asynchronous functions via Observable sequences.  This requires `rx.lite.compat.js` from the [`rx-lite-compat`](https://www.npmjs.com/package/rx-lite) NPM module.  This module has support for older browsers which do not support ES5 functionality, hence the name `compat`.
 
 ## Getting Started
 
@@ -9,14 +9,14 @@ There are a number of ways to get started with RxJS.
 ### Installing with [NPM](https://npmjs.org/)
 
 ```bash`
-$ npm install rx-lite-aggregates
-$ npm install -g rx-lite-aggregates
+$ npm install rx-lite-async-compat
+$ npm install -g rx-lite-async-compat
 ```
 
 ### Using with Node.js and Ringo.js
 
 ```js
-var Rx = require('rx-lite-aggregates');
+var Rx = require('rx-lite-async-compat');
 ```
 
 ### In a Browser:
@@ -24,41 +24,15 @@ var Rx = require('rx-lite-aggregates');
 ```html
 <!-- Just the core RxJS -->
 <script src="path/to/rx.lite.js"></script>
-<script src="path/to/rx.lite.aggregates.js"></script>
+<script src="path/to/rx.lite.async.compat.js"></script>
 ```
 
 ## Included Observable Operators ##
 
-### `Observable Instance Methods`
-- [`aggregate`](../../doc/api/core/operators/aggregate.md)
-- [`all`](../../doc/api/core/operators/every.md)
-- [`any`](../../doc/api/core/operators/some.md)
-- [`average`](../../doc/api/core/operators/average.md)
-- [`includes`](../../doc/api/core/operators/includes.md)
-- [`count`](../../doc/api/core/operators/count.md)
-- [`elementAt`](../../doc/api/core/operators/elementat.md)
-- [`elementAtOrDefault`](../../doc/api/core/operators/elementatordefault.md)
-- [`every`](../../doc/api/core/operators/every.md)
-- [`find`](../../doc/api/core/operators/find.md)
-- [`findIndex`](../../doc/api/core/operators/findindex.md)
-- [`first`](../../doc/api/core/operators/first.md)
-- [`firstOrDefault`](../../doc/api/core/operators/firstordefault.md)
-- [`indexOf`](../../doc/api/core/operators/indexof.md)
-- [`isEmpty`](../../doc/api/core/operators/isempty.md)
-- [`last`](../../doc/api/core/operators/last.md)
-- [`lastOrDefault`](../../doc/api/core/operators/lastordefault.md)
-- [`max`](../../doc/api/core/operators/max.md)
-- [`maxBy`](../../doc/api/core/operators/maxby.md)
-- [`min`](../../doc/api/core/operators/min.md)
-- [`minBy`](../../doc/api/core/operators/minby.md)
-- [`reduce`](../../doc/api/core/operators/reduce.md)
-- [`sequenceEqual`](../../doc/api/core/operators/sequenceequal.md)
-- [`single`](../../doc/api/core/operators/single.md)
-- [`singleOrDefault`](../../doc/api/core/operators/singleordefault.md)
-- [`some`](../../doc/api/core/operators/some.md)
-- [`sum`](../../doc/api/core/operators/sum.md)
-- [`toMap`](../../doc/api/core/operators/tomap.md)
-- [`toSet`](../../doc/api/core/operators/toset.md)
+### `Observable Methods`
+- [`start`](../../doc/api/core/operators/start.md)
+- [`startAsync`](../../doc/api/core/operators/startasync.md)
+- [`toAsync`](../../doc/api/core/operators/toasync.md)
 
 ## Contributing ##
 

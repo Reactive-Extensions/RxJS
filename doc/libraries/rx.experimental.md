@@ -1,6 +1,6 @@
 # RxJS Experimental Module #
 
-The Reactive Extensions for JavaScript has a number of operators that are considered experimental and not ready for mainstream usage.  This includes imperative operators such as `if`, `case`, `for`, `while`, ``](../api/core/observable.md../api/core/observable.md` as well as operators such as `forkJoin`.
+The Reactive Extensions for JavaScript has a number of operators that are considered experimental and not ready for mainstream usage.  This includes imperative operators such as `if`, `case`, `for`, `while`, `doWhile` as well as operators such as `forkJoin`.
 
 ## Details ##
 

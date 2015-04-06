@@ -2658,8 +2658,7 @@
           hasResult = condition(state);
           hasResult && (result = resultSelector(state));
         } catch (e) {
-          o.onError(e);
-          return;
+          return o.onError(e);
         }
         if (hasResult) {
           o.onNext(result);
