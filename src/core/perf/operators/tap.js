@@ -1,8 +1,10 @@
   var TapObservable = (function(__super__) {
     inherits(TapObservable,__super__);
-    function TapObservable(source, tapObserver) {
+    function TapObservable(source, observerOrOnNext, onError, onCompleted) {
       this.source = source;
-      this.tapObserver = tapObserver;
+      this.tapObserver = !observerOrOnNext || isFunction(observerOrOnNext) ?
+        observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
+        observerOrOnNext;;
       __super__.call(this);
     }
 
@@ -57,10 +59,8 @@
   * @returns {Observable} The source sequence with the side-effecting behavior applied.
   */
   observableProto['do'] = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
-    var tapObserver = typeof observerOrOnNext === 'function' || typeof observerOrOnNext === 'undefined'?
-      observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
-      observerOrOnNext;
-    return new TapObservable(this, tapObserver);
+
+    return new TapObservable(this, observerOrOnNext, onError, onCompleted);
   };
 
   /** @deprecated use #do or #tap instead. */

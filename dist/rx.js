@@ -2807,10 +2807,10 @@
    */
   var observableReturn = Observable['return'] = Observable.just = Observable.returnValue = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleWithState(value, function (_, v) {
-        observer.onNext(v);
-        observer.onCompleted();
+    return new AnonymousObservable(function (o) {
+      return scheduler.scheduleWithState(value, function(_,v) {
+        o.onNext(v);
+        o.onCompleted();
       });
     });
   };
