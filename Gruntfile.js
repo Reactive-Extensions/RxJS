@@ -205,6 +205,7 @@ module.exports = function (grunt) {
               'src/core/backpressure/controlled.js',
               'src/core/backpressure/stopandwait.js',
               'src/core/backpressure/windowed.js',
+              'src/core/linq/observable/pipe.js',
 
               // Binding operators
               'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -497,6 +498,7 @@ module.exports = function (grunt) {
               'src/core/backpressure/controlled.js',
               'src/core/backpressure/stopandwait.js',
               'src/core/backpressure/windowed.js',
+              'src/core/linq/observable/pipe.js',
 
               // Binding operators
               'src/core/linq/observable/multicast.js', // ConnectableObservable
@@ -1046,6 +1048,7 @@ module.exports = function (grunt) {
               'src/core/backpressure/pausable.js',
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',
+              'src/core/linq/observable/pipe.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -1215,6 +1218,7 @@ module.exports = function (grunt) {
               'src/core/backpressure/pausable.js',
               'src/core/backpressure/pausablebuffered.js',
               'src/core/backpressure/controlled.js',
+              'src/core/linq/observable/pipe.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',

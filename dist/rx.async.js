@@ -300,15 +300,17 @@
    */
   Observable.fromCallback = function (func, context, selector) {
     return function () {
-      for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+      var len = arguments.length, args = new Array(len)
+      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
 
       return new AnonymousObservable(function (observer) {
         function handler() {
-          var results = arguments;
+          var len = arguments.length, results = new Array(len);
+          for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
 
           if (selector) {
             try {
-              results = selector(results);
+              results = selector.apply(context, results);
             } catch (e) {
               return observer.onError(e);
             }
@@ -355,7 +357,7 @@
 
           if (selector) {
             try {
-              results = selector(results);
+              results = selector.apply(context, results);
             } catch (e) {
               return observer.onError(e);
             }

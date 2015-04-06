@@ -4199,15 +4199,17 @@
    */
   Observable.fromCallback = function (func, context, selector) {
     return function () {
-      for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+      var len = arguments.length, args = new Array(len)
+      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
 
       return new AnonymousObservable(function (observer) {
         function handler() {
-          var results = arguments;
+          var len = arguments.length, results = new Array(len);
+          for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
 
           if (selector) {
             try {
-              results = selector(results);
+              results = selector.apply(context, results);
             } catch (e) {
               return observer.onError(e);
             }
@@ -4254,7 +4256,7 @@
 
           if (selector) {
             try {
-              results = selector(results);
+              results = selector.apply(context, results);
             } catch (e) {
               return observer.onError(e);
             }
@@ -5402,6 +5404,38 @@
   observableProto.controlled = function (enableQueue) {
     if (enableQueue == null) {  enableQueue = true; }
     return new ControlledObservable(this, enableQueue);
+  };
+
+  /**
+   * Pipes the existing Observable sequence into a Node.js Stream.
+   * @param {Stream} dest The destination Node.js stream.
+   * @returns {Stream} The destination stream.
+   */
+  observableProto.pipe = function (dest) {
+    var source = this.pausableBuffered();
+
+    function onDrain() {
+      source.resume();
+    }
+
+    dest.addListener('drain', onDrain);
+
+    source.subscribe(
+      function (x) {
+        !dest.write(String(x)) && source.pause();
+      },
+      function (err) {
+        dest.emit('error', err);
+      },
+      function () {
+        // Hack check because STDIO is not closable
+        !dest._isStdio && dest.end();
+        dest.removeListener('drain', onDrain);
+      });
+
+    source.resume();
+
+    return dest;
   };
 
   /**
