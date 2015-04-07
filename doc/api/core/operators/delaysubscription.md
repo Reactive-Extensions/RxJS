@@ -16,29 +16,27 @@ The side-effects of subscribing to the source sequence will be run on the specif
 
 #### Example
 ```js
-console.log('Start %s' new Date().getTime());
+var start = Date.now()
 
 var source = Rx.Observable
-    .range(0, 3)
-    .delayWithSelector(Rx.Observable.timer(5000))
-    .timeStamp()
-    .map(function (x) { return x.value + ':' + x.timestamp; });
+  .range(0, 3)
+  .delaySubscription(5000);
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: %s', x);
-    },
-    function (err) {
-        console.log('Error: %s', err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s, %s', x, Date.now() - start);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
-// => Next: 0:300
-// => Next: 1:400
-// => Next: 2:400
-// => Completed
+//=> Next: 0, 5001
+//=> Next: 1, 5002
+//=> Next: 2, 5003
+//=> Completed
 ```
 ### Location
 
