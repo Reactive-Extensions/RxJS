@@ -2588,6 +2588,34 @@
     });
   };
 
+  var EmptyObservable = (function(__super__) {
+    inherits(EmptyObservable, __super__);
+    function EmptyObservable(scheduler) {
+      this.scheduler = scheduler;
+      __super__.call(this);
+    }
+
+    EmptyObservable.prototype.subscribeCore = function (observer) {
+      var sink = new EmptySink(observer, this);
+      return sink.run();
+    };
+
+    function EmptySink(observer, parent) {
+      this.observer = observer;
+      this.parent = parent;
+    }
+
+    function scheduleItem(s, state) {
+      state.onCompleted();
+    }
+
+    EmptySink.prototype.run = function () {
+      return this.parent.scheduler.scheduleWithState(this.observer, scheduleItem);
+    };
+
+    return EmptyObservable;
+  }(ObservableBase));
+
   /**
    *  Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
    *
@@ -2599,11 +2627,7 @@
    */
   var observableEmpty = Observable.empty = function (scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleWithState(null, function () {
-        observer.onCompleted();
-      });
-    });
+    return new EmptyObservable(scheduler);
   };
 
   var FromObservable = (function(__super__) {
@@ -2883,14 +2907,62 @@
     return new FromArrayObservable(args, scheduler);
   };
 
+  var NeverObservable = (function(__super__) {
+    inherits(NeverObservable, __super__);
+    function NeverObservable() {
+      __super__.call(this);
+    }
+
+    NeverObservable.prototype.subscribeCore = function (observer) {
+      return disposableEmpty;
+    };
+
+    return NeverObservable;
+  }(ObservableBase));
+
   /**
-   *  Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins).
+   * Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins).
    * @returns {Observable} An observable sequence whose observers will never get called.
    */
   var observableNever = Observable.never = function () {
-    return new AnonymousObservable(function () {
-      return disposableEmpty;
-    });
+    return new NeverObservable();
+  };
+
+  var PairsObservable = (function(__super__) {
+    inherits(PairsObservable, __super__);
+    function PairsObservable(obj, scheduler) {
+      this.obj = obj;
+      this.keys = Object.keys(obj);
+      this.scheduler = scheduler;
+      __super__.call(this);
+    }
+
+    PairsObservable.prototype.subscribeCore = function (observer) {
+      var sink = new PairsSink(observer, this);
+      return sink.run();
+    };
+
+    return PairsObservable;
+  }(ObservableBase));
+
+  function PairsSink(observer, parent) {
+    this.observer = observer;
+    this.parent = parent;
+  }
+
+  PairsSink.prototype.run = function () {
+    var observer = this.observer, obj = this.parent.obj, keys = this.parent.keys, len = keys.length;
+    function loopRecursive(i, recurse) {
+      if (i < len) {
+        var key = keys[i];
+        observer.onNext([key, obj[key]]);
+        recurse(i + 1);
+      } else {
+        observer.onCompleted();
+      }
+    }
+
+    return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
   };
 
   /**
@@ -2900,19 +2972,8 @@
    * @returns {Observable} An observable sequence of [key, value] pairs from the object.
    */
   Observable.pairs = function (obj, scheduler) {
-    scheduler || (scheduler = Rx.Scheduler.currentThread);
-    return new AnonymousObservable(function (observer) {
-      var keys = Object.keys(obj), len = keys.length;
-      return scheduler.scheduleRecursiveWithState(0, function (idx, self) {
-        if (idx < len) {
-          var key = keys[idx];
-          observer.onNext([key, obj[key]]);
-          self(idx + 1);
-        } else {
-          observer.onCompleted();
-        }
-      });
-    });
+    scheduler || (scheduler = currentThreadScheduler);
+    return new PairsObservable(obj, scheduler);
   };
 
     var RangeObservable = (function(__super__) {
@@ -2985,6 +3046,37 @@
     return observableReturn(value, scheduler).repeat(repeatCount == null ? -1 : repeatCount);
   };
 
+  var JustObservable = (function(__super__) {
+    inherits(JustObservable, __super__);
+    function JustObservable(value, scheduler) {
+      this.value = value;
+      this.scheduler = scheduler;
+      __super__.call(this);
+    }
+
+    JustObservable.prototype.subscribeCore = function (observer) {
+      var sink = new JustSink(observer, this);
+      return sink.run();
+    };
+
+    function JustSink(observer, parent) {
+      this.observer = observer;
+      this.parent = parent;
+    }
+
+    function scheduleItem(s, state) {
+      var value = state[0], observer = state[1];
+      observer.onNext(value);
+      observer.onCompleted();
+    }
+
+    JustSink.prototype.run = function () {
+      return this.parent.scheduler.scheduleWithState([this.parent.value, this.observer], scheduleItem);
+    };
+
+    return JustObservable;
+  }(ObservableBase));
+
   /**
    *  Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
    *  There is an alias called 'just' or browsers <IE9.
@@ -2994,13 +3086,38 @@
    */
   var observableReturn = Observable['return'] = Observable.just = Observable.returnValue = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new AnonymousObservable(function (o) {
-      return scheduler.scheduleWithState(value, function(_,v) {
-        o.onNext(v);
-        o.onCompleted();
-      });
-    });
+    return new JustObservable(value, scheduler);
   };
+
+  var ThrowObservable = (function(__super__) {
+    inherits(ThrowObservable, __super__);
+    function ThrowObservable(error, scheduler) {
+      this.error = error;
+      this.scheduler = scheduler;
+      __super__.call(this);
+    }
+
+    ThrowObservable.prototype.subscribeCore = function (observer) {
+      var sink = new ThrowSink(observer, this);
+      return sink.run();
+    };
+
+    function ThrowSink(observer, parent) {
+      this.observer = observer;
+      this.parent = parent;
+    }
+
+    function scheduleItem(s, state) {
+      var error = state[0], observer = state[1];
+      observer.onError(error);
+    }
+
+    ThrowSink.prototype.run = function () {
+      return this.parent.scheduler.scheduleWithState([this.parent.error, this.observer], scheduleItem);
+    };
+
+    return ThrowObservable;
+  }(ObservableBase));
 
   /**
    *  Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
@@ -3009,19 +3126,9 @@
    * @param {Scheduler} scheduler Scheduler to send the exceptional termination call on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} The observable sequence that terminates exceptionally with the specified exception object.
    */
-  var observableThrow = Observable['throw'] = Observable.throwError = function (error, scheduler) {
+  var observableThrow = Observable['throw'] = Observable.throwError = Observable.throwException = function (error, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.schedule(function () {
-        observer.onError(error);
-      });
-    });
-  };
-
-  /** @deprecated use #some instead */
-  Observable.throwException = function () {
-    //deprecate('throwException', 'throwError');
-    return Observable.throwError.apply(null, arguments);
+    return new ThrowObservable(error, scheduler);
   };
 
   /**
