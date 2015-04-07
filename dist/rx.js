@@ -1259,14 +1259,14 @@
 
   var localTimer = (function () {
     var localSetTimeout, localClearTimeout = noop;
-    if (!!root.WScript) {
+    if (!!root.setTimeout) {
+      localSetTimeout = root.setTimeout;
+      localClearTimeout = root.clearTimeout;
+    } else if (!!root.WScript) {
       localSetTimeout = function (fn, time) {
         root.WScript.Sleep(time);
         fn();
       };
-    } else if (!!root.setTimeout) {
-      localSetTimeout = root.setTimeout;
-      localClearTimeout = root.clearTimeout;
     } else {
       throw new NotSupportedError();
     }
@@ -1352,8 +1352,10 @@
 
       if (root.addEventListener) {
         root.addEventListener('message', onGlobalPostMessage, false);
+      } else if (root.attachEvent) {
+        root.attachEvent('onmessage', onGlobalPostMessage);
       } else {
-        root.attachEvent('onmessage', onGlobalPostMessage, false);
+        root.onmessage = onGlobalPostMessage;
       }
 
       scheduleMethod = function (action) {
@@ -1409,12 +1411,9 @@
   var timeoutScheduler = Scheduler.timeout = Scheduler.default = (function () {
 
     function scheduleNow(state, action) {
-      var scheduler = this,
-        disposable = new SingleAssignmentDisposable();
+      var scheduler = this, disposable = new SingleAssignmentDisposable();
       var id = scheduleMethod(function () {
-        if (!disposable.isDisposed) {
-          disposable.setDisposable(action(scheduler, state));
-        }
+        !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
       });
       return new CompositeDisposable(disposable, disposableCreate(function () {
         clearMethod(id);
@@ -1422,13 +1421,10 @@
     }
 
     function scheduleRelative(state, dueTime, action) {
-      var scheduler = this, dt = Scheduler.normalize(dueTime);
+      var scheduler = this, dt = Scheduler.normalize(dueTime), disposable = new SingleAssignmentDisposable();
       if (dt === 0) { return scheduler.scheduleWithState(state, action); }
-      var disposable = new SingleAssignmentDisposable();
       var id = localSetTimeout(function () {
-        if (!disposable.isDisposed) {
-          disposable.setDisposable(action(scheduler, state));
-        }
+        !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
       }, dt);
       return new CompositeDisposable(disposable, disposableCreate(function () {
         localClearTimeout(id);

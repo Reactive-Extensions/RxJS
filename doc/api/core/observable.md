@@ -77,6 +77,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`debounceWithSelector`](operators/throttlewithselector.md)
 - [`defaultIfEmpty`](operators/defaultifempty.md)
 - [`delay`](operators/delay.md)
+- [`delaySubscription`](operators/delaysubscription.md)
 - [`delayWithSelector`](operators/delaywithselector.md)
 - [`dematerialize`](operators/dematerialize.md)
 - [`distinct`](operators/distinct.md)

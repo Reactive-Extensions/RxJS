@@ -34,6 +34,7 @@ NuGet Dependencies:
 - [`bufferWithTimeOrCount`](../api/core/operators/bufferwithtimeorcount.md)
 - [`debounce`](../api/core/operators/debounce.md)
 - [`delay`](../api/core/operators/delay.md)
+- [`delaySubscription`](../api/core/operators/delaysubscription.md)
 - [`delayWithSelector`](../api/core/operators/delaywithselector.md)
 - [`sample`](../api/core/operators/sample.md)
 - [`skipLastWithTime`](../api/core/operators/skiplastwithtime.md)

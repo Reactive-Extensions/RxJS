@@ -10,47 +10,54 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delayWithSelector = function (subscriptionDelay, delayDurationSelector) {
-      var source = this, subDelay, selector;
-      if (typeof subscriptionDelay === 'function') {
-        selector = subscriptionDelay;
-      } else {
-        subDelay = subscriptionDelay;
-        selector = delayDurationSelector;
-      }
-      return new AnonymousObservable(function (observer) {
-        var delays = new CompositeDisposable(), atEnd = false, done = function () {
-            if (atEnd && delays.length === 0) { observer.onCompleted(); }
-        }, subscription = new SerialDisposable(), start = function () {
-          subscription.setDisposable(source.subscribe(function (x) {
-              var delay;
-              try {
-                delay = selector(x);
-              } catch (error) {
-                observer.onError(error);
-                return;
+    var source = this, subDelay, selector;
+    if (isFunction(subscriptionDelay)) {
+      selector = subscriptionDelay;
+    } else {
+      subDelay = subscriptionDelay;
+      selector = delayDurationSelector;
+    }
+    return new AnonymousObservable(function (observer) {
+      var delays = new CompositeDisposable(), atEnd = false, subscription = new SerialDisposable();
+
+      function start() {
+        subscription.setDisposable(source.subscribe(
+          function (x) {
+            var delay = tryCatch(selector)(x);
+            if (delay === errorObj) { return observer.onError(delay.e); }
+            var d = new SingleAssignmentDisposable();
+            delays.add(d);
+            d.setDisposable(delay.subscribe(
+              function () {
+                observer.onNext(x);
+                delays.remove(d);
+                done();
+              },
+              function (e) { observer.onError(e); },
+              function () {
+                observer.onNext(x);
+                delays.remove(d);
+                done();
               }
-              var d = new SingleAssignmentDisposable();
-              delays.add(d);
-              d.setDisposable(delay.subscribe(function () {
-                observer.onNext(x);
-                delays.remove(d);
-                done();
-              }, observer.onError.bind(observer), function () {
-                observer.onNext(x);
-                delays.remove(d);
-                done();
-              }));
-          }, observer.onError.bind(observer), function () {
+            ))
+          },
+          function (e) { observer.onError(e); },
+          function () {
             atEnd = true;
             subscription.dispose();
             done();
-          }));
-      };
+          }
+        ))
+      }
+
+      function done () {
+        atEnd && delays.length === 0 && observer.onCompleted();
+      }
 
       if (!subDelay) {
         start();
       } else {
-        subscription.setDisposable(subDelay.subscribe(start, observer.onError.bind(observer), start));
+        subscription.setDisposable(subDelay.subscribe(start, function (e) { observer.onError(e); }, start));
       }
 
       return new CompositeDisposable(subscription, delays);

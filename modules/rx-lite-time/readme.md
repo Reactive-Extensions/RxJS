@@ -36,11 +36,12 @@ var Rx = require('rx-lite-time');
 ### `Observable Instance Methods`
 - [`bufferWithTime`](../../doc/api/core/operators/bufferwithtime.md)
 - [`bufferWithTimeOrCount`](../../doc/api/core/operators/bufferwithtimeorcount.md)
+- [`debounceWithSelector`](../../doc/api/core/operators/debouncewithselector.md)
+- [`delaySubscription`](../api/core/operators/delaysubscription.md)
 - [`skipLastWithTime`](../../doc/api/core/operators/skiplastwithtime.md)
 - [`takeLastBufferWithTime`](../../doc/api/core/operators/takelastbufferwithtime.md)
 - [`takeLastWithTime`](../../doc/api/core/operators/takelastwithtime.md)
 - [`throttleFirst`](../../doc/api/core/operators/throttlefirst.md)
-- [`debounceWithSelector`](../../doc/api/core/operators/debouncewithselector.md)
 - [`throttleWithTimeout`](../../doc/api/core/operators/debounce.md)
 - [`timeInterval`](../../doc/api/core/operators/timeinterval.md)
 - [`timeoutWithSelector`](../../doc/api/core/operators/timeoutwithselector.md)

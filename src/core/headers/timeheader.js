@@ -17,5 +17,6 @@
     normalizeTime = Rx.Scheduler.normalize,
     helpers = Rx.helpers,
     isPromise = helpers.isPromise,
+    isFunction = helpers.isFunction,
     isScheduler = helpers.isScheduler,
     observableFromPromise = Observable.fromPromise;

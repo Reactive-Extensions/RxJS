@@ -1817,6 +1817,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/subintro.js',
               'src/core/headers/timeheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
               'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
               'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
@@ -1856,6 +1857,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro.js',
               'src/core/headers/timeheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/linq/observable/windowwithtime.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/windowwithtimeorcount.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/bufferwithtime.js', // windowwithtime, selectMany, toArray
@@ -1883,6 +1885,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/litecompatintro.js',
               'src/core/headers/timeheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/linq/observable/windowwithtime.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/windowwithtimeorcount.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
               'src/core/linq/observable/bufferwithtime.js', // windowwithtime, selectMany, toArray

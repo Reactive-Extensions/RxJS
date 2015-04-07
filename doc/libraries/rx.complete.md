@@ -88,6 +88,7 @@ NuGet Packages:
 - [`debounceWithSelector`](../api/core/operators/debouncewithselector.md)
 - [`defaultIfEmpty`](../api/core/operators/defaultifempty.md)
 - [`delay`](../api/core/operators/delay.md)
+- [`delaySubscription`](../api/core/operators/delaysubscription.md)
 - [`delayWithSelector`](../api/core/operators/delaywithselector.md)
 - [`dematerialize`](../api/core/operators/dematerialize.md)
 - [`distinct`](../api/core/operators/distinct.md)

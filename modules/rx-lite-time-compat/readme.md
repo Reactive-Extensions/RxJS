@@ -1,4 +1,4 @@
-# RxJS Time Module #
+# RxJS Time Compat Module #
 
 The Reactive Extensions for JavaScript, as it is a library that deals with events over time, naturally has a large number of operators that allow the creation of sequences at given timers, in addition to capturing time stamp and time interval information.  In addition, you can also check for timeouts on your operations.  This also supports windows and buffers with time. This requires `rx.lite.js` from the [`rx-lite`](https://www.npmjs.com/package/rx-lite) NPM module.  This module has support for older browsers which do not support ES5 functionality, hence the name `compat`.
 
@@ -17,15 +17,15 @@ $ npm install -g rx-lite-time
 ### Using with Node.js and Ringo.js
 
 ```js
-var Rx = require('rx-lite-time');
+var Rx = require('rx-lite-time-compat');
 ```
 
 ### In a Browser:
 
 ```html
 <!-- Just the core RxJS -->
-<script src="path/to/rx.lite.js"></script>
-<script src="path/to/rx.lite.time.js"></script>
+<script src="path/to/rx.lite.compat.js"></script>
+<script src="path/to/rx.lite.time.compat.js"></script>
 ```
 
 ## Included Observable Operators ##
@@ -33,24 +33,18 @@ var Rx = require('rx-lite-time');
 ### `Observable Methods`
 - [`generateWithAbsoluteTime`](../../doc/api/core/operators/generatewithabsolutetime.md)
 - [`generateWithRelativeTime`](../../doc/api/core/operators/generatewithrelativetime.md)
-- [`interval`](../../doc/api/core/operators/generatewithrelativetime.md)
-- [`timer`](../../doc/api/core/operators/timer.md)
 
 ### `Observable Instance Methods`
 - [`bufferWithTime`](../../doc/api/core/operators/bufferwithtime.md)
 - [`bufferWithTimeOrCount`](../../doc/api/core/operators/bufferwithtimeorcount.md)
-- [`debounce`](../../doc/api/core/operators/debounce.md)
-- [`delay`](../../doc/api/core/operators/delay.md)
-- [`delayWithSelector`](../../doc/api/core/operators/delaywithselector.md)
-- [`sample`](../../doc/api/core/operators/sample.md)
+- [`debounceWithSelector`](../../doc/api/core/operators/debouncewithselector.md)
+- [`delaySubscription`](../api/core/operators/delaysubscription.md)
 - [`skipLastWithTime`](../../doc/api/core/operators/skiplastwithtime.md)
 - [`takeLastBufferWithTime`](../../doc/api/core/operators/takelastbufferwithtime.md)
 - [`takeLastWithTime`](../../doc/api/core/operators/takelastwithtime.md)
 - [`throttleFirst`](../../doc/api/core/operators/throttlefirst.md)
-- [`debounceWithSelector`](../../doc/api/core/operators/debouncewithselector.md)
 - [`throttleWithTimeout`](../../doc/api/core/operators/debounce.md)
 - [`timeInterval`](../../doc/api/core/operators/timeinterval.md)
-- [`timeout`](../../doc/api/core/operators/timeout.md)
 - [`timeoutWithSelector`](../../doc/api/core/operators/timeoutwithselector.md)
 - [`timestamp`](../../doc/api/core/operators/timestamp.md)
 - [`windowWithTime`](../../doc/api/core/operators/windowwithtime.md)
