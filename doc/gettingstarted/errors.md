@@ -25,6 +25,14 @@ interface Observable<T> {
 
 But the try/catch/finally approach won't work with asynchronous code.  Instead, we have a myriad of ways of handling errors as they occur, and ensure proper disposal of resources.
 
+For example, we might want to do the following:
+- swallow the error and switch over to a backup Observable to continue the sequence
+- swallow the error and emit a default item
+- swallow the error and immediately try to restart the failed Observable
+- swallow the error and try to restart the failed Observable after some back-off interval
+
+We'll cover each of those scenarios and more in this section.
+
 ## Catching Errors ##
 
 The first topic is catching errors as they happen with our streams. In the Reactive Extensions, any error is propogated through the `onError` channel which halts the sequence.  We can compensate for this by using the `catch` operator, at both the class and instance level.  
