@@ -1,57 +1,48 @@
-  var BooleanDisposable = (function () {
-    var trueInstance = (function () {
-      var d = new BooleanDisposable();
-      d.isDisposed = true;
-      return d;
-    }());
-
-    function BooleanDisposable (isSingle) {
-      this.isDisposed = false;
-      this.current = null;
-      this.isSingle = isSingle;
-    }
-
-    var booleanDisposablePrototype = BooleanDisposable.prototype;
-
-    /**
-     * Gets the underlying disposable.
-     * @return The underlying disposable.
-     */
-    booleanDisposablePrototype.getDisposable = function () {
-      return this.current === trueInstance ? disposableEmpty : this.current;
-    };
-
-    /**
-     * Sets the underlying disposable.
-     * @param {Disposable} value The new underlying disposable.
-     */
-    booleanDisposablePrototype.setDisposable = function (value) {
-      var shouldDispose = this.current === trueInstance;
-      if (!shouldDispose) {
-        var old = this.current;
-        this.current = value;
-      }
-      old && old.dispose();
-      shouldDispose && value && value.dispose();
-    };
-
-    /**
-     * Disposes the underlying disposable as well as all future replacements.
-     */
-    booleanDisposablePrototype.dispose = function () {
-      if (!this.isDisposed) {
-        var old = this.current;
-        this.current = trueInstance;
-        this.isDisposed = trueInstance.isDisposed;
-      }
-      old && old.dispose();
-    };
-
-    return BooleanDisposable;
-  }());
+  // Single assignment
   var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable = function () {
-    return new BooleanDisposable(true);
+    this.isDisposed = false;
+    this.current = null;
   };
+  SingleAssignmentDisposable.prototype.getDisposable = function () {
+    return this.current;
+  };
+  SingleAssignmentDisposable.prototype.setDisposable = function (value) {
+    if (this.current) { throw new Error('Disposable has already been assigned'); }
+    var shouldDispose = this.isDisposed;
+    !shouldDispose && (this.current = value);
+    shouldDispose && value && value.dispose();
+  };
+  SingleAssignmentDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      var old = this.current;
+      this.current = null;
+    }
+    old && old.dispose();
+  };
+
+  // Multiple assignment disposable
   var SerialDisposable = Rx.SerialDisposable = function () {
-    return new BooleanDisposable();
+    this.isDisposed = false;
+    this.current = null;
+  };
+  SerialDisposable.prototype.getDisposable = function () {
+    return this.current;
+  };
+  SerialDisposable.prototype.setDisposable = function (value) {
+    var shouldDispose = this.isDisposed;
+    if (!shouldDispose) {
+      var old = this.current;
+      this.current = value;
+    }
+    old && old.dispose();
+    shouldDispose && value && value.dispose();
+  };
+  SerialDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      var old = this.current;
+      this.current = null;
+    }
+    old && old.dispose();
   };

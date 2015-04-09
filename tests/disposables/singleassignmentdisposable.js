@@ -33,7 +33,7 @@ test('FutureDisposable_DisposeBeforeSet', function () {
     d.dispose();
     ok(!disposed);
     d.setDisposable(dd);
-    ok(d.getDisposable() === Rx.Disposable.empty);
+    ok(d.getDisposable() == null);
     ok(disposed);
     d.dispose();
     ok(disposed);

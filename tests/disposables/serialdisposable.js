@@ -46,7 +46,7 @@ test('MutableDisposable_ReplaceAfterDispose', function () {
     });
     m.setDisposable(d1);
 
-    equal(Disposable.empty, m.getDisposable());
+    equal(null, m.getDisposable());
     ok(disp1);
 
     var d2 = Disposable.create(function () {
@@ -54,7 +54,7 @@ test('MutableDisposable_ReplaceAfterDispose', function () {
     });
     m.setDisposable(d2);
 
-    equal(Disposable.empty, m.getDisposable());
+    equal(null, m.getDisposable());
     ok(disp2);
 });
 
@@ -70,5 +70,5 @@ test('MutableDisposable_Dispose', function () {
     ok(!disp);
     m.dispose();
     ok(disp);
-    equal(Disposable.empty, m.getDisposable());
+    equal(null, m.getDisposable());
 });
