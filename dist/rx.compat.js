@@ -32,7 +32,6 @@
   // Defaults
   var noop = Rx.helpers.noop = function () { },
     notDefined = Rx.helpers.notDefined = function (x) { return typeof x === 'undefined'; },
-    isScheduler = Rx.helpers.isScheduler = function (x) { return x instanceof Rx.Scheduler; },
     identity = Rx.helpers.identity = function (x) { return x; },
     pluck = Rx.helpers.pluck = function (property) { return function (x) { return x[property]; }; },
     just = Rx.helpers.just = function (value) { return function () { return value; }; },
@@ -1128,6 +1127,11 @@
       this._scheduleAbsolute = scheduleAbsolute;
     }
 
+    /** Determines whether the given object is a scheduler */
+    Scheduler.isScheduler = function (s) {
+      return s instanceof Scheduler;
+    }
+
     function invokeAction(scheduler, action) {
       action();
       return disposableEmpty;
@@ -1212,7 +1216,7 @@
     return Scheduler;
   }());
 
-  var normalizeTime = Scheduler.normalize;
+  var normalizeTime = Scheduler.normalize, isScheduler = Scheduler.isScheduler;
 
   (function (schedulerProto) {
 
@@ -1599,7 +1603,7 @@
   /**
    * Gets a scheduler that schedules work via a timed callback based upon platform.
    */
-  var timeoutScheduler = Scheduler.timeout = Scheduler.default = (function () {
+  var timeoutScheduler = Scheduler.timeout = Scheduler['default'] = (function () {
 
     function scheduleNow(state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();

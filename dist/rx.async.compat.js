@@ -43,8 +43,8 @@
     disposableCreate = Rx.Disposable.create,
     CompositeDisposable = Rx.CompositeDisposable,
     immediateScheduler = Rx.Scheduler.immediate,
-    timeoutScheduler = Rx.Scheduler.timeout,
-    isScheduler = Rx.helpers.isScheduler,
+    timeoutScheduler = Rx.Scheduler['default'],
+    isScheduler = Rx.Scheduler.isScheduler,
     slice = Array.prototype.slice;
 
   var fnString = 'function',

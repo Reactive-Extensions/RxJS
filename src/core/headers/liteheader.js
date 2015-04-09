@@ -1,7 +1,6 @@
   // Defaults
   var noop = Rx.helpers.noop = function () { },
     notDefined = Rx.helpers.notDefined = function (x) { return typeof x === 'undefined'; },
-    isScheduler = Rx.helpers.isScheduler = function (x) { return x instanceof Rx.Scheduler; },
     identity = Rx.helpers.identity = function (x) { return x; },
     pluck = Rx.helpers.pluck = function (property) { return function (x) { return x[property]; }; },
     just = Rx.helpers.just = function (value) { return function () { return value; }; },

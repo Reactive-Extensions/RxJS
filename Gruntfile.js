@@ -22,7 +22,7 @@ module.exports = function (grunt) {
             src: [
               'src/core/headers/license.js',
               'src/core/headers/intro.js',
-              'src/core/headers/basicheader-modern.js',
+              'src/core/headers/basicheader.js',
 
               // Stack trace start
               'src/core/longstacktraces/longstackbegin.js',
@@ -317,7 +317,7 @@ module.exports = function (grunt) {
             src: [
               'src/core/headers/license.js',
               'src/core/headers/intro.js',
-              'src/core/headers/basicheader.js',
+              'src/core/headers/basicheader-compat.js',
 
               // Stack trace start
               'src/core/longstacktraces/longstackbegin.js',
@@ -610,7 +610,7 @@ module.exports = function (grunt) {
             src: [
               'src/core/headers/license.js',
               'src/core/headers/intro.js',
-              'src/core/headers/basicheader-modern.js',
+              'src/core/headers/basicheader.js',
 
               // Stack trace start
               'src/core/longstacktraces/longstackbegin.js',
@@ -759,7 +759,7 @@ module.exports = function (grunt) {
             src: [
               'src/core/headers/license.js',
               'src/core/headers/intro.js',
-              'src/core/headers/basicheader.js',
+              'src/core/headers/basicheader-compat.js',
 
               // Stack trace start
               'src/core/longstacktraces/longstackbegin.js',
@@ -1283,7 +1283,7 @@ module.exports = function (grunt) {
           'lite-extras-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/liteextrasheader.js',
 
               'src/core/disposables/scheduleddisposable.js',
@@ -1353,7 +1353,7 @@ module.exports = function (grunt) {
           'backpressure-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/backpressureheader.js',
 
               // Backpressure operators
@@ -1453,7 +1453,7 @@ module.exports = function (grunt) {
           'aggregates-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/aggregatesheader.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
@@ -1542,7 +1542,7 @@ module.exports = function (grunt) {
           'async-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/asyncheader.js',
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
@@ -1613,7 +1613,7 @@ module.exports = function (grunt) {
           'coincidence-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/coincidenceheader.js',
               'src/core/internal/dictionary.js',
               'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
@@ -1684,7 +1684,7 @@ module.exports = function (grunt) {
           'experimental-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/experimentalheader.js',
               'src/core/headers/enumeratorheader.js',
               'src/core/linq/enumerable/while.js', // Enumerable
@@ -1744,7 +1744,7 @@ module.exports = function (grunt) {
           'joinpatterns-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/joinpatternsheader.js',
               'src/core/internal/map.js',
               'src/core/joins/pattern.js',
@@ -1797,7 +1797,7 @@ module.exports = function (grunt) {
           'testing-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litetestintrocompat.js',
+              'src/core/headers/litetestintro-compat.js',
               'src/core/headers/testheader.js',
               'src/core/testing/reactivetest.js',
               'src/core/testing/recorded.js',
@@ -1883,7 +1883,7 @@ module.exports = function (grunt) {
           'time-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/timeheader.js',
               'src/core/internal/trycatch.js',
               'src/core/linq/observable/windowwithtime.js', // AnonymousObservable, SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, addref, subject
@@ -1933,7 +1933,7 @@ module.exports = function (grunt) {
           'virtualtime-lite-compat': {
             src: [
               'src/core/headers/license.js',
-              'src/core/headers/litecompatintro.js',
+              'src/core/headers/liteintro-compat.js',
               'src/core/headers/virtualtimeheader.js',
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',

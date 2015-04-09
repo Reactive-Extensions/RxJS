@@ -60,7 +60,7 @@
     inherits = internals.inherits,
     bindCallback = internals.bindCallback,
     noop = helpers.noop,
-    isScheduler = helpers.isScheduler,
+    isScheduler = Rx.Scheduler.isScheduler,
     observableFromPromise = Observable.fromPromise,
     ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;
 

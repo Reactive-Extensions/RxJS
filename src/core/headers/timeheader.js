@@ -7,7 +7,7 @@
     observableNever = Observable.never,
     observableThrow = Observable.throwException,
     observableFromArray = Observable.fromArray,
-    timeoutScheduler = Rx.Scheduler.timeout,
+    timeoutScheduler = Rx.Scheduler['default'],
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     SerialDisposable = Rx.SerialDisposable,
     CompositeDisposable = Rx.CompositeDisposable,
@@ -18,5 +18,5 @@
     helpers = Rx.helpers,
     isPromise = helpers.isPromise,
     isFunction = helpers.isFunction,
-    isScheduler = helpers.isScheduler,
+    isScheduler = Rx.Scheduler.isScheduler,
     observableFromPromise = Observable.fromPromise;

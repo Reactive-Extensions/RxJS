@@ -151,7 +151,7 @@
   /**
    * Gets a scheduler that schedules work via a timed callback based upon platform.
    */
-  var timeoutScheduler = Scheduler.timeout = Scheduler.default = (function () {
+  var timeoutScheduler = Scheduler.timeout = Scheduler['default'] = (function () {
 
     function scheduleNow(state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();

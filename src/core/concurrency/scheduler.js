@@ -8,6 +8,11 @@
       this._scheduleAbsolute = scheduleAbsolute;
     }
 
+    /** Determines whether the given object is a scheduler */
+    Scheduler.isScheduler = function (s) {
+      return s instanceof Scheduler;
+    }
+
     function invokeAction(scheduler, action) {
       action();
       return disposableEmpty;
@@ -92,4 +97,4 @@
     return Scheduler;
   }());
 
-  var normalizeTime = Scheduler.normalize;
+  var normalizeTime = Scheduler.normalize, isScheduler = Scheduler.isScheduler;

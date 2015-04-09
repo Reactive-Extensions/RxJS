@@ -4,7 +4,7 @@ if (!Rx.Observable.prototype.timeInterval) {
   // Add timeInterval for tests
   Rx.Observable.prototype.timeInterval = function (scheduler) {
     var source = this;
-    Rx.helpers.isScheduler(scheduler) || (scheduler = Rx.Scheduler.timeout);
+    Rx.Scheduler.isScheduler(scheduler) || (scheduler = Rx.Scheduler['default']);
     return Rx.Observable.defer(function () {
       var last = scheduler.now();
       return source.map(function (x) {

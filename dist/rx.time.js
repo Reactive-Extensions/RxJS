@@ -41,7 +41,7 @@
     observableNever = Observable.never,
     observableThrow = Observable.throwException,
     observableFromArray = Observable.fromArray,
-    timeoutScheduler = Rx.Scheduler.timeout,
+    timeoutScheduler = Rx.Scheduler['default'],
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     SerialDisposable = Rx.SerialDisposable,
     CompositeDisposable = Rx.CompositeDisposable,
@@ -52,7 +52,7 @@
     helpers = Rx.helpers,
     isPromise = helpers.isPromise,
     isFunction = helpers.isFunction,
-    isScheduler = helpers.isScheduler,
+    isScheduler = Rx.Scheduler.isScheduler,
     observableFromPromise = Observable.fromPromise;
 
   var errorObj = {e: {}};
@@ -505,9 +505,9 @@
    *
    * @example
    *  1 - res = source.timestamp(); // produces { value: x, timestamp: ts }
-   *  2 - res = source.timestamp(Rx.Scheduler.timeout);
+   *  2 - res = source.timestamp(Rx.Scheduler.default);
    *
-   * @param {Scheduler} [scheduler]  Scheduler used to compute timestamps. If not specified, the timeout scheduler is used.
+   * @param {Scheduler} [scheduler]  Scheduler used to compute timestamps. If not specified, the default scheduler is used.
    * @returns {Observable} An observable sequence with timestamp information on values.
    */
   observableProto.timestamp = function (scheduler) {

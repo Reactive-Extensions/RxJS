@@ -23,5 +23,5 @@
     helpers = Rx.helpers,
     noop = helpers.noop,
     isPromise = helpers.isPromise,
-    isScheduler = helpers.isScheduler,
+    isScheduler = Rx.Scheduler.isScheduler,
     observableFromPromise = Observable.fromPromise;

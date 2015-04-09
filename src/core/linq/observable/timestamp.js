@@ -3,9 +3,9 @@
    *
    * @example
    *  1 - res = source.timestamp(); // produces { value: x, timestamp: ts }
-   *  2 - res = source.timestamp(Rx.Scheduler.timeout);
+   *  2 - res = source.timestamp(Rx.Scheduler.default);
    *
-   * @param {Scheduler} [scheduler]  Scheduler used to compute timestamps. If not specified, the timeout scheduler is used.
+   * @param {Scheduler} [scheduler]  Scheduler used to compute timestamps. If not specified, the default scheduler is used.
    * @returns {Observable} An observable sequence with timestamp information on values.
    */
   observableProto.timestamp = function (scheduler) {
