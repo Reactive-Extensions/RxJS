@@ -269,6 +269,7 @@
     //deprecate('contains', 'includes');
     observableProto.includes(searchElement, fromIndex);
   };
+
   /**
    * Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
    * @example

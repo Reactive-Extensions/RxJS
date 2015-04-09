@@ -1,7 +1,14 @@
-  var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable = (function () {
-    function BooleanDisposable () {
+  var BooleanDisposable = (function () {
+    var trueInstance = (function () {
+      var d = new BooleanDisposable();
+      d.isDisposed = true;
+      return d;
+    }());
+
+    function BooleanDisposable (isSingle) {
       this.isDisposed = false;
       this.current = null;
+      this.isSingle = isSingle;
     }
 
     var booleanDisposablePrototype = BooleanDisposable.prototype;
@@ -11,7 +18,7 @@
      * @return The underlying disposable.
      */
     booleanDisposablePrototype.getDisposable = function () {
-      return this.current;
+      return this.current === trueInstance ? disposableEmpty : this.current;
     };
 
     /**
@@ -19,7 +26,7 @@
      * @param {Disposable} value The new underlying disposable.
      */
     booleanDisposablePrototype.setDisposable = function (value) {
-      var shouldDispose = this.isDisposed;
+      var shouldDispose = this.current === trueInstance;
       if (!shouldDispose) {
         var old = this.current;
         this.current = value;
@@ -33,13 +40,18 @@
      */
     booleanDisposablePrototype.dispose = function () {
       if (!this.isDisposed) {
-        this.isDisposed = true;
         var old = this.current;
-        this.current = null;
+        this.current = trueInstance;
+        this.isDisposed = trueInstance.isDisposed;
       }
       old && old.dispose();
     };
 
     return BooleanDisposable;
   }());
-  var SerialDisposable = Rx.SerialDisposable = SingleAssignmentDisposable;
+  var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable = function () {
+    return new BooleanDisposable(true);
+  };
+  var SerialDisposable = Rx.SerialDisposable = function () {
+    return new BooleanDisposable();
+  };

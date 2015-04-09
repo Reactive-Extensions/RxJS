@@ -13,8 +13,8 @@ test('FutureDisposable_SetNull', function () {
 });
 
 test('FutureDisposable_DisposeAfterSet', function () {
-    var disposed = false
-        d = new SingleAssignmentDisposable()
+    var disposed = false,
+        d = new SingleAssignmentDisposable(),
         dd = Disposable.create(function () { disposed = true; });
     d.setDisposable(dd);
     equal(dd, d.getDisposable());
@@ -33,7 +33,7 @@ test('FutureDisposable_DisposeBeforeSet', function () {
     d.dispose();
     ok(!disposed);
     d.setDisposable(dd);
-    ok(d.getDisposable() === null);
+    ok(d.getDisposable() === Rx.Disposable.empty);
     ok(disposed);
     d.dispose();
     ok(disposed);
