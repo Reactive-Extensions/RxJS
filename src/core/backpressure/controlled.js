@@ -13,8 +13,7 @@
     }
 
     ControlledObservable.prototype.request = function (numberOfItems) {
-      if (numberOfItems == null) { numberOfItems = -1; }
-      return this.subject.request(numberOfItems);
+      return this.subject.request(numberOfItems == null ? -1 : numberOfItems);
     };
 
     return ControlledObservable;
@@ -41,30 +40,32 @@
       this.error = null;
       this.hasFailed = false;
       this.hasCompleted = false;
-      this.scheduler = scheduler || Rx.Scheduler['currentThread'];
+      this.scheduler = scheduler || currentThreadScheduler;
     }
 
     addProperties(ControlledSubject.prototype, Observer, {
       onCompleted: function () {
         this.hasCompleted = true;
-        if (!this.enableQueue || this.queue.length === 0)
+        if (!this.enableQueue || this.queue.length === 0) {
           this.subject.onCompleted();
-        else
-          this.queue.push(Rx.Notification.createOnCompleted());
+        } else {
+          this.queue.push(Notification.createOnCompleted());
+        }
       },
       onError: function (error) {
         this.hasFailed = true;
         this.error = error;
-        if (!this.enableQueue || this.queue.length === 0)
+        if (!this.enableQueue || this.queue.length === 0) {
           this.subject.onError(error);
-        else
-          this.queue.push(Rx.Notification.createOnError(error));
+        } else {
+          this.queue.push(Notification.createOnError(error));
+        }
       },
       onNext: function (value) {
         var hasRequested = false;
 
         if (this.requestedCount === 0) {
-          this.enableQueue && this.queue.push(Rx.Notification.createOnNext(value));
+          this.enableQueue && this.queue.push(Notification.createOnNext(value));
         } else {
           (this.requestedCount !== -1 && this.requestedCount-- === 0) && this.disposeCurrentRequest();
           hasRequested = true;
@@ -77,8 +78,12 @@
           (this.queue.length > 0 && this.queue[0].kind !== 'N')) {
             var first = this.queue.shift();
             first.accept(this.subject);
-            if (first.kind === 'N') numberOfItems--;
-            else { this.disposeCurrentRequest(); this.queue = []; }
+            if (first.kind === 'N') {
+              numberOfItems--;
+            } else {
+              this.disposeCurrentRequest();
+              this.queue = [];
+            }
           }
 
           return { numberOfItems : numberOfItems, returnValue: this.queue.length !== 0};
@@ -88,24 +93,20 @@
       },
       request: function (number) {
         this.disposeCurrentRequest();
-        var self = this; //r = this._processRequest(number);
+        var self = this;
 
         this.requestedDisposable = this.scheduler.scheduleWithState(number,
-        function(s, i){
-          var r = self._processRequest(i);
-          var remaining = r.numberOfItems;
+        function(s, i) {
+          var r = self._processRequest(i), remaining = r.numberOfItems;
           if (!r.returnValue) {
             self.requestedCount = remaining;
-            self.requestedDisposable = disposableCreate(function(){
+            self.requestedDisposable = disposableCreate(function () {
               self.requestedCount = 0;
             });
           }
-
-
         });
 
         return this.requestedDisposable;
-
       },
       disposeCurrentRequest: function () {
         this.requestedDisposable.dispose();

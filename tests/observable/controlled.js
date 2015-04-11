@@ -162,7 +162,7 @@ test('controlled fires onError', function(){
 
     var error = new Error("expected");
     var source = Rx.Observable.range(1, 2, scheduler)
-        .concat(Rx.Observable.throw(error, scheduler))
+        .concat(Rx.Observable.throwError(error, scheduler))
         .controlled();
 
     scheduler.scheduleAbsolute(200, function(){
