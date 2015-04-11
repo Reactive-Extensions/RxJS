@@ -13,4 +13,6 @@
     timeoutScheduler = Rx.Scheduler.timeout,
     currentThreadScheduler = Rx.Scheduler.currentThread,
     identity = Rx.helpers.identity,
+    //TODO Get some consistency about where this is declared
+    isScheduler = Rx.helpers.isScheduler || Rx.Scheduler.isScheduler,
     checkDisposed = Rx.Disposable.checkDisposed;
