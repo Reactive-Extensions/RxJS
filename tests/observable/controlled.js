@@ -217,3 +217,61 @@ test('controlled drops messages with queue disabled', function(){
 
 
 });
+
+test('controlled requests are scheduled', function() {
+    var scheduler = new TestScheduler();
+    var results = scheduler.createObserver();
+
+    var xs = scheduler
+        .createHotObservable(
+        onNext(210, 0),
+        onNext(220, 1),
+        onNext(230, 2),
+        onNext(240, 3),
+        onNext(250, 4),
+        onNext(260, 5),
+        onNext(270, 6),
+        onCompleted(280)
+
+    );
+    var source = xs.controlled();
+
+// process one event at a time
+    scheduler.scheduleAbsolute(200, function() {
+        var subscription =
+            source.subscribe(
+            function (x) {
+                // alternate between immediate and delayed request(1), causes hanging
+                if (x % 2) {
+                    //Immediate
+                    source.request(1); // request next
+                } else {
+                    //Delayed
+                    scheduler.schedule(function () {
+                        source.request(1); // request next
+                    });
+                }
+                results.onNext(x);
+            },
+            results.onError.bind(results),
+            results.onCompleted.bind(results)
+        );
+    });
+
+    scheduler.scheduleAbsolute(300, function() {
+        source.request(1); // start by requesting first item
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+        onNext(300, 0),
+        onNext(301, 1),
+        onNext(301, 2),
+        onNext(302, 3),
+        onNext(302, 4),
+        onNext(303, 5),
+        onNext(303, 6),
+        onCompleted(303)
+    );
+});

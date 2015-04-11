@@ -6,9 +6,9 @@
       return this.source.subscribe(observer);
     }
 
-    function ControlledObservable (source, enableQueue) {
+    function ControlledObservable (source, enableQueue, scheduler) {
       __super__.call(this, subscribe, source);
-      this.subject = new ControlledSubject(enableQueue);
+      this.subject = new ControlledSubject(enableQueue, scheduler);
       this.source = source.multicast(this.subject).refCount();
     }
 
@@ -29,7 +29,7 @@
 
     inherits(ControlledSubject, __super__);
 
-    function ControlledSubject(enableQueue) {
+    function ControlledSubject(enableQueue, scheduler) {
       enableQueue == null && (enableQueue = true);
 
       __super__.call(this, subscribe);
@@ -41,6 +41,7 @@
       this.error = null;
       this.hasFailed = false;
       this.hasCompleted = false;
+      this.scheduler = scheduler || Rx.Scheduler['currentThread'];
     }
 
     addProperties(ControlledSubject.prototype, Observer, {
@@ -83,30 +84,28 @@
           return { numberOfItems : numberOfItems, returnValue: this.queue.length !== 0};
         }
 
-        //TODO I don't think this is ever necessary, since termination of a sequence without a queue occurs in the onCompletion or onError function
-        //if (this.hasFailed) {
-        //  this.subject.onError(this.error);
-        //} else if (this.hasCompleted) {
-        //  this.subject.onCompleted();
-        //}
-
         return { numberOfItems: numberOfItems, returnValue: false };
       },
       request: function (number) {
         this.disposeCurrentRequest();
-        var self = this, r = this._processRequest(number);
+        var self = this; //r = this._processRequest(number);
 
-        var number = r.numberOfItems;
-        if (!r.returnValue) {
-          this.requestedCount = number;
-          this.requestedDisposable = disposableCreate(function () {
-            self.requestedCount = 0;
-          });
+        this.requestedDisposable = this.scheduler.scheduleWithState(number,
+        function(s, i){
+          var r = self._processRequest(i);
+          var remaining = r.numberOfItems;
+          if (!r.returnValue) {
+            self.requestedCount = remaining;
+            self.requestedDisposable = disposableCreate(function(){
+              self.requestedCount = 0;
+            });
+          }
 
-          return this.requestedDisposable;
-        } else {
-          return disposableEmpty;
-        }
+
+        });
+
+        return this.requestedDisposable;
+
       },
       disposeCurrentRequest: function () {
         this.requestedDisposable.dispose();
@@ -122,10 +121,17 @@
    * @example
    * var source = Rx.Observable.interval(100).controlled();
    * source.request(3); // Reads 3 values
-   * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
+   * @param {bool} enableQueue truthy value to determine if values should be queued pending the next request
+   * @param {Scheduler} scheduler determines how the requests will be scheduled
    * @returns {Observable} The observable sequence which is paused based upon the pauser.
    */
-  observableProto.controlled = function (enableQueue) {
+  observableProto.controlled = function (enableQueue, scheduler) {
+
+    if (enableQueue && isScheduler(enableQueue)) {
+        scheduler = enableQueue;
+        enableQueue = true;
+    }
+
     if (enableQueue == null) {  enableQueue = true; }
-    return new ControlledObservable(this, enableQueue);
+    return new ControlledObservable(this, enableQueue, scheduler);
   };
