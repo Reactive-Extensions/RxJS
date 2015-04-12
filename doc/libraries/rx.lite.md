@@ -104,7 +104,7 @@ NuGet Packages:
 - [`tapOnNext`](../api/core/operators/doonnext.md)
 - [`tapOnError`](../api/core/operators/doonerror.md)
 - [`tapOnCompleted`](../api/core/operators/dooncompleted.md)
-- [`throttle`](../api/core/operators/throttle.md)
+- [`throttle`](../api/core/operators/debounce.md)
 - [`throttleFirst`](../api/core/operators/throttlefirst.md)
 - [`timeout`](../api/core/operators/timeout.md)
 - [`timestamp`](../api/core/operators/timestamp.md)
