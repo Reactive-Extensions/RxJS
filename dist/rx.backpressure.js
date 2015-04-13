@@ -49,7 +49,27 @@
     currentThreadScheduler = Rx.Scheduler.currentThread,
     identity = Rx.helpers.identity,
     isScheduler = Rx.Scheduler.isScheduler,
+    isFunction = Rx.helpers.isFunction,
     checkDisposed = Rx.Disposable.checkDisposed;
+
+  var errorObj = {e: {}};
+  var tryCatchTarget;
+  function tryCatcher() {
+    try {
+      return tryCatchTarget.apply(this, arguments);
+    } catch (e) {
+      errorObj.e = e;
+      return errorObj;
+    }
+  }
+  function tryCatch(fn) {
+    if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
+    tryCatchTarget = fn;
+    return tryCatcher;
+  }
+  function thrower(e) {
+    throw e;
+  }
 
   /**
   * Used to pause and resume streams.
@@ -142,25 +162,14 @@
 
       function next(x, i) {
         values[i] = x
-        var res;
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
-          if (err) {
-            o.onError(err);
-            return;
-          }
-
-          try {
-            res = resultSelector.apply(null, values);
-          } catch (ex) {
-            o.onError(ex);
-            return;
-          }
+          if (err) { return o.onError(err); }
+          var res = tryCatch(resultSelector).apply(null, values);
+          if (res === errorObj) { return o.onError(res.e); }
           o.onNext(res);
         }
-        if (isDone && values[1]) {
-          o.onCompleted();
-        }
+        isDone && values[1] && o.onCompleted();
       }
 
       return new CompositeDisposable(
@@ -199,6 +208,8 @@
     function subscribe(o) {
       var q = [], previousShouldFire;
 
+      function drainQueue() { while (q.length > 0) { o.onNext(q.shift()); } }
+
       var subscription =
         combineLatestSource(
           this.source,
@@ -211,11 +222,7 @@
               if (previousShouldFire !== undefined && results.shouldFire != previousShouldFire) {
                 previousShouldFire = results.shouldFire;
                 // change in shouldFire
-                if (results.shouldFire) {
-                  while (q.length > 0) {
-                    o.onNext(q.shift());
-                  }
-                }
+                if (results.shouldFire) { drainQueue(); }
               } else {
                 previousShouldFire = results.shouldFire;
                 // new data
@@ -227,17 +234,11 @@
               }
             },
             function (err) {
-              // Empty buffer before sending error
-              while (q.length > 0) {
-                o.onNext(q.shift());
-              }
+              drainQueue();
               o.onError(err);
             },
             function () {
-              // Empty buffer before sending completion
-              while (q.length > 0) {
-                o.onNext(q.shift());
-              }
+              drainQueue();
               o.onCompleted();
             }
           );

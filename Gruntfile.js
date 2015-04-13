@@ -1323,6 +1323,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/subintro.js',
               'src/core/headers/backpressureheader.js',
+              'src/core/internal/trycatch.js',
 
               // Backpressure operators
               'src/core/backpressure/pauser.js',
@@ -1341,6 +1342,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro.js',
               'src/core/headers/backpressureheader.js',
+              'src/core/internal/trycatch.js',
 
               // Backpressure operators
               'src/core/backpressure/stopandwait.js',
@@ -1355,6 +1357,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro-compat.js',
               'src/core/headers/backpressureheader.js',
+              'src/core/internal/trycatch.js',
 
               // Backpressure operators
               'src/core/backpressure/stopandwait.js',

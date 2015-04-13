@@ -15,4 +15,5 @@
     currentThreadScheduler = Rx.Scheduler.currentThread,
     identity = Rx.helpers.identity,
     isScheduler = Rx.Scheduler.isScheduler,
+    isFunction = Rx.helpers.isFunction,
     checkDisposed = Rx.Disposable.checkDisposed;
