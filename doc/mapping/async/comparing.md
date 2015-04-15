@@ -117,7 +117,7 @@ var stat = Rx.Observable.fromNodeCallback(fs.stat);
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 Rx.Observable
-  .for(files, stat)
+  .for(files, function (file) { return stat(file); })
   .toArray()
   .forEach(
     function (results) {
@@ -166,10 +166,12 @@ Using RxJS, we can achieve the same results of an array of all of our values by 
 var Rx = require('rx'),
     fs = require('fs');
 
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
-  .for(files, exists)
+  .for(files, function (file) { return exists(file); })
   .where(function (x) { return x; })
   .toArray()
   .forEach(
@@ -216,10 +218,12 @@ Using RxJS, we can achieve the same results of an array of all of our values by 
 var Rx = require('rx'),
     fs = require('fs');
 
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
-    .for(files, exists)
+    .for(files, function (file) { return exists(file); })
     .where(function (x) { return !x; })
     .toArray()
     .forEach(
@@ -349,10 +353,12 @@ Using RxJS, we can achieve the same results of an array of all of our values by 
 var Rx = require('rx'),
     fs = require('fs');
 
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
+
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
-    .for(files, exists)
+    .for(files, function (file) { return exists(file); })
     .some()
     .forEach(
       function (results) {
@@ -394,7 +400,7 @@ var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
-  .for(files, exists)
+  .for(files, function (file) { return exists(file); })
   .every()
   .forEach(
     function (results) {
@@ -436,7 +442,7 @@ var directories = ['dir1', 'dir2', 'dir3'];
 var readdir = Rx.Observable.fromNodeCallback(fs.readdir);
 
 Rx.Observable
-  .for(directories, readdir)
+  .for(directories, function (dir) { return readdir(dir); })
   .toArray()
   .forEach(
     function (files) {
