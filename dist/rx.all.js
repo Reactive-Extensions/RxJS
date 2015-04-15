@@ -7247,6 +7247,27 @@
     return ConnectableObservable;
   }(Observable));
 
+  /**
+   * Returns an observable sequence that shares a single subscription to the underlying sequence. This observable sequence
+   * can be resubscribed to, even if all prior subscriptions have ended. (unlike `.publish().refCount()`)
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source.
+   */
+  observableProto.singleInstance = function() {
+    var source = this, hasObservable = false, observable;
+
+    function getObservable() {
+      if (!hasObservable) {
+        hasObservable = true;
+        observable = source.finally(function() { hasObservable = false; }).publish().refCount();
+      }
+      return observable;
+    };
+
+    return new AnonymousObservable(function(o) {
+      return getObservable().subscribe(o);
+    });
+  };
+
   var Dictionary = (function () {
 
     var primes = [1, 3, 7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749, 65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593, 16777213, 33554393, 67108859, 134217689, 268435399, 536870909, 1073741789, 2147483647],
