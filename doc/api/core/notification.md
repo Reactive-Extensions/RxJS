@@ -208,7 +208,7 @@ var subscription = source.subscribe(
 
 /* With a scheduler */
 var source = Rx.Notification.createOnError(new Error('error!'))
-    .toObservable(Rx.Scheduler.timeout);
+    .toObservable(Rx.Scheduler.immediate);
 
 var subscription = source.subscribe(
     function (x) {
