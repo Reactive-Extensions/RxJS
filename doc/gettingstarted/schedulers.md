@@ -47,7 +47,7 @@ Rx.Observable.generate(
 	function () { return true; },
 	function (x) { return x + 1; },
 	function (x) { return x; },
-	observeOn(Rx.Scheduler.default)
+	Rx.Scheduler.default)
 	.subscribe(...);
 ```
 
