@@ -243,6 +243,7 @@ Please check out:
         - [The Car Game](https://github.com/mikkark/TheCarGame) - [Site](https://thecargame.herokuapp.com/) - [Blog Post](https://allthingsarchitectural.wordpress.com/2014/11/24/game-programming-with-angular-rxjs-and-node-js/)
     - [Cycle](https://github.com/staltz/cycle)
         - [Cycle TODO MVC](https://github.com/staltz/todomvc-cycle)
+    - [WebRx](https://github.com/oliverw/webrx)
     - Everything else
         - [Mario Elm Example](http://fudini.github.io/rx/mario.html)
         - [Firebase + RxJS](http://blog.cryptoguru.com/2014/11/frp-using-rxjs-and-firebase.html)  
