@@ -266,14 +266,14 @@ async.reduce([1,2,3], 0, fs.reduction, function (err, results) {
 
 #### RxJS version ####
 
-In RxJS, we have a number of ways of doing this including using `Rx.Observable.from` to turn an array into observable sequence, then we can call `reduce` to add the numbers.  To ensure that it is indeed async, we can switch to the `Rx.Scheduler.timeout` to ensure that it is done via a `setImmediate` call.
+In RxJS, we have a number of ways of doing this including using `Rx.Observable.from` to turn an array into observable sequence, then we can call `reduce` to add the numbers.
 
 ```js
 var Rx = require('rx'),
     fs = require('fs');
 
 Rx.Observable
-  .from([1,2,3], Rx.Scheduler.timeout)
+  .from([1,2,3])
   .reduce(function (acc, x) { return acc + x; }, 0)
   .forEach( function (results) { console.log(results); });
 // => 6
@@ -799,14 +799,14 @@ call_order.push('one');
 
 #### RxJS version ####
 
-We can achieve the same thing by using the `Rx.Scheduler.timeout` scheduler to schedule an item which will optimize for the runtime, for example, using `process.nextTick` if available, or `setImmediate` if available, or other fallbacks like `MessageChannel`, `postMessage` or even an async script load.
+We can achieve the same thing by using the `Rx.Scheduler.default` scheduler to schedule an item which will optimize for the runtime, for example, using `process.nextTick` if available, or `setImmediate` if available, or other fallbacks like `MessageChannel`, `postMessage` or even an async script load.
 
 ```js
 var Rx = require('rx');
 
 var call_order = [];
 
-Rx.Scheduler.timeout.schedule(function () {
+Rx.Scheduler.default.schedule(function () {
   call_order.push('two');
   // call_order now equals ['one','two']
 });
