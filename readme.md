@@ -18,7 +18,7 @@
 **[Contributing](#contributing)** |
 **[License](#license)**
 
-# The Reactive Extensions for JavaScript (RxJS) <sup>2.4</sup>... #
+# The Reactive Extensions for JavaScript (RxJS) <sup>2.5</sup>... #
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
 The project is actively developed by [Microsoft Open Technologies, Inc.](http://msopentech.com/), in collaboration with a community of open source developers.
@@ -390,7 +390,7 @@ require({
 ## What about my libraries? ##
 
 The Reactive Extensions for JavaScript have no external dependencies any library, so they'll work well with just about any library.  We provide bridges and support for various libraries including:
-
+- [Node.js](https://www.npmjs.com/package/rx-node)
 - [React](http://facebook.github.io/react/)
     - [Rx-React](https://github.com/fdecampredon/rx-react)
     - [RxReact](https://github.com/AlexMost/RxReact)
@@ -407,8 +407,6 @@ The Reactive Extensions for JavaScript have no external dependencies any library
 - [MooTools](https://github.com/Reactive-Extensions/RxJS-MooTools)
 - [Dojo 1.7+](https://github.com/Reactive-Extensions/RxJS-Dojo)
 - [ExtJS](https://github.com/Reactive-Extensions/RxJS-ExtJS)
-
-In addition, we have support for [common Node.js functions](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/nodejs/nodejs.md) such as binding to callbacks and the `EventEmitter` class.
 
 ## Compatibility ##
 
