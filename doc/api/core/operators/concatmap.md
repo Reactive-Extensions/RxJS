@@ -94,10 +94,10 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
-// => Next: 4
-// => Next: 4
-// => Next: 4
-// => Next: 4
+// => Next: 1
+// => Next: 3
+// => Next: 5
+// => Next: 7
 // => Completed
 
 /* Using an array */
