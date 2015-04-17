@@ -61,7 +61,7 @@ NuGet Packages:
 - [`finally | finallyAction`](../api/core/operators/finally.md)
 - [`flatMap`](../api/core/operators/selectmany.md)
 - [`flatMapLatest`](../api/core/operators/flatmaplatest.md)
-- [`flatMapObserver`](../api/core/operators/flatpmapobserver.md)
+- [`flatMapObserver`](../api/core/operators/flatmapobserver.md)
 - [`ignoreElements`](../api/core/operators/ignoreelements.md)
 - [`map`](../api/core/operators/select.md)
 - [`merge`](../api/core/operators/mergeproto.md)
