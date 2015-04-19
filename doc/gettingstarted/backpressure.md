@@ -40,7 +40,7 @@ Another technique to deal with an observable sequence which is producing too muc
 var throttled = Rx.Observable.fromEvent(window, 'resize')
   .throttleFirst(250 /* ms */);
 
-debounced.subscribeOnNext(function (e) {
+throttled.subscribeOnNext(function (e) {
   console.log('Window inner height: %d', window.innerHeight);
   console.log('Window inner width: %d', window.innerWidth);
 });
