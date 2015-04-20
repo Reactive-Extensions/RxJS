@@ -102,6 +102,7 @@ NuGet Packages:
 - [`elementAtOrDefault`](../api/core/operators/elementatordefault.md)
 - [`every`](../api/core/operators/all.md)
 - [`expand`](../api/core/operators/expand.md)
+- [`extend`](../api/core/operators/manyselect.md)
 - [`filter`](../api/core/operators/where.md)
 - [`finally | finallyAction`](../api/core/operators/finally.md)
 - [`find`](../api/core/operators/find.md)

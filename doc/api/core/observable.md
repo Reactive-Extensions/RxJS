@@ -91,6 +91,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`elementAtOrDefault`](operators/elementatordefault.md)
 - [`every`](operators/every.md)
 - [`expand`](operators/expand.md)
+- [`extend`](operators/manyselect.md)
 - [`filter`](operators/where.md)
 - [`finally | ensure`](operators/finally.md)
 - [`find`](operators/find.md)

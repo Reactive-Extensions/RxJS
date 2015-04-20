@@ -1,4 +1,5 @@
 ### `Rx.Observable.prototype.manySelect(selector, [scheduler])`
+### `Rx.Observable.prototype.extend(selector, [scheduler])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/manyselect.js "View in source")
 
 Comonadic bind operator.

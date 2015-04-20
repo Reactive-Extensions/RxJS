@@ -4,7 +4,7 @@
    * @param {Object} scheduler Scheduler used to execute the operation. If not specified, defaults to the ImmediateScheduler.
    * @returns {Observable} An observable sequence which results from the comonadic bind operation.
    */
-  observableProto.manySelect = function (selector, scheduler) {
+  observableProto.manySelect = observableProto.extend = function (selector, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     var source = this;
     return observableDefer(function () {
