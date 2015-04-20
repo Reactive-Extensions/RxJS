@@ -198,10 +198,8 @@ Please check out:
     - [Tech Blog](http://blogs.msdn.com/b/rxteam)
     - [Twitter @ReactiveX](https://twitter.com/ReactiveX)
     - [Twitter @OpenAtMicrosoft](http://twitter.com/OpenAtMicrosoft)
-    - [IRC #reactivex](http://webchat.freenode.net/#reactivex)
-    - [JabbR rx](https://jabbr.net/#/rooms/rx)
     - [StackOverflow rxjs](http://stackoverflow.com/questions/tagged/rxjs)
-    - [Google Group rxjs](https://groups.google.com/forum/#!forum/rxjs)
+    - [Slack](http://reactivex.slack.com)
 
 - Tutorials
     - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
@@ -219,6 +217,7 @@ Please check out:
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
     - [Rx Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
     - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
+    - [Visualizing Reactive Streams](http://jaredly.github.io/2015/03/06/visualizing-reactive-streams-hot-and-cold/)
 
 - Community Examples
     - [React](http://facebook.github.io/react/)
@@ -245,9 +244,11 @@ Please check out:
         - [Cycle TODO MVC](https://github.com/staltz/todomvc-cycle)
     - [WebRx](https://github.com/oliverw/webrx)
     - Everything else
+        - [RxVision](http://jaredly.github.io/rxvision/)
         - [Mario Elm Example](http://fudini.github.io/rx/mario.html)
         - [Firebase + RxJS](http://blog.cryptoguru.com/2014/11/frp-using-rxjs-and-firebase.html)  
         - [Reactive Trader](https://github.com/AdaptiveConsulting/ReactiveTrader) - [Site](https://reactivetrader.azurewebsites.net/)
+    - [NPM Dependencies](https://www.npmjs.com/browse/depended/rx)
 
 - Presentations
     - Don't Cross the Streams - Cascadia.js 2012 [slides/demos](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams) | [video](http://www.youtube.com/watch?v=FqBq4uoiG0M)
