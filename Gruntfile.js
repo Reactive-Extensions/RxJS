@@ -220,6 +220,7 @@ module.exports = function (grunt) {
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
               'src/core/linq/connectableobservable.js',
+              'src/core/linq/observable/singleinstance.js',
 
               // Coincidence operators
               'src/core/internal/dictionary.js',
@@ -1567,6 +1568,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/sharevalue.js', // multicast, BehaviorSubject, Reference counted
               'src/core/linq/observable/replay.js', // multicast, ReplaySubject
               'src/core/linq/observable/sharereplay.js',
+              'src/core/linq/observable/singleinstance.js',
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
