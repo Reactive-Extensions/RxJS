@@ -20,9 +20,9 @@ File Dependencies:
 
 ### `Observable Methods`
 - [`amb`](../api/core/operators/amb.md)
-- [`generate`](../core/operators/generate.md)
+- [`generate`](../api/core/operators/generate.md)
 - [`onErrorResumeNext`](../api/core/operators/onerrorresumenext.md)
-- [`using`](../api/core/ooperators/using.md)
+- [`using`](../api/core/operators/using.md)
 
 ### `Observable Instance Methods`
 - [`amb`](../api/core/operators/ambproto.md)
