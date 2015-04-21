@@ -366,3 +366,13 @@ setTimeout(function () {
   }, 3000);
 }, 3000);
 ```
+
+**Analogies** 
+
+It helps to think of cold and hot Observables as movies or performances that one can watch ("subscribe").
+
+- Cold Observables: movies.
+- Hot Observables: live performances.
+- Hot Observables replayed: live performances recorded on video.
+
+Whenever you watch a movie, your run of the movie is independent of anyone else's run, even though all movie watchers see the same effects. On the other hand, a live performance is shared to multiple viewers. If you arrive late to a live performance, you will simply miss some of it. However, if it was recorded on video (in RxJS this would happen with a BehaviorSubject or a ReplaySubject), you can watch a "movie" of the live performance. A [`.publish().refCount()`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/refcount.md) live performance is one where the artists quit playing when no one is watching, and start playing again when there is at least one person in the audience. 
