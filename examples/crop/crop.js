@@ -4,6 +4,8 @@
     boundingBox,
     // an array of draggable elements that modify the crop region
     handles = [],
+    // we need handles as a nodeList in order to add multiple event listeners at once
+    handleNodes,
     // `overlay` is a canvas element that allows us to darken the portion  of the image that will be removed.
     overlay,
     // `ctx` will be the drawing context for `overlay`
@@ -97,6 +99,9 @@
 
     // render the handles in their initial positiions
     handles.forEach(function (element) { element['render'](); });
+
+    // grab handles in a nodeList so we can add mousedown listeners to all of them at once
+    handleNodes = document.querySelectorAll('.handle');
   }
 
   function respondToGestures() {
@@ -111,7 +116,7 @@
     var fromEvent = Rx.Observable.fromEvent,
         move = fromEvent(overlay, moves),
         up   = fromEvent(document, ups),
-        down = fromEvent(handles, downs);
+        down = fromEvent(handleNodes, downs);
 
     // When the mouse is down on a handle, return the handle element
     return down.flatMap(function (handle) {
