@@ -17,20 +17,12 @@
       return source.subscribe(function (value) {
         var key = value;
         if (keySelector) {
-          try {
-            key = keySelector(value);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
+          key = tryCatch(keySelector)(value);
+          if (key === errorObj) { return o.onError(key.e); }
         }
         if (hasCurrentKey) {
-          try {
-            var comparerEquals = comparer(currentKey, key);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
+          var comparerEquals = tryCatch(comparer)(currentKey, key);
+          if (comparerEquals === errorObj) { return o.onError(comparerEquals.e); }
         }
         if (!hasCurrentKey || !comparerEquals) {
           hasCurrentKey = true;

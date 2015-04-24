@@ -338,36 +338,24 @@
 
       leftSubscription.setDisposable(leftSource.subscribe(function (left) {
         choiceL();
-        if (choice === leftChoice) {
-          observer.onNext(left);
-        }
+        choice === leftChoice && observer.onNext(left);
       }, function (err) {
         choiceL();
-        if (choice === leftChoice) {
-          observer.onError(err);
-        }
+        choice === leftChoice && observer.onError(err);
       }, function () {
         choiceL();
-        if (choice === leftChoice) {
-          observer.onCompleted();
-        }
+        choice === leftChoice && observer.onCompleted();
       }));
 
       rightSubscription.setDisposable(rightSource.subscribe(function (right) {
         choiceR();
-        if (choice === rightChoice) {
-          observer.onNext(right);
-        }
+        choice === rightChoice && observer.onNext(right);
       }, function (err) {
         choiceR();
-        if (choice === rightChoice) {
-          observer.onError(err);
-        }
+        choice === rightChoice && observer.onError(err);
       }, function () {
         choiceR();
-        if (choice === rightChoice) {
-          observer.onCompleted();
-        }
+        choice === rightChoice && observer.onCompleted();
       }));
 
       return new CompositeDisposable(leftSubscription, rightSubscription);

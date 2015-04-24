@@ -4,5 +4,5 @@
    */
   observableProto.asObservable = function () {
     var source = this;
-    return new AnonymousObservable(function (o) { return source.subscribe(o); }, this);
+    return new AnonymousObservable(function (o) { return source.subscribe(o); }, source);
   };

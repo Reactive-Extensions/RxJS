@@ -14,25 +14,16 @@
         observerOrOnNext;
 
       return source.subscribe(function (x) {
-        try {
-          tapObserver.onNext(x);
-        } catch (e) {
-          observer.onError(e);
-        }
+        var res = tryCatch(tapObserver.onNext).call(tapObserver, x);
+        if (res === errorObj) { observer.onError(res.e); }
         observer.onNext(x);
       }, function (err) {
-          try {
-            tapObserver.onError(err);
-          } catch (e) {
-            observer.onError(e);
-          }
+        var res = tryCatch(tapObserver.onError).call(tapObserver, err);
+        if (res === errorObj) { observer.onError(res.e); }
         observer.onError(err);
       }, function () {
-        try {
-          tapObserver.onCompleted();
-        } catch (e) {
-          observer.onError(e);
-        }
+        var res = tryCatch(tapObserver.onCompleted).call(tapObserver);
+        if (res === errorObj) { observer.onError(res.e); }
         observer.onCompleted();
       });
     }, this);

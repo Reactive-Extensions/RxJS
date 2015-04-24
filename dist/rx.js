@@ -3028,36 +3028,24 @@
 
       leftSubscription.setDisposable(leftSource.subscribe(function (left) {
         choiceL();
-        if (choice === leftChoice) {
-          observer.onNext(left);
-        }
+        choice === leftChoice && observer.onNext(left);
       }, function (err) {
         choiceL();
-        if (choice === leftChoice) {
-          observer.onError(err);
-        }
+        choice === leftChoice && observer.onError(err);
       }, function () {
         choiceL();
-        if (choice === leftChoice) {
-          observer.onCompleted();
-        }
+        choice === leftChoice && observer.onCompleted();
       }));
 
       rightSubscription.setDisposable(rightSource.subscribe(function (right) {
         choiceR();
-        if (choice === rightChoice) {
-          observer.onNext(right);
-        }
+        choice === rightChoice && observer.onNext(right);
       }, function (err) {
         choiceR();
-        if (choice === rightChoice) {
-          observer.onError(err);
-        }
+        choice === rightChoice && observer.onError(err);
       }, function () {
         choiceR();
-        if (choice === rightChoice) {
-          observer.onCompleted();
-        }
+        choice === rightChoice && observer.onCompleted();
       }));
 
       return new CompositeDisposable(leftSubscription, rightSubscription);
@@ -3919,7 +3907,7 @@
    */
   observableProto.asObservable = function () {
     var source = this;
-    return new AnonymousObservable(function (o) { return source.subscribe(o); }, this);
+    return new AnonymousObservable(function (o) { return source.subscribe(o); }, source);
   };
 
   /**
@@ -3973,20 +3961,12 @@
       return source.subscribe(function (value) {
         var key = value;
         if (keySelector) {
-          try {
-            key = keySelector(value);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
+          key = tryCatch(keySelector)(value);
+          if (key === errorObj) { return o.onError(key.e); }
         }
         if (hasCurrentKey) {
-          try {
-            var comparerEquals = comparer(currentKey, key);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
+          var comparerEquals = tryCatch(comparer)(currentKey, key);
+          if (comparerEquals === errorObj) { return o.onError(comparerEquals.e); }
         }
         if (!hasCurrentKey || !comparerEquals) {
           hasCurrentKey = true;
@@ -4013,25 +3993,16 @@
         observerOrOnNext;
 
       return source.subscribe(function (x) {
-        try {
-          tapObserver.onNext(x);
-        } catch (e) {
-          observer.onError(e);
-        }
+        var res = tryCatch(tapObserver.onNext).call(tapObserver, x);
+        if (res === errorObj) { observer.onError(res.e); }
         observer.onNext(x);
       }, function (err) {
-          try {
-            tapObserver.onError(err);
-          } catch (e) {
-            observer.onError(e);
-          }
+        var res = tryCatch(tapObserver.onError).call(tapObserver, err);
+        if (res === errorObj) { observer.onError(res.e); }
         observer.onError(err);
       }, function () {
-        try {
-          tapObserver.onCompleted();
-        } catch (e) {
-          observer.onError(e);
-        }
+        var res = tryCatch(tapObserver.onCompleted).call(tapObserver);
+        if (res === errorObj) { observer.onError(res.e); }
         observer.onCompleted();
       });
     }, this);
