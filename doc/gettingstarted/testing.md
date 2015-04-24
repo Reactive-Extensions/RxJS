@@ -94,7 +94,7 @@ In the following example, we are going to reuse the Buffer example which generat
 var seq1 = Rx.Observable.interval(1000)
    .do(function (x) { console.log(x); })
    .bufferWithCount(5)
-   .do(function (x) { console.log('buffer is full'))
+   .do(function (x) { console.log('buffer is full'); })
    .subscribe(function (x) { console.log('Sum of the buffer is ' + x.reduce(function (acc, x) { return acc + x; }, 0)); });
 
 // => 0
