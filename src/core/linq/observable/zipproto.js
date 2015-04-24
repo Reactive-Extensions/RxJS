@@ -1,20 +1,16 @@
   function zipArray(second, resultSelector) {
     var first = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var index = 0, len = second.length;
       return first.subscribe(function (left) {
         if (index < len) {
-          var right = second[index++], result;
-          try {
-            result = resultSelector(left, right);
-          } catch (e) {
-            return observer.onError(e);
-          }
-          observer.onNext(result);
+          var right = second[index++], res = tryCatch(resultSelector)(left, right);
+          if (res === errorObj) { return o.onError(res.e); }
+          o.onNext(res);
         } else {
-          observer.onCompleted();
+          o.onCompleted();
         }
-      }, function (e) { observer.onError(e); }, function () { observer.onCompleted(); });
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, first);
   }
 
@@ -24,10 +20,6 @@
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
    * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
-   *
-   * @example
-   * 1 - res = obs1.zip(obs2, fn);
-   * 1 - res = x1.zip([1,2,3], fn);
    * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
    */
   observableProto.zip = function () {
@@ -37,33 +29,10 @@
 
     var parent = this, resultSelector = args.pop();
     args.unshift(parent);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var n = args.length,
         queues = arrayInitialize(n, emptyArrayFactory),
         isDone = arrayInitialize(n, falseFactory);
-
-      function next(i) {
-        var res, queuedValues;
-        if (queues.every(function (x) { return x.length > 0; })) {
-          try {
-            queuedValues = queues.map(function (x) { return x.shift(); });
-            res = resultSelector.apply(parent, queuedValues);
-          } catch (ex) {
-            observer.onError(ex);
-            return;
-          }
-          observer.onNext(res);
-        } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-          observer.onCompleted();
-        }
-      };
-
-      function done(i) {
-        isDone[i] = true;
-        if (isDone.every(function (x) { return x; })) {
-          observer.onCompleted();
-        }
-      }
 
       var subscriptions = new Array(n);
       for (var idx = 0; idx < n; idx++) {
@@ -72,9 +41,17 @@
           isPromise(source) && (source = observableFromPromise(source));
           sad.setDisposable(source.subscribe(function (x) {
             queues[i].push(x);
-            next(i);
-          }, function (e) { observer.onError(e); }, function () {
-            done(i);
+            if (queues.every(function (x) { return x.length > 0; })) {
+              var queuedValues = queues.map(function (x) { return x.shift(); }),
+                  res = tryCatch(resultSelector).apply(parent, queuedValues);
+              if (res === errorObj) { return o.onError(res.e); }
+              o.onNext(res);
+            } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+              o.onCompleted();
+            }
+          }, function (e) { o.onError(e); }, function () {
+            isDone[i] = true;
+            isDone.every(identity) && o.onCompleted();
           }));
           subscriptions[i] = sad;
         })(idx);

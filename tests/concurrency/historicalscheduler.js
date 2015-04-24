@@ -1,49 +1,48 @@
-QUnit.module('HistoricalScheduler');
+(function () {
+  QUnit.module('HistoricalScheduler');
 
-var HistoricalScheduler = Rx.HistoricalScheduler;
+  var HistoricalScheduler = Rx.HistoricalScheduler;
 
-function arrayEquals(first, second) {
+  function arrayEquals(first, second) {
     if (first.length !== second.length) {
-        ok(false);
+      ok(false);
     }
     for (var i = 0, len = first.length; i < len; i++) {
-        var f = first[i], s = second[i];
-        if (f.equals && s.equals) {
-            ok(f.equals(s));
-        } else {
-            ok(f === s);
-        }
+      var f = first[i], s = second[i];
+      if (f.equals && s.equals) {
+        ok(f.equals(s));
+      } else {
+        ok(f === s);
+      }
     }
-}
+  }
 
-function time(days) {
+  function time(days) {
     var d = new Date(1979,10,31,4,30,15);
     d.setUTCDate(d.getDate() + days);
     return d.getTime();
-}
+  }
 
-function fromDays(days) {
+  function fromDays(days) {
     return 86400000 * days;
-}
+  }
 
-function Timestamped (value, timestamp) {
+  function Timestamped (value, timestamp) {
     this.value = value;
     this.timestamp = timestamp;
-}
-Timestamped.prototype.equals = function (other) {
-    if (other == null) {
-        return false;
-    }
+  }
+  Timestamped.prototype.equals = function (other) {
+    if (other == null) { return false; }
     return other.value === this.value && other.timestamp === this.timestamp;
-};
+  };
 
-test('Ctor', function () {
+  test('Ctor', function () {
     var s = new HistoricalScheduler();
     equal(0, s.clock);
     equal(false, s.isEnabled);
-});
+  });
 
-test('StartStop', function () {
+  test('StartStop', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -77,14 +76,14 @@ test('StartStop', function () {
     equal(time(6), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(1, time(0)),
-        new Timestamped(2, time(1)),
-        new Timestamped(3, time(3)),
-        new Timestamped(4, time(6))
+      new Timestamped(1, time(0)),
+      new Timestamped(2, time(1)),
+      new Timestamped(3, time(3)),
+      new Timestamped(4, time(6))
     ]);
-});
+  });
 
-test('Order', function () {
+  test('Order', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -99,14 +98,14 @@ test('Order', function () {
     s.start();
 
     arrayEquals(list, [
-        new Timestamped(0, time(1)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2)),
-        new Timestamped(3, time(3))
+      new Timestamped(0, time(1)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2)),
+      new Timestamped(3, time(3))
     ]);
-});
+  });
 
-test('Cancellation', function () {
+  test('Cancellation', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -114,18 +113,18 @@ test('Cancellation', function () {
     var d = s.scheduleAbsolute(time(2), function () { list.push(new Timestamped(2, s.now())); });
 
     s.scheduleAbsolute(time(1), function () {
-        list.push(new Timestamped(0, s.now()));
-        d.dispose();
+      list.push(new Timestamped(0, s.now()));
+      d.dispose();
     });
 
     s.start();
 
     arrayEquals(list, [
-        new Timestamped(0, time(1))
+      new Timestamped(0, time(1))
     ]);
-});
+  });
 
-test('AdvanceTo', function () {
+  test('AdvanceTo', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -142,9 +141,9 @@ test('AdvanceTo', function () {
     equal(time(8), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2))
     ]);
 
     s.advanceTo(time(8));
@@ -153,9 +152,9 @@ test('AdvanceTo', function () {
     equal(time(8), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2))
     ]);
 
     s.scheduleAbsolute(time(7), function () { list.push(new Timestamped(7, s.now())); });
@@ -165,9 +164,9 @@ test('AdvanceTo', function () {
     equal(time(8), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2))
     ]);
 
     s.advanceTo(time(10));
@@ -176,12 +175,12 @@ test('AdvanceTo', function () {
     equal(time(10), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2)),
-        new Timestamped(7, time(8)),
-        new Timestamped(8, time(8)),
-        new Timestamped(10, time(10))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2)),
+      new Timestamped(7, time(8)),
+      new Timestamped(8, time(8)),
+      new Timestamped(10, time(10))
     ]);
 
     s.advanceTo(time(100));
@@ -190,17 +189,17 @@ test('AdvanceTo', function () {
     equal(time(100), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2)),
-        new Timestamped(7, time(8)),
-        new Timestamped(8, time(8)),
-        new Timestamped(10, time(10)),
-        new Timestamped(11, time(11))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2)),
+      new Timestamped(7, time(8)),
+      new Timestamped(8, time(8)),
+      new Timestamped(10, time(10)),
+      new Timestamped(11, time(11))
     ]);
-});
+  });
 
-test('AdvanceBy', function () {
+  test('AdvanceBy', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -217,9 +216,9 @@ test('AdvanceBy', function () {
     equal(time(8), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2))
     ]);
 
     s.scheduleAbsolute(time(7), function () { list.push(new Timestamped(7, s.now())); });
@@ -229,9 +228,9 @@ test('AdvanceBy', function () {
     equal(time(8), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2))
     ]);
 
     s.advanceBy(0);
@@ -240,9 +239,9 @@ test('AdvanceBy', function () {
     equal(time(8), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2))
     ]);
 
     s.advanceBy(fromDays(2));
@@ -251,12 +250,12 @@ test('AdvanceBy', function () {
     equal(time(10), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2)),
-        new Timestamped(7, time(8)),
-        new Timestamped(8, time(8)),
-        new Timestamped(10, time(10))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2)),
+      new Timestamped(7, time(8)),
+      new Timestamped(8, time(8)),
+      new Timestamped(10, time(10))
     ]);
 
     s.advanceBy(fromDays(90));
@@ -265,25 +264,25 @@ test('AdvanceBy', function () {
     equal(time(100), s.clock);
 
     arrayEquals(list, [
-        new Timestamped(0, time(0)),
-        new Timestamped(1, time(1)),
-        new Timestamped(2, time(2)),
-        new Timestamped(7, time(8)),
-        new Timestamped(8, time(8)),
-        new Timestamped(10, time(10)),
-        new Timestamped(11, time(11))
+      new Timestamped(0, time(0)),
+      new Timestamped(1, time(1)),
+      new Timestamped(2, time(2)),
+      new Timestamped(7, time(8)),
+      new Timestamped(8, time(8)),
+      new Timestamped(10, time(10)),
+      new Timestamped(11, time(11))
     ]);
-});
+  });
 
-test('IsEnabled', function () {
+  test('IsEnabled', function () {
     var s = new HistoricalScheduler();
 
     equal(false, s.isEnabled);
 
     s.schedule(function () {
-        equal(true, s.isEnabled);
-        s.stop();
-        equal(false, s.isEnabled);
+      equal(true, s.isEnabled);
+      s.stop();
+      equal(false, s.isEnabled);
     });
 
     equal(false, s.isEnabled);
@@ -291,9 +290,9 @@ test('IsEnabled', function () {
     s.start();
 
     equal(false, s.isEnabled);
-});
+  });
 
-test('Sleep1', function () {
+  test('Sleep1', function () {
     var now = new Date(1983, 2, 11, 12, 0, 0).getTime();
 
     var s = new HistoricalScheduler(now);
@@ -301,30 +300,30 @@ test('Sleep1', function () {
     s.sleep(fromDays(1));
 
     equal(now + fromDays(1), s.clock);
-});
+  });
 
-test('Sleep2', function () {
+  test('Sleep2', function () {
     var s = new HistoricalScheduler();
 
     var n = 0;
 
     s.scheduleRecursiveWithAbsolute(s.now() + 6000, function (rec) {
-        s.sleep(3 * 6000);
-        n++;
+      s.sleep(3 * 6000);
+      n++;
 
-        rec(s.now() + 6000);
+      rec(s.now() + 6000);
     });
 
     s.advanceTo(s.now() + (5 * 6000));
 
     equal(2, n);
-});
+  });
 
-function reverseComparer (x, y) {
+  function reverseComparer (x, y) {
     return y - x;
-}
+  }
 
-test('WithComparer', function () {
+  test('WithComparer', function () {
     var now = new Date();
 
     var s = new HistoricalScheduler(now, reverseComparer);
@@ -337,4 +336,6 @@ test('WithComparer', function () {
     s.start();
 
     arrayEquals(res, [1,2]);
-});
+  });
+
+}());

@@ -40,7 +40,7 @@
     defaultSubComparer = Rx.helpers.defaultSubComparer = function (x, y) { return x > y ? 1 : (x < y ? -1 : 0); },
     defaultKeySerializer = Rx.helpers.defaultKeySerializer = function (x) { return x.toString(); },
     defaultError = Rx.helpers.defaultError = function (err) { throw err; },
-    isPromise = Rx.helpers.isPromise = function (p) { return !!p && typeof p.then === 'function'; },
+    isPromise = Rx.helpers.isPromise = function (p) { return !!p && typeof p.subscribe !== 'function' && typeof p.then === 'function'; },
     asArray = Rx.helpers.asArray = function () { return Array.prototype.slice.call(arguments); },
     not = Rx.helpers.not = function (a) { return !a; },
     isFunction = Rx.helpers.isFunction = (function () {
@@ -3935,32 +3935,20 @@
     }, source);
   };
 
+  function falseFactory() { return false; }
+
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
-   *
-   * @example
-   * 1 - obs = obs1.withLatestFrom(obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
-   * 2 - obs = obs1.withLatestFrom([obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   observableProto.withLatestFrom = function () {
     var len = arguments.length, args = new Array(len)
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     var resultSelector = args.pop(), source = this;
-
-    if (typeof source === 'undefined') {
-      throw new Error('Source observable not found for withLatestFrom().');
-    }
-    if (typeof resultSelector !== 'function') {
-      throw new Error('withLatestFrom() expects a resultSelector function.');
-    }
-    if (Array.isArray(args[0])) {
-      args = args[0];
-    }
+    Array.isArray(args[0]) && (args = args[0]);
 
     return new AnonymousObservable(function (observer) {
-      var falseFactory = function () { return false; },
-        n = args.length,
+      var n = args.length,
         hasValue = arrayInitialize(n, falseFactory),
         hasValueAll = false,
         values = new Array(n);
@@ -3974,24 +3962,19 @@
             values[i] = x;
             hasValue[i] = true;
             hasValueAll = hasValue.every(identity);
-          }, observer.onError.bind(observer), function () {}));
+          }, function (e) { observer.onError(e); }, noop));
           subscriptions[i] = sad;
         }(idx));
       }
 
       var sad = new SingleAssignmentDisposable();
       sad.setDisposable(source.subscribe(function (x) {
-        var res;
         var allValues = [x].concat(values);
-        if (!hasValueAll) return;
-        try {
-          res = resultSelector.apply(null, allValues);
-        } catch (ex) {
-          observer.onError(ex);
-          return;
-        }
+        if (!hasValueAll) { return; }
+        var res = tryCatch(resultSelector).apply(null, allValues);
+        if (res === errorObj) { return observer.onError(res.e); }
         observer.onNext(res);
-      }, observer.onError.bind(observer), function () {
+      }, function (e) { observer.onError(e); }, function () {
         observer.onCompleted();
       }));
       subscriptions[n] = sad;
@@ -4002,21 +3985,17 @@
 
   function zipArray(second, resultSelector) {
     var first = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var index = 0, len = second.length;
       return first.subscribe(function (left) {
         if (index < len) {
-          var right = second[index++], result;
-          try {
-            result = resultSelector(left, right);
-          } catch (e) {
-            return observer.onError(e);
-          }
-          observer.onNext(result);
+          var right = second[index++], res = tryCatch(resultSelector)(left, right);
+          if (res === errorObj) { return o.onError(res.e); }
+          o.onNext(res);
         } else {
-          observer.onCompleted();
+          o.onCompleted();
         }
-      }, function (e) { observer.onError(e); }, function () { observer.onCompleted(); });
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, first);
   }
 
@@ -4026,10 +4005,6 @@
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
    * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
-   *
-   * @example
-   * 1 - res = obs1.zip(obs2, fn);
-   * 1 - res = x1.zip([1,2,3], fn);
    * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
    */
   observableProto.zip = function () {
@@ -4039,33 +4014,10 @@
 
     var parent = this, resultSelector = args.pop();
     args.unshift(parent);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var n = args.length,
         queues = arrayInitialize(n, emptyArrayFactory),
         isDone = arrayInitialize(n, falseFactory);
-
-      function next(i) {
-        var res, queuedValues;
-        if (queues.every(function (x) { return x.length > 0; })) {
-          try {
-            queuedValues = queues.map(function (x) { return x.shift(); });
-            res = resultSelector.apply(parent, queuedValues);
-          } catch (ex) {
-            observer.onError(ex);
-            return;
-          }
-          observer.onNext(res);
-        } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-          observer.onCompleted();
-        }
-      };
-
-      function done(i) {
-        isDone[i] = true;
-        if (isDone.every(function (x) { return x; })) {
-          observer.onCompleted();
-        }
-      }
 
       var subscriptions = new Array(n);
       for (var idx = 0; idx < n; idx++) {
@@ -4074,9 +4026,17 @@
           isPromise(source) && (source = observableFromPromise(source));
           sad.setDisposable(source.subscribe(function (x) {
             queues[i].push(x);
-            next(i);
-          }, function (e) { observer.onError(e); }, function () {
-            done(i);
+            if (queues.every(function (x) { return x.length > 0; })) {
+              var queuedValues = queues.map(function (x) { return x.shift(); }),
+                  res = tryCatch(resultSelector).apply(parent, queuedValues);
+              if (res === errorObj) { return o.onError(res.e); }
+              o.onNext(res);
+            } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+              o.onCompleted();
+            }
+          }, function (e) { o.onError(e); }, function () {
+            isDone[i] = true;
+            isDone.every(identity) && o.onCompleted();
           }));
           subscriptions[i] = sad;
         })(idx);
@@ -4099,6 +4059,9 @@
     return first.zip.apply(first, args);
   };
 
+  function falseFactory() { return false; }
+  function arrayFactory() { return []; }
+
   /**
    * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
    * @param arguments Observable sources.
@@ -4113,28 +4076,10 @@
       sources = new Array(len);
       for(var i = 0; i < len; i++) { sources[i] = arguments[i]; }
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var n = sources.length,
-        queues = arrayInitialize(n, function () { return []; }),
-        isDone = arrayInitialize(n, function () { return false; });
-
-      function next(i) {
-        if (queues.every(function (x) { return x.length > 0; })) {
-          var res = queues.map(function (x) { return x.shift(); });
-          observer.onNext(res);
-        } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-          observer.onCompleted();
-          return;
-        }
-      };
-
-      function done(i) {
-        isDone[i] = true;
-        if (isDone.every(identity)) {
-          observer.onCompleted();
-          return;
-        }
-      }
+        queues = arrayInitialize(n, arrayFactory),
+        isDone = arrayInitialize(n, falseFactory);
 
       var subscriptions = new Array(n);
       for (var idx = 0; idx < n; idx++) {
@@ -4142,9 +4087,15 @@
           subscriptions[i] = new SingleAssignmentDisposable();
           subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
             queues[i].push(x);
-            next(i);
-          }, function (e) { observer.onError(e); }, function () {
-            done(i);
+            if (queues.every(function (x) { return x.length > 0; })) {
+              var res = queues.map(function (x) { return x.shift(); });
+              o.onNext(res);
+            } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+              return o.onCompleted();
+            }
+          }, function (e) { o.onError(e); }, function () {
+            isDone[i] = true;
+            isDone.every(identity) && o.onCompleted();
           }));
         })(idx);
       }
@@ -7460,6 +7411,27 @@
     return ConnectableObservable;
   }(Observable));
 
+  /**
+   * Returns an observable sequence that shares a single subscription to the underlying sequence. This observable sequence
+   * can be resubscribed to, even if all prior subscriptions have ended. (unlike `.publish().refCount()`)
+   * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source.
+   */
+  observableProto.singleInstance = function() {
+    var source = this, hasObservable = false, observable;
+
+    function getObservable() {
+      if (!hasObservable) {
+        hasObservable = true;
+        observable = source.finally(function() { hasObservable = false; }).publish().refCount();
+      }
+      return observable;
+    };
+
+    return new AnonymousObservable(function(o) {
+      return getObservable().subscribe(o);
+    });
+  };
+
   var Dictionary = (function () {
 
     var primes = [1, 3, 7, 13, 31, 61, 127, 251, 509, 1021, 2039, 4093, 8191, 16381, 32749, 65521, 131071, 262139, 524287, 1048573, 2097143, 4194301, 8388593, 16777213, 33554393, 67108859, 134217689, 268435399, 536870909, 1073741789, 2147483647],
@@ -8410,7 +8382,7 @@
    * @param {Object} scheduler Scheduler used to execute the operation. If not specified, defaults to the ImmediateScheduler.
    * @returns {Observable} An observable sequence which results from the comonadic bind operation.
    */
-  observableProto.manySelect = function (selector, scheduler) {
+  observableProto.manySelect = observableProto.extend = function (selector, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     var source = this;
     return observableDefer(function () {

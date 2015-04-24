@@ -220,6 +220,7 @@ module.exports = function (grunt) {
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
               'src/core/linq/connectableobservable.js',
+              'src/core/linq/observable/singleinstance.js',
 
               // Coincidence operators
               'src/core/internal/dictionary.js',
@@ -513,6 +514,7 @@ module.exports = function (grunt) {
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
               'src/core/linq/connectableobservable.js',
+              'src/core/linq/observable/singleinstance.js',
 
               // Coincidence operators
               'src/core/internal/dictionary.js',
@@ -1276,6 +1278,8 @@ module.exports = function (grunt) {
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
 
+              'src/core/linq/observable/singleinstance.js',
+
               'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.lite.extras.js'
@@ -1313,6 +1317,8 @@ module.exports = function (grunt) {
               // Standard Query Operators
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
+
+              'src/core/linq/observable/singleinstance.js',
 
               'src/core/headers/suboutro.js'
             ],
@@ -1571,6 +1577,7 @@ module.exports = function (grunt) {
               'src/core/subjects/behaviorsubject.js',
               'src/core/subjects/replaysubject.js',
               'src/core/linq/connectableobservable.js',
+              'src/core/linq/observable/singleinstance.js',
               'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.binding.js'
