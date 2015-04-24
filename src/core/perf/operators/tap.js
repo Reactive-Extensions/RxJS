@@ -14,41 +14,43 @@
 
     return TapObservable;
   }(ObservableBase));
-
-  var TapObserver = (function(__super__){
-    inherits(TapObserver, __super__);
-    function TapObserver(observer, tapObserver) {
-      this.observer = observer;
-      this.tapObserver = tapObserver;
-      __super__.call(this;)
-    }
-    TapObserver.prototype.next = function(x) {
-      try {
-        this.tapObserver.onNext(x);
-      } catch (e) {
-        return this.observer.onError(e);
-      }
-      this.observer.onNext(x);
-    };
-    TapObserver.prototype.error = function(err) {
-      try {
-        this.tapObserver.onError(err);
-      } catch (e) {
-        return this.observer.onError(e);
-      }
+  
+  function TapObserver(observer, tapObserver) {
+    this.observer = observer;
+    this.tapObserver = tapObserver;
+    this.isStopped = false;
+  }
+  TapObserver.prototype.onNext = function(x) {
+    if (this.isStopped) { return; }
+    var res = tryCatch(this.tapObserver.onNext).call(this.tapObserver, x);
+    if (res === errorObj) { this.observer.onError(res.e); }
+    this.observer.onNext(x);
+  };
+  TapObserver.prototype.onError = function(err) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      var res = tryCatch(this.tapObserver.onError).call(this.tapObserver, err);
+      if (res === errorObj) { return this.observer.onError(res.e); }
       this.observer.onError(err);
-    };
-    TapObserver.prototype.completed = function() {
-      try {
-        this.tapObserver.onCompleted();
-      } catch (e) {
-        return this.observer.onError(e);
-      }
+    }
+  };
+  TapObserver.prototype.onCompleted = function() {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      var res = tryCatch(this.tapObserver.onCompleted).call(this.tapObserver);
+      if (res === errorObj) { return this.observer.onError(res.e); }
       this.observer.onCompleted();
-    };
-
-    return TapObserver;
-  }(AbstractObserver));
+    }
+  };
+  TapObserver.prototype.dispose = function() { this.isStopped = true; };
+  TapObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+      return true;
+    }
+    return false;
+  };
 
   /**
   *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
