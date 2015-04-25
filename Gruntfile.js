@@ -70,7 +70,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
 
               // Async
-              'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
 
               // Creation
@@ -128,7 +128,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/repeatproto.js',
               'src/core/linq/observable/retry.js',
               'src/core/linq/observable/retrywhen.js',
-              'src/core/linq/observable/scan.js',
+              'src/core/perf/operators/scan.js',
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
               'src/core/linq/observable/takelast.js',
@@ -366,7 +366,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
 
               // Async
-              'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
 
               // Creation
@@ -422,7 +422,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/repeatproto.js',
               'src/core/linq/observable/retry.js',
               'src/core/linq/observable/retrywhen.js',
-              'src/core/linq/observable/scan.js',
+              'src/core/perf/operators/scan.js',
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
               'src/core/linq/observable/takelast.js',
@@ -660,7 +660,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
 
               // Async
-              'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
 
               // Creation
@@ -716,7 +716,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/repeatproto.js',
               'src/core/linq/observable/retry.js',
               'src/core/linq/observable/retrywhen.js',
-              'src/core/linq/observable/scan.js',
+              'src/core/perf/operators/scan.js',
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
               'src/core/linq/observable/takelast.js',
@@ -809,7 +809,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
 
               // Async
-              'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
 
               // Creation
@@ -865,7 +865,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/repeatproto.js',
               'src/core/linq/observable/retry.js',
               'src/core/linq/observable/retrywhen.js',
-              'src/core/linq/observable/scan.js',
+              'src/core/perf/operators/scan.js',
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
               'src/core/linq/observable/takelast.js',
@@ -995,7 +995,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/repeatproto.js',
               'src/core/linq/observable/retry.js',
               'src/core/linq/observable/retrywhen.js',
-              'src/core/linq/observable/scan.js',
+              'src/core/perf/operators/scan.js',
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
               'src/core/linq/observable/takelast.js',
@@ -1017,7 +1017,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromevent-modern.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
-              'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
               'src/core/linq/observable/startasync.js',
 
@@ -1165,7 +1165,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/repeatproto.js',
               'src/core/linq/observable/retry.js',
               'src/core/linq/observable/retrywhen.js',
-              'src/core/linq/observable/scan.js',
+              'src/core/perf/operators/scan.js',
               'src/core/linq/observable/skiplast.js',
               'src/core/linq/observable/startwith.js',
               'src/core/linq/observable/takelast.js',
@@ -1187,7 +1187,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
-              'src/core/linq/observable/frompromise.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
               'src/core/linq/observable/startasync.js',
 

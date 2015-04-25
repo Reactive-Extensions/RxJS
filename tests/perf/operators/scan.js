@@ -4,17 +4,29 @@ var Benchmark = require('benchmark');
 
 var suite = new Benchmark.Suite;
 
+// Backfill range to get rid of differences
+RxOld.range = function (start, count) {
+  var scheduler = RxNew.Scheduler.currentThread;
+  return new RxNew.AnonymousObservable(function (observer) {
+    return scheduler.scheduleRecursiveWithState(0, function (i, self) {
+      if (i < count) {
+        observer.onNext(start + i);
+        self(i + 1);
+      } else {
+        observer.onCompleted();
+      }
+    });
+  });
+};
+RxNew.range = RxOld.range;
+
 // add tests
 suite.add('old', function() {
   RxOld.Observable.range(0, 25)
-  .map(addTwo)
-  .filter(isEven)
   .scan(addX).subscribe();
 })
 .add('new', function() {
   RxNew.Observable.range(0, 25)
-  .map(addTwo)
-  .filter(isEven)
   .scan(addX).subscribe();
 })
 // add listeners
@@ -27,6 +39,4 @@ suite.add('old', function() {
 // run async
 .run({ 'async': true });
 
-function addTwo(x) { return x + 2; }
-function addX(acc, x) { return x + x }
-function isEven(x) { return x % 2 === 0; }
+function addX(acc, x) { return acc + x; }

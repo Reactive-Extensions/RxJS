@@ -9,56 +9,63 @@
     }
 
     ScanObservable.prototype.subscribeCore = function(observer) {
-      return this.source.subscribe(new ScanObserver(observer,this);
+      return this.source.subscribe(new ScanObserver(observer,this));
     };
 
     return ScanObservable;
   }(ObservableBase));
 
-  var ScanObserver = (function(__super__) {
-    inherits(ScanObserver, __super__);
-    function ScanObserver(observer, parent) {
-      this.observer = observer;
-      this.accumulator = parent.accumulator;
-      this.hasSeed = parent.hasSeed;
-      this.seed = parent.seed;
-      this.hasAccumulation = false;
-      this.accumulation = null;
-      this.hasValue = false;
-      __super__.call(this);
-    }
-    ScanObserver.prototype.next = function (x) {
-      !this.hasValue && (this.hasValue = true);
-      try {
-        if (this.hasAccumulation) {
-          this.accumulation = this.accumulator(this.accumulation, x);
-        } else {
-          this.accumulation = this.hasSeed ? this.accumulator(this.seed, x) : x;
-          this.hasAccumulation = true;
-        }
-      } catch (e) {
-        this.observer.onError(e);
-        return;
+  function ScanObserver(observer, parent) {
+    this.observer = observer;
+    this.accumulator = parent.accumulator;
+    this.hasSeed = parent.hasSeed;
+    this.seed = parent.seed;
+    this.hasAccumulation = false;
+    this.accumulation = null;
+    this.hasValue = false;
+    this.isStopped = false;
+  }
+  ScanObserver.prototype.onNext = function (x) {
+    if (this.isStopped) { return; }
+    !this.hasValue && (this.hasValue = true);
+    try {
+      if (this.hasAccumulation) {
+        this.accumulation = this.accumulator(this.accumulation, x);
+      } else {
+        this.accumulation = this.hasSeed ? this.accumulator(this.seed, x) : x;
+        this.hasAccumulation = true;
       }
-
-      this.observer.onNext(accumulation);
-    };
-    ScanObserver.prototype.error = function (e) { this.observer.onError(e); };
-    ScanObserver.prototype.completed = function () {
-      !this.hasValue && this.hasSeed && this.observer.onNext(seed);
+    } catch (e) {
+      return this.observer.onError(e);
+    }
+    this.observer.onNext(this.accumulation);
+  };
+  ScanObserver.prototype.onError = function (e) { 
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+    }
+  };
+  ScanObserver.prototype.onCompleted = function () {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      !this.hasValue && this.hasSeed && this.observer.onNext(this.seed);
       this.observer.onCompleted();
-    };
-
-    return ScanObserver;
-  }(AbstractObserver));
-
+    }
+  };
+  ScanObserver.prototype.dispose = function() { this.isStopped = true; };
+  ScanObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.observer.onError(e);
+      return true;
+    }
+    return false;
+  };
 
   /**
   *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
   *  For aggregation behavior with no intermediate results, see Observable.aggregate.
-  * @example
-  *  var res = source.scan(function (acc, x) { return acc + x; });
-  *  var res = source.scan(0, function (acc, x) { return acc + x; });
   * @param {Mixed} [seed] The initial accumulator value.
   * @param {Function} accumulator An accumulator function to be invoked on each element.
   * @returns {Observable} An observable sequence containing the accumulated values.
