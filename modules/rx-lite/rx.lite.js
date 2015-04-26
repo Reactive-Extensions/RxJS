@@ -3226,52 +3226,52 @@
   };
 
   var TakeUntilObservable = (function(__super__) {
-		inherits(TakeUntilObservable, __super__);
-		
-		function TakeUntilObservable(source, other) {
-			this.source = source;
-			this.other = isPromise(other) ? observableFromPromise(other) : other;
-			__super__.call(this);
-		}
-		
-		TakeUntilObservable.prototype.subscribeCore = function(o) {
-			return new CompositeDisposable(
-				this.source.subscribe(o),
-				this.other.subscribe(new InnerObserver(o))
-			);
-		};
-		
-		function InnerObserver(o) {
-			this.o = o;
-			this.isStopped = false;
-		}
-		InnerObserver.prototype.onNext = function (x) {
-			if (this.isStopped) { return; }
-			this.o.onCompleted();
-		};
-		InnerObserver.prototype.onError = function (err) {
-			if (!this.isStopped) {
-				this.isStopped = true;
-				this.o.onError(err);
-			}
-		};
-		InnerObserver.prototype.onCompleted = function () {
-			!this.isStopped && (this.isStopped = true);
-		};
-	  InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-	  InnerObserver.prototype.fail = function (e) {
-	    if (!this.isStopped) {
-	      this.isStopped = true;
-	      this.observer.onError(e);
-	      return true;
-	    }
-	    return false;
-	  };
+    inherits(TakeUntilObservable, __super__);
 
-		return TakeUntilObservable;
-	}(ObservableBase));
-	
-	/**
+    function TakeUntilObservable(source, other) {
+      this.source = source;
+      this.other = isPromise(other) ? observableFromPromise(other) : other;
+      __super__.call(this);
+    }
+
+    TakeUntilObservable.prototype.subscribeCore = function(o) {
+      return new CompositeDisposable(
+        this.source.subscribe(o),
+        this.other.subscribe(new InnerObserver(o))
+      );
+    };
+
+    function InnerObserver(o) {
+      this.o = o;
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = function (x) {
+      if (this.isStopped) { return; }
+      this.o.onCompleted();
+    };
+    InnerObserver.prototype.onError = function (err) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(err);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function () {
+      !this.isStopped && (this.isStopped = true);
+    };
+    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+        return true;
+      }
+      return false;
+    };
+
+    return TakeUntilObservable;
+  }(ObservableBase));
+
+  /**
    * Returns the values from the source observable sequence until the other observable sequence produces a value.
    * @param {Observable | Promise} other Observable sequence or Promise that terminates propagation of elements of the source sequence.
    * @returns {Observable} An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.
@@ -3279,6 +3279,7 @@
   observableProto.takeUntil = function (other) {
     return new TakeUntilObservable(this, other);
   };
+
   function falseFactory() { return false; }
 
   /**
@@ -3644,50 +3645,50 @@
     return this.ensure(action);
   };
 
-	var IgnoreElementsObservable = (function(__super__) {
-		inherits(IgnoreElementsObservable, __super__);
-		
-		function IgnoreElementsObservable(source) {
-			this.source = source;
-			__super__.call(this);
-		}
-		
-		IgnoreElementsObservable.prototype.subscribeCore = function (o) {
-			return this.source.subscribe(new InnerObserver(o));
-		};
-		
-		function InnerObserver(o) {
-			this.o = o;
-			this.isStopped = false;
-		}
-		InnerObserver.prototype.onNext = noop;
-		InnerObserver.prototype.onError = function (err) {
-			if(!this.isStopped) {
-				this.isStopped = true;
-				this.o.onError(err);
-			}
-		};
-		InnerObserver.prototype.onCompleted = function () {
-			if(!this.isStopped) {
-				this.isStopped = true;
-				this.o.onCompleted();
-			}	
-		};
-	  InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-  	InnerObserver.prototype.fail = function (e) {
-	    if (!this.isStopped) {
-	      this.isStopped = true;
-	      this.observer.onError(e);
-	      return true;
-	    }
-	
-	    return false;
-	  };
-		
-		return IgnoreElementsObservable;
-	}(ObservableBase));  
-	
-	/**
+  var IgnoreElementsObservable = (function(__super__) {
+    inherits(IgnoreElementsObservable, __super__);
+
+    function IgnoreElementsObservable(source) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    IgnoreElementsObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new InnerObserver(o));
+    };
+
+    function InnerObserver(o) {
+      this.o = o;
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = noop;
+    InnerObserver.prototype.onError = function (err) {
+      if(!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(err);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function () {
+      if(!this.isStopped) {
+        this.isStopped = true;
+        this.o.onCompleted();
+      }
+    };
+    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.observer.onError(e);
+        return true;
+      }
+
+      return false;
+    };
+
+    return IgnoreElementsObservable;
+  }(ObservableBase));
+
+  /**
    *  Ignores all elements in an observable sequence leaving only the termination messages.
    * @returns {Observable} An empty observable sequence that signals termination, successful or exceptional, of the source sequence.
    */
@@ -4141,6 +4142,57 @@
     }, source);
   };
 
+  var TakeObservable = (function(__super__) {
+    inherits(TakeObservable, __super__);
+    
+    function TakeObservable(source, count) {
+      this.source = source;
+      this.count = count;
+      __super__.call(this);
+    }
+    
+    TakeObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new InnerObserver(o, this.count));  
+    };
+    
+    function InnerObserver(o, c) {
+      this.o = o;
+      this.c = c;
+      this.r = c;
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = function (x) {
+      if (this.isStopped) { return; }
+      if (this.r-- > 0) {
+        this.o.onNext(x);
+        this.r === 0 && this.o.onCompleted();
+      }
+    };
+    InnerObserver.prototype.onError = function (err) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(err);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function () {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onCompleted();
+      }
+    };
+    InnerObserver.prototype.dispose = function () { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+        return true;
+      }
+      return false;
+    }
+    
+    return TakeObservable;
+  }(ObservableBase));  
+  
   /**
    *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
    *
@@ -4153,16 +4205,7 @@
   observableProto.take = function (count, scheduler) {
     if (count < 0) { throw new ArgumentOutOfRangeError(); }
     if (count === 0) { return observableEmpty(scheduler); }
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var remaining = count;
-      return source.subscribe(function (x) {
-        if (remaining-- > 0) {
-          o.onNext(x);
-          remaining === 0 && o.onCompleted();
-        }
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, source);
+    return new TakeObservable(this, count);
   };
 
   /**

@@ -149,7 +149,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -443,7 +443,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -735,7 +735,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -884,7 +884,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -1008,7 +1008,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -1178,7 +1178,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectswitch.js',
               'src/core/linq/observable/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 

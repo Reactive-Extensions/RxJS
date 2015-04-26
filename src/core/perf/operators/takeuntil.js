@@ -35,7 +35,7 @@
     InnerObserver.prototype.fail = function (e) {
       if (!this.isStopped) {
         this.isStopped = true;
-        this.observer.onError(e);
+        this.o.onError(e);
         return true;
       }
       return false;
