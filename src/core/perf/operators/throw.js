@@ -6,23 +6,23 @@
       __super__.call(this);
     }
 
-    ThrowObservable.prototype.subscribeCore = function (observer) {
-      var sink = new ThrowSink(observer, this);
+    ThrowObservable.prototype.subscribeCore = function (o) {
+      var sink = new ThrowSink(o, this);
       return sink.run();
     };
 
-    function ThrowSink(observer, parent) {
-      this.observer = observer;
-      this.parent = parent;
+    function ThrowSink(o, p) {
+      this.o = o;
+      this.p = p;
     }
 
     function scheduleItem(s, state) {
-      var error = state[0], observer = state[1];
-      observer.onError(error);
+      var e = state[0], o = state[1];
+      o.onError(e);
     }
 
     ThrowSink.prototype.run = function () {
-      return this.parent.scheduler.scheduleWithState([this.parent.error, this.observer], scheduleItem);
+      return this.p.scheduler.scheduleWithState([this.p.error, this.o], scheduleItem);
     };
 
     return ThrowObservable;

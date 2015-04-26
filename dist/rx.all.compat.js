@@ -2522,42 +2522,42 @@
       __super__.call(this);
     }
 
-    ToArrayObservable.prototype.subscribeCore = function(observer) {
-      return this.source.subscribe(new ToArrayObserver(observer));
+    ToArrayObservable.prototype.subscribeCore = function(o) {
+      return this.source.subscribe(new InnerObserver(o));
+    };
+
+    function InnerObserver(o) {
+      this.o = o;
+      this.a = [];
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.a.push(x); } };
+    InnerObserver.prototype.onError = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function () {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onNext(this.a);
+        this.o.onCompleted();
+      }
+    };
+    InnerObserver.prototype.dispose = function () { this.isStopped = true; }
+    InnerObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+        return true;
+      }
+ 
+      return false;
     };
 
     return ToArrayObservable;
   }(ObservableBase));
-
-  function ToArrayObserver(observer) {
-    this.observer = observer;
-    this.a = [];
-    this.isStopped = false;
-  }
-  ToArrayObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.a.push(x); } };
-  ToArrayObserver.prototype.onError = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-    }
-  };
-  ToArrayObserver.prototype.onCompleted = function () {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onNext(this.a);
-      this.observer.onCompleted();
-    }
-  };
-  ToArrayObserver.prototype.dispose = function () { this.isStopped = true; }
-  ToArrayObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
-
-    return false;
-  };
 
   /**
   * Creates an array from an observable sequence.
@@ -3140,23 +3140,23 @@
       __super__.call(this);
     }
 
-    ThrowObservable.prototype.subscribeCore = function (observer) {
-      var sink = new ThrowSink(observer, this);
+    ThrowObservable.prototype.subscribeCore = function (o) {
+      var sink = new ThrowSink(o, this);
       return sink.run();
     };
 
-    function ThrowSink(observer, parent) {
-      this.observer = observer;
-      this.parent = parent;
+    function ThrowSink(o, p) {
+      this.o = o;
+      this.p = p;
     }
 
     function scheduleItem(s, state) {
-      var error = state[0], observer = state[1];
-      observer.onError(error);
+      var e = state[0], o = state[1];
+      o.onError(e);
     }
 
     ThrowSink.prototype.run = function () {
-      return this.parent.scheduler.scheduleWithState([this.parent.error, this.observer], scheduleItem);
+      return this.p.scheduler.scheduleWithState([this.p.error, this.o], scheduleItem);
     };
 
     return ThrowObservable;
@@ -4217,48 +4217,48 @@
     inherits(TapObservable,__super__);
     function TapObservable(source, observerOrOnNext, onError, onCompleted) {
       this.source = source;
-      this.tapObserver = !observerOrOnNext || isFunction(observerOrOnNext) ?
+      this.t = !observerOrOnNext || isFunction(observerOrOnNext) ?
         observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
-        observerOrOnNext;;
+        observerOrOnNext;
       __super__.call(this);
     }
 
-    TapObservable.prototype.subscribeCore = function(observer) {
-      return this.source.subscribe(new InnerObserver(observer, this.tapObserver));
+    TapObservable.prototype.subscribeCore = function(o) {
+      return this.source.subscribe(new InnerObserver(o, this.t));
     };
-    
-    function InnerObserver(observer, tapObserver) {
-      this.observer = observer;
-      this.tapObserver = tapObserver;
+
+    function InnerObserver(o, t) {
+      this.o = o;
+      this.t = t;
       this.isStopped = false;
     }
     InnerObserver.prototype.onNext = function(x) {
       if (this.isStopped) { return; }
-      var res = tryCatch(this.tapObserver.onNext).call(this.tapObserver, x);
-      if (res === errorObj) { this.observer.onError(res.e); }
-      this.observer.onNext(x);
+      var res = tryCatch(this.t.onNext).call(this.t, x);
+      if (res === errorObj) { this.o.onError(res.e); }
+      this.o.onNext(x);
     };
     InnerObserver.prototype.onError = function(err) {
       if (!this.isStopped) {
         this.isStopped = true;
-        var res = tryCatch(this.tapObserver.onError).call(this.tapObserver, err);
-        if (res === errorObj) { return this.observer.onError(res.e); }
-        this.observer.onError(err);
+        var res = tryCatch(this.t.onError).call(this.t, err);
+        if (res === errorObj) { return this.o.onError(res.e); }
+        this.o.onError(err);
       }
     };
     InnerObserver.prototype.onCompleted = function() {
       if (!this.isStopped) {
         this.isStopped = true;
-        var res = tryCatch(this.tapObserver.onCompleted).call(this.tapObserver);
-        if (res === errorObj) { return this.observer.onError(res.e); }
-        this.observer.onCompleted();
+        var res = tryCatch(this.t.onCompleted).call(this.t);
+        if (res === errorObj) { return this.o.onError(res.e); }
+        this.o.onCompleted();
       }
     };
     InnerObserver.prototype.dispose = function() { this.isStopped = true; };
     InnerObserver.prototype.fail = function (e) {
       if (!this.isStopped) {
         this.isStopped = true;
-        this.observer.onError(e);
+        this.o.onError(e);
         return true;
       }
       return false;
@@ -4270,20 +4270,13 @@
   /**
   *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
   *  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
-  * @param {Function | Observer} observerOrOnNext Action to invoke for each element in the observable sequence or an observer.
+  * @param {Function | Observer} observerOrOnNext Action to invoke for each element in the observable sequence or an o.
   * @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
   * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
   * @returns {Observable} The source sequence with the side-effecting behavior applied.
   */
-  observableProto['do'] = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
-
+  observableProto['do'] = observableProto.tap = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
     return new TapObservable(this, observerOrOnNext, onError, onCompleted);
-  };
-
-  /** @deprecated use #do or #tap instead. */
-  observableProto.doAction = function () {
-    //deprecate('doAction', 'do or tap');
-    return this.tap.apply(this, arguments);
   };
 
   /**

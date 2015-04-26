@@ -30,7 +30,6 @@
       this.hasLatest = true;
       this.innerSubscription.setDisposable(d);
 
-      // Check if Promise or Observable
       isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
       d.setDisposable(innerSource.subscribe(new InnerObserver(this, id)));
