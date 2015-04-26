@@ -3414,22 +3414,60 @@
     }, sources);
   };
 
-  /**
+  var TakeUntilObservable = (function(__super__) {
+		inherits(TakeUntilObservable, __super__);
+		
+		function TakeUntilObservable(source, other) {
+			this.source = source;
+			this.other = isPromise(other) ? observableFromPromise(other) : other;
+			__super__.call(this);
+		}
+		
+		TakeUntilObservable.prototype.subscribeCore = function(o) {
+			return new CompositeDisposable(
+				this.source.subscribe(o),
+				this.other.subscribe(new InnerObserver(o))
+			);
+		};
+		
+		function InnerObserver(o) {
+			this.o = o;
+			this.isStopped = false;
+		}
+		InnerObserver.prototype.onNext = function (x) {
+			if (this.isStopped) { return; }
+			this.o.onCompleted();
+		};
+		InnerObserver.prototype.onError = function (err) {
+			if (!this.isStopped) {
+				this.isStopped = true;
+				this.o.onError(err);
+			}
+		};
+		InnerObserver.prototype.onCompleted = function () {
+			!this.isStopped && (this.isStopped = true);
+		};
+	  InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+	  InnerObserver.prototype.fail = function (e) {
+	    if (!this.isStopped) {
+	      this.isStopped = true;
+	      this.observer.onError(e);
+	      return true;
+	    }
+	    return false;
+	  };
+
+		return TakeUntilObservable;
+	}(ObservableBase));
+	
+	/**
    * Returns the values from the source observable sequence until the other observable sequence produces a value.
    * @param {Observable | Promise} other Observable sequence or Promise that terminates propagation of elements of the source sequence.
    * @returns {Observable} An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.
    */
   observableProto.takeUntil = function (other) {
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      isPromise(other) && (other = observableFromPromise(other));
-      return new CompositeDisposable(
-        source.subscribe(o),
-        other.subscribe(function () { o.onCompleted(); }, function (e) { o.onError(e); }, noop)
-      );
-    }, source);
+    return new TakeUntilObservable(this, other);
   };
-
   function falseFactory() { return false; }
 
   /**
@@ -3665,48 +3703,48 @@
     }
 
     TapObservable.prototype.subscribeCore = function(observer) {
-      return this.source.subscribe(new TapObserver(observer, this.tapObserver));
+      return this.source.subscribe(new InnerObserver(observer, this.tapObserver));
+    };
+    
+    function InnerObserver(observer, tapObserver) {
+      this.observer = observer;
+      this.tapObserver = tapObserver;
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = function(x) {
+      if (this.isStopped) { return; }
+      var res = tryCatch(this.tapObserver.onNext).call(this.tapObserver, x);
+      if (res === errorObj) { this.observer.onError(res.e); }
+      this.observer.onNext(x);
+    };
+    InnerObserver.prototype.onError = function(err) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        var res = tryCatch(this.tapObserver.onError).call(this.tapObserver, err);
+        if (res === errorObj) { return this.observer.onError(res.e); }
+        this.observer.onError(err);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function() {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        var res = tryCatch(this.tapObserver.onCompleted).call(this.tapObserver);
+        if (res === errorObj) { return this.observer.onError(res.e); }
+        this.observer.onCompleted();
+      }
+    };
+    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.observer.onError(e);
+        return true;
+      }
+      return false;
     };
 
     return TapObservable;
   }(ObservableBase));
-  
-  function TapObserver(observer, tapObserver) {
-    this.observer = observer;
-    this.tapObserver = tapObserver;
-    this.isStopped = false;
-  }
-  TapObserver.prototype.onNext = function(x) {
-    if (this.isStopped) { return; }
-    var res = tryCatch(this.tapObserver.onNext).call(this.tapObserver, x);
-    if (res === errorObj) { this.observer.onError(res.e); }
-    this.observer.onNext(x);
-  };
-  TapObserver.prototype.onError = function(err) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      var res = tryCatch(this.tapObserver.onError).call(this.tapObserver, err);
-      if (res === errorObj) { return this.observer.onError(res.e); }
-      this.observer.onError(err);
-    }
-  };
-  TapObserver.prototype.onCompleted = function() {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      var res = tryCatch(this.tapObserver.onCompleted).call(this.tapObserver);
-      if (res === errorObj) { return this.observer.onError(res.e); }
-      this.observer.onCompleted();
-    }
-  };
-  TapObserver.prototype.dispose = function() { this.isStopped = true; };
-  TapObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
-    return false;
-  };
 
   /**
   *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
@@ -3795,15 +3833,55 @@
     return this.ensure(action);
   };
 
-  /**
+	var IgnoreElementsObservable = (function(__super__) {
+		inherits(IgnoreElementsObservable, __super__);
+		
+		function IgnoreElementsObservable(source) {
+			this.source = source;
+			__super__.call(this);
+		}
+		
+		IgnoreElementsObservable.prototype.subscribeCore = function (o) {
+			return this.source.subscribe(new InnerObserver(o));
+		};
+		
+		function InnerObserver(o) {
+			this.o = o;
+			this.isStopped = false;
+		}
+		InnerObserver.prototype.onNext = noop;
+		InnerObserver.prototype.onError = function (err) {
+			if(!this.isStopped) {
+				this.isStopped = true;
+				this.o.onError(err);
+			}
+		};
+		InnerObserver.prototype.onCompleted = function () {
+			if(!this.isStopped) {
+				this.isStopped = true;
+				this.o.onCompleted();
+			}	
+		};
+	  InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+  	InnerObserver.prototype.fail = function (e) {
+	    if (!this.isStopped) {
+	      this.isStopped = true;
+	      this.observer.onError(e);
+	      return true;
+	    }
+	
+	    return false;
+	  };
+		
+		return IgnoreElementsObservable;
+	}(ObservableBase));  
+	
+	/**
    *  Ignores all elements in an observable sequence leaving only the termination messages.
    * @returns {Observable} An empty observable sequence that signals termination, successful or exceptional, of the source sequence.
    */
   observableProto.ignoreElements = function () {
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(noop, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, source);
+    return new IgnoreElementsObservable(this);
   };
 
   /**

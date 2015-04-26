@@ -9,48 +9,48 @@
     }
 
     TapObservable.prototype.subscribeCore = function(observer) {
-      return this.source.subscribe(new TapObserver(observer, this.tapObserver));
+      return this.source.subscribe(new InnerObserver(observer, this.tapObserver));
+    };
+    
+    function InnerObserver(observer, tapObserver) {
+      this.observer = observer;
+      this.tapObserver = tapObserver;
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = function(x) {
+      if (this.isStopped) { return; }
+      var res = tryCatch(this.tapObserver.onNext).call(this.tapObserver, x);
+      if (res === errorObj) { this.observer.onError(res.e); }
+      this.observer.onNext(x);
+    };
+    InnerObserver.prototype.onError = function(err) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        var res = tryCatch(this.tapObserver.onError).call(this.tapObserver, err);
+        if (res === errorObj) { return this.observer.onError(res.e); }
+        this.observer.onError(err);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function() {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        var res = tryCatch(this.tapObserver.onCompleted).call(this.tapObserver);
+        if (res === errorObj) { return this.observer.onError(res.e); }
+        this.observer.onCompleted();
+      }
+    };
+    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.observer.onError(e);
+        return true;
+      }
+      return false;
     };
 
     return TapObservable;
   }(ObservableBase));
-  
-  function TapObserver(observer, tapObserver) {
-    this.observer = observer;
-    this.tapObserver = tapObserver;
-    this.isStopped = false;
-  }
-  TapObserver.prototype.onNext = function(x) {
-    if (this.isStopped) { return; }
-    var res = tryCatch(this.tapObserver.onNext).call(this.tapObserver, x);
-    if (res === errorObj) { this.observer.onError(res.e); }
-    this.observer.onNext(x);
-  };
-  TapObserver.prototype.onError = function(err) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      var res = tryCatch(this.tapObserver.onError).call(this.tapObserver, err);
-      if (res === errorObj) { return this.observer.onError(res.e); }
-      this.observer.onError(err);
-    }
-  };
-  TapObserver.prototype.onCompleted = function() {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      var res = tryCatch(this.tapObserver.onCompleted).call(this.tapObserver);
-      if (res === errorObj) { return this.observer.onError(res.e); }
-      this.observer.onCompleted();
-    }
-  };
-  TapObserver.prototype.dispose = function() { this.isStopped = true; };
-  TapObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
-    return false;
-  };
 
   /**
   *  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
