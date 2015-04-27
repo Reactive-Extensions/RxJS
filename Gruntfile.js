@@ -147,7 +147,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectswitch.js',
-              'src/core/linq/observable/skip.js',
+              'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
@@ -157,7 +157,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
-              'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
+              'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
               'src/core/linq/observable/every.js', // where, any
@@ -441,7 +441,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectswitch.js',
-              'src/core/linq/observable/skip.js',
+              'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
@@ -451,7 +451,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
-              'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
+              'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
               'src/core/linq/observable/every.js', // where, any
@@ -733,7 +733,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectswitch.js',
-              'src/core/linq/observable/skip.js',
+              'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
@@ -882,7 +882,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectswitch.js',
-              'src/core/linq/observable/skip.js',
+              'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
@@ -1006,7 +1006,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectswitch.js',
-              'src/core/linq/observable/skip.js',
+              'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
@@ -1176,7 +1176,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectswitch.js',
-              'src/core/linq/observable/skip.js',
+              'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
@@ -1378,10 +1378,11 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/subintro.js',
               'src/core/headers/aggregatesheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
-              'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
+              'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
               'src/core/linq/observable/every.js', // where, any
@@ -1421,10 +1422,11 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro.js',
               'src/core/headers/aggregatesheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
-              'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
+              'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
               'src/core/linq/observable/every.js', // where, any
@@ -1464,10 +1466,11 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro-compat.js',
               'src/core/headers/aggregatesheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
-              'src/core/linq/observable/reduce.js', // scan, startwith, finalvalue
+              'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
               'src/core/linq/observable/every.js', // where, any

@@ -14,8 +14,10 @@
     isPromise = helpers.isPromise,
     isArrayLike = helpers.isArrayLike,
     isIterable = helpers.isIterable,
+    inherits = Rx.internals.inherits,
     observableFromPromise = Observable.fromPromise,
     observableFrom = Observable.from,
     bindCallback = Rx.internals.bindCallback,
     EmptyError = Rx.EmptyError,
+    ObservableBase = Rx.ObservableBase,
     ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;

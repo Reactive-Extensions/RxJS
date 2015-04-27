@@ -24,7 +24,7 @@
               hasAccumulation = true;
             }
           } catch (e) {
-            return o.onError(e);
+            o.onError(e);
           }
         },
         function (e) { o.onError(e); },
