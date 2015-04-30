@@ -100,7 +100,7 @@ NuGet Packages:
 - [`doWhile`](../api/core/operators/dowhile.md)
 - [`elementAt`](../api/core/operators/elementat.md)
 - [`elementAtOrDefault`](../api/core/operators/elementatordefault.md)
-- [`every`](../api/core/operators/all.md)
+- [`every`](../api/core/operators/every.md)
 - [`expand`](../api/core/operators/expand.md)
 - [`extend`](../api/core/operators/manyselect.md)
 - [`filter`](../api/core/operators/where.md)
