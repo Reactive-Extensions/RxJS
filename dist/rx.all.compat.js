@@ -5034,10 +5034,13 @@
       this.selector = bindCallback(selector, thisArg, 3);
       __super__.call(this);
     }
+    
+    function innerMap(selector, self) {
+      return function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); }
+    }
 
     MapObservable.prototype.internalMap = function (selector, thisArg) {
-      var self = this;
-      return new MapObservable(this.source, function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); }, thisArg)
+      return new MapObservable(this.source, innerMap(selector, this), thisArg);
     };
 
     MapObservable.prototype.subscribeCore = function (observer) {
@@ -5058,7 +5061,7 @@
 
   MapObserver.prototype.onNext = function(x) {
     if (this.isStopped) { return; }
-    var result = tryCatch(this.selector).call(this, x, this.i++, this.source);
+    var result = tryCatch(this.selector)(x, this.i++, this.source);
     if (result === errorObj) {
       return this.observer.onError(result.e);
     }
@@ -5418,10 +5421,13 @@
     FilterObservable.prototype.subscribeCore = function (observer) {
       return this.source.subscribe(new FilterObserver(observer, this.predicate, this));
     };
+    
+    function innerPredicate(predicate, self) {
+      return function(x, i, o) { return self.predicate(x, i, o) && predicate.call(this, x, i, o); }
+    }
 
     FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
-      var self = this;
-      return new FilterObservable(this.source, function(x, i, o) { return self.predicate(x, i, o) && predicate.call(this, x, i, o); }, thisArg);
+      return new FilterObservable(this.source, innerPredicate(predicate, this), thisArg);
     };
 
     return FilterObservable;

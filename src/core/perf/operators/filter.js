@@ -10,10 +10,13 @@
     FilterObservable.prototype.subscribeCore = function (observer) {
       return this.source.subscribe(new FilterObserver(observer, this.predicate, this));
     };
+    
+    function innerPredicate(predicate, self) {
+      return function(x, i, o) { return self.predicate(x, i, o) && predicate.call(this, x, i, o); }
+    }
 
     FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
-      var self = this;
-      return new FilterObservable(this.source, function(x, i, o) { return self.predicate(x, i, o) && predicate.call(this, x, i, o); }, thisArg);
+      return new FilterObservable(this.source, innerPredicate(predicate, this), thisArg);
     };
 
     return FilterObservable;
