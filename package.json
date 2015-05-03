@@ -22,9 +22,6 @@
   "jam": {
     "main": "dist/rx.all.js"
   },
-  "browser": {
-    "index.js": "dist/rx.all.js"
-  },
   "dependencies": {},
   "devDependencies": {
     "benchmark": "*",
