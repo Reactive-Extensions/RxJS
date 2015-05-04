@@ -1,7 +1,7 @@
 ### `Rx.Observable.prototype.flatMapLatest(selector, [thisArg])`
 ### `Rx.Observable.prototype.switchMap(selector, [thisArg])`
 ### `Rx.Observable.prototype.selectSwitch(selector, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/flatmaplatest.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectswitch.js "View in source")
 
 Transform the items emitted by an Observable into Observables, and mirror those items emitted by the most-recently transformed Observable.
 
@@ -46,7 +46,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/flatmaplatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/flatmaplatest.js)
+- [`/src/core/linq/observable/selectswitch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectswitch.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
