@@ -1053,7 +1053,6 @@
           }
         });
       }
-
       recursiveAction(state);
       return group;
     }
@@ -1092,8 +1091,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursive = function (action) {
-      return this.scheduleRecursiveWithState(action, function (_action, self) {
-        _action(function () { self(_action); }); });
+      return this.scheduleRecursiveWithState(action, scheduleInnerRecursive);
     };
 
     /**
@@ -5214,7 +5212,7 @@
         return true;
       }
       return false;
-    }
+    };
     
     return TakeObservable;
   }(ObservableBase));  

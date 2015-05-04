@@ -44,7 +44,7 @@
         return true;
       }
       return false;
-    }
+    };
     
     return TakeObservable;
   }(ObservableBase));  
