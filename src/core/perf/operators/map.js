@@ -15,46 +15,46 @@
       return new MapObservable(this.source, innerMap(selector, this), thisArg);
     };
 
-    MapObservable.prototype.subscribeCore = function (observer) {
-      return this.source.subscribe(new MapObserver(observer, this.selector, this));
+    MapObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new InnerObserver(o, this.selector, this));
+    };
+    
+    function InnerObserver(o, selector, source) {
+      this.o = o;
+      this.selector = selector;
+      this.source = source;
+      this.i = 0;
+      this.isStopped = false;
+    }
+  
+    InnerObserver.prototype.onNext = function(x) {
+      if (this.isStopped) { return; }
+      var result = tryCatch(this.selector)(x, this.i++, this.source);
+      if (result === errorObj) {
+        return this.o.onError(result.e);
+      }
+      this.o.onNext(result);
+    };
+    InnerObserver.prototype.onError = function (e) {
+      if(!this.isStopped) { this.isStopped = true; this.o.onError(e); }
+    };
+    InnerObserver.prototype.onCompleted = function () {
+      if(!this.isStopped) { this.isStopped = true; this.o.onCompleted(); }
+    };
+    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+        return true;
+      }
+  
+      return false;
     };
 
     return MapObservable;
 
   }(ObservableBase));
-
-  function MapObserver(observer, selector, source) {
-    this.observer = observer;
-    this.selector = selector;
-    this.source = source;
-    this.i = 0;
-    this.isStopped = false;
-  }
-
-  MapObserver.prototype.onNext = function(x) {
-    if (this.isStopped) { return; }
-    var result = tryCatch(this.selector)(x, this.i++, this.source);
-    if (result === errorObj) {
-      return this.observer.onError(result.e);
-    }
-    this.observer.onNext(result);
-  };
-  MapObserver.prototype.onError = function (e) {
-    if(!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
-  };
-  MapObserver.prototype.onCompleted = function () {
-    if(!this.isStopped) { this.isStopped = true; this.observer.onCompleted(); }
-  };
-  MapObserver.prototype.dispose = function() { this.isStopped = true; };
-  MapObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
-
-    return false;
-  };
 
   /**
   * Projects each element of an observable sequence into a new form by incorporating the element's index.
