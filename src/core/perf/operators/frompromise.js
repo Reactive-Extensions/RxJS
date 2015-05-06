@@ -1,15 +1,15 @@
 	var FromPromiseObservable = (function(__super__) {
 		inherits(FromPromiseObservable, __super__);
-		function FromPromiseObservable(promise) {
-			this.p = promise;
+		function FromPromiseObservable(p) {
+			this.p = p;
 			__super__.call(this);
 		}
 		
-		FromPromiseObservable.prototype.subscribeCore = function(observer) {
+		FromPromiseObservable.prototype.subscribeCore = function(o) {
 			this.p.then(function (data) {
-				observer.onNext(data);
-				observer.onCompleted();
-			}, function (err) { observer.onError(err); });
+				o.onNext(data);
+				o.onCompleted();
+			}, function (err) { o.onError(err); });
 			return disposableEmpty;	
 		};
 		

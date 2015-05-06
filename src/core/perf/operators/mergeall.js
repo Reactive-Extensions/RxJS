@@ -12,12 +12,7 @@
       m.setDisposable(this.source.subscribe(new MergeAllObserver(observer, g)));
       return g;
     };
-
-    return MergeAllObservable;
-  }(ObservableBase));
-
-  var MergeAllObserver = (function() {
-
+    
     function MergeAllObserver(o, g) {
       this.o = o;
       this.g = g;
@@ -89,9 +84,8 @@
       return false;
     };
 
-    return MergeAllObserver;
-
-  }());
+    return MergeAllObservable;
+  }(ObservableBase));
 
   /**
   * Merges an observable sequence of observable sequences into an observable sequence.

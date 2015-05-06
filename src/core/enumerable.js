@@ -1,24 +1,18 @@
-  var Enumerable = Rx.internals.Enumerable = function (iterator) {
-    this._iterator = iterator;
-  };
+  var Enumerable = Rx.internals.Enumerable = function () { };
 
-  Enumerable.prototype[$iterator$] = function () {
-    return this._iterator();
-  };
-
-  Enumerable.prototype.concat = function () {
-    var sources = this;
-    return new AnonymousObservable(function (o) {
-      var e = sources[$iterator$]();
-
+  var ConcatObservable = (function(__super__) {
+    inherits(ConcatObservable, __super__);
+    function ConcatObservable(sources) {
+      this.sources = sources;
+      __super__.call(this);
+    }
+    
+    ConcatObservable.prototype.subscribeCore = function (o) {
       var isDisposed, subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursive(function (self) {
+      var cancelable = immediateScheduler.scheduleRecursiveWithState(this.sources[$iterator$](), function (e, self) {
         if (isDisposed) { return; }
-        try {
-          var currentItem = e.next();
-        } catch (ex) {
-          return o.onError(ex);
-        }
+        var currentItem = tryCatch(e.next).call(e);
+        if (currentItem === errorObj) { return o.onError(currentItem.e); }
 
         if (currentItem.done) {
           return o.onCompleted();
@@ -33,14 +27,20 @@
         d.setDisposable(currentValue.subscribe(
           function(x) { o.onNext(x); },
           function(err) { o.onError(err); },
-          self)
+          function () { self(e); })
         );
       });
 
       return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
         isDisposed = true;
       }));
-    });
+    };
+    
+    return ConcatObservable;
+  }(ObservableBase));
+
+  Enumerable.prototype.concat = function () {
+    return new ConcatObservable(this);
   };
 
   Enumerable.prototype.catchError = function () {
@@ -51,12 +51,8 @@
       var isDisposed, subscription = new SerialDisposable();
       var cancelable = immediateScheduler.scheduleRecursiveWithState(null, function (lastException, self) {
         if (isDisposed) { return; }
-
-        try {
-          var currentItem = e.next();
-        } catch (ex) {
-          return observer.onError(ex);
-        }
+        var currentItem = tryCatch(e.next).call(e);
+        if (currentItem === errorObj) { return o.onError(currentItem.e); }
 
         if (currentItem.done) {
           if (lastException !== null) {
@@ -100,12 +96,7 @@
         subscription = new SerialDisposable();
       var cancelable = immediateScheduler.scheduleRecursive(function (self) {
         if (isDisposed) { return; }
-
-        try {
-          var currentItem = e.next();
-        } catch (ex) {
-          return o.onError(ex);
-        }
+        var currentItem = e.next();
 
         if (currentItem.done) {
           if (lastException) {
@@ -142,30 +133,60 @@
       }));
     });
   };
+  
+  var RepeatEnumerable = (function (__super__) {
+    inherits(RepeatEnumerable, __super__);
+    
+    function RepeatEnumerable(v, c) {
+      this.v = v;
+      this.c = c == null ? -1 : c;
+    }
+    RepeatEnumerable.prototype[$iterator$] = function () {
+      return new RepeatEnumerator(this); 
+    };
+    
+    function RepeatEnumerator(p) {
+      this.v = p.v;
+      this.l = p.c;
+    }
+    RepeatEnumerator.prototype.next = function () {
+      if (this.l === 0) { return doneEnumerator; }
+      if (this.l > 0) { this.l--; }
+      return { done: false, value: this.v }; 
+    };
+    
+    return RepeatEnumerable;
+  }(Enumerable));
 
   var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
-    if (repeatCount == null) { repeatCount = -1; }
-    return new Enumerable(function () {
-      var left = repeatCount;
-      return new Enumerator(function () {
-        if (left === 0) { return doneEnumerator; }
-        if (left > 0) { left--; }
-        return { done: false, value: value };
-      });
-    });
+    return new RepeatEnumerable(value, repeatCount);
   };
+  
+  var OfEnumerable = (function(__super__) {
+    inherits(OfEnumerable, __super__);
+    function OfEnumerable(s, fn, thisArg) {
+      this.s = s;
+      this.fn = fn ? bindCallback(fn, thisArg, 3) : null;
+    }
+    OfEnumerable.prototype[$iterator$] = function () {
+      return new OfEnumerator(this);
+    };
+    
+    function OfEnumerator(p) {
+      this.i = -1;
+      this.s = p.s;
+      this.l = this.s.length;
+      this.fn = p.fn;
+    }
+    OfEnumerator.prototype.next = function () {
+     return ++this.i < this.l ?
+       { done: false, value: !this.fn ? this.s[this.i] : this.fn(this.s[this.i], this.i, this.s) } :
+       doneEnumerator; 
+    };
+    
+    return OfEnumerable;
+  }(Enumerable));
 
   var enumerableOf = Enumerable.of = function (source, selector, thisArg) {
-    if (selector) {
-      var selectorFn = bindCallback(selector, thisArg, 3);
-    }
-    return new Enumerable(function () {
-      var index = -1;
-      return new Enumerator(
-        function () {
-          return ++index < source.length ?
-            { done: false, value: !selector ? source[index] : selectorFn(source[index], index, source) } :
-            doneEnumerator;
-        });
-    });
+    return new OfEnumerable(source, selector, thisArg);
   };

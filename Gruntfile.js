@@ -54,8 +54,6 @@ module.exports = function (grunt) {
               'src/core/concurrency/defaultscheduler.js',
               'src/core/concurrency/catchscheduler.js',
               'src/core/notification.js',
-              'src/core/enumerator.js',
-              'src/core/enumerable.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -64,6 +62,7 @@ module.exports = function (grunt) {
               'src/core/observeonobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/enumerable.js',
 
               // Concurrency
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
@@ -351,8 +350,6 @@ module.exports = function (grunt) {
               'src/core/concurrency/defaultscheduler.js',
               'src/core/concurrency/catchscheduler.js',
               'src/core/notification.js',
-              'src/core/enumerator.js',
-              'src/core/enumerable.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -361,6 +358,7 @@ module.exports = function (grunt) {
               'src/core/observeonobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/enumerable.js',
 
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
@@ -644,8 +642,6 @@ module.exports = function (grunt) {
               'src/core/concurrency/defaultscheduler.js',
               'src/core/concurrency/catchscheduler.js',
               'src/core/notification.js',
-              'src/core/enumerator.js',
-              'src/core/enumerable.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -654,6 +650,7 @@ module.exports = function (grunt) {
               'src/core/observeonobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/enumerable.js',
 
               // Concurrency
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
@@ -794,8 +791,6 @@ module.exports = function (grunt) {
               'src/core/concurrency/defaultscheduler.js',
               'src/core/concurrency/catchscheduler.js',
               'src/core/notification.js',
-              'src/core/enumerator.js',
-              'src/core/enumerable.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
@@ -804,6 +799,7 @@ module.exports = function (grunt) {
               'src/core/observeonobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/enumerable.js',
 
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
               'src/core/linq/observable/subscribeon.js', // SingleAssignmentDisposable, SerialDisposable, ScheduleDisposable
@@ -940,14 +936,13 @@ module.exports = function (grunt) {
               'src/core/concurrency/defaultscheduler.js',
 
               'src/core/notification.js',
-              'src/core/enumerator.js',
-              'src/core/enumerable.js',
               'src/core/observer-lite.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
               'src/core/observable.js',
               'src/core/scheduledobserver.js',
               'src/core/perf/observablebase.js',
+              'src/core/enumerable.js',
 
               // Creation
               'src/core/perf/operators/toarray.js',
@@ -1110,13 +1105,12 @@ module.exports = function (grunt) {
               'src/core/concurrency/defaultscheduler.js',
 
               'src/core/notification.js',
-              'src/core/enumerator.js',
-              'src/core/enumerable.js',
               'src/core/observer-lite.js',
               'src/core/abstractobserver.js',
               'src/core/anonymousobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/enumerable.js',
               'src/core/scheduledobserver.js',
 
               // Creation

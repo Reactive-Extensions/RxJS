@@ -1608,188 +1608,6 @@
     };
   }());
 
-  var Enumerator = Rx.internals.Enumerator = function (next) {
-    this._next = next;
-  };
-
-  Enumerator.prototype.next = function () {
-    return this._next();
-  };
-
-  Enumerator.prototype[$iterator$] = function () { return this; }
-
-  var Enumerable = Rx.internals.Enumerable = function (iterator) {
-    this._iterator = iterator;
-  };
-
-  Enumerable.prototype[$iterator$] = function () {
-    return this._iterator();
-  };
-
-  Enumerable.prototype.concat = function () {
-    var sources = this;
-    return new AnonymousObservable(function (o) {
-      var e = sources[$iterator$]();
-
-      var isDisposed, subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursive(function (self) {
-        if (isDisposed) { return; }
-        try {
-          var currentItem = e.next();
-        } catch (ex) {
-          return o.onError(ex);
-        }
-
-        if (currentItem.done) {
-          return o.onCompleted();
-        }
-
-        // Check if promise
-        var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
-
-        var d = new SingleAssignmentDisposable();
-        subscription.setDisposable(d);
-        d.setDisposable(currentValue.subscribe(
-          function(x) { o.onNext(x); },
-          function(err) { o.onError(err); },
-          self)
-        );
-      });
-
-      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
-        isDisposed = true;
-      }));
-    });
-  };
-
-  Enumerable.prototype.catchError = function () {
-    var sources = this;
-    return new AnonymousObservable(function (o) {
-      var e = sources[$iterator$]();
-
-      var isDisposed, subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursiveWithState(null, function (lastException, self) {
-        if (isDisposed) { return; }
-
-        try {
-          var currentItem = e.next();
-        } catch (ex) {
-          return observer.onError(ex);
-        }
-
-        if (currentItem.done) {
-          if (lastException !== null) {
-            o.onError(lastException);
-          } else {
-            o.onCompleted();
-          }
-          return;
-        }
-
-        // Check if promise
-        var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
-
-        var d = new SingleAssignmentDisposable();
-        subscription.setDisposable(d);
-        d.setDisposable(currentValue.subscribe(
-          function(x) { o.onNext(x); },
-          self,
-          function() { o.onCompleted(); }));
-      });
-      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
-        isDisposed = true;
-      }));
-    });
-  };
-
-
-  Enumerable.prototype.catchErrorWhen = function (notificationHandler) {
-    var sources = this;
-    return new AnonymousObservable(function (o) {
-      var exceptions = new Subject(),
-        notifier = new Subject(),
-        handled = notificationHandler(exceptions),
-        notificationDisposable = handled.subscribe(notifier);
-
-      var e = sources[$iterator$]();
-
-      var isDisposed,
-        lastException,
-        subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursive(function (self) {
-        if (isDisposed) { return; }
-
-        try {
-          var currentItem = e.next();
-        } catch (ex) {
-          return o.onError(ex);
-        }
-
-        if (currentItem.done) {
-          if (lastException) {
-            o.onError(lastException);
-          } else {
-            o.onCompleted();
-          }
-          return;
-        }
-
-        // Check if promise
-        var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
-
-        var outer = new SingleAssignmentDisposable();
-        var inner = new SingleAssignmentDisposable();
-        subscription.setDisposable(new CompositeDisposable(inner, outer));
-        outer.setDisposable(currentValue.subscribe(
-          function(x) { o.onNext(x); },
-          function (exn) {
-            inner.setDisposable(notifier.subscribe(self, function(ex) {
-              o.onError(ex);
-            }, function() {
-              o.onCompleted();
-            }));
-
-            exceptions.onNext(exn);
-          },
-          function() { o.onCompleted(); }));
-      });
-
-      return new CompositeDisposable(notificationDisposable, subscription, cancelable, disposableCreate(function () {
-        isDisposed = true;
-      }));
-    });
-  };
-
-  var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
-    if (repeatCount == null) { repeatCount = -1; }
-    return new Enumerable(function () {
-      var left = repeatCount;
-      return new Enumerator(function () {
-        if (left === 0) { return doneEnumerator; }
-        if (left > 0) { left--; }
-        return { done: false, value: value };
-      });
-    });
-  };
-
-  var enumerableOf = Enumerable.of = function (source, selector, thisArg) {
-    if (selector) {
-      var selectorFn = bindCallback(selector, thisArg, 3);
-    }
-    return new Enumerable(function () {
-      var index = -1;
-      return new Enumerator(
-        function () {
-          return ++index < source.length ?
-            { done: false, value: !selector ? source[index] : selectorFn(source[index], index, source) } :
-            doneEnumerator;
-        });
-    });
-  };
-
   /**
    * Supports push-style iteration over an observable sequence.
    */
@@ -2231,6 +2049,199 @@
     return ObservableBase;
   }(Observable));
 
+  var Enumerable = Rx.internals.Enumerable = function () { };
+
+  var ConcatObservable = (function(__super__) {
+    inherits(ConcatObservable, __super__);
+    function ConcatObservable(sources) {
+      this.sources = sources;
+      __super__.call(this);
+    }
+    
+    ConcatObservable.prototype.subscribeCore = function (o) {
+      var isDisposed, subscription = new SerialDisposable();
+      var cancelable = immediateScheduler.scheduleRecursiveWithState(this.sources[$iterator$](), function (e, self) {
+        if (isDisposed) { return; }
+        var currentItem = tryCatch(e.next).call(e);
+        if (currentItem === errorObj) { return o.onError(currentItem.e); }
+
+        if (currentItem.done) {
+          return o.onCompleted();
+        }
+
+        // Check if promise
+        var currentValue = currentItem.value;
+        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
+        var d = new SingleAssignmentDisposable();
+        subscription.setDisposable(d);
+        d.setDisposable(currentValue.subscribe(
+          function(x) { o.onNext(x); },
+          function(err) { o.onError(err); },
+          function () { self(e); })
+        );
+      });
+
+      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
+        isDisposed = true;
+      }));
+    };
+    
+    return ConcatObservable;
+  }(ObservableBase));
+
+  Enumerable.prototype.concat = function () {
+    return new ConcatObservable(this);
+  };
+
+  Enumerable.prototype.catchError = function () {
+    var sources = this;
+    return new AnonymousObservable(function (o) {
+      var e = sources[$iterator$]();
+
+      var isDisposed, subscription = new SerialDisposable();
+      var cancelable = immediateScheduler.scheduleRecursiveWithState(null, function (lastException, self) {
+        if (isDisposed) { return; }
+        var currentItem = tryCatch(e.next).call(e);
+        if (currentItem === errorObj) { return o.onError(currentItem.e); }
+
+        if (currentItem.done) {
+          if (lastException !== null) {
+            o.onError(lastException);
+          } else {
+            o.onCompleted();
+          }
+          return;
+        }
+
+        // Check if promise
+        var currentValue = currentItem.value;
+        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
+        var d = new SingleAssignmentDisposable();
+        subscription.setDisposable(d);
+        d.setDisposable(currentValue.subscribe(
+          function(x) { o.onNext(x); },
+          self,
+          function() { o.onCompleted(); }));
+      });
+      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
+        isDisposed = true;
+      }));
+    });
+  };
+
+
+  Enumerable.prototype.catchErrorWhen = function (notificationHandler) {
+    var sources = this;
+    return new AnonymousObservable(function (o) {
+      var exceptions = new Subject(),
+        notifier = new Subject(),
+        handled = notificationHandler(exceptions),
+        notificationDisposable = handled.subscribe(notifier);
+
+      var e = sources[$iterator$]();
+
+      var isDisposed,
+        lastException,
+        subscription = new SerialDisposable();
+      var cancelable = immediateScheduler.scheduleRecursive(function (self) {
+        if (isDisposed) { return; }
+        var currentItem = e.next();
+
+        if (currentItem.done) {
+          if (lastException) {
+            o.onError(lastException);
+          } else {
+            o.onCompleted();
+          }
+          return;
+        }
+
+        // Check if promise
+        var currentValue = currentItem.value;
+        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
+        var outer = new SingleAssignmentDisposable();
+        var inner = new SingleAssignmentDisposable();
+        subscription.setDisposable(new CompositeDisposable(inner, outer));
+        outer.setDisposable(currentValue.subscribe(
+          function(x) { o.onNext(x); },
+          function (exn) {
+            inner.setDisposable(notifier.subscribe(self, function(ex) {
+              o.onError(ex);
+            }, function() {
+              o.onCompleted();
+            }));
+
+            exceptions.onNext(exn);
+          },
+          function() { o.onCompleted(); }));
+      });
+
+      return new CompositeDisposable(notificationDisposable, subscription, cancelable, disposableCreate(function () {
+        isDisposed = true;
+      }));
+    });
+  };
+  
+  var RepeatEnumerable = (function (__super__) {
+    inherits(RepeatEnumerable, __super__);
+    
+    function RepeatEnumerable(v, c) {
+      this.v = v;
+      this.c = c == null ? -1 : c;
+    }
+    RepeatEnumerable.prototype[$iterator$] = function () {
+      return new RepeatEnumerator(this); 
+    };
+    
+    function RepeatEnumerator(p) {
+      this.v = p.v;
+      this.l = p.c;
+    }
+    RepeatEnumerator.prototype.next = function () {
+      if (this.l === 0) { return doneEnumerator; }
+      if (this.l > 0) { this.l--; }
+      return { done: false, value: this.v }; 
+    };
+    
+    return RepeatEnumerable;
+  }(Enumerable));
+
+  var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
+    return new RepeatEnumerable(value, repeatCount);
+  };
+  
+  var OfEnumerable = (function(__super__) {
+    inherits(OfEnumerable, __super__);
+    function OfEnumerable(s, fn, thisArg) {
+      this.s = s;
+      this.fn = fn ? bindCallback(fn, thisArg, 3) : null;
+    }
+    OfEnumerable.prototype[$iterator$] = function () {
+      return new OfEnumerator(this);
+    };
+    
+    function OfEnumerator(p) {
+      this.i = -1;
+      this.s = p.s;
+      this.l = this.s.length;
+      this.fn = p.fn;
+    }
+    OfEnumerator.prototype.next = function () {
+     return ++this.i < this.l ?
+       { done: false, value: !this.fn ? this.s[this.i] : this.fn(this.s[this.i], this.i, this.s) } :
+       doneEnumerator; 
+    };
+    
+    return OfEnumerable;
+  }(Enumerable));
+
+  var enumerableOf = Enumerable.of = function (source, selector, thisArg) {
+    return new OfEnumerable(source, selector, thisArg);
+  };
+
    /**
    *  Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
    *
@@ -2271,16 +2282,16 @@
 
 	var FromPromiseObservable = (function(__super__) {
 		inherits(FromPromiseObservable, __super__);
-		function FromPromiseObservable(promise) {
-			this.p = promise;
+		function FromPromiseObservable(p) {
+			this.p = p;
 			__super__.call(this);
 		}
 		
-		FromPromiseObservable.prototype.subscribeCore = function(observer) {
+		FromPromiseObservable.prototype.subscribeCore = function(o) {
 			this.p.then(function (data) {
-				observer.onNext(data);
-				observer.onCompleted();
-			}, function (err) { observer.onError(err); });
+				o.onNext(data);
+				o.onCompleted();
+			}, function (err) { o.onError(err); });
 			return disposableEmpty;	
 		};
 		
@@ -3484,12 +3495,7 @@
       m.setDisposable(this.source.subscribe(new MergeAllObserver(observer, g)));
       return g;
     };
-
-    return MergeAllObservable;
-  }(ObservableBase));
-
-  var MergeAllObserver = (function() {
-
+    
     function MergeAllObserver(o, g) {
       this.o = o;
       this.g = g;
@@ -3561,9 +3567,8 @@
       return false;
     };
 
-    return MergeAllObserver;
-
-  }());
+    return MergeAllObservable;
+  }(ObservableBase));
 
   /**
   * Merges an observable sequence of observable sequences into an observable sequence.
@@ -8145,15 +8150,28 @@
     ];
   };
 
+  var WhileEnumerable = (function(__super__) {
+    inherits(WhileEnumerable, __super__);
+    function WhileEnumerable(c, s) {
+      this.c = c;
+      this.s = s;
+    }
+    WhileEnumerable.prototype[$iterator$] = function () {
+      var self = this;
+      return {
+        next: function () {
+          return self.c() ?
+           { done: false, value: self.s } :
+           { done: true, value: void 0 };
+        }
+      };
+    };
+    return WhileEnumerable;
+  }(Enumerable));
+  
   function enumerableWhile(condition, source) {
-    return new Enumerable(function () {
-      return new Enumerator(function () {
-        return condition() ?
-          { done: false, value: source } :
-          { done: true, value: undefined };
-      });
-    });
-  }
+    return new WhileEnumerable(condition, source);
+  }  
 
    /**
    *  Returns an observable sequence that is the result of invoking the selector on the source sequence, without sharing subscriptions.
