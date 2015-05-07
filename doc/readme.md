@@ -35,11 +35,11 @@ To put it more concretely, if you know how to program against Arrays using the A
   <tr><td><pre><code>getDataFromLocalMemory()
   .filter (s => s != null)
   .map(s => s + 'transformed')
-  .forEach(s => console.log('next => %s', it))</code></pre></td>
+  .forEach(s => console.log(`next => ${s}`))</code></pre></td>
   <td><pre><code>getDataFromNetwork()
   .filter (s => s != null)
   .map(s => s + 'transformed')
-  .subscribe(s => console.log('next => %s', it))</code></pre></td></tr>
+  .subscribe(s => console.log(`next => ${s}`))</code></pre></td></tr>
  </tbody>
 </table></center>
 
