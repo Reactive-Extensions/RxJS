@@ -191,6 +191,7 @@ Please check out:
  - [Our design guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
  - [Our contribution guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/contributing)
  - [Our complete Unit Tests](https://github.com/Reactive-Extensions/RxJS/tree/master/tests)
+ - [Our recipes](https://github.com/Reactive-Extensions/RxJS/wiki/Recipes)
 
 ## Resources
 
