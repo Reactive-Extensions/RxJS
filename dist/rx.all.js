@@ -2075,16 +2075,41 @@
 
         var d = new SingleAssignmentDisposable();
         subscription.setDisposable(d);
-        d.setDisposable(currentValue.subscribe(
-          function(x) { o.onNext(x); },
-          function(err) { o.onError(err); },
-          function () { self(e); })
-        );
+        d.setDisposable(currentValue.subscribe(new InnerObserver(o, self, e)));
       });
 
       return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
         isDisposed = true;
       }));
+    };
+    
+    function InnerObserver(o, s, e) {
+      this.o = o;
+      this.s = s;
+      this.e = e;
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.o.onNext(x); } };
+    InnerObserver.prototype.onError = function (err) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(err);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function () {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.s(this.e);
+      }
+    };
+    InnerObserver.prototype.dispose = function () { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (err) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(err);
+        return true;
+      }
+      return false;
     };
     
     return ConcatObservable;
@@ -2147,7 +2172,8 @@
         subscription = new SerialDisposable();
       var cancelable = immediateScheduler.scheduleRecursive(function (self) {
         if (isDisposed) { return; }
-        var currentItem = e.next();
+        var currentItem = tryCatch(e.next).call(e);
+        if (currentItem === errorObj) { return o.onError(currentItem.e); }
 
         if (currentItem.done) {
           if (lastException) {
