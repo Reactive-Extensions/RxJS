@@ -2020,11 +2020,16 @@
   Enumerable.prototype.concat = function () {
     return new ConcatObservable(this);
   };
-
-  Enumerable.prototype.catchError = function () {
-    var sources = this;
-    return new AnonymousObservable(function (o) {
-      var e = sources[$iterator$]();
+  
+  var CatchErrorObservable = (function(__super__) {
+    inherits(CatchErrorObservable, __super__);
+    function CatchErrorObservable(sources) {
+      this.sources = sources;
+      __super__.call(this);
+    }
+    
+    CatchErrorObservable.prototype.subscribeCore = function (o) {
+      var e = this.sources[$iterator$]();
 
       var isDisposed, subscription = new SerialDisposable();
       var cancelable = immediateScheduler.scheduleRecursiveWithState(null, function (lastException, self) {
@@ -2033,12 +2038,7 @@
         if (currentItem === errorObj) { return o.onError(currentItem.e); }
 
         if (currentItem.done) {
-          if (lastException !== null) {
-            o.onError(lastException);
-          } else {
-            o.onCompleted();
-          }
-          return;
+          return lastException !== null ? o.onError(lastException) : o.onCompleted();
         }
 
         // Check if promise
@@ -2055,9 +2055,42 @@
       return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
         isDisposed = true;
       }));
-    });
-  };
+    };
+    
+    function InnerObserver(o, s) {
+      this.o = o;
+      this.s = s;
+      this.isStopped = false;
+    }
+    InnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.o.onNext(x); } };
+    InnerObserver.prototype.onError = function (err) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.s(err);
+      }
+    };
+    InnerObserver.prototype.onCompleted = function () {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.onCompleted();
+      }
+    };
+    InnerObserver.prototype.dispose = function () { this.isStopped = true; };
+    InnerObserver.prototype.fail = function (err) {
+      if (!this.isStopped) {
+        this.isStopped = true
+        this.o.onError(err);
+        return true;
+      }
+      return false;
+    };
+    
+    return CatchErrorObservable;
+  }(ObservableBase));
 
+  Enumerable.prototype.catchError = function () {
+    return new CatchErrorObservable(this);
+  };
 
   Enumerable.prototype.catchErrorWhen = function (notificationHandler) {
     var sources = this;
