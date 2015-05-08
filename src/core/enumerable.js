@@ -1,13 +1,13 @@
   var Enumerable = Rx.internals.Enumerable = function () { };
 
-  var ConcatObservable = (function(__super__) {
-    inherits(ConcatObservable, __super__);
-    function ConcatObservable(sources) {
+  var ConcatEnumerableObservable = (function(__super__) {
+    inherits(ConcatEnumerableObservable, __super__);
+    function ConcatEnumerableObservable(sources) {
       this.sources = sources;
       __super__.call(this);
     }
     
-    ConcatObservable.prototype.subscribeCore = function (o) {
+    ConcatEnumerableObservable.prototype.subscribeCore = function (o) {
       var isDisposed, subscription = new SerialDisposable();
       var cancelable = immediateScheduler.scheduleRecursiveWithState(this.sources[$iterator$](), function (e, self) {
         if (isDisposed) { return; }
@@ -61,11 +61,11 @@
       return false;
     };
     
-    return ConcatObservable;
+    return ConcatEnumerableObservable;
   }(ObservableBase));
 
   Enumerable.prototype.concat = function () {
-    return new ConcatObservable(this);
+    return new ConcatEnumerableObservable(this);
   };
   
   var CatchErrorObservable = (function(__super__) {
