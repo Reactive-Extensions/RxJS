@@ -212,10 +212,10 @@ var subscription = source.subscribe(
 We can also do a `Map` as well by applying the same technique.
 
 ```js
-var set = new Map([['key1', 1], ['key2', 2]]);
+var map = new Map([['key1', 1], ['key2', 2]]);
 
-// Converts a Set to an observable sequence
-var source = Rx.Observable.from(set);
+// Converts a Map to an observable sequence
+var source = Rx.Observable.from(map);
 
 // Prints out each item
 var subscription = source.subscribe(
