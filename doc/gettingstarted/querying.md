@@ -171,7 +171,7 @@ var overfirstbisector = points.filter(function (pos) {
 	return pos.x === pos.y;
 });
 
-var movesub = overfirstbisector.subscribe(function (pos) { console.log('mouse at ' + pos.x + ', ' pos.y); });
+var movesub = overfirstbisector.subscribe(function (pos) { console.log('mouse at ' + pos.x + ', ' + pos.y); });
 ```
 
 ## Time-based Operation ##
