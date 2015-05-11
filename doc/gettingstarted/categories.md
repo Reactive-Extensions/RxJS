@@ -49,6 +49,7 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/amb.md">amb</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/ambproto.md">prototype.amb</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/combinelatest.md">combineLatest</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/combinelatestproto.md">proto.combineLatest</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/concat.md">concat</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/concatproto.md">prototype.concat</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/startwith.md">startWith</a></li>
