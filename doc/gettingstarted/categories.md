@@ -14,7 +14,7 @@ This topic lists all major operators implemented by the [`Observable`](https://g
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/create.md">create</a></li>
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/defer.md">defer</a></li>
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generate.md">generate</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generatewithabsolutetime.nd">generateWithAbsoluteTime</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generatewithabsolutetime.md">generateWithAbsoluteTime</a></li>
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generatewithrelativetime.md">generateWithRelativeTime</a></li>
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservablerangestart-count-scheduler">range</a></li>
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/using.md">using</a></li>
