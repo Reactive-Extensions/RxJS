@@ -92,30 +92,33 @@ var subscription = source.subscribe(
 // => Completed
 
 /* Using an array */
-var source = Rx.Observable.of(1,2,3)
-  .flatMap(
-    function (x, i) { return [x,i]; },
-    function (x, y, ix, iy) { return x + y + ix + iy; }
-  );
+Rx.Observable.of(2, 3, 5)
+.selectMany(function(outer) {
+  //Return x^2, x^3 and x^4
+  return [x * x, 
+             x * x * x, 
+             x * x * x * x];
+},
+function(outer, inner, outerIndex, innerIndex)
+{
+  return { outer : outer, inner : inner, outerIdx : outerIndex, innerIdx : innerIndex };
+}
+).subscribe(function(next) {
 
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  console.log('Outer: ' + next.outer + ', Inner: ' + next.inner, + 
+              ', InnerIndex: ' + next.innerIdx + ', OuterIndex: ' + next.outerIdx);
+}, function() {
+  console.log('Completed');
+});
 
-// => Next: 2
-// => Next: 2
-// => Next: 5
-// => Next: 5
-// => Next: 8
-// => Next: 8
-// => Completed
+//=> Outer: 2, Inner: 4, InnerIndex : 0, OuterIndex : 0
+//=> Outer: 2, Inner: 8, InnerIndex : 1, OuterIndex : 0
+//=> Outer: 2, Inner: 16, InnerIndex : 2, OuterIndex : 0
+//=> Outer: 3, Inner: 9, InnerIndex : 0, OuterIndex : 1
+//=> Outer: 3, Inner: 27, InnerIndex : 1, OuterIndex : 1
+//=> Outer: 3, Inner: 81, InnerIndex : 2, OuterIndex : 1
+//...etc
+//=> Completed
 ```
 
 ### Location
