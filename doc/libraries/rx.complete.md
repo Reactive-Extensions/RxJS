@@ -49,6 +49,7 @@ NuGet Packages:
 - [`ofObjectChanges`](../api/core/operators/ofobjectchanges.md)
 - [`ofWithScheduler`](../api/core/operators/ofwithscheduler.md)
 - [`onErrorResumeNext`](../api/core/operators/onerrorresumenext.md)
+- [`pairs`](../api/core/operators/pairs.md)
 - [`range`](../api/core/operators/range.md)
 - [`repeat`](../api/core/operators/repeat.md)
 - [`return`](../api/core/operators/return.md)

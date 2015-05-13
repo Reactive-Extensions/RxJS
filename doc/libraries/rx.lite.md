@@ -38,6 +38,7 @@ NuGet Packages:
 - [`never`](../api/core/operators/never.md)
 - [`of`](../api/core/operators/of.md)
 - [`ofWithScheduler`](../api/core/operators/ofwithscheduler.md)
+- [`pairs`](../api/core/operators/pairs.md)
 - [`range`](../api/core/operators/range.md)
 - [`repeat`](../api/core/operators/repeat.md)
 - [`return | returnValue`](../api/core/operators/return.md)

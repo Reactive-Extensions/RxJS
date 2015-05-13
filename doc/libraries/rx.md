@@ -35,6 +35,7 @@ NuGet Packages:
 - [`of`](../api/core/operators/of.md)
 - [`ofWithScheduler`](../api/core/operators/ofwithscheduler.md)
 - [`onErrorResumeNext`](../api/core/operators/onerrorresumenext.md)
+- [`pairs`](../api/core/operators/pairs.md)
 - [`range`](../api/core/operators/range.md)
 - [`repeat`](../api/core/operators/repeat.md)
 - [`return | returnValue`](../api/core/operators/return.md)
