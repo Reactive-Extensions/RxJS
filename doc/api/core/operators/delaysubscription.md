@@ -41,7 +41,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/delaysubscription.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/delaywithselector.js)
+- [`/src/core/linq/observable/delaysubscription.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/delaysubscription.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
