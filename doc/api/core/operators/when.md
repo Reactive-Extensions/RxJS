@@ -33,6 +33,39 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
+#### Example
+
+```js
+var chopsticks = [new Rx.Subject(), new Rx.Subject(), new Rx.Subject()];
+
+var hungry = [new Rx.Subject(), new Rx.Subject(), new Rx.Subject()];
+
+var eat = i => {
+  return () => {
+    setTimeout(() => {
+      console.log('Done');
+      chopsticks[i].onNext({});
+      chopsticks[(i+1) % 3].onNext({});
+    }, 1000);
+    return 'philosopher ' + i + ' eating';
+  };
+};
+
+var dining = Rx.Observable.when(
+  hungry[0].and(chopsticks[0]).and(chopsticks[1]).thenDo(eat(0)),
+  hungry[1].and(chopsticks[1]).and(chopsticks[2]).thenDo(eat(1)),
+  hungry[2].and(chopsticks[2]).and(chopsticks[0]).thenDo(eat(2))
+);
+
+dining.subscribe(console.log.bind(console));
+
+chopsticks[0].onNext({}); chopsticks[1].onNext({}); chopsticks[2].onNext({});
+
+for (var i = 0; i < 3; i++) {
+  hungry[0].onNext({}); hungry[1].onNext({}); hungry[2].onNext({});
+}
+```
+
 ### Location
 
 File:
