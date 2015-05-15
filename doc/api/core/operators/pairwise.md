@@ -29,6 +29,43 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
+#### Example (Draw line)
+```html
+<canvas id="canvas" width="600" height="600"/>
+```
+
+```js
+var canvas = document.getElementById("canvas");
+var g = canvas.getContext("2d");
+g.rect(0, 0, canvas.width, canvas.height);
+g.fillStyle = "rgb(0,0,0)";
+g.fill();
+
+var mouseMove = Rx.Observable.fromEvent(document, 'mousemove');
+var mouseDown = Rx.Observable.fromEvent(document.getElementById('canvas'), 'mousedown');
+var mouseUp = Rx.Observable.fromEvent(document.getElementById('canvas'), 'mouseup');
+
+mouseDown.flatMap(function(ev) {  
+  return mouseMove.map(function(ev) {
+    return {
+      x: ev.clientX,
+      y: ev.clientY
+    };
+  }).pairwise().takeUntil(mouseUp);
+  
+}).subscribe(function(pos) {
+  g.beginPath();
+  g.lineWidth = 1;
+  
+  g.strokeStyle = "rgb(255, 0, 0)";
+  
+  g.moveTo(pos[0].x, pos[0].y);
+  g.lineTo(pos[1].x, pos[1].y);
+  
+  g.stroke();
+});
+```
+
 ### Location
 
 File:
