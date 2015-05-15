@@ -1,4 +1,4 @@
-### `Rx.Observable.spawn(fn)`
+### `Rx.spawn(fn)`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/spawn.js "View in source")
 
 Spawns a generator function which allows for Promises, Observable sequences, Arrays, Objects, Generators and functions.
