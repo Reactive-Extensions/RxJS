@@ -2,12 +2,12 @@
     inherits(SkipObservable, __super__);
     function SkipObservable(source, count) {
       this.source = source;
-      this.count = count;
+      this.skipCount = count;
       __super__.call(this);
     }
     
     SkipObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.count));
+      return this.source.subscribe(new InnerObserver(o, this.skipCount));
     };
     
     function InnerObserver(o, c) {

@@ -2,7 +2,7 @@
     inherits(RangeObservable, __super__);
     function RangeObservable(start, count, scheduler) {
       this.start = start;
-      this.count = count;
+      this.rangeCount = count;
       this.scheduler = scheduler;
       __super__.call(this);
     }
@@ -22,7 +22,7 @@
     }
 
     RangeSink.prototype.run = function () {
-      var start = this.parent.start, count = this.parent.count, observer = this.observer;
+      var start = this.parent.start, count = this.parent.rangeCount, observer = this.observer;
       function loopRecursive(i, recurse) {
         if (i < count) {
           observer.onNext(start + i);
