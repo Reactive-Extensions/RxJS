@@ -206,3 +206,39 @@ test('Count_Predicate_PredicateThrows', function () {
     res.messages.assertEqual(onError(230, ex));
     xs.subscriptions.assertEqual(subscribe(200, 230));
 });
+
+test('Count_After_Range', function() {
+
+    var scheduler = new TestScheduler();
+    var xs = Rx.Observable.range(1, 10, scheduler);
+
+    var result = scheduler.startWithCreate(function(){
+        return xs.count();
+    });
+
+    result.messages.assertEqual(onNext(211, 10), onCompleted(211));
+});
+
+test('Count_After_Skip', function() {
+
+    var scheduler = new TestScheduler();
+    var xs = Rx.Observable.range(1, 10, scheduler).skip(1);
+
+    var result = scheduler.startWithCreate(function(){
+        return xs.count();
+    });
+
+    result.messages.assertEqual(onNext(211, 9), onCompleted(211));
+});
+
+test('Count_After_Take', function() {
+
+    var scheduler = new TestScheduler();
+    var xs = Rx.Observable.range(1, 10, scheduler).take(1);
+
+    var result = scheduler.startWithCreate(function(){
+        return xs.count();
+    });
+
+    result.messages.assertEqual(onNext(201, 1), onCompleted(201));
+});

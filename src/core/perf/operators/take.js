@@ -3,12 +3,12 @@
     
     function TakeObservable(source, count) {
       this.source = source;
-      this.count = count;
+      this.takeCount = count;
       __super__.call(this);
     }
     
     TakeObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.count));  
+      return this.source.subscribe(new InnerObserver(o, this.takeCount));
     };
     
     function InnerObserver(o, c) {
