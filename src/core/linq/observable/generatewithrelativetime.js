@@ -21,12 +21,9 @@
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (observer) {
       var first = true,
-        hasResult = false,
-        result,
-        state = initialState,
-        time;
-      return scheduler.scheduleRecursiveWithRelative(0, function (self) {
-        hasResult && observer.onNext(result);
+        hasResult = false;
+      return scheduler.scheduleRecursiveWithRelativeAndState(initialState, 0, function (state, self) {
+        hasResult && observer.onNext(state);
 
         try {
           if (first) {
@@ -36,15 +33,15 @@
           }
           hasResult = condition(state);
           if (hasResult) {
-            result = resultSelector(state);
-            time = timeSelector(state);
+            var result = resultSelector(state);
+            var time = timeSelector(state);
           }
         } catch (e) {
           observer.onError(e);
           return;
         }
         if (hasResult) {
-          self(time);
+          self(result, time);
         } else {
           observer.onCompleted();
         }
