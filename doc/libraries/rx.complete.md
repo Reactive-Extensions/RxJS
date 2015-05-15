@@ -79,7 +79,7 @@ NuGet Packages:
 - [`catch | catchException`](../api/core/operators/catchproto.md)
 - [`combineLatest`](../api/core/operators/combinelatest.md)
 - [`concat`](../api/core/operators/concatproto.md)
-- [`concatAll`](../api/core/operators/concatallproto.md)
+- [`concatAll`](../api/core/operators/concatall.md)
 - [`concatMap`](../api/core/operators/concatmap.md)
 - [`connect`](../api/core/operators/connect.md)
 - [`includes`](../api/core/operators/includes.md)
