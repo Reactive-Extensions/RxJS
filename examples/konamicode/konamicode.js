@@ -16,12 +16,12 @@ $(function () {
 
     $(document).keyupAsObservable()
         .map(function (e) { return e.keyCode; }) // get the key code
-        .windowWithCount(10, 10)                    // get the last 10 keys
-        .selectMany(function (x) {                  // compare to known konmai code sequence
+        .windowWithCount(10, 1)                     // get the last 10 keys
+        .selectMany(function (x) {                  // compare to known konami code sequence
             return x.sequenceEqual(konami);
         })
         .filter(function (equal) { return equal; })  // where we match
         .subscribe(function () {
-            result.html('KONAMI!').fadeOut(2000);   // print the result
+            result.html('KONAMI!').show().fadeOut(2000);   // print the result
         });
 });
