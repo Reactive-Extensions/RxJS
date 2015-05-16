@@ -47,6 +47,36 @@ let subscription2 = odds.subscribe(
 // => Completed
 ```
 
+#### Example
+
+```html
+<div id="dom-event-source"></div>
+<div id="dom-event-output">
+    <div class="left"><p></p></div>
+    <div class="right"><p></p></div>
+</div>
+```
+
+```js
+var sourceElement = document.getElementById("dom-event-source");
+var elements = ["#dom-event-output .left p", "#dom-event-output .right p"].map(document.querySelector.bind(document));
+var elementRect = sourceElement.getBoundingClientRect();
+
+var observers = Rx.Observable.fromEvent(sourceElement, 'mousemove')
+.map(e => ({
+      x: Math.floor(e.clientX - elementRect.left), 
+      y: Math.floor(e.clientY - elementRect.top)
+    })
+).partition(pos => pos.x < sourceElement.clientWidth / 2);
+
+elements.forEach((n, i, a) => 
+                 observers[i].subscribe(displayCoordinates.bind(displayCoordinates, n)));
+
+function displayCoordinates(element, pos) {
+  element.textContent = `(x: ${pos.x}, y: ${pos.y})`;
+}
+```
+
 ### Location
 
 File:
