@@ -14,7 +14,7 @@ test('Sample_Regular', function () {
     results = scheduler.startWithCreate(function () {
         return xs.sample(50, scheduler);
     });
-    results.messages.assertEqual(onNext(250, 3), onNext(300, 5), onNext(350, 6), onNext(400, 7), onCompleted(400));
+    results.messages.assertEqual(onNext(250, 3), onNext(300, 4), onNext(350, 5), onNext(400, 7), onCompleted(400));
 });
 
 test('Sample_ErrorInFlight', function () {
@@ -25,7 +25,7 @@ test('Sample_ErrorInFlight', function () {
     results = scheduler.startWithCreate(function () {
         return xs.sample(50, scheduler);
     });
-    results.messages.assertEqual(onNext(250, 3), onNext(300, 5), onError(330, ex));
+    results.messages.assertEqual(onNext(250, 3), onNext(300, 4), onError(330, ex));
 });
 
 test('Sample_Empty', function () {
@@ -34,7 +34,7 @@ test('Sample_Empty', function () {
     results = scheduler.startWithCreate(function () {
         return Rx.Observable.empty(scheduler).sample(0, scheduler);
     });
-    results.messages.assertEqual(onCompleted(201));
+    results.messages.assertEqual(onCompleted(202));
 });
 
 test('Sample_Error', function () {

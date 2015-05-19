@@ -22,6 +22,53 @@
     }, source);
   }
 
+  function sampleObservableInterval(source, interval, scheduler) {
+    return new AnonymousObservable(function(observer){
+
+      var sd = new SerialDisposable(),
+          completionPending = new SingleAssignmentDisposable(),
+          atEnd = false;
+
+      function computeTimeRemaining(s, i) {
+        var now = s.now();
+        return (i > 0) ? i - (now % i) : 0;
+      }
+
+      function sampleSubscribe(n) {
+
+        var timeRemaining = computeTimeRemaining(scheduler, interval);
+
+        //Wait around for the next interval
+        if (timeRemaining == interval) {
+          sd.current = null;
+        }
+
+        sd.setDisposable(scheduler.scheduleRelativeWithState(n, timeRemaining, function(s, state) {
+          observer.onNext(n);
+          if (atEnd) {
+            completionPending.dispose();
+            observer.onCompleted();
+          }
+
+        }));
+      }
+
+      function sampleComplete() {
+
+        var timeRemaining = computeTimeRemaining(scheduler, interval);
+
+        completionPending.setDisposable(scheduler.scheduleRelative(timeRemaining, function() {
+          observer.onCompleted();
+        }));
+
+        atEnd = true;
+      }
+
+      return new CompositeDisposable(sd, completionPending, source.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleComplete));
+
+    }, source);
+  }
+
   /**
    *  Samples the observable sequence at each interval.
    *
@@ -37,6 +84,7 @@
   observableProto.sample = observableProto.throttleLatest = function (intervalOrSampler, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return typeof intervalOrSampler === 'number' ?
-      sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
+      //sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
+      sampleObservableInterval(this, intervalOrSampler, scheduler) :
       sampleObservable(this, intervalOrSampler);
   };
