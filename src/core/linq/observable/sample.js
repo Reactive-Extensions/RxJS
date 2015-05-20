@@ -24,7 +24,7 @@
 
   function computeTimeRemaining(s, i) {
     var now = s.now();
-    return (i > 0) ? i - (now % i) : 0;
+    return (i == 0) ? 0 : i - (now % i);
   }
 
   function sampleObservableInterval(source, interval, scheduler) {
@@ -33,8 +33,7 @@
       var currentItemDisposable = new SerialDisposable(),
           sad = new SingleAssignmentDisposable(),
           observerCompleted = bindCallback(observer.onCompleted, observer),
-          completion = new CompositeDisposable(sad, disposableCreate(observerCompleted)),
-          atEnd;
+          value = [];
 
       function sampleSubscribe(n) {
 
@@ -43,18 +42,19 @@
         //Wait around for the next interval
         if (timeRemaining == interval) {
           currentItemDisposable = new SerialDisposable();
+          value.push(n);
+        } else {
+          value[0] = n;
         }
 
-        currentItemDisposable.setDisposable(scheduler.scheduleRelativeWithState(n, timeRemaining, function(s, state) {
-          observer.onNext(state);
-          atEnd && completion.dispose();
+        currentItemDisposable.setDisposable(scheduler.scheduleRelative(timeRemaining, function() {
+          value.length > 0 && observer.onNext(value.shift());
         }));
       }
 
       function sampleComplete() {
         var timeRemaining = computeTimeRemaining(scheduler, interval);
         sad.setDisposable(scheduler.scheduleRelative(timeRemaining, observerCompleted));
-        atEnd = true;
       }
 
       return new CompositeDisposable(currentItemDisposable, sad,
@@ -78,7 +78,6 @@
   observableProto.sample = observableProto.throttleLatest = function (intervalOrSampler, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return typeof intervalOrSampler === 'number' ?
-      //sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
       sampleObservableInterval(this, intervalOrSampler, scheduler) :
       sampleObservable(this, intervalOrSampler);
   };
