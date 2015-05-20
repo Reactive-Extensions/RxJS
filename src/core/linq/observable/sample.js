@@ -22,17 +22,19 @@
     }, source);
   }
 
+  function computeTimeRemaining(s, i) {
+    var now = s.now();
+    return (i > 0) ? i - (now % i) : 0;
+  }
+
   function sampleObservableInterval(source, interval, scheduler) {
     return new AnonymousObservable(function(observer){
 
-      var sd = new SerialDisposable(),
-          completionPending = new SingleAssignmentDisposable(),
-          atEnd = false;
-
-      function computeTimeRemaining(s, i) {
-        var now = s.now();
-        return (i > 0) ? i - (now % i) : 0;
-      }
+      var currentItemDisposable = new SerialDisposable(),
+          sad = new SingleAssignmentDisposable(),
+          observerCompleted = bindCallback(observer.onCompleted, observer),
+          completion = new CompositeDisposable(sad, disposableCreate(observerCompleted)),
+          atEnd;
 
       function sampleSubscribe(n) {
 
@@ -40,31 +42,23 @@
 
         //Wait around for the next interval
         if (timeRemaining == interval) {
-          sd.current = null;
+          currentItemDisposable = new SerialDisposable();
         }
 
-        sd.setDisposable(scheduler.scheduleRelativeWithState(n, timeRemaining, function(s, state) {
-          observer.onNext(n);
-          if (atEnd) {
-            completionPending.dispose();
-            observer.onCompleted();
-          }
-
+        currentItemDisposable.setDisposable(scheduler.scheduleRelativeWithState(n, timeRemaining, function(s, state) {
+          observer.onNext(state);
+          atEnd && completion.dispose();
         }));
       }
 
       function sampleComplete() {
-
         var timeRemaining = computeTimeRemaining(scheduler, interval);
-
-        completionPending.setDisposable(scheduler.scheduleRelative(timeRemaining, function() {
-          observer.onCompleted();
-        }));
-
+        sad.setDisposable(scheduler.scheduleRelative(timeRemaining, observerCompleted));
         atEnd = true;
       }
 
-      return new CompositeDisposable(sd, completionPending, source.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleComplete));
+      return new CompositeDisposable(currentItemDisposable, sad,
+          source.subscribe(sampleSubscribe, bindCallback(observer.onError, observer), sampleComplete));
 
     }, source);
   }
