@@ -55,3 +55,94 @@ test('Sample_Never', function () {
     });
     results.messages.assertEqual();
 });
+
+test('Sample_Other_Regular', function(){
+
+    var results,
+        scheduler = new TestScheduler(),
+        xs = scheduler.createHotObservable(
+            onNext(210, 1),
+            onNext(230, 2),
+            onNext(300, 3),
+            onNext(350, 4),
+            onCompleted(800)
+        ),
+        other = scheduler.createHotObservable(
+            onNext(220, 0),
+            onNext(310, 0),
+            onNext(800, 0),
+            onNext(810, 0)
+        );
+
+
+    results = scheduler.startWithCreate(function() {
+        return xs.sample(other);
+    });
+
+    results.messages.assertEqual(onNext(220, 1), onNext(310, 3), onNext(800, 4), onCompleted(800));
+
+});
+
+test("Sample_Other_Never", function() {
+
+    var results,
+        scheduler = new TestScheduler(),
+        xs = scheduler.createHotObservable(
+            onNext(210, 1),
+            onNext(230, 2),
+            onNext(300, 3),
+            onNext(350, 4),
+            onCompleted(800)
+        );
+
+    results = scheduler.startWithCreate(function(){
+        return xs.sample(Rx.Observable.empty(scheduler));
+    });
+
+    results.messages.assertEqual(onCompleted(800));
+
+});
+
+test("Sample_Other_Error", function(){
+
+    var results,
+        scheduler = new TestScheduler(),
+        xs = scheduler.createHotObservable(
+            onNext(210, 1),
+            onNext(230, 2),
+            onNext(300, 3),
+            onNext(350, 4),
+            onCompleted(800)
+        ),
+        error = new Error("failed to sample");
+
+    results = scheduler.startWithCreate(function() {
+        return xs.sample(Rx.Observable.throwError(error, scheduler));
+    });
+
+    results.messages.assertEqual(onError(201, error));
+
+});
+
+test("Sample_Other_ErrorInFlight", function() {
+    var ex = 'ex',
+    scheduler = new TestScheduler(),
+    xs = scheduler.createHotObservable(
+        onNext(150, 1),
+        onNext(210, 2),
+        onNext(230, 3),
+        onNext(260, 4),
+        onNext(300, 5),
+        onNext(310, 6),
+        onCompleted(330)),
+    other = scheduler.createHotObservable(
+        onNext(250, 0),
+        onNext(300, 0),
+        onError(310, ex)
+    ),
+    results = scheduler.startWithCreate(function () {
+        return xs.sample(other);
+    });
+
+    results.messages.assertEqual(onNext(250, 3), onNext(300, 5), onError(310, ex));
+});
