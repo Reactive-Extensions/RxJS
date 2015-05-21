@@ -10,14 +10,20 @@
         atEnd && observer.onCompleted();
       }
 
+      function sampleComplete() {
+        sampleSubscribe();
+        atEnd = true;
+      }
+
       return new CompositeDisposable(
         source.subscribe(function (newValue) {
           hasValue = true;
           value = newValue;
         }, observer.onError.bind(observer), function () {
+          atEnd && observer.onCompleted();
           atEnd = true;
         }),
-        sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleSubscribe)
+        sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleComplete)
       );
     }, source);
   }
