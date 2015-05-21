@@ -30,26 +30,25 @@
   function sampleObservableInterval(source, interval, scheduler) {
     return new AnonymousObservable(function(observer){
 
-      var currentItemDisposable = new SerialDisposable(),
-          sad = new SingleAssignmentDisposable(),
+      var sad = new SingleAssignmentDisposable(),
           observerCompleted = bindCallback(observer.onCompleted, observer),
-          value = [];
+          value = [],
+          disposables = [];
 
       function sampleSubscribe(n) {
 
         var timeRemaining = computeTimeRemaining(scheduler, interval);
 
-        //Wait around for the next interval
-        if (timeRemaining == interval) {
-          currentItemDisposable = new SerialDisposable();
-          value.push(n);
-        } else {
-          value[0] = n;
-        }
+        var i = Math.floor(timeRemaining / interval);
 
-        currentItemDisposable.setDisposable(scheduler.scheduleRelative(timeRemaining, function() {
-          value.length > 0 && observer.onNext(value.shift());
-        }));
+        value[i] = n;
+
+        if (!disposables[i]) {
+          disposables[i] = scheduler.scheduleRelative(timeRemaining, function() {
+            value.length > 0 && observer.onNext(value.shift());
+            disposables[i] = null;
+          });
+        }
       }
 
       function sampleComplete() {
@@ -57,7 +56,13 @@
         sad.setDisposable(scheduler.scheduleRelative(timeRemaining, observerCompleted));
       }
 
-      return new CompositeDisposable(currentItemDisposable, sad,
+      return new CompositeDisposable(sad,
+          Disposable.create(function() {
+            while (disposables.length > 0) {
+              var d = disposables.shift();
+              d && d.dispose();
+            }
+          }),
           source.subscribe(sampleSubscribe, bindCallback(observer.onError, observer), sampleComplete));
 
     }, source);
