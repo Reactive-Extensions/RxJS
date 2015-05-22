@@ -37,7 +37,7 @@
     return new AnonymousObservable(function(observer){
 
       var sad = new SingleAssignmentDisposable(),
-          observerCompleted = bindCallback(observer.onCompleted, observer),
+          observerCompleted = bindCallback(observer.onCompleted, observer, 0),
           value = [],
           disposables = [];
 
@@ -69,7 +69,7 @@
               d && d.dispose();
             }
           }),
-          source.subscribe(sampleSubscribe, bindCallback(observer.onError, observer), sampleComplete));
+          source.subscribe(sampleSubscribe, bindCallback(observer.onError, observer, 1), sampleComplete));
 
     }, source);
   }
