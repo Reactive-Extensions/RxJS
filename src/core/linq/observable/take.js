@@ -16,7 +16,7 @@
       return source.subscribe(function (x) {
         if (remaining-- > 0) {
           o.onNext(x);
-          remaining === 0 && o.onCompleted();
+          remaining <= 0 && o.onCompleted();
         }
       }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
     }, source);

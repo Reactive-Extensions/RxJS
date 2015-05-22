@@ -409,7 +409,7 @@
    * source.request(3); // Reads 3 values
    * @param {bool} enableQueue truthy value to determine if values should be queued pending the next request
    * @param {Scheduler} scheduler determines how the requests will be scheduled
-   * @returns {Observable} The observable sequence which is paused based upon the pauser.
+   * @returns {Observable} The observable sequence which only propagates values on request.
    */
   observableProto.controlled = function (enableQueue, scheduler) {
 

@@ -2487,7 +2487,7 @@
     inherits(RangeObservable, __super__);
     function RangeObservable(start, count, scheduler) {
       this.start = start;
-      this.count = count;
+      this.rangeCount = count;
       this.scheduler = scheduler;
       __super__.call(this);
     }
@@ -2507,7 +2507,7 @@
     }
 
     RangeSink.prototype.run = function () {
-      var start = this.parent.start, count = this.parent.count, observer = this.observer;
+      var start = this.parent.start, count = this.parent.rangeCount, observer = this.observer;
       function loopRecursive(i, recurse) {
         if (i < count) {
           observer.onNext(start + i);
@@ -4230,12 +4230,12 @@
     inherits(SkipObservable, __super__);
     function SkipObservable(source, count) {
       this.source = source;
-      this.count = count;
+      this.skipCount = count;
       __super__.call(this);
     }
     
     SkipObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.count));
+      return this.source.subscribe(new InnerObserver(o, this.skipCount));
     };
     
     function InnerObserver(o, c) {
@@ -4314,12 +4314,12 @@
     
     function TakeObservable(source, count) {
       this.source = source;
-      this.count = count;
+      this.takeCount = count;
       __super__.call(this);
     }
     
     TakeObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.count));  
+      return this.source.subscribe(new InnerObserver(o, this.takeCount));
     };
     
     function InnerObserver(o, c) {
@@ -4328,33 +4328,35 @@
       this.r = c;
       this.isStopped = false;
     }
-    InnerObserver.prototype.onNext = function (x) {
-      if (this.isStopped) { return; }
-      if (this.r-- > 0) {
-        this.o.onNext(x);
-        this.r === 0 && this.o.onCompleted();
+    InnerObserver.prototype = {
+      onNext: function (x) {
+        if (this.isStopped) { return; }
+        if (this.r-- > 0) {
+          this.o.onNext(x);
+          this.r <= 0 && this.o.onCompleted();
+        }
+      },
+      onError: function (err) {
+        if (!this.isStopped) {
+          this.isStopped = true;
+          this.o.onError(err);
+        }
+      },
+      onCompleted: function () {
+        if (!this.isStopped) {
+          this.isStopped = true;
+          this.o.onCompleted();
+        }
+      },
+      dispose: function () { this.isStopped = true; },
+      fail: function (e) {
+        if (!this.isStopped) {
+          this.isStopped = true;
+          this.o.onError(e);
+          return true;
+        }
+        return false;
       }
-    };
-    InnerObserver.prototype.onError = function (err) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(err);
-      }
-    };
-    InnerObserver.prototype.onCompleted = function () {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onCompleted();
-      }
-    };
-    InnerObserver.prototype.dispose = function () { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
     };
     
     return TakeObservable;
@@ -4362,9 +4364,6 @@
   
   /**
    *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
-   *
-   *  var res = source.take(5);
-   *  var res = source.take(0, Rx.Scheduler.timeout);
    * @param {Number} count The number of elements to return.
    * @param {Scheduler} [scheduler] Scheduler used to produce an OnCompleted message in case <paramref name="count count</paramref> is set to 0.
    * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.
@@ -5603,7 +5602,7 @@
    * source.request(3); // Reads 3 values
    * @param {bool} enableQueue truthy value to determine if values should be queued pending the next request
    * @param {Scheduler} scheduler determines how the requests will be scheduled
-   * @returns {Observable} The observable sequence which is paused based upon the pauser.
+   * @returns {Observable} The observable sequence which only propagates values on request.
    */
   observableProto.controlled = function (enableQueue, scheduler) {
 
