@@ -392,8 +392,9 @@
   function createEventListener (el, eventName, handler) {
     var disposables = new CompositeDisposable();
 
-    // Asume NodeList
-    if (Object.prototype.toString.call(el) === '[object NodeList]') {
+    // Asume NodeList or HTMLCollection
+    var toStr = Object.prototype.toString;
+    if (toStr.call(el) === '[object NodeList]' || toStr.call(el) === '[object HTMLCollection]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }

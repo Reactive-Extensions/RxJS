@@ -4756,13 +4756,13 @@
    * @returns {boolean}
    */
   function isNodeList(el) {
-      if (window.StaticNodeList) {
-          // IE8 Specific
-          // instanceof is slower than Object#toString, but Object#toString will not work as intended in IE8
-          return (el instanceof window.StaticNodeList || el instanceof NodeList);
-      } else {
-          return (Object.prototype.toString.call(el) == '[object NodeList]')
-      }
+    if (window.StaticNodeList) {
+      // IE8 Specific
+      // instanceof is slower than Object#toString, but Object#toString will not work as intended in IE8
+      return (el instanceof window.StaticNodeList || el instanceof NodeList);
+    } else {
+      return (Object.prototype.toString.call(el) == '[object NodeList]')
+    }
   }
   function fixEvent(event) {
     var stopPropagation = function () {
@@ -4846,7 +4846,7 @@
     var disposables = new CompositeDisposable();
 
     // Asume NodeList
-    if (isNodeList(el)) {
+    if (isNodeList(el) || Object.prototype.toString.call(el) === '[object HTMLCollection]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
