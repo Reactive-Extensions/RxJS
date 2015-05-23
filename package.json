@@ -12,12 +12,7 @@
     "type": "git",
     "url": "https://github.com/Reactive-Extensions/RxJS.git"
   },
-  "licenses": [
-    {
-      "type": "Apache License, Version 2.0",
-      "url": "http://www.apache.org/licenses/LICENSE-2.0.html"
-    }
-  ],
+  "license": "Apache-2.0",
   "bugs": "https://github.com/Reactive-Extensions/RxJS/issues",
   "jam": {
     "main": "dist/rx.all.js"
