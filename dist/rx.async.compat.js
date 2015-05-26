@@ -379,20 +379,16 @@
     };
   };
 
-  /**
-   * Returns true if `el` is a NodeList or StaticNodeList (IE8 querySelectorAll returns a StaticNodeList)
-   * @param {object} el
-   * @returns {boolean}
-   */
   function isNodeList(el) {
     if (window.StaticNodeList) {
       // IE8 Specific
       // instanceof is slower than Object#toString, but Object#toString will not work as intended in IE8
-      return (el instanceof window.StaticNodeList || el instanceof NodeList);
+      return (el instanceof window.StaticNodeList || el instanceof window.NodeList);
     } else {
       return (Object.prototype.toString.call(el) == '[object NodeList]')
     }
   }
+
   function fixEvent(event) {
     var stopPropagation = function () {
       this.cancelBubble = true;
