@@ -50,7 +50,6 @@ declare module Rx {
 	export module helpers {
 		function noop(): void;
 		function notDefined(value: any): boolean;
-		function isScheduler(value: any): boolean;
 		function identity<T>(value: T): T;
 		function defaultNow(): number;
 		function defaultComparer(left: any, right: any): boolean;
@@ -117,6 +116,7 @@ declare module Rx {
 
 	export interface IScheduler {
 		now(): number;
+	  isScheduler(value: any): boolean;
 
 		schedule(action: () => void): IDisposable;
 		scheduleWithState<TState>(state: TState, action: (scheduler: IScheduler, state: TState) => IDisposable): IDisposable;
@@ -308,7 +308,7 @@ declare module Rx {
 		do(onNext?: (value: T) => void, onError?: (exception: any) => void, onCompleted?: () => void): Observable<T>;
 		doAction(onNext?: (value: T) => void, onError?: (exception: any) => void, onCompleted?: () => void): Observable<T>;	// alias for do
 		tap(onNext?: (value: T) => void, onError?: (exception: any) => void, onCompleted?: () => void): Observable<T>;	// alias for do
-		
+
 		doOnNext(onNext: (value: T) => void, thisArg?: any): Observable<T>;
 		doOnError(onError: (exception: any) => void, thisArg?: any): Observable<T>;
 		doOnCompleted(onCompleted: () => void, thisArg?: any): Observable<T>;
