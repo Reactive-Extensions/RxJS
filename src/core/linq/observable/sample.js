@@ -10,15 +10,67 @@
         atEnd && observer.onCompleted();
       }
 
+      function sampleComplete() {
+        sampleSubscribe();
+        atEnd = true;
+      }
+
       return new CompositeDisposable(
         source.subscribe(function (newValue) {
           hasValue = true;
           value = newValue;
         }, observer.onError.bind(observer), function () {
+          atEnd && observer.onCompleted();
           atEnd = true;
         }),
-        sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleSubscribe)
+        sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleComplete)
       );
+    }, source);
+  }
+
+  function computeTimeRemaining(s, i) {
+    var now = s.now();
+    return (i == 0) ? 0 : i - (now % i);
+  }
+
+  function sampleObservableInterval(source, interval, scheduler) {
+    return new AnonymousObservable(function(observer){
+
+      var sad = new SingleAssignmentDisposable(),
+          observerCompleted = bindCallback(observer.onCompleted, observer, 0),
+          value = [],
+          disposables = [];
+
+      function sampleSubscribe(n) {
+
+        var timeRemaining = computeTimeRemaining(scheduler, interval);
+
+        var i = Math.floor(timeRemaining / interval);
+
+        value[i] = n;
+
+        if (!disposables[i]) {
+          disposables[i] = scheduler.scheduleRelative(timeRemaining, function() {
+            value.length > 0 && observer.onNext(value.shift());
+            disposables[i] = null;
+          });
+        }
+      }
+
+      function sampleComplete() {
+        var timeRemaining = computeTimeRemaining(scheduler, interval);
+        sad.setDisposable(scheduler.scheduleRelative(timeRemaining, observerCompleted));
+      }
+
+      return new CompositeDisposable(sad,
+          Disposable.create(function() {
+            while (disposables.length > 0) {
+              var d = disposables.shift();
+              d && d.dispose();
+            }
+          }),
+          source.subscribe(sampleSubscribe, bindCallback(observer.onError, observer, 1), sampleComplete));
+
     }, source);
   }
 
@@ -37,6 +89,6 @@
   observableProto.sample = observableProto.throttleLatest = function (intervalOrSampler, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return typeof intervalOrSampler === 'number' ?
-      sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
+      sampleObservableInterval(this, intervalOrSampler, scheduler) :
       sampleObservable(this, intervalOrSampler);
   };
