@@ -664,6 +664,8 @@ declare module Rx {
 		* @returns An Observable sequence which wraps the existing promise success and failure.
 		*/
 		fromPromise<T>(promise: IPromise<T>): Observable<T>;
+		
+		prototype: any;
 	}
 
 	export var Observable: ObservableStatic;
