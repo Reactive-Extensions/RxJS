@@ -518,25 +518,33 @@
   };
 
   function sampleObservable(source, sampler) {
-    return new AnonymousObservable(function (observer) {
-      var atEnd, value, hasValue;
+    return new AnonymousObservable(function (o) {
+      var atEnd = false, value, hasValue = false;
 
       function sampleSubscribe() {
         if (hasValue) {
           hasValue = false;
-          observer.onNext(value);
+          o.onNext(value);
         }
-        atEnd && observer.onCompleted();
+        atEnd && o.onCompleted();
       }
 
-      return new CompositeDisposable(
-        source.subscribe(function (newValue) {
+      var sourceSubscription = new SingleAssignmentDisposable();
+      sourceSubscription.setDisposable(source.subscribe(
+        function (newValue) {
           hasValue = true;
           value = newValue;
-        }, observer.onError.bind(observer), function () {
+        },
+        function (e) { o.onError(e); },
+        function () {
           atEnd = true;
-        }),
-        sampler.subscribe(sampleSubscribe, observer.onError.bind(observer), sampleSubscribe)
+          sourceSubscription.dispose(); 
+        }
+      ));
+
+      return new CompositeDisposable(
+        sourceSubscription,
+        sampler.subscribe(sampleSubscribe, function (e) { o.onError(e); }, sampleSubscribe)
       );
     }, source);
   }
