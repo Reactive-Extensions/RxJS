@@ -2738,94 +2738,65 @@
     return combineLatest.apply(this, args);
   };
 
-  function falseFactory() { return false; }
+  /**
+   * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
+   *
+   * @example
+   * 1 - obs = Rx.Observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
+   * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
+   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+   */
+  var combineLatest = Observable.combineLatest = function () {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    var resultSelector = args.pop();
+    Array.isArray(args[0]) && (args = args[0]);
 
-  var CombineLatestObservable = (function(__super__) {
-    inherits(CombineLatestObservable, __super__);
-    function CombineLatestObservable(parameters, resultSelector) {
-      this.parameters = parameters;
-      this.resultSelector = resultSelector;
-      this.length = parameters.length;
-      this.hasValue = arrayInitialize(this.length, falseFactory);
-      this.hasValueAll = false;
-      this.isDone = arrayInitialize(this.length, falseFactory);
-      this.values = new Array(this.length);
-      __super__.call(this);
-    }
+    return new AnonymousObservable(function (o) {
+      var n = args.length,
+        falseFactory = function () { return false; },
+        hasValue = arrayInitialize(n, falseFactory),
+        hasValueAll = false,
+        isDone = arrayInitialize(n, falseFactory),
+        values = new Array(n);
 
-    CombineLatestObservable.prototype.subscribeCore = function(observer) {
-      var self = this, parameters = self.parameters, n = this.length, subscriptions = new Array(n);
+      function next(i) {
+        hasValue[i] = true;
+        if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
+          try {
+            var res = resultSelector.apply(null, values);
+          } catch (e) {
+            return o.onError(e);
+          }
+          o.onNext(res);
+        } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+          o.onCompleted();
+        }
+      }
 
+      function done (i) {
+        isDone[i] = true;
+        isDone.every(identity) && o.onCompleted();
+      }
+
+      var subscriptions = new Array(n);
       for (var idx = 0; idx < n; idx++) {
         (function (i) {
-          var source = parameters[i], sad = new SingleAssignmentDisposable();
-          subscriptions[i] = sad;
+          var source = args[i], sad = new SingleAssignmentDisposable();
           isPromise(source) && (source = observableFromPromise(source));
-          sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, self)));
+          sad.setDisposable(source.subscribe(function (x) {
+              values[i] = x;
+              next(i);
+            },
+            function(e) { o.onError(e); },
+            function () { done(i); }
+          ));
+          subscriptions[i] = sad;
         }(idx));
       }
 
       return new CompositeDisposable(subscriptions);
-    };
-
-    return CombineLatestObservable;
-  }(ObservableBase));
-
-  function CombineLatestObserver(observer, i, parent) {
-    this.observer = observer;
-    this.i = i;
-    this.parent = parent;
-    this.isStopped = false;
-  }
-
-  CombineLatestObserver.prototype.onNext = function(x) {
-    if (this.isStopped) { return; }
-    var i = this.i;
-    this.parent.values[i] = x;
-    this.parent.hasValue[i] = true;
-    if (this.parent.hasValueAll || (this.parent.hasValueAll = this.parent.hasValue.every(identity))) {
-      var res = tryCatch(this.parent.resultSelector).apply(null, this.parent.values);
-      if (res === errorObj) { return this.observer.onError(res.e); }
-      this.observer.onNext(res);
-    } else if (this.parent.isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-      this.observer.onCompleted();
-    }
-  };
-  CombineLatestObserver.prototype.onError = function(e) {
-    if (!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
-  };
-  CombineLatestObserver.prototype.onCompleted = function() {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.parent.isDone[this.i] = true;
-      this.parent.isDone.every(identity) && this.observer.onCompleted();
-    }
-  };
-  CombineLatestObserver.prototype.dispose = function() { this.isStopped = true; };
-  CombineLatestObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
-    }
-
-    return false;
-  };
-
-  /**
-  * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
-  *
-  * @example
-  * 1 - obs = Rx.Observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
-  * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
-  * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
-  */
-  var combineLatest = Observable.combineLatest = function () {
-    var len = arguments.length, args = new Array(len)
-    for(i = 0; i < len; i++) { args[i] = arguments[i]; }
-    var resultSelector = args.pop();
-    Array.isArray(args[0]) && (args = args[0]);
-    return new CombineLatestObservable(args, resultSelector);
+    }, this);
   };
 
   /**
@@ -4309,61 +4280,11 @@
     }, source);
   };
 
-  var TakeObservable = (function(__super__) {
-    inherits(TakeObservable, __super__);
-    
-    function TakeObservable(source, count) {
-      this.source = source;
-      this.takeCount = count;
-      __super__.call(this);
-    }
-    
-    TakeObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.takeCount));
-    };
-    
-    function InnerObserver(o, c) {
-      this.o = o;
-      this.c = c;
-      this.r = c;
-      this.isStopped = false;
-    }
-    InnerObserver.prototype = {
-      onNext: function (x) {
-        if (this.isStopped) { return; }
-        if (this.r-- > 0) {
-          this.o.onNext(x);
-          this.r <= 0 && this.o.onCompleted();
-        }
-      },
-      onError: function (err) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onError(err);
-        }
-      },
-      onCompleted: function () {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onCompleted();
-        }
-      },
-      dispose: function () { this.isStopped = true; },
-      fail: function (e) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onError(e);
-          return true;
-        }
-        return false;
-      }
-    };
-    
-    return TakeObservable;
-  }(ObservableBase));  
-  
   /**
    *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
+   *
+   *  var res = source.take(5);
+   *  var res = source.take(0, Rx.Scheduler.timeout);
    * @param {Number} count The number of elements to return.
    * @param {Scheduler} [scheduler] Scheduler used to produce an OnCompleted message in case <paramref name="count count</paramref> is set to 0.
    * @returns {Observable} An observable sequence that contains the specified number of elements from the start of the input sequence.
@@ -4371,7 +4292,16 @@
   observableProto.take = function (count, scheduler) {
     if (count < 0) { throw new ArgumentOutOfRangeError(); }
     if (count === 0) { return observableEmpty(scheduler); }
-    return new TakeObservable(this, count);
+    var source = this;
+    return new AnonymousObservable(function (o) {
+      var remaining = count;
+      return source.subscribe(function (x) {
+        if (remaining-- > 0) {
+          o.onNext(x);
+          remaining <= 0 && o.onCompleted();
+        }
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
+    }, source);
   };
 
   /**
