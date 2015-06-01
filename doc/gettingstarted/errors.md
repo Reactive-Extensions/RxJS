@@ -153,7 +153,7 @@ The above case retries immediately upon failure.  But what if you want to contro
 var source = get('url').retryWhen(
   function (attempts) {
     return attempts
-      .zip(Observable.range(1, 3), function (_, i) { return i })
+      .zip(Rx.Observable.range(1, 3), function (_, i) { return i })
       .flatMap(function (i)) {
         console.log('delay retry by ' + i + ' second(s)');
         return Rx.Observable.timer(i * 1000);
