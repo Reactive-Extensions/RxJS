@@ -220,6 +220,38 @@ test('Sample_Sampler_Simple3', function () {
   );
 });
 
+test('Sample completes if earlier completes', function () {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(220, 2),
+    onNext(240, 3),
+    onNext(290, 4),
+    onCompleted(300)
+   );
+
+  var ys = scheduler.createHotObservable(
+    onNext(150, ""),
+    onCompleted(210)
+  );
+
+  var res = scheduler.startWithCreate(function () {
+    return xs.sample(ys);
+  });
+
+  res.messages.assertEqual(
+  );
+
+  xs.subscriptions.assertEqual(
+    subscribe(200, 300)
+  );
+
+  ys.subscriptions.assertEqual(
+    subscribe(200, 1000)
+  );
+});
+
 test('Sample_Sampler_SourceThrows', function() {
   var error = new Error();
 
