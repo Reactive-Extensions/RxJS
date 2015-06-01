@@ -1233,7 +1233,7 @@
 
     function runTrampoline () {
       while (queue.length > 0) {
-        var item = queue.dequeue();
+        var item = queue.shift();
         !item.isCancelled() && item.invoke();
       }
     }
@@ -1242,14 +1242,13 @@
       var si = new ScheduledItem(this, state, action, this.now());
 
       if (!queue) {
-        queue = new PriorityQueue(4);
-        queue.enqueue(si);
+        queue = [si];
 
         var result = tryCatch(runTrampoline)();
         queue = null;
         if (result === errorObj) { return thrower(result.e); }
       } else {
-        queue.enqueue(si);
+        queue.push(si);
       }
       return si.disposable;
     }
