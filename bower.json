@@ -18,7 +18,7 @@
     "dist/rx.joinpatterns.js",
     "dist/rx.testing.js",
     "dist/rx.time.js",
-    "dist/rx.virtualtime.js",
+    "dist/rx.virtualtime.js"
   ],
   "ignore": [
     ".sh",
