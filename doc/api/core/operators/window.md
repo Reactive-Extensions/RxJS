@@ -67,7 +67,7 @@ This version of `window` opens a window whenever it observes the `windowOpenings
 var openings = Rx.Observable.interval(200);
 
 var source = Rx.Observable.interval(50)
-  .buffer(openings, function (x) { return Rx.Observable.timer(x + 100); })
+  .window(openings, function (x) { return Rx.Observable.timer(x + 100); })
   .take(3);
 
 var subscription = source.subscribe(
