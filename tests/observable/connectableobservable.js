@@ -11,26 +11,26 @@ var Observable = Rx.Observable,
 
 var ConnectableObservable = (function (_super) {
 
-    function subscribe(observer) {
-        return this._o.subscribe(observer);
-    }
+  function subscribe(observer) {
+    return this._o.subscribe(observer);
+  }
 
-    inherits(ConnectableObservable, _super);
+  inherits(ConnectableObservable, _super);
 
-    function ConnectableObservable(o, s) {
-        _super.call(this, subscribe);
-        this._o = o.multicast(s);
-    }
+  function ConnectableObservable(o, s) {
+    _super.call(this, subscribe);
+    this._o = o.multicast(s);
+  }
 
-    ConnectableObservable.prototype.connect = function () {
-        return this._o.connect();
-    };
+  ConnectableObservable.prototype.connect = function () {
+    return this._o.connect();
+  };
 
-    ConnectableObservable.prototype.refCount = function () {
-        return this._o.refCount();
-    };
+  ConnectableObservable.prototype.refCount = function () {
+    return this._o.refCount();
+  };
 
-    return ConnectableObservable;
+  return ConnectableObservable;
 }(Observable));
 
 var MySubject = (function (_super) {
@@ -76,7 +76,7 @@ test('ConnectableObservable_Creation', function () {
     var y = 0;
 
     var s2 = new Subject();
-    var co2 = new ConnectableObservable(Observable.returnValue(1), s2);
+    var co2 = new ConnectableObservable(Observable.just(1), s2);
 
     co2.subscribe(function (x) { y = x; });
     notEqual(1, y);

@@ -39,7 +39,7 @@
     observableDefer = Observable.defer,
     observableEmpty = Observable.empty,
     observableNever = Observable.never,
-    observableThrow = Observable.throwException,
+    observableThrow = Observable.throwError,
     observableFromArray = Observable.fromArray,
     timeoutScheduler = Rx.Scheduler['default'],
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,

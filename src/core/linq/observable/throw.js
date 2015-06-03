@@ -8,14 +8,8 @@
   var observableThrow = Observable['throw'] = Observable.throwError = function (error, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (observer) {
-      return scheduler.schedule(function () {
-        observer.onError(error);
+      return scheduler.scheduleWithState(error, function (e) {
+        observer.onError(e);
       });
     });
-  };
-
-  /** @deprecated use #some instead */
-  Observable.throwException = function () {
-    //deprecate('throwException', 'throwError');
-    return Observable.throwError.apply(null, arguments);
   };

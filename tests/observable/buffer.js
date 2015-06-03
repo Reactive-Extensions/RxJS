@@ -457,7 +457,7 @@ test('Buffer_Closings_WindowClose_Error', function () {
     );
 
     var res = scheduler.startWithCreate(function () {
-        return xs.buffer(function () { return Observable.throwException(ex, scheduler); });
+        return xs.buffer(function () { return Observable.throwError(ex, scheduler); });
     });
 
     res.messages.assertEqual(

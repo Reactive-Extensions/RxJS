@@ -36,7 +36,7 @@
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     observableNever = Observable.never,
-    observableThrow = Observable.throwException,
+    observableThrow = Observable.throwError,
     AnonymousObservable = Rx.AnonymousObservable,
     AnonymousObserver = Rx.AnonymousObserver,
     notificationCreateOnNext = Rx.Notification.createOnNext,

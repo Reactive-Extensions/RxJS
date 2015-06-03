@@ -44,7 +44,7 @@
     immediateScheduler = Rx.Scheduler.immediate,
     timeoutScheduler = Rx.Scheduler['default'],
     isScheduler = Rx.Scheduler.isScheduler,
-    slice = Array.prototype.slice;
+    isFunction = Rx.helpers.isFunction;
 
   var fnString = 'function',
       throwString = 'throw',

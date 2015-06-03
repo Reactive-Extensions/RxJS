@@ -197,7 +197,7 @@ test('JoinOp_Error_III', function () {
     ys = scheduler.createHotObservable(onNext(215, new TimeInterval("hat", 20)), onNext(217, new TimeInterval("bat", 1)), onNext(290, new TimeInterval("wag", 200)), onNext(300, new TimeInterval("pig", 10)), onNext(305, new TimeInterval("cup", 50)), onNext(600, new TimeInterval("yak", 90)), onNext(702, new TimeInterval("tin", 20)), onNext(712, new TimeInterval("man", 10)), onNext(722, new TimeInterval("rat", 200)), onNext(732, new TimeInterval("wig", 5)), onCompleted(800));
     results = scheduler.startWithCreate(function () {
         return xs.join(ys, function (x) {
-            return Observable.timer(x.interval, undefined, scheduler).selectMany(x.value === 6 ? Observable.throwException(ex) : Observable.empty());
+            return Observable.timer(x.interval, undefined, scheduler).selectMany(x.value === 6 ? Observable.throwError(ex) : Observable.empty());
         }, function (y) {
             return Observable.timer(y.interval, undefined, scheduler);
         }, function (x, y) {
@@ -217,7 +217,7 @@ test('JoinOp_Error_IV', function () {
         return xs.join(ys, function (x) {
             return Observable.timer(x.interval, undefined, scheduler);
         }, function (y) {
-            return Observable.timer(y.interval, undefined, scheduler).selectMany(y.value === "tin" ? Observable.throwException(ex) : Observable.empty());
+            return Observable.timer(y.interval, undefined, scheduler).selectMany(y.value === "tin" ? Observable.throwError(ex) : Observable.empty());
         }, function (x, y) {
             return x.value + y.value;
         });

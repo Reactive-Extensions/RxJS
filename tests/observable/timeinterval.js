@@ -47,7 +47,7 @@ test('TimeInterval_Error', function () {
     ex = 'ex';
     scheduler = new TestScheduler();
     results = scheduler.startWithCreate(function () {
-        return Rx.Observable.throwException(ex, scheduler).timeInterval(scheduler);
+        return Rx.Observable.throwError(ex, scheduler).timeInterval(scheduler);
     });
     results.messages.assertEqual(onError(201, ex));
 });

@@ -118,7 +118,7 @@ test('Window_Closings_WindowClose_Error', function () {
     window = 1;
     results = scheduler.startWithCreate(function () {
         return xs.window(function () {
-            return Observable.throwException(ex, scheduler);
+            return Observable.throwError(ex, scheduler);
         }).select(function (w, i) {
             return w.select(function (x) {
                 return i.toString() + ' ' + x.toString();

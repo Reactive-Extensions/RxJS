@@ -15,7 +15,7 @@ test('Window_Time_Basic', function () {
         return xs.windowWithTime(100, scheduler).select(function (ys, i) {
             return ys.select(function (y) {
                 return i + ' ' + y;
-            }).concat(Rx.Observable.returnValue(i + ' end'));
+            }).concat(Rx.Observable.just(i + ' end'));
         }).mergeObservable();
     });
     results.messages.assertEqual(onNext(210, "0 2"), onNext(240, "0 3"), onNext(270, "0 4"), onNext(300, "0 end"), onNext(320, "1 5"), onNext(360, "1 6"), onNext(390, "1 7"), onNext(400, "1 end"), onNext(410, "2 8"), onNext(460, "2 9"), onNext(470, "2 10"), onNext(490, "2 end"), onCompleted(490));
@@ -30,7 +30,7 @@ test('Window_Time_Basic_Both', function () {
         return xs.windowWithTime(100, 50, scheduler).select(function (ys, i) {
             return ys.select(function (y) {
                 return i + " " + y;
-            }).concat(Rx.Observable.returnValue(i + " end"));
+            }).concat(Rx.Observable.just(i + " end"));
         }).mergeObservable();
     });
     results.messages.assertEqual(onNext(210, "0 2"), onNext(240, "0 3"), onNext(270, "0 4"), onNext(270, "1 4"), onNext(300, "0 end"), onNext(320, "1 5"), onNext(320, "2 5"), onNext(350, "1 end"), onNext(360, "2 6"), onNext(360, "3 6"), onNext(390, "2 7"), onNext(390, "3 7"), onNext(400, "2 end"), onNext(410, "3 8"), onNext(410, "4 8"), onNext(450, "3 end"), onNext(460, "4 9"), onNext(460, "5 9"), onNext(470, "4 10"), onNext(470, "5 10"), onNext(490, "4 end"), onNext(490, "5 end"), onCompleted(490));

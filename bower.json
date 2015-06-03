@@ -1,6 +1,6 @@
 {
   "name": "rxjs",
-  "version": "2.5.3",
+  "version": "3.0.0",
   "main": [
     "dist/rx.all.js",
     "dist/rx.all.compat.js",

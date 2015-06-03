@@ -772,92 +772,6 @@
     }());
   }
 
-  // Collections
-  function IndexedItem(id, value) {
-    this.id = id;
-    this.value = value;
-  }
-
-  IndexedItem.prototype.compareTo = function (other) {
-    var c = this.value.compareTo(other.value);
-    c === 0 && (c = this.id - other.id);
-    return c;
-  };
-
-  // Priority Queue for Scheduling
-  var PriorityQueue = Rx.internals.PriorityQueue = function (capacity) {
-    this.items = new Array(capacity);
-    this.length = 0;
-  };
-
-  var priorityProto = PriorityQueue.prototype;
-  priorityProto.isHigherPriority = function (left, right) {
-    return this.items[left].compareTo(this.items[right]) < 0;
-  };
-
-  priorityProto.percolate = function (index) {
-    if (index >= this.length || index < 0) { return; }
-    var parent = index - 1 >> 1;
-    if (parent < 0 || parent === index) { return; }
-    if (this.isHigherPriority(index, parent)) {
-      var temp = this.items[index];
-      this.items[index] = this.items[parent];
-      this.items[parent] = temp;
-      this.percolate(parent);
-    }
-  };
-
-  priorityProto.heapify = function (index) {
-    +index || (index = 0);
-    if (index >= this.length || index < 0) { return; }
-    var left = 2 * index + 1,
-        right = 2 * index + 2,
-        first = index;
-    if (left < this.length && this.isHigherPriority(left, first)) {
-      first = left;
-    }
-    if (right < this.length && this.isHigherPriority(right, first)) {
-      first = right;
-    }
-    if (first !== index) {
-      var temp = this.items[index];
-      this.items[index] = this.items[first];
-      this.items[first] = temp;
-      this.heapify(first);
-    }
-  };
-
-  priorityProto.peek = function () { return this.items[0].value; };
-
-  priorityProto.removeAt = function (index) {
-    this.items[index] = this.items[--this.length];
-    this.items[this.length] = undefined;
-    this.heapify();
-  };
-
-  priorityProto.dequeue = function () {
-    var result = this.peek();
-    this.removeAt(0);
-    return result;
-  };
-
-  priorityProto.enqueue = function (item) {
-    var index = this.length++;
-    this.items[index] = new IndexedItem(PriorityQueue.count++, item);
-    this.percolate(index);
-  };
-
-  priorityProto.remove = function (item) {
-    for (var i = 0; i < this.length; i++) {
-      if (this.items[i].value === item) {
-        this.removeAt(i);
-        return true;
-      }
-    }
-    return false;
-  };
-  PriorityQueue.count = 0;
-
   /**
    * Represents a group of disposable resources that are disposed together.
    * @constructor
@@ -2809,7 +2723,7 @@
    * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} An observable sequence containing the single specified element.
    */
-  var observableReturn = Observable['return'] = Observable.just = Observable.returnValue = function (value, scheduler) {
+  var observableReturn = Observable['return'] = Observable.just = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new JustObservable(value, scheduler);
   };
@@ -2851,7 +2765,7 @@
    * @param {Scheduler} scheduler Scheduler to send the exceptional termination call on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} The observable sequence that terminates exceptionally with the specified exception object.
    */
-  var observableThrow = Observable['throw'] = Observable.throwError = Observable.throwException = function (error, scheduler) {
+  var observableThrow = Observable['throw'] = Observable.throwError = function (error, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new ThrowObservable(error, scheduler);
   };
@@ -2885,7 +2799,7 @@
    * @param {Mixed} handlerOrSecond Exception handler function that returns an observable sequence given the error that occurred in the first sequence, or a second observable sequence used to produce results when an error occurred in the first sequence.
    * @returns {Observable} An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
    */
-  observableProto['catch'] = observableProto.catchError = observableProto.catchException = function (handlerOrSecond) {
+  observableProto['catch'] = observableProto.catchError = function (handlerOrSecond) {
     return typeof handlerOrSecond === 'function' ?
       observableCatchHandler(this, handlerOrSecond) :
       observableCatch([this, handlerOrSecond]);
@@ -2896,7 +2810,7 @@
    * @param {Array | Arguments} args Arguments or an array to use as the next sequence if an error occurs.
    * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
    */
-  var observableCatch = Observable.catchError = Observable['catch'] = Observable.catchException = function () {
+  var observableCatch = Observable.catchError = Observable['catch'] = function () {
     var items = [];
     if (Array.isArray(arguments[0])) {
       items = arguments[0];
@@ -4789,10 +4703,6 @@
 
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
-   *
-   * @example
-   *   var source = Rx.Observable.fromEvent(element, 'mouseup');
-   *
    * @param {Object} element The DOMElement or NodeList to attach a listener.
    * @param {String} eventName The event name to attach the observable sequence.
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
@@ -4817,22 +4727,17 @@
           selector);
       }
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       return createEventListener(
         element,
         eventName,
-        function handler (e) {
-          var results = e;
-
-          if (selector) {
-            try {
-              results = selector(arguments);
-            } catch (err) {
-              return observer.onError(err);
-            }
+        function handler () {
+          var results = arguments[0];
+          if (isFunction(selector)) {
+            results = tryCatch(selector).apply(null, arguments);
+            if (results === errorObj) { return o.onError(results.e); }
           }
-
-          observer.onNext(results);
+          o.onNext(results);
         });
     }).publish().refCount();
   };
@@ -4846,23 +4751,18 @@
    */
   var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
     return new AnonymousObservable(function (observer) {
-      function innerHandler (e) {
-        var result = e;
-        if (selector) {
-          try {
-            result = selector(arguments);
-          } catch (err) {
-            return observer.onError(err);
-          }
+      function innerHandler () {
+        var result = arguments[0];
+        if (isFunction(selector)) {
+          result = tryCatch(selector).apply(null, arguments);
+          if (result === errorObj) { return observer.onError(result.e); }
         }
         observer.onNext(result);
       }
 
       var returnValue = addHandler(innerHandler);
       return disposableCreate(function () {
-        if (removeHandler) {
-          removeHandler(innerHandler, returnValue);
-        }
+        isFunction(removeHandler) && removeHandler(innerHandler, returnValue);
       });
     }).publish().refCount();
   };

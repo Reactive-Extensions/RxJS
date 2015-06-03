@@ -31,7 +31,7 @@ test('ConcatMap_Triple_Identity', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.just(x, scheduler); },
-      function (ex) { return Observable.throwException(ex, scheduler); },
+      function (err) { return Observable.throwError(err, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -82,7 +82,7 @@ test('ConcatMap_Triple_InnersWithTiming1', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return ysn; },
-      function (ex) { return yse; },
+      function (err) { return yse; },
       function () { return ysc; }
     );
   });
@@ -159,7 +159,7 @@ test('ConcatMap_Triple_InnersWithTiming2', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return ysn; },
-      function (ex) { return yse; },
+      function (err) { return yse; },
       function () { return ysc; }
     );
   });
@@ -236,7 +236,7 @@ test('ConcatMap_Triple_InnersWithTiming3', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return ysn; },
-      function (ex) { return yse; },
+      function (err) { return yse; },
       function () { return ysc; }
     );
   });
@@ -298,7 +298,7 @@ test('ConcatMap_Triple_Error_Identity', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.just(x, scheduler); },
-      function (ex1) { return Observable.throwException(ex1, scheduler); },
+      function (ex1) { return Observable.throwError(ex1, scheduler); },
       function () { return Observable.empty(scheduler); }
     )
   });
@@ -332,7 +332,7 @@ test('ConcatMap_Triple_ConcatMap', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.throwException(ex, scheduler); },
+      function (err) { return Observable.throwError(err, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -371,7 +371,7 @@ test('ConcatMap_Triple_Concat', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.just(x, scheduler); },
-      function (ex) { return Observable.throwException(ex, scheduler); },
+      function (err) { return Observable.throwError(err, scheduler); },
       function () { return Observable.range(1, 3, scheduler); }
     );
   });
@@ -408,7 +408,7 @@ test('ConcatMap_Triple_Catch', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.just(x, scheduler); },
-      function (ex) { return Observable.range(1, 3, scheduler); },
+      function (err) { return Observable.range(1, 3, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -442,7 +442,7 @@ test('ConcatMap_Triple_Error_Catch', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.just(x, scheduler); },
-      function (ex) { return Observable.range(1, 3, scheduler); },
+      function (err) { return Observable.range(1, 3, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -479,7 +479,7 @@ test('ConcatMap_Triple_All', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function (err) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
   });
@@ -520,7 +520,7 @@ test('ConcatMap_Triple_Error_All', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function (err) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
   });
@@ -561,7 +561,7 @@ test('ConcatMap_Triple_All_Dispose', function () {
   var res = scheduler.startWithDispose(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function (err) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
   }, 307);
@@ -594,7 +594,7 @@ test('ConcatMap_Triple_All_Dispose_Before_First', function () {
   var res = scheduler.startWithDispose(function () {
     return xs.concatMapObserver(
       function (x) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function (err) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
   }, 304);
@@ -723,7 +723,7 @@ test('ConcatMapWithIndex_Triple_Identity', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return Observable.just(x, scheduler); },
-      function (ex) { return Observable.throwException(ex, scheduler); },
+      function (err) { return Observable.throwError(err, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -774,7 +774,7 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming1', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return  ysn; },
-      function (ex) { return yse; },
+      function (err) { return yse; },
       function () { return ysc; }
     );
   });
@@ -851,7 +851,7 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming2', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return ysn; },
-      function (ex) { return yse; },
+      function (err) { return yse; },
       function () { return ysc; }
     );
   });
@@ -928,7 +928,7 @@ test('ConcatMapWithIndex_Triple_InnersWithTiming3', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return ysn; },
-      function (ex) { return yse; },
+      function (err) { return yse; },
       function () { return ysc; }
     );
   });
@@ -990,7 +990,7 @@ test('ConcatMapWithIndex_Triple_Error_Identity', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return Observable.just(x, scheduler); },
-      function (ex1) { return Observable.throwException(ex1, scheduler); },
+      function (ex1) { return Observable.throwError(ex1, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -1024,7 +1024,7 @@ test('ConcatMapWithIndex_Triple_ConcatMap', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.throwException(ex, scheduler); },
+      function (err) { return Observable.throwError(err, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -1063,7 +1063,7 @@ test('ConcatMapWithIndex_Triple_Concat', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return  Observable.just(x, scheduler); },
-      function (ex) { return Observable.throwException(ex, scheduler); },
+      function (err) { return Observable.throwError(err, scheduler); },
       function () { return Observable.range(1, 3, scheduler); }
     );
   });
@@ -1100,7 +1100,7 @@ test('ConcatMapWithIndex_Triple_Catch', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return  Observable.just(x, scheduler); },
-      function (ex) { return Observable.range(1, 3, scheduler); },
+      function (err) { return Observable.range(1, 3, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -1134,7 +1134,7 @@ test('ConcatMapWithIndex_Triple_Error_Catch', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return  Observable.just(x, scheduler); },
-      function (ex) { return Observable.range(1, 3, scheduler); },
+      function (err) { return Observable.range(1, 3, scheduler); },
       function () { return Observable.empty(scheduler); }
     );
   });
@@ -1171,7 +1171,7 @@ test('ConcatMapWithIndex_Triple_All', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
         function (x, _) { return Observable.repeat(x, x, scheduler); },
-        function (ex) { return Observable.repeat(0, 2, scheduler); },
+        function (err) { return Observable.repeat(0, 2, scheduler); },
         function () { return Observable.repeat(-1, 2, scheduler); }
     );
   });
@@ -1212,7 +1212,7 @@ test('ConcatMapWithIndex_Triple_Error_All', function () {
   var res = scheduler.startWithCreate(function () {
     return xs.concatMapObserver(
       function (x, _) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function (err) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
   });
@@ -1253,7 +1253,7 @@ test('ConcatMapWithIndex_Triple_All_Dispose', function () {
   var res = scheduler.startWithDispose(function () {
     return xs.concatMapObserver(
       function (x, _) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function (err) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
   }, 307);
@@ -1286,7 +1286,7 @@ test('ConcatMapWithIndex_Triple_All_Dispose_Before_First', function () {
   var res = scheduler.startWithDispose(function () {
     return xs.concatMapObserver(
       function (x, _) { return Observable.repeat(x, x, scheduler); },
-      function (ex) { return Observable.repeat(0, 2, scheduler); },
+      function (err) { return Observable.repeat(0, 2, scheduler); },
       function () { return Observable.repeat(-1, 2, scheduler); }
     );
   }, 304);

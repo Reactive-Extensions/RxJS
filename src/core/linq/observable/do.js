@@ -6,7 +6,7 @@
    * @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
    * @returns {Observable} The source sequence with the side-effecting behavior applied.
    */
-  observableProto['do'] = observableProto.tap = observableProto.doAction = function (observerOrOnNext, onError, onCompleted) {
+  observableProto['do'] = observableProto.tap = function (observerOrOnNext, onError, onCompleted) {
     var source = this;
     return new AnonymousObservable(function (observer) {
       var tapObserver = !observerOrOnNext || isFunction(observerOrOnNext) ?

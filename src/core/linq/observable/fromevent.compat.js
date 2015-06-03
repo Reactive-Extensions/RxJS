@@ -1,19 +1,96 @@
+  function isNodeList(el) {
+    if (window.StaticNodeList) {
+      // IE8 Specific
+      // instanceof is slower than Object#toString, but Object#toString will not work as intended in IE8
+      return (el instanceof window.StaticNodeList || el instanceof window.NodeList);
+    } else {
+      return (Object.prototype.toString.call(el) == '[object NodeList]')
+    }
+  }
+
+  function fixEvent(event) {
+    var stopPropagation = function () {
+      this.cancelBubble = true;
+    };
+
+    var preventDefault = function () {
+      this.bubbledKeyCode = this.keyCode;
+      if (this.ctrlKey) {
+        try {
+          this.keyCode = 0;
+        } catch (e) { }
+      }
+      this.defaultPrevented = true;
+      this.returnValue = false;
+      this.modified = true;
+    };
+
+    event || (event = root.event);
+    if (!event.target) {
+      event.target = event.target || event.srcElement;
+
+      if (event.type == 'mouseover') {
+        event.relatedTarget = event.fromElement;
+      }
+      if (event.type == 'mouseout') {
+        event.relatedTarget = event.toElement;
+      }
+      // Adding stopPropogation and preventDefault to IE
+      if (!event.stopPropagation) {
+        event.stopPropagation = stopPropagation;
+        event.preventDefault = preventDefault;
+      }
+      // Normalize key events
+      switch (event.type) {
+        case 'keypress':
+          var c = ('charCode' in event ? event.charCode : event.keyCode);
+          if (c == 10) {
+            c = 0;
+            event.keyCode = 13;
+          } else if (c == 13 || c == 27) {
+            c = 0;
+          } else if (c == 3) {
+            c = 99;
+          }
+          event.charCode = c;
+          event.keyChar = event.charCode ? String.fromCharCode(event.charCode) : '';
+          break;
+      }
+    }
+
+    return event;
+  }
+
   function createListener (element, name, handler) {
+    // Standards compliant
     if (element.addEventListener) {
       element.addEventListener(name, handler, false);
       return disposableCreate(function () {
         element.removeEventListener(name, handler, false);
       });
     }
-    throw new Error('No listener found');
+    if (element.attachEvent) {
+      // IE Specific
+      var innerHandler = function (event) {
+        handler(fixEvent(event));
+      };
+      element.attachEvent('on' + name, innerHandler);
+      return disposableCreate(function () {
+        element.detachEvent('on' + name, innerHandler);
+      });
+    }
+    // Level 1 DOM Events
+    element['on' + name] = handler;
+    return disposableCreate(function () {
+      element['on' + name] = null;
+    });
   }
 
   function createEventListener (el, eventName, handler) {
     var disposables = new CompositeDisposable();
 
-    // Asume NodeList or HTMLCollection
-    var toStr = Object.prototype.toString;
-    if (toStr.call(el) === '[object NodeList]' || toStr.call(el) === '[object HTMLCollection]') {
+    // Asume NodeList
+    if (isNodeList(el) || Object.prototype.toString.call(el) === '[object HTMLCollection]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }

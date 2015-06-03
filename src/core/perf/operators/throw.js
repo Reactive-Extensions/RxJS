@@ -35,7 +35,7 @@
    * @param {Scheduler} scheduler Scheduler to send the exceptional termination call on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} The observable sequence that terminates exceptionally with the specified exception object.
    */
-  var observableThrow = Observable['throw'] = Observable.throwError = Observable.throwException = function (error, scheduler) {
+  var observableThrow = Observable['throw'] = Observable.throwError = function (error, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new ThrowObservable(error, scheduler);
   };

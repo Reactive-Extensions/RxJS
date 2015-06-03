@@ -194,7 +194,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromevent-modern.js', // publish
+              'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
 
@@ -487,7 +487,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromevent.js', // publish
+              'src/core/linq/observable/fromevent.compat.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
 
@@ -625,7 +625,6 @@ module.exports = function (grunt) {
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
               'src/core/internal/trycatch.js',
-              'src/core/internal/priorityqueue.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
@@ -774,7 +773,6 @@ module.exports = function (grunt) {
               'src/core/internal/util.js',
               'src/core/internal/trycatch.js',
               'src/core/internal/polyfills.js',
-              'src/core/internal/priorityqueue.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
@@ -920,7 +918,6 @@ module.exports = function (grunt) {
               'src/core/internal/isequal.js',
               'src/core/internal/trycatch.js',
               'src/core/internal/util.js',
-              'src/core/internal/priorityqueue.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
@@ -1010,7 +1007,7 @@ module.exports = function (grunt) {
               // Async Operators
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromevent-modern.js', // publish
+              'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
@@ -1089,7 +1086,6 @@ module.exports = function (grunt) {
               'src/core/internal/trycatch.js',
               'src/core/internal/util.js',
               'src/core/internal/polyfills.js',
-              'src/core/internal/priorityqueue.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
@@ -1179,7 +1175,7 @@ module.exports = function (grunt) {
               // Async Operators
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromevent.js', // publish
+              'src/core/linq/observable/fromevent.compat.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
@@ -1504,12 +1500,13 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/asyncintro.js',
               'src/core/headers/asyncheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromevent-modern.js', // publish
+              'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
               'src/core/headers/suboutro.js'
@@ -1521,12 +1518,13 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/asyncintro.js',
               'src/core/headers/asyncheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
               'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
               'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromevent.js', // publish
+              'src/core/linq/observable/fromevent.compat.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
               'src/core/headers/suboutro.js'
@@ -1920,6 +1918,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/subintro.js',
               'src/core/headers/virtualtimeheader.js',
+              'src/core/internal/priorityqueue.js',
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',
               'src/core/headers/suboutro.js'
@@ -1931,6 +1930,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro.js',
               'src/core/headers/virtualtimeheader.js',
+              'src/core/internal/priorityqueue.js',
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',
               'src/core/headers/suboutro.js'
@@ -1941,6 +1941,7 @@ module.exports = function (grunt) {
             src: [
               'src/core/headers/license.js',
               'src/core/headers/liteintro-compat.js',
+              'src/core/internal/priorityqueue.js',
               'src/core/headers/virtualtimeheader.js',
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',

@@ -45,7 +45,26 @@
     immediateScheduler = Rx.Scheduler.immediate,
     timeoutScheduler = Rx.Scheduler['default'],
     isScheduler = Rx.Scheduler.isScheduler,
-    slice = Array.prototype.slice;
+    isFunction = Rx.helpers.isFunction;
+
+  var errorObj = {e: {}};
+  var tryCatchTarget;
+  function tryCatcher() {
+    try {
+      return tryCatchTarget.apply(this, arguments);
+    } catch (e) {
+      errorObj.e = e;
+      return errorObj;
+    }
+  }
+  function tryCatch(fn) {
+    if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
+    tryCatchTarget = fn;
+    return tryCatcher;
+  }
+  function thrower(e) {
+    throw e;
+  }
 
   var fnString = 'function',
       throwString = 'throw',
@@ -412,10 +431,6 @@
 
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
-   *
-   * @example
-   *   var source = Rx.Observable.fromEvent(element, 'mouseup');
-   *
    * @param {Object} element The DOMElement or NodeList to attach a listener.
    * @param {String} eventName The event name to attach the observable sequence.
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
@@ -440,22 +455,17 @@
           selector);
       }
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       return createEventListener(
         element,
         eventName,
-        function handler (e) {
-          var results = e;
-
-          if (selector) {
-            try {
-              results = selector(arguments);
-            } catch (err) {
-              return observer.onError(err);
-            }
+        function handler () {
+          var results = arguments[0];
+          if (isFunction(selector)) {
+            results = tryCatch(selector).apply(null, arguments);
+            if (results === errorObj) { return o.onError(results.e); }
           }
-
-          observer.onNext(results);
+          o.onNext(results);
         });
     }).publish().refCount();
   };
@@ -469,23 +479,18 @@
    */
   var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
     return new AnonymousObservable(function (observer) {
-      function innerHandler (e) {
-        var result = e;
-        if (selector) {
-          try {
-            result = selector(arguments);
-          } catch (err) {
-            return observer.onError(err);
-          }
+      function innerHandler () {
+        var result = arguments[0];
+        if (isFunction(selector)) {
+          result = tryCatch(selector).apply(null, arguments);
+          if (result === errorObj) { return observer.onError(result.e); }
         }
         observer.onNext(result);
       }
 
       var returnValue = addHandler(innerHandler);
       return disposableCreate(function () {
-        if (removeHandler) {
-          removeHandler(innerHandler, returnValue);
-        }
+        isFunction(removeHandler) && removeHandler(innerHandler, returnValue);
       });
     }).publish().refCount();
   };

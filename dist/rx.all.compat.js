@@ -3166,7 +3166,7 @@
    * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} An observable sequence containing the single specified element.
    */
-  var observableReturn = Observable['return'] = Observable.just = Observable.returnValue = function (value, scheduler) {
+  var observableReturn = Observable['return'] = Observable.just = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new JustObservable(value, scheduler);
   };
@@ -3208,7 +3208,7 @@
    * @param {Scheduler} scheduler Scheduler to send the exceptional termination call on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} The observable sequence that terminates exceptionally with the specified exception object.
    */
-  var observableThrow = Observable['throw'] = Observable.throwError = Observable.throwException = function (error, scheduler) {
+  var observableThrow = Observable['throw'] = Observable.throwError = function (error, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new ThrowObservable(error, scheduler);
   };
@@ -3341,7 +3341,7 @@
    * @param {Mixed} handlerOrSecond Exception handler function that returns an observable sequence given the error that occurred in the first sequence, or a second observable sequence used to produce results when an error occurred in the first sequence.
    * @returns {Observable} An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
    */
-  observableProto['catch'] = observableProto.catchError = observableProto.catchException = function (handlerOrSecond) {
+  observableProto['catch'] = observableProto.catchError = function (handlerOrSecond) {
     return typeof handlerOrSecond === 'function' ?
       observableCatchHandler(this, handlerOrSecond) :
       observableCatch([this, handlerOrSecond]);
@@ -3352,7 +3352,7 @@
    * @param {Array | Arguments} args Arguments or an array to use as the next sequence if an error occurs.
    * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
    */
-  var observableCatch = Observable.catchError = Observable['catch'] = Observable.catchException = function () {
+  var observableCatch = Observable.catchError = Observable['catch'] = function () {
     var items = [];
     if (Array.isArray(arguments[0])) {
       items = arguments[0];
@@ -6686,10 +6686,6 @@
 
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
-   *
-   * @example
-   *   var source = Rx.Observable.fromEvent(element, 'mouseup');
-   *
    * @param {Object} element The DOMElement or NodeList to attach a listener.
    * @param {String} eventName The event name to attach the observable sequence.
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
@@ -6714,22 +6710,17 @@
           selector);
       }
     }
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       return createEventListener(
         element,
         eventName,
-        function handler (e) {
-          var results = e;
-
-          if (selector) {
-            try {
-              results = selector(arguments);
-            } catch (err) {
-              return observer.onError(err);
-            }
+        function handler () {
+          var results = arguments[0];
+          if (isFunction(selector)) {
+            results = tryCatch(selector).apply(null, arguments);
+            if (results === errorObj) { return o.onError(results.e); }
           }
-
-          observer.onNext(results);
+          o.onNext(results);
         });
     }).publish().refCount();
   };
@@ -6743,23 +6734,18 @@
    */
   var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
     return new AnonymousObservable(function (observer) {
-      function innerHandler (e) {
-        var result = e;
-        if (selector) {
-          try {
-            result = selector(arguments);
-          } catch (err) {
-            return observer.onError(err);
-          }
+      function innerHandler () {
+        var result = arguments[0];
+        if (isFunction(selector)) {
+          result = tryCatch(selector).apply(null, arguments);
+          if (result === errorObj) { return observer.onError(result.e); }
         }
         observer.onNext(result);
       }
 
       var returnValue = addHandler(innerHandler);
       return disposableCreate(function () {
-        if (removeHandler) {
-          removeHandler(innerHandler, returnValue);
-        }
+        isFunction(removeHandler) && removeHandler(innerHandler, returnValue);
       });
     }).publish().refCount();
   };

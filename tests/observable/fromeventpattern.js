@@ -55,16 +55,16 @@ test('Event_2', function () {
     var element = new FakeDOMStandardElement('foo');
 
     var d = Observable.fromEventPattern(
-            function (h) { element.addEventListener('someEvent', h, false); },
-            function (h) { element.removeEventListener('someEvent', h, false); },
-            function (arr) {
-                return { foo: arr[0], bar: arr[1] };
-            }
-        )
-        .subscribe(function (x) {
-            equal(x.foo, 'baz');
-            equal(x.bar, 'quux');
-        });
+          function (h) { element.addEventListener('someEvent', h, false); },
+          function (h) { element.removeEventListener('someEvent', h, false); },
+          function (baz, quux) {
+            return { foo: baz, bar: quux };
+          }
+      )
+      .subscribe(function (x) {
+          equal(x.foo, 'baz');
+          equal(x.bar, 'quux');
+      });
 
     element.trigger('someEvent', 'baz', 'quux');
     equal(element.addEventListenerCalled, true);

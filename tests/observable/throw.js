@@ -10,33 +10,39 @@ var Observable = Rx.Observable,
     subscribed = Rx.ReactiveTest.subscribed,
     disposed = Rx.ReactiveTest.disposed;
 
+function noop () { }
+
 test('Throw_Basic', function () {
-    var ex, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    results = scheduler.startWithCreate(function () {
-        return Observable.throwException(ex, scheduler);
-    });
-    results.messages.assertEqual(onError(201, ex));
+  var scheduler = new TestScheduler();
+
+  var error = new Error();
+
+  var results = scheduler.startWithCreate(function () {
+    return Observable.throwError(error, scheduler);
+  });
+
+  results.messages.assertEqual(
+    onError(201, error));
 });
 
 test('Throw_Disposed', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithDispose(function () {
-        return Observable.throwException('ex', scheduler);
-    }, 200);
-    results.messages.assertEqual();
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.startWithDispose(function () {
+    return Observable.throwError(new Error(), scheduler);
+  }, 200);
+
+  results.messages.assertEqual();
 });
 
 test('Throw_ObserverThrows', function () {
-    var scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = Observable.throwException('ex', scheduler);
-    xs.subscribe(function (x) { }, function (ex) {
-        throw 'ex';
-    }, function () { });
-    raises(function () {
-        return scheduler.start();
-    });
+  var scheduler = new TestScheduler();
+
+  var xs = Observable.throwError(new Error(), scheduler);
+
+  xs.subscribe(noop, function () { throw new Error(); });
+
+  raises(function () {
+    scheduler.start();
+  });
 });
