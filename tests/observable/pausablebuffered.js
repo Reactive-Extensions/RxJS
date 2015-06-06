@@ -447,3 +447,17 @@ test('paused with state change in subscriber', function(){
     onCompleted(500)
   );
 });
+
+test("pausableBuffered produces expected result", 1, function () {
+  var data = new Rx.Subject();
+  var signal = new Rx.Subject();
+  var p = data.pausableBuffered(signal);
+  var results = [];
+  p.subscribe(function (value) { results.push(value); });
+
+  data.onNext(1);
+  signal.onNext(false);
+  signal.onNext(true);
+
+  QUnit.deepEqual(results, [1]);
+});
