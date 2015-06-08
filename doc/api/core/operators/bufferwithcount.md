@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.bufferWithCount(count, [skip])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithcount.js"View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/bufferwithcount.js)
 
 Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
 
