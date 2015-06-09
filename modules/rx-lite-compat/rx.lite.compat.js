@@ -1781,6 +1781,15 @@
     observableProto = Observable.prototype;
 
     /**
+    * Determines whether the given object is an Observable
+    * @param {Any} An object to determine whether it is an Observable
+    * @returns {Boolean} true if an Observable, else false.
+    */
+    observableProto.isObservable = function (o) {
+      return o && isFunction(o.subscribe);
+    }
+
+    /**
      *  Subscribes an observer to the observable sequence.
      *  @param {Mixed} [observerOrOnNext] The object that is to receive notifications or an action to invoke for each element in the observable sequence.
      *  @param {Function} [onError] Action to invoke upon exceptional termination of the observable sequence.
@@ -3821,31 +3830,17 @@
   observableProto['finally'] = observableProto.ensure = function (action) {
     var source = this;
     return new AnonymousObservable(function (observer) {
-      var subscription;
-      try {
-        subscription = source.subscribe(observer);
-      } catch (e) {
+      var subscription = tryCatch(source.subscribe).call(source, observer);
+      if (subscription === errorObj) {
         action();
-        throw e;
+        return thrower(subscription.e);
       }
       return disposableCreate(function () {
-        try {
-          subscription.dispose();
-        } catch (e) {
-          throw e;
-        } finally {
-          action();
-        }
+        var r = tryCatch(subscription.dispose).call(subscription);
+        action();
+        r === errorObj && thrower(r.e);
       });
     }, this);
-  };
-
-  /**
-   * @deprecated use #finally or #ensure instead.
-   */
-  observableProto.finallyAction = function (action) {
-    //deprecate('finallyAction', 'finally or ensure');
-    return this.ensure(action);
   };
 
   var IgnoreElementsObservable = (function(__super__) {
@@ -4750,14 +4745,14 @@
    * @returns {Observable} An observable sequence which wraps an event from an event emitter
    */
   var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       function innerHandler () {
         var result = arguments[0];
         if (isFunction(selector)) {
           result = tryCatch(selector).apply(null, arguments);
-          if (result === errorObj) { return observer.onError(result.e); }
+          if (result === errorObj) { return o.onError(result.e); }
         }
-        observer.onNext(result);
+        o.onNext(result);
       }
 
       var returnValue = addHandler(innerHandler);
@@ -5458,7 +5453,7 @@
         err;
 
       function next(x, i) {
-        values[i] = x
+        values[i] = x;
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
           if (err) { return o.onError(err); }
@@ -5510,7 +5505,7 @@
       var subscription =
         combineLatestSource(
           this.source,
-          this.pauser.distinctUntilChanged().startWith(false),
+          this.pauser.startWith(false).distinctUntilChanged(),
           function (data, shouldFire) {
             return { data: data, shouldFire: shouldFire };
           })

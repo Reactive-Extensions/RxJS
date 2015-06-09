@@ -1731,7 +1731,11 @@
    * @returns An observer that hides the identity of the specified observer.
    */
   Observer.prototype.asObserver = function () {
-    return new AnonymousObserver(this.onNext.bind(this), this.onError.bind(this), this.onCompleted.bind(this));
+    var self = this;
+    return new AnonymousObserver(
+      function (x) { self.onNext(x); },
+      function (err) { self.onError(err); },
+      function () { self.onCompleted(); });
   };
 
   /**
@@ -1764,12 +1768,13 @@
    * @returns The observer object that invokes the specified handler using a notification corresponding to each message it receives.
    */
   Observer.fromNotifier = function (handler, thisArg) {
+    var cb = bindCallback(handler, thisArg, 1);
     return new AnonymousObserver(function (x) {
-      return handler.call(thisArg, notificationCreateOnNext(x));
+      return cb(notificationCreateOnNext(x));
     }, function (e) {
-      return handler.call(thisArg, notificationCreateOnError(e));
+      return cb(notificationCreateOnError(e));
     }, function () {
-      return handler.call(thisArg, notificationCreateOnCompleted());
+      return cb(notificationCreateOnCompleted());
     });
   };
 
@@ -2068,6 +2073,15 @@
     }
 
     observableProto = Observable.prototype;
+
+    /**
+    * Determines whether the given object is an Observable
+    * @param {Any} An object to determine whether it is an Observable
+    * @returns {Boolean} true if an Observable, else false.
+    */
+    observableProto.isObservable = function (o) {
+      return o && isFunction(o.subscribe);
+    }
 
     /**
      *  Subscribes an observer to the observable sequence.
@@ -4341,31 +4355,17 @@
   observableProto['finally'] = observableProto.ensure = function (action) {
     var source = this;
     return new AnonymousObservable(function (observer) {
-      var subscription;
-      try {
-        subscription = source.subscribe(observer);
-      } catch (e) {
+      var subscription = tryCatch(source.subscribe).call(source, observer);
+      if (subscription === errorObj) {
         action();
-        throw e;
+        return thrower(subscription.e);
       }
       return disposableCreate(function () {
-        try {
-          subscription.dispose();
-        } catch (e) {
-          throw e;
-        } finally {
-          action();
-        }
+        var r = tryCatch(subscription.dispose).call(subscription);
+        action();
+        r === errorObj && thrower(r.e);
       });
     }, this);
-  };
-
-  /**
-   * @deprecated use #finally or #ensure instead.
-   */
-  observableProto.finallyAction = function (action) {
-    //deprecate('finallyAction', 'finally or ensure');
-    return this.ensure(action);
   };
 
   var IgnoreElementsObservable = (function(__super__) {

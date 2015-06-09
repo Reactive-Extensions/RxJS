@@ -6,29 +6,15 @@
   observableProto['finally'] = observableProto.ensure = function (action) {
     var source = this;
     return new AnonymousObservable(function (observer) {
-      var subscription;
-      try {
-        subscription = source.subscribe(observer);
-      } catch (e) {
+      var subscription = tryCatch(source.subscribe).call(source, observer);
+      if (subscription === errorObj) {
         action();
-        throw e;
+        return thrower(subscription.e);
       }
       return disposableCreate(function () {
-        try {
-          subscription.dispose();
-        } catch (e) {
-          throw e;
-        } finally {
-          action();
-        }
+        var r = tryCatch(subscription.dispose).call(subscription);
+        action();
+        r === errorObj && thrower(r.e);
       });
     }, this);
-  };
-
-  /**
-   * @deprecated use #finally or #ensure instead.
-   */
-  observableProto.finallyAction = function (action) {
-    //deprecate('finallyAction', 'finally or ensure');
-    return this.ensure(action);
   };

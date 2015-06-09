@@ -155,7 +155,6 @@ module.exports = function (grunt) {
               // Aggregate Operators
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
-              'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
               'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
@@ -448,7 +447,6 @@ module.exports = function (grunt) {
               // Aggregate Operators
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
-              'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
               'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
@@ -1371,7 +1369,6 @@ module.exports = function (grunt) {
               'src/core/internal/trycatch.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
-              'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
               'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
@@ -1415,7 +1412,6 @@ module.exports = function (grunt) {
               'src/core/internal/trycatch.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
-              'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
               'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select
@@ -1459,7 +1455,6 @@ module.exports = function (grunt) {
               'src/core/internal/trycatch.js',
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
-              'src/core/linq/observable/aggregate.js', // scan, startwith, finalvalue
               'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
               'src/core/linq/observable/some.js',  // where
               'src/core/linq/observable/isempty.js', // any, select

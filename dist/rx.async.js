@@ -478,14 +478,14 @@
    * @returns {Observable} An observable sequence which wraps an event from an event emitter
    */
   var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       function innerHandler () {
         var result = arguments[0];
         if (isFunction(selector)) {
           result = tryCatch(selector).apply(null, arguments);
-          if (result === errorObj) { return observer.onError(result.e); }
+          if (result === errorObj) { return o.onError(result.e); }
         }
-        observer.onNext(result);
+        o.onNext(result);
       }
 
       var returnValue = addHandler(innerHandler);

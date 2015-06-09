@@ -32,6 +32,15 @@
     observableProto = Observable.prototype;
 
     /**
+    * Determines whether the given object is an Observable
+    * @param {Any} An object to determine whether it is an Observable
+    * @returns {Boolean} true if an Observable, else false.
+    */
+    observableProto.isObservable = function (o) {
+      return o && isFunction(o.subscribe);
+    }
+
+    /**
      *  Subscribes an observer to the observable sequence.
      *  @param {Mixed} [observerOrOnNext] The object that is to receive notifications or an action to invoke for each element in the observable sequence.
      *  @param {Function} [onError] Action to invoke upon exceptional termination of the observable sequence.
