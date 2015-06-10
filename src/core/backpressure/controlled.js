@@ -62,15 +62,12 @@
         }
       },
       onNext: function (value) {
-        var hasRequested = false;
-
         if (this.requestedCount === 0) {
           this.enableQueue && this.queue.push(Notification.createOnNext(value));
         } else {
           (this.requestedCount !== -1 && this.requestedCount-- === 0) && this.disposeCurrentRequest();
-          hasRequested = true;
+          this.subject.onNext(value);
         }
-        hasRequested && this.subject.onNext(value);
       },
       _processRequest: function (numberOfItems) {
         if (this.enableQueue) {
