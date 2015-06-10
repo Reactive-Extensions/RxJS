@@ -62,10 +62,10 @@
         }
       },
       onNext: function (value) {
-        if (this.requestedCount === 0) {
+        if (this.requestedCount <= 0) {
           this.enableQueue && this.queue.push(Notification.createOnNext(value));
         } else {
-          (this.requestedCount !== -1 && this.requestedCount-- === 0) && this.disposeCurrentRequest();
+          (this.requestedCount-- === 0) && this.disposeCurrentRequest();
           this.subject.onNext(value);
         }
       },
