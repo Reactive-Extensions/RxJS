@@ -459,7 +459,6 @@ test('controlled relays requested values when only some of them are queued up', 
 
 });
 
-/*
 test('controlled can terminate the request via dispose when it is partially delivered', function() {
 
     var scheduler = new TestScheduler();
@@ -505,7 +504,6 @@ test('controlled can terminate the request via dispose when it is partially deli
     );
 
 });
-*/
 
 test('controlled relays queued values, non-queued values, and then a queued value again', function() {
 

@@ -36,7 +36,7 @@
       this.enableQueue = enableQueue;
       this.queue = enableQueue ? [] : null;
       this.requestedCount = 0;
-      this.requestedDisposable = disposableEmpty;
+      this.requestedDisposable = null;
       this.error = null;
       this.hasFailed = false;
       this.hasCompleted = false;
@@ -48,6 +48,7 @@
         this.hasCompleted = true;
         if (!this.enableQueue || this.queue.length === 0) {
           this.subject.onCompleted();
+          this.disposeCurrentRequest()
         } else {
           this.queue.push(Notification.createOnCompleted());
         }
@@ -57,6 +58,7 @@
         this.error = error;
         if (!this.enableQueue || this.queue.length === 0) {
           this.subject.onError(error);
+          this.disposeCurrentRequest()
         } else {
           this.queue.push(Notification.createOnError(error));
         }
@@ -93,19 +95,26 @@
         this.requestedDisposable = this.scheduler.scheduleWithState(number,
         function(s, i) {
           var remaining = self._processRequest(i);
-          if (remaining > 0) {
+          var stopped = self.hasCompleted || self.hasFailed
+          if (!stopped && remaining > 0) {
             self.requestedCount = remaining;
-            self.requestedDisposable = disposableCreate(function () {
+
+            return disposableCreate(function () {
               self.requestedCount = 0;
             });
+              // Scheduled item is still in progress. Return a new
+              // disposable to allow the request to be interrupted
+              // via dispose.
           }
         });
 
         return this.requestedDisposable;
       },
       disposeCurrentRequest: function () {
-        this.requestedDisposable.dispose();
-        this.requestedDisposable = disposableEmpty;
+        if (this.requestedDisposable) {
+          this.requestedDisposable.dispose();
+          this.requestedDisposable = null;
+        }
       }
     });
 
