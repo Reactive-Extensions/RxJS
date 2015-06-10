@@ -71,8 +71,8 @@
       },
       _processRequest: function (numberOfItems) {
         if (this.enableQueue) {
-          while ((this.queue.length >= numberOfItems && numberOfItems > 0) ||
-          (this.queue.length > 0 && this.queue[0].kind !== 'N')) {
+          while (this.queue.length > 0 &&
+          (numberOfItems > 0 || this.queue[0].kind !== 'N')) {
             var first = this.queue.shift();
             first.accept(this.subject);
             if (first.kind === 'N') {
@@ -82,11 +82,9 @@
               this.queue = [];
             }
           }
-
-          return { numberOfItems : numberOfItems, returnValue: this.queue.length !== 0};
         }
 
-        return { numberOfItems: numberOfItems, returnValue: false };
+        return numberOfItems;
       },
       request: function (number) {
         this.disposeCurrentRequest();
@@ -94,8 +92,8 @@
 
         this.requestedDisposable = this.scheduler.scheduleWithState(number,
         function(s, i) {
-          var r = self._processRequest(i), remaining = r.numberOfItems;
-          if (!r.returnValue) {
+          var remaining = self._processRequest(i);
+          if (remaining > 0) {
             self.requestedCount = remaining;
             self.requestedDisposable = disposableCreate(function () {
               self.requestedCount = 0;

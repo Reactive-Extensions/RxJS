@@ -417,7 +417,6 @@ test("controlled doesn't dequeue any values when requesting null, 0, or -1, or -
 
 });
 
-/*
 test('controlled relays requested values when only some of them are queued up', function() {
 
     var scheduler = new TestScheduler();
@@ -460,6 +459,7 @@ test('controlled relays requested values when only some of them are queued up', 
 
 });
 
+/*
 test('controlled can terminate the request via dispose when it is partially delivered', function() {
 
     var scheduler = new TestScheduler();
@@ -834,7 +834,7 @@ test('controlled ignores all values when queue is disabled but delivers error im
 
 });
 
-/*
+
 test('controlled disposes partially delivered request when issuing a new one', function() {
 
    var scheduler = new TestScheduler();
@@ -891,4 +891,3 @@ test('controlled disposes partially delivered request when issuing a new one', f
     );
 
 });
-*/
