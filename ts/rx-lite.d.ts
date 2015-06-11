@@ -507,30 +507,6 @@ declare module Rx {
 		fromArray<T>(array: T[], scheduler?: IScheduler): Observable<T>;
 		fromArray<T>(array: { length: number;[index: number]: T; }, scheduler?: IScheduler): Observable<T>;
 
-		/**
-		*  Converts an iterable into an Observable sequence
-		*
-		* @example
-		*  var res = Rx.Observable.fromIterable(new Map());
-		*  var res = Rx.Observable.fromIterable(function* () { yield 42; });
-		*  var res = Rx.Observable.fromIterable(new Set(), Rx.Scheduler.timeout);
-		* @param generator Generator to convert from.
-		* @param [scheduler] Scheduler to run the enumeration of the input sequence on.
-		* @returns The observable sequence whose elements are pulled from the given generator sequence.
-		*/
-		fromItreable<T>(generator: () => { next(): { done: boolean; value?: T; }; }, scheduler?: IScheduler): Observable<T>;
-
-		/**
-		*  Converts an iterable into an Observable sequence
-		*
-		* @example
-		*  var res = Rx.Observable.fromIterable(new Map());
-		*  var res = Rx.Observable.fromIterable(new Set(), Rx.Scheduler.timeout);
-		* @param iterable Iterable to convert from.
-		* @param [scheduler] Scheduler to run the enumeration of the input sequence on.
-		* @returns The observable sequence whose elements are pulled from the given generator sequence.
-		*/
-		fromItreable<T>(iterable: {}, scheduler?: IScheduler): Observable<T>;	// todo: can't describe ES6 Iterable via TypeScript type system
 		generate<TState, TResult>(initialState: TState, condition: (state: TState) => boolean, iterate: (state: TState) => TState, resultSelector: (state: TState) => TResult, scheduler?: IScheduler): Observable<TResult>;
 		never<T>(): Observable<T>;
 
