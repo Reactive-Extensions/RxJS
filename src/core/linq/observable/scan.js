@@ -3,37 +3,29 @@
    *  For aggregation behavior with no intermediate results, see Observable.aggregate.
    * @example
    *  var res = source.scan(function (acc, x) { return acc + x; });
-   *  var res = source.scan(0, function (acc, x) { return acc + x; });
-   * @param {Mixed} [seed] The initial accumulator value.
+   *  var res = source.scan(function (acc, x) { return acc + x; }, 0);
    * @param {Function} accumulator An accumulator function to be invoked on each element.
+   * @param {Mixed} [seed] The initial accumulator value.
    * @returns {Observable} An observable sequence containing the accumulated values.
    */
-  observableProto.scan = function () {
-    var hasSeed = false, seed, accumulator, source = this;
+  observableProto.scan = function (accumulator) {
+    var hasSeed = false, seed, source = this, accumulator = arguments[0];
     if (arguments.length === 2) {
       hasSeed = true;
-      seed = arguments[0];
-      accumulator = arguments[1];
-    } else {
-      accumulator = arguments[0];
+      seed = arguments[1];
     }
     return new AnonymousObservable(function (o) {
       var hasAccumulation, accumulation, hasValue;
       return source.subscribe (
         function (x) {
           !hasValue && (hasValue = true);
-          try {
-            if (hasAccumulation) {
-              accumulation = accumulator(accumulation, x);
-            } else {
-              accumulation = hasSeed ? accumulator(seed, x) : x;
-              hasAccumulation = true;
-            }
-          } catch (e) {
-            o.onError(e);
-            return;
+          if (hasAccumulation) {
+            accumulation = tryCatch(accumulator)(accumulation, x);
+          } else {
+            accumulation = hasSeed ? tryCatch(accumulator)(seed, x) : x;
+            hasAccumulation = true;
           }
-
+          if (accumulation === errorObj) { return o.onError(accumulation.e); }
           o.onNext(accumulation);
         },
         function (e) { o.onError(e); },

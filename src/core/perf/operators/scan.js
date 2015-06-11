@@ -8,15 +8,15 @@
       __super__.call(this);
     }
 
-    ScanObservable.prototype.subscribeCore = function(observer) {
-      return this.source.subscribe(new ScanObserver(observer,this));
+    ScanObservable.prototype.subscribeCore = function(o) {
+      return this.source.subscribe(new ScanObserver(o,this));
     };
 
     return ScanObservable;
   }(ObservableBase));
 
-  function ScanObserver(observer, parent) {
-    this.observer = observer;
+  function ScanObserver(o, parent) {
+    this.o = o;
     this.accumulator = parent.accumulator;
     this.hasSeed = parent.hasSeed;
     this.seed = parent.seed;
@@ -28,36 +28,33 @@
   ScanObserver.prototype.onNext = function (x) {
     if (this.isStopped) { return; }
     !this.hasValue && (this.hasValue = true);
-    try {
-      if (this.hasAccumulation) {
-        this.accumulation = this.accumulator(this.accumulation, x);
-      } else {
-        this.accumulation = this.hasSeed ? this.accumulator(this.seed, x) : x;
-        this.hasAccumulation = true;
-      }
-    } catch (e) {
-      return this.observer.onError(e);
+    if (this.hasAccumulation) {
+      this.accumulation = tryCatch(this.accumulator)(this.accumulation, x);
+    } else {
+      this.accumulation = this.hasSeed ? tryCatch(this.accumulator)(this.seed, x) : x;
+      this.hasAccumulation = true;
     }
-    this.observer.onNext(this.accumulation);
+    if (this.accumulation === errorObj) { return this.o.onError(this.accumulation.e); }
+    this.o.onNext(this.accumulation);
   };
-  ScanObserver.prototype.onError = function (e) { 
+  ScanObserver.prototype.onError = function (e) {
     if (!this.isStopped) {
       this.isStopped = true;
-      this.observer.onError(e);
+      this.o.onError(e);
     }
   };
   ScanObserver.prototype.onCompleted = function () {
     if (!this.isStopped) {
       this.isStopped = true;
-      !this.hasValue && this.hasSeed && this.observer.onNext(this.seed);
-      this.observer.onCompleted();
+      !this.hasValue && this.hasSeed && this.o.onNext(this.seed);
+      this.o.onCompleted();
     }
   };
   ScanObserver.prototype.dispose = function() { this.isStopped = true; };
   ScanObserver.prototype.fail = function (e) {
     if (!this.isStopped) {
       this.isStopped = true;
-      this.observer.onError(e);
+      this.o.onError(e);
       return true;
     }
     return false;
@@ -71,13 +68,10 @@
   * @returns {Observable} An observable sequence containing the accumulated values.
   */
   observableProto.scan = function () {
-    var hasSeed = false, seed, accumulator, source = this;
+    var hasSeed = false, seed, accumulator = arguments[0];
     if (arguments.length === 2) {
       hasSeed = true;
-      seed = arguments[0];
-      accumulator = arguments[1];
-    } else {
-      accumulator = arguments[0];
+      seed = arguments[1];
     }
     return new ScanObservable(this, accumulator, hasSeed, seed);
   };

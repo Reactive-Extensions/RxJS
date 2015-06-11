@@ -139,12 +139,12 @@
 
     var results = scheduler.startWithCreate(function () {
       return xs.retryWhen(function(attempts) {
-        return attempts.scan(0, function(count, ex) {
+        return attempts.scan(function(count, ex) {
           if(++count === 2) {
             throw error;
           }
           return count;
-        }); // returning any nexting observable should cause a continue
+        }, 0); // returning any nexting observable should cause a continue
       });
     });
 
@@ -205,9 +205,9 @@
 
     var results = scheduler.startWithCreate(function () {
       return xs.retryWhen(function(attempts) {
-        return attempts.scan(0, function(count, error) {
+        return attempts.scan(function(count, error) {
           return count + 1;
-        }).takeWhile(function(count) {
+        }, 0).takeWhile(function(count) {
           return count < 2;
         }); // returning any nexting observable should cause a continue
       });
