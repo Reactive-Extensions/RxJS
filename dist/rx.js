@@ -4294,13 +4294,13 @@
     }
 
     ScanObservable.prototype.subscribeCore = function(o) {
-      return this.source.subscribe(new ScanObserver(o,this));
+      return this.source.subscribe(new InnerObserver(o,this));
     };
 
     return ScanObservable;
   }(ObservableBase));
 
-  function ScanObserver(o, parent) {
+  function InnerObserver(o, parent) {
     this.o = o;
     this.accumulator = parent.accumulator;
     this.hasSeed = parent.hasSeed;
@@ -4310,39 +4310,41 @@
     this.hasValue = false;
     this.isStopped = false;
   }
-  ScanObserver.prototype.onNext = function (x) {
-    if (this.isStopped) { return; }
-    !this.hasValue && (this.hasValue = true);
-    if (this.hasAccumulation) {
-      this.accumulation = tryCatch(this.accumulator)(this.accumulation, x);
-    } else {
-      this.accumulation = this.hasSeed ? tryCatch(this.accumulator)(this.seed, x) : x;
-      this.hasAccumulation = true;
+  InnerObserver.prototype = {
+    onNext: function (x) {
+      if (this.isStopped) { return; }
+      !this.hasValue && (this.hasValue = true);
+      if (this.hasAccumulation) {
+        this.accumulation = tryCatch(this.accumulator)(this.accumulation, x);
+      } else {
+        this.accumulation = this.hasSeed ? tryCatch(this.accumulator)(this.seed, x) : x;
+        this.hasAccumulation = true;
+      }
+      if (this.accumulation === errorObj) { return this.o.onError(this.accumulation.e); }
+      this.o.onNext(this.accumulation);
+    },
+    onError: function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+      }
+    },
+    onCompleted: function () {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        !this.hasValue && this.hasSeed && this.o.onNext(this.seed);
+        this.o.onCompleted();
+      }
+    },
+    dispose: function() { this.isStopped = true; },
+    fail: function (e) {
+      if (!this.isStopped) {
+        this.isStopped = true;
+        this.o.onError(e);
+        return true;
+      }
+      return false;
     }
-    if (this.accumulation === errorObj) { return this.o.onError(this.accumulation.e); }
-    this.o.onNext(this.accumulation);
-  };
-  ScanObserver.prototype.onError = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.o.onError(e);
-    }
-  };
-  ScanObserver.prototype.onCompleted = function () {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      !this.hasValue && this.hasSeed && this.o.onNext(this.seed);
-      this.o.onCompleted();
-    }
-  };
-  ScanObserver.prototype.dispose = function() { this.isStopped = true; };
-  ScanObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.o.onError(e);
-      return true;
-    }
-    return false;
   };
 
   /**
