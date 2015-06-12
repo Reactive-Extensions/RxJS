@@ -76,6 +76,7 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
     </tr>
     <tr>
         <td>of asynchronous elements</td>
+        <td></td>
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/for.md">Observable.for</a></td>
     </tr>
     <tr>
