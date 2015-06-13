@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.flatMap(selector, [resultSelector])`
 ### `Rx.Observable.prototype.selectMany(selector, [resultSelector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/selectmany.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectmany.js "View in source")
 
 One of the following:
 
