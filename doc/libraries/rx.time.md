@@ -26,7 +26,7 @@ NuGet Dependencies:
 ### `Observable Methods`
 - [`generateWithAbsoluteTime`](../api/core/operators/generatewithabsolutetime.md)
 - [`generateWithRelativeTime`](../api/core/operators/generatewithrelativetime.md)
-- [`interval`](../api/core/operators/generatewithrelativetime.md)
+- [`interval`](../api/core/operators/interval.md)
 - [`timer`](../api/core/operators/timer.md)
 
 ### `Observable Instance Methods`
