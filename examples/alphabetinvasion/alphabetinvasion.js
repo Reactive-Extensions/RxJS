@@ -353,7 +353,7 @@
             var self = this;
             for (var i = 0, len = msg.length; i < len; i++) {
                 (function (i) {
-                    Rx.Observable.returnValue(i).delay(30 * i).subscribe(function (x) {
+                    Rx.Observable.just(i).delay(30 * i).subscribe(function (x) {
                         self.message.innerText = msg.substring(0, x + 1);
                     });
                 })(i);

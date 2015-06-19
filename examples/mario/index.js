@@ -136,7 +136,7 @@
   // array of currently pressed keys
   var keyboard = keyDowns
     .merge(keyUps)
-    .scan([], keysBuffer)
+    .scan(keysBuffer, [])
     .distinctUntilChanged()
     .shareValue([]);
 
@@ -182,9 +182,9 @@
     dir: 'right'
   };
 
-  var marios = input.scan(mario, function (m, c) {
+  var marios = input.scan(function (m, c) {
     return step(c.dt, c.keys)(m);
-  });
+  }, mario);
 
   marios
     .combineLatest(dimensions, function (mario, dimensions) {
