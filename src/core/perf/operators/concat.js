@@ -1,15 +1,15 @@
-	var ConcatObservable = (function(__super__) {
-		inherits(ConcatObservable, __super__);
-		function ConcatObservable(sources) {
-			this.sources = sources;
-			__super__.call(this);
-		}
-		
-		ConcatObservable.prototype.subscribeCore = function(o) {
+  var ConcatObservable = (function(__super__) {
+    inherits(ConcatObservable, __super__);
+    function ConcatObservable(sources) {
+      this.sources = sources;
+      __super__.call(this);
+    }
+
+    ConcatObservable.prototype.subscribeCore = function(o) {
       var sink = new ConcatSink(this.sources, o);
       return sink.run();
-		};
-    
+    };
+
     function ConcatSink(sources, o) {
       this.sources = sources;
       this.o = o;
@@ -19,9 +19,9 @@
       var cancelable = immediateScheduler.scheduleRecursiveWithState(0, function (i, self) {
         if (isDisposed) { return; }
         if (i === length) {
-					return o.onCompleted();
-				}
-	
+          return o.onCompleted();
+        }
+
         // Check if promise
         var currentValue = sources[i];
         isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
@@ -39,11 +39,11 @@
         isDisposed = true;
       }));
     };
-    
-		
-		return ConcatObservable;
-	}(ObservableBase));
-  
+
+
+    return ConcatObservable;
+  }(ObservableBase));
+
   /**
    * Concatenates all the observable sequences.
    * @param {Array | Arguments} args Arguments or an array to concat to the observable sequence.

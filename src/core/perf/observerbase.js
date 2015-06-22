@@ -1,9 +1,9 @@
-	function ObserverBase(o) {
-		this.o = o;
-		this.isStopped = false;
-	}  
-	
-	ObserverBase.prototype.onError = function (err) {
+  function ObserverBase(o) {
+    this.o = o;
+    this.isStopped = false;
+  }
+
+  ObserverBase.prototype.onError = function (err) {
     if (!this.isStopped) {
       this.isStopped = true;
       this.o.onError(err);
