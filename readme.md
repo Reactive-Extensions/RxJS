@@ -205,92 +205,35 @@ Please check out:
 - Tutorials
     - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
     - [2 minute introduction to Rx](https://medium.com/@andrestaltz/2-minute-introduction-to-rx-24c8ca793877)
-    - [Learn RxJS](https://github.com/jhusain/learnrx)
+    - [Learn RxJS - @jhusain](https://github.com/jhusain/learnrx)
     - [RxJS Koans](https://github.com/Reactive-Extensions/RxJSKoans)
-    - [RxJS Workshop](https://github.com/Reactive-Extensions/BuildStuffWorkshop)
+    - [RxJS Workshop from BuildStuff 2014](https://github.com/Reactive-Extensions/BuildStuffWorkshop)
     - [Rx Workshop](http://rxworkshop.codeplex.com/)
     - [Reactive Programming and MVC](http://aaronstacy.com/writings/reactive-programming-and-mvc/)
+    - [RxJS lessons - egghead.io](https://egghead.io/technologies/rx)
+    - [RxJS Training - @andrestaltz](https://github.com/staltz/rxjs-training)
 
 - Reference Material
     - [Rx Marbles](http://rxmarbles.com/)
     - [RxJS GitBook](http://xgrommx.github.io/rx-book/)
     - [Intro to Rx](http://introtorx.com/)
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
-    - [Rx Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
-    - [Beginners Guide to Rx](http://msdn.microsoft.com/en-us/data/gg577611)
+    - [RxJS Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
     - [Visualizing Reactive Streams](http://jaredly.github.io/2015/03/06/visualizing-reactive-streams-hot-and-cold/)
-
-- Community Examples
-    - [React](http://facebook.github.io/react/)
-        - [Rx-React](https://github.com/fdecampredon/rx-react)
-        - [RxReact](https://github.com/AlexMost/RxReact)
-        - [cycle-react](https://github.com/pH200/cycle-react)
-        - [React RxJS Autocomplete](https://github.com/eliseumds/react-autocomplete)
-        - [React RxJS TODO MVC](https://github.com/fdecampredon/react-rxjs-todomvc)
-        - [Rx TODO MVC](https://github.com/footballradar/rx-todomvc)
-        - [React RxJS Router](https://github.com/kmcclosk/reactjs-rxjs-example)
-        - [React + RxJS + Angular 2.0 di.js TODO MVC](https://github.com/joelhooks/react-rxjs-angular-di-todomvc)
-        - [React + RxJS Reactive Cube](https://github.com/hugobessaa/cubactive)
-        - [Real-Time with React + RxJS + Meteor](https://medium.com/@bobiblazeski/functional-reactive-interfaces-e8de034de6bd)
-        - [React + RxJS Flow](https://github.com/justinwoo/react-rxjs-flow)
-        - [Reactive Widgets](https://github.com/zxbodya/reactive-widgets)
-        - [React RxJS Infinite Scroll](https://github.com/justinwoo/react-rxjs-scroll)
-    - [Flux](http://facebook.github.io/flux/)
-        - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
-        - [ReactiveFlux](https://github.com/codesuki/reactive-flux)
-        - [Thundercats.js](https://github.com/r3dm/thundercats)
-        - [Flurx](https://github.com/cell303/flurx)
-        - [RR](https://github.com/winsonwq/RR)
-    - [Ember](http://emberjs.com/)
-        - [RxEmber](https://github.com/blesh/RxEmber)
-    - [AngularJS](http://angularjs.org)
-        - [Ninya.io - Angular + RxJS + rx.angular.js](https://github.com/ninya-io/ninya.io) - [Site](http://stackwho.herokuapp.com/)
-        - [The Car Game](https://github.com/mikkark/TheCarGame) - [Site](https://thecargame.herokuapp.com/) - [Blog Post](https://allthingsarchitectural.wordpress.com/2014/11/24/game-programming-with-angular-rxjs-and-node-js/)
-    - [Cycle](https://github.com/staltz/cycle)
-        - [Cycle TODO MVC](https://github.com/staltz/todomvc-cycle)
-    - [WebRx](https://github.com/oliverw/webrx)
-    - Everything else
-        - [RxVision](http://jaredly.github.io/rxvision/)
-        - [Mario Elm Example](http://fudini.github.io/rx/mario.html)
-        - [Firebase + RxJS](http://blog.cryptoguru.com/2014/11/frp-using-rxjs-and-firebase.html)  
-        - [Reactive Trader](https://github.com/AdaptiveConsulting/ReactiveTrader) - [Site](https://reactivetrader.azurewebsites.net/)
-    - [NPM Dependencies](https://www.npmjs.com/browse/depended/rx)
-
-- Presentations
-    - Don't Cross the Streams - Cascadia.js 2012 [slides/demos](http://www.slideshare.net/mattpodwysocki/cascadiajs-dont-cross-the-streams) | [video](http://www.youtube.com/watch?v=FqBq4uoiG0M)
-    - Curing Your Asynchronous Blues - Strange Loop 2013 [slides/demos](https://github.com/Reactive-Extensions/StrangeLoop2013) | [video](http://www.infoq.com/presentations/rx-event-processing)
-    - Streaming and event-based programming using FRP and RxJS - FutureJS 2014 [slides/demos](https://github.com/Reactive-Extensions/FutureJS) | [video](https://www.youtube.com/watch?v=zlERo_JMGCw)
-    - [Tyrannosaurus Rx](http://yobriefca.se/presentations/tyrannosaurus-rx.pdf) - [James Hughes](http://twitter.com/kouphax)
-    - Taming Asynchronous Workflows with Functional Reactive Programming - EuroClojure - [Leonardo Borges](https://twitter.com/leonardo_borges) [slides](http://www.slideshare.net/borgesleonardo/functional-reactive-programming-compositional-event-systems) | [video](http://www.slideshare.net/borgesleonardo/functional-reactive-programming-compositional-event-systems)
-- Reactive All the Things - ng-conf 2015 - [Martin Gontovnikas](https://twitter.com/mgonto/) & [Ben Lesh](https://twitter.com/BenLesh)
-    - [Slides](http://mgonto.github.io/reactive-all-the-things-talk/#1)
-    - [Video](https://www.youtube.com/watch?v=zbBVG8bOoXk&feature=youtu.be&app=desktop)
-
-- Videos
-    - [Practical Rx with Matthew Podwysocki, Bart de Smet and Jafar Husain](http://channel9.msdn.com/posts/Bart-De-Smet-Jafar-Hussain-Matthew-Podwysocki-Pragmatic-Rx)
-    - [Netflix and RxJS](http://channel9.msdn.com/posts/Rx-and-Netflix)
-    - [Hello RxJS - Channel 9](http://channel9.msdn.com/Blogs/Charles/Introducing-RxJS-Reactive-Extensions-for-JavaScript)
-    - [MIX 2011](http://channel9.msdn.com/events/MIX/MIX11/HTM07)
-    - [RxJS Today and Tomorrow - Channel 9](http://channel9.msdn.com/Blogs/Charles/Matthew-Podwysocki-and-Bart-J-F-De-Smet-RxJS-Today-and-Tomorrow)
-    - [Reactive Extensions Videos on Channel 9](http://channel9.msdn.com/Tags/reactive+extensions)
-    - [Asynchronous JavaScript at Netflix - Netflix JavaScript Talks - Jafar Husain](https://www.youtube.com/watch?v=XRYN2xt11Ek)
-    - [Asynchronous JavaScript at Netflix - MountainWest JavaScript 2014 - Jafar Husain](https://www.youtube.com/watch?v=XE692Clb5LU)
-    - [Asynchronous JavaScript at Netflix - HTML5DevConf - Jafar Husain](https://www.youtube.com/watch?v=5uxSu-F5Kj0)
-    - [Adding Even More Fun to Functional Programming With RXJS - Ryan Anklam](https://www.youtube.com/watch?v=8EExNfm0gt4)
-    - [Reactive Angular - Devoxx France 2014 - Martin Gontovnikas](http://parleys.com/play/53677646e4b0593229b85841/chapter0/about)
-    - [Reactive Game Programming for the Discerning Hipster - JSConf 2014 - Bodil Stokke](https://www.youtube.com/watch?v=x8mmAu7ZR9Y)
-
-- Podcasts
-    - [.NET Rocks #907](http://dotnetrocks.com/default.aspx?showNum=907)
-    - [JavaScript Jabber #83](http://javascriptjabber.com/083-jsj-frp-and-rxjs-with-matthew-podwysocki/)
-
-- Articles
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
+
+- Essential tools
+    - [RxVision](http://jaredforsyth.com/rxvision/)
+    - [Percussion](https://github.com/grisendo/Percussion)
 
 - Books
     - [RxJS](http://xgrommx.github.io/rx-book)
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
+
+- [Community Examples](doc/community.md)
+- [Presentations](doc/presentations.md)
+- [Videos and Podcasts](doc/videos.md)
 
 ## Getting Started
 
