@@ -1,10 +1,9 @@
 [![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
-[![Inline docs](http://inch-ci.org/github/Reactive-Extensions/RxJS.svg?branch=master)](http://inch-ci.org/github/Reactive-Extensions/RxJS)
 [![GitHub version](http://img.shields.io/github/tag/reactive-extensions/rxjs.svg)](https://github.com/Reactive-Extensions/RxJS)
 [![NPM version](http://img.shields.io/npm/v/rx.svg)](https://npmjs.org/package/rx)
 [![Downloads](http://img.shields.io/npm/dm/rx.svg)](https://npmjs.org/package/rx)
 [![NuGet](http://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
-[![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](http://gruntjs.com/)
+[![Join the chat at https://gitter.im/Reactive-Extensions/RxJS](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Reactive-Extensions/RxJS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **[The Need to go Reactive](#the-need-to-go-reactive)** |
 **[About the Reactive Extensions](#about-the-reactive-extensions)** |
@@ -20,7 +19,6 @@
 
 # The Reactive Extensions for JavaScript (RxJS) <sup>3.0</sup>... #
 
-[![Join the chat at https://gitter.im/Reactive-Extensions/RxJS](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Reactive-Extensions/RxJS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
 The project is actively developed by [Microsoft Open Technologies, Inc.](http://msopentech.com/), in collaboration with a community of open source developers.

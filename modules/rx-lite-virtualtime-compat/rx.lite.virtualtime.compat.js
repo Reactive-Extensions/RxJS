@@ -118,15 +118,15 @@
   };
   PriorityQueue.count = 0;
 
-	// Aliases
-	var Scheduler = Rx.Scheduler,
-		PriorityQueue = Rx.internals.PriorityQueue,
-		ScheduledItem = Rx.internals.ScheduledItem,
-		SchedulePeriodicRecursive  = Rx.internals.SchedulePeriodicRecursive,
-		disposableEmpty = Rx.Disposable.empty,
-		inherits = Rx.internals.inherits,
+  // Aliases
+  var Scheduler = Rx.Scheduler,
+    PriorityQueue = Rx.internals.PriorityQueue,
+    ScheduledItem = Rx.internals.ScheduledItem,
+    SchedulePeriodicRecursive  = Rx.internals.SchedulePeriodicRecursive,
+    disposableEmpty = Rx.Disposable.empty,
+    inherits = Rx.internals.inherits,
     defaultSubComparer = Rx.helpers.defaultSubComparer,
-		notImplemented = Rx.helpers.notImplemented;
+    notImplemented = Rx.helpers.notImplemented;
 
   /** Provides a set of extension methods for virtual time scheduling. */
   Rx.VirtualTimeScheduler = (function (__super__) {

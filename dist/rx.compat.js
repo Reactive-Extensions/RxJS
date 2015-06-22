@@ -2429,32 +2429,32 @@
     }, source);
   };
 
-	var FromPromiseObservable = (function(__super__) {
-		inherits(FromPromiseObservable, __super__);
-		function FromPromiseObservable(p) {
-			this.p = p;
-			__super__.call(this);
-		}
-		
-		FromPromiseObservable.prototype.subscribeCore = function(o) {
-			this.p.then(function (data) {
-				o.onNext(data);
-				o.onCompleted();
-			}, function (err) { o.onError(err); });
-			return disposableEmpty;	
-		};
-		
-		return FromPromiseObservable;
-	}(ObservableBase));	 
-	 
-	 /**
-	 * Converts a Promise to an Observable sequence
-	 * @param {Promise} An ES6 Compliant promise.
-	 * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
-	 */
-	var observableFromPromise = Observable.fromPromise = function (promise) {
-		return new FromPromiseObservable(promise);
-	};
+  var FromPromiseObservable = (function(__super__) {
+    inherits(FromPromiseObservable, __super__);
+    function FromPromiseObservable(p) {
+      this.p = p;
+      __super__.call(this);
+    }
+
+    FromPromiseObservable.prototype.subscribeCore = function(o) {
+      this.p.then(function (data) {
+        o.onNext(data);
+        o.onCompleted();
+      }, function (err) { o.onError(err); });
+      return disposableEmpty;
+    };
+
+    return FromPromiseObservable;
+  }(ObservableBase));
+
+  /**
+  * Converts a Promise to an Observable sequence
+  * @param {Promise} An ES6 Compliant promise.
+  * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
+  */
+  var observableFromPromise = Observable.fromPromise = function (promise) {
+    return new FromPromiseObservable(promise);
+  };
   /*
    * Converts an existing observable sequence to an ES6 Compatible Promise
    * @example
@@ -3373,18 +3373,18 @@
     return observableConcat.apply(null, args);
   };
 
-	var ConcatObservable = (function(__super__) {
-		inherits(ConcatObservable, __super__);
-		function ConcatObservable(sources) {
-			this.sources = sources;
-			__super__.call(this);
-		}
-		
-		ConcatObservable.prototype.subscribeCore = function(o) {
+  var ConcatObservable = (function(__super__) {
+    inherits(ConcatObservable, __super__);
+    function ConcatObservable(sources) {
+      this.sources = sources;
+      __super__.call(this);
+    }
+
+    ConcatObservable.prototype.subscribeCore = function(o) {
       var sink = new ConcatSink(this.sources, o);
       return sink.run();
-		};
-    
+    };
+
     function ConcatSink(sources, o) {
       this.sources = sources;
       this.o = o;
@@ -3394,9 +3394,9 @@
       var cancelable = immediateScheduler.scheduleRecursiveWithState(0, function (i, self) {
         if (isDisposed) { return; }
         if (i === length) {
-					return o.onCompleted();
-				}
-	
+          return o.onCompleted();
+        }
+
         // Check if promise
         var currentValue = sources[i];
         isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
@@ -3414,11 +3414,11 @@
         isDisposed = true;
       }));
     };
-    
-		
-		return ConcatObservable;
-	}(ObservableBase));
-  
+
+
+    return ConcatObservable;
+  }(ObservableBase));
+
   /**
    * Concatenates all the observable sequences.
    * @param {Array | Arguments} args Arguments or an array to concat to the observable sequence.
