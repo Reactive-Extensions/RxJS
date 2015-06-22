@@ -2705,8 +2705,8 @@
       __super__.call(this);
     }
 
-    FromObservable.prototype.subscribeCore = function (observer) {
-      var sink = new FromSink(observer, this);
+    FromObservable.prototype.subscribeCore = function (o) {
+      var sink = new FromSink(o, this);
       return sink.run();
     };
 
@@ -2714,38 +2714,30 @@
   }(ObservableBase));
 
   var FromSink = (function () {
-    function FromSink(observer, parent) {
-      this.observer = observer;
+    function FromSink(o, parent) {
+      this.o = o;
       this.parent = parent;
     }
 
     FromSink.prototype.run = function () {
       var list = Object(this.parent.iterable),
           it = getIterable(list),
-          observer = this.observer,
+          o = this.o,
           mapper = this.parent.mapper;
 
       function loopRecursive(i, recurse) {
-        try {
-          var next = it.next();
-        } catch (e) {
-          return observer.onError(e);
-        }
-        if (next.done) {
-          return observer.onCompleted();
-        }
+        var next = tryCatch(it.next).call(it);
+        if (next === errorObj) { return o.onError(next.e); }
+        if (next.done) { return o.onCompleted(); }
 
         var result = next.value;
 
-        if (mapper) {
-          try {
-            result = mapper(result, i);
-          } catch (e) {
-            return observer.onError(e);
-          }
+        if (isFunction(mapper)) {
+          result = tryCatch(mapper)(result, i);
+          if (result === errorObj) { return o.onError(result.e); }
         }
 
-        observer.onNext(result);
+        o.onNext(result);
         recurse(i + 1);
       }
 
@@ -2757,7 +2749,7 @@
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
 
-  function StringIterable(str) {
+  function StringIterable(s) {
     this._s = s;
   }
 
@@ -2765,7 +2757,7 @@
     return new StringIterator(this._s);
   };
 
-  function StringIterator(str) {
+  function StringIterator(s) {
     this._s = s;
     this._l = s.length;
     this._i = 0;
