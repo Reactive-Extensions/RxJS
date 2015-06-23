@@ -149,7 +149,7 @@ var async = require('async'),
 
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
-async.filter(files, fs.exists, function (err, results) {
+async.filter(files, fs.exists, function (results) {
 
   results.forEach(function (result) {
     console.log('exists: %s', result);
