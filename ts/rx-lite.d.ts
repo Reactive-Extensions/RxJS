@@ -322,7 +322,7 @@ declare module Rx {
 		materialize(): Observable<Notification<T>>;
 		repeat(repeatCount?: number): Observable<T>;
 		retry(retryCount?: number): Observable<T>;
-		scan<TAcc>(seed: TAcc, accumulator: (acc: TAcc, value: T) => TAcc): Observable<TAcc>;
+		scan<TAcc>(accumulator: (acc: TAcc, value: T, seed: TAcc => TAcc): Observable<TAcc>;
 		scan(accumulator: (acc: T, value: T) => T): Observable<T>;
 		skipLast(count: number): Observable<T>;
 		startWith(...values: T[]): Observable<T>;
@@ -662,7 +662,7 @@ declare module Rx {
 		* @returns An Observable sequence which wraps the existing promise success and failure.
 		*/
 		fromPromise<T>(promise: IPromise<T>): Observable<T>;
-		
+
 		prototype: any;
 	}
 

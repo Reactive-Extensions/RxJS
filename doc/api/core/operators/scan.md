@@ -1,9 +1,12 @@
-### `Rx.Observable.prototype.scan(accumulator, [seed])`
+### `Rx.Observable.prototype.scan(accumulator, [seed])` **New as of v3.0**
+### `Rx.Observable.prototype.scan([seed], accumulator)` **Removed as of v3.0**
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js "View in source")
 
 Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
 
-For aggregation behavior with no intermediate results, see `Rx.Observable#aggregate` or `Rx.Observable#reduce`.
+For aggregation behavior with no intermediate results, see `Rx.Observable#reduce`.
+
+Note the `Rx.Observable.prototype.scan([seed], accumulator)` has been removed as per v3.0 and replaced with `Rx.Observable.prototype.scan(accumulator, [seed])`.
 
 #### Arguments
 1. `accumulator` *(`Function`)*: An accumulator function to be invoked on each element.
