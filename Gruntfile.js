@@ -18,6 +18,50 @@ module.exports = function (grunt) {
             '*/'
       },
       concat: {
+          core: {
+            src: [
+              'src/core/headers/license.js',
+              'src/core/headers/intro.js',
+              'src/core/headers/coreheader.js',
+
+              // Stack trace start
+              'src/core/longstacktraces/longstackbegin.js',
+              'src/core/longstacktraces/longstacktraces.js',
+
+              // internals
+              'src/core/internal/trycatch.js',
+              'src/core/internal/util.js',
+
+              // Schedulers
+              'src/core/concurrency/scheduleditem.js',
+              'src/core/concurrency/scheduler.js',
+              'src/core/concurrency/scheduler.recursive.js',
+              'src/core/concurrency/scheduler.periodic.js',
+              'src/core/concurrency/scheduleperiodicrecursive.js',
+              'src/core/concurrency/immediatescheduler.js',
+              'src/core/concurrency/currentthreadscheduler.js',
+              'src/core/concurrency/defaultscheduler.js',
+
+              // Observer
+              'src/core/observer-lite.js',
+              'src/core/abstractobserver.js',
+              'src/core/anonymousobserver.js',
+
+              // Observable
+              'src/core/observable.js',
+              'src/core/perf/observablebase.js',
+              'src/core/anonymousobservable.js',
+              'src/core/autodetachobserver.js',
+
+              'src/core/headers/exports.js',
+
+              // Long stacktrace end
+              'src/core/longstacktraces/longstackend.js',
+
+              'src/core/headers/outro.js'
+            ],
+            dest: 'dist/rx.core.js'
+          },
           all: {
             src: [
               'src/core/headers/license.js',
@@ -308,7 +352,7 @@ module.exports = function (grunt) {
               // Long stacktrace end
               'src/core/longstacktraces/longstackend.js',
 
-              'src/core/headers/outro.js',
+              'src/core/headers/outro.js'
             ],
             dest: 'dist/rx.all.js'
           },
@@ -1961,6 +2005,13 @@ module.exports = function (grunt) {
           banner:
             '/* Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.*/'
         },
+        core: {
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.core.map'
+          },
+          files: {'dist/rx.core.min.js': ['dist/rx.core.js'] }
+        },
         all: {
           options: {
             sourceMap: true,
@@ -2406,6 +2457,7 @@ module.exports = function (grunt) {
   ]);
 
   grunt.registerTask('concat-min', [
+    'concat:core',
     'concat:all',
     'concat:all-compat',
     'concat:main',
@@ -2445,6 +2497,7 @@ module.exports = function (grunt) {
     'concat:virtualtime-lite-compat',
     'concat:sorting',
 
+    'uglify:core',
     'uglify:all',
     'uglify:all-compat',
     'uglify:main',
@@ -2492,6 +2545,7 @@ module.exports = function (grunt) {
 
   // Default task
   grunt.registerTask('default', [
+    'concat:core',
     'concat:all',
     'concat:all-compat',
     'concat:main',
@@ -2531,6 +2585,7 @@ module.exports = function (grunt) {
     'concat:virtualtime-lite-compat',
     'concat:sorting',
 
+    'uglify:core',
     'uglify:all',
     'uglify:all-compat',
     'uglify:main',
