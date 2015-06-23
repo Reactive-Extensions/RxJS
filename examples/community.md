@@ -25,6 +25,7 @@ Below are samples using RxJS as provided by the community.
     - [Thundercats.js](https://github.com/r3dm/thundercats)
     - [Flurx](https://github.com/cell303/flurx)
     - [RR](https://github.com/winsonwq/RR)
+    - [Loxe](https://github.com/ahomu/Loxe)
 
 - [Ember](http://emberjs.com/)
     - [RxEmber](https://github.com/blesh/RxEmber)
