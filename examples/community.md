@@ -38,6 +38,11 @@ Below are samples using RxJS as provided by the community.
 - [Cycle](https://github.com/staltz/cycle)
     - [Cycle TODO MVC](https://github.com/staltz/todomvc-cycle)
 
+- [Firebase](https://www.firebase.com/)
+    - [Firebase Promisified](https://github.com/nemanja-stanarevic/firebase-promisified)
+    - [Firebase + RxJS](http://blog.cryptoguru.com/2014/11/frp-using-rxjs-and-firebase.html)  
+
+
 - [WebRx](https://github.com/oliverw/webrx)
 - [Zorium](https://zorium.org/)
 
@@ -45,7 +50,6 @@ Below are samples using RxJS as provided by the community.
     - [RxJS Examples from Cmdv](https://github.com/Cmdv/RxJS-Examples)
     - [RxVision](http://jaredly.github.io/rxvision/)
     - [Mario Elm Example](http://fudini.github.io/rx/mario.html)
-    - [Firebase + RxJS](http://blog.cryptoguru.com/2014/11/frp-using-rxjs-and-firebase.html)  
     - [Reactive Trader](https://github.com/AdaptiveConsulting/ReactiveTrader) - [Site](https://reactivetrader.azurewebsites.net/)
 
 - [NPM Dependencies](https://www.npmjs.com/browse/depended/rx)
