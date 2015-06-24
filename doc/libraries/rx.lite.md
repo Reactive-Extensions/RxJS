@@ -110,6 +110,7 @@ NuGet Packages:
 - [`timeout`](../api/core/operators/timeout.md)
 - [`timestamp`](../api/core/operators/timestamp.md)
 - [`toArray`](../api/core/operators/toarray.md)
+- [`toPromise`](../api/core/operators/topromise.md)
 - [`transduce`](../api/core/operators/transduce.md)
 - [`where`](../api/core/operators/where.md)
 - [`withLatestFrom`](../api/core/operators/withlatestfrom.md)

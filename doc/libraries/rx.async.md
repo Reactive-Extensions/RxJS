@@ -32,7 +32,7 @@ NuGet Dependencies:
 - [`fromEvent`](../api/core/operators/fromevent.md)
 - [`fromEventPattern`](../api/core/operators/fromeventpattern.md)
 - [`fromNodeCallback`](../api/core/operators/fromnodecallback.md)
-- [`fromPromise`](../api/core/operators/frompromise.md)
 - [`start`](../api/core/operators/start.md)
 - [`startAsync`](../api/core/operators/startasync.md)
 - [`toAsync`](../api/core/operators/toasync.md)
+- [`toPromise`](../api/core/operators/topromise.md)

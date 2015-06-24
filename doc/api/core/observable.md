@@ -190,6 +190,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`timestamp`](operators/timestamp.md)
 - [`toArray`](operators/toarray.md)
 - [`toMap`](operators/tomap.md)
+- [`toPromise`](operators/topromise.md)
 - [`toSet`](operators/toset.md)
 - [`transduce`](operators/transduce.md)
 - [`where`](operators/where.md)
