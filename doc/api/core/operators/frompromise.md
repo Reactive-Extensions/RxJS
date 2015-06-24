@@ -1,7 +1,7 @@
 ### `Rx.Observable.fromPromise(promise)`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js "View in source")
 
-Converts a Promises/A+ spec compliant Promise and/or ES6 compliant Promise to an Observable sequence.
+Converts a Promises/A+ spec compliant Promise and/or ES2015 compliant Promise to an Observable sequence.
 
 #### Arguments
 1. `promise` *(Promise)*: Promises/A+ spec compliant Promise to an Observable sequence.
@@ -20,15 +20,15 @@ var promise1 = new RSVP.Promise(function (resolve, reject) {
 var source1 = Rx.Observable.fromPromise(promise1);
 
 var subscription1 = source1.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 42
 // => Completed
@@ -41,15 +41,15 @@ var promise2 = new RSVP.Promise(function (resolve, reject) {
 var source2 = Rx.Observable.fromPromise(promise2);
 
 var subscription2 = source2.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Error: Error: reject
 ```
@@ -57,7 +57,7 @@ var subscription2 = source2.subscribe(
 ### Location
 
 File:
-- [/src/core/linq/observable/frompromise.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js)
+- [`/src/core/linq/observable/frompromise.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js)
 
 Dist:
 - [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.async.js)
@@ -79,4 +79,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/fromnodecallback.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/frompromise.js)
+- [`/tests/observable/frompromise.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/frompromise.js)
