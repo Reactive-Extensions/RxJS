@@ -13,42 +13,38 @@ Returns an observable sequence that contains only distinct elements according to
 #### Example
 ```js
 /* Without key selector */
-var source = Rx.Observable.from([
-        42, 24, 42, 24
-    ])
-    .distinct();
+var source = Rx.Observable.of(42, 24, 42, 24)
+  .distinct();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x.toString());
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x;
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 42
 // => Next: 24
 // => Completed
 
 /* With key selector */
-var source = Rx.Observable.from([
-        {value: 42}, {value: 24}, {value: 42}, {value: 24}
-    ])
+var source = Rx.Observable.of({value: 42}, {value: 24}, {value: 42}, {value: 24})
     .distinct(function (x) { return x.value; });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x.toString());
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x;
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: { value: 42 }
 // => Next: { value: 24 }
@@ -64,8 +60,8 @@ Dist:
 - [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)
 - [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
+- [`rx.lite.extras.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.extras.js)
+- [`rx.lite.extras.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.extras.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
