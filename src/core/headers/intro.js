@@ -1,23 +1,19 @@
 ;(function (undefined) {
 
   var objectTypes = {
-    'boolean': false,
     'function': true,
-    'object': true,
-    'number': false,
-    'string': false,
-    'undefined': false
+    'object': true
   };
 
-  var root = (objectTypes[typeof window] && window) || this,
+  var
     freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
+    freeSelf = objectTypes[typeof self] && self.Object && self,
+    freeWindow = objectTypes[typeof window] && window && window.Object && window,
     freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
     moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
-    freeGlobal = objectTypes[typeof global] && global;
+    freeGlobal = freeExports && freeModule && typeof global == 'object' && global && global.Object && global;
 
-  if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
-    root = freeGlobal;
-  }
+  var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
   var Rx = {
       internals: {},
