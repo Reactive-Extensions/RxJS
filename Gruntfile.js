@@ -1370,6 +1370,7 @@ module.exports = function (grunt) {
               'src/core/backpressure/controlled.js',
               'src/core/backpressure/stopandwait.js',
               'src/core/backpressure/windowed.js',
+              'src/core/linq/observable/pipe.js',
 
               'src/core/headers/suboutro.js'
             ],
@@ -1385,6 +1386,7 @@ module.exports = function (grunt) {
               // Backpressure operators
               'src/core/backpressure/stopandwait.js',
               'src/core/backpressure/windowed.js',
+              'src/core/linq/observable/pipe.js',
 
               'src/core/headers/suboutro.js'
             ],
@@ -1400,6 +1402,7 @@ module.exports = function (grunt) {
               // Backpressure operators
               'src/core/backpressure/stopandwait.js',
               'src/core/backpressure/windowed.js',
+              'src/core/linq/observable/pipe.js',
 
               'src/core/headers/suboutro.js'
             ],
