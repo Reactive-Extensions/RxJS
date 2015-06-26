@@ -2,9 +2,6 @@
 
 Hides the identity of an observable sequence.
 
-#### Arguments
-1. `args` *(Array|arguments)*: Observable sources or Promises competing to react first either as an array or arguments.
-
 #### Returns
 *(`Observable`)*: An observable sequence that hides the identity of the source sequence.
 
