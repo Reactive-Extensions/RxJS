@@ -37,3 +37,5 @@ NuGet Dependencies:
 - [`forkJoin`](../api/core/operators/forkjoinproto.md)
 - [`let | letBind`](../api/core/operators/let.md)
 - [`manySelect`](../api/core/operators/manyselect.md)
+- [`exclusive`](../api/core/operators/exclusive.md)
+- [`exclusivemap`](../api/core/operators/exclusivemap.md)
