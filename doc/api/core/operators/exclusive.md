@@ -1,7 +1,7 @@
 ### `Rx.Observable.prototype.exclusive()` ##
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/exclusive.js "View in source")
 
-Recieves an Observable of Observables and propagates the first Observable exclusively until it completes before it begins subscribes to the next Observable.  Observables that come before the current Observable completes will be dropped and will not propogate.
+Receives an Observable of Observables and propagates the first Observable exclusively until it completes before it begins subscribes to the next Observable.  Observables that come before the current Observable completes will be dropped and will not propogate.
 
 This operator is similar to `concatAll()` except that it will not hold onto Observables that come in before the current one is finished completed.
 
