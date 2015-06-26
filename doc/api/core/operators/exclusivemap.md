@@ -1,4 +1,4 @@
-### `Rx.Observable.prototype.exclusive()` ##
+### `Rx.Observable.prototype.exclusivemap()` ##
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/exclusivemap.js "View in source")
 
 Receives an Observable of Observables and transforms items from the first Observable exclusively until it completes before it begins subscribes to the next Observable.  Observables that come before the current Observable completes will be dropped and will not propogate.
