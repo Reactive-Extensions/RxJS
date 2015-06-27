@@ -1,7 +1,7 @@
-### `Rx.Observable.prototype.first([predicate], [thisArg])`
+### `Rx.Observable.prototype.first(predicate, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/first.js "View in source")
 
-Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
+Returns the first element of an observable sequence that satisfies the condition in the predicate, or a default value if no such element exists.
 
 #### Arguments
 1. `predicate` *(`Function`)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
@@ -15,37 +15,19 @@ Returns the first element of an observable sequence that satisfies the condition
 
 #### Example
 ```js
-/* No Match */
-var source = Rx.Observable.empty()
-    .first();
-
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
-
-// => Error: Error: Sequence contains no elements.
-
 /* Without a predicate */
-var source = Rx.Observable.range(0, 10)
-    .first();
+var source = Rx.Observable.range(0, 10).first();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 0
 // => Completed
@@ -55,15 +37,15 @@ var source = Rx.Observable.range(0, 10)
     .first(function (x, idx, obs) { return x % 2 === 1; });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 1
 // => Completed

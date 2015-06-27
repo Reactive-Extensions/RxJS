@@ -5,7 +5,20 @@
    * @returns {Observable} Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
    */
   observableProto.single = function (predicate, thisArg) {
-    return predicate && isFunction(predicate) ?
-      this.where(predicate, thisArg).single() :
-      singleOrDefaultAsync(this, false);
+    if (isFunction(predicate)) { return this.filter(predicate, thisArg).single(); }
+    var source = this;
+    return new AnonymousObservable(function (o) {
+      var value, seenValue = false;
+      return source.subscribe(function (x) {
+        if (seenValue) {
+          o.onError(new Error('Sequence contains more than one element'));
+        } else {
+          value = x;
+          seenValue = true;
+        }
+      }, function (e) { o.onError(e); }, function () {
+        o.onNext(value);
+        o.onCompleted();
+      });
+    }, source);
   };

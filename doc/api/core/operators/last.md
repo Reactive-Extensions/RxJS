@@ -16,36 +16,35 @@ Returns the last element of an observable sequence that satisfies the condition 
 #### Example
 ```js
 /* No Match */
-var source = Rx.Observable.empty()
-    .last();
+var source = Rx.Observable.empty().last();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
-// => Error: Error: Sequence contains no elements.
+// => Next: undefined
+// => Completed
 
 /* Without predicate */
-var source = Rx.Observable.range(0, 10)
-    .last();
+var source = Rx.Observable.range(0, 10).last();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 9
 // => Completed
@@ -57,15 +56,15 @@ var source = Rx.Observable.range(0, 10)
     });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 8
 // => Completed

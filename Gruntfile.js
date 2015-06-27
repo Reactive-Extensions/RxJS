@@ -213,18 +213,10 @@ module.exports = function (grunt) {
               'src/core/linq/observable/max.js',   // max, _firstonly
               'src/core/linq/observable/average.js',   // select, scan, aggregate, finalvalue
               'src/core/linq/observable/sequenceequal.js',   // compositedisposable
-              'src/core/linq/observable/_elementatordefault.js',
-              'src/core/linq/observable/elementat.js', // _elementatordefault
-              'src/core/linq/observable/elementatordefault.js', // _elementatordefault
-              'src/core/linq/observable/_singleordefault.js',
-              'src/core/linq/observable/single.js', // _singleordefault, where
-              'src/core/linq/observable/singleordefault.js', // _singleordefault, where
-              'src/core/linq/observable/_firstordefault.js',
-              'src/core/linq/observable/first.js', // _firstordefault, where
-              'src/core/linq/observable/firstordefault.js', // _firstordefault, where
-              'src/core/linq/observable/_lastordefault.js',
-              'src/core/linq/observable/last.js', // _firstordefault, where
-              'src/core/linq/observable/lastordefault.js', // _firstordefault, where
+              'src/core/linq/observable/elementat.js',
+              'src/core/linq/observable/single.js',
+              'src/core/linq/observable/first.js',
+              'src/core/linq/observable/last.js',
               'src/core/linq/observable/_findvalue.js',
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where
@@ -488,7 +480,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
-              // Aggregate Operators
+              // Aggregate operators
               'src/core/linq/observable/_extremaby.js',
               'src/core/linq/observable/_firstonly.js',
               'src/core/perf/operators/reduce.js', // scan, startwith, finalvalue
@@ -505,18 +497,10 @@ module.exports = function (grunt) {
               'src/core/linq/observable/max.js',   // max, _firstonly
               'src/core/linq/observable/average.js',   // select, scan, aggregate, finalvalue
               'src/core/linq/observable/sequenceequal.js',   // compositedisposable
-              'src/core/linq/observable/_elementatordefault.js',
-              'src/core/linq/observable/elementat.js', // _elementatordefault
-              'src/core/linq/observable/elementatordefault.js', // _elementatordefault
-              'src/core/linq/observable/_singleordefault.js',
-              'src/core/linq/observable/single.js', // _singleordefault, where
-              'src/core/linq/observable/singleordefault.js', // _singleordefault, where
-              'src/core/linq/observable/_firstordefault.js',
-              'src/core/linq/observable/first.js', // _firstordefault, where
-              'src/core/linq/observable/firstordefault.js', // _firstordefault, where
-              'src/core/linq/observable/_lastordefault.js',
-              'src/core/linq/observable/last.js', // _firstordefault, where
-              'src/core/linq/observable/lastordefault.js', // _firstordefault, where
+              'src/core/linq/observable/elementat.js',
+              'src/core/linq/observable/single.js',
+              'src/core/linq/observable/first.js',
+              'src/core/linq/observable/last.js',
               'src/core/linq/observable/_findvalue.js',
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where
@@ -1430,18 +1414,10 @@ module.exports = function (grunt) {
               'src/core/linq/observable/max.js',   // max, _firstonly
               'src/core/linq/observable/average.js',   // select, scan, aggregate, finalvalue
               'src/core/linq/observable/sequenceequal.js',   // compositedisposable
-              'src/core/linq/observable/_elementatordefault.js',
-              'src/core/linq/observable/elementat.js', // _elementatordefault
-              'src/core/linq/observable/elementatordefault.js', // _elementatordefault
-              'src/core/linq/observable/_singleordefault.js',
-              'src/core/linq/observable/single.js', // _singleordefault, where
-              'src/core/linq/observable/singleordefault.js', // _singleordefault, where
-              'src/core/linq/observable/_firstordefault.js',
-              'src/core/linq/observable/first.js', // _firstordefault, where
-              'src/core/linq/observable/firstordefault.js', // _firstordefault, where
-              'src/core/linq/observable/_lastordefault.js',
-              'src/core/linq/observable/last.js', // _firstordefault, where
-              'src/core/linq/observable/lastordefault.js', // _firstordefault, where
+              'src/core/linq/observable/elementat.js',
+              'src/core/linq/observable/single.js',
+              'src/core/linq/observable/first.js',
+              'src/core/linq/observable/last.js',
               'src/core/linq/observable/_findvalue.js',
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where
@@ -1473,18 +1449,10 @@ module.exports = function (grunt) {
               'src/core/linq/observable/max.js',   // max, _firstonly
               'src/core/linq/observable/average.js',   // select, scan, aggregate, finalvalue
               'src/core/linq/observable/sequenceequal.js',   // compositedisposable
-              'src/core/linq/observable/_elementatordefault.js',
-              'src/core/linq/observable/elementat.js', // _elementatordefault
-              'src/core/linq/observable/elementatordefault.js', // _elementatordefault
-              'src/core/linq/observable/_singleordefault.js',
-              'src/core/linq/observable/single.js', // _singleordefault, where
-              'src/core/linq/observable/singleordefault.js', // _singleordefault, where
-              'src/core/linq/observable/_firstordefault.js',
-              'src/core/linq/observable/first.js', // _firstordefault, where
-              'src/core/linq/observable/firstordefault.js', // _firstordefault, where
-              'src/core/linq/observable/_lastordefault.js',
-              'src/core/linq/observable/last.js', // _firstordefault, where
-              'src/core/linq/observable/lastordefault.js', // _firstordefault, where
+              'src/core/linq/observable/elementat.js',
+              'src/core/linq/observable/single.js',
+              'src/core/linq/observable/first.js',
+              'src/core/linq/observable/last.js',
               'src/core/linq/observable/_findvalue.js',
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where
@@ -1516,18 +1484,10 @@ module.exports = function (grunt) {
               'src/core/linq/observable/max.js',   // max, _firstonly
               'src/core/linq/observable/average.js',   // select, scan, aggregate, finalvalue
               'src/core/linq/observable/sequenceequal.js',   // compositedisposable
-              'src/core/linq/observable/_elementatordefault.js',
-              'src/core/linq/observable/elementat.js', // _elementatordefault
-              'src/core/linq/observable/elementatordefault.js', // _elementatordefault
-              'src/core/linq/observable/_singleordefault.js',
-              'src/core/linq/observable/single.js', // _singleordefault, where
-              'src/core/linq/observable/singleordefault.js', // _singleordefault, where
-              'src/core/linq/observable/_firstordefault.js',
-              'src/core/linq/observable/first.js', // _firstordefault, where
-              'src/core/linq/observable/firstordefault.js', // _firstordefault, where
-              'src/core/linq/observable/_lastordefault.js',
-              'src/core/linq/observable/last.js', // _firstordefault, where
-              'src/core/linq/observable/lastordefault.js', // _firstordefault, where
+              'src/core/linq/observable/elementat.js',
+              'src/core/linq/observable/single.js',
+              'src/core/linq/observable/first.js',
+              'src/core/linq/observable/last.js',
               'src/core/linq/observable/_findvalue.js',
               'src/core/linq/observable/find.js', // _findvalue, where
               'src/core/linq/observable/findindex.js', // _findvalue, where

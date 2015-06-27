@@ -5,7 +5,15 @@
    * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
    */
   observableProto.last = function (predicate, thisArg) {
-    return predicate ?
-      this.where(predicate, thisArg).last() :
-      lastOrDefaultAsync(this, false);
+    if (isFunction(predicate)) { return this.filter(predicate, thisArg).last(); }
+    var source = this;
+    return new AnonymousObservable(function (o) {
+      var value, seenValue = false;
+      return source.subscribe(function (x) {
+        value = x;
+      }, function (e) { o.onError(e); }, function () {
+        o.onNext(value);
+        o.onCompleted();
+      });
+    }, source);
   };

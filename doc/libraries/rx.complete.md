@@ -100,7 +100,6 @@ NuGet Packages:
 - [`doOnCompleted`](../api/core/operators/dooncompleted.md)
 - [`doWhile`](../api/core/operators/dowhile.md)
 - [`elementAt`](../api/core/operators/elementat.md)
-- [`elementAtOrDefault`](../api/core/operators/elementatordefault.md)
 - [`every`](../api/core/operators/every.md)
 - [`expand`](../api/core/operators/expand.md)
 - [`extend`](../api/core/operators/manyselect.md)
@@ -109,7 +108,6 @@ NuGet Packages:
 - [`find`](../api/core/operators/find.md)
 - [`findIndex`](../api/core/operators/findindex.md)
 - [`first`](../api/core/operators/first.md)
-- [`firstOrDefault`](../api/core/operators/firstordefault.md)
 - [`flatMap`](../api/core/operators/selectmany.md)
 - [`flatMapLatest`](../api/core/operators/flatmaplatest.md)
 - [`flatMapObserver`](../api/core/operators/flatmapobserver.md)
@@ -121,7 +119,6 @@ NuGet Packages:
 - [`isEmpty`](../api/core/operators/isempty.md)
 - [`join`](../api/core/operators/join.md)
 - [`last`](../api/core/operators/last.md)
-- [`lastOrDefault`](../api/core/operators/lastordefault.md)
 - [`let | letBind`](../api/core/operators/let.md)
 - [`manySelect`](../api/core/operators/manyselect.md)
 - [`map`](../api/core/operators/select.md)
@@ -161,7 +158,6 @@ NuGet Packages:
 - [`sequenceEqual`](../api/core/operators/sequenceequal.md)
 - [`single`](../api/core/operators/single.md)
 - [`singleInstance`](../api/core/operators/singleinstance.md)
-- [`singleOrDefault`](../api/core/operators/singleordefault.md)
 - [`skip`](../api/core/operators/skip.md)
 - [`skipLast`](../api/core/operators/skiplast.md)
 - [`skipLastWithTime`](../api/core/operators/skiplastwithtime.md)
@@ -198,26 +194,6 @@ NuGet Packages:
 - [`windowWithTimeOrCount`](../api/core/operators/windowwithtimeorcount.md)
 - [`withLatestFrom`](../api/core/operators/withlatestfrom.md)
 - [`zip`](../api/core/operators/zipproto.md)
-
-## `Deprecated Observable Methods` ##
-- [`catchException`](../api/core/operators/catch.md)
-- [`fromArray`](../api/core/operators/fromarray.md)
-- [`returnValue`](../api/core/operators/return.md)
-- [`throwException`](../api/core/operators/throw.md)
-
-## `Deprecated Observable Instance Methods` ##
-- [`aggregate`](../api/core/operators/aggregate.md)
-- [`all`](../api/core/operators/every.md)
-- [`any`](../api/core/operators/any.md)
-- [`doAction`](../api/core/operators/do.md)
-- [`catchException`](../api/core/operators/catchproto.md)
-- [`concatObservable`](../api/core/operators/concatall.md)
-- [`contains`](../api/core/operators/includes.md)
-- [`finallyAction`](../api/core/operators/finally.md)
-- [`mergeObservable`](../api/core/operators/mergeall.md)
-- [`throttle`](../api/core/operators/debounce.md)
-- [`throttleWithSelector`](../api/core/operators/debouncewithselector.md)
-
 
 ## Included Classes ##
 
