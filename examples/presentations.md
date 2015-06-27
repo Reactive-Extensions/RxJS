@@ -13,3 +13,5 @@ The following are presentations about RxJS
 - The Reactive Loop - Functional JS London 2015
   - [Slides](http://slides.com/theefer/reactive-loop-funjs#/)
   - [Code](https://github.com/theefer/funjs-reactive-loop)
+- Reactive Functions with RxJS - Leeds JS 2015
+  - [Slides](https://www.icloud.com/keynote/AwBWCAESEIf9pea2IykiVtOZFiXflDsaKj9lVsSLP_OtPU29v7fNpMs78DK7tvXz4bFBkb6BXFKjxqt4G5B_UlM6TwMCUCAQEEIGVYVFig5qOTdorTOd2ERMJDtn6dvDFY58zqBiVzZmtN#RxJS_talk)
