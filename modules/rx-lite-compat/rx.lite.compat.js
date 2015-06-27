@@ -5759,11 +5759,8 @@ observableProto.controlled = function (enableQueue, scheduler) {
       var xform = transducer(transformForObserver(o));
       return source.subscribe(
         function(v) {
-          try {
-            xform['@@transducer/step'](o, v);
-          } catch (e) {
-            o.onError(e);
-          }
+          var res = tryCatch(xform['@@transducer/step']).call(xform, o, v);
+          if (res === errorObj) { o.onError(res.e); }
         },
         function (e) { o.onError(e); },
         function() { xform['@@transducer/result'](o); }

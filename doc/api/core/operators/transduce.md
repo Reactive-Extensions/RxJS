@@ -10,15 +10,15 @@ Such examples of transducers libraries are [transducers-js](https://github.com/c
 In order for this operator to work, the transducers library must follow the following contract:
 ```js
 return {
-  init: function() {
+  '@@transducer/init': function() {
     // Return the item
     return observer;
   },
-  step: function(obs, input) {
+  '@@transducer/step': function(obs, input) {
     // Process next item
     return obs.onNext(input);
   },
-  result: function(obs) {
+  '@@transducer/result': function(obs) {
     // Mark completion
     return obs.onCompleted();
   }
