@@ -157,7 +157,7 @@
 
   Rx.Observable['throw'] = Rx.Observable.throwError = function (error) {
     return new Rx.AnonymousObservable(function (observer) {
-      return Rx.Scheduler.immediate.scheduleWithState(error, function (e) {
+      return Rx.Scheduler.immediate.scheduleWithState(error, function (_,e) {
         observer.onError(e);
       });
     });

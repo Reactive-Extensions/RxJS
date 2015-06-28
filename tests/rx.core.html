@@ -87,6 +87,33 @@
       }());
     }
   </script>
+  <script>
+  // RxJS Polyfills
+  Rx.Observable.empty = function () {
+    return new Rx.AnonymousObservable(function (observer) {
+      return Rx.Scheduler.immediate.scheduleWithState(null, function () {
+        observer.onCompleted();
+      });
+    });
+  };
+
+  Rx.Observable['return'] = Rx.Observable.just = function (value) {
+    return new Rx.AnonymousObservable(function (o) {
+      return Rx.Scheduler.immediate.scheduleWithState(value, function(_,v) {
+        o.onNext(v);
+        o.onCompleted();
+      });
+    });
+  };
+
+  Rx.Observable['throw'] = Rx.Observable.throwError = function (error) {
+    return new Rx.AnonymousObservable(function (observer) {
+      return Rx.Scheduler.immediate.scheduleWithState(error, function (_,e) {
+        observer.onError(e);
+      });
+    });
+  };
+  </script>
 
   <!-- Individual Tests -->
   <script src="concurrency/scheduler-lite.js"></script>
@@ -100,6 +127,7 @@
   <script src="disposables/singleassignmentdisposable.js"></script>
 
   <script src="core/observer-lite.js"></script>
+  <script src="core/observable.js"></script>
   <script src="observable/create.js"></script>
 
 </body>
