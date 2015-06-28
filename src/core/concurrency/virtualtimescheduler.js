@@ -1,5 +1,5 @@
   /** Provides a set of extension methods for virtual time scheduling. */
-  Rx.VirtualTimeScheduler = (function (__super__) {
+  var VirtualTimeScheduler = Rx.VirtualTimeScheduler = (function (__super__) {
 
     function localNow() {
       return this.toDateTimeOffset(this.clock);

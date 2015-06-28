@@ -1,6 +1,5 @@
   // Aliases
   var Scheduler = Rx.Scheduler,
-    PriorityQueue = Rx.internals.PriorityQueue,
     ScheduledItem = Rx.internals.ScheduledItem,
     SchedulePeriodicRecursive  = Rx.internals.SchedulePeriodicRecursive,
     disposableEmpty = Rx.Disposable.empty,

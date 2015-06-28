@@ -31,6 +31,7 @@ var
   defaultNow = Rx.helpers.defaultNow = (function () { return !!Date.now ? Date.now : function () { return +new Date; }; }()),
   defaultError = Rx.helpers.defaultError = function (err) { throw err; },
   isPromise = Rx.helpers.isPromise = function (p) { return !!p && !isFunction(p.subscribe) && isFunction(p.then); },
+  defaultSubComparer = Rx.helpers.defaultSubComparer = function (x, y) { return x > y ? 1 : (x < y ? -1 : 0); }
   isFunction = Rx.helpers.isFunction = (function () {
     var isFn = function (value) {
       return typeof value == 'function' || false;
@@ -51,8 +52,18 @@ var
   };
   NotImplementedError.prototype = Error.prototype;
 
+  var NotSupportedError = Rx.NotSupportedError = function (message) {
+    this.message = message || 'This operation is not supported';
+    Error.call(this);
+  };
+  NotSupportedError.prototype = Error.prototype;
+
   var notImplemented = Rx.helpers.notImplemented = function () {
     throw new NotImplementedError();
+  };
+
+  var notSupported = Rx.helpers.notSupported = function () {
+    throw new NotSupportedError();
   };
 
   Rx.config.longStackSupport = false;
@@ -203,6 +214,170 @@ var
     }
     return a;
   }
+
+  /**
+   * Represents a group of disposable resources that are disposed together.
+   * @constructor
+   */
+  var CompositeDisposable = Rx.CompositeDisposable = function () {
+    var args = [], i, len;
+    if (Array.isArray(arguments[0])) {
+      args = arguments[0];
+      len = args.length;
+    } else {
+      len = arguments.length;
+      args = new Array(len);
+      for(i = 0; i < len; i++) { args[i] = arguments[i]; }
+    }
+    for(i = 0; i < len; i++) {
+      if (!isDisposable(args[i])) { throw new TypeError('Not a disposable'); }
+    }
+    this.disposables = args;
+    this.isDisposed = false;
+    this.length = args.length;
+  };
+
+  var CompositeDisposablePrototype = CompositeDisposable.prototype;
+
+  /**
+   * Adds a disposable to the CompositeDisposable or disposes the disposable if the CompositeDisposable is disposed.
+   * @param {Mixed} item Disposable to add.
+   */
+  CompositeDisposablePrototype.add = function (item) {
+    if (this.isDisposed) {
+      item.dispose();
+    } else {
+      this.disposables.push(item);
+      this.length++;
+    }
+  };
+
+  /**
+   * Removes and disposes the first occurrence of a disposable from the CompositeDisposable.
+   * @param {Mixed} item Disposable to remove.
+   * @returns {Boolean} true if found; false otherwise.
+   */
+  CompositeDisposablePrototype.remove = function (item) {
+    var shouldDispose = false;
+    if (!this.isDisposed) {
+      var idx = this.disposables.indexOf(item);
+      if (idx !== -1) {
+        shouldDispose = true;
+        this.disposables.splice(idx, 1);
+        this.length--;
+        item.dispose();
+      }
+    }
+    return shouldDispose;
+  };
+
+  /**
+   *  Disposes all disposables in the group and removes them from the group.
+   */
+  CompositeDisposablePrototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      var len = this.disposables.length, currentDisposables = new Array(len);
+      for(var i = 0; i < len; i++) { currentDisposables[i] = this.disposables[i]; }
+      this.disposables = [];
+      this.length = 0;
+
+      for (i = 0; i < len; i++) {
+        currentDisposables[i].dispose();
+      }
+    }
+  };
+
+  /**
+   * Provides a set of static methods for creating Disposables.
+   * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
+   */
+  var Disposable = Rx.Disposable = function (action) {
+    this.isDisposed = false;
+    this.action = action || noop;
+  };
+
+  /** Performs the task of cleaning up resources. */
+  Disposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.action();
+      this.isDisposed = true;
+    }
+  };
+
+  /**
+   * Creates a disposable object that invokes the specified action when disposed.
+   * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
+   * @return {Disposable} The disposable object that runs the given action upon disposal.
+   */
+  var disposableCreate = Disposable.create = function (action) { return new Disposable(action); };
+
+  /**
+   * Gets the disposable that does nothing when disposed.
+   */
+  var disposableEmpty = Disposable.empty = { dispose: noop };
+
+  /**
+   * Validates whether the given object is a disposable
+   * @param {Object} Object to test whether it has a dispose method
+   * @returns {Boolean} true if a disposable object, else false.
+   */
+  var isDisposable = Disposable.isDisposable = function (d) {
+    return d && isFunction(d.dispose);
+  };
+
+  var checkDisposed = Disposable.checkDisposed = function (disposable) {
+    if (disposable.isDisposed) { throw new ObjectDisposedError(); }
+  };
+
+  // Single assignment
+  var SingleAssignmentDisposable = Rx.SingleAssignmentDisposable = function () {
+    this.isDisposed = false;
+    this.current = null;
+  };
+  SingleAssignmentDisposable.prototype.getDisposable = function () {
+    return this.current;
+  };
+  SingleAssignmentDisposable.prototype.setDisposable = function (value) {
+    if (this.current) { throw new Error('Disposable has already been assigned'); }
+    var shouldDispose = this.isDisposed;
+    !shouldDispose && (this.current = value);
+    shouldDispose && value && value.dispose();
+  };
+  SingleAssignmentDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      var old = this.current;
+      this.current = null;
+    }
+    old && old.dispose();
+  };
+
+  // Multiple assignment disposable
+  var SerialDisposable = Rx.SerialDisposable = function () {
+    this.isDisposed = false;
+    this.current = null;
+  };
+  SerialDisposable.prototype.getDisposable = function () {
+    return this.current;
+  };
+  SerialDisposable.prototype.setDisposable = function (value) {
+    var shouldDispose = this.isDisposed;
+    if (!shouldDispose) {
+      var old = this.current;
+      this.current = value;
+    }
+    old && old.dispose();
+    shouldDispose && value && value.dispose();
+  };
+  SerialDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      var old = this.current;
+      this.current = null;
+    }
+    old && old.dispose();
+  };
 
   var ScheduledItem = Rx.internals.ScheduledItem = function (scheduler, state, action, dueTime, comparer) {
     this.scheduler = scheduler;
@@ -952,44 +1127,6 @@ var
     return Observable;
   })();
 
-  var ObservableBase = Rx.ObservableBase = (function (__super__) {
-    inherits(ObservableBase, __super__);
-
-    function fixSubscriber(subscriber) {
-      return subscriber && isFunction(subscriber.dispose) ? subscriber :
-        isFunction(subscriber) ? disposableCreate(subscriber) : disposableEmpty;
-    }
-
-    function setDisposable(s, state) {
-      var ado = state[0], self = state[1];
-      var sub = tryCatch(self.subscribeCore).call(self, ado);
-
-      if (sub === errorObj) {
-        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
-      }
-      ado.setDisposable(fixSubscriber(sub));
-    }
-
-    function subscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
-
-      if (currentThreadScheduler.scheduleRequired()) {
-        currentThreadScheduler.scheduleWithState(state, setDisposable);
-      } else {
-        setDisposable(null, state);
-      }
-      return ado;
-    }
-
-    function ObservableBase() {
-      __super__.call(this, subscribe);
-    }
-
-    ObservableBase.prototype.subscribeCore = notImplemented;
-
-    return ObservableBase;
-  }(Observable));
-
   var AnonymousObservable = Rx.AnonymousObservable = (function (__super__) {
     inherits(AnonymousObservable, __super__);
 
@@ -1028,6 +1165,44 @@ var
 
     return AnonymousObservable;
 
+  }(Observable));
+
+  var ObservableBase = Rx.ObservableBase = (function (__super__) {
+    inherits(ObservableBase, __super__);
+
+    function fixSubscriber(subscriber) {
+      return subscriber && isFunction(subscriber.dispose) ? subscriber :
+        isFunction(subscriber) ? disposableCreate(subscriber) : disposableEmpty;
+    }
+
+    function setDisposable(s, state) {
+      var ado = state[0], self = state[1];
+      var sub = tryCatch(self.subscribeCore).call(self, ado);
+
+      if (sub === errorObj) {
+        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
+      }
+      ado.setDisposable(fixSubscriber(sub));
+    }
+
+    function subscribe(observer) {
+      var ado = new AutoDetachObserver(observer), state = [ado, this];
+
+      if (currentThreadScheduler.scheduleRequired()) {
+        currentThreadScheduler.scheduleWithState(state, setDisposable);
+      } else {
+        setDisposable(null, state);
+      }
+      return ado;
+    }
+
+    function ObservableBase() {
+      __super__.call(this, subscribe);
+    }
+
+    ObservableBase.prototype.subscribeCore = notImplemented;
+
+    return ObservableBase;
   }(Observable));
 
   var AutoDetachObserver = (function (__super__) {
@@ -1071,6 +1246,19 @@ var
 
     return AutoDetachObserver;
   }(AbstractObserver));
+
+  /**
+   *  Creates an observable sequence from a specified subscribe method implementation.
+   * @example
+   *  var res = Rx.Observable.create(function (observer) { return function () { } );
+   *  var res = Rx.Observable.create(function (observer) { return Rx.Disposable.empty; } );
+   *  var res = Rx.Observable.create(function (observer) { } );
+   * @param {Function} subscribe Implementation of the resulting observable sequence's subscribe method, returning a function that will be wrapped in a Disposable.
+   * @returns {Observable} The observable sequence with the specified implementation for the Subscribe method.
+   */
+  Observable.create = Observable.createWithDisposable = function (subscribe, parent) {
+    return new AnonymousObservable(subscribe, parent);
+  };
 
   if (typeof define == 'function' && typeof define.amd == 'object' && define.amd) {
     root.Rx = Rx;

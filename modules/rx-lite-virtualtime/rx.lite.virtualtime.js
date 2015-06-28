@@ -30,7 +30,6 @@
 
   // Aliases
   var Scheduler = Rx.Scheduler,
-    PriorityQueue = Rx.internals.PriorityQueue,
     ScheduledItem = Rx.internals.ScheduledItem,
     SchedulePeriodicRecursive  = Rx.internals.SchedulePeriodicRecursive,
     disposableEmpty = Rx.Disposable.empty,
@@ -125,7 +124,7 @@
   PriorityQueue.count = 0;
 
   /** Provides a set of extension methods for virtual time scheduling. */
-  Rx.VirtualTimeScheduler = (function (__super__) {
+  var VirtualTimeScheduler = Rx.VirtualTimeScheduler = (function (__super__) {
 
     function localNow() {
       return this.toDateTimeOffset(this.clock);

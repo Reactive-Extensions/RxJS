@@ -1671,13 +1671,13 @@
     };
 
     ScheduledObserver.prototype.ensureActive = function () {
-      var isOwner = false, parent = this;
+      var isOwner = false;
       if (!this.hasFaulted && this.queue.length > 0) {
         isOwner = !this.isAcquired;
         this.isAcquired = true;
       }
       if (isOwner) {
-        this.disposable.setDisposable(this.scheduler.scheduleRecursive(function (self) {
+        this.disposable.setDisposable(this.scheduler.scheduleRecursiveWithState(this, function (parent, self) {
           var work;
           if (parent.queue.length > 0) {
             work = parent.queue.shift();
@@ -1685,14 +1685,13 @@
             parent.isAcquired = false;
             return;
           }
-          try {
-            work();
-          } catch (ex) {
+          var res = tryCatch(work)();
+          if (res === errorObj) {
             parent.queue = [];
             parent.hasFaulted = true;
-            throw ex;
+            return thrower(res.e);
           }
-          self();
+          self(parent);
         }));
       }
     };

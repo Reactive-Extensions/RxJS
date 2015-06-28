@@ -32,6 +32,11 @@ module.exports = function (grunt) {
               'src/core/internal/trycatch.js',
               'src/core/internal/util.js',
 
+              // Disposables
+              'src/core/disposables/compositedisposable.js',
+              'src/core/disposables/disposable.js',
+              'src/core/disposables/booleandisposable.js',
+
               // Schedulers
               'src/core/concurrency/scheduleditem.js',
               'src/core/concurrency/scheduler.js',
@@ -49,9 +54,10 @@ module.exports = function (grunt) {
 
               // Observable
               'src/core/observable.js',
-              'src/core/perf/observablebase.js',
               'src/core/anonymousobservable.js',
+              'src/core/perf/observablebase.js',
               'src/core/autodetachobserver.js',
+              'src/core/linq/observable/create.js',
 
               'src/core/headers/exports.js',
 
@@ -61,6 +67,59 @@ module.exports = function (grunt) {
               'src/core/headers/outro.js'
             ],
             dest: 'dist/rx.core.js'
+          },
+          'core-binding': {
+            src: [
+              'src/core/headers/license.js',
+              'src/core/headers/core-intro.js',
+              'src/core/headers/core-bindingheader.js',
+              'src/core/internal/trycatch.js',
+              'src/core/linq/observable/multicast.js',
+              'src/core/linq/observable/publish.js',
+              'src/core/linq/observable/share.js',
+              'src/core/linq/observable/publishlast.js',
+              'src/core/linq/observable/publishvalue.js',
+              'src/core/linq/observable/sharevalue.js',
+              'src/core/linq/observable/replay.js',
+              'src/core/linq/observable/sharereplay.js',
+              'src/core/scheduledobserver.js',
+              'src/core/subjects/innersubscription.js',
+              'src/core/subjects/subject.js',
+              'src/core/subjects/anonymoussubject.js',
+              'src/core/subjects/asyncsubject.js',
+              'src/core/subjects/behaviorsubject.js',
+              'src/core/subjects/replaysubject.js',
+              'src/core/linq/connectableobservable.js',
+              'src/core/headers/suboutro.js'
+            ],
+            dest: 'dist/rx.core.binding.js'
+          },
+          'core-testing': {
+            src: [
+              'src/core/headers/license.js',
+              'src/core/headers/core-intro.js',
+              'src/core/headers/core-testheader.js',
+
+              'src/core/notification.js',
+              'src/core/internal/dontenums.js',
+              'src/core/internal/isequal.js',
+
+              'src/core/concurrency/scheduleperiodicrecursive.js',
+              'src/core/internal/priorityqueue.js',
+              'src/core/concurrency/virtualtimescheduler.js',
+
+              'src/core/testing/reactivetest.js',
+              'src/core/testing/recorded.js',
+              'src/core/testing/subscription.js',
+              'src/core/testing/mockdisposable.js',
+              'src/core/testing/mockobserver.js',
+              'src/core/testing/mockpromise.js',
+              'src/core/testing/hotobservable.js',
+              'src/core/testing/coldobservable.js',
+              'src/core/testing/testscheduler.js',
+              'src/core/headers/suboutro.js'
+            ],
+            dest: 'dist/rx.core.testing.js'
           },
           all: {
             src: [
@@ -1975,6 +2034,20 @@ module.exports = function (grunt) {
           },
           files: {'dist/rx.core.min.js': ['dist/rx.core.js'] }
         },
+        'core-binding': {
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.core.binding.map'
+          },
+          files: {'dist/rx.core.binding.min.js': ['dist/rx.core.binding.js'] }
+        },
+        'core-testing': {
+          options: {
+            sourceMap: true,
+            sourceMapName: 'dist/rx.core.testing.map'
+          },
+          files: {'dist/rx.core.testing.min.js': ['dist/rx.core.testing.js'] }
+        },
         all: {
           options: {
             sourceMap: true,
@@ -2421,6 +2494,8 @@ module.exports = function (grunt) {
 
   grunt.registerTask('concat-min', [
     'concat:core',
+    'concat:core-binding',
+    'concat:core-testing',
     'concat:all',
     'concat:all-compat',
     'concat:main',
@@ -2461,6 +2536,8 @@ module.exports = function (grunt) {
     'concat:sorting',
 
     'uglify:core',
+    'uglify:core-binding',
+    'uglify:core-testing',
     'uglify:all',
     'uglify:all-compat',
     'uglify:main',
@@ -2509,6 +2586,8 @@ module.exports = function (grunt) {
   // Default task
   grunt.registerTask('default', [
     'concat:core',
+    'concat:core-binding',
+    'concat:core-testing',
     'concat:all',
     'concat:all-compat',
     'concat:main',
@@ -2549,6 +2628,8 @@ module.exports = function (grunt) {
     'concat:sorting',
 
     'uglify:core',
+    'uglify:core-binding',
+    'uglify:core-testing',
     'uglify:all',
     'uglify:all-compat',
     'uglify:main',
