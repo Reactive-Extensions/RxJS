@@ -19,17 +19,17 @@ File Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`amb`](../api/core/operators/amb.md)
-- [`generate`](../api/core/operators/generate.md)
-- [`onErrorResumeNext`](../api/core/operators/onerrorresumenext.md)
-- [`using`](../api/core/operators/using.md)
+- [`amb`](../../api/core/operators/amb.md)
+- [`generate`](../../api/core/operators/generate.md)
+- [`onErrorResumeNext`](../../api/core/operators/onerrorresumenext.md)
+- [`using`](../../api/core/operators/using.md)
 
 ### `Observable Instance Methods`
-- [`amb`](../api/core/operators/ambproto.md)
-- [`bufferWithCount`](../api/core/operators/bufferwithcount.md)
-- [`distinct`](../api/core/operators/distinct.md)
-- [`observeOn`](../api/core/operators/observeon.md)
-- [`onErrorResumeNext`](../api/core/operators/onerrorresumenext.md)
-- [`subscribeOn`](../api/core/operators/subscribeon.md)
-- [`takeLastBuffer`](../api/core/operators/takelastbuffer.md)
-- [`windowWithCount`](../api/core/operators/windowwithcount.md)
+- [`amb`](../../api/core/operators/ambproto.md)
+- [`bufferWithCount`](../../api/core/operators/bufferwithcount.md)
+- [`distinct`](../../api/core/operators/distinct.md)
+- [`observeOn`](../../api/core/operators/observeon.md)
+- [`onErrorResumeNext`](../../api/core/operators/onerrorresumenext.md)
+- [`subscribeOn`](../../api/core/operators/subscribeon.md)
+- [`takeLastBuffer`](../../api/core/operators/takelastbuffer.md)
+- [`windowWithCount`](../../api/core/operators/windowwithcount.md)

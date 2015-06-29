@@ -87,6 +87,9 @@ Curious on how we designed RxJS? This is covered along with overall guidelines o
 
 There are many libraries that make up the Reactive Extensions for JavaScript, so it may be a little daunting at first to know which ones to include.  This will serve as a guide for which libraries you might need.  For most operations you'll only need [`rx.lite.js`](libraries/lite/rx.lite.md), but you may find you need more operators, so you start with [`rx.js`](libraries/main/rx.md) and add additional files to mix in functionality as you need it.
 
+### The complete library:
+- [`rx.all.js`](libraries/main/rx.complete.md)
+
 ### Main Libraries:
 - [`rx.js`](libraries/main/rx.md)
 - [`rx.aggregates.js`](libraries/main/rx.aggregates.md)

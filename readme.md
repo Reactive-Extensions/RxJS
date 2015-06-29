@@ -84,24 +84,42 @@ The only difference is that we can handle the errors inline with our subscriptio
 
 ## Batteries Included ##
 
-Sure, there are a lot of libraries to get started with RxJS. Confused on where to get started?  Start out with the complete set of operators with [`rx.all.js`](doc/libraries/rx.complete.md), then you can reduce it to the number of operators that you really need, and perhaps stick with something as small as [`rx.lite.js`](doc/libraries/rx.lite.md).
+Sure, there are a lot of libraries to get started with RxJS. Confused on where to get started?  Start out with the complete set of operators with [`rx.all.js`](doc/libraries/rx.complete.md), then you can reduce it to the number of operators that you really need, and perhaps stick with something as small as [`rx.lite.js`](doc/libraries/rx.lite.md).  If you're an implementor of RxJS, then you can start out with [`rx.core.js`](doc/libraries/rx.core.md).
 
 This set of libraries include:
 
-- [`rx.all.js`](doc/libraries/rx.complete.md) - complete version of RxJS with all operators, minus the testing operators, and comes with a compat file for older browsers.
-- [`rx.lite.js`](doc/libraries/rx.lite.md) - lite version with event bindings, creation, time and standard query operators with a compat file for older browsers.  For most operations, this is the file you'll want to use unless you want the full power of RxJS.
-- [`rx.lite.extras.js`](doc/libraries/rx.lite.extras.md) - the operators missing from rx.lite.js that can be found in rx.js.
-- [`rx.js`](doc/libraries/rx.md) - core library for ES5 compliant browsers and runtimes plus compatibility for older browsers.
-- [`rx.aggregates.js`](doc/libraries/rx.aggregates.md) - aggregation event processing query operations
-- [`rx.async.js`](doc/libraries/rx.async.md) - async operations such as events, callbacks and promises plus a compat file for older browsers.
-- [`rx.backpressure.js`](doc/libraries/rx.backpressure.md) - backpressure operators such as pause/resume and controlled.
-- [`rx.binding.js`](doc/libraries/rx.binding.md) - binding operators including multicast, publish, publishLast, publishValue, and replay
-- [`rx.coincidence.js`](doc/libraries/rx.coincidence.md) - reactive coincidence join event processing query operations
-- [`rx.experimental.js`](doc/libraries/rx.experimental.md) - experimental operators including imperative operators and forkJoin
-- [`rx.joinpatterns.js`](doc/libraries/rx.joinpatterns.md) - join patterns event processing query operations
-- [`rx.testing.js`](doc/libraries/rx.testing.md) - used to write unit tests for complex event processing queries
-- [`rx.time.js`](doc/libraries/rx.time.md) - time-based event processing query operations
-- [`rx.virtualtime.js`](doc/libraries/rx.virtualtime.md) - virtual-time-based schedulers
+### The complete library:
+- [`rx.all.js`](libraries/main/rx.complete.md)
+
+### Main Libraries:
+- [`rx.js`](libraries/main/rx.md)
+- [`rx.aggregates.js`](libraries/main/rx.aggregates.md)
+- [`rx.async.js`](libraries/main/rx.async.md)
+- [`rx.binding.js`](libraries/main/rx.binding.md)
+- [`rx.coincidence.js`](libraries/main/rx.coincidence.md)
+- [`rx.experimental.js`](libraries/main/rx.experimental.md)
+- [`rx.joinpatterns.js`](libraries/main/rx.joinpatterns.md)
+- [`rx.testing.js`](libraries/main/rx.testing.md)
+- [`rx.time.js`](libraries/main/rx.time.md)
+- [`rx.virtualtime.js`](libraries/main/rx.virtualtime.md)
+
+### Lite Libraries:
+- [`rx.lite.js`](libraries/lite/rx.lite.md)
+- [`rx.lite.extras.js`](libraries/lite/rx.lite.extras.md)
+- [`rx.lite.aggregates.js`](libraries/lite/rx.lite.aggregates.md)
+- [`rx.lite.async.js`](libraries/lite/rx.lite.async.md)
+- [`rx.lite.binding.js`](libraries/lite/rx.lite.binding.md)
+- [`rx.lite.coincidence.js`](libraries/lite/rx.lite.coincidence.md)
+- [`rx.lite.experimental.js`](libraries/lite/rx.lite.experimental.md)
+- [`rx.lite.joinpatterns.js`](libraries/lite/rx.lite.joinpatterns.md)
+- [`rx.lite.testing.js`](libraries/lite/rx.lite.testing.md)
+- [`rx.lite.time.js`](libraries/lite/rx.lite.time.md)
+- [`rx.lite.virtualtime.js`](libraries/lite/rx.lite.virtualtime.md)
+
+### Core Libraries:
+- [`rx.core.js`](libraries/core/rx.core.md)
+- [`rx.core.binding.js`](libraries/core/rx.core.binding.md)
+- [`rx.core.testing.js`](libraries/core/rx.core.testing.md)
 
 ## Why RxJS? ##
 
