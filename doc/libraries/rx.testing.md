@@ -1,4 +1,4 @@
-# RxJS Time Module #
+# RxJS Testing Module #
 
 The Reactive Extensions for JavaScript has a built-in mechanism for testing all operators which allows for mocking absolute and relative time with ease.
 

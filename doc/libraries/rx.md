@@ -1,6 +1,6 @@
-# RxJS Core Module #
+# RxJS Main Module #
 
-The Reactive Extensions for JavaScript's core functionality is in the main RxJS file which has many core components including the Schedulers, Disposables, Observable and Observer.
+The Reactive Extensions for JavaScript's main functionality is in the main RxJS file which has many core components including the Schedulers, Disposables, Observable and Observer.
 
 This comes with both `rx.js` which is for use in modern development environments such as > IE9 and server-side environments such as Node.js.  We also have `rx.compat.js` which has backwards compatibility to browsers which do not support all required ES5 features.
 
@@ -22,7 +22,7 @@ NuGet Packages:
 - [`amb`](../api/core/operators/amb.md)
 - [`catch | catchException`](../api/core/operators/catch.md)
 - [`concat`](../api/core/operators/concat.md)
-- [`create | createWithDisposable`](../api/core/operators/create.md)
+- [`create`](../api/core/operators/create.md)
 - [`defer`](../api/core/operators/defer.md)
 - [`empty`](../api/core/operators/empty.md)
 - [`from`](../api/core/operators/from.md)
@@ -108,6 +108,7 @@ NuGet Packages:
 ### Core Objects
 
 - [`Rx.Observer`](../api/core/observer.md)
+- [`Rx.Observable`](../api/core/Observable.md)
 - [`Rx.Notification`](../api/core/notification.md)
 
 ### Subjects

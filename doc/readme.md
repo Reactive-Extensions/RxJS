@@ -85,19 +85,37 @@ Curious on how we designed RxJS? This is covered along with overall guidelines o
 
 ## Getting to Know RxJS Libraries ##
 
-There are many libraries that make up the Reactive Extensions for JavaScript, so it may be a little daunting at first to know which ones to include.  This will serve as a guide for which libraries you might need.  For most operations you'll only need [RxJS-Lite](libraries/rx.lite.md), but you may find you need more operators, so you start with [RxJS Core](libraries/rx.md) and add additional files to mix in functionality as you need it.
+There are many libraries that make up the Reactive Extensions for JavaScript, so it may be a little daunting at first to know which ones to include.  This will serve as a guide for which libraries you might need.  For most operations you'll only need [`rx.lite.js`](libraries/rx.lite.md), but you may find you need more operators, so you start with [`rx.js`](libraries/rx.md) and add additional files to mix in functionality as you need it.
 
-- [`rx.lite.js`](libraries/rx.lite.md)
+### Main Libraries:
 - [`rx.js`](libraries/rx.md)
+- [`rx.aggregates.js`](libraries/rx.aggregates.md)
 - [`rx.async.js`](libraries/rx.async.md)
 - [`rx.binding.js`](libraries/rx.binding.md)
 - [`rx.coincidence.js`](libraries/rx.coincidence.md)
 - [`rx.experimental.js`](libraries/rx.experimental.md)
 - [`rx.joinpatterns.js`](libraries/rx.joinpatterns.md)
-- [`rx.node.js`](libraries/rx.node.md)
 - [`rx.testing.js`](libraries/rx.testing.md)
 - [`rx.time.js`](libraries/rx.time.md)
 - [`rx.virtualtime.js`](libraries/rx.virtualtime.md)
+
+### Lite Libraries:
+- [`rx.lite.js`](libraries/rx.lite.md)
+- [`rx.lite.extras.js`](libraries/rx.lite.extras.md)
+- [`rx.lite.aggregates.js`](libraries/rx.lite.aggregates.md)
+- [`rx.lite.async.js`](libraries/rx.lite.async.md)
+- [`rx.lite.binding.js`](libraries/rx.lite.binding.md)
+- [`rx.lite.coincidence.js`](libraries/rx.lite.coincidence.md)
+- [`rx.lite.experimental.js`](libraries/rx.lite.experimental.md)
+- [`rx.lite.joinpatterns.js`](libraries/rx.lite.joinpatterns.md)
+- [`rx.lite.testing.js`](libraries/rx.lite.testing.md)
+- [`rx.lite.time.js`](libraries/rx.lite.time.md)
+- [`rx.lite.virtualtime.js`](libraries/rx.lite.virtualtime.md)
+
+### Core Libraries:
+- [`rx.core.js`](libraries/rx.core.md)
+- [`rx.core.binding.js`](libraries/rx.core.binding.md)
+- [`rx.core.testing.js`](libraries/rx.core.testing.md)
 
 ## How Do I? ##
 
