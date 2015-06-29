@@ -1,11 +1,11 @@
-  /*
+  /**
    * Performs a exclusive waiting for the first to finish before subscribing to another observable.
    * Observables that come in between subscriptions will be dropped on the floor.
    * @returns {Observable} A exclusive observable with only the results that happen when subscribed.
    */
-  observableProto.exclusive = function () {
+  observableProto.switchFirst = function () {
     var sources = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hasCurrent = false,
         isStopped = false,
         m = new SingleAssignmentDisposable(),
@@ -24,23 +24,19 @@
             g.add(innerSubscription);
 
             innerSubscription.setDisposable(innerSource.subscribe(
-              observer.onNext.bind(observer),
-              observer.onError.bind(observer),
+              function (x) { o.onNext(x); },
+              function (e) { o.onError(e); },
               function () {
                 g.remove(innerSubscription);
                 hasCurrent = false;
-                if (isStopped && g.length === 1) {
-                  observer.onCompleted();
-                }
+                isStopped && g.length === 1 && o.onCompleted();
             }));
           }
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
           isStopped = true;
-          if (!hasCurrent && g.length === 1) {
-            observer.onCompleted();
-          }
+          !hasCurrent && g.length === 1 && o.onCompleted();
         }));
 
       return g;

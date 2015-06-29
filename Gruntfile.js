@@ -248,7 +248,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
-              'src/core/linq/observable/selectswitch.js',
+              'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -383,8 +383,9 @@ module.exports = function (grunt) {
               'src/core/linq/observable/transduce.js',
 
               // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              'src/core/linq/observable/switchfirst.js',
+              'src/core/linq/observable/flatmapfirst.js',
+              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
 
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
@@ -532,7 +533,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
-              'src/core/linq/observable/selectswitch.js',
+              'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -664,8 +665,9 @@ module.exports = function (grunt) {
               'src/core/linq/observable/throttlefirst.js',
 
               // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              'src/core/linq/observable/switchfirst.js',
+              'src/core/linq/observable/flatmapfirst.js',
+              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -813,7 +815,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/selectmany.js',
-              'src/core/linq/observable/selectswitch.js',
+              'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -960,7 +962,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
               'src/core/linq/observable/selectmanyobserver.js',
-              'src/core/linq/observable/selectswitch.js',
+              'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -1082,7 +1084,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
-              'src/core/linq/observable/selectswitch.js',
+              'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -1250,7 +1252,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmany.js',
-              'src/core/linq/observable/selectswitch.js',
+              'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -1700,6 +1702,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/subintro.js',
               'src/core/headers/experimentalheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/headers/enumeratorheader.js',
               'src/core/linq/enumerable/while.js', // Enumerable
               'src/core/linq/observable/let.js',
@@ -1714,8 +1717,9 @@ module.exports = function (grunt) {
               'src/core/linq/observable/manyselect.js', // ImmediateScheduler, CurrentThreadScheduler, select, do, observeOn
 
               // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              'src/core/linq/observable/switchfirst.js',
+              'src/core/linq/observable/flatmapfirst.js',
+              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
 
               'src/core/headers/suboutro.js'
             ],
@@ -1726,6 +1730,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro.js',
               'src/core/headers/experimentalheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/headers/enumeratorheader.js',
               'src/core/linq/enumerable/while.js', // Enumerable
               'src/core/linq/observable/let.js',
@@ -1740,8 +1745,9 @@ module.exports = function (grunt) {
               'src/core/linq/observable/manyselect.js', // ImmediateScheduler, CurrentThreadScheduler, select, do, observeOn
 
               // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              'src/core/linq/observable/switchfirst.js',
+              'src/core/linq/observable/flatmapfirst.js',
+              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
 
               'src/core/headers/suboutro.js'
             ],
@@ -1752,6 +1758,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro-compat.js',
               'src/core/headers/experimentalheader.js',
+              'src/core/internal/trycatch.js',
               'src/core/headers/enumeratorheader.js',
               'src/core/linq/enumerable/while.js', // Enumerable
               'src/core/linq/observable/let.js',
@@ -1766,8 +1773,9 @@ module.exports = function (grunt) {
               'src/core/linq/observable/manyselect.js', // ImmediateScheduler, CurrentThreadScheduler, select, do, observeOn
 
               // Experimental Flattening
-              'src/core/linq/observable/exclusive.js',
-              'src/core/linq/observable/exclusivemap.js',
+              'src/core/linq/observable/switchfirst.js',
+              'src/core/linq/observable/flatmapfirst.js',
+              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
 
               'src/core/headers/suboutro.js'
             ],

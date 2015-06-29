@@ -17,19 +17,19 @@ NuGet Packages:
 
 ### Core Objects
 
-- [`Rx.Observer`](../api/core/observer.md)
-- [`Rx.Observable`](../api/core/observable.md)
+- [`Rx.Observer`](../../api/core/observer.md)
+- [`Rx.Observable`](../../api/core/observable.md)
 
 ### `Observable Methods`
-- [`create`](../api/core/operators/create.md)
+- [`create`](../../api/core/operators/create.md)
 
 ### Schedulers
 
-- [`Rx.Scheduler`](../api/schedulers/scheduler.md)
+- [`Rx.Scheduler`](../../api/schedulers/scheduler.md)
 
 ### Disposables
 
-- [`Rx.CompositeDisposable`](../api/disposables/compositedisposable.md)
-- [`Rx.Disposable`](../api/disposables/disposable.md)
-- [`Rx.SerialDisposable`](../api/disposables/serialdisposable.md)
-- [`Rx.SingleAssignmentDisposable`](../api/disposables/singleassignmentdisposable.md)
+- [`Rx.CompositeDisposable`](../../api/disposables/compositedisposable.md)
+- [`Rx.Disposable`](../../api/disposables/disposable.md)
+- [`Rx.SerialDisposable`](../../api/disposables/serialdisposable.md)
+- [`Rx.SingleAssignmentDisposable`](../../api/disposables/singleassignmentdisposable.md)
