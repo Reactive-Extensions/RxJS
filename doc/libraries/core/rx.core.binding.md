@@ -22,23 +22,23 @@ NuGet Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Instance Methods`
-- [`connect`](../api/core/operators/connect.md)
-- [`publish`](../api/core/operators/publish.md)
-- [`publishLast`](../api/core/operators/publishlast.md)
-- [`publishValue`](../api/core/operators/publishvalue.md)
-- [`refCount`](../api/core/operators/refcount.md)
-- [`replay`](../api/core/operators/replay.md)
-- [`share`](../api/core/operators/share.md)
-- [`shareLast`](../api/core/operators/sharelast.md)
-- [`shareReplay`](../api/core/operators/sharereplay.md)
-- [`shareValue`](../api/core/operators/sharevalue.md)
-- [`singleInstance`](../api/core/operators/singleinstance.md)
+- [`connect`](../../api/core/operators/connect.md)
+- [`publish`](../../api/core/operators/publish.md)
+- [`publishLast`](../../api/core/operators/publishlast.md)
+- [`publishValue`](../../api/core/operators/publishvalue.md)
+- [`refCount`](../../api/core/operators/refcount.md)
+- [`replay`](../../api/core/operators/replay.md)
+- [`share`](../../api/core/operators/share.md)
+- [`shareLast`](../../api/core/operators/sharelast.md)
+- [`shareReplay`](../../api/core/operators/sharereplay.md)
+- [`shareValue`](../../api/core/operators/sharevalue.md)
+- [`singleInstance`](../../api/core/operators/singleinstance.md)
 
 ## Included Classes ##
 
 ### Subjects
 
-- [`Rx.AsyncSubject`](../api/subjects/asyncsubject.md)
-- [`Rx.Subject`](../api/subjects/subject.md)
-- [`Rx.BehaviorSubject`](../api/core/observable.mdapi/subjects/behaviorsubject.md)
-- [`Rx.ReplaySubject`](../api/core/observable.mdapi/subjects/replaysubject.md)
+- [`Rx.AsyncSubject`](../../api/subjects/asyncsubject.md)
+- [`Rx.Subject`](../../api/subjects/subject.md)
+- [`Rx.BehaviorSubject`](../../api/core/observable.mdapi/subjects/behaviorsubject.md)
+- [`Rx.ReplaySubject`](../../api/core/observable.mdapi/subjects/replaysubject.md)

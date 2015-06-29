@@ -24,18 +24,18 @@ NuGet Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`case | switchCase`](../api/core/operators/case.md)
-- [`for | forIn`](../api/core/operators/for.md)
-- [`forkJoin`](../api/core/operators/forkjoin.md)
-- [`if | ifThen`](../api/core/operators/if.md)
-- [`while | whileDo`](../api/core/operators/while.md)
+- [`case | switchCase`](../../api/core/operators/case.md)
+- [`for | forIn`](../../api/core/operators/for.md)
+- [`forkJoin`](../../api/core/operators/forkjoin.md)
+- [`if | ifThen`](../../api/core/operators/if.md)
+- [`while | whileDo`](../../api/core/operators/while.md)
 
 ### `Observable Instance Methods`
 - [`doWhile`](/api/core/operators/dowhile.md)
-- [`expand`](../api/core/operators/expand.md)
-- [`extend`](../api/core/operators/manyselect.md)
-- [`forkJoin`](../api/core/operators/forkjoinproto.md)
-- [`let | letBind`](../api/core/operators/let.md)
-- [`manySelect`](../api/core/operators/manyselect.md)
-- [`exclusive`](../api/core/operators/exclusive.md)
-- [`exclusivemap`](../api/core/operators/exclusivemap.md)
+- [`expand`](../../api/core/operators/expand.md)
+- [`extend`](../../api/core/operators/manyselect.md)
+- [`forkJoin`](../../api/core/operators/forkjoinproto.md)
+- [`let | letBind`](../../api/core/operators/let.md)
+- [`manySelect`](../../api/core/operators/manyselect.md)
+- [`exclusive`](../../api/core/operators/exclusive.md)
+- [`exclusivemap`](../../api/core/operators/exclusivemap.md)

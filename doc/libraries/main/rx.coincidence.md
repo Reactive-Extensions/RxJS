@@ -23,11 +23,11 @@ NuGet Dependencies:
 ## Included Observable Operators ##
 
 ## `Observable Instance Methods`
-- [`buffer`](../api/core/operators/buffer.md)
-- [`groupBy`](../api/core/operators/groupby.md)
-- [`groupByUntil`](../api/core/operators/groupbyuntil.md)
-- [`groupJoin`](../api/core/operators/groupjoin.md)
-- [`join`](../api/core/operators/join.md)
-- [`pairwise`](../api/core/operators/pairwise.md)
-- [`partition`](../api/core/operators/partition.md)
-- [`window`](../api/core/operators/window.md)
+- [`buffer`](../../api/core/operators/buffer.md)
+- [`groupBy`](../../api/core/operators/groupby.md)
+- [`groupByUntil`](../../api/core/operators/groupbyuntil.md)
+- [`groupJoin`](../../api/core/operators/groupjoin.md)
+- [`join`](../../api/core/operators/join.md)
+- [`pairwise`](../../api/core/operators/pairwise.md)
+- [`partition`](../../api/core/operators/partition.md)
+- [`window`](../../api/core/operators/window.md)

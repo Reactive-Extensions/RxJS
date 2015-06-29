@@ -19,11 +19,10 @@ File Dependencies:
 NuGet Dependencies:
 - [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
 - [`RxJS-Main`](http://www.nuget.org/packages/RxJS-Main/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 ## Included Classes ##
 
 ### Schedulers
 
-- [`Rx.HistoricalScheduler`](../api/schedulers/historicalscheduler.md)
-- [`Rx.VirtualTimeScheduler`](../api/schedulers/virtualtimescheduler.md)
+- [`Rx.HistoricalScheduler`](../../api/schedulers/historicalscheduler.md)
+- [`Rx.VirtualTimeScheduler`](../../api/schedulers/virtualtimescheduler.md)

@@ -26,6 +26,6 @@ NuGet Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Instance Methods`
-- [`controlled`](../api/core/operators/controlled.md)
-- [`pausable`](../api/core/operators/pausable.md)
-- [`pausableBuffered`](../api/core/operators/pausablebuffered.md)
+- [`controlled`](../../api/core/operators/controlled.md)
+- [`pausable`](../../api/core/operators/pausable.md)
+- [`pausableBuffered`](../../api/core/operators/pausablebuffered.md)

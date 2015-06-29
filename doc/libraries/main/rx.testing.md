@@ -25,7 +25,7 @@ NuGet Dependencies:
 
 ### Testing Classes
 
-- [`Rx.ReactiveTest`](../api/testing/reactivetest.md)
-- [`Rx.Recorded`](../api/testing/recorded.md)
-- [`Rx.Subscription`](../api/testing/subscription.md)
-- [`Rx.TestScheduler`](../api/testing/testscheduler.md)
+- [`Rx.ReactiveTest`](../../api/testing/reactivetest.md)
+- [`Rx.Recorded`](../../api/testing/recorded.md)
+- [`Rx.Subscription`](../../api/testing/subscription.md)
+- [`Rx.TestScheduler`](../../api/testing/testscheduler.md)

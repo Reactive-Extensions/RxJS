@@ -24,10 +24,10 @@ NuGet Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`when`](../api/core/operators/when.md)
+- [`when`](../../api/core/operators/when.md)
 
 ### `Observable Instance Methods`
-- [`and`](../api/core/operators/and.md)
+- [`and`](../../api/core/operators/and.md)
 
 ### `Pattern Instance Methods`
-- [`thenDo`](../api/core/operators/thendo.md)
+- [`thenDo`](../../api/core/operators/thendo.md)

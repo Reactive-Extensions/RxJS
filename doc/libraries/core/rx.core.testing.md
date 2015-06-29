@@ -23,15 +23,15 @@ NuGet Dependencies:
 
 ### Core Objects
 
-- [`Rx.Notification`](../api/core/notification.md)
+- [`Rx.Notification`](../../api/core/notification.md)
 
 ### Schedulers
 
-- [`Rx.TestScheduler`](../api/testing/testscheduler.md)
-- [`Rx.VirtualTimeScheduler`](../api/schedulers/virtualtimescheduler.md)
+- [`Rx.TestScheduler`](../../api/testing/testscheduler.md)
+- [`Rx.VirtualTimeScheduler`](../../api/schedulers/virtualtimescheduler.md)
 
 ### Testing Classes
 
-- [`Rx.ReactiveTest`](../api/testing/reactivetest.md)
-- [`Rx.Recorded`](../api/testing/recorded.md)
-- [`Rx.Subscription`](../api/testing/subscription.md)
+- [`Rx.ReactiveTest`](../../api/testing/reactivetest.md)
+- [`Rx.Recorded`](../../api/testing/recorded.md)
+- [`Rx.Subscription`](../../api/testing/subscription.md)
