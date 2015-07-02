@@ -249,7 +249,7 @@ Please check out:
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
 
-- [Community Examples](doc/community.md)
+- [Community Examples](examples/community.md)
 - [Presentations](doc/presentations.md)
 - [Videos and Podcasts](doc/videos.md)
 
