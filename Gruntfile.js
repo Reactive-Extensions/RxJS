@@ -165,6 +165,7 @@ module.exports = function (grunt) {
               'src/core/observeonobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/perf/operators/flatmapbase.js',
               'src/core/enumerable.js',
 
               // Concurrency
@@ -453,6 +454,7 @@ module.exports = function (grunt) {
               'src/core/observeonobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/perf/operators/flatmapbase.js',
               'src/core/enumerable.js',
 
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
@@ -523,7 +525,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/windowwithcount.js',
 
               // Standard query operators
-              'src/core/linq/observable/concatmap.js',
+              'src/core/perf/operators/concatmap.js',
               'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
@@ -736,6 +738,7 @@ module.exports = function (grunt) {
               'src/core/observeonobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/perf/operators/flatmapbase.js',
               'src/core/enumerable.js',
 
               // Concurrency
@@ -807,7 +810,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/windowwithcount.js',
 
               // Standard query operators
-              'src/core/linq/observable/concatmap.js',
+              'src/core/perf/operators/concatmap.js',
               'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
@@ -884,6 +887,7 @@ module.exports = function (grunt) {
               'src/core/observeonobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/perf/operators/flatmapbase.js',
               'src/core/enumerable.js',
 
               'src/core/linq/observable/observeon.js', // ObserveOnObserver
@@ -954,7 +958,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/windowwithcount.js',
 
               // Standard query operators
-              'src/core/linq/observable/concatmap.js',
+              'src/core/perf/operators/concatmap.js',
               'src/core/linq/observable/concatmapobserver.js',
               'src/core/linq/observable/defaultifempty.js',
               'src/core/linq/observable/distinct.js',
@@ -1026,6 +1030,7 @@ module.exports = function (grunt) {
               'src/core/observable.js',
               'src/core/scheduledobserver.js',
               'src/core/perf/observablebase.js',
+              'src/core/perf/operators/flatmapbase.js',
               'src/core/enumerable.js',
 
               // Creation
@@ -1080,7 +1085,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/takelast.js',
 
               // Standard Query Operators
-              'src/core/linq/observable/concatmap.js',
+              'src/core/perf/operators/concatmap.js',
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/perf/operators/flatmap.js',
@@ -1193,6 +1198,7 @@ module.exports = function (grunt) {
               'src/core/anonymousobserver.js',
               'src/core/observable.js',
               'src/core/perf/observablebase.js',
+              'src/core/perf/operators/flatmapbase.js',
               'src/core/enumerable.js',
               'src/core/scheduledobserver.js',
 
@@ -1248,7 +1254,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/takelast.js',
 
               // Standard Query Operators
-              'src/core/linq/observable/concatmap.js',
+              'src/core/perf/operators/concatmap.js',
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/perf/operators/flatmap.js',
