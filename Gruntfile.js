@@ -246,7 +246,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/groupbyuntil.js',
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
-              'src/core/linq/observable/selectmany.js',
+              'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
@@ -531,7 +531,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/groupbyuntil.js',
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
-              'src/core/linq/observable/selectmany.js',
+              'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
@@ -814,7 +814,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmanyobserver.js',
-              'src/core/linq/observable/selectmany.js',
+              'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
@@ -960,7 +960,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/distinct.js',
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
-              'src/core/linq/observable/selectmany.js',
+              'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
@@ -1083,7 +1083,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/concatmap.js',
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
-              'src/core/linq/observable/selectmany.js',
+              'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
@@ -1251,7 +1251,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/concatmap.js',
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
-              'src/core/linq/observable/selectmany.js',
+              'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
@@ -2390,7 +2390,7 @@ module.exports = function (grunt) {
             'dist/rx.lite.extras.compat.min.js'
           ],
           dest: 'modules/rx-lite-extras-compat/'
-        },
+        }
       }
   });
 
