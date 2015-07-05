@@ -55,7 +55,7 @@ Next, we'll get the user input from an input, listening to the keyup event by us
         $results = $('#results');
 
     /* Only get the value from each key up */
-    var keyups = Rx.Observable.fromEvent(input, 'keyup')
+    var keyups = Rx.Observable.fromEvent($input.get(0), 'keyup')
         .map(function (e) {
             return e.target.value;
         })
