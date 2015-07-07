@@ -249,7 +249,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/selectmanyobserver.js',
-              'src/core/linq/observable/flatmaplatest.js',
+              'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -385,8 +385,8 @@ module.exports = function (grunt) {
 
               // Experimental Flattening
               'src/core/linq/observable/switchfirst.js',
-              'src/core/linq/observable/flatmapfirst.js',
-              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
+              'src/core/perf/operators/flatmapfirst.js',
+              'src/core/perf/operators/flatmapwithmaxconcurrent.js',
 
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
@@ -535,7 +535,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/selectmanyobserver.js',
-              'src/core/linq/observable/flatmaplatest.js',
+              'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -668,8 +668,8 @@ module.exports = function (grunt) {
 
               // Experimental Flattening
               'src/core/linq/observable/switchfirst.js',
-              'src/core/linq/observable/flatmapfirst.js',
-              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
+              'src/core/perf/operators/flatmapfirst.js',
+              'src/core/perf/operators/flatmapwithmaxconcurrent.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -818,7 +818,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/linq/observable/selectmanyobserver.js',
               'src/core/perf/operators/flatmap.js',
-              'src/core/linq/observable/flatmaplatest.js',
+              'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -966,7 +966,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/pluck.js',
               'src/core/perf/operators/flatmap.js',
               'src/core/linq/observable/selectmanyobserver.js',
-              'src/core/linq/observable/flatmaplatest.js',
+              'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -1089,7 +1089,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/perf/operators/flatmap.js',
-              'src/core/linq/observable/flatmaplatest.js',
+              'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -1258,7 +1258,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/map.js',
               'src/core/linq/observable/pluck.js',
               'src/core/perf/operators/flatmap.js',
-              'src/core/linq/observable/flatmaplatest.js',
+              'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
               'src/core/linq/observable/take.js',
@@ -1724,8 +1724,8 @@ module.exports = function (grunt) {
 
               // Experimental Flattening
               'src/core/linq/observable/switchfirst.js',
-              'src/core/linq/observable/flatmapfirst.js',
-              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
+              'src/core/perf/operators/flatmapfirst.js',
+              'src/core/perf/operators/flatmapwithmaxconcurrent.js',
 
               'src/core/headers/suboutro.js'
             ],
@@ -1752,8 +1752,8 @@ module.exports = function (grunt) {
 
               // Experimental Flattening
               'src/core/linq/observable/switchfirst.js',
-              'src/core/linq/observable/flatmapfirst.js',
-              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
+              'src/core/perf/operators/flatmapfirst.js',
+              'src/core/perf/operators/flatmapwithmaxconcurrent.js',
 
               'src/core/headers/suboutro.js'
             ],
@@ -1780,8 +1780,8 @@ module.exports = function (grunt) {
 
               // Experimental Flattening
               'src/core/linq/observable/switchfirst.js',
-              'src/core/linq/observable/flatmapfirst.js',
-              'src/core/linq/observable/flatmapwithmaxconcurrent.js',
+              'src/core/perf/operators/flatmapfirst.js',
+              'src/core/perf/operators/flatmapwithmaxconcurrent.js',
 
               'src/core/headers/suboutro.js'
             ],

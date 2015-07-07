@@ -35,6 +35,7 @@ var FlatMapObservable = (function(__super__){
     InnerObserver.prototype.onNext = function(x) {
 
         if (this.isStopped) return;
+
         var i = this.i++;
         var result = tryCatch(this.selector)(x, i, this.source);
 
