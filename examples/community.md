@@ -20,6 +20,7 @@ Below are samples using RxJS as provided by the community.
     - [Real-Time TODOs using RethinkDB, React, RxJS and Socket.io](https://github.com/bobiblazeski/rio)
     - [React RxJS and PureScript implementation of the Game of Life](https://github.com/EugeneN/pureGoL)
     - [React + RxJs + React-Router + JSON](https://github.com/Cmdv/React-RxJS)
+    - [React + RxJs Translating Morse codes into letters and words](https://github.com/AlexMost/morse)
 
 - [Flux](http://facebook.github.io/flux/)
     - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
