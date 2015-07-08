@@ -89,37 +89,37 @@ Sure, there are a lot of libraries to get started with RxJS. Confused on where t
 This set of libraries include:
 
 ### The complete library:
-- [`rx.all.js`](libraries/main/rx.complete.md)
+- [`rx.all.js`](doc/libraries/main/rx.complete.md)
 
 ### Main Libraries:
-- [`rx.js`](libraries/main/rx.md)
-- [`rx.aggregates.js`](libraries/main/rx.aggregates.md)
-- [`rx.async.js`](libraries/main/rx.async.md)
-- [`rx.binding.js`](libraries/main/rx.binding.md)
-- [`rx.coincidence.js`](libraries/main/rx.coincidence.md)
-- [`rx.experimental.js`](libraries/main/rx.experimental.md)
-- [`rx.joinpatterns.js`](libraries/main/rx.joinpatterns.md)
-- [`rx.testing.js`](libraries/main/rx.testing.md)
-- [`rx.time.js`](libraries/main/rx.time.md)
-- [`rx.virtualtime.js`](libraries/main/rx.virtualtime.md)
+- [`rx.js`](doc/libraries/main/rx.md)
+- [`rx.aggregates.js`](doc/libraries/main/rx.aggregates.md)
+- [`rx.async.js`](doc/libraries/main/rx.async.md)
+- [`rx.binding.js`](doc/libraries/main/rx.binding.md)
+- [`rx.coincidence.js`](doc/libraries/main/rx.coincidence.md)
+- [`rx.experimental.js`](doc/libraries/main/rx.experimental.md)
+- [`rx.joinpatterns.js`](doc/libraries/main/rx.joinpatterns.md)
+- [`rx.testing.js`](doc/libraries/main/rx.testing.md)
+- [`rx.time.js`](doc/libraries/main/rx.time.md)
+- [`rx.virtualtime.js`](doc/libraries/main/rx.virtualtime.md)
 
 ### Lite Libraries:
-- [`rx.lite.js`](libraries/lite/rx.lite.md)
-- [`rx.lite.extras.js`](libraries/lite/rx.lite.extras.md)
-- [`rx.lite.aggregates.js`](libraries/lite/rx.lite.aggregates.md)
-- [`rx.lite.async.js`](libraries/lite/rx.lite.async.md)
-- [`rx.lite.binding.js`](libraries/lite/rx.lite.binding.md)
-- [`rx.lite.coincidence.js`](libraries/lite/rx.lite.coincidence.md)
-- [`rx.lite.experimental.js`](libraries/lite/rx.lite.experimental.md)
-- [`rx.lite.joinpatterns.js`](libraries/lite/rx.lite.joinpatterns.md)
-- [`rx.lite.testing.js`](libraries/lite/rx.lite.testing.md)
-- [`rx.lite.time.js`](libraries/lite/rx.lite.time.md)
-- [`rx.lite.virtualtime.js`](libraries/lite/rx.lite.virtualtime.md)
+- [`rx.lite.js`](doc/libraries/lite/rx.lite.md)
+- [`rx.lite.extras.js`](doc/libraries/lite/rx.lite.extras.md)
+- [`rx.lite.aggregates.js`](doc/libraries/lite/rx.lite.aggregates.md)
+- [`rx.lite.async.js`](doc/libraries/lite/rx.lite.async.md)
+- [`rx.lite.binding.js`](doc/libraries/lite/rx.lite.binding.md)
+- [`rx.lite.coincidence.js`](doc/libraries/lite/rx.lite.coincidence.md)
+- [`rx.lite.experimental.js`](doc/libraries/lite/rx.lite.experimental.md)
+- [`rx.lite.joinpatterns.js`](doc/libraries/lite/rx.lite.joinpatterns.md)
+- [`rx.lite.testing.js`](doc/libraries/lite/rx.lite.testing.md)
+- [`rx.lite.time.js`](doc/libraries/lite/rx.lite.time.md)
+- [`rx.lite.virtualtime.js`](doc/libraries/lite/rx.lite.virtualtime.md)
 
 ### Core Libraries:
-- [`rx.core.js`](libraries/core/rx.core.md)
-- [`rx.core.binding.js`](libraries/core/rx.core.binding.md)
-- [`rx.core.testing.js`](libraries/core/rx.core.testing.md)
+- [`rx.core.js`](doc/libraries/core/rx.core.md)
+- [`rx.core.binding.js`](doc/libraries/core/rx.core.binding.md)
+- [`rx.core.testing.js`](doc/libraries/core/rx.core.testing.md)
 
 ## Why RxJS? ##
 
@@ -249,7 +249,7 @@ Please check out:
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
 
-- [Community Examples](doc/community.md)
+- [Community Examples](examples/community.md)
 - [Presentations](doc/presentations.md)
 - [Videos and Podcasts](doc/videos.md)
 
