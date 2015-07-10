@@ -1,12 +1,16 @@
-  function createListener (element, name, handler) {
-    if (element.addEventListener) {
-      element.addEventListener(name, handler, false);
-      return disposableCreate(function () {
-        element.removeEventListener(name, handler, false);
-      });
-    }
-    throw new Error('No listener found');
+  function ListenDisposable(e, n, fn) {
+    this._e = e;
+    this._n = n;
+    this._fn = fn;
+    this._e.addEventListener(this._n, this._fn, false);
+    this.isDisposed = false;
   }
+  ListenDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e.removeEventListener(this._n, this._fn, false);
+      this.isDisposed = true;
+    }
+  };
 
   function createEventListener (el, eventName, handler) {
     var disposables = new CompositeDisposable();
@@ -18,7 +22,7 @@
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
     } else if (el) {
-      disposables.add(createListener(el, eventName, handler));
+      disposables.add(new ListenDisposable(el, eventName, handler));
     }
 
     return disposables;

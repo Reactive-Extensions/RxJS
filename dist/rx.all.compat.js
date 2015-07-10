@@ -2129,25 +2129,23 @@
    */
   var Observable = Rx.Observable = (function () {
 
+    function makeSubscribe(self, subscribe) {
+      return function (o) {
+        var oldOnError = o.onError;
+        o.onError = function (e) {
+          makeStackTraceLong(e, self);
+          oldOnError.call(o, e);
+        };
+
+        return subscribe.call(self, o);
+      };
+    }
+
     function Observable(subscribe) {
       if (Rx.config.longStackSupport && hasStacks) {
-        try {
-          throw new Error();
-        } catch (e) {
-          this.stack = e.stack.substring(e.stack.indexOf("\n") + 1);
-        }
-
-        var self = this;
-        this._subscribe = function (observer) {
-          var oldOnError = observer.onError.bind(observer);
-
-          observer.onError = function (err) {
-            makeStackTraceLong(err, self);
-            oldOnError(err);
-          };
-
-          return subscribe.call(self, observer);
-        };
+        var e = tryCatch(thrower)(new Error()).e;
+        this.stack = e.stack.substring(e.stack.indexOf('\n') + 1);
+        this._subscribe = makeSubscribe(this, subscribe);
       } else {
         this._subscribe = subscribe;
       }
@@ -2165,16 +2163,16 @@
     }
 
     /**
-     *  Subscribes an observer to the observable sequence.
-     *  @param {Mixed} [observerOrOnNext] The object that is to receive notifications or an action to invoke for each element in the observable sequence.
+     *  Subscribes an o to the observable sequence.
+     *  @param {Mixed} [oOrOnNext] The object that is to receive notifications or an action to invoke for each element in the observable sequence.
      *  @param {Function} [onError] Action to invoke upon exceptional termination of the observable sequence.
      *  @param {Function} [onCompleted] Action to invoke upon graceful termination of the observable sequence.
      *  @returns {Diposable} A disposable handling the subscriptions and unsubscriptions.
      */
-    observableProto.subscribe = observableProto.forEach = function (observerOrOnNext, onError, onCompleted) {
-      return this._subscribe(typeof observerOrOnNext === 'object' ?
-        observerOrOnNext :
-        observerCreate(observerOrOnNext, onError, onCompleted));
+    observableProto.subscribe = observableProto.forEach = function (oOrOnNext, onError, onCompleted) {
+      return this._subscribe(typeof oOrOnNext === 'object' ?
+        oOrOnNext :
+        observerCreate(oOrOnNext, onError, onCompleted));
     };
 
     /**
@@ -5950,15 +5948,15 @@
    * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
    * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate if provided, else the first item in the sequence.
    */
-  observableProto.first = function (predicate, thisArg) {
-    if (isFunction(predicate)) { return this.filter(predicate, thisArg).first(); }
+  observableProto.first = function (predicate, thisArg, defaultValue) {
+    if (isFunction(predicate)) { return this.filter(predicate, thisArg).first(defaultValue); }
     var source = this;
     return new AnonymousObservable(function (o) {
       return source.subscribe(function (x) {
         o.onNext(x);
         o.onCompleted();
       }, function (e) { o.onError(e); }, function () {
-        o.onNext(undefined);
+        o.onNext(defaultValue);
         o.onCompleted();
       });
     }, source);
