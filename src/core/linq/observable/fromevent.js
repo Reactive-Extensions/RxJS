@@ -59,17 +59,22 @@
           selector);
       }
     }
+
+    function eventHandler(o) {
+      return function handler () {
+        var results = arguments[0];
+        if (isFunction(selector)) {
+          results = tryCatch(selector).apply(null, arguments);
+          if (results === errorObj) { return o.onError(results.e); }
+        }
+        o.onNext(results);
+      };
+    }
+
     return new AnonymousObservable(function (o) {
       return createEventListener(
         element,
         eventName,
-        function handler () {
-          var results = arguments[0];
-          if (isFunction(selector)) {
-            results = tryCatch(selector).apply(null, arguments);
-            if (results === errorObj) { return o.onError(results.e); }
-          }
-          o.onNext(results);
-        });
+        eventHandler(o));
     }).publish().refCount();
   };
