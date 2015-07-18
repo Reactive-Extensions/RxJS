@@ -322,7 +322,7 @@ declare module Rx {
 		materialize(): Observable<Notification<T>>;
 		repeat(repeatCount?: number): Observable<T>;
 		retry(retryCount?: number): Observable<T>;
-		scan<TAcc>(accumulator: (acc: TAcc, value: T, seed: TAcc => TAcc): Observable<TAcc>;
+		scan<TAcc>(accumulator: (acc: TAcc, value: T, seed: TAcc) => TAcc): Observable<TAcc>;
 		scan(accumulator: (acc: T, value: T) => T): Observable<T>;
 		skipLast(count: number): Observable<T>;
 		startWith(...values: T[]): Observable<T>;
@@ -339,12 +339,14 @@ declare module Rx {
 		selectMany<TResult>(selector: (value: T) => IPromise<TResult>): Observable<TResult>;
 		selectMany<TResult>(other: Observable<TResult>): Observable<TResult>;
 		selectMany<TResult>(other: IPromise<TResult>): Observable<TResult>;
+		selectMany<TResult>(selector: (value: T) => TResult[]): Observable<TResult>;	// alias for selectMany
 		flatMap<TOther, TResult>(selector: (value: T) => Observable<TOther>, resultSelector: (item: T, other: TOther) => TResult): Observable<TResult>;	// alias for selectMany
 		flatMap<TOther, TResult>(selector: (value: T) => IPromise<TOther>, resultSelector: (item: T, other: TOther) => TResult): Observable<TResult>;	// alias for selectMany
 		flatMap<TResult>(selector: (value: T) => Observable<TResult>): Observable<TResult>;	// alias for selectMany
 		flatMap<TResult>(selector: (value: T) => IPromise<TResult>): Observable<TResult>;	// alias for selectMany
 		flatMap<TResult>(other: Observable<TResult>): Observable<TResult>;	// alias for selectMany
 		flatMap<TResult>(other: IPromise<TResult>): Observable<TResult>;	// alias for selectMany
+		flatMap<TResult>(selector: (value: T) => TResult[]): Observable<TResult>;	// alias for selectMany
 
 		/**
 		 * Projects each notification of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
