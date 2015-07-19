@@ -360,32 +360,27 @@
       var len = arguments.length, args = new Array(len);
       for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
 
-      return new AnonymousObservable(function (observer) {
-        function handler(err) {
-          if (err) {
-            observer.onError(err);
-            return;
-          }
+      return new AnonymousObservable(function (o) {
+        function handler() {
+          var err = arguments[0];
+          if (err) { return o.onError(err); }
 
           var len = arguments.length, results = [];
           for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
 
-          if (selector) {
-            try {
-              results = selector.apply(context, results);
-            } catch (e) {
-              return observer.onError(e);
-            }
-            observer.onNext(results);
+          if (isFunction(selector)) {
+            var results = tryCatch(selector).apply(context, results);
+            if (results === errorObj) { return o.onError(results.e); }
+            o.onNext(results);
           } else {
             if (results.length <= 1) {
-              observer.onNext.apply(observer, results);
+              o.onNext(results[0]);
             } else {
-              observer.onNext(results);
+              o.onNext(results);
             }
           }
 
-          observer.onCompleted();
+          o.onCompleted();
         }
 
         args.push(handler);
@@ -394,15 +389,19 @@
     };
   };
 
-  function createListener (element, name, handler) {
-    if (element.addEventListener) {
-      element.addEventListener(name, handler, false);
-      return disposableCreate(function () {
-        element.removeEventListener(name, handler, false);
-      });
-    }
-    throw new Error('No listener found');
+  function ListenDisposable(e, n, fn) {
+    this._e = e;
+    this._n = n;
+    this._fn = fn;
+    this._e.addEventListener(this._n, this._fn, false);
+    this.isDisposed = false;
   }
+  ListenDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e.removeEventListener(this._n, this._fn, false);
+      this.isDisposed = true;
+    }
+  };
 
   function createEventListener (el, eventName, handler) {
     var disposables = new CompositeDisposable();
@@ -414,7 +413,7 @@
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
     } else if (el) {
-      disposables.add(createListener(el, eventName, handler));
+      disposables.add(new ListenDisposable(el, eventName, handler));
     }
 
     return disposables;
@@ -451,18 +450,23 @@
           selector);
       }
     }
+
+    function eventHandler(o) {
+      return function handler () {
+        var results = arguments[0];
+        if (isFunction(selector)) {
+          results = tryCatch(selector).apply(null, arguments);
+          if (results === errorObj) { return o.onError(results.e); }
+        }
+        o.onNext(results);
+      };
+    }
+
     return new AnonymousObservable(function (o) {
       return createEventListener(
         element,
         eventName,
-        function handler () {
-          var results = arguments[0];
-          if (isFunction(selector)) {
-            results = tryCatch(selector).apply(null, arguments);
-            if (results === errorObj) { return o.onError(results.e); }
-          }
-          o.onNext(results);
-        });
+        eventHandler(o));
     }).publish().refCount();
   };
 

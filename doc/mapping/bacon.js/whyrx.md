@@ -8,7 +8,7 @@ But, before we get started, why use RxJS over Bacon.js?
 
 RxJS has always been committed to providing the best performance available on any given JavaScript platform.  Whether it is providing a small footprint for an `Observable` instance, to providing the capability of using `setImmediate` versus `setTimeout` versus `requestAnimationFrame`, all by choosing a different scheduler.  In addition, since RxJS is written in regular JavaScript versus CoffeeScript, there are a lot more optimizations that can be made by hand to ensure performance.
 
-To make this more concrete, there is a project called [Kefir](https://github.com/pozadi/kefir) which is trying to make a more performance oriented version of Bacon.js.  Here are some current numbers based upon the memory tests provided by Kefir.  Note that these may change over time, but gives you a good indication of memory consumtpion.  Below will be comparison of `combineLatest`, `filter`, `map`, and `scan`.
+To make this more concrete, there is a project called [Kefir](https://github.com/pozadi/kefir) which is trying to make a more performance oriented version of Bacon.js.  Here are some current numbers based upon the memory tests provided by Kefir.  Note that these may change over time, but gives you a good indication of memory consumption.  Below will be comparison of `combineLatest`, `filter`, `map`, and `scan`.
 
 ```
 stream1.combine(stream2, ->) (1000 samples)
@@ -55,7 +55,7 @@ RxJS, on the other hand is more flexible about binding to the libraries you use.
 - [Backbone.js](http://backbonejs.org)
 - [Ember.js](http://emberjs.org)
 
-You can also override this behavior in `fromEvent` so that you use native DOM or Node.js events via the `EventEmitter` directly by setting the `Rx.config.useNativeEvents` flag to true, so that it's never in doubt which event system you are using.  When using native DOM events, you can attach a listener to one item, or you can attach listeners to a NodeList's children, we figure that out for you without you having to change your code, whereas Bacon.js doesnot.
+You can also override this behavior in `fromEvent` so that you use native DOM or Node.js events via the `EventEmitter` directly by setting the `Rx.config.useNativeEvents` flag to true, so that it's never in doubt which event system you are using.  When using native DOM events, you can attach a listener to one item, or you can attach listeners to a NodeList's children, we figure that out for you without you having to change your code, whereas Bacon.js does not.
 
 In order to support the libraries you use, it's very simple to add your own event binding, for example we can bind our events to the [Dojo Toolkit](http://dojotoolkit.org) using the `Rx.Observable.fromEventPattern` method:
 
@@ -282,7 +282,7 @@ rx --lite --compat --methods map,flatmap,takeuntil,fromevent
 
 ## Long Stack Trace Support ##
 
-Debugging programming with callbacks can be quite cumbersome.  To that end, RxJS has introduced a notion of "Long Stack Traces" which allows you to quickly isolate your code from the plumbing not only of RxJS, but also node.js and the browser cruft, thus getting you to the real cause of the issue.
+Debugging programming with callbacks can be quite cumbersome.  To that end, RxJS has introduced a notion of "Long Stack Traces" which allows you to quickly isolate your code from the plumbing not only of RxJS, but also Node.js and the browser cruft, thus getting you to the real cause of the issue.
 
 For example, without "long stack trace" support, typically, an error would look like the following:
 

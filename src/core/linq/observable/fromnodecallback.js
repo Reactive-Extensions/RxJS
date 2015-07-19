@@ -10,32 +10,27 @@
       var len = arguments.length, args = new Array(len);
       for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
 
-      return new AnonymousObservable(function (observer) {
-        function handler(err) {
-          if (err) {
-            observer.onError(err);
-            return;
-          }
+      return new AnonymousObservable(function (o) {
+        function handler() {
+          var err = arguments[0];
+          if (err) { return o.onError(err); }
 
           var len = arguments.length, results = [];
           for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
 
-          if (selector) {
-            try {
-              results = selector.apply(context, results);
-            } catch (e) {
-              return observer.onError(e);
-            }
-            observer.onNext(results);
+          if (isFunction(selector)) {
+            var results = tryCatch(selector).apply(context, results);
+            if (results === errorObj) { return o.onError(results.e); }
+            o.onNext(results);
           } else {
             if (results.length <= 1) {
-              observer.onNext.apply(observer, results);
+              o.onNext(results[0]);
             } else {
-              observer.onNext(results);
+              o.onNext(results);
             }
           }
 
-          observer.onCompleted();
+          o.onCompleted();
         }
 
         args.push(handler);
