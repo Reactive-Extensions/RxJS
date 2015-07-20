@@ -11,32 +11,34 @@
       var len = arguments.length, args = new Array(len)
       for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
 
-      return new AnonymousObservable(function (observer) {
-        function handler() {
-          var len = arguments.length, results = new Array(len);
-          for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
+      var subject = new AsyncSubject();
 
-          if (selector) {
-            try {
-              results = selector.apply(context, results);
-            } catch (e) {
-              return observer.onError(e);
-            }
+      function handler() {
+        var len = arguments.length, results = new Array(len);
+        for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
 
-            observer.onNext(results);
-          } else {
-            if (results.length <= 1) {
-              observer.onNext.apply(observer, results);
-            } else {
-              observer.onNext(results);
-            }
+        if (selector) {
+          try {
+            results = selector.apply(context, results);
+          } catch (e) {
+            return subject.onError(e);
           }
 
-          observer.onCompleted();
+          subject.onNext(results);
+        } else {
+          if (results.length <= 1) {
+            subject.onNext.apply(subject, results);
+          } else {
+            subject.onNext(results);
+          }
         }
 
-        args.push(handler);
-        func.apply(context, args);
-      }).publishLast().refCount();
+        subject.onCompleted();
+      }
+
+      args.push(handler);
+      func.apply(context, args);
+
+      return subject.asObservable();
     };
   };

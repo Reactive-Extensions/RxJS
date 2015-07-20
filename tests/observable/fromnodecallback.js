@@ -90,4 +90,38 @@
         ok(false);
       });
   });
+
+  test('FromCallback_Resubscribe', function() {
+
+    var count = 0;
+
+    var res = Observable.fromNodeCallback(
+        function(cb) {
+          cb(null, ++count);
+        })();
+
+    var observer = Rx.Observer.create(
+        function (v) {
+          ok(1);
+        }, function (err) {
+          ok(false);
+        }, function () {
+          ok(true);
+        });
+
+
+    res.subscribe(observer);
+
+    res.subscribe(function (v) {
+      ok(1);
+    }, function (err) {
+      ok(false);
+    }, function () {
+      ok(true);
+    });
+
+    equal(1, count);
+
+  });
+
 }());
