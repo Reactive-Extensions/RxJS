@@ -4283,19 +4283,21 @@ var FlatMapObservable = (function(__super__){
     inherits(TapObservable,__super__);
     function TapObservable(source, observerOrOnNext, onError, onCompleted) {
       this.source = source;
-      this.t = !observerOrOnNext || isFunction(observerOrOnNext) ?
-        observerCreate(observerOrOnNext || noop, onError || noop, onCompleted || noop) :
-        observerOrOnNext;
+      this._oN = observerOrOnNext;
+      this._oE = onError;
+      this._oC = onCompleted;
       __super__.call(this);
     }
 
     TapObservable.prototype.subscribeCore = function(o) {
-      return this.source.subscribe(new InnerObserver(o, this.t));
+      return this.source.subscribe(new InnerObserver(o, this));
     };
 
-    function InnerObserver(o, t) {
+    function InnerObserver(o, p) {
       this.o = o;
-      this.t = t;
+      this.t = !p._oN || isFunction(p._oN) ?
+        observerCreate(p._oN || noop, p._oE || noop, p._oC || noop) :
+        p._oN;
       this.isStopped = false;
     }
     InnerObserver.prototype.onNext = function(x) {
