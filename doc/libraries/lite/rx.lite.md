@@ -11,7 +11,7 @@ Files:
 - [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 NPM Packages:
-- [`rx`](https://www.npmjs.org/package/rx)
+- [`rx-lite`](https://www.npmjs.org/package/rx-lite)
 
 NuGet Packages:
 - [`RxJS-Lite`](https://www.nuget.org/packages/RxJS-Lite/)

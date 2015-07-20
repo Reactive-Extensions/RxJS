@@ -107,7 +107,6 @@ There are many libraries that make up the Reactive Extensions for JavaScript, so
 - [`rx.lite.extras.js`](libraries/lite/rx.lite.extras.md)
 - [`rx.lite.aggregates.js`](libraries/lite/rx.lite.aggregates.md)
 - [`rx.lite.async.js`](libraries/lite/rx.lite.async.md)
-- [`rx.lite.binding.js`](libraries/lite/rx.lite.binding.md)
 - [`rx.lite.coincidence.js`](libraries/lite/rx.lite.coincidence.md)
 - [`rx.lite.experimental.js`](libraries/lite/rx.lite.experimental.md)
 - [`rx.lite.joinpatterns.js`](libraries/lite/rx.lite.joinpatterns.md)

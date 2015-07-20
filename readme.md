@@ -109,7 +109,6 @@ This set of libraries include:
 - [`rx.lite.extras.js`](doc/libraries/lite/rx.lite.extras.md)
 - [`rx.lite.aggregates.js`](doc/libraries/lite/rx.lite.aggregates.md)
 - [`rx.lite.async.js`](doc/libraries/lite/rx.lite.async.md)
-- [`rx.lite.binding.js`](doc/libraries/lite/rx.lite.binding.md)
 - [`rx.lite.coincidence.js`](doc/libraries/lite/rx.lite.coincidence.md)
 - [`rx.lite.experimental.js`](doc/libraries/lite/rx.lite.experimental.md)
 - [`rx.lite.joinpatterns.js`](doc/libraries/lite/rx.lite.joinpatterns.md)
