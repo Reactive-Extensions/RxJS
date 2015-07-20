@@ -61,29 +61,54 @@
     return event;
   }
 
-  function createListener (element, name, handler) {
-    // Standards compliant
-    if (element.addEventListener) {
-      element.addEventListener(name, handler, false);
-      return disposableCreate(function () {
-        element.removeEventListener(name, handler, false);
-      });
+  function ListenDisposable(e, n, fn) {
+    this._e = e;
+    this._n = n;
+    this._fn = fn;
+    this._e.addEventListener(this._n, this._fn, false);
+    this.isDisposed = false;
+  }
+  ListenDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e.removeEventListener(this._n, this._fn, false);
+      this.isDisposed = true;
     }
-    if (element.attachEvent) {
-      // IE Specific
-      var innerHandler = function (event) {
-        handler(fixEvent(event));
-      };
-      element.attachEvent('on' + name, innerHandler);
-      return disposableCreate(function () {
-        element.detachEvent('on' + name, innerHandler);
-      });
+  };
+
+  function AttachEventDisposable(e, n, fn) {
+    this._e = e;
+    this._n = 'on' + n;
+    this._fn = function (e) { fn(fixEvent(e)); };
+    this._e.attachEvent(this._n, this._fn);
+    this.isDisposed = false;
+  }
+  AttachEventDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e.detachEvent(this._n, this._fn);
+      this.isDisposed = true;
     }
-    // Level 1 DOM Events
-    element['on' + name] = handler;
-    return disposableCreate(function () {
-      element['on' + name] = null;
-    });
+  };
+  function LevelOneDisposable(e, n, fn) {
+    this._e = e;
+    this._n = 'on' + n;
+    this._e[this._n] = fn;
+    this.isDisposed = false;
+  }
+  LevelOneDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e[this._n] = null;
+      this.isDisposed = true;
+    }
+  };
+
+  function createListener (el, eventName, handler) {
+    if (el.addEventListener) {
+      return new ListenDisposable(el, eventName, handler)
+    }
+    if (el.attachEvent) {
+      return new AttachEventDisposable(el, eventName, handler);
+    }
+    return LevelOneDisposable(el, eventName, handler);
   }
 
   function createEventListener (el, eventName, handler) {

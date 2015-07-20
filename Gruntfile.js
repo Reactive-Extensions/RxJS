@@ -287,8 +287,8 @@ module.exports = function (grunt) {
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/fromcallback.js',
+              'src/core/perf/operators/fromnodecallback.js',
               'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
@@ -573,8 +573,8 @@ module.exports = function (grunt) {
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
-              'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/fromcallback.js',
+              'src/core/perf/operators/fromnodecallback.js',
               'src/core/linq/observable/fromevent.compat.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
@@ -1097,8 +1097,8 @@ module.exports = function (grunt) {
               'src/core/perf/operators/filter.js',
 
               // Async Operators
-              'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/fromcallback.js',
+              'src/core/perf/operators/fromnodecallback.js',
               'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
@@ -1266,8 +1266,8 @@ module.exports = function (grunt) {
               'src/core/perf/operators/filter.js',
 
               // Async Operators
-              'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/fromcallback.js',
+              'src/core/perf/operators/fromnodecallback.js',
               'src/core/linq/observable/fromevent.compat.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
@@ -1573,8 +1573,8 @@ module.exports = function (grunt) {
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/fromcallback.js',
+              'src/core/perf/operators/fromnodecallback.js',
               'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
@@ -1591,8 +1591,8 @@ module.exports = function (grunt) {
               'src/core/linq/observable/spawn.js',
               'src/core/linq/observable/start.js', // toasync
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
-              'src/core/linq/observable/fromcallback.js', // AsyncSubject, asObservable
-              'src/core/linq/observable/fromnodecallback.js', // AsyncSubject, asObservable
+              'src/core/perf/operators/fromcallback.js',
+              'src/core/perf/operators/fromnodecallback.js',
               'src/core/linq/observable/fromevent.compat.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',

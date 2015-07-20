@@ -4498,93 +4498,99 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
       new FilterObservable(this, predicate, thisArg);
   };
 
-  /**
-   * Converts a callback function to an observable sequence.
-   *
-   * @param {Function} function Function with a callback as the last parameter to convert to an Observable sequence.
-   * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
-   * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
-   * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
-   */
-  Observable.fromCallback = function (func, context, selector) {
-    return function () {
-      var len = arguments.length, args = new Array(len)
-      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+function createCbObservable(fn, ctx, selector, args) {
+  var o = new AsyncSubject();
 
-      var subject = new AsyncSubject();
+  args.push(createCbHandler(o, ctx, selector));
+  fn.apply(ctx, args);
 
-      function handler() {
-        var len = arguments.length, results = new Array(len);
-        for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
+  return o.asObservable();
+}
 
-        if (selector) {
-          try {
-            results = selector.apply(context, results);
-          } catch (e) {
-            return subject.onError(e);
-          }
+function createCbHandler(o, ctx, selector) {
+  return function handler () {
+    var len = arguments.length, results = new Array(len);
+    for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
 
-          subject.onNext(results);
-        } else {
-          if (results.length <= 1) {
-            subject.onNext.apply(subject, results);
-          } else {
-            subject.onNext(results);
-          }
-        }
-
-        subject.onCompleted();
+    if (isFunction(selector)) {
+      results = tryCatch(selector).apply(ctx, results);
+      if (results === errorObj) { return o.onError(results.e); }
+      o.onNext(results);
+    } else {
+      if (results.length <= 1) {
+        o.onNext(results[0]);
+      } else {
+        o.onNext(results);
       }
+    }
 
-      args.push(handler);
-      func.apply(context, args);
-
-      return subject.asObservable();
-    };
+    o.onCompleted();
   };
+}
 
-  /**
-   * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
-   * @param {Function} func The function to call
-   * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
-   * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.
-   * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
-   */
-  Observable.fromNodeCallback = function (func, context, selector) {
-    return function () {
-      var len = arguments.length, args = new Array(len);
-      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+/**
+ * Converts a callback function to an observable sequence.
+ *
+ * @param {Function} fn Function with a callback as the last parameter to convert to an Observable sequence.
+ * @param {Mixed} [ctx] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+ * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
+ * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
+ */
+Observable.fromCallback = function (fn, ctx, selector) {
+  return function () {
+    var len = arguments.length, args = new Array(len)
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return createCbObservable(fn, ctx, selector, args);
+  };
+};
 
-      var o = new AsyncSubject();
+function createNodeObservable(fn, ctx, selector, args) {
+  var o = new AsyncSubject();
 
-      function handler() {
-        var err = arguments[0];
-        if (err) { return o.onError(err); }
+  args.push(createNodeHandler(o, ctx, selector));
+  fn.apply(ctx, args);
 
-        var len = arguments.length, results = [];
-        for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
+  return o.asObservable();
+}
 
-        if (isFunction(selector)) {
-          var results = tryCatch(selector).apply(context, results);
-          if (results === errorObj) { return o.onError(results.e); }
-          o.onNext(results);
-        } else {
-          if (results.length <= 1) {
-            o.onNext(results[0]);
-          } else {
-            o.onNext(results);
-          }
-        }
+function createNodeHandler(o, ctx, selector) {
+  return function handler () {
+    var err = arguments[0];
+    if (err) { return o.onError(err); }
 
-        o.onCompleted();
+    var len = arguments.length, results = [];
+    for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
+
+    if (isFunction(selector)) {
+      var results = tryCatch(selector).apply(ctx, results);
+      if (results === errorObj) { return o.onError(results.e); }
+      o.onNext(results);
+    } else {
+      if (results.length <= 1) {
+        o.onNext(results[0]);
+      } else {
+        o.onNext(results);
       }
+    }
 
-      args.push(handler);
-      func.apply(context, args);
-
-      return o.asObservable();
-    };
+    o.onCompleted();
   };
+}
+
+/**
+ * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
+ * @param {Function} fn The function to call
+ * @param {Mixed} [ctx] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+ * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.
+ * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
+ */
+Observable.fromNodeCallback = function (fn, ctx, selector) {
+  return function () {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return createNodeObservable(fn, ctx, selector, args);
+  };
+};
 
   function isNodeList(el) {
     if (window.StaticNodeList) {
@@ -4649,29 +4655,54 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     return event;
   }
 
-  function createListener (element, name, handler) {
-    // Standards compliant
-    if (element.addEventListener) {
-      element.addEventListener(name, handler, false);
-      return disposableCreate(function () {
-        element.removeEventListener(name, handler, false);
-      });
+  function ListenDisposable(e, n, fn) {
+    this._e = e;
+    this._n = n;
+    this._fn = fn;
+    this._e.addEventListener(this._n, this._fn, false);
+    this.isDisposed = false;
+  }
+  ListenDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e.removeEventListener(this._n, this._fn, false);
+      this.isDisposed = true;
     }
-    if (element.attachEvent) {
-      // IE Specific
-      var innerHandler = function (event) {
-        handler(fixEvent(event));
-      };
-      element.attachEvent('on' + name, innerHandler);
-      return disposableCreate(function () {
-        element.detachEvent('on' + name, innerHandler);
-      });
+  };
+
+  function AttachEventDisposable(e, n, fn) {
+    this._e = e;
+    this._n = 'on' + n;
+    this._fn = function (e) { fn(fixEvent(e)); };
+    this._e.attachEvent(this._n, this._fn);
+    this.isDisposed = false;
+  }
+  AttachEventDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e.detachEvent(this._n, this._fn);
+      this.isDisposed = true;
     }
-    // Level 1 DOM Events
-    element['on' + name] = handler;
-    return disposableCreate(function () {
-      element['on' + name] = null;
-    });
+  };
+  function LevelOneDisposable(e, n, fn) {
+    this._e = e;
+    this._n = 'on' + n;
+    this._e[this._n] = fn;
+    this.isDisposed = false;
+  }
+  LevelOneDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e[this._n] = null;
+      this.isDisposed = true;
+    }
+  };
+
+  function createListener (el, eventName, handler) {
+    if (el.addEventListener) {
+      return new ListenDisposable(el, eventName, handler)
+    }
+    if (el.attachEvent) {
+      return new AttachEventDisposable(el, eventName, handler);
+    }
+    return LevelOneDisposable(el, eventName, handler);
   }
 
   function createEventListener (el, eventName, handler) {

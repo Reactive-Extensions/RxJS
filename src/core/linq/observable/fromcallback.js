@@ -17,17 +17,13 @@
         var len = arguments.length, results = new Array(len);
         for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
 
-        if (selector) {
-          try {
-            results = selector.apply(context, results);
-          } catch (e) {
-            return subject.onError(e);
-          }
-
+        if (isFunction(selector)) {
+          results = tryCatch(selector).apply(context, results);
+          if (results === errorObj) { return subject.onError(results.e); }
           subject.onNext(results);
         } else {
           if (results.length <= 1) {
-            subject.onNext.apply(subject, results);
+            subject.onNext(results[0]);
           } else {
             subject.onNext(results);
           }
