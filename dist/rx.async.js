@@ -318,33 +318,35 @@
       var len = arguments.length, args = new Array(len)
       for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
 
-      return new AnonymousObservable(function (observer) {
-        function handler() {
-          var len = arguments.length, results = new Array(len);
-          for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
+      var subject = new AsyncSubject();
 
-          if (selector) {
-            try {
-              results = selector.apply(context, results);
-            } catch (e) {
-              return observer.onError(e);
-            }
+      function handler() {
+        var len = arguments.length, results = new Array(len);
+        for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
 
-            observer.onNext(results);
-          } else {
-            if (results.length <= 1) {
-              observer.onNext.apply(observer, results);
-            } else {
-              observer.onNext(results);
-            }
+        if (selector) {
+          try {
+            results = selector.apply(context, results);
+          } catch (e) {
+            return subject.onError(e);
           }
 
-          observer.onCompleted();
+          subject.onNext(results);
+        } else {
+          if (results.length <= 1) {
+            subject.onNext.apply(subject, results);
+          } else {
+            subject.onNext(results);
+          }
         }
 
-        args.push(handler);
-        func.apply(context, args);
-      }).publishLast().refCount();
+        subject.onCompleted();
+      }
+
+      args.push(handler);
+      func.apply(context, args);
+
+      return subject.asObservable();
     };
   };
 
@@ -360,32 +362,34 @@
       var len = arguments.length, args = new Array(len);
       for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
 
-      return new AnonymousObservable(function (o) {
-        function handler() {
-          var err = arguments[0];
-          if (err) { return o.onError(err); }
+      var o = new AsyncSubject();
 
-          var len = arguments.length, results = [];
-          for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
+      function handler() {
+        var err = arguments[0];
+        if (err) { return o.onError(err); }
 
-          if (isFunction(selector)) {
-            var results = tryCatch(selector).apply(context, results);
-            if (results === errorObj) { return o.onError(results.e); }
-            o.onNext(results);
+        var len = arguments.length, results = [];
+        for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
+
+        if (isFunction(selector)) {
+          var results = tryCatch(selector).apply(context, results);
+          if (results === errorObj) { return o.onError(results.e); }
+          o.onNext(results);
+        } else {
+          if (results.length <= 1) {
+            o.onNext(results[0]);
           } else {
-            if (results.length <= 1) {
-              o.onNext(results[0]);
-            } else {
-              o.onNext(results);
-            }
+            o.onNext(results);
           }
-
-          o.onCompleted();
         }
 
-        args.push(handler);
-        func.apply(context, args);
-      }).publishLast().refCount();
+        o.onCompleted();
+      }
+
+      args.push(handler);
+      func.apply(context, args);
+
+      return o.asObservable();
     };
   };
 

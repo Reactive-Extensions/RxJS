@@ -2160,6 +2160,70 @@
     return ObservableBase;
   }(Observable));
 
+var FlatMapObservable = (function(__super__){
+
+    inherits(FlatMapObservable, __super__);
+
+    function FlatMapObservable(source, selector, resultSelector, thisArg) {
+        this.resultSelector = Rx.helpers.isFunction(resultSelector) ?
+            resultSelector : null;
+
+        this.selector = Rx.internals.bindCallback(Rx.helpers.isFunction(selector) ? selector : function() { return selector; }, thisArg, 3);
+        this.source = source;
+
+        __super__.call(this);
+
+    }
+
+    FlatMapObservable.prototype.subscribeCore = function(o) {
+        return this.source.subscribe(new InnerObserver(o, this.selector, this.resultSelector, this));
+    };
+
+    function InnerObserver(observer, selector, resultSelector, source) {
+        this.i = 0;
+        this.selector = selector;
+        this.resultSelector = resultSelector;
+        this.source = source;
+        this.isStopped = false;
+        this.o = observer;
+    }
+
+    InnerObserver.prototype._wrapResult = function(result, x, i) {
+        return this.resultSelector ?
+            result.map(function(y, i2) { return this.resultSelector(x, y, i, i2); }, this) :
+            result;
+    };
+
+    InnerObserver.prototype.onNext = function(x) {
+
+        if (this.isStopped) return;
+
+        var i = this.i++;
+        var result = tryCatch(this.selector)(x, i, this.source);
+
+        if (result === errorObj) {
+            return this.o.onError(result.e);
+        }
+
+        Rx.helpers.isPromise(result) && (result = Rx.Observable.fromPromise(result));
+        (Rx.helpers.isArrayLike(result) || Rx.helpers.isIterable(result)) && (result = Rx.Observable.from(result));
+
+        this.o.onNext(this._wrapResult(result, x, i));
+
+    };
+
+    InnerObserver.prototype.onError = function(e) {
+        if(!this.isStopped) { this.isStopped = true; this.o.onError(e); }
+    };
+
+    InnerObserver.prototype.onCompleted = function() {
+        if (!this.isStopped) {this.isStopped = true; this.o.onCompleted(); }
+    };
+
+    return FlatMapObservable;
+
+}(ObservableBase));
+
   var Enumerable = Rx.internals.Enumerable = function () { };
 
   var ConcatEnumerableObservable = (function(__super__) {
@@ -4198,39 +4262,80 @@
     }, this);
   };
 
+  var DistinctUntilChangedObservable = (function(__super__) {
+    inherits(DistinctUntilChangedObservable, __super__);
+    function DistinctUntilChangedObservable(source, keyFn, comparer) {
+      this.source = source;
+      this.keyFn = keyFn;
+      this.comparer = comparer;
+      __super__.call(this);
+    }
+
+    DistinctUntilChangedObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new DistinctUntilChangedObserver(o, this.keyFn, this.comparer));
+    };
+
+    return DistinctUntilChangedObservable;
+  }(ObservableBase));
+
+  function DistinctUntilChangedObserver(o, keyFn, comparer) {
+    this.o = o;
+    this.keyFn = keyFn;
+    this.comparer = comparer;
+    this.hasCurrentKey = false;
+    this.currentKey = null;
+    this.isStopped = false;
+  }
+
+  DistinctUntilChangedObserver.prototype.onNext = function (x) {
+    if (this.isStopped) { return; }
+    var key = x;
+    if (isFunction(this.keyFn)) {
+      key = tryCatch(this.keyFn)(x);
+      if (key === errorObj) { return this.o.onError(key.e); }
+    }
+    if (this.hasCurrentKey) {
+      comparerEquals = tryCatch(this.comparer)(this.currentKey, key);
+      if (comparerEquals === errorObj) { return this.o.onError(comparerEquals.e); }
+    }
+    if (!this.hasCurrentKey || !comparerEquals) {
+      this.hasCurrentKey = true;
+      this.currentKey = key;
+      this.o.onNext(x);
+    }
+  };
+  DistinctUntilChangedObserver.prototype.onError = function(e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.o.onError(e);
+    }
+  };
+  DistinctUntilChangedObserver.prototype.onCompleted = function () {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.o.onCompleted();
+    }
+  };
+  DistinctUntilChangedObserver.prototype.dispose = function() { this.isStopped = true; };
+  DistinctUntilChangedObserver.prototype.fail = function (e) {
+    if (!this.isStopped) {
+      this.isStopped = true;
+      this.o.onError(e);
+      return true;
+    }
+
+    return false;
+  };
+
   /**
-   *  Returns an observable sequence that contains only distinct contiguous elements according to the keySelector and the comparer.
-   *
-   *  var obs = observable.distinctUntilChanged();
-   *  var obs = observable.distinctUntilChanged(function (x) { return x.id; });
-   *  var obs = observable.distinctUntilChanged(function (x) { return x.id; }, function (x, y) { return x === y; });
-   *
-   * @param {Function} [keySelector] A function to compute the comparison key for each element. If not provided, it projects the value.
-   * @param {Function} [comparer] Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
-   * @returns {Observable} An observable sequence only containing the distinct contiguous elements, based on a computed key value, from the source sequence.
-   */
-  observableProto.distinctUntilChanged = function (keySelector, comparer) {
-    var source = this;
+  *  Returns an observable sequence that contains only distinct contiguous elements according to the keyFn and the comparer.
+  * @param {Function} [keyFn] A function to compute the comparison key for each element. If not provided, it projects the value.
+  * @param {Function} [comparer] Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
+  * @returns {Observable} An observable sequence only containing the distinct contiguous elements, based on a computed key value, from the source sequence.
+  */
+  observableProto.distinctUntilChanged = function (keyFn, comparer) {
     comparer || (comparer = defaultComparer);
-    return new AnonymousObservable(function (o) {
-      var hasCurrentKey = false, currentKey;
-      return source.subscribe(function (value) {
-        var key = value;
-        if (keySelector) {
-          key = tryCatch(keySelector)(value);
-          if (key === errorObj) { return o.onError(key.e); }
-        }
-        if (hasCurrentKey) {
-          var comparerEquals = tryCatch(comparer)(currentKey, key);
-          if (comparerEquals === errorObj) { return o.onError(comparerEquals.e); }
-        }
-        if (!hasCurrentKey || !comparerEquals) {
-          hasCurrentKey = true;
-          currentKey = key;
-          o.onNext(value);
-        }
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, this);
+    return new DistinctUntilChangedObservable(this, keyFn, comparer);
   };
 
   var TapObservable = (function(__super__) {
@@ -4678,52 +4783,9 @@
     }, source);
   };
 
-  function concatMap(source, selector, thisArg) {
-    var selectorFunc = bindCallback(selector, thisArg, 3);
-    return source.map(function (x, i) {
-      var result = selectorFunc(x, i, source);
-      isPromise(result) && (result = observableFromPromise(result));
-      (isArrayLike(result) || isIterable(result)) && (result = observableFrom(result));
-      return result;
-    }).concatAll();
-  }
-
-  /**
-   *  One of the Following:
-   *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
-   *
-   * @example
-   *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); });
-   *  Or:
-   *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
-   *
-   *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
-   *  Or:
-   *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
-   *
-   *  var res = source.concatMap(Rx.Observable.fromArray([1,2,3]));
-   * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the
-   * source sequence onto which could be either an observable or Promise.
-   * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
-   * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
-   */
-  observableProto.selectConcat = observableProto.concatMap = function (selector, resultSelector, thisArg) {
-    if (isFunction(selector) && isFunction(resultSelector)) {
-      return this.concatMap(function (x, i) {
-        var selectorResult = selector(x, i);
-        isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
-        (isArrayLike(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
-
-        return selectorResult.map(function (y, i2) {
-          return resultSelector(x, y, i, i2);
-        });
-      });
-    }
-    return isFunction(selector) ?
-      concatMap(this, selector, thisArg) :
-      concatMap(this, function () { return selector; });
-  };
-
+observableProto.flatMapConcat = observableProto.concatMap = function(selector, resultSelector, thisArg) {
+    return new FlatMapObservable(this, selector, resultSelector, thisArg).merge(1);
+};
   /**
    * Projects each notification of an observable sequence to an observable sequence and concats the resulting observable sequences into one observable sequence.
    * @param {Function} onNext A transform function to apply to each element; the second parameter of the function represents the index of the source element.
@@ -4951,51 +5013,16 @@
     });
   };
 
-  function flatMap(source, selector, thisArg) {
-    var selectorFunc = bindCallback(selector, thisArg, 3);
-    return source.map(function (x, i) {
-      var result = selectorFunc(x, i, source);
-      isPromise(result) && (result = observableFromPromise(result));
-      (isArrayLike(result) || isIterable(result)) && (result = observableFrom(result));
-      return result;
-    }).mergeAll();
-  }
+observableProto.flatMap = observableProto.selectMany = function(selector, resultSelector, thisArg) {
+    return new FlatMapObservable(this, selector, resultSelector, thisArg).mergeAll();
+};
 
-  /**
-   *  One of the Following:
-   *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
-   *
-   * @example
-   *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); });
-   *  Or:
-   *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
-   *
-   *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
-   *  Or:
-   *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
-   *
-   *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
-   * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto which could be either an observable or Promise.
-   * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
-   * @param {Any} [thisArg] Object to use as this when executing callback.
-   * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
-   */
-  observableProto.selectMany = observableProto.flatMap = function (selector, resultSelector, thisArg) {
-    if (isFunction(selector) && isFunction(resultSelector)) {
-      return this.flatMap(function (x, i) {
-        var selectorResult = selector(x, i);
-        isPromise(selectorResult) && (selectorResult = observableFromPromise(selectorResult));
-        (isArrayLike(selectorResult) || isIterable(selectorResult)) && (selectorResult = observableFrom(selectorResult));
 
-        return selectorResult.map(function (y, i2) {
-          return resultSelector(x, y, i, i2);
-        });
-      }, thisArg);
-    }
-    return isFunction(selector) ?
-      flatMap(this, selector, thisArg) :
-      flatMap(this, function () { return selector; });
-  };
+//
+//Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, resultSelector, thisArg) {
+//    return new FlatMapObservable(this, selector, resultSelector, thisArg).merge(limit);
+//};
+//
 
   /**
    * Projects each notification of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -5049,18 +5076,9 @@
     }, source).mergeAll();
   };
 
-  /**
-   *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
-   *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
-   * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
-   * @param {Any} [thisArg] Object to use as this when executing callback.
-   * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
-   *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
-   */
-  observableProto.selectSwitch = observableProto.flatMapLatest = observableProto.switchMap = function (selector, thisArg) {
-    return this.select(selector, thisArg).switchLatest();
-  };
-
+Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisArg) {
+    return new FlatMapObservable(this, selector, resultSelector, thisArg).switchLatest();
+};
   var SkipObservable = (function(__super__) {
     inherits(SkipObservable, __super__);
     function SkipObservable(source, count) {
