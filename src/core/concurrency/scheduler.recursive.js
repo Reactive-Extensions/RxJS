@@ -2,57 +2,54 @@
 
     function invokeRecImmediate(scheduler, pair) {
       var state = pair[0], action = pair[1], group = new CompositeDisposable();
+      action(state, innerAction);
+      return group;
 
-      function recursiveAction(state1) {
+      function innerAction(state2) {
+        var isAdded = false, isDone = false;
 
-        function innerAction(state2) {
-          var isAdded = false, isDone = false;
-
-          function scheduleWork(_, state3) {
-            if (isAdded) {
-              group.remove(d);
-            } else {
-              isDone = true;
-            }
-            recursiveAction(state3);
-            return disposableEmpty;
-          }
-
-          var d = scheduler.scheduleWithState(state2, scheduleWork);
-          if (!isDone) {
-            group.add(d);
-            isAdded = true;
-          }
+        var d = scheduler.scheduleWithState(state2, scheduleWork);
+        if (!isDone) {
+          group.add(d);
+          isAdded = true;
         }
 
-        action(state1, innerAction);
+        function scheduleWork(_, state3) {
+          if (isAdded) {
+            group.remove(d);
+          } else {
+            isDone = true;
+          }
+          action(state3, innerAction);
+          return disposableEmpty;
+        }
       }
-      recursiveAction(state);
-      return group;
     }
 
     function invokeRecDate(scheduler, pair, method) {
       var state = pair[0], action = pair[1], group = new CompositeDisposable();
-      function recursiveAction(state1) {
-        action(state1, function (state2, dueTime1) {
-          var isAdded = false, isDone = false,
-          d = scheduler[method](state2, dueTime1, function (scheduler1, state3) {
-            if (isAdded) {
-              group.remove(d);
-            } else {
-              isDone = true;
-            }
-            recursiveAction(state3);
-            return disposableEmpty;
-          });
-          if (!isDone) {
-            group.add(d);
-            isAdded = true;
-          }
-        });
-      };
-      recursiveAction(state);
+      action(state, innerAction);
       return group;
+
+      function innerAction(state2, dueTime1) {
+        var isAdded = false, isDone = false;
+
+        var d = scheduler[method](state2, dueTime1, scheduleWork);
+        if (!isDone) {
+          group.add(d);
+          isAdded = true;
+        }
+
+        function scheduleWork(_, state3) {
+          if (isAdded) {
+            group.remove(d);
+          } else {
+            isDone = true;
+          }
+          action(state3, innerAction);
+          return disposableEmpty;
+        }
+      }
     }
 
     function scheduleInnerRecursive(action, self) {
