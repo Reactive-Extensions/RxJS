@@ -18,7 +18,7 @@
             return disposableEmpty;
           }
 
-          d = scheduler.scheduleWithState(state2, scheduleWork);
+          var d = scheduler.scheduleWithState(state2, scheduleWork);
           if (!isDone) {
             group.add(d);
             isAdded = true;
