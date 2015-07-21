@@ -1137,9 +1137,11 @@
       var state = pair[0], action = pair[1], group = new CompositeDisposable();
 
       function recursiveAction(state1) {
-        action(state1, function (state2) {
-          var isAdded = false, isDone = false,
-          d = scheduler.scheduleWithState(state2, function (scheduler1, state3) {
+
+        function innerAction(state2) {
+          var isAdded = false, isDone = false;
+
+          function scheduleWork(_, state3) {
             if (isAdded) {
               group.remove(d);
             } else {
@@ -1147,12 +1149,16 @@
             }
             recursiveAction(state3);
             return disposableEmpty;
-          });
+          }
+
+          d = scheduler.scheduleWithState(state2, scheduleWork);
           if (!isDone) {
             group.add(d);
             isAdded = true;
           }
-        });
+        }
+
+        action(state1, innerAction);
       }
       recursiveAction(state);
       return group;
