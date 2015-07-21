@@ -3757,7 +3757,7 @@ var FlatMapObservable = (function(__super__){
       m.setDisposable(this.source.subscribe(new MergeAllObserver(observer, g)));
       return g;
     };
-    
+
     function MergeAllObserver(o, g) {
       this.o = o;
       this.g = g;
@@ -3771,7 +3771,7 @@ var FlatMapObservable = (function(__super__){
 
       isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
 
-      sad.setDisposable(innerSource.subscribe(new InnerObserver(this, this.g, sad)));
+      sad.setDisposable(innerSource.subscribe(new InnerObserver(this, sad)));
     };
     MergeAllObserver.prototype.onError = function (e) {
       if(!this.isStopped) {
@@ -3797,9 +3797,8 @@ var FlatMapObservable = (function(__super__){
       return false;
     };
 
-    function InnerObserver(parent, g, sad) {
+    function InnerObserver(parent, sad) {
       this.parent = parent;
-      this.g = g;
       this.sad = sad;
       this.isStopped = false;
     }
