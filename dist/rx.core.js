@@ -559,6 +559,14 @@ var
       }
     }
 
+    function invokeRecDateRelative(s, p) {
+      return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
+    }
+
+    function invokeRecDateAbsolute(s, p) {
+      return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
+    }
+
     function scheduleInnerRecursive(action, self) {
       action(function(dt) { self(action, dt); });
     }
@@ -600,9 +608,7 @@ var
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithRelativeAndState = function (state, dueTime, action) {
-      return this._scheduleRelative([state, action], dueTime, function (s, p) {
-        return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
-      });
+      return this._scheduleRelative([state, action], dueTime, invokeRecDateRelative);
     };
 
     /**
@@ -623,9 +629,7 @@ var
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithAbsoluteAndState = function (state, dueTime, action) {
-      return this._scheduleAbsolute([state, action], dueTime, function (s, p) {
-        return invokeRecDate(s, p, 'scheduleWithAbsoluteAndState');
-      });
+      return this._scheduleAbsolute([state, action], dueTime, invokeRecDateAbsolute);
     };
   }(Scheduler.prototype));
 
