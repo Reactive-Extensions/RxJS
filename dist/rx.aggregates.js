@@ -499,25 +499,31 @@
   };
 
   /**
-   * Returns the element at a specified index in a sequence or undefined if not found.
-   * @example
-   * var res = source.elementAt(5);
+   * Returns the element at a specified index in a sequence or default value if not found.
    * @param {Number} index The zero-based index of the element to retrieve.
+   * @param {Any} [defaultValue] The default value to use if elementAt does not find a value.
    * @returns {Observable} An observable sequence that produces the element at the specified position in the source sequence.
    */
-  observableProto.elementAt =  function (index) {
+  observableProto.elementAt =  function (index, defaultValue) {
     if (index < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
       var i = index;
-      return source.subscribe(function (x) {
-        if (i-- === 0) {
-          o.onNext(x);
-          o.onCompleted();
-        }
-      }, function (e) { o.onError(e); }, function () {
-        o.onNext(undefined);
-        o.onCompleted();
+      return source.subscribe(
+        function (x) {
+          if (i-- === 0) {
+            o.onNext(x);
+            o.onCompleted();
+          }
+        },
+        function (e) { o.onError(e); },
+        function () {
+          if (defaultValue === undefined) {
+            o.onError(new ArgumentOutOfRangeError());
+          } else {
+            o.onNext(defaultValue);
+            o.onCompleted();
+          }
       });
     }, source);
   };
@@ -549,41 +555,99 @@
 
   /**
    * Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
-   * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
-   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
    * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate if provided, else the first item in the sequence.
    */
-  observableProto.first = function (predicate, thisArg, defaultValue) {
-    if (isFunction(predicate)) { return this.filter(predicate, thisArg).first(defaultValue); }
-    var source = this;
+  observableProto.first = function () {
+    var obj = {}, source = this;
+    if (typeof arguments[0] === 'object') {
+      obj = arguments[0];
+    } else {
+      obj = {
+        predicate: arguments[0],
+        thisArg: arguments[1],
+        defaultValue: arguments[2]
+      };
+    }
+    if (isFunction (obj.predicate)) {
+      var fn = obj.predicate;
+      obj.predicate = bindCallback(fn, obj.thisArg, 3);
+    }
     return new AnonymousObservable(function (o) {
-      return source.subscribe(function (x) {
-        o.onNext(x);
-        o.onCompleted();
-      }, function (e) { o.onError(e); }, function () {
-        o.onNext(defaultValue);
-        o.onCompleted();
-      });
+      var i = 0;
+      return source.subscribe(
+        function (x) {
+          if (obj.predicate) {
+            var res = tryCatch(obj.predicate)(x, i++, source);
+            if (res === errorObj) { return o.onError(res.e); }
+            if (res) {
+              o.onNext(x);
+              o.onCompleted();
+            }
+          } else if (!obj.predicate) {
+            o.onNext(x);
+            o.onCompleted();
+          }
+        },
+        function (e) { o.onError(e); },
+        function () {
+          if (obj.defaultValue === undefined) {
+            o.onError(new EmptyError());
+          } else {
+            o.onNext(obj.defaultValue);
+            o.onCompleted();
+          }
+        });
     }, source);
   };
 
   /**
    * Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
-   * @param {Function} [predicate] A predicate function to evaluate for elements in the source sequence.
-   * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
    * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
    */
-  observableProto.last = function (predicate, thisArg) {
-    if (isFunction(predicate)) { return this.filter(predicate, thisArg).last(); }
-    var source = this;
+  observableProto.last = function () {
+    var obj = {}, source = this;
+    if (typeof arguments[0] === 'object') {
+      obj = arguments[0];
+    } else {
+      obj = {
+        predicate: arguments[0],
+        thisArg: arguments[1],
+        defaultValue: arguments[2]
+      };
+    }
+    if (isFunction (obj.predicate)) {
+      var fn = obj.predicate;
+      obj.predicate = bindCallback(fn, obj.thisArg, 3);
+    }
     return new AnonymousObservable(function (o) {
-      var value, seenValue = false;
-      return source.subscribe(function (x) {
-        value = x;
-      }, function (e) { o.onError(e); }, function () {
-        o.onNext(value);
-        o.onCompleted();
-      });
+      var value, seenValue = false, i = 0;
+      return source.subscribe(
+        function (x) {
+          if (obj.predicate) {
+            var res = tryCatch(obj.predicate)(x, i++, source);
+            if (res === errorObj) { return o.onError(res.e); }
+            if (res) {
+              seenValue = true;
+              value = x;
+            }
+          } else if (!obj.predicate) {
+            seenValue = true;
+            value = x;
+          }
+        },
+        function (e) { o.onError(e); },
+        function () {
+          if (seenValue) {
+            o.onNext(value);
+            o.onCompleted();
+          }
+          else if (obj.defaultValue === undefined) {
+            o.onError(new EmptyError());
+          } else {
+            o.onNext(obj.defaultValue);
+            o.onCompleted();
+          }
+        });
     }, source);
   };
 

@@ -7,7 +7,6 @@
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  // Last or Default
   test('last Empty', function () {
     var scheduler = new TestScheduler();
 
@@ -20,37 +19,50 @@
       return xs.last();
     });
 
-    res.messages.assertEqual(
-      onNext(250, undefined),
+    ok(res.messages[0].time === 250 && res.messages[0].value.exception !== null);
+
+    xs.subscriptions.assertEqual(subscribe(200, 250));
+  });
+
+  test('last default value', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
       onCompleted(250)
     );
 
-    xs.subscriptions.assertEqual(
-      subscribe(200, 250)
+    var res = scheduler.startWithCreate(function () {
+      return xs.last({defaultValue: 42});
+    });
+
+    res.messages.assertEqual(
+      onNext(250, 42),
+      onCompleted(250)
     );
+
+    xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
   test('last One', function () {
-      var scheduler = new TestScheduler();
+    var scheduler = new TestScheduler();
 
-      var xs = scheduler.createHotObservable(
-        onNext(150, 1),
-        onNext(210, 2),
-        onCompleted(250)
-      );
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(250)
+    );
 
-      var res = scheduler.startWithCreate(function () {
-        return xs.last();
-      });
+    var res = scheduler.startWithCreate(function () {
+      return xs.last();
+    });
 
-      res.messages.assertEqual(
-        onNext(250, 2),
-        onCompleted(250)
-      );
+    res.messages.assertEqual(
+      onNext(250, 2),
+      onCompleted(250)
+    );
 
-      xs.subscriptions.assertEqual(
-        subscribe(200, 250)
-      );
+    xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
   test('last Many', function () {
@@ -67,34 +79,34 @@
       return xs.last();
     });
 
-    res.messages.assertEqual(onNext(250, 3), onCompleted(250));
+    res.messages.assertEqual(
+      onNext(250, 3),
+      onCompleted(250)
+    );
+
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
   test('last Error', function () {
-    var error = new Error();
+    var ex = new Error();
 
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
       onNext(150, 1),
-      onError(210, error)
+      onError(210, ex)
     );
 
     var res = scheduler.startWithCreate(function () {
       return xs.last();
     });
 
-    res.messages.assertEqual(
-      onError(210, error)
-    );
+    res.messages.assertEqual(onError(210, ex));
 
-    xs.subscriptions.assertEqual(
-      subscribe(200, 210)
-    );
+    xs.subscriptions.assertEqual(subscribe(200, 210));
   });
 
-  test('last Predicate', function () {
+  test('last predicate', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -107,7 +119,9 @@
     );
 
     var res = scheduler.startWithCreate(function () {
-      return xs.last(function (x) { return x % 2 === 1; });
+      return xs.last(function (x) {
+        return x % 2 === 1;
+      });
     });
 
     res.messages.assertEqual(
@@ -115,62 +129,169 @@
       onCompleted(250)
     );
 
-    xs.subscriptions.assertEqual(
-      subscribe(200, 250)
+    xs.subscriptions.assertEqual(subscribe(200, 250));
+  });
+
+  test('last Obj predicate', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
     );
-  });
 
-  test('last Predicate_None', function () {
-      var scheduler = new TestScheduler();
-
-      var xs = scheduler.createHotObservable(
-        onNext(150, 1),
-        onNext(210, 2),
-        onNext(220, 3),
-        onNext(230, 4),
-        onNext(240, 5),
-        onCompleted(250)
-      );
-
-      var res = scheduler.startWithCreate(function () {
-        return xs.last(function (x) { return x > 10; });
+    var res = scheduler.startWithCreate(function () {
+      return xs.last({
+        predicate: function (x) {
+          return x % 2 === 1;
+        }
       });
+    });
 
-      res.messages.assertEqual(
-        onNext(250, undefined),
-        onCompleted(250)
-      );
+    res.messages.assertEqual(
+      onNext(250, 5),
+      onCompleted(250)
+    );
 
-      xs.subscriptions.assertEqual(
-        subscribe(200, 250)
-      );
+    xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
-  test('last Predicate_Throw', function () {
-    var error = new Error();
+  test('last predicate thisArg', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+      return xs.last(function (x) {
+        equal(this, 42);
+        return x % 2 === 1;
+      }, 42);
+    });
+
+    res.messages.assertEqual(
+      onNext(250, 5),
+      onCompleted(250)
+    );
+
+    xs.subscriptions.assertEqual(subscribe(200, 250));
+  });
+
+  test('last Obj predicate', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+      return xs.last({
+        predicate: function (x) {
+          equal(this, 42);
+          return x % 2 === 1;
+        },
+        thisArg: 42
+      });
+    });
+
+    res.messages.assertEqual(
+      onNext(250, 5),
+      onCompleted(250)
+    );
+
+    xs.subscriptions.assertEqual(subscribe(200, 250));
+  });
+
+  test('last predicate None', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+      return xs.last(function (x) {
+        return x > 10;
+      });
+    });
+
+    ok(res.messages[0].time === 250 && res.messages[0].value.exception !== null);
+
+    xs.subscriptions.assertEqual(subscribe(200, 250));
+  });
+
+  test('last Obj predicate none default', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var res = scheduler.startWithCreate(function () {
+      return xs.last({
+        predicate: function (x) {
+          return x > 10;
+        },
+        defaultValue: 42
+      });
+    });
+
+    res.messages.assertEqual(
+      onNext(250, 42),
+      onCompleted(250)
+    );
+
+    xs.subscriptions.assertEqual(subscribe(200, 250));
+  });
+
+  test('last predicate Throw', function () {
+    var ex = new Error();
 
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
       onNext(150, 1),
-      onError(210, error)
+      onError(210, ex)
     );
 
     var res = scheduler.startWithCreate(function () {
-      return xs.last(function (x) { return x > 10; });
+      return xs.last(function (x) {
+        return x % 2 === 1;
+      });
     });
 
-    res.messages.assertEqual(
-      onError(210, error)
-    );
+    res.messages.assertEqual(onError(210, ex));
 
-    xs.subscriptions.assertEqual(
-      subscribe(200, 210)
-    );
+    xs.subscriptions.assertEqual(subscribe(200, 210));
   });
 
-  test('last PredicateThrows', function () {
-    var error = new Error();
+  test('last predicateThrows', function () {
+    var ex = new Error();
 
     var scheduler = new TestScheduler();
 
@@ -185,18 +306,16 @@
 
     var res = scheduler.startWithCreate(function () {
       return xs.last(function (x) {
-        if (x < 4) { return x % 2 === 1; }
-        throw error;
+        if (x < 4) {
+          return x % 2 === 1;
+        } else {
+          throw ex;
+        }
       });
     });
 
-    res.messages.assertEqual(
-      onError(230, error)
-    );
+    res.messages.assertEqual(onError(230, ex));
 
-    xs.subscriptions.assertEqual(
-      subscribe(200, 230)
-    );
+    xs.subscriptions.assertEqual(subscribe(200, 230));
   });
-
 }());

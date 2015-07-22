@@ -21,13 +21,21 @@ RxOld.range = function (start, count) {
 RxNew.range = RxOld.range;
 
 // add tests
-suite.add('old', function() {
-  RxOld.Observable.range(0, 50)
+suite.add('old single', function() {
+  RxOld.Observable.range(0, 10)
+  .map(double).subscribe();
+})
+.add('new single', function() {
+  RxNew.Observable.range(0, 10)
+  .map(double).subscribe();
+})
+.add('old chained', function() {
+  RxOld.Observable.range(0, 10)
   .map(square)
   .map(double).subscribe();
 })
-.add('new', function() {
-  RxNew.Observable.range(0, 50)
+.add('new chained', function() {
+  RxNew.Observable.range(0, 10)
   .map(square)
   .map(double).subscribe();
 })

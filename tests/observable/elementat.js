@@ -7,7 +7,7 @@
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('elementAt_First', function () {
+  test('elementAt First', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -31,7 +31,7 @@
     );
   });
 
-  test('elementAt_Other', function () {
+  test('elementAt Other', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -55,28 +55,49 @@
     );
   });
 
-  test('elementAt_OutOfRange', function () {
-      var scheduler = new TestScheduler();
+  test('elementAt OutOfRange', function () {
+    var scheduler = new TestScheduler();
 
-      var xs = scheduler.createHotObservable(
-        onNext(280, 42),
-        onNext(360, 43),
-        onNext(470, 44),
-        onCompleted(600)
-      );
+    var xs = scheduler.createHotObservable(
+      onNext(280, 42),
+      onNext(360, 43),
+      onNext(470, 44),
+      onCompleted(600)
+    );
 
-      var results = scheduler.startWithCreate(function () {
-        return xs.elementAt(3);
-      });
+    var results = scheduler.startWithCreate(function () {
+      return xs.elementAt(3);
+    });
 
-      results.messages.assertEqual(
-        onNext(600, undefined),
-        onCompleted(600)
-      );
+    ok(results.messages[0].time === 600 && results.messages[0].value.exception !== null);
 
-      xs.subscriptions.assertEqual(
-        subscribe(200, 600)
-      );
+    xs.subscriptions.assertEqual(
+      subscribe(200, 600)
+    );
+  });
+
+  test('elementAt out of range default', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(280, 42),
+      onNext(360, 43),
+      onNext(470, 44),
+      onCompleted(600)
+    );
+
+    var results = scheduler.startWithCreate(function () {
+      return xs.elementAt(3, 84);
+    });
+
+    results.messages.assertEqual(
+      onNext(600, 84),
+      onCompleted(600)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 600)
+    );
   });
 
 }());
