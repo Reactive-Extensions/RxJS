@@ -1,4 +1,5 @@
 ### `Rx.Observable.prototype.last([predicate], [thisArg])`
+### `Rx.Observable.prototype.last([settings])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/last.js "View in source")
 
 Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.  If no element was found and no default value is specified, `onError` is called with an error, however if a default value was specified, it will be yielded via an `onNext` call.
