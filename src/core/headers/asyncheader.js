@@ -10,4 +10,5 @@
     immediateScheduler = Rx.Scheduler.immediate,
     timeoutScheduler = Rx.Scheduler['default'],
     isScheduler = Rx.Scheduler.isScheduler,
+    isPromise = Rx.helpers.isPromise,
     isFunction = Rx.helpers.isFunction;
