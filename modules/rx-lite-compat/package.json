@@ -20,10 +20,10 @@
   ],
   "bugs": "https://github.com/Reactive-Extensions/RxJS/issues",
   "jam": {
-    "main": "rx.lite.js"
+    "main": "rx.lite.compat.js"
   },
   "browser": {
-    "index.js": "rx.lite.js"
+    "index.js": "rx.lite.compat.js"
   },
   "dependencies": {},
   "devDependencies": {},
