@@ -74,7 +74,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`controlled`](operators/controlled.md)
 - [`count`](operators/count.md)
 - [`debounce`](operators/debounce.md)
-- [`debounceWithSelector`](operators/throttlewithselector.md)
+- [`debounceWithSelector`](operators/debouncewithselector.md)
 - [`defaultIfEmpty`](operators/defaultifempty.md)
 - [`delay`](operators/delay.md)
 - [`delaySubscription`](operators/delaysubscription.md)
