@@ -1,5 +1,4 @@
 ### `Rx.Observable.prototype.some([predicate], [thisArg])` ###
-### `Rx.Observable.prototype.any([predicate], [thisArg])` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/some.js "View in source")
 
 Determines whether any element of an observable sequence satisfies a condition if present, else if any items are in the sequence. There is an alias to this function called `some`.

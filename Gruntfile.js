@@ -25,11 +25,11 @@ module.exports = function (grunt) {
               'src/core/headers/coreheader.js',
 
               // Stack trace start
+              'src/core/internal/trycatch.js',
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
               // internals
-              'src/core/internal/trycatch.js',
               'src/core/internal/util.js',
 
               // Disposables
@@ -128,6 +128,7 @@ module.exports = function (grunt) {
               'src/core/headers/basicheader.js',
 
               // Stack trace start
+              'src/core/internal/trycatch.js',
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
@@ -139,7 +140,6 @@ module.exports = function (grunt) {
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
-              'src/core/internal/trycatch.js',
               'src/core/internal/priorityqueue.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
@@ -317,7 +317,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/singleinstance.js',
 
               // Coincidence operators
-              'src/core/internal/dictionary.js',
               'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/buffer.js', // window, selectMany, toArray
@@ -416,6 +415,7 @@ module.exports = function (grunt) {
               'src/core/headers/basicheader-compat.js',
 
               // Stack trace start
+              'src/core/internal/trycatch.js',
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
@@ -427,7 +427,6 @@ module.exports = function (grunt) {
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
-              'src/core/internal/trycatch.js',
               'src/core/internal/polyfills.js',
               'src/core/internal/priorityqueue.js',
               'src/core/disposables/compositedisposable.js',
@@ -603,7 +602,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/singleinstance.js',
 
               // Coincidence operators
-              'src/core/internal/dictionary.js',
               'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/buffer.js', // window, selectMany, toArray
@@ -702,6 +700,7 @@ module.exports = function (grunt) {
               'src/core/headers/basicheader.js',
 
               // Stack trace start
+              'src/core/internal/trycatch.js',
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
@@ -713,7 +712,6 @@ module.exports = function (grunt) {
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
-              'src/core/internal/trycatch.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
@@ -850,6 +848,7 @@ module.exports = function (grunt) {
               'src/core/headers/basicheader-compat.js',
 
               // Stack trace start
+              'src/core/internal/trycatch.js',
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
@@ -861,7 +860,6 @@ module.exports = function (grunt) {
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
-              'src/core/internal/trycatch.js',
               'src/core/internal/polyfills.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
@@ -997,6 +995,7 @@ module.exports = function (grunt) {
               'src/core/headers/liteheader.js',
 
               // Stack trace start
+              'src/core/internal/trycatch.js',
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
@@ -1007,7 +1006,6 @@ module.exports = function (grunt) {
               'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
-              'src/core/internal/trycatch.js',
               'src/core/internal/util.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
@@ -1165,6 +1163,7 @@ module.exports = function (grunt) {
               'src/core/headers/liteheader-compat.js',
 
               // Stack trace start
+              'src/core/internal/trycatch.js',
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
@@ -1175,7 +1174,6 @@ module.exports = function (grunt) {
               'src/core/internal/bindcallback.js',
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
-              'src/core/internal/trycatch.js',
               'src/core/internal/util.js',
               'src/core/internal/polyfills.js',
               'src/core/disposables/compositedisposable.js',
@@ -1332,6 +1330,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro.js',
               'src/core/headers/liteextrasheader.js',
+              'src/core/internal/trycatch.js',
 
               'src/core/disposables/scheduleddisposable.js',
               'src/core/checkedobserver.js',
@@ -1372,6 +1371,7 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro-compat.js',
               'src/core/headers/liteextrasheader.js',
+              'src/core/internal/trycatch.js',
 
               'src/core/disposables/scheduleddisposable.js',
               'src/core/checkedobserver.js',
@@ -1651,7 +1651,8 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/subintro.js',
               'src/core/headers/coincidenceheader.js',
-              'src/core/internal/dictionary.js',
+              'src/core/internal/trycatch.js',
+              'src/core/internal/map.js',
               'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/buffer.js', // window, selectMany, toArray
@@ -1670,7 +1671,8 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro.js',
               'src/core/headers/coincidenceheader.js',
-              'src/core/internal/dictionary.js',
+              'src/core/internal/trycatch.js',
+              'src/core/internal/map.js',
               'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/buffer.js', // window, selectMany, toArray
@@ -1689,7 +1691,8 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro-compat.js',
               'src/core/headers/coincidenceheader.js',
-              'src/core/internal/dictionary.js',
+              'src/core/internal/trycatch.js',
+              'src/core/internal/map.js',
               'src/core/linq/observable/join.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/groupjoin.js', // SerialDisposable, SingleAssignmentDisposable, RefCountDisposable, CompositeDisposable, Dictionary
               'src/core/linq/observable/buffer.js', // window, selectMany, toArray

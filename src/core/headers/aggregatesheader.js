@@ -3,6 +3,7 @@
     observableProto = Observable.prototype,
     CompositeDisposable = Rx.CompositeDisposable,
     AnonymousObservable = Rx.AnonymousObservable,
+    AbstractObserver = Rx.internals.AbstractObserver,
     disposableEmpty = Rx.Disposable.empty,
     isEqual = Rx.internals.isEqual,
     helpers = Rx.helpers,

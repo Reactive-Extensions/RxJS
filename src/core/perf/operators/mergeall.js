@@ -90,6 +90,6 @@
   * Merges an observable sequence of observable sequences into an observable sequence.
   * @returns {Observable} The observable sequence that merges the elements of the inner sequences.
   */
-  observableProto.mergeAll = observableProto.mergeObservable = function () {
+  observableProto.mergeAll = function () {
     return new MergeAllObservable(this);
   };

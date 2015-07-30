@@ -9,9 +9,7 @@ Helper functions for the Reactive Extensions for JavaScript
 - [`Rx.helpers.defaultError`](#rxhelpersdefaulterror)
 - [`Rx.helpers.identity`](#rxhelpersidentityx)
 - [`Rx.helpers.isPromise`](#rxhelpersispromisep)
-- [`Rx.helpers.just`](#rxhelpersjustvalue)
 - [`Rx.helpers.noop`](#rxhelpersnoop)
-- [`Rx.helpers.pluck`](#rxhelperspluckproperty)
 
 * * *
 
@@ -120,29 +118,6 @@ console.log(x);
 ```
 * * *
 
-### <a id="rxhelpersidentityx"></a>`Rx.helpers.just(value)`
-<a href="#rxhelpersjustvalue">#</a>[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/basicheader.js "View in source") [&#x24C9;][1]
-
-A function which takes an argument and returns a function, when invoked, returns the argument.
-
-#### Arguments
-1. `value` *(Any)*: The value to return.
-
-#### Returns
-*(Function)*: A function, when invoked, returns the value.
-
-#### Example
-
-```js
-var just = Rx.helpers.just;
-
-Rx.Observable.timer(100)
-  .map(just('foo'))
-  .subscribe(console.log.bind(console));
-// => foo
-```
-* * *
-
 ### <a id="rxhelpersispromisep"></a>`Rx.helpers.isPromise(p)`
 <a href="#rxhelpersispromisep">#</a>[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/basicheader.js "View in source") [&#x24C9;][1]
 
@@ -178,33 +153,5 @@ var noop = Rx.helpers.noop;
 
 // This does nothing!
 noop();
-```
-* * *
-
-### <a id="rxhelperspluckproperty"></a>`Rx.helpers.pluck(property)`
-<a href="#rxhelperspluckproperty">#</a>[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/basicheader.js "View in source") [&#x24C9;][1]
-
-Plucks a property from the object.
-
-#### Arguments
-1. `property` *(String)*: The property name to pluck from the object.
-
-#### Returns
-*(Boolean)*: `true` if equal; else `false`.
-
-#### Example
-
-```js
-var pluck = Rx.helpers.pluck;
-
-var source = Rx.Observable.interval(1000)
-  .timeInterval()
-  .map(pluck('value'))
-  .take(3);
-
-source.subscribe(console.log.bind(console));
-// => 0
-// => 1
-// => 2
 ```
 * * *

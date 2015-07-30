@@ -1,5 +1,4 @@
 ### `Rx.Observable.prototype.finally(action)`
-### `Rx.Observable.prototype.finallyAction(action)` *DEPRECATED*
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/finally.js "View in source")
 
 Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.  There is an alias called `finallyAction` for browsers <IE9
@@ -18,20 +17,18 @@ Invokes a specified action after the source observable sequence terminates grace
 ```js
 /* Terminated by error still fires function */
 var source = Rx.Observable.throw(new Error())
-    .finally(function () {
-        console.log('Finally');
-    });
+  .finally(function () { console.log('Finally'); });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Error: Error
 // => Finally

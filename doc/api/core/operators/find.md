@@ -18,20 +18,18 @@ Searches for an element that matches the conditions defined by the specified pre
 var array = [1,2,3,4];
 
 var source = Rx.Observable.from(array)
-    .find(function (x, i, obs) {
-        return x === 1;
-    });
+  .find(function (x, i, obs) { return x === 1; });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 1
 // => Completed
@@ -40,20 +38,18 @@ var subscription = source.subscribe(
 var array = [1,2,3,4];
 
 var source = Rx.Observable.from(array)
-    .find(function (x, i, obs) {
-        return x === 5;
-    });
+  .find(function (x, i, obs) { return x === 5; });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: undefined
 // => Completed

@@ -131,7 +131,7 @@
   };
 
    /**
-   *  Determines whether an observable collection contains values. There is an alias for this method called 'ifThen' for browsers <IE9
+   *  Determines whether an observable collection contains values. 
    *
    * @example
    *  1 - res = Rx.Observable.if(condition, obs1);
@@ -142,7 +142,7 @@
    * @param {Observable} [elseSource] The observable sequence or Promise that will be run if the condition function returns false. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.
    * @returns {Observable} An observable sequence which is either the thenSource or elseSource.
    */
-  Observable['if'] = Observable.ifThen = function (condition, thenSource, elseSourceOrScheduler) {
+  Observable['if'] = function (condition, thenSource, elseSourceOrScheduler) {
     return observableDefer(function () {
       elseSourceOrScheduler || (elseSourceOrScheduler = observableEmpty());
 
@@ -192,25 +192,19 @@
 
    /**
    *  Uses selector to determine which source in sources to use.
-   *  There is an alias 'switchCase' for browsers <IE9.
-   *
-   * @example
-   *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 });
-   *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 }, obs0);
-   *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 }, scheduler);
-   *
+
    * @param {Function} selector The function which extracts the value for to test in a case statement.
    * @param {Array} sources A object which has keys which correspond to the case statement labels.
    * @param {Observable} [elseSource] The observable sequence or Promise that will be run if the sources are not matched. If this is not provided, it defaults to Rx.Observabe.empty with the specified scheduler.
    *
    * @returns {Observable} An observable sequence which is determined by a case statement.
    */
-  Observable['case'] = Observable.switchCase = function (selector, sources, defaultSourceOrScheduler) {
+  Observable['case'] = function (selector, sources, defaultSourceOrScheduler) {
     return observableDefer(function () {
       isPromise(defaultSourceOrScheduler) && (defaultSourceOrScheduler = observableFromPromise(defaultSourceOrScheduler));
       defaultSourceOrScheduler || (defaultSourceOrScheduler = observableEmpty());
 
-      typeof defaultSourceOrScheduler.now === 'function' && (defaultSourceOrScheduler = observableEmpty(defaultSourceOrScheduler));
+      isScheduler(defaultSourceOrScheduler) && (defaultSourceOrScheduler = observableEmpty(defaultSourceOrScheduler));
 
       var result = sources[selector()];
       isPromise(result) && (result = observableFromPromise(result));
@@ -484,7 +478,7 @@
         this.onNext(Observable.empty());
       },
       onError: function (e) {
-        this.onNext(Observable.throwError(e));
+        this.onNext(Observable['throw'](e));
       },
       onNext: function (v) {
         this.tail.onNext(v);

@@ -10,7 +10,6 @@
      */
     function AbstractObserver() {
       this.isStopped = false;
-      __super__.call(this);
     }
 
     // Must be implemented by other observers
@@ -23,7 +22,7 @@
      * @param {Any} value Next element in the sequence.
      */
     AbstractObserver.prototype.onNext = function (value) {
-      if (!this.isStopped) { this.next(value); }
+      !this.isStopped && this.next(value);
     };
 
     /**
@@ -50,9 +49,7 @@
     /**
      * Disposes the observer, causing it to transition to the stopped state.
      */
-    AbstractObserver.prototype.dispose = function () {
-      this.isStopped = true;
-    };
+    AbstractObserver.prototype.dispose = function () { this.isStopped = true; };
 
     AbstractObserver.prototype.fail = function (e) {
       if (!this.isStopped) {

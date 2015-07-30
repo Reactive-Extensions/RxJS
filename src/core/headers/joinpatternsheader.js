@@ -13,4 +13,5 @@
     Enumerable = Rx.internals.Enumerable,
     Enumerator = Rx.internals.Enumerator,
     $iterator$ = Rx.iterator,
-    doneEnumerator = Rx.doneEnumerator;
+    doneEnumerator = Rx.doneEnumerator,
+    bindCallback = Rx.internals.bindCallback;

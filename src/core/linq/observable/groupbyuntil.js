@@ -9,88 +9,77 @@
      *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); }, function (x) { return x.toString(); });
      * @param {Function} keySelector A function to extract the key for each element.
      * @param {Function} durationSelector A function to signal the expiration of a group.
-     * @param {Function} [comparer] Used to compare objects. When not specified, the default comparer is used.
      * @returns {Observable}
      *  A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
      *  If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
      *
      */
-    observableProto.groupByUntil = function (keySelector, elementSelector, durationSelector, comparer) {
+    observableProto.groupByUntil = function (keySelector, elementSelector, durationSelector) {
       var source = this;
-      elementSelector || (elementSelector = identity);
-      comparer || (comparer = defaultComparer);
-      return new AnonymousObservable(function (observer) {
-        function handleError(e) { return function (item) { item.onError(e); }; }
-        var map = new Dictionary(0, comparer),
+      return new AnonymousObservable(function (o) {
+        var map = new Map(),
           groupDisposable = new CompositeDisposable(),
-          refCountDisposable = new RefCountDisposable(groupDisposable);
+          refCountDisposable = new RefCountDisposable(groupDisposable),
+          handleError = function (e) { return function (item) { item.onError(e); }; };
 
-        groupDisposable.add(source.subscribe(function (x) {
-          var key;
-          try {
-            key = keySelector(x);
-          } catch (e) {
-            map.getValues().forEach(handleError(e));
-            observer.onError(e);
-            return;
-          }
-
-          var fireNewMapEntry = false,
-            writer = map.tryGetValue(key);
-          if (!writer) {
-            writer = new Subject();
-            map.set(key, writer);
-            fireNewMapEntry = true;
-          }
-
-          if (fireNewMapEntry) {
-            var group = new GroupedObservable(key, writer, refCountDisposable),
-              durationGroup = new GroupedObservable(key, writer);
-            try {
-              duration = durationSelector(durationGroup);
-            } catch (e) {
-              map.getValues().forEach(handleError(e));
-              observer.onError(e);
-              return;
+        groupDisposable.add(
+          source.subscribe(function (x) {
+            var key = tryCatch(keySelector)(x);
+            if (key === errorObj) {
+              map.forEach(handleError(key.e));
+              return o.onError(key.e);
             }
 
-            observer.onNext(group);
+            var fireNewMapEntry = false, writer = map.get(key);
+            if (writer === undefined) {
+              writer = new Subject();
+              map.set(key, writer);
+              fireNewMapEntry = true;
+            }
 
-            var md = new SingleAssignmentDisposable();
-            groupDisposable.add(md);
+            if (fireNewMapEntry) {
+              var group = new GroupedObservable(key, writer, refCountDisposable),
+                durationGroup = new GroupedObservable(key, writer);
+              var duration = tryCatch(durationSelector)(durationGroup);
+              if (duration === errorObj) {
+                map.forEach(handleError(duration.e));
+                return o.onError(duration.e);
+              }
 
-            var expire = function () {
-              map.remove(key) && writer.onCompleted();
-              groupDisposable.remove(md);
-            };
+              o.onNext(group);
 
-            md.setDisposable(duration.take(1).subscribe(
-              noop,
-              function (exn) {
-                map.getValues().forEach(handleError(exn));
-                observer.onError(exn);
-              },
-              expire)
-            );
-          }
+              var md = new SingleAssignmentDisposable();
+              groupDisposable.add(md);
 
-          var element;
-          try {
-            element = elementSelector(x);
-          } catch (e) {
-            map.getValues().forEach(handleError(e));
-            observer.onError(e);
-            return;
-          }
+              md.setDisposable(duration.take(1).subscribe(
+                noop,
+                function (e) {
+                  map.forEach(handleError(e));
+                  o.onError(e);
+                },
+                function () {
+                  if (map['delete'](key)) { writer.onCompleted(); }
+                  groupDisposable.remove(md);
+                }));
+            }
 
-          writer.onNext(element);
-      }, function (ex) {
-        map.getValues().forEach(handleError(ex));
-        observer.onError(ex);
-      }, function () {
-        map.getValues().forEach(function (item) { item.onCompleted(); });
-        observer.onCompleted();
-      }));
+            var element = x;
+            if (isFunction(elementSelector)) {
+              element = tryCatch(elementSelector)(x);
+              if (element === errorObj) {
+                map.forEach(handleError(element.e));
+                return o.onError(element.e);
+              }
+            }
+
+            writer.onNext(element);
+        }, function (e) {
+          map.forEach(handleError(e));
+          o.onError(e);
+        }, function () {
+          map.forEach(function (item) { item.onCompleted(); });
+          o.onCompleted();
+        }));
 
       return refCountDisposable;
     }, source);

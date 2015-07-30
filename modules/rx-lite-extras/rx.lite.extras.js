@@ -32,13 +32,14 @@
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     observableNever = Observable.never,
-    observableThrow = Observable.throwError,
+    observableThrow = Observable['throw'],
     AnonymousObservable = Rx.AnonymousObservable,
     AnonymousObserver = Rx.AnonymousObserver,
     notificationCreateOnNext = Rx.Notification.createOnNext,
     notificationCreateOnError = Rx.Notification.createOnError,
     notificationCreateOnCompleted = Rx.Notification.createOnCompleted,
     Observer = Rx.Observer,
+    observerCreate = Observer.create,
     Subject = Rx.Subject,
     internals = Rx.internals,
     helpers = Rx.helpers,
@@ -53,12 +54,32 @@
     addRef = Rx.internals.addRef,
     identity = helpers.identity,
     isPromise = helpers.isPromise,
+    isFunction = helpers.isFunction,
     inherits = internals.inherits,
     bindCallback = internals.bindCallback,
     noop = helpers.noop,
     isScheduler = Rx.Scheduler.isScheduler,
     observableFromPromise = Observable.fromPromise,
     ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;
+
+  var errorObj = {e: {}};
+  var tryCatchTarget;
+  function tryCatcher() {
+    try {
+      return tryCatchTarget.apply(this, arguments);
+    } catch (e) {
+      errorObj.e = e;
+      return errorObj;
+    }
+  }
+  function tryCatch(fn) {
+    if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
+    tryCatchTarget = fn;
+    return tryCatcher;
+  }
+  function thrower(e) {
+    throw e;
+  }
 
   function ScheduledDisposable(scheduler, disposable) {
     this.scheduler = scheduler;
@@ -290,16 +311,18 @@
    * @returns {Observable} An observable sequence whose lifetime controls the lifetime of the dependent resource object.
    */
   Observable.using = function (resourceFactory, observableFactory) {
-    return new AnonymousObservable(function (observer) {
-      var disposable = disposableEmpty, resource, source;
-      try {
-        resource = resourceFactory();
-        resource && (disposable = resource);
-        source = observableFactory(resource);
-      } catch (exception) {
-        return new CompositeDisposable(observableThrow(exception).subscribe(observer), disposable);
+    return new AnonymousObservable(function (o) {
+      var disposable = disposableEmpty;
+      var resource = tryCatch(resourceFactory)();
+      if (resource === errorObj) {
+        return new CompositeDisposable(observableThrow(resource.e).subscribe(o), disposable);
       }
-      return new CompositeDisposable(source.subscribe(observer), disposable);
+      resource && (disposable = resource);
+      var source = tryCatch(observableFactory)(resource);
+      if (source === errorObj) {
+        return new CompositeDisposable(observableThrow(source.e).subscribe(o), disposable);
+      }
+      return new CompositeDisposable(source.subscribe(o), disposable);
     });
   };
 
@@ -332,52 +355,59 @@
         }
       }
 
-      leftSubscription.setDisposable(leftSource.subscribe(function (left) {
-        choiceL();
-        choice === leftChoice && observer.onNext(left);
-      }, function (err) {
-        choiceL();
-        choice === leftChoice && observer.onError(err);
-      }, function () {
-        choiceL();
-        choice === leftChoice && observer.onCompleted();
-      }));
+      var leftSubscribe = observerCreate(
+        function (left) {
+          choiceL();
+          choice === leftChoice && observer.onNext(left);
+        },
+        function (e) {
+          choiceL();
+          choice === leftChoice && observer.onError(e);
+        },
+        function () {
+          choiceL();
+          choice === leftChoice && observer.onCompleted();
+        }
+      );
+      var rightSubscribe = observerCreate(
+        function (right) {
+          choiceR();
+          choice === rightChoice && observer.onNext(right);
+        },
+        function (e) {
+          choiceR();
+          choice === rightChoice && observer.onError(e);
+        },
+        function () {
+          choiceR();
+          choice === rightChoice && observer.onCompleted();
+        }
+      );
 
-      rightSubscription.setDisposable(rightSource.subscribe(function (right) {
-        choiceR();
-        choice === rightChoice && observer.onNext(right);
-      }, function (err) {
-        choiceR();
-        choice === rightChoice && observer.onError(err);
-      }, function () {
-        choiceR();
-        choice === rightChoice && observer.onCompleted();
-      }));
+      leftSubscription.setDisposable(leftSource.subscribe(leftSubscribe));
+      rightSubscription.setDisposable(rightSource.subscribe(rightSubscribe));
 
       return new CompositeDisposable(leftSubscription, rightSubscription);
     });
   };
 
+  function amb(p, c) { return p.amb(c); }
+
   /**
    * Propagates the observable sequence or Promise that reacts first.
-   *
-   * @example
-   * var = Rx.Observable.amb(xs, ys, zs);
    * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
    */
   Observable.amb = function () {
-    var acc = observableNever(), items = [];
+    var acc = observableNever(), items;
     if (Array.isArray(arguments[0])) {
       items = arguments[0];
     } else {
-      for(var i = 0, len = arguments.length; i < len; i++) { items.push(arguments[i]); }
-    }
-
-    function func(previous, current) {
-      return previous.amb(current);
+      var len = arguments.length;
+      items = new Array(items);
+      for(var i = 0; i < len; i++) { items[i] = arguments[i]; }
     }
     for (var i = 0, len = items.length; i < len; i++) {
-      acc = func(acc, items[i]);
+      acc = amb(acc, items[i]);
     }
     return acc;
   };
@@ -425,25 +455,20 @@
     });
   };
 
+  function toArray(x) { return x.toArray(); }
+  function notEmpty(x) { return x.length > 0; }
+
   /**
    *  Projects each element of an observable sequence into zero or more buffers which are produced based on element count information.
-   *
-   * @example
-   *  var res = xs.bufferWithCount(10);
-   *  var res = xs.bufferWithCount(10, 1);
    * @param {Number} count Length of each buffer.
    * @param {Number} [skip] Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
    * @returns {Observable} An observable sequence of buffers.
    */
   observableProto.bufferWithCount = function (count, skip) {
-    if (typeof skip !== 'number') {
-      skip = count;
-    }
-    return this.windowWithCount(count, skip).selectMany(function (x) {
-      return x.toArray();
-    }).where(function (x) {
-      return x.length > 0;
-    });
+    typeof skip !== 'number' && (skip = count);
+    return this.windowWithCount(count, skip)
+      .flatMap(toArray)
+      .filter(notEmpty);
   };
 
   /**

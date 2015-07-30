@@ -27,7 +27,7 @@
   test('Finally calls finally before throwing', function () {
     var invoked = false;
 
-    var someObservable = Rx.Observable.throwError(new Error()).ensure(function () {
+    var someObservable = Rx.Observable['throw'](new Error()).ensure(function () {
       invoked = true;
     });
 

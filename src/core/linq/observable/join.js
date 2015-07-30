@@ -9,93 +9,72 @@
    */
   observableProto.join = function (right, leftDurationSelector, rightDurationSelector, resultSelector) {
     var left = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var group = new CompositeDisposable();
       var leftDone = false, rightDone = false;
       var leftId = 0, rightId = 0;
-      var leftMap = new Dictionary(), rightMap = new Dictionary();
+      var leftMap = new Map(), rightMap = new Map();
+      var handleError = function (e) { o.onError(e); };
 
       group.add(left.subscribe(
         function (value) {
-          var id = leftId++;
-          var md = new SingleAssignmentDisposable();
+          var id = leftId++, md = new SingleAssignmentDisposable();
 
-          leftMap.add(id, value);
+          leftMap.set(id, value);
           group.add(md);
 
-          var expire = function () {
-            leftMap.remove(id) && leftMap.count() === 0 && leftDone && observer.onCompleted();
-            group.remove(md);
-          };
+          var duration = tryCatch(leftDurationSelector)(value);
+          if (duration === errorObj) { return o.onError(duration.e); }
 
-          var duration;
-          try {
-            duration = leftDurationSelector(value);
-          } catch (e) {
-            observer.onError(e);
-            return;
-          }
+          md.setDisposable(duration.take(1).subscribe(
+            noop,
+            handleError,
+            function () {
+              leftMap['delete'](id) && leftMap.size === 0 && leftDone && o.onCompleted();
+              group.remove(md);
+            }));
 
-          md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), expire));
-
-          rightMap.getValues().forEach(function (v) {
-            var result;
-            try {
-              result = resultSelector(value, v);
-            } catch (exn) {
-              observer.onError(exn);
-              return;
-            }
-
-            observer.onNext(result);
+          rightMap.forEach(function (v) {
+            var result = tryCatch(resultSelector)(value, v);
+            if (result === errorObj) { return o.onError(result.e); }
+            o.onNext(result);
           });
         },
-        observer.onError.bind(observer),
+        handleError,
         function () {
           leftDone = true;
-          (rightDone || leftMap.count() === 0) && observer.onCompleted();
+          (rightDone || leftMap.size === 0) && o.onCompleted();
         })
       );
 
       group.add(right.subscribe(
         function (value) {
-          var id = rightId++;
-          var md = new SingleAssignmentDisposable();
+          var id = rightId++, md = new SingleAssignmentDisposable();
 
-          rightMap.add(id, value);
+          rightMap.set(id, value);
           group.add(md);
 
-          var expire = function () {
-            rightMap.remove(id) && rightMap.count() === 0 && rightDone && observer.onCompleted();
-            group.remove(md);
-          };
+          var duration = tryCatch(rightDurationSelector)(value);
+          if (duration === errorObj) { return o.onError(duration.e); }
 
-          var duration;
-          try {
-            duration = rightDurationSelector(value);
-          } catch (e) {
-            observer.onError(e);
-            return;
-          }
+          md.setDisposable(duration.take(1).subscribe(
+            noop,
+            handleError,
+            function () {
+              rightMap['delete'](id) && rightMap.size === 0 && rightDone && o.onCompleted();
+              group.remove(md);
+            }));
 
-          md.setDisposable(duration.take(1).subscribe(noop, observer.onError.bind(observer), expire));
-
-          leftMap.getValues().forEach(function (v) {
-            var result;
-            try {
-              result = resultSelector(v, value);
-            } catch (exn) {
-              observer.onError(exn);
-              return;
-            }
-
-            observer.onNext(result);
+          leftMap.forEach(function (v) {
+            var result = tryCatch(resultSelector)(v, value);
+            if (result === errorObj) { return o.onError(result.e); }
+            o.onNext(result);
           });
         },
-        observer.onError.bind(observer),
+        handleError,
         function () {
           rightDone = true;
-          (leftDone || rightMap.count() === 0) && observer.onCompleted();
+          (leftDone || rightMap.size === 0) && o.onCompleted();
         })
       );
       return group;

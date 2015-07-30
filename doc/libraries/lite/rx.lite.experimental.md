@@ -19,11 +19,11 @@ File Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Methods`
-- [`case | switchCase`](../../api/core/operators/case.md)
-- [`for | forIn`](../../api/core/operators/for.md)
+- [`case`](../../api/core/operators/case.md)
+- [`for`](../../api/core/operators/for.md)
 - [`forkJoin`](../../api/core/operators/forkjoin.md)
-- [`if | ifThen`](../../api/core/operators/if.md)
-- [`while | whileDo`](../../api/core/operators/while.md)
+- [`if`](../../api/core/operators/if.md)
+- [`while`](../../api/core/operators/while.md)
 
 ### `Observable Instance Methods`
 - [`doWhile`](/api/core/operators/dowhile.md)
@@ -32,7 +32,7 @@ File Dependencies:
 - [`flatMapFirst`](../../api/core/operators/flatmapfirst.md)
 - [`flatMapWithMaxConcurrent`](../../api/core/flatmapwithmaxconcurrent.md)
 - [`forkJoin`](../../api/core/operators/forkjoinproto.md)
-- [`let | letBind`](../../api/core/operators/let.md)
+- [`let`](../../api/core/operators/let.md)
 - [`manySelect`](../../api/core/operators/manyselect.md)
 - [`selectSwitchFirst`](../../api/core/operators/flatmapfirst.md)
 - [`selectWithMaxConcurrent`](../../api/core/operators/flatmapwithmaxconcurrent.md)

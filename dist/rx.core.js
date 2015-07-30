@@ -66,102 +66,6 @@ var
     throw new NotSupportedError();
   };
 
-  Rx.config.longStackSupport = false;
-  var hasStacks = false;
-  try {
-    throw new Error();
-  } catch (e) {
-    hasStacks = !!e.stack;
-  }
-
-  // All code after this point will be filtered from stack traces reported by RxJS
-  var rStartingLine = captureLine(), rFileName;
-
-  var STACK_JUMP_SEPARATOR = "From previous event:";
-
-  function makeStackTraceLong(error, observable) {
-      // If possible, transform the error stack trace by removing Node and RxJS
-      // cruft, then concatenating with the stack trace of `observable`.
-      if (hasStacks &&
-          observable.stack &&
-          typeof error === "object" &&
-          error !== null &&
-          error.stack &&
-          error.stack.indexOf(STACK_JUMP_SEPARATOR) === -1
-      ) {
-        var stacks = [];
-        for (var o = observable; !!o; o = o.source) {
-          if (o.stack) {
-            stacks.unshift(o.stack);
-          }
-        }
-        stacks.unshift(error.stack);
-
-        var concatedStacks = stacks.join("\n" + STACK_JUMP_SEPARATOR + "\n");
-        error.stack = filterStackString(concatedStacks);
-    }
-  }
-
-  function filterStackString(stackString) {
-    var lines = stackString.split("\n"),
-        desiredLines = [];
-    for (var i = 0, len = lines.length; i < len; i++) {
-      var line = lines[i];
-
-      if (!isInternalFrame(line) && !isNodeFrame(line) && line) {
-        desiredLines.push(line);
-      }
-    }
-    return desiredLines.join("\n");
-  }
-
-  function isInternalFrame(stackLine) {
-    var fileNameAndLineNumber = getFileNameAndLineNumber(stackLine);
-    if (!fileNameAndLineNumber) {
-      return false;
-    }
-    var fileName = fileNameAndLineNumber[0], lineNumber = fileNameAndLineNumber[1];
-
-    return fileName === rFileName &&
-      lineNumber >= rStartingLine &&
-      lineNumber <= rEndingLine;
-  }
-
-  function isNodeFrame(stackLine) {
-    return stackLine.indexOf("(module.js:") !== -1 ||
-      stackLine.indexOf("(node.js:") !== -1;
-  }
-
-  function captureLine() {
-    if (!hasStacks) { return; }
-
-    try {
-      throw new Error();
-    } catch (e) {
-      var lines = e.stack.split("\n");
-      var firstLine = lines[0].indexOf("@") > 0 ? lines[1] : lines[2];
-      var fileNameAndLineNumber = getFileNameAndLineNumber(firstLine);
-      if (!fileNameAndLineNumber) { return; }
-
-      rFileName = fileNameAndLineNumber[0];
-      return fileNameAndLineNumber[1];
-    }
-  }
-
-  function getFileNameAndLineNumber(stackLine) {
-    // Named functions: "at functionName (filename:lineNumber:columnNumber)"
-    var attempt1 = /at .+ \((.+):(\d+):(?:\d+)\)$/.exec(stackLine);
-    if (attempt1) { return [attempt1[1], Number(attempt1[2])]; }
-
-    // Anonymous functions: "at filename:lineNumber:columnNumber"
-    var attempt2 = /at ([^ ]+):(\d+):(?:\d+)$/.exec(stackLine);
-    if (attempt2) { return [attempt2[1], Number(attempt2[2])]; }
-
-    // Firefox style: "function@filename:lineNumber or @filename:lineNumber"
-    var attempt3 = /.*@(.+):(\d+)$/.exec(stackLine);
-    if (attempt3) { return [attempt3[1], Number(attempt3[2])]; }
-  }
-
   var errorObj = {e: {}};
   var tryCatchTarget;
   function tryCatcher() {
@@ -179,6 +83,97 @@ var
   }
   function thrower(e) {
     throw e;
+  }
+
+  Rx.config.longStackSupport = false;
+  var hasStacks = false, stacks = tryCatch(function () { throw new Error(); })();
+  hasStacks = !!stacks.e && !!stacks.e.stack;
+
+  // All code after this point will be filtered from stack traces reported by RxJS
+  var rStartingLine = captureLine(), rFileName;
+
+  var STACK_JUMP_SEPARATOR = 'From previous event:';
+
+  function makeStackTraceLong(error, observable) {
+    // If possible, transform the error stack trace by removing Node and RxJS
+    // cruft, then concatenating with the stack trace of `observable`.
+    if (hasStacks &&
+        observable.stack &&
+        typeof error === 'object' &&
+        error !== null &&
+        error.stack &&
+        error.stack.indexOf(STACK_JUMP_SEPARATOR) === -1
+    ) {
+      var stacks = [];
+      for (var o = observable; !!o; o = o.source) {
+        if (o.stack) {
+          stacks.unshift(o.stack);
+        }
+      }
+      stacks.unshift(error.stack);
+
+      var concatedStacks = stacks.join('\n' + STACK_JUMP_SEPARATOR + '\n');
+      error.stack = filterStackString(concatedStacks);
+    }
+  }
+
+  function filterStackString(stackString) {
+    var lines = stackString.split('\n'), desiredLines = [];
+    for (var i = 0, len = lines.length; i < len; i++) {
+      var line = lines[i];
+
+      if (!isInternalFrame(line) && !isNodeFrame(line) && line) {
+        desiredLines.push(line);
+      }
+    }
+    return desiredLines.join('\n');
+  }
+
+  function isInternalFrame(stackLine) {
+    var fileNameAndLineNumber = getFileNameAndLineNumber(stackLine);
+    if (!fileNameAndLineNumber) {
+      return false;
+    }
+    var fileName = fileNameAndLineNumber[0], lineNumber = fileNameAndLineNumber[1];
+
+    return fileName === rFileName &&
+      lineNumber >= rStartingLine &&
+      lineNumber <= rEndingLine;
+  }
+
+  function isNodeFrame(stackLine) {
+    return stackLine.indexOf('(module.js:') !== -1 ||
+      stackLine.indexOf('(node.js:') !== -1;
+  }
+
+  function captureLine() {
+    if (!hasStacks) { return; }
+
+    try {
+      throw new Error();
+    } catch (e) {
+      var lines = e.stack.split('\n');
+      var firstLine = lines[0].indexOf('@') > 0 ? lines[1] : lines[2];
+      var fileNameAndLineNumber = getFileNameAndLineNumber(firstLine);
+      if (!fileNameAndLineNumber) { return; }
+
+      rFileName = fileNameAndLineNumber[0];
+      return fileNameAndLineNumber[1];
+    }
+  }
+
+  function getFileNameAndLineNumber(stackLine) {
+    // Named functions: 'at functionName (filename:lineNumber:columnNumber)'
+    var attempt1 = /at .+ \((.+):(\d+):(?:\d+)\)$/.exec(stackLine);
+    if (attempt1) { return [attempt1[1], Number(attempt1[2])]; }
+
+    // Anonymous functions: 'at filename:lineNumber:columnNumber'
+    var attempt2 = /at ([^ ]+):(\d+):(?:\d+)$/.exec(stackLine);
+    if (attempt2) { return [attempt2[1], Number(attempt2[2])]; }
+
+    // Firefox style: 'function@filename:lineNumber or @filename:lineNumber'
+    var attempt3 = /.*@(.+):(\d+)$/.exec(stackLine);
+    if (attempt3) { return [attempt3[1], Number(attempt3[2])]; }
   }
 
   var hasProp = {}.hasOwnProperty,
@@ -944,7 +939,6 @@ var
      */
     function AbstractObserver() {
       this.isStopped = false;
-      __super__.call(this);
     }
 
     // Must be implemented by other observers
@@ -957,7 +951,7 @@ var
      * @param {Any} value Next element in the sequence.
      */
     AbstractObserver.prototype.onNext = function (value) {
-      if (!this.isStopped) { this.next(value); }
+      !this.isStopped && this.next(value);
     };
 
     /**
@@ -984,9 +978,7 @@ var
     /**
      * Disposes the observer, causing it to transition to the stopped state.
      */
-    AbstractObserver.prototype.dispose = function () {
-      this.isStopped = true;
-    };
+    AbstractObserver.prototype.dispose = function () { this.isStopped = true; };
 
     AbstractObserver.prototype.fail = function (e) {
       if (!this.isStopped) {
@@ -1142,8 +1134,8 @@ var
     }
 
     function setDisposable(s, state) {
-      var ado = state[0], subscribe = state[1];
-      var sub = tryCatch(subscribe)(ado);
+      var ado = state[0], self = state[1];
+      var sub = tryCatch(self.__subscribe).call(self, ado);
 
       if (sub === errorObj) {
         if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
@@ -1151,21 +1143,21 @@ var
       ado.setDisposable(fixSubscriber(sub));
     }
 
+    function innerSubscribe(observer) {
+      var ado = new AutoDetachObserver(observer), state = [ado, this];
+
+      if (currentThreadScheduler.scheduleRequired()) {
+        currentThreadScheduler.scheduleWithState(state, setDisposable);
+      } else {
+        setDisposable(null, state);
+      }
+      return ado;
+    }
+
     function AnonymousObservable(subscribe, parent) {
       this.source = parent;
-
-      function s(observer) {
-        var ado = new AutoDetachObserver(observer), state = [ado, subscribe];
-
-        if (currentThreadScheduler.scheduleRequired()) {
-          currentThreadScheduler.scheduleWithState(state, setDisposable);
-        } else {
-          setDisposable(null, state);
-        }
-        return ado;
-      }
-
-      __super__.call(this, s);
+      this.__subscribe = subscribe;
+      __super__.call(this, innerSubscribe);
     }
 
     return AnonymousObservable;

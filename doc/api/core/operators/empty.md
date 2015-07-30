@@ -14,16 +14,16 @@ Returns an empty observable sequence, using the specified scheduler to send out 
 var source = Rx.Observable.empty();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
-
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
+  
 // => Completed
 ```
 
