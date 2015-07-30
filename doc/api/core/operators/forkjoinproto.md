@@ -30,7 +30,7 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
-// => Next: 44
+// => Next: 45
 // => Completed
 ```
 

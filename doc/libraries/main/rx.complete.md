@@ -139,7 +139,7 @@ NuGet Packages:
 - [`pausableBuffered`](../../api/core/operators/pausablebuffered.md)
 - [`pluck`](../../api/core/operators/pluck.md)
 - [`publish`](../../api/core/operators/publish.md)
-- [`publishLast`](../../api/core/operators/publishlatest.md)
+- [`publishLast`](../../api/core/operators/publishlast.md)
 - [`publishValue`](../../api/core/operators/publishvalue.md)
 - [`share`](../../api/core/operators/share.md)
 - [`shareReplay`](../../api/core/operators/sharereplay.md)

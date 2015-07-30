@@ -72,7 +72,6 @@ eventEmitter.emit('data', 'baz', 'quux');
 
 File:
 - [`/src/core/linq/observable/fromevent.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js)
-- [`/src/core/linq/observable/fromevent-modern.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent-modern.js)
 
 Dist:
 - [`rx.async.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.async.js)
