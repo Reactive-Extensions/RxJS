@@ -45,9 +45,40 @@
   function toObservable(obj) {
     if (!obj) { return obj; }
     if (Observable.isObservable(obj)) { return obj; }
+    if (isArrayLike(result) || isIterable(result)) { return arrayToObservable.call(this, obj); }
+    if (isPromise(obj) { return Observable.fromPromise(obj); })
     if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
     if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
     return obj;
+  }
+
+  function arrayToObservable (obj) {
+    return Observable.from(obj)
+      .map(toObservable, this)
+      .toArray();
+  }
+
+  function objectToObservable (obj) {
+    var results = new obj.constructor(), Object.keys(obj), var observables = [];
+    for (var i = 0, len = keys.length; i < len; i++) {
+      var key = keys[i], observable = toObservable.call(this, obj[key]);
+      if (observable && Observable.isObservable(observable)) {
+        defer(observable, key);
+      } else {
+        results[key] = obj[key];
+      }
+    }
+    return Observable.concat(observables).startWith(results);
+
+    function defer (observable, key) {
+      results[key] = undefined;
+      observables.push(new AnonymousObservable(function (o) {
+        return observable.subscribe(function (next) {
+          results[key] = next;
+          o.onCompleted();
+        });
+      }));
+    }
   }
 
   function thunkToObservable(fn) {
