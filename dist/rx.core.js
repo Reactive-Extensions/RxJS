@@ -1074,7 +1074,7 @@ var
     * @param {Any} An object to determine whether it is an Observable
     * @returns {Boolean} true if an Observable, else false.
     */
-    observableProto.isObservable = function (o) {
+    Observable.isObservable = function (o) {
       return o && isFunction(o.subscribe);
     }
 

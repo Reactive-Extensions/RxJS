@@ -45,10 +45,11 @@
   function toObservable(obj) {
     if (!obj) { return obj; }
     if (Observable.isObservable(obj)) { return obj; }
-    if (isArrayLike(result) || isIterable(result)) { return arrayToObservable.call(this, obj); }
     if (isPromise(obj)) { return Observable.fromPromise(obj); }
     if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
     if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
+    if (isArrayLike(obj) || isIterable(obj)) { return arrayToObservable.call(this, obj); }
+    if (isObject(obj)) return objectToObservable.call(this, obj);
     return obj;
   }
 
@@ -107,4 +108,8 @@
     if (!ctor) { return false; }
     if (ctor.name === 'GeneratorFunction' || ctor.displayName === 'GeneratorFunction') { return true; }
     return isGenerator(ctor.prototype);
+  }
+
+  function isObject(val) {
+    return Object == val.constructor;
   }
