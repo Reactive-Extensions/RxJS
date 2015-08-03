@@ -4,10 +4,10 @@ var Tests = (function () {
         this.element = element;
     }
     Tests.prototype.start = function () {
-        var e = Expression.Add(Expression.Constant(1), Expression.Constant(2));
-        var l = Expression.Lambda(e);
-        var c = l.CompileToFunction();
-        var f = l.Compile();
+        var e = Expression.add(Expression.constant(1), Expression.constant(2));
+        var l = Expression.lambda(e);
+        var c = l.compileToFunction();
+        var f = l.compile();
         var b = l.toBonsai();
         var x = f();
         this.element.innerHTML = "Eval(" + l + ") = Eval(" + c + ") = Eval(" + JSON.stringify(b) + ") = " + x;

@@ -8,125 +8,125 @@ var Expression = (function () {
     function Expression(nodeType) {
         this.nodeType = nodeType;
     }
-    Expression.prototype.Accept = function (visitor) {
+    Expression.prototype.accept = function (visitor) {
         throw new Error("not implemented");
     };
-    Expression.prototype.AcceptGeneric = function (visitor) {
+    Expression.prototype.acceptGeneric = function (visitor) {
         throw new Error("not implemented");
     };
     Expression.prototype.toString = function () {
-        return new PrintVisitor().Visit(this);
+        return new PrintVisitor().visit(this);
     };
     Expression.prototype.toBonsai = function () {
-        return new BonsaiVisitor().Visit(this);
+        return new BonsaiVisitor().visit(this);
     };
-    Expression.Constant = function (value) {
+    Expression.constant = function (value) {
         return new ConstantExpression(value);
     };
-    Expression.Parameter = function (name) {
+    Expression.parameter = function (name) {
         return new ParameterExpression(name);
     };
-    Expression.Condition = function (test, ifTrue, ifFalse) {
+    Expression.condition = function (test, ifTrue, ifFalse) {
         return new ConditionalExpression(test, ifTrue, ifFalse);
     };
-    Expression.Add = function (left, right) {
+    Expression.add = function (left, right) {
         return new BinaryExpression(3 /* Add */, left, right);
     };
-    Expression.Subtract = function (left, right) {
+    Expression.subtract = function (left, right) {
         return new BinaryExpression(4 /* Subtract */, left, right);
     };
-    Expression.Multiply = function (left, right) {
+    Expression.multiply = function (left, right) {
         return new BinaryExpression(5 /* Multiply */, left, right);
     };
-    Expression.Divide = function (left, right) {
+    Expression.divide = function (left, right) {
         return new BinaryExpression(6 /* Divide */, left, right);
     };
-    Expression.Modulo = function (left, right) {
+    Expression.modulo = function (left, right) {
         return new BinaryExpression(7 /* Modulo */, left, right);
     };
-    Expression.And = function (left, right) {
+    Expression.and = function (left, right) {
         return new BinaryExpression(8 /* And */, left, right);
     };
-    Expression.AndAlso = function (left, right) {
+    Expression.andAlso = function (left, right) {
         return new BinaryExpression(10 /* AndAlso */, left, right);
     };
-    Expression.Or = function (left, right) {
+    Expression.or = function (left, right) {
         return new BinaryExpression(9 /* Or */, left, right);
     };
-    Expression.OrElse = function (left, right) {
+    Expression.orElse = function (left, right) {
         return new BinaryExpression(11 /* OrElse */, left, right);
     };
-    Expression.ExclusiveOr = function (left, right) {
+    Expression.exclusiveOr = function (left, right) {
         return new BinaryExpression(12 /* ExclusiveOr */, left, right);
     };
-    Expression.Equal = function (left, right) {
+    Expression.equal = function (left, right) {
         return new BinaryExpression(13 /* Equal */, left, right);
     };
-    Expression.NotEqual = function (left, right) {
+    Expression.notEqual = function (left, right) {
         return new BinaryExpression(14 /* NotEqual */, left, right);
     };
-    Expression.LessThan = function (left, right) {
+    Expression.lessThan = function (left, right) {
         return new BinaryExpression(15 /* LessThan */, left, right);
     };
-    Expression.LessThanOrEqual = function (left, right) {
+    Expression.lessThanOrEqual = function (left, right) {
         return new BinaryExpression(16 /* LessThanOrEqual */, left, right);
     };
-    Expression.GreaterThan = function (left, right) {
+    Expression.greaterThan = function (left, right) {
         return new BinaryExpression(17 /* GreaterThan */, left, right);
     };
-    Expression.GreaterThanOrEqual = function (left, right) {
+    Expression.greaterThanOrEqual = function (left, right) {
         return new BinaryExpression(18 /* GreaterThanOrEqual */, left, right);
     };
-    Expression.LeftShift = function (left, right) {
+    Expression.leftShift = function (left, right) {
         return new BinaryExpression(19 /* LeftShift */, left, right);
     };
-    Expression.RightShift = function (left, right) {
+    Expression.rightShift = function (left, right) {
         return new BinaryExpression(20 /* RightShift */, left, right);
     };
-    Expression.Not = function (operand) {
+    Expression.not = function (operand) {
         return new UnaryExpression(22 /* Not */, operand);
     };
-    Expression.UnaryPlus = function (operand) {
+    Expression.unaryPlus = function (operand) {
         return new UnaryExpression(24 /* UnaryPlus */, operand);
     };
-    Expression.Negate = function (operand) {
+    Expression.negate = function (operand) {
         return new UnaryExpression(23 /* Negate */, operand);
     };
-    Expression.OnesComplement = function (operand) {
+    Expression.onesComplement = function (operand) {
         return new UnaryExpression(25 /* OnesComplement */, operand);
     };
-    Expression.Lambda = function (body) {
+    Expression.lambda = function (body) {
         var parameters = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             parameters[_i - 1] = arguments[_i];
         }
         return new LambdaExpression(body, parameters);
     };
-    Expression.Invoke = function (expression) {
+    Expression.invoke = function (expression) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
         return new InvocationExpression(expression, args);
     };
-    Expression.New = function (typeName) {
+    Expression.new = function (typeName) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
         }
         return new NewExpression(typeName, args);
     };
-    Expression.Call = function (obj, methodName) {
+    Expression.functionCall = function (obj, methodName) {
         var args = [];
         for (var _i = 2; _i < arguments.length; _i++) {
             args[_i - 2] = arguments[_i];
         }
-        return new CallExpression(obj, methodName, args);
+        return new FunctionCallExpression(obj, methodName, args);
     };
-    Expression.Member = function (obj, memberName) {
+    Expression.member = function (obj, memberName) {
         return new MemberExpression(obj, memberName);
     };
-    Expression.Index = function (obj) {
+    Expression.index = function (obj) {
         var args = [];
         for (var _i = 1; _i < arguments.length; _i++) {
             args[_i - 1] = arguments[_i];
@@ -138,50 +138,50 @@ var Expression = (function () {
 var ExpressionVisitorGeneric = (function () {
     function ExpressionVisitorGeneric() {
     }
-    ExpressionVisitorGeneric.prototype.Visit = function (node) {
+    ExpressionVisitorGeneric.prototype.visit = function (node) {
         if (node === null) {
             return null;
         }
-        return node.AcceptGeneric(this);
+        return node.acceptGeneric(this);
     };
-    ExpressionVisitorGeneric.prototype.VisitConstant = function (node) {
+    ExpressionVisitorGeneric.prototype.visitConstant = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitParameter = function (node) {
+    ExpressionVisitorGeneric.prototype.visitParameter = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitBinary = function (node) {
+    ExpressionVisitorGeneric.prototype.visitBinary = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitUnary = function (node) {
+    ExpressionVisitorGeneric.prototype.visitUnary = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitConditional = function (node) {
+    ExpressionVisitorGeneric.prototype.visitConditional = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitLambda = function (node) {
+    ExpressionVisitorGeneric.prototype.visitLambda = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitInvoke = function (node) {
+    ExpressionVisitorGeneric.prototype.visitInvoke = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitCall = function (node) {
+    ExpressionVisitorGeneric.prototype.visitCall = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitNew = function (node) {
+    ExpressionVisitorGeneric.prototype.visitNew = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitMember = function (node) {
+    ExpressionVisitorGeneric.prototype.visitMember = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitIndex = function (node) {
+    ExpressionVisitorGeneric.prototype.visitIndex = function (node) {
         throw new Error("not implemented");
     };
-    ExpressionVisitorGeneric.prototype.VisitMany = function (nodes) {
+    ExpressionVisitorGeneric.prototype.visitMany = function (nodes) {
         var res = new Array(nodes.length);
         for (var i = 0; i < nodes.length; i++) {
             var oldNode = nodes[i];
-            var newNode = this.Visit(oldNode);
+            var newNode = this.visit(oldNode);
             res[i] = newNode;
         }
         return res;
@@ -191,50 +191,50 @@ var ExpressionVisitorGeneric = (function () {
 var ExpressionVisitor = (function () {
     function ExpressionVisitor() {
     }
-    ExpressionVisitor.prototype.Visit = function (node) {
+    ExpressionVisitor.prototype.visit = function (node) {
         if (node === null) {
             return null;
         }
-        return node.Accept(this);
+        return node.accept(this);
     };
-    ExpressionVisitor.prototype.VisitConstant = function (node) {
+    ExpressionVisitor.prototype.visitConstant = function (node) {
         return node;
     };
-    ExpressionVisitor.prototype.VisitParameter = function (node) {
+    ExpressionVisitor.prototype.visitParameter = function (node) {
         return node;
     };
-    ExpressionVisitor.prototype.VisitBinary = function (node) {
-        return node.Update(this.Visit(node.left), this.Visit(node.right));
+    ExpressionVisitor.prototype.visitBinary = function (node) {
+        return node.update(this.visit(node.left), this.visit(node.right));
     };
-    ExpressionVisitor.prototype.VisitUnary = function (node) {
-        return node.Update(this.Visit(node.operand));
+    ExpressionVisitor.prototype.visitUnary = function (node) {
+        return node.update(this.visit(node.operand));
     };
-    ExpressionVisitor.prototype.VisitConditional = function (node) {
-        return node.Update(this.Visit(node.test), this.Visit(node.ifTrue), this.Visit(node.ifFalse));
+    ExpressionVisitor.prototype.visitConditional = function (node) {
+        return node.update(this.visit(node.test), this.visit(node.ifTrue), this.visit(node.ifFalse));
     };
-    ExpressionVisitor.prototype.VisitLambda = function (node) {
-        return node.Update(this.Visit(node.body), this.VisitMany(node.parameters));
+    ExpressionVisitor.prototype.visitLambda = function (node) {
+        return node.update(this.visit(node.body), this.visitMany(node.parameters));
     };
-    ExpressionVisitor.prototype.VisitInvoke = function (node) {
-        return node.Update(this.Visit(node.expression), this.VisitMany(node.args));
+    ExpressionVisitor.prototype.visitInvoke = function (node) {
+        return node.update(this.visit(node.expression), this.visitMany(node.args));
     };
-    ExpressionVisitor.prototype.VisitCall = function (node) {
-        return node.Update(this.Visit(node.obj), this.VisitMany(node.args));
+    ExpressionVisitor.prototype.visitCall = function (node) {
+        return node.update(this.visit(node.obj), this.visitMany(node.args));
     };
-    ExpressionVisitor.prototype.VisitNew = function (node) {
-        return node.Update(this.VisitMany(node.args));
+    ExpressionVisitor.prototype.visitNew = function (node) {
+        return node.update(this.visitMany(node.args));
     };
-    ExpressionVisitor.prototype.VisitMember = function (node) {
-        return node.Update(this.Visit(node.obj));
+    ExpressionVisitor.prototype.visitMember = function (node) {
+        return node.update(this.visit(node.obj));
     };
-    ExpressionVisitor.prototype.VisitIndex = function (node) {
-        return node.Update(this.Visit(node.obj), this.VisitMany(node.args));
+    ExpressionVisitor.prototype.visitIndex = function (node) {
+        return node.update(this.visit(node.obj), this.visitMany(node.args));
     };
-    ExpressionVisitor.prototype.VisitMany = function (nodes) {
+    ExpressionVisitor.prototype.visitMany = function (nodes) {
         var res = new Array(nodes.length);
         for (var i = 0; i < nodes.length; i++) {
             var oldNode = nodes[i];
-            var newNode = this.Visit(oldNode);
+            var newNode = this.visit(oldNode);
             res[i] = newNode;
         }
         return res;
@@ -254,11 +254,11 @@ var ConstantExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    ConstantExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitConstant(this);
+    ConstantExpression.prototype.accept = function (visitor) {
+        return visitor.visitConstant(this);
     };
-    ConstantExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitConstant(this);
+    ConstantExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitConstant(this);
     };
     return ConstantExpression;
 })(Expression);
@@ -275,11 +275,11 @@ var ParameterExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    ParameterExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitParameter(this);
+    ParameterExpression.prototype.accept = function (visitor) {
+        return visitor.visitParameter(this);
     };
-    ParameterExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitParameter(this);
+    ParameterExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitParameter(this);
     };
     return ParameterExpression;
 })(Expression);
@@ -296,13 +296,13 @@ var UnaryExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    UnaryExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitUnary(this);
+    UnaryExpression.prototype.accept = function (visitor) {
+        return visitor.visitUnary(this);
     };
-    UnaryExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitUnary(this);
+    UnaryExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitUnary(this);
     };
-    UnaryExpression.prototype.Update = function (operand) {
+    UnaryExpression.prototype.update = function (operand) {
         if (operand !== this._operand) {
             return new UnaryExpression(this.nodeType, operand);
         }
@@ -331,13 +331,13 @@ var BinaryExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    BinaryExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitBinary(this);
+    BinaryExpression.prototype.accept = function (visitor) {
+        return visitor.visitBinary(this);
     };
-    BinaryExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitBinary(this);
+    BinaryExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitBinary(this);
     };
-    BinaryExpression.prototype.Update = function (left, right) {
+    BinaryExpression.prototype.update = function (left, right) {
         if (left !== this._left || right !== this._right) {
             return new BinaryExpression(this.nodeType, left, right);
         }
@@ -374,13 +374,13 @@ var ConditionalExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    ConditionalExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitConditional(this);
+    ConditionalExpression.prototype.accept = function (visitor) {
+        return visitor.visitConditional(this);
     };
-    ConditionalExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitConditional(this);
+    ConditionalExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitConditional(this);
     };
-    ConditionalExpression.prototype.Update = function (test, ifTrue, ifFalse) {
+    ConditionalExpression.prototype.update = function (test, ifTrue, ifFalse) {
         if (test !== this._test || ifTrue !== this._ifTrue || ifFalse !== this._ifFalse) {
             return new ConditionalExpression(test, ifTrue, ifFalse);
         }
@@ -409,21 +409,21 @@ var LambdaExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    LambdaExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitLambda(this);
+    LambdaExpression.prototype.accept = function (visitor) {
+        return visitor.visitLambda(this);
     };
-    LambdaExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitLambda(this);
+    LambdaExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitLambda(this);
     };
-    LambdaExpression.prototype.Update = function (body, parameters) {
+    LambdaExpression.prototype.update = function (body, parameters) {
         if (body !== this._body || parameters !== this._parameters) {
             return new LambdaExpression(body, parameters);
         }
         return this;
     };
-    LambdaExpression.prototype.CompileToFunction = function (debug) {
+    LambdaExpression.prototype.compileToFunction = function (debug) {
         var comp = new LambdaCompiler();
-        comp.Visit(this);
+        comp.visit(this);
         var code = comp.code;
         code = code.replace(/\"/g, "\\\""); // TODO: more escape sequences
         code = "new Function(\"return " + code + ";\")";
@@ -433,8 +433,8 @@ var LambdaExpression = (function (_super) {
         }
         return code;
     };
-    LambdaExpression.prototype.Compile = function (debug) {
-        var code = this.CompileToFunction(debug);
+    LambdaExpression.prototype.compile = function (debug) {
+        var code = this.compileToFunction(debug);
         return eval(code)();
     };
     return LambdaExpression;
@@ -460,13 +460,13 @@ var InvocationExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    InvocationExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitInvoke(this);
+    InvocationExpression.prototype.accept = function (visitor) {
+        return visitor.visitInvoke(this);
     };
-    InvocationExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitInvoke(this);
+    InvocationExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitInvoke(this);
     };
-    InvocationExpression.prototype.Update = function (expression, args) {
+    InvocationExpression.prototype.update = function (expression, args) {
         if (expression !== this._expression || args !== this._args) {
             return new InvocationExpression(expression, args);
         }
@@ -474,48 +474,48 @@ var InvocationExpression = (function (_super) {
     };
     return InvocationExpression;
 })(Expression);
-var CallExpression = (function (_super) {
-    __extends(CallExpression, _super);
-    function CallExpression(expression, methodName, args) {
+var FunctionCallExpression = (function (_super) {
+    __extends(FunctionCallExpression, _super);
+    function FunctionCallExpression(expression, methodName, args) {
         _super.call(this, 28 /* Call */);
         this._expression = expression;
         this._method = methodName;
         this._args = args;
     }
-    Object.defineProperty(CallExpression.prototype, "obj", {
+    Object.defineProperty(FunctionCallExpression.prototype, "obj", {
         get: function () {
             return this._expression;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CallExpression.prototype, "method", {
+    Object.defineProperty(FunctionCallExpression.prototype, "method", {
         get: function () {
             return this._method;
         },
         enumerable: true,
         configurable: true
     });
-    Object.defineProperty(CallExpression.prototype, "args", {
+    Object.defineProperty(FunctionCallExpression.prototype, "args", {
         get: function () {
             return this._args;
         },
         enumerable: true,
         configurable: true
     });
-    CallExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitCall(this);
+    FunctionCallExpression.prototype.accept = function (visitor) {
+        return visitor.visitCall(this);
     };
-    CallExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitCall(this);
+    FunctionCallExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitCall(this);
     };
-    CallExpression.prototype.Update = function (expression, args) {
+    FunctionCallExpression.prototype.update = function (expression, args) {
         if (expression !== this._expression || args !== this._args) {
-            return new CallExpression(expression, this._method, args);
+            return new FunctionCallExpression(expression, this._method, args);
         }
         return this;
     };
-    return CallExpression;
+    return FunctionCallExpression;
 })(Expression);
 var IndexExpression = (function (_super) {
     __extends(IndexExpression, _super);
@@ -538,13 +538,13 @@ var IndexExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    IndexExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitIndex(this);
+    IndexExpression.prototype.accept = function (visitor) {
+        return visitor.visitIndex(this);
     };
-    IndexExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitIndex(this);
+    IndexExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitIndex(this);
     };
-    IndexExpression.prototype.Update = function (expression, args) {
+    IndexExpression.prototype.update = function (expression, args) {
         if (expression !== this._expression || args !== this._args) {
             return new IndexExpression(expression, args);
         }
@@ -573,13 +573,13 @@ var NewExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    NewExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitNew(this);
+    NewExpression.prototype.accept = function (visitor) {
+        return visitor.visitNew(this);
     };
-    NewExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitNew(this);
+    NewExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitNew(this);
     };
-    NewExpression.prototype.Update = function (args) {
+    NewExpression.prototype.update = function (args) {
         if (args !== this._args) {
             return new NewExpression(this._type, args);
         }
@@ -608,13 +608,13 @@ var MemberExpression = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    MemberExpression.prototype.Accept = function (visitor) {
-        return visitor.VisitMember(this);
+    MemberExpression.prototype.accept = function (visitor) {
+        return visitor.visitMember(this);
     };
-    MemberExpression.prototype.AcceptGeneric = function (visitor) {
-        return visitor.VisitMember(this);
+    MemberExpression.prototype.acceptGeneric = function (visitor) {
+        return visitor.visitMember(this);
     };
-    MemberExpression.prototype.Update = function (obj) {
+    MemberExpression.prototype.update = function (obj) {
         if (obj !== this._obj) {
             return new MemberExpression(obj, this._member);
         }
@@ -637,7 +637,7 @@ var LambdaCompiler = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    LambdaCompiler.prototype.VisitConstant = function (node) {
+    LambdaCompiler.prototype.visitConstant = function (node) {
         var value = "";
         if (typeof node.value == "string") {
             value = "\"" + node.value + "\""; // TODO: escape characters
@@ -654,8 +654,8 @@ var LambdaCompiler = (function (_super) {
         this._stack.push(value);
         return node;
     };
-    LambdaCompiler.prototype.VisitUnary = function (node) {
-        this.Visit(node.operand);
+    LambdaCompiler.prototype.visitUnary = function (node) {
+        this.visit(node.operand);
         var o = this._stack.pop();
         var i = "";
         switch (node.nodeType) {
@@ -676,9 +676,9 @@ var LambdaCompiler = (function (_super) {
         this._stack.push(res);
         return node;
     };
-    LambdaCompiler.prototype.VisitBinary = function (node) {
-        this.Visit(node.left);
-        this.Visit(node.right);
+    LambdaCompiler.prototype.visitBinary = function (node) {
+        this.visit(node.left);
+        this.visit(node.right);
         var r = this._stack.pop();
         var l = this._stack.pop();
         var i = "";
@@ -742,10 +742,10 @@ var LambdaCompiler = (function (_super) {
         this._stack.push(res);
         return node;
     };
-    LambdaCompiler.prototype.VisitConditional = function (node) {
-        this.Visit(node.test);
-        this.Visit(node.ifTrue);
-        this.Visit(node.ifFalse);
+    LambdaCompiler.prototype.visitConditional = function (node) {
+        this.visit(node.test);
+        this.visit(node.ifTrue);
+        this.visit(node.ifFalse);
         var f = this._stack.pop();
         var t = this._stack.pop();
         var c = this._stack.pop();
@@ -753,13 +753,13 @@ var LambdaCompiler = (function (_super) {
         this._stack.push(res);
         return node;
     };
-    LambdaCompiler.prototype.VisitParameter = function (node) {
+    LambdaCompiler.prototype.visitParameter = function (node) {
         this._stack.push(node.name);
         return node;
     };
-    LambdaCompiler.prototype.VisitLambda = function (node) {
-        this.VisitMany(node.parameters);
-        this.Visit(node.body);
+    LambdaCompiler.prototype.visitLambda = function (node) {
+        this.visitMany(node.parameters);
+        this.visit(node.body);
         var body = this._stack.pop();
         var n = node.parameters.length;
         var args = new Array(n);
@@ -771,9 +771,9 @@ var LambdaCompiler = (function (_super) {
         this._stack.push(res);
         return node;
     };
-    LambdaCompiler.prototype.VisitInvoke = function (node) {
-        this.Visit(node.expression);
-        this.VisitMany(node.args);
+    LambdaCompiler.prototype.visitInvoke = function (node) {
+        this.visit(node.expression);
+        this.visitMany(node.args);
         var n = node.args.length;
         var args = new Array(n);
         for (var i = 0; i < n; i++) {
@@ -785,13 +785,13 @@ var LambdaCompiler = (function (_super) {
         this._stack.push(res);
         return node;
     };
-    LambdaCompiler.prototype.VisitCall = function (node) {
+    LambdaCompiler.prototype.visitCall = function (node) {
         var res = "";
         if (node.obj !== null) {
-            this.Visit(node.obj);
+            this.visit(node.obj);
             res = this._stack.pop() + ".";
         }
-        this.VisitMany(node.args);
+        this.visitMany(node.args);
         var n = node.args.length;
         var args = new Array(n);
         for (var i = 0; i < n; i++) {
@@ -802,8 +802,8 @@ var LambdaCompiler = (function (_super) {
         this._stack.push(res);
         return node;
     };
-    LambdaCompiler.prototype.VisitNew = function (node) {
-        this.VisitMany(node.args);
+    LambdaCompiler.prototype.visitNew = function (node) {
+        this.visitMany(node.args);
         var n = node.args.length;
         var args = new Array(n);
         for (var i = 0; i < n; i++) {
@@ -814,20 +814,20 @@ var LambdaCompiler = (function (_super) {
         this._stack.push(res);
         return node;
     };
-    LambdaCompiler.prototype.VisitMember = function (node) {
+    LambdaCompiler.prototype.visitMember = function (node) {
         var res = "";
         if (node.obj !== null) {
-            this.Visit(node.obj);
+            this.visit(node.obj);
             res = this._stack.pop() + ".";
         }
         res += node.member;
         this._stack.push(res);
         return node;
     };
-    LambdaCompiler.prototype.VisitIndex = function (node) {
-        this.Visit(node.obj);
+    LambdaCompiler.prototype.visitIndex = function (node) {
+        this.visit(node.obj);
         var res = this._stack.pop();
-        this.VisitMany(node.args);
+        this.visitMany(node.args);
         var n = node.args.length;
         var args = new Array(n);
         for (var i = 0; i < n; i++) {
@@ -854,7 +854,7 @@ var FreeVariableScanner = (function (_super) {
         enumerable: true,
         configurable: true
     });
-    FreeVariableScanner.prototype.VisitParameter = function (node) {
+    FreeVariableScanner.prototype.visitParameter = function (node) {
         var found = false;
         for (var i = this._stack.length - 1; i >= 0; i--) {
             if (this._stack[i].indexOf(node) >= 0) {
@@ -867,9 +867,9 @@ var FreeVariableScanner = (function (_super) {
         }
         return node;
     };
-    FreeVariableScanner.prototype.VisitLambda = function (node) {
+    FreeVariableScanner.prototype.visitLambda = function (node) {
         this._stack.push(node.parameters);
-        this.Visit(node.body);
+        this.visit(node.body);
         this._stack.pop();
         return node;
     };
@@ -916,7 +916,7 @@ var Binder = (function (_super) {
         this._stack = new Array();
         this._resources = resources;
     }
-    Binder.prototype.VisitParameter = function (node) {
+    Binder.prototype.visitParameter = function (node) {
         var found = false;
         for (var i = this._stack.length - 1; i >= 0; i--) {
             if (this._stack[i].indexOf(node) >= 0) {
@@ -925,13 +925,13 @@ var Binder = (function (_super) {
             }
         }
         if (!found) {
-            return Expression.Constant(this._resources[node.name]);
+            return Expression.constant(this._resources[node.name]);
         }
         return node;
     };
-    Binder.prototype.VisitLambda = function (node) {
+    Binder.prototype.visitLambda = function (node) {
         this._stack.push(node.parameters);
-        this.Visit(node.body);
+        this.visit(node.body);
         this._stack.pop();
         return node;
     };
@@ -942,58 +942,58 @@ var PrintVisitor = (function (_super) {
     function PrintVisitor() {
         _super.apply(this, arguments);
     }
-    PrintVisitor.prototype.VisitConstant = function (node) {
+    PrintVisitor.prototype.visitConstant = function (node) {
         return "Constant(" + node.value + ")";
     };
-    PrintVisitor.prototype.VisitParameter = function (node) {
+    PrintVisitor.prototype.visitParameter = function (node) {
         return "Parameter(" + node.name + ")";
     };
-    PrintVisitor.prototype.VisitBinary = function (node) {
-        return ExpressionType[node.nodeType] + "(" + this.Visit(node.left) + ", " + this.Visit(node.right) + ")";
+    PrintVisitor.prototype.visitBinary = function (node) {
+        return ExpressionType[node.nodeType] + "(" + this.visit(node.left) + ", " + this.visit(node.right) + ")";
     };
-    PrintVisitor.prototype.VisitUnary = function (node) {
-        return ExpressionType[node.nodeType] + "(" + this.Visit(node.operand) + ")";
+    PrintVisitor.prototype.visitUnary = function (node) {
+        return ExpressionType[node.nodeType] + "(" + this.visit(node.operand) + ")";
     };
-    PrintVisitor.prototype.VisitConditional = function (node) {
-        return "Conditional(" + this.Visit(node.test) + ", " + this.Visit(node.ifTrue) + ", " + this.Visit(node.ifFalse) + ")";
+    PrintVisitor.prototype.visitConditional = function (node) {
+        return "Conditional(" + this.visit(node.test) + ", " + this.visit(node.ifTrue) + ", " + this.visit(node.ifFalse) + ")";
     };
-    PrintVisitor.prototype.VisitLambda = function (node) {
-        var body = this.Visit(node.body);
-        var children = this.VisitMany(node.parameters);
+    PrintVisitor.prototype.visitLambda = function (node) {
+        var body = this.visit(node.body);
+        var children = this.visitMany(node.parameters);
         children.unshift(body);
         return "Lambda(" + children.join(", ") + ")";
     };
-    PrintVisitor.prototype.VisitInvoke = function (node) {
-        var expression = this.Visit(node.expression);
-        var children = this.VisitMany(node.args);
+    PrintVisitor.prototype.visitInvoke = function (node) {
+        var expression = this.visit(node.expression);
+        var children = this.visitMany(node.args);
         children.unshift(expression);
         return "Invoke(" + children.join(", ") + ")";
     };
-    PrintVisitor.prototype.VisitCall = function (node) {
-        var children = this.VisitMany(node.args);
+    PrintVisitor.prototype.visitCall = function (node) {
+        var children = this.visitMany(node.args);
         if (node.obj != null) {
-            children.unshift(this.Visit(node.obj));
+            children.unshift(this.visit(node.obj));
         }
         children.unshift(node.method);
         return "Call(" + children.join(", ") + ")";
     };
-    PrintVisitor.prototype.VisitNew = function (node) {
-        var children = this.VisitMany(node.args);
+    PrintVisitor.prototype.visitNew = function (node) {
+        var children = this.visitMany(node.args);
         children.unshift(node.type);
         return "New(" + children.join(", ") + ")";
     };
-    PrintVisitor.prototype.VisitMember = function (node) {
+    PrintVisitor.prototype.visitMember = function (node) {
         var children = [];
         if (node.obj != null) {
-            children.unshift(this.Visit(node.obj));
+            children.unshift(this.visit(node.obj));
         }
         children.unshift(node.member);
         return "Member(" + children.join(", ") + ")";
     };
-    PrintVisitor.prototype.VisitIndex = function (node) {
-        var children = this.VisitMany(node.args);
+    PrintVisitor.prototype.visitIndex = function (node) {
+        var children = this.visitMany(node.args);
         if (node.obj != null) {
-            children.unshift(this.Visit(node.obj));
+            children.unshift(this.visit(node.obj));
         }
         return "Index(" + children.join(", ") + ")";
     };
@@ -1004,13 +1004,13 @@ var BonsaiVisitor = (function (_super) {
     function BonsaiVisitor() {
         _super.apply(this, arguments);
     }
-    BonsaiVisitor.prototype.VisitConstant = function (node) {
+    BonsaiVisitor.prototype.visitConstant = function (node) {
         return [":", node.value];
     };
-    BonsaiVisitor.prototype.VisitParameter = function (node) {
+    BonsaiVisitor.prototype.visitParameter = function (node) {
         return ["$", node.name];
     };
-    BonsaiVisitor.prototype.VisitBinary = function (node) {
+    BonsaiVisitor.prototype.visitBinary = function (node) {
         var i = "";
         switch (node.nodeType) {
             case 3 /* Add */:
@@ -1068,9 +1068,9 @@ var BonsaiVisitor = (function (_super) {
                 i = ">>";
                 break;
         }
-        return [i, this.Visit(node.left), this.Visit(node.right)];
+        return [i, this.visit(node.left), this.visit(node.right)];
     };
-    BonsaiVisitor.prototype.VisitUnary = function (node) {
+    BonsaiVisitor.prototype.visitUnary = function (node) {
         var i = "";
         switch (node.nodeType) {
             case 23 /* Negate */:
@@ -1086,39 +1086,39 @@ var BonsaiVisitor = (function (_super) {
                 i = "~";
                 break;
         }
-        return [i, this.Visit(node.operand)];
+        return [i, this.visit(node.operand)];
     };
-    BonsaiVisitor.prototype.VisitConditional = function (node) {
-        return ["?:", this.Visit(node.test), this.Visit(node.ifTrue), this.Visit(node.ifFalse)];
+    BonsaiVisitor.prototype.visitConditional = function (node) {
+        return ["?:", this.visit(node.test), this.visit(node.ifTrue), this.visit(node.ifFalse)];
     };
-    BonsaiVisitor.prototype.VisitLambda = function (node) {
-        return ["=>", this.Visit(node.body), this.VisitMany(node.parameters)];
+    BonsaiVisitor.prototype.visitLambda = function (node) {
+        return ["=>", this.visit(node.body), this.visitMany(node.parameters)];
     };
-    BonsaiVisitor.prototype.VisitInvoke = function (node) {
-        var expression = this.Visit(node.expression);
-        var args = this.VisitMany(node.args);
+    BonsaiVisitor.prototype.visitInvoke = function (node) {
+        var expression = this.visit(node.expression);
+        var args = this.visitMany(node.args);
         return ["()", expression, args];
     };
-    BonsaiVisitor.prototype.VisitCall = function (node) {
+    BonsaiVisitor.prototype.visitCall = function (node) {
         var args = [];
         if (node.obj != null) {
-            args.unshift(this.Visit(node.obj));
+            args.unshift(this.visit(node.obj));
         }
-        args.unshift(this.VisitMany(node.args));
+        args.unshift(this.visitMany(node.args));
         return [".()", node.method, args];
     };
-    BonsaiVisitor.prototype.VisitNew = function (node) {
-        var args = this.VisitMany(node.args);
+    BonsaiVisitor.prototype.visitNew = function (node) {
+        var args = this.visitMany(node.args);
         return ["new", args];
     };
-    BonsaiVisitor.prototype.VisitMember = function (node) {
+    BonsaiVisitor.prototype.visitMember = function (node) {
         var res = [".", node.member];
         if (node.obj != null) {
-            res.unshift(this.Visit(node.obj));
+            res.unshift(this.visit(node.obj));
         }
         return res;
     };
-    BonsaiVisitor.prototype.VisitIndex = function (node) {
+    BonsaiVisitor.prototype.visitIndex = function (node) {
         throw new Error("not implemented");
     };
     return BonsaiVisitor;

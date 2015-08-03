@@ -5,183 +5,183 @@ class Expression {
         this.nodeType = nodeType;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
+    accept(visitor: ExpressionVisitor): Expression {
         throw new Error("not implemented");
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
         throw new Error("not implemented");
     }
 
     toString(): string {
-        return new PrintVisitor().Visit(this);
+        return new PrintVisitor().visit(this);
     }
 
     toBonsai(): string {
-        return new BonsaiVisitor().Visit(this);
+        return new BonsaiVisitor().visit(this);
     }
 
-    static Constant(value: any): ConstantExpression {
+    static constant(value: any): ConstantExpression {
         return new ConstantExpression(value);
     }
 
-    static Parameter(name: string): ParameterExpression {
+    static parameter(name: string): ParameterExpression {
         return new ParameterExpression(name);
     }
 
-    static Condition(test: Expression, ifTrue: Expression, ifFalse: Expression): ConditionalExpression {
+    static condition(test: Expression, ifTrue: Expression, ifFalse: Expression): ConditionalExpression {
         return new ConditionalExpression(test, ifTrue, ifFalse);
     }
 
-    static Add(left: Expression, right: Expression): BinaryExpression {
+    static add(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.Add, left, right);
     }
 
-    static Subtract(left: Expression, right: Expression): BinaryExpression {
+    static subtract(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.Subtract, left, right);
     }
 
-    static Multiply(left: Expression, right: Expression): BinaryExpression {
+    static multiply(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.Multiply, left, right);
     }
 
-    static Divide(left: Expression, right: Expression): BinaryExpression {
+    static divide(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.Divide, left, right);
     }
 
-    static Modulo(left: Expression, right: Expression): BinaryExpression {
+    static modulo(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.Modulo, left, right);
     }
 
-    static And(left: Expression, right: Expression): BinaryExpression {
+    static and(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.And, left, right);
     }
 
-    static AndAlso(left: Expression, right: Expression): BinaryExpression {
+    static andAlso(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.AndAlso, left, right);
     }
 
-    static Or(left: Expression, right: Expression): BinaryExpression {
+    static or(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.Or, left, right);
     }
 
-    static OrElse(left: Expression, right: Expression): BinaryExpression {
+    static orElse(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.OrElse, left, right);
     }
 
-    static ExclusiveOr(left: Expression, right: Expression): BinaryExpression {
+    static exclusiveOr(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.ExclusiveOr, left, right);
     }
 
-    static Equal(left: Expression, right: Expression): BinaryExpression {
+    static equal(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.Equal, left, right);
     }
 
-    static NotEqual(left: Expression, right: Expression): BinaryExpression {
+    static notEqual(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.NotEqual, left, right);
     }
 
-    static LessThan(left: Expression, right: Expression): BinaryExpression {
+    static lessThan(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.LessThan, left, right);
     }
 
-    static LessThanOrEqual(left: Expression, right: Expression): BinaryExpression {
+    static lessThanOrEqual(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.LessThanOrEqual, left, right);
     }
 
-    static GreaterThan(left: Expression, right: Expression): BinaryExpression {
+    static greaterThan(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.GreaterThan, left, right);
     }
 
-    static GreaterThanOrEqual(left: Expression, right: Expression): BinaryExpression {
+    static greaterThanOrEqual(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.GreaterThanOrEqual, left, right);
     }
 
-    static LeftShift(left: Expression, right: Expression): BinaryExpression {
+    static leftShift(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.LeftShift, left, right);
     }
 
-    static RightShift(left: Expression, right: Expression): BinaryExpression {
+    static rightShift(left: Expression, right: Expression): BinaryExpression {
         return new BinaryExpression(ExpressionType.RightShift, left, right);
     }
 
-    static Not(operand: Expression): UnaryExpression {
+    static not(operand: Expression): UnaryExpression {
         return new UnaryExpression(ExpressionType.Not, operand);
     }
 
-    static UnaryPlus(operand: Expression): UnaryExpression {
+    static unaryPlus(operand: Expression): UnaryExpression {
         return new UnaryExpression(ExpressionType.UnaryPlus, operand);
     }
 
-    static Negate(operand: Expression): UnaryExpression {
+    static negate(operand: Expression): UnaryExpression {
         return new UnaryExpression(ExpressionType.Negate, operand);
     }
 
-    static OnesComplement(operand: Expression): UnaryExpression {
+    static onesComplement(operand: Expression): UnaryExpression {
         return new UnaryExpression(ExpressionType.OnesComplement, operand);
     }
 
-    static Lambda<T extends Function>(body: Expression, ...parameters: ParameterExpression[]): LambdaExpression<T> {
+    static lambda<T extends Function>(body: Expression, ...parameters: ParameterExpression[]): LambdaExpression<T> {
         return new LambdaExpression<T>(body, parameters);
     }
 
-    static Invoke(expression: Expression, ...args: Expression[]): InvocationExpression {
+    static invoke(expression: Expression, ...args: Expression[]): InvocationExpression {
         return new InvocationExpression(expression, args);
     }
 
-    static New(typeName: string, ...args: Expression[]): NewExpression {
+    static new(typeName: string, ...args: Expression[]): NewExpression {
         return new NewExpression(typeName, args);
     }
 
-    static Call(obj: Expression, methodName: string, ...args: Expression[]): CallExpression {
-        return new CallExpression(obj, methodName, args);
+    static functionCall(obj: Expression, methodName: string, ...args: Expression[]): FunctionCallExpression {
+        return new FunctionCallExpression(obj, methodName, args);
     }
 
-    static Member(obj: Expression, memberName: string): MemberExpression {
+    static member(obj: Expression, memberName: string): MemberExpression {
         return new MemberExpression(obj, memberName);
     }
 
-    static Index(obj: Expression, ...args: Expression[]): IndexExpression {
+    static index(obj: Expression, ...args: Expression[]): IndexExpression {
         return new IndexExpression(obj, args);
     }
 }
 
 class ExpressionVisitorGeneric<T> {
-    Visit(node: Expression): T {
+    visit(node: Expression): T {
         if (node === null) {
             return null;
         }
-        return node.AcceptGeneric(this);
+        return node.acceptGeneric(this);
     }
 
-    VisitConstant(node: ConstantExpression): T { throw new Error("not implemented"); }
+    visitConstant(node: ConstantExpression): T { throw new Error("not implemented"); }
 
-    VisitParameter(node: ParameterExpression): T { throw new Error("not implemented"); }
+    visitParameter(node: ParameterExpression): T { throw new Error("not implemented"); }
 
-    VisitBinary(node: BinaryExpression): T { throw new Error("not implemented"); }
+    visitBinary(node: BinaryExpression): T { throw new Error("not implemented"); }
 
-    VisitUnary(node: UnaryExpression): T { throw new Error("not implemented"); }
+    visitUnary(node: UnaryExpression): T { throw new Error("not implemented"); }
 
-    VisitConditional(node: ConditionalExpression): T { throw new Error("not implemented"); }
+    visitConditional(node: ConditionalExpression): T { throw new Error("not implemented"); }
 
-    VisitLambda<TFunction extends Function>(node: LambdaExpression<TFunction>): T { throw new Error("not implemented"); }
+    visitLambda<TFunction extends Function>(node: LambdaExpression<TFunction>): T { throw new Error("not implemented"); }
 
-    VisitInvoke(node: InvocationExpression): T { throw new Error("not implemented"); }
+    visitInvoke(node: InvocationExpression): T { throw new Error("not implemented"); }
 
-    VisitCall(node: CallExpression): T { throw new Error("not implemented"); }
+    visitCall(node: FunctionCallExpression): T { throw new Error("not implemented"); }
 
-    VisitNew(node: NewExpression): T { throw new Error("not implemented"); }
+    visitNew(node: NewExpression): T { throw new Error("not implemented"); }
 
-    VisitMember(node: MemberExpression): T { throw new Error("not implemented"); }
+    visitMember(node: MemberExpression): T { throw new Error("not implemented"); }
 
-    VisitIndex(node: IndexExpression): T { throw new Error("not implemented"); }
+    visitIndex(node: IndexExpression): T { throw new Error("not implemented"); }
 
-    VisitMany<E extends Expression>(nodes: E[]): T[] {
+    visitMany<E extends Expression>(nodes: E[]): T[] {
         var res = new Array<T>(nodes.length);
 
         for (var i = 0; i < nodes.length; i++) {
             var oldNode = nodes[i];
-            var newNode = <T>this.Visit(oldNode);
+            var newNode = <T>this.visit(oldNode);
             res[i] = newNode;
         }
 
@@ -190,63 +190,63 @@ class ExpressionVisitorGeneric<T> {
 }
 
 class ExpressionVisitor {
-    Visit(node: Expression): Expression {
+    visit(node: Expression): Expression {
         if (node === null) {
             return null;
         }
-        return node.Accept(this);
+        return node.accept(this);
     }
 
-    VisitConstant(node: ConstantExpression): Expression {
+    visitConstant(node: ConstantExpression): Expression {
         return node;
     }
 
-    VisitParameter(node: ParameterExpression): Expression {
+    visitParameter(node: ParameterExpression): Expression {
         return node;
     }
 
-    VisitBinary(node: BinaryExpression): Expression {
-        return node.Update(this.Visit(node.left), this.Visit(node.right));
+    visitBinary(node: BinaryExpression): Expression {
+        return node.update(this.visit(node.left), this.visit(node.right));
     }
 
-    VisitUnary(node: UnaryExpression): Expression {
-        return node.Update(this.Visit(node.operand));
+    visitUnary(node: UnaryExpression): Expression {
+        return node.update(this.visit(node.operand));
     }
 
-    VisitConditional(node: ConditionalExpression): Expression {
-        return node.Update(this.Visit(node.test), this.Visit(node.ifTrue), this.Visit(node.ifFalse));
+    visitConditional(node: ConditionalExpression): Expression {
+        return node.update(this.visit(node.test), this.visit(node.ifTrue), this.visit(node.ifFalse));
     }
 
-    VisitLambda<T extends Function>(node: LambdaExpression<T>): Expression {
-        return node.Update(this.Visit(node.body), this.VisitMany(node.parameters));
+    visitLambda<T extends Function>(node: LambdaExpression<T>): Expression {
+        return node.update(this.visit(node.body), this.visitMany(node.parameters));
     }
 
-    VisitInvoke(node: InvocationExpression): Expression {
-        return node.Update(this.Visit(node.expression), this.VisitMany(node.args));
+    visitInvoke(node: InvocationExpression): Expression {
+        return node.update(this.visit(node.expression), this.visitMany(node.args));
     }
 
-    VisitCall(node: CallExpression): Expression {
-        return node.Update(this.Visit(node.obj), this.VisitMany(node.args));
+    visitCall(node: FunctionCallExpression): Expression {
+        return node.update(this.visit(node.obj), this.visitMany(node.args));
     }
 
-    VisitNew(node: NewExpression): Expression {
-        return node.Update(this.VisitMany(node.args));
+    visitNew(node: NewExpression): Expression {
+        return node.update(this.visitMany(node.args));
     }
 
-    VisitMember(node: MemberExpression): Expression {
-        return node.Update(this.Visit(node.obj));
+    visitMember(node: MemberExpression): Expression {
+        return node.update(this.visit(node.obj));
     }
 
-    VisitIndex(node: IndexExpression): Expression {
-        return node.Update(this.Visit(node.obj), this.VisitMany(node.args));
+    visitIndex(node: IndexExpression): Expression {
+        return node.update(this.visit(node.obj), this.visitMany(node.args));
     }
 
-    VisitMany<T extends Expression>(nodes: T[]): T[] {
+    visitMany<T extends Expression>(nodes: T[]): T[] {
         var res = new Array<T>(nodes.length);
 
         for (var i = 0; i < nodes.length; i++) {
             var oldNode = nodes[i];
-            var newNode = <T>this.Visit(oldNode);
+            var newNode = <T>this.visit(oldNode);
             res[i] = newNode;
         }
 
@@ -266,12 +266,12 @@ class ConstantExpression extends Expression {
         return this._value;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitConstant(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitConstant(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitConstant(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitConstant(this);
     }
 }
 
@@ -287,12 +287,12 @@ class ParameterExpression extends Expression {
         return this._name;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitParameter(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitParameter(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitParameter(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitParameter(this);
     }
 }
 
@@ -308,15 +308,15 @@ class UnaryExpression extends Expression {
         return this._operand;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitUnary(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitUnary(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitUnary(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitUnary(this);
     }
 
-    Update(operand: Expression): UnaryExpression {
+    update(operand: Expression): UnaryExpression {
         if (operand !== this._operand) {
             return new UnaryExpression(this.nodeType, operand);
         }
@@ -343,15 +343,15 @@ class BinaryExpression extends Expression {
         return this._right;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitBinary(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitBinary(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitBinary(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitBinary(this);
     }
 
-    Update(left: Expression, right: Expression): BinaryExpression {
+    update(left: Expression, right: Expression): BinaryExpression {
         if (left !== this._left || right !== this._right) {
             return new BinaryExpression(this.nodeType, left, right);
         }
@@ -384,15 +384,15 @@ class ConditionalExpression extends Expression {
         return this._ifTrue;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitConditional(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitConditional(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitConditional(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitConditional(this);
     }
 
-    Update(test: Expression, ifTrue: Expression, ifFalse: Expression): ConditionalExpression {
+    update(test: Expression, ifTrue: Expression, ifFalse: Expression): ConditionalExpression {
         if (test !== this._test || ifTrue !== this._ifTrue || ifFalse !== this._ifFalse) {
             return new ConditionalExpression(test, ifTrue, ifFalse);
         }
@@ -419,15 +419,15 @@ class LambdaExpression<TFunction extends Function> extends Expression {
         return this._parameters;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitLambda<TFunction>(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitLambda<TFunction>(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitLambda<TFunction>(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitLambda<TFunction>(this);
     }
 
-    Update(body: Expression, parameters: ParameterExpression[]): LambdaExpression<TFunction> {
+    update(body: Expression, parameters: ParameterExpression[]): LambdaExpression<TFunction> {
         if (body !== this._body || parameters !== this._parameters) {
             return new LambdaExpression<TFunction>(body, parameters);
         }
@@ -435,9 +435,9 @@ class LambdaExpression<TFunction extends Function> extends Expression {
         return this;
     }
 
-    CompileToFunction(debug?: boolean): string {
+    compileToFunction(debug?: boolean): string {
         var comp = new LambdaCompiler();
-        comp.Visit(this);
+        comp.visit(this);
 
         var code = comp.code;
 
@@ -452,8 +452,8 @@ class LambdaExpression<TFunction extends Function> extends Expression {
         return code;
     }
 
-    Compile(debug?: boolean): TFunction {
-        var code = this.CompileToFunction(debug);
+    compile(debug?: boolean): TFunction {
+        var code = this.compileToFunction(debug);
         return <TFunction>eval(code)();
     }
 }
@@ -476,15 +476,15 @@ class InvocationExpression extends Expression {
         return this._args;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitInvoke(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitInvoke(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitInvoke(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitInvoke(this);
     }
 
-    Update(expression: Expression, args: Expression[]): InvocationExpression {
+    update(expression: Expression, args: Expression[]): InvocationExpression {
         if (expression !== this._expression || args !== this._args) {
             return new InvocationExpression(expression, args);
         }
@@ -493,7 +493,7 @@ class InvocationExpression extends Expression {
     }
 }
 
-class CallExpression extends Expression {
+class FunctionCallExpression extends Expression {
     _expression: Expression;
     _method: string;
     _args: Expression[];
@@ -517,17 +517,17 @@ class CallExpression extends Expression {
         return this._args;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitCall(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitCall(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitCall(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitCall(this);
     }
 
-    Update(expression: Expression, args: Expression[]): CallExpression {
+    update(expression: Expression, args: Expression[]): FunctionCallExpression {
         if (expression !== this._expression || args !== this._args) {
-            return new CallExpression(expression, this._method, args);
+            return new FunctionCallExpression(expression, this._method, args);
         }
 
         return this;
@@ -552,15 +552,15 @@ class IndexExpression extends Expression {
         return this._args;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitIndex(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitIndex(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitIndex(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitIndex(this);
     }
 
-    Update(expression: Expression, args: Expression[]): IndexExpression {
+    update(expression: Expression, args: Expression[]): IndexExpression {
         if (expression !== this._expression || args !== this._args) {
             return new IndexExpression(expression, args);
         }
@@ -587,15 +587,15 @@ class NewExpression extends Expression {
         return this._args;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitNew(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitNew(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitNew(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitNew(this);
     }
 
-    Update(args: Expression[]): NewExpression {
+    update(args: Expression[]): NewExpression {
         if (args !== this._args) {
             return new NewExpression(this._type, args);
         }
@@ -622,15 +622,15 @@ class MemberExpression extends Expression {
         return this._member;
     }
 
-    Accept(visitor: ExpressionVisitor): Expression {
-        return visitor.VisitMember(this);
+    accept(visitor: ExpressionVisitor): Expression {
+        return visitor.visitMember(this);
     }
 
-    AcceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
-        return visitor.VisitMember(this);
+    acceptGeneric<T>(visitor: ExpressionVisitorGeneric<T>): T {
+        return visitor.visitMember(this);
     }
 
-    Update(obj: Expression): MemberExpression {
+    update(obj: Expression): MemberExpression {
         if (obj !== this._obj) {
             return new MemberExpression(obj, this._member);
         }
@@ -654,7 +654,7 @@ class LambdaCompiler extends ExpressionVisitor {
         return this._stack[0];
     }
 
-    VisitConstant(node: ConstantExpression): Expression {
+    visitConstant(node: ConstantExpression): Expression {
         var value = "";
 
         if (typeof node.value == "string") {
@@ -675,8 +675,8 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitUnary(node: UnaryExpression): Expression {
-        this.Visit(node.operand);
+    visitUnary(node: UnaryExpression): Expression {
+        this.visit(node.operand);
 
         var o = this._stack.pop();
         var i = "";
@@ -702,9 +702,9 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitBinary(node: BinaryExpression): Expression {
-        this.Visit(node.left);
-        this.Visit(node.right);
+    visitBinary(node: BinaryExpression): Expression {
+        this.visit(node.left);
+        this.visit(node.right);
 
         var r = this._stack.pop();
         var l = this._stack.pop();
@@ -773,10 +773,10 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitConditional(node: ConditionalExpression): Expression {
-        this.Visit(node.test);
-        this.Visit(node.ifTrue);
-        this.Visit(node.ifFalse);
+    visitConditional(node: ConditionalExpression): Expression {
+        this.visit(node.test);
+        this.visit(node.ifTrue);
+        this.visit(node.ifFalse);
 
         var f = this._stack.pop();
         var t = this._stack.pop();
@@ -789,15 +789,15 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitParameter(node: ParameterExpression): Expression {
+    visitParameter(node: ParameterExpression): Expression {
         this._stack.push(node.name);
 
         return node;
     }
 
-    VisitLambda<T extends Function>(node: LambdaExpression<T>): Expression {
-        this.VisitMany(node.parameters);
-        this.Visit(node.body);
+    visitLambda<T extends Function>(node: LambdaExpression<T>): Expression {
+        this.visitMany(node.parameters);
+        this.visit(node.body);
 
         var body = this._stack.pop();
 
@@ -816,9 +816,9 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitInvoke(node: InvocationExpression): Expression {
-        this.Visit(node.expression);
-        this.VisitMany(node.args);
+    visitInvoke(node: InvocationExpression): Expression {
+        this.visit(node.expression);
+        this.visitMany(node.args);
 
         var n = node.args.length;
         var args = new Array<string>(n);
@@ -837,15 +837,15 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitCall(node: CallExpression): Expression {
+    visitCall(node: FunctionCallExpression): Expression {
         var res = "";
 
         if (node.obj !== null) {
-            this.Visit(node.obj);
+            this.visit(node.obj);
             res = this._stack.pop() + ".";
         }
 
-        this.VisitMany(node.args);
+        this.visitMany(node.args);
 
         var n = node.args.length;
         var args = new Array<string>(n);
@@ -862,8 +862,8 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitNew(node: NewExpression): Expression {
-        this.VisitMany(node.args);
+    visitNew(node: NewExpression): Expression {
+        this.visitMany(node.args);
 
         var n = node.args.length;
         var args = new Array<string>(n);
@@ -880,11 +880,11 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitMember(node: MemberExpression): Expression {
+    visitMember(node: MemberExpression): Expression {
         var res = "";
 
         if (node.obj !== null) {
-            this.Visit(node.obj);
+            this.visit(node.obj);
             res = this._stack.pop() + ".";
         }
 
@@ -895,11 +895,11 @@ class LambdaCompiler extends ExpressionVisitor {
         return node;
     }
 
-    VisitIndex(node: IndexExpression): Expression {
-        this.Visit(node.obj);
+    visitIndex(node: IndexExpression): Expression {
+        this.visit(node.obj);
         var res = this._stack.pop();
 
-        this.VisitMany(node.args);
+        this.visitMany(node.args);
 
         var n = node.args.length;
         var args = new Array<string>(n);
@@ -931,7 +931,7 @@ class FreeVariableScanner extends ExpressionVisitor {
         return this._result;
     }
 
-    VisitParameter(node: ParameterExpression): Expression {
+    visitParameter(node: ParameterExpression): Expression {
         var found = false;
 
         for (var i = this._stack.length - 1; i >= 0; i--) {
@@ -948,10 +948,10 @@ class FreeVariableScanner extends ExpressionVisitor {
         return node;
     }
 
-    VisitLambda<T extends Function>(node: LambdaExpression<T>): Expression {
+    visitLambda<T extends Function>(node: LambdaExpression<T>): Expression {
         this._stack.push(node.parameters);
 
-        this.Visit(node.body);
+        this.visit(node.body);
 
         this._stack.pop();
 
@@ -1003,7 +1003,7 @@ class Binder extends ExpressionVisitor {
         this._resources = resources;
     }
 
-    VisitParameter(node: ParameterExpression): Expression {
+    visitParameter(node: ParameterExpression): Expression {
         var found = false;
 
         for (var i = this._stack.length - 1; i >= 0; i--) {
@@ -1014,16 +1014,16 @@ class Binder extends ExpressionVisitor {
         }
 
         if (!found) {
-            return Expression.Constant(this._resources[node.name]);
+            return Expression.constant(this._resources[node.name]);
         }
 
         return node;
     }
 
-    VisitLambda<T extends Function>(node: LambdaExpression<T>): Expression {
+    visitLambda<T extends Function>(node: LambdaExpression<T>): Expression {
         this._stack.push(node.parameters);
 
-        this.Visit(node.body);
+        this.visit(node.body);
 
         this._stack.pop();
 
@@ -1032,83 +1032,83 @@ class Binder extends ExpressionVisitor {
 }
 
 class PrintVisitor extends ExpressionVisitorGeneric<string> {
-    VisitConstant(node: ConstantExpression): string {
+    visitConstant(node: ConstantExpression): string {
         return "Constant(" + node.value + ")";
     }
 
-    VisitParameter(node: ParameterExpression): string {
+    visitParameter(node: ParameterExpression): string {
         return "Parameter(" + node.name + ")";
     }
 
-    VisitBinary(node: BinaryExpression): string {
-        return ExpressionType[node.nodeType] + "(" + this.Visit(node.left) + ", " + this.Visit(node.right) + ")";
+    visitBinary(node: BinaryExpression): string {
+        return ExpressionType[node.nodeType] + "(" + this.visit(node.left) + ", " + this.visit(node.right) + ")";
     }
 
-    VisitUnary(node: UnaryExpression): string {
-        return ExpressionType[node.nodeType] + "(" + this.Visit(node.operand) + ")";
+    visitUnary(node: UnaryExpression): string {
+        return ExpressionType[node.nodeType] + "(" + this.visit(node.operand) + ")";
     }
 
-    VisitConditional(node: ConditionalExpression): string {
-        return "Conditional(" + this.Visit(node.test) + ", " + this.Visit(node.ifTrue) + ", " + this.Visit(node.ifFalse) + ")";
+    visitConditional(node: ConditionalExpression): string {
+        return "Conditional(" + this.visit(node.test) + ", " + this.visit(node.ifTrue) + ", " + this.visit(node.ifFalse) + ")";
     }
 
-    VisitLambda<T extends Function>(node: LambdaExpression<T>): string {
-        var body = this.Visit(node.body);
-        var children = this.VisitMany(node.parameters);
+    visitLambda<T extends Function>(node: LambdaExpression<T>): string {
+        var body = this.visit(node.body);
+        var children = this.visitMany(node.parameters);
         children.unshift(body);
         return "Lambda(" + children.join(", ") + ")";
     }
 
-    VisitInvoke(node: InvocationExpression): string {
-        var expression = this.Visit(node.expression);
-        var children = this.VisitMany(node.args);
+    visitInvoke(node: InvocationExpression): string {
+        var expression = this.visit(node.expression);
+        var children = this.visitMany(node.args);
         children.unshift(expression);
         return "Invoke(" + children.join(", ") + ")";
     }
 
-    VisitCall(node: CallExpression): string {
-        var children = this.VisitMany(node.args);
+    visitCall(node: FunctionCallExpression): string {
+        var children = this.visitMany(node.args);
         if (node.obj != null) {
-            children.unshift(this.Visit(node.obj));
+            children.unshift(this.visit(node.obj));
         }
         children.unshift(node.method);
         return "Call(" + children.join(", ") + ")";
     }
 
-    VisitNew(node: NewExpression): string {
-        var children = this.VisitMany(node.args);
+    visitNew(node: NewExpression): string {
+        var children = this.visitMany(node.args);
         children.unshift(node.type);
         return "New(" + children.join(", ") + ")";
     }
 
-    VisitMember(node: MemberExpression): string {
+    visitMember(node: MemberExpression): string {
         var children = <string[]>[];
         if (node.obj != null) {
-            children.unshift(this.Visit(node.obj));
+            children.unshift(this.visit(node.obj));
         }
         children.unshift(node.member);
         return "Member(" + children.join(", ") + ")";
     }
 
-    VisitIndex(node: IndexExpression): string {
-        var children = this.VisitMany(node.args);
+    visitIndex(node: IndexExpression): string {
+        var children = this.visitMany(node.args);
         if (node.obj != null) {
-            children.unshift(this.Visit(node.obj));
+            children.unshift(this.visit(node.obj));
         }
         return "Index(" + children.join(", ") + ")";
     }
 }
 
 class BonsaiVisitor extends ExpressionVisitorGeneric<any> {
-    VisitConstant(node: ConstantExpression): any {
+    visitConstant(node: ConstantExpression): any {
         return [ ":", node.value ];
     }
 
-    VisitParameter(node: ParameterExpression): any {
+    visitParameter(node: ParameterExpression): any {
         return ["$", node.name];
     }
 
-    VisitBinary(node: BinaryExpression): any {
+    visitBinary(node: BinaryExpression): any {
         var i = "";
 
         switch (node.nodeType) {
@@ -1168,10 +1168,10 @@ class BonsaiVisitor extends ExpressionVisitorGeneric<any> {
                 break;
         }
 
-        return [ i, this.Visit(node.left), this.Visit(node.right) ];
+        return [ i, this.visit(node.left), this.visit(node.right) ];
     }
 
-    VisitUnary(node: UnaryExpression): any {
+    visitUnary(node: UnaryExpression): any {
         var i = "";
 
         switch (node.nodeType) {
@@ -1189,46 +1189,46 @@ class BonsaiVisitor extends ExpressionVisitorGeneric<any> {
                 break;
         }
 
-        return [i, this.Visit(node.operand)];
+        return [i, this.visit(node.operand)];
     }
 
-    VisitConditional(node: ConditionalExpression): any {
-        return ["?:", this.Visit(node.test), this.Visit(node.ifTrue), this.Visit(node.ifFalse) ];
+    visitConditional(node: ConditionalExpression): any {
+        return ["?:", this.visit(node.test), this.visit(node.ifTrue), this.visit(node.ifFalse) ];
     }
 
-    VisitLambda<T extends Function>(node: LambdaExpression<T>): any {
-        return ["=>", this.Visit(node.body), this.VisitMany(node.parameters)];
+    visitLambda<T extends Function>(node: LambdaExpression<T>): any {
+        return ["=>", this.visit(node.body), this.visitMany(node.parameters)];
     }
 
-    VisitInvoke(node: InvocationExpression): any {
-        var expression = this.Visit(node.expression);
-        var args = this.VisitMany(node.args);
+    visitInvoke(node: InvocationExpression): any {
+        var expression = this.visit(node.expression);
+        var args = this.visitMany(node.args);
         return ["()", expression, args];
     }
 
-    VisitCall(node: CallExpression): any {
+    visitCall(node: FunctionCallExpression): any {
         var args = <any[]>[];
         if (node.obj != null) {
-            args.unshift(this.Visit(node.obj));
+            args.unshift(this.visit(node.obj));
         }
-        args.unshift(this.VisitMany(node.args));
+        args.unshift(this.visitMany(node.args));
         return [".()", node.method, args];
     }
 
-    VisitNew(node: NewExpression): any {
-        var args = this.VisitMany(node.args);
+    visitNew(node: NewExpression): any {
+        var args = this.visitMany(node.args);
         return ["new", args];
     }
 
-    VisitMember(node: MemberExpression): any {
+    visitMember(node: MemberExpression): any {
         var res = [".", node.member];
         if (node.obj != null) {
-            res.unshift(this.Visit(node.obj));
+            res.unshift(this.visit(node.obj));
         }
         return res;
     }
 
-    VisitIndex(node: IndexExpression): any {
+    visitIndex(node: IndexExpression): any {
         throw new Error("not implemented");
     }
 }
