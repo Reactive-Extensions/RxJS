@@ -2399,6 +2399,39 @@ module.exports = function (grunt) {
             'dist/rx.lite.extras.compat.min.js'
           ],
           dest: 'modules/rx-lite-extras-compat/'
+        },
+        'core': {
+          flatten: true,
+          filter: 'isFile',
+          expand: true,
+          src: [
+            'dist/rx.core.js',
+            'dist/rx.core.map',
+            'dist/rx.core.min.js'
+          ],
+          dest: 'modules/rx-core/'
+        },
+        'core-binding': {
+          flatten: true,
+          filter: 'isFile',
+          expand: true,
+          src: [
+            'dist/rx.core.binding.js',
+            'dist/rx.core.binding.map',
+            'dist/rx.core.binding.min.js'
+          ],
+          dest: 'modules/rx-core-binding/'
+        },
+        'core-testing': {
+          flatten: true,
+          filter: 'isFile',
+          expand: true,
+          src: [
+            'dist/rx.core.testing.js',
+            'dist/rx.core.testing.map',
+            'dist/rx.core.testing.min.js'
+          ],
+          dest: 'modules/rx-core-testing/'
         }
       }
   });
@@ -2597,7 +2630,10 @@ module.exports = function (grunt) {
     'copy:lite',
     'copy:lite-compat',
     'copy:lite-extras',
-    'copy:lite-extras-compat'
+    'copy:lite-extras-compat',
+    'copy:core',
+    'copy:core-binding',
+    'copy:core-testing',
   ]);
 
   // Default task
@@ -2690,6 +2726,9 @@ module.exports = function (grunt) {
     'copy:lite-compat',
     'copy:lite-extras',
     'copy:lite-extras-compat',
+    'copy:core',
+    'copy:core-binding',
+    'copy:core-testing',
 
     'qunit'
   ]);

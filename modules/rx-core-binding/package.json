@@ -1,7 +1,7 @@
 {
-  "name": "rx-lite-async-compat",
-  "title": "Reactive Extensions for JavaScript (RxJS) Async",
-  "description": "Lightweight older browser compatible library with asynchronous functions for composing asynchronous and event-based operations in JavaScript",
+  "name": "rx-core-binding",
+  "title": "Reactive Extensions for JavaScript (RxJS) Core",
+  "description": "Core binding library for composing asynchronous and event-based operations in JavaScript",
   "version": "3.0.0",
   "homepage": "https://github.com/Reactive-Extensions/RxJS",
   "author": {
@@ -20,13 +20,13 @@
   ],
   "bugs": "https://github.com/Reactive-Extensions/RxJS/issues",
   "jam": {
-    "main": "rx.lite.async.compat.js"
+    "main": "rx.core.binding.js"
   },
   "browser": {
-    "index.js": "rx.lite.async.compat.js"
+    "index.js": "rx.core.binding.js"
   },
   "dependencies": {
-    "rx-lite-compat": "*"
+    "rx-core": "*"
   },
   "devDependencies": {},
   "keywords": [
@@ -36,5 +36,5 @@
     "Rx",
     "RxJS"
   ],
-  "main": "rx.lite.async.compat.js"
+  "main": "rx.core.binding.js"
 }
