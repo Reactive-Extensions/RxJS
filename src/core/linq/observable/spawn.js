@@ -46,7 +46,7 @@
     if (!obj) { return obj; }
     if (Observable.isObservable(obj)) { return obj; }
     if (isArrayLike(result) || isIterable(result)) { return arrayToObservable.call(this, obj); }
-    if (isPromise(obj) { return Observable.fromPromise(obj); })
+    if (isPromise(obj)) { return Observable.fromPromise(obj); }
     if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
     if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
     return obj;
@@ -59,7 +59,7 @@
   }
 
   function objectToObservable (obj) {
-    var results = new obj.constructor(), Object.keys(obj), var observables = [];
+    var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
     for (var i = 0, len = keys.length; i < len; i++) {
       var key = keys[i], observable = toObservable.call(this, obj[key]);
       if (observable && Observable.isObservable(observable)) {
