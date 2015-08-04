@@ -152,7 +152,6 @@ This section contains the reference documentation for the Reactive Extensions cl
 - [`Rx.helpers`](api/helpers/readme.md)
 
 ### Core
-- [`Rx.spawn`](api/core/spawn.md)
 - [`Rx.Observable`](api/core/observable.md)
 - [`Rx.Observer`](api/core/observer.md)
 - [`Rx.Notification`](api/core/notification.md)

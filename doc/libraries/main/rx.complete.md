@@ -53,6 +53,7 @@ NuGet Packages:
 - [`range`](../../api/core/operators/range.md)
 - [`repeat`](../../api/core/operators/repeat.md)
 - [`return`](../../api/core/operators/return.md)
+- [`spawn`](../../api/core/operators/spawn.md)
 - [`start`](../../api/core/operators/start.md)
 - [`startAsync`](../../api/core/operators/startasync.md)
 - [`throw`](../../api/core/operators/throw.md)

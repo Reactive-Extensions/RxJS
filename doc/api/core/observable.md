@@ -39,6 +39,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`range`](operators/range.md)
 - [`repeat`](operators/repeat.md)
 - [`return`](operators/return.md)
+- [`spawn`](operators/spawn.md)
 - [`start`](operators/start.md)
 - [`startAsync`](operators/startasync.md)
 - [`throw`](operators/throw.md)
