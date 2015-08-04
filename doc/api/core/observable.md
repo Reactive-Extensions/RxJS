@@ -100,7 +100,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`flatMapFirst`](operators/flatmapfirst.md)
 - [`flatMapLatest`](operators/flatmaplatest.md)
 - [`flatMapObserver`](operators/flatmapobserver.md)
-- [`flatMapWithMaxConcurrency`](operators/flatmapwithmaxconcurrency.md)
+- [`flatMapWithMaxConcurrent`](operators/flatmapwithmaxconcurrent.md)
 - [`forkJoin`](operators/forkjoinproto.md)
 - [`groupBy`](operators/groupby.md)
 - [`groupByUntil`](operators/groupbyuntil.md)
