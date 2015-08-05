@@ -340,8 +340,8 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     var disposables = new CompositeDisposable();
 
     // Asume NodeList or HTMLCollection
-    var toStr = Object.prototype.toString;
-    if (toStr.call(el) === '[object NodeList]' || toStr.call(el) === '[object HTMLCollection]') {
+    var elemToString = Object.prototype.toString.call(el);
+    if (elemToString === '[object NodeList]' || elemToString === '[object HTMLCollection]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
@@ -356,6 +356,17 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * Configuration option to determine whether to use native events only
    */
   Rx.config.useNativeEvents = false;
+
+  function eventHandler(o, selector) {
+    return function handler () {
+      var results = arguments[0];
+      if (isFunction(selector)) {
+        results = tryCatch(selector).apply(null, arguments);
+        if (results === errorObj) { return o.onError(results.e); }
+      }
+      o.onNext(results);
+    };
+  }
 
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
@@ -384,22 +395,11 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       }
     }
 
-    function eventHandler(o) {
-      return function handler () {
-        var results = arguments[0];
-        if (isFunction(selector)) {
-          results = tryCatch(selector).apply(null, arguments);
-          if (results === errorObj) { return o.onError(results.e); }
-        }
-        o.onNext(results);
-      };
-    }
-
     return new AnonymousObservable(function (o) {
       return createEventListener(
         element,
         eventName,
-        eventHandler(o));
+        eventHandler(o, selector));
     }).publish().refCount();
   };
 
@@ -408,9 +408,11 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @param {Function} addHandler The function to add a handler to the emitter.
    * @param {Function} [removeHandler] The optional function to remove a handler from an emitter.
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
+   * @param {Scheduler} [scheduler] A scheduler used to schedule the remove handler.
    * @returns {Observable} An observable sequence which wraps an event from an event emitter
    */
-  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
+  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector, scheduler) {
+    isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (o) {
       function innerHandler () {
         var result = arguments[0];

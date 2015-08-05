@@ -2627,25 +2627,28 @@ var FlatMapObservable = (function(__super__){
     }
 
     EmptyObservable.prototype.subscribeCore = function (observer) {
-      var sink = new EmptySink(observer, this);
+      var sink = new EmptySink(observer, this.scheduler);
       return sink.run();
     };
 
-    function EmptySink(observer, parent) {
+    function EmptySink(observer, scheduler) {
       this.observer = observer;
-      this.parent = parent;
+      this.scheduler = scheduler;
     }
 
     function scheduleItem(s, state) {
       state.onCompleted();
+      return disposableEmpty;
     }
 
     EmptySink.prototype.run = function () {
-      return this.parent.scheduler.scheduleWithState(this.observer, scheduleItem);
+      return this.scheduler.scheduleWithState(this.observer, scheduleItem);
     };
 
     return EmptyObservable;
   }(ObservableBase));
+
+  var EMPTY_OBSERVABLE = new EmptyObservable(immediateScheduler);
 
   /**
    *  Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
@@ -2658,7 +2661,7 @@ var FlatMapObservable = (function(__super__){
    */
   var observableEmpty = Observable.empty = function (scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new EmptyObservable(scheduler);
+    return scheduler === immediateScheduler ? EMPTY_OBSERVABLE : new EmptyObservable(scheduler);
   };
 
   var FromObservable = (function(__super__) {
@@ -2917,12 +2920,14 @@ var FlatMapObservable = (function(__super__){
     return NeverObservable;
   }(ObservableBase));
 
+  var NEVER_OBSERVABLE = new NeverObservable();
+
   /**
    * Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins).
    * @returns {Observable} An observable sequence whose observers will never get called.
    */
   var observableNever = Observable.never = function () {
-    return new NeverObservable();
+    return NEVER_OBSERVABLE;
   };
 
   function observableOf (scheduler, array) {
@@ -3108,23 +3113,28 @@ var FlatMapObservable = (function(__super__){
     }
 
     JustObservable.prototype.subscribeCore = function (observer) {
-      var sink = new JustSink(observer, this);
+      var sink = new JustSink(observer, this.value, this.scheduler);
       return sink.run();
     };
 
-    function JustSink(observer, parent) {
+    function JustSink(observer, value, scheduler) {
       this.observer = observer;
-      this.parent = parent;
+      this.value = value;
+      this.scheduler = scheduler;
     }
 
     function scheduleItem(s, state) {
       var value = state[0], observer = state[1];
       observer.onNext(value);
       observer.onCompleted();
+      return disposableEmpty;
     }
 
     JustSink.prototype.run = function () {
-      return this.parent.scheduler.scheduleWithState([this.parent.value, this.observer], scheduleItem);
+      var state = [this.value, this.observer];
+      return this.scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this.scheduler.scheduleWithState(state, scheduleItem);
     };
 
     return JustObservable;

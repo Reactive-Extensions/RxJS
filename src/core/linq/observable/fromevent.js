@@ -16,8 +16,8 @@
     var disposables = new CompositeDisposable();
 
     // Asume NodeList or HTMLCollection
-    var toStr = Object.prototype.toString;
-    if (toStr.call(el) === '[object NodeList]' || toStr.call(el) === '[object HTMLCollection]') {
+    var elemToString = Object.prototype.toString.call(el);
+    if (elemToString === '[object NodeList]' || elemToString === '[object HTMLCollection]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
@@ -32,6 +32,17 @@
    * Configuration option to determine whether to use native events only
    */
   Rx.config.useNativeEvents = false;
+
+  function eventHandler(o, selector) {
+    return function handler () {
+      var results = arguments[0];
+      if (isFunction(selector)) {
+        results = tryCatch(selector).apply(null, arguments);
+        if (results === errorObj) { return o.onError(results.e); }
+      }
+      o.onNext(results);
+    };
+  }
 
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
@@ -60,21 +71,10 @@
       }
     }
 
-    function eventHandler(o) {
-      return function handler () {
-        var results = arguments[0];
-        if (isFunction(selector)) {
-          results = tryCatch(selector).apply(null, arguments);
-          if (results === errorObj) { return o.onError(results.e); }
-        }
-        o.onNext(results);
-      };
-    }
-
     return new AnonymousObservable(function (o) {
       return createEventListener(
         element,
         eventName,
-        eventHandler(o));
+        eventHandler(o, selector));
     }).publish().refCount();
   };

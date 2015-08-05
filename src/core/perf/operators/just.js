@@ -7,23 +7,28 @@
     }
 
     JustObservable.prototype.subscribeCore = function (observer) {
-      var sink = new JustSink(observer, this);
+      var sink = new JustSink(observer, this.value, this.scheduler);
       return sink.run();
     };
 
-    function JustSink(observer, parent) {
+    function JustSink(observer, value, scheduler) {
       this.observer = observer;
-      this.parent = parent;
+      this.value = value;
+      this.scheduler = scheduler;
     }
 
     function scheduleItem(s, state) {
       var value = state[0], observer = state[1];
       observer.onNext(value);
       observer.onCompleted();
+      return disposableEmpty;
     }
 
     JustSink.prototype.run = function () {
-      return this.parent.scheduler.scheduleWithState([this.parent.value, this.observer], scheduleItem);
+      var state = [this.value, this.observer];
+      return this.scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this.scheduler.scheduleWithState(state, scheduleItem);
     };
 
     return JustObservable;
