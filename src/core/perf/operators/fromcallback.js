@@ -38,6 +38,8 @@ function createCbHandler(o, ctx, selector) {
  */
 Observable.fromCallback = function (fn, ctx, selector) {
   return function () {
+    typeof ctx === 'undefined' && (ctx = this); 
+
     var len = arguments.length, args = new Array(len)
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     return createCbObservable(fn, ctx, selector, args);

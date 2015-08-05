@@ -40,6 +40,7 @@ function createNodeHandler(o, ctx, selector) {
  */
 Observable.fromNodeCallback = function (fn, ctx, selector) {
   return function () {
+    typeof ctx === 'undefined' && (ctx = this); 
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     return createNodeObservable(fn, ctx, selector, args);
