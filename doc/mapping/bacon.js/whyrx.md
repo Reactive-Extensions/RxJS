@@ -8,7 +8,7 @@ But, before we get started, why use RxJS over Bacon.js?
 
 RxJS has always been committed to providing the best performance available on any given JavaScript platform.  Whether it is providing a small footprint for an `Observable` instance, to providing the capability of using `setImmediate` versus `setTimeout` versus `requestAnimationFrame`, all by choosing a different scheduler.  In addition, since RxJS is written in regular JavaScript versus CoffeeScript, there are a lot more optimizations that can be made by hand to ensure performance.
 
-To make this more concrete, there is a project called [Kefir](https://github.com/pozadi/kefir) which is trying to make a more performance oriented version of Bacon.js.  Here are some current numbers based upon the memory tests provided by Kefir.  Note that these may change over time, but gives you a good indication of memory consumption.  Below will be comparison of `combineLatest`, `filter`, `map`, and `scan`.
+To make this more concrete, there is a project called [Kefir](https://github.com/rpominov/kefir) which is trying to make a more performance oriented version of Bacon.js.  Here are some current numbers based upon the memory tests provided by Kefir.  Note that these may change over time, but gives you a good indication of memory consumption.  Below will be comparison of `combineLatest`, `filter`, `map`, and `scan`.
 
 ```
 stream1.combine(stream2, ->) (1000 samples)
