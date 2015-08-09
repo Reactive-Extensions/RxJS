@@ -8,9 +8,6 @@ declare module Rx {
     // Type alias for arrays and array like objects
     export type ArrayOrIterable<T> = ArrayLike<T>;
 
-    // Type alias for observables, promises or arrays (some methods automatically call .from on an array result)
-    export type ObservableOrPromiseOrIterable<T> = ObservableOrPromise<T> | ArrayOrIterable<T>;
-
     /**
      * Promise A+
      */
@@ -299,14 +296,6 @@ declare module Rx {
     }
 
     export var SerialDisposable : SerialDisposableStatic;
-}
-
-(function() {
-    var sad: Rx.SingleAssignmentDisposable = new Rx.SingleAssignmentDisposable();
-    sad.dispose();
-    sad.isDisposed;
-    var d = sad.getDisposable();
-    sad.setDisposable(d);
 
     /**
      * Represents a disposable resource that only disposes its underlying disposable resource when all dependent disposable objects have been disposed.
@@ -1936,7 +1925,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        concatMap<TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TResult>>): Observable<TResult>;
+        concatMap<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -1956,7 +1945,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        concatMap<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        concatMap<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -1976,7 +1965,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectConcat<TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TResult>>): Observable<TResult>;
+        concatMap<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -1996,7 +1985,87 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectConcat<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        concatMap<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        /**
+        *  One of the Following:
+        *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        * @example
+        *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); });
+        *  Or:
+        *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+        *
+        *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+        *  Or:
+        *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        *  var res = source.concatMap(Rx.Observable.fromArray([1,2,3]));
+        * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the
+        * source sequence onto which could be either an observable or Promise.
+        * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+        */
+        selectConcat<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        /**
+        *  One of the Following:
+        *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        * @example
+        *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); });
+        *  Or:
+        *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+        *
+        *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+        *  Or:
+        *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        *  var res = source.concatMap(Rx.Observable.fromArray([1,2,3]));
+        * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the
+        * source sequence onto which could be either an observable or Promise.
+        * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+        */
+        selectConcat<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        /**
+        *  One of the Following:
+        *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        * @example
+        *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); });
+        *  Or:
+        *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+        *
+        *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+        *  Or:
+        *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        *  var res = source.concatMap(Rx.Observable.fromArray([1,2,3]));
+        * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the
+        * source sequence onto which could be either an observable or Promise.
+        * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+        */
+        selectConcat<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        /**
+        *  One of the Following:
+        *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        * @example
+        *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); });
+        *  Or:
+        *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+        *
+        *  var res = source.concatMap(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+        *  Or:
+        *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        *  var res = source.concatMap(Rx.Observable.fromArray([1,2,3]));
+        * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the
+        * source sequence onto which could be either an observable or Promise.
+        * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+        */
+        selectConcat<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -2119,7 +2188,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMap<TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TResult>>): Observable<TResult>;
+        flatMap<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2139,7 +2208,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMap<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        flatMap<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2159,7 +2228,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectMany<TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TResult>>): Observable<TResult>;
+        flatMap<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2179,7 +2248,87 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectMany<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        flatMap<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        /**
+        *  One of the Following:
+        *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        * @example
+        *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+        *  Or:
+        *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+        *
+        *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+        *  Or:
+        *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
+        * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto which could be either an observable or Promise.
+        * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+        */
+        selectMany<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        /**
+        *  One of the Following:
+        *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        * @example
+        *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+        *  Or:
+        *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+        *
+        *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+        *  Or:
+        *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
+        * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto which could be either an observable or Promise.
+        * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+        */
+        selectMany<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        /**
+        *  One of the Following:
+        *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        * @example
+        *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+        *  Or:
+        *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+        *
+        *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+        *  Or:
+        *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
+        * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto which could be either an observable or Promise.
+        * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+        */
+        selectMany<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        /**
+        *  One of the Following:
+        *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        * @example
+        *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); });
+        *  Or:
+        *  Projects each element of an observable sequence to an observable sequence, invokes the result selector for the source element and each of the corresponding inner sequence's elements, and merges the results into one observable sequence.
+        *
+        *  var res = source.selectMany(function (x) { return Rx.Observable.range(0, x); }, function (x, y) { return x + y; });
+        *  Or:
+        *  Projects each element of the source observable sequence to the other observable sequence and merges the resulting observable sequences into one observable sequence.
+        *
+        *  var res = source.selectMany(Rx.Observable.fromArray([1,2,3]));
+        * @param {Function} selector A transform function to apply to each element or an observable sequence to project each element from the source sequence onto which could be either an observable or Promise.
+        * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
+        */
+        selectMany<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -2191,7 +2340,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        selectSwitch<TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TResult>>): Observable<TResult>;
+        selectSwitch<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2200,7 +2349,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        selectSwitch<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectSwitch<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2209,7 +2358,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        flatMapLatest<TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TResult>>): Observable<TResult>;
+        selectSwitch<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2218,7 +2367,43 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        flatMapLatest<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectSwitch<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        /**
+        *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
+        *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+        * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
+        *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
+        */
+        flatMapLatest<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        /**
+        *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
+        *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+        * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
+        *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
+        */
+        flatMapLatest<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        /**
+        *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
+        *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+        * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
+        *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
+        */
+        flatMapLatest<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        /**
+        *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
+        *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
+        * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
+        *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
+        */
+        flatMapLatest<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {

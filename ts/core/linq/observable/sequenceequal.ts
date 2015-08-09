@@ -13,7 +13,7 @@ module Rx {
         * @param {Function} [comparer] Comparer used to compare elements of both sequences.
         * @returns {Observable} An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.
         */
-        sequenceEqual(second: ObservableOrPromiseOrIterable<T>, comparer?: _Comparer<T, boolean>): Observable<boolean>;
+        sequenceEqual(second: ObservableOrPromise<T> | ArrayOrIterable<T>, comparer?: _Comparer<T, boolean>): Observable<boolean>;
         /**
         *  Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
         *
@@ -26,7 +26,7 @@ module Rx {
         * @param {Function} [comparer] Comparer used to compare elements of both sequences.
         * @returns {Observable} An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.
         */
-        sequenceEqual<TOther>(second: ObservableOrPromiseOrIterable<TOther>, comparer: _Comparer<T | TOther, boolean>): Observable<boolean>;
+        sequenceEqual<TOther>(second: ObservableOrPromise<T> | ArrayOrIterable<T>, comparer: _Comparer<T | TOther, boolean>): Observable<boolean>;
     }
 }
 

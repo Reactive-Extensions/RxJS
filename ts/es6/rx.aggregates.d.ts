@@ -8,9 +8,6 @@ declare module Rx {
     // Type alias for arrays and array like objects
     export type ArrayOrIterable<T> = ArrayLike<T> | Iterable<T>;
 
-    // Type alias for observables, promises or arrays (some methods automatically call .from on an array result)
-    export type ObservableOrPromiseOrIterable<T> = ObservableOrPromise<T> | ArrayOrIterable<T>;
-
     /**
      * Promise A+
      */
@@ -331,7 +328,7 @@ declare module Rx {
         * @param {Function} [comparer] Comparer used to compare elements of both sequences.
         * @returns {Observable} An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.
         */
-        sequenceEqual(second: ObservableOrPromiseOrIterable<T>, comparer?: _Comparer<T, boolean>): Observable<boolean>;
+        sequenceEqual(second: ObservableOrPromise<T> | ArrayOrIterable<T>, comparer?: _Comparer<T, boolean>): Observable<boolean>;
         /**
         *  Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
         *
@@ -344,7 +341,7 @@ declare module Rx {
         * @param {Function} [comparer] Comparer used to compare elements of both sequences.
         * @returns {Observable} An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.
         */
-        sequenceEqual<TOther>(second: ObservableOrPromiseOrIterable<TOther>, comparer: _Comparer<T | TOther, boolean>): Observable<boolean>;
+        sequenceEqual<TOther>(second: ObservableOrPromise<T> | ArrayOrIterable<T>, comparer: _Comparer<T | TOther, boolean>): Observable<boolean>;
     }
 
     export interface Observable<T> {

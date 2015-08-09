@@ -8,9 +8,6 @@ declare module Rx {
     // Type alias for arrays and array like objects
     export type ArrayOrIterable<T> = ArrayLike<T>;
 
-    // Type alias for observables, promises or arrays (some methods automatically call .from on an array result)
-    export type ObservableOrPromiseOrIterable<T> = ObservableOrPromise<T> | ArrayOrIterable<T>;
-
     /**
      * Promise A+
      */

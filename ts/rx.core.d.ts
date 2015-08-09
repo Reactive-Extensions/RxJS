@@ -8,9 +8,6 @@ declare module Rx {
     // Type alias for arrays and array like objects
     export type ArrayOrIterable<T> = ArrayLike<T>;
 
-    // Type alias for observables, promises or arrays (some methods automatically call .from on an array result)
-    export type ObservableOrPromiseOrIterable<T> = ObservableOrPromise<T> | ArrayOrIterable<T>;
-
     /**
      * Promise A+
      */
@@ -269,14 +266,6 @@ declare module Rx {
     }
 
     export var SerialDisposable : SerialDisposableStatic;
-}
-
-(function() {
-    var sad: Rx.SingleAssignmentDisposable = new Rx.SingleAssignmentDisposable();
-    sad.dispose();
-    sad.isDisposed;
-    var d = sad.getDisposable();
-    sad.setDisposable(d);
 
     export interface IScheduler {
         /**

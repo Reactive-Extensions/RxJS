@@ -9,7 +9,7 @@ module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        selectSwitchFirst<TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TResult>>): Observable<TResult>;
+        selectSwitchFirst<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
@@ -18,7 +18,25 @@ module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        selectSwitchFirst<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectSwitchFirst<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        /**
+        *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
+        *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
+        * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
+        *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
+        */
+        selectSwitchFirst<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        /**
+        *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
+        *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
+        * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
+        *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
+        */
+        selectSwitchFirst<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
 
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
@@ -28,7 +46,8 @@ module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        flatMapFirst<TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TResult>>): Observable<TResult>;
+        flatMapFirst<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
@@ -37,7 +56,25 @@ module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        flatMapFirst<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromiseOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        flatMapFirst<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        /**
+        *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
+        *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
+        * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
+        *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
+        */
+        flatMapFirst<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        /**
+        *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
+        *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
+        * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
+        *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
+        */
+        flatMapFirst<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
     }
 }
 

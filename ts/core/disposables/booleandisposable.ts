@@ -43,9 +43,7 @@ module Rx {
     sad.isDisposed;
     var d = sad.getDisposable();
     sad.setDisposable(d);
-});
-
-(function() {
+    
     var sad: Rx.SerialDisposable = new Rx.SerialDisposable();
     sad.dispose();
     sad.isDisposed;
