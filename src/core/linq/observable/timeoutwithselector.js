@@ -12,7 +12,7 @@
       }
       other || (other = observableThrow(new Error('Timeout')));
       var source = this;
-      return new AnonymousObservable(function (observer) {
+      return new AnonymousObservable(function (o) {
         var subscription = new SerialDisposable(), timer = new SerialDisposable(), original = new SingleAssignmentDisposable();
 
         subscription.setDisposable(original);
@@ -29,12 +29,12 @@
           var d = new SingleAssignmentDisposable();
           timer.setDisposable(d);
           d.setDisposable(timeout.subscribe(function () {
-            timerWins() && subscription.setDisposable(other.subscribe(observer));
+            timerWins() && subscription.setDisposable(other.subscribe(o));
             d.dispose();
           }, function (e) {
-            timerWins() && observer.onError(e);
+            timerWins() && o.onError(e);
           }, function () {
-            timerWins() && subscription.setDisposable(other.subscribe(observer));
+            timerWins() && subscription.setDisposable(other.subscribe(o));
           }));
         };
 
@@ -48,20 +48,15 @@
 
         original.setDisposable(source.subscribe(function (x) {
           if (observerWins()) {
-            observer.onNext(x);
-            var timeout;
-            try {
-              timeout = timeoutdurationSelector(x);
-            } catch (e) {
-              observer.onError(e);
-              return;
-            }
+            o.onNext(x);
+            var timeout = tryCatch(timeoutdurationSelector)(x);
+            if (timeout === errorObj) { return o.onError(e); }
             setTimer(isPromise(timeout) ? observableFromPromise(timeout) : timeout);
           }
         }, function (e) {
-          observerWins() && observer.onError(e);
+          observerWins() && o.onError(e);
         }, function () {
-          observerWins() && observer.onCompleted();
+          observerWins() && o.onCompleted();
         }));
         return new CompositeDisposable(subscription, timer);
       }, source);

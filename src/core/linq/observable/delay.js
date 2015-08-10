@@ -1,4 +1,16 @@
-  function observableDelayTimeSpan(source, dueTime, scheduler) {
+  /**
+   *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
+   *
+   *  3 - res = Rx.Observable.delay(5000);
+   *  4 - res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
+   * @memberOf Observable#
+   * @param {Number} dueTime Relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
+   * @param {Scheduler} [scheduler] Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
+   * @returns {Observable} Time-shifted sequence.
+   */
+  observableProto.delay = function (dueTime, scheduler) {
+    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    var source = this;
     return new AnonymousObservable(function (observer) {
       var active = false,
         cancelable = new SerialDisposable(),
@@ -24,7 +36,7 @@
           } else {
             d = new SingleAssignmentDisposable();
             cancelable.setDisposable(d);
-            d.setDisposable(scheduler.scheduleRecursiveWithRelative(dueTime, function (self) {
+            d.setDisposable(scheduler.scheduleRecursiveFuture(null, dueTime, function (_, self) {
               var e, recurseDueTime, result, shouldRecurse;
               if (exception !== null) {
                 return;
@@ -60,31 +72,4 @@
       });
       return new CompositeDisposable(subscription, cancelable);
     }, source);
-  }
-
-  function observableDelayDate(source, dueTime, scheduler) {
-    return observableDefer(function () {
-      return observableDelayTimeSpan(source, dueTime - scheduler.now(), scheduler);
-    });
-  }
-
-  /**
-   *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
-   *
-   * @example
-   *  1 - res = Rx.Observable.delay(new Date());
-   *  2 - res = Rx.Observable.delay(new Date(), Rx.Scheduler.timeout);
-   *
-   *  3 - res = Rx.Observable.delay(5000);
-   *  4 - res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
-   * @memberOf Observable#
-   * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
-   * @param {Scheduler} [scheduler] Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
-   * @returns {Observable} Time-shifted sequence.
-   */
-  observableProto.delay = function (dueTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return dueTime instanceof Date ?
-      observableDelayDate(this, dueTime.getTime(), scheduler) :
-      observableDelayTimeSpan(this, dueTime, scheduler);
   };

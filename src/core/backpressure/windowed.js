@@ -4,9 +4,7 @@
       this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
 
       var self = this;
-      timeoutScheduler.schedule(function () {
-        self.source.request(self.windowSize);
-      });
+      timeoutScheduler.schedule(null, function () { self.source.request(self.windowSize); });
 
       return this.subscription;
     }

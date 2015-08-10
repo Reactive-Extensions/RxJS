@@ -5,14 +5,14 @@
    * @returns {Observable} An observable sequence of [key, value] pairs from the object.
    */
   Observable.pairs = function (obj, scheduler) {
-    scheduler || (scheduler = Rx.Scheduler.currentThread);
+    scheduler || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
       var keys = Object.keys(obj), len = keys.length;
-      return scheduler.scheduleRecursiveWithState(0, function (idx, self) {
-        if (idx < len) {
-          var key = keys[idx];
+      return scheduler.scheduleRecursive(0, function (i, self) {
+        if (i < len) {
+          var key = keys[i];
           observer.onNext([key, obj[key]]);
-          self(idx + 1);
+          self(i + 1);
         } else {
           observer.onCompleted();
         }

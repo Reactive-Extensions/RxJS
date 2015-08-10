@@ -6,18 +6,18 @@
    */
   observableProto.pairwise = function () {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var previous, hasPrevious = false;
       return source.subscribe(
         function (x) {
           if (hasPrevious) {
-            observer.onNext([previous, x]);
+            o.onNext([previous, x]);
           } else {
             hasPrevious = true;
           }
           previous = x;
         },
-        observer.onError.bind(observer),
-        observer.onCompleted.bind(observer));
+        function (e) { o.onError(e); },
+        function () { o.onCompleted(); });
     }, source);
   };

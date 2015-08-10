@@ -15,7 +15,7 @@
   test('CurrentThread_ScheduleAction', function () {
     var ran = false;
 
-    Scheduler.currentThread.schedule(function () { ran = true; });
+    Scheduler.currentThread.schedule(null, function () { ran = true; });
 
     ok(ran);
   });
@@ -24,7 +24,7 @@
     var error = new Error();
 
     try {
-      Scheduler.currentThread.schedule(function () { throw error; });
+      Scheduler.currentThread.schedule(null, function () { throw error; });
       ok(false);
     } catch (e) {
       equal(e, error);
@@ -34,8 +34,8 @@
   test('CurrentThread_ScheduleActionNested', function () {
     var ran = false;
 
-    Scheduler.currentThread.schedule(function () {
-      Scheduler.currentThread.schedule(function () { ran = true; });
+    Scheduler.currentThread.schedule(null, function () {
+      Scheduler.currentThread.schedule(null, function () { ran = true; });
     });
 
     ok(ran);
@@ -45,8 +45,8 @@
     var ran1 = false, ran2 = false;
 
     Scheduler.currentThread.ensureTrampoline(function () {
-      Scheduler.currentThread.schedule(function () { ran1 = true; });
-      Scheduler.currentThread.schedule(function () { ran2 = true; });
+      Scheduler.currentThread.schedule(null, function () { ran1 = true; });
+      Scheduler.currentThread.schedule(null, function () { ran2 = true; });
     });
 
     ok(ran1);
@@ -69,9 +69,9 @@
     var ran1 = false, ran2 = false;
 
     Scheduler.currentThread.ensureTrampoline(function () {
-      Scheduler.currentThread.schedule(function () {
+      Scheduler.currentThread.schedule(null, function () {
         ran1 = true;
-        var d = Scheduler.currentThread.schedule(function () { ran2 = true; });
+        var d = Scheduler.currentThread.schedule(null, function () { ran2 = true; });
         d.dispose();
       });
     });

@@ -1,5 +1,5 @@
   /**
-   *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
+   *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out o messages.
    *
    * @example
    *  var res = Rx.Observable.range(0, 10);
@@ -11,13 +11,13 @@
    */
   Observable.range = function (start, count, scheduler) {
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
+    return new AnonymousObservable(function (o) {
+      return scheduler.scheduleRecursive(0, function (i, self) {
         if (i < count) {
-          observer.onNext(start + i);
+          o.onNext(start + i);
           self(i + 1);
         } else {
-          observer.onCompleted();
+          o.onCompleted();
         }
       });
     });

@@ -1,224 +1,214 @@
-﻿QUnit.module('Scheduler');
+(function () {
+  QUnit.module('Scheduler');
 
-var Scheduler = Rx.Scheduler;
+  var Scheduler = Rx.Scheduler,
+      isFunction = Rx.helpers.isFunction,
+      inherits = Rx.internals.inherits,
+      disposableEmpty = Rx.Disposable.empty;
 
-var MyScheduler = (function () {
+  function defaultNow() {
+    return isFunction(Date.now) ? Date.now() : +new Date;
+  }
 
-    function defaultNow() {
-        return new Date().getTime();
+  var LocalScheduler = (function (__super__) {
+    inherits(LocalScheduler, __super__);
+
+    function LocalScheduler(now) {
+      this.now = now != null ? function () { return now; } : +new Date();
+      this.waitCycles = 0;
     }
 
-    function schedule(state, action) {
-        return action(this, state);
-    }
-
-    function scheduleRelative(state, dueTime, action) {
-        var self = this;
-        this.check(function (o) {
-            return action(self, o);
-        }, state, dueTime);
-        this.waitCycles += dueTime;
-        return action(this, state);
-    }
-
-    function scheduleAbsolute(state, dueTime, action) {
-        return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
-    }
-
-    return function (now) {
-        var nowFunc = now === undefined ? defaultNow : function () { return now; };
-        var scheduler = new Scheduler(nowFunc, schedule, scheduleRelative, scheduleAbsolute);
-        scheduler.waitCycles = 0;
-
-        return scheduler;
+    LocalScheduler.prototype.schedule = function (state, action) {
+      return action(this, state);
     };
-}());
 
-test('Scheduler_ScheduleNonRecursive', function () {
-    var ms = new MyScheduler();
+    LocalScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
+      this.check(function (o) { return action(self, o); }, state, dueTime);
+      this.waitCycles += dueTime;
+      return action(this, state);
+    };
+
+    return LocalScheduler;
+  }(Scheduler));
+
+  test('schedule recursive non-recursive', function () {
+    var ms = new LocalScheduler();
+
     var res = false;
-    ms.scheduleRecursive(function (a) {
-	    res = true;
-    });
-    ok(res);
-});
 
-test('Scheduler_ScheduleRecursive', function () {
-    var ms = new MyScheduler();
+    ms.scheduleRecursive(null, function (a) { res = true; });
+
+    ok(res);
+  });
+
+  test('schedule recursive', function () {
+    var ms = new LocalScheduler();
+
     var i = 0;
-    ms.scheduleRecursive(function (a) {
-	    if (++i < 10) {
-	        a();
-	    }
-    });
+
+    ms.scheduleRecursive(null, function (_, a) { ++i < 10 && a(); });
+
     equal(10, i);
-});
+  });
 
-test('Scheduler_ScheduleWithTimeNonRecursive', function () {
-    var now = new Date().getTime();
-    var ms = new MyScheduler(now);
+  test('schedule absolute non-recursive', function () {
+    var now = defaultNow();
+
+    var ms = new LocalScheduler(now);
+
     var res = false;
-    ms.check = function (a, s, t) {
-	    equal(t, 0);
-    };
-    ms.scheduleWithAbsolute(now, function () {
-	    res = true;
-    });
+
+    ms.check = function (a, s, t) { equal(t, 0); };
+
+    ms.scheduleFuture(null, new Date(now), function () { res = true; });
+
     ok(res);
+
     equal(ms.waitCycles, 0);
-});
+  });
 
-test('Scheduler_ScheduleWithTimeRecursive', function () {
-    var now = new Date().getTime();
+  test('schedule absolute recursive', function () {
+    var now = defaultNow();
+
     var i = 0;
-    var ms = new MyScheduler(now);
-    ms.check = function (a, s, t) {
-        equal(t, 0);
-    };
 
-    ms.scheduleRecursiveWithAbsolute(now, function (a) {
-	    if (++i < 10) {
-	        a(now);
-	    }
-    });
+    var ms = new LocalScheduler(now);
+
+    ms.check = function (a, s, t) { equal(t, 0); };
+
+    ms.scheduleRecursiveFuture(new Date(now), function (a) { ++i < 10 && a(new Date(now)); });
 
     equal(ms.waitCycles, 0);
     equal(10, i);
-});
+  });
 
-test('Scheduler_ScheduleWithTimeSpanNonRecursive', function () {
-    var now = new Date().getTime();
-    var ms = new MyScheduler(now);
-    ms.check = function (a, s, t) {
-	    equal(t, 0);
-    };
+  test('schedule recursive relative non-recursive', function () {
+    var now = defaultNow();
+
+    var ms = new LocalScheduler(now);
+
+    ms.check = function (a, s, t) { equal(t, 0); };
 
     var res = false;
-    ms.scheduleRecursiveWithRelative(0, function (a) {
-	    res = true;
-    });
+
+    ms.scheduleRecursiveFuture(null, 0, function () { res = true; });
 
     ok(res);
     equal(ms.waitCycles, 0);
-});
+  });
 
-test('Scheduler_ScheduleWithTimeRecursive', function () {
-    var now = new Date().getTime();
+  test('schedule relative recursive', function () {
+    var now = defaultNow();
+
     var i = 0;
-    var ms = new MyScheduler(now);
-    ms.check = function (a, s, t) {
-	    return ok(t < 10);
-    };
 
-    ms.scheduleRecursiveWithRelative(0, function (a) {
-	    if (++i < 10) {
-	        a(i);
-	    }
-    });
+    var ms = new LocalScheduler(now);
+
+    ms.check = function (a, s, t) { ok(t < 10); };
+
+    ms.scheduleRecursiveFuture(null, 0, function (_, a) { ++i < 10 && a(i); });
 
     equal(ms.waitCycles, 45);
     equal(10, i);
-});
+  });
 
-test('Catch_Builtin_Swallow_Shallow', function () {
-    var swallow = Scheduler.immediate.catchError(function () { return true; });
-    swallow.schedule(function () { throw new Error('Should be swallowed'); });
+  test('catch swallows error', function () {
+    var swallow = Scheduler.immediate['catch'](function () { return true; });
+
+    swallow.schedule(null, function () { throw new Error('Should be swallowed'); });
+
     ok(true);
-});
+  });
 
-test('Catch_Builtin_Swallow_Recursive', function () {
-    var swallow = Scheduler.immediate.catchError(function () { return true; });
-    swallow.scheduleWithState(42, function (self, state) {
-        return self.schedule(function () { new Error('Should be swallowed'); });
+  test('swallow recursive', function () {
+    var swallow = Scheduler.immediate['catch'](function () { return true; });
+
+    swallow.scheduler(42, function (self, state) {
+      return self.schedule(null, function () { new Error('Should be swallowed'); });
     });
+
     ok(true);
-});
+  });
 
-var disposableEmpty = Rx.Disposable.empty;
-function MyDisposable() {
-    this.isDisposed = false;
-}
-MyDisposable.prototype.dispose = function () {
-    this.isDisposed = true;
-};
+  var LocalExceptionScheduler = (function () {
+    inherits(LocalExceptionScheduler, __super__);
 
-var MyExceptionScheduler = (function () {
-    function getNow() {
-        return new Date().getTime();
+    function LocalExceptionScheduler(onError) {
+      this._onError = onError;
+      __super__.call(this);
     }
 
-    function scheduleNow(state, action) {
-        try {
-            return action(this, state);
-        } catch (e) {
-            this._onError(e);
-            return disposableEmpty;
-        }
-    }
-
-    function notSupported() {
-        throw new Error('not supported');
-    }
-
-    function schedulePeriodic(state, period, action) {
-        var b = new MyDisposable(), self = this;
-        Scheduler.immediate.schedule(function () {
-            try {
-                var s = state;
-                for(var i = 0; true; i++) {
-                    if (i > 10) {
-                        break;
-                    }
-                    s = action(s);
-                }
-            } catch (e) {
-                self._onError(e);
-            }
-        });
-    }
-
-    return function (onError) {
-        var scheduler = new Scheduler(getNow, scheduleNow, notSupported, notSupported);
-        scheduler._onError = onError;
-        scheduler.schedulePeriodicWithState = schedulePeriodic.bind(scheduler);
-        return scheduler;
+    LocalExceptionScheduler.prototype.schedule = function (state, action) {
+      try {
+        return action(this, state);
+      } catch (e) {
+        this._onError(e);
+        return disposableEmpty;
+      }
     };
+
+    LocalExceptionScheduler.prototype.schedulePeriodic = function (state, period, action) {
+      var self = this;
+      Scheduler.immediate.schedule(function () {
+        try {
+          var s = state;
+          for(var i = 0; true; i++) {
+            if (i > 10) { break; }
+            s = action(s);
+          }
+        } catch (e) {
+          self._onError(e);
+        }
+      });
+    };
+
+    return LocalExceptionScheduler;
+
+  }(Scheduler));
+
+  test('catch custom unhandled', function () {
+    var err;
+
+    var scheduler = new LocalExceptionScheduler(function (e) { err = e; });
+
+    scheduler['catch'](function () { return true; }).schedule(function () {
+      throw new Error('Should be caught');
+    });
+
+    ok(!err);
+
+    var err1 = 'error';
+
+    scheduler['catch'](function () { return ex1 instanceof Error; })
+      .schedule(function () { throw ex1; });
+
+    equal(err, err1);
+  });
+
+  test('catch custom schedule periodic caught', function () {
+    var err;
+
+    var scheduler = new LocalExceptionScheduler(function (e) { err = e; });
+
+    var catcher = scheduler['catch'](function () { return true; });
+
+    catcher.schedulePeriodic(42, 0, function () { throw new Error('Should be caught'); });
+
+    ok(!err);
+  });
+
+  test('catch custom schedule periodic uncaught', function () {
+    var error = new Error('Error1');
+
+    var err;
+
+    var scheduler = new LocalExceptionScheduler(function (e) { err = e; });
+
+    var catcher = scheduler['catch'](function (e) { return e instanceof String; });
+
+    catcher.schedulePeriodicWithState(42, 0, function () { throw error; });
+
+    equal(err, error);
+  });
+
 }());
-
-test('Catch_Custom_Unhandled', function () {
-    var err;
-    var scheduler = new MyExceptionScheduler(function (ex) { err = ex; });
-    scheduler.catchError(function () { return true; }).schedule(function () {
-        throw new Error('Should be caught');
-    });
-    ok(!err);
-
-    var ex1 = 'error';
-    scheduler.catchError(function () { return ex1 instanceof Error; }).schedule(function () {
-        throw ex1;
-    });
-    equal(err, ex1);
-});
-
-test('Catch_Custom_Periodic_Caught', function () {
-    var err;
-    var scheduler = new MyExceptionScheduler(function (ex) { err = ex; });
-    var catcher = scheduler.catchError(function () { return true; });
-    catcher.schedulePeriodicWithState(42, 0, function () {
-        throw new Error('Should be caught');
-    });
-
-    ok(!err);
-});
-
-test('Catch_Custom_Periodic_Uncaught1', function () {
-    var ex = new Error('Error1');
-    var err;
-    var scheduler = new MyExceptionScheduler(function (e) { err = e; });
-    var catcher = scheduler.catchError(function (e) { return e instanceof String; });
-    catcher.schedulePeriodicWithState(42, 0, function () {
-        throw ex;
-    });
-
-    equal(err, ex);
-});

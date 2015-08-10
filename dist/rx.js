@@ -1155,6 +1155,7 @@
         queue = null;
         if (result === errorObj) { return thrower(result.e); }
       } else {
+        console.log('pushed si');
         queue.push(si);
       }
       return si.disposable;

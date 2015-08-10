@@ -1,5 +1,12 @@
   /** Gets a scheduler that schedules work immediately on the current thread. */
-  var immediateScheduler = Scheduler.immediate = (function () {
-    function scheduleNow(state, action) { return action(this, state); }
-    return new Scheduler(defaultNow, scheduleNow, notSupported, notSupported);
-  }());
+  var ImmediateScheduler = (function (__super__) {
+    inherits(ImmediateScheduler, __super__);
+    function ImmediateScheduler() { }
+
+    ImmediateScheduler.prototype.schedule = function (state, action) {
+      return Scheduler._fixDisposable(action(this, state));
+    };
+
+  }(Scheduler));
+
+  var immediateScheduler = Scheduler.immediate = new ImmediateScheduler();

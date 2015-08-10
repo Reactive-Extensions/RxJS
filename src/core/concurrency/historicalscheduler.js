@@ -26,7 +26,7 @@
       return absolute + relative;
     };
 
-    HistoricalSchedulerProto.toDateTimeOffset = function (absolute) {
+    HistoricalSchedulerProto.toAbsoluteTime = function (absolute) {
       return new Date(absolute).getTime();
     };
 
@@ -36,7 +36,7 @@
      * @param {Number} timeSpan TimeSpan value to convert.
      * @return {Number} Corresponding relative virtual time value.
      */
-    HistoricalSchedulerProto.toRelative = function (timeSpan) {
+    HistoricalSchedulerProto.toRelativeTime = function (timeSpan) {
       return timeSpan;
     };
 

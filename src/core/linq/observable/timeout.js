@@ -8,12 +8,9 @@
   observableProto.timeout = function (dueTime, other, scheduler) {
     (other == null || typeof other === 'string') && (other = observableThrow(new Error(other || 'Timeout')));
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    var source = this;
 
-    var source = this, schedulerMethod = dueTime instanceof Date ?
-      'scheduleWithAbsolute' :
-      'scheduleWithRelative';
-
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var id = 0,
         original = new SingleAssignmentDisposable(),
         subscription = new SerialDisposable(),
@@ -24,10 +21,10 @@
 
       function createTimer() {
         var myId = id;
-        timer.setDisposable(scheduler[schedulerMethod](dueTime, function () {
+        timer.setDisposable(scheduler.scheduleFuture(null, dueTime, function () {
           if (id === myId) {
             isPromise(other) && (other = observableFromPromise(other));
-            subscription.setDisposable(other.subscribe(observer));
+            subscription.setDisposable(other.subscribe(o));
           }
         }));
       }
@@ -37,18 +34,18 @@
       original.setDisposable(source.subscribe(function (x) {
         if (!switched) {
           id++;
-          observer.onNext(x);
+          o.onNext(x);
           createTimer();
         }
       }, function (e) {
         if (!switched) {
           id++;
-          observer.onError(e);
+          o.onError(e);
         }
       }, function () {
         if (!switched) {
           id++;
-          observer.onCompleted();
+          o.onCompleted();
         }
       }));
       return new CompositeDisposable(subscription, timer);

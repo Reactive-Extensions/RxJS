@@ -8,7 +8,7 @@
   var observableReturn = Observable['return'] = Observable.just = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new AnonymousObservable(function (o) {
-      return scheduler.scheduleWithState(value, function(_,v) {
+      return scheduler.schedule(value, function(_,v) {
         o.onNext(v);
         o.onCompleted();
       });

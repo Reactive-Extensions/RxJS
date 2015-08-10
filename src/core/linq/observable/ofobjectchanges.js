@@ -5,7 +5,7 @@
    */
   Observable.ofObjectChanges = function(obj) {
     if (obj == null) { throw new TypeError('object must not be null or undefined.'); }
-    if (typeof Object.observe !== 'function' && typeof Object.unobserve !== 'function') { throw new TypeError('Object.observe is not supported on your platform') }
+    if (typeof Object.observe !== 'function' && typeof Object.unobserve !== 'function') { throw new TypeError('Object.observe is not supported on your platform'); }
     return new AnonymousObservable(function(observer) {
       function observerFn(changes) {
         for(var i = 0, len = changes.length; i < len; i++) {
@@ -15,8 +15,8 @@
 
       Object.observe(obj, observerFn);
 
-      return function () {
+      return disposableCreate(function () {
         Object.unobserve(obj, observerFn);
-      };
+      });
     });
   };

@@ -2,7 +2,7 @@
     var len = array.length;
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleRecursiveWithState(0, function (i, self) {
+      return scheduler.scheduleRecursive(0, function (i, self) {
         if (i < len) {
           observer.onNext(array[i]);
           self(i + 1);

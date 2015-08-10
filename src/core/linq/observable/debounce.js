@@ -17,7 +17,7 @@
           var currentId = id,
             d = new SingleAssignmentDisposable();
           cancelable.setDisposable(d);
-          d.setDisposable(scheduler.scheduleWithRelative(dueTime, function () {
+          d.setDisposable(scheduler.scheduleFuture(dueTime, function () {
             hasvalue && id === currentId && observer.onNext(value);
             hasvalue = false;
           }));
@@ -37,12 +37,4 @@
         });
       return new CompositeDisposable(subscription, cancelable);
     }, this);
-  };
-
-  /**
-   * @deprecated use #debounce or #throttleWithTimeout instead.
-   */
-  observableProto.throttle = function(dueTime, scheduler) {
-    //deprecate('throttle', 'debounce or throttleWithTimeout');
-    return this.debounce(dueTime, scheduler);
   };

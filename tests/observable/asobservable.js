@@ -1,78 +1,103 @@
-QUnit.module('AsObservable');
+(function () {
+  QUnit.module('asObservable');
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      subscribe = Rx.ReactiveTest.subscribe;
 
-test('AsObservable_Hides', function () {
-    var someObservable;
-    someObservable = Rx.Observable.empty();
+  test('asObservable hides', function () {
+    var someObservable = Rx.Observable.empty();
     ok(someObservable.asObservable() !== someObservable);
-});
+  });
 
-test('AsObservable_Never', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Rx.Observable.never().asObservable();
+  test('asObservable never', function () {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function () {
+      return Rx.Observable.never().asObservable();
     });
+
     results.messages.assertEqual();
-});
+  });
 
-test('AsObservable_Empty', function () {
-    var results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onCompleted(250));
-    results = scheduler.startWithCreate(function () {
-        return xs.asObservable();
-    }).messages;
-    equal(1, results.length);
-    ok(results[0].value.kind === 'C' && results[0].time === 250);
-});
+  test('asObservable empty', function () {
+    var scheduler = new TestScheduler();
 
-test('AsObservable_Throw', function () {
-    var ex, results, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onError(250, ex));
-    results = scheduler.startWithCreate(function () {
-        return xs.asObservable();
-    }).messages;
-    equal(1, results.length);
-    ok(results[0].value.kind === 'E' && results[0].value.exception === ex && results[0].time === 250);
-});
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(250));
 
-test('AsObservable_Return', function () {
-    var results, scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = scheduler.createHotObservable(onNext(150, 1), onNext(220, 2), onCompleted(250));
-    results = scheduler.startWithCreate(function () {
-        return xs.asObservable();
-    }).messages;
-    equal(2, results.length);
-    ok(results[0].value.kind === 'N' && results[0].value.value === 2 && results[0].time === 220);
-    ok(results[1].value.kind === 'C' && results[1].time === 250);
-});
+    var results = scheduler.startScheduler(function () {
+      return xs.asObservable();
+    })
 
-test('AsObservable_IsNotEager', function () {
-    var scheduler, subscribed, xs;
-    scheduler = new TestScheduler();
-    subscribed = false;
-    xs = Rx.Observable.create(function (obs) {
-        var disp;
-        subscribed = true;
-        disp = scheduler.createHotObservable(onNext(150, 1), onNext(220, 2), onCompleted(250)).subscribe(obs);
-        return function () {
-            return disp.dispose();
-        };
+    results.messages.assertEqual(
+      onCompleted(250)
+    );
+  });
+
+  test('asObservable throws', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(250, error));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.asObservable();
     });
+
+    results.messages.assertEqual(
+      onError(250, error));
+  });
+
+  test('asObservable Return', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(220, 2),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.asObservable();
+    });
+
+    results.messages.assertEqual(
+      onNext(220, 2),
+      onCompleted(250));
+  });
+
+  test('asObservable is not eager', function () {
+    var scheduler = new TestScheduler();
+
+    var subscribed = false;
+
+    var xs = Rx.Observable.create(function (obs) {
+      subscribed = true;
+
+      var disp = scheduler.createHotObservable(
+        onNext(150, 1),
+        onNext(220, 2),
+        onCompleted(250))
+      .subscribe(obs);
+
+      return Rx.Disposable.create(function () { disp.dispose(); }};
+    });
+
     xs.asObservable();
     ok(!subscribed);
-    scheduler.startWithCreate(function () {
-        return xs.asObservable();
+
+    scheduler.startScheduler(function () {
+      return xs.asObservable();
     });
+
     ok(subscribed);
-});
+  });
+
+}());

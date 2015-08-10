@@ -148,12 +148,12 @@
     }
   }());
 
-  /**
-   * Gets a scheduler that schedules work via a timed callback based upon platform.
-   */
-  var timeoutScheduler = Scheduler.timeout = Scheduler['default'] = (function () {
+  var DefaultScheduler = (function (__super__) {
+    inherits(DefaultScheduler, __super__);
 
-    function scheduleNow(state, action) {
+    function DefaultScheduler() { }
+
+    DefaultScheduler.prototype.schedule = function (state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();
       var id = scheduleMethod(function () {
         !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
@@ -161,22 +161,23 @@
       return new CompositeDisposable(disposable, disposableCreate(function () {
         clearMethod(id);
       }));
-    }
+    };
 
-    function scheduleRelative(state, dueTime, action) {
-      var scheduler = this, dt = Scheduler.normalize(dueTime), disposable = new SingleAssignmentDisposable();
-      if (dt === 0) { return scheduler.scheduleWithState(state, action); }
+    DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
+      if (dueTime === 0) { return this.schedule(state, action); }
+      var scheduler = this, disposable = new SingleAssignmentDisposable();
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
-      }, dt);
+      }, dueTime);
       return new CompositeDisposable(disposable, disposableCreate(function () {
         localClearTimeout(id);
       }));
-    }
+    };
 
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
-    }
+    return DefaultScheduler;
+  }(Scheduler));
 
-    return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
-  })();
+  /**
+   * Gets a scheduler that schedules work via a timed callback based upon platform.
+   */
+  var timeoutScheduler = Scheduler.timeout = Scheduler['default'] = new DefaultScheduler();

@@ -1,4 +1,5 @@
   var HotObservable = (function (__super__) {
+    inherits(HotObservable, __super__);
 
     function subscribe(observer) {
       var observable = this;
@@ -12,8 +13,6 @@
       });
     }
 
-    inherits(HotObservable, __super__);
-
     function HotObservable(scheduler, messages) {
       __super__.call(this, subscribe);
       var message, notification, observable = this;
@@ -25,7 +24,7 @@
         message = this.messages[i];
         notification = message.value;
         (function (innerNotification) {
-          scheduler.scheduleAbsoluteWithState(null, message.time, function () {
+          scheduler.scheduleAbsolute(null, message.time, function () {
             var obs = observable.observers.slice(0);
 
             for (var j = 0, jLen = obs.length; j < jLen; j++) {

@@ -6,9 +6,7 @@
    */
   var observableThrow = Observable['throw'] = function (error, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleWithState(error, function (e) {
-        observer.onError(e);
-      });
+    return new AnonymousObservable(function (o) {
+      return scheduler.schedule(error, function (e) { o.onError(e); });
     });
   };

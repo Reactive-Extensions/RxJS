@@ -1,121 +1,103 @@
-﻿QUnit.module('Scheduler');
+(function () {
+  QUnit.module('Scheduler');
 
-var Scheduler = Rx.Scheduler;
+  var Scheduler = Rx.Scheduler,
+      isFunction = Rx.helpers.isFunction,
+      inherits = Rx.internals.inherits;
 
-var MyScheduler = (function () {
+  function defaultNow() {
+    return isFunction(Date.now) ? Date.now() : +new Date;
+  }
 
-    function defaultNow() {
-        return new Date().getTime();
+  var LocalScheduler = (function (__super__) {
+    inherits(LocalScheduler, __super__);
+
+    function LocalScheduler(now) {
+      this.now = now != null ? function () { return now; } : +new Date();
+      this.waitCycles = 0;
     }
 
-    function schedule(state, action) {
-        return action(this, state);
-    }
-
-    function scheduleRelative(state, dueTime, action) {
-        var self = this;
-        this.check(function (o) {
-            return action(self, o);
-        }, state, dueTime);
-        this.waitCycles += dueTime;
-        return action(this, state);
-    }
-
-    function scheduleAbsolute(state, dueTime, action) {
-        return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
-    }
-
-    return function (now) {
-        var nowFunc = now === undefined ? defaultNow : function () { return now; };
-        var scheduler = new Scheduler(nowFunc, schedule, scheduleRelative, scheduleAbsolute);
-        scheduler.waitCycles = 0;
-
-        return scheduler;
+    LocalScheduler.prototype.schedule = function (state, action) {
+      return action(this, state);
     };
-}());
 
-test('Scheduler_ScheduleNonRecursive', function () {
-    var ms = new MyScheduler();
+    LocalScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
+      this.check(function (o) { return action(self, o); }, state, dueTime);
+      this.waitCycles += dueTime;
+      return action(this, state);
+    };
+
+    return LocalScheduler;
+  }(Scheduler));
+
+  test('schedule recursive non-recursive', function () {
+    var ms = new LocalScheduler();
+
     var res = false;
-    ms.scheduleRecursive(function (a) {
-	    res = true;
-    });
-    ok(res);
-});
 
-test('Scheduler_ScheduleRecursive', function () {
-    var ms = new MyScheduler();
+    ms.scheduleRecursive(null, function () { res = true; });
+
+    ok(res);
+  });
+
+  test('schedule recursive', function () {
+    var ms = new LocalScheduler();
+
     var i = 0;
-    ms.scheduleRecursive(function (a) {
-	    if (++i < 10) {
-	        a();
-	    }
-    });
+
+    ms.scheduleRecursive(null, function (_, a) { ++i < 10 && a(); });
+
     equal(10, i);
-});
+  });
 
-test('Scheduler_ScheduleWithTimeNonRecursive', function () {
-    var now = new Date().getTime();
-    var ms = new MyScheduler(now);
+  test('schedule absolute non-recursive', function () {
+    var now = defaultNow();
+
+    var ms = new LocalScheduler(now);
+
     var res = false;
-    ms.check = function (a, s, t) {
-	    equal(t, 0);
-    };
-    ms.scheduleWithAbsolute(now, function () {
-	    res = true;
-    });
+
+    ms.check = function (a, s, t) { equal(t, 0); };
+
+    ms.scheduleFuture(new Date(now), function () { res = true; });
+
     ok(res);
-    equal(ms.waitCycles, 0);
-});
-
-test('Scheduler_ScheduleWithTimeRecursive', function () {
-    var now = new Date().getTime();
-    var i = 0;
-    var ms = new MyScheduler(now);
-    ms.check = function (a, s, t) {
-        equal(t, 0);
-    };
-
-    ms.scheduleRecursiveWithAbsolute(now, function (a) {
-	    if (++i < 10) {
-	        a(now);
-	    }
-    });
 
     equal(ms.waitCycles, 0);
-    equal(10, i);
-});
+  });
 
-test('Scheduler_ScheduleWithTimeSpanNonRecursive', function () {
-    var now = new Date().getTime();
-    var ms = new MyScheduler(now);
-    ms.check = function (a, s, t) {
-	    equal(t, 0);
-    };
+  test('Scheduler_ScheduleWithTimeSpanNonRecursive', function () {
+    var now = defaultNow();
+
+    var ms = new LocalScheduler(now);
+
+    ms.check = function (a, s, t) { equal(t, 0); };
 
     var res = false;
-    ms.scheduleRecursiveWithRelative(0, function (a) {
-	    res = true;
-    });
+
+    ms.scheduleRecursiveFuture(null, 0, function () { res = true; });
 
     ok(res);
     equal(ms.waitCycles, 0);
-});
+  });
 
-test('Scheduler_ScheduleWithTimeRecursive', function () {
-    var now = new Date().getTime();
+  test('Scheduler_ScheduleWithTimeRecursive', function () {
+    var now = defaultNow();
+
     var i = 0;
-    var ms = new MyScheduler(now);
+
+    var ms = new LocalScheduler(now);
+
     ms.check = function (a, s, t) {
 	    return ok(t < 10);
     };
 
-    ms.scheduleRecursiveWithRelative(0, function (a) {
-	    if (++i < 10) {
-	        a(i);
-	    }
+    ms.scheduleRecursiveFuture(null, 0, function (_, a) {
+	    if (++i < 10) { a(i); }
     });
 
     equal(ms.waitCycles, 45);
     equal(10, i);
-});
+  });
+
+}());

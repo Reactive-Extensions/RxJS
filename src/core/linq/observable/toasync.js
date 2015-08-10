@@ -11,14 +11,9 @@
       var args = arguments,
         subject = new AsyncSubject();
 
-      scheduler.schedule(function () {
-        var result;
-        try {
-          result = func.apply(context, args);
-        } catch (e) {
-          subject.onError(e);
-          return;
-        }
+      scheduler.schedule(null, function () {
+        var result = tryCatch(func).apply(context, args);
+        if (result === errorObj) { return subject.onError(result.e); }
         subject.onNext(result);
         subject.onCompleted();
       });
