@@ -94,6 +94,7 @@
         if (ret.done) {
           o.onNext(ret.value);
           o.onCompleted();
+          return;
         }
         var value = toObservable.call(self, ret.value);
         if (Observable.isObservable(value)) {
@@ -120,7 +121,7 @@
 
   function arrayToObservable (obj) {
     return Observable.from(obj)
-      .map(toObservable, this)
+      .flatMap(toObservable)
       .toArray();
   }
 

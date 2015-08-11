@@ -6315,6 +6315,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
         if (ret.done) {
           o.onNext(ret.value);
           o.onCompleted();
+          return;
         }
         var value = toObservable.call(self, ret.value);
         if (Observable.isObservable(value)) {
@@ -6341,7 +6342,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
 
   function arrayToObservable (obj) {
     return Observable.from(obj)
-      .map(toObservable, this)
+      .flatMap(toObservable)
       .toArray();
   }
 
