@@ -1,5 +1,5 @@
 (function () {
-  QUnit.module('Case');
+  QUnit.module('case');
 
   var Observable = Rx.Observable,
       TestScheduler = Rx.TestScheduler,
@@ -8,7 +8,7 @@
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('Case One', function () {
+  test('case one', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -34,7 +34,7 @@
       2: ys
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['case'](function () { return 1; }, map, zs);
     });
 
@@ -52,7 +52,7 @@
     zs.subscriptions.assertEqual();
   });
 
-  test('Case Two', function () {
+  test('case two', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -78,7 +78,7 @@
       2: ys
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['case'](function () { return 2; }, map, zs);
     });
 
@@ -96,7 +96,7 @@
     zs.subscriptions.assertEqual();
   });
 
-  test('Case Three', function () {
+  test('case three', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -122,7 +122,7 @@
       2: ys
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['case'](function () { return 3; }, map, zs);
     });
 
@@ -140,7 +140,7 @@
       subscribe(200, 320));
   });
 
-  test('Case Throw', function () {
+  test('case throw', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -168,7 +168,7 @@
       2: ys
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['case'](function () { throw error; }, map, zs);
     });
 
@@ -182,7 +182,7 @@
     zs.subscriptions.assertEqual();
   });
 
-  test('CaseWithDefault One', function () {
+  test('case with default one', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -202,7 +202,7 @@
       2: ys
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['case'](function () { return 1; }, map, scheduler);
     });
 
@@ -218,7 +218,7 @@
     ys.subscriptions.assertEqual();
   });
 
-  test('CaseWithDefault Two', function () {
+  test('case with default two', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -238,7 +238,7 @@
       2: ys
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['case'](function () { return 2; }, map, scheduler);
     });
 
@@ -254,7 +254,7 @@
       subscribe(200, 310));
   });
 
-  test('CaseWithDefault Three', function () {
+  test('case with default three', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -274,7 +274,7 @@
       2: ys
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['case'](function () { return 3; }, map, scheduler);
     });
 
@@ -286,7 +286,7 @@
     ys.subscriptions.assertEqual();
   });
 
-  test('CaseWithDefault Throw', function () {
+  test('case with default throw', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -307,7 +307,7 @@
       1: xs,
       2: ys
     };
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['case'](function () { throw error; }, map, scheduler);
     });
 

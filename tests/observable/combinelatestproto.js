@@ -1,424 +1,556 @@
-QUnit.module('CombineLatestProto');
+(function () {
+  QUnit.module('combineLatest');
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      subscribe = Rx.ReactiveTest.subscribe;
 
-test('CombineLatest_NeverNever', function () {
-    var e1, e2, results, scheduler;
-    scheduler = new TestScheduler();
-    e1 = Observable.never();
-    e2 = Observable.never();
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
+  function add(x, y) { return x + y; }
+
+  test('combineLatest never never', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = Observable.never();
+    var e2 = Observable.never();
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual();
+  });
+
+  test('combineLatest never empty', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = Observable.never();
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(210));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
     });
     results.messages.assertEqual();
-});
+  });
 
-test('CombineLatest_NeverEmpty', function () {
-    var e1, e2, msgs, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onCompleted(210)];
-    e1 = Observable.never();
-    e2 = scheduler.createHotObservable(msgs);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
+  test('combineLatest empty never', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = Observable.never();
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(210));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
     });
+
     results.messages.assertEqual();
-});
+  });
 
-test('CombineLatest_EmptyNever', function () {
-    var e1, e2, msgs, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onCompleted(210)];
-    e1 = Observable.never();
-    e2 = scheduler.createHotObservable(msgs);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
+  test('combineLatest empty empty', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(210));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(210));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
     });
+
+    results.messages.assertEqual(
+      onCompleted(210));
+  });
+
+  test('combineLatest empty return', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(210));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(220));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onCompleted(215));
+  });
+
+  test('combineLatest return empty', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(210));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(220));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
+    });
+
+    results.messages.assertEqual(
+      onCompleted(215));
+  });
+
+  test('combineLatest never return', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(220));
+    var e2 = Observable.never();
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
     results.messages.assertEqual();
-});
+  });
 
-test('CombineLatest_EmptyEmpty', function () {
-    var e1, e2, msgs1, msgs2, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onCompleted(210)];
-    msgs2 = [onNext(150, 1), onCompleted(210)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onCompleted(210));
-});
+  test('combineLatest return never', function () {
+    var scheduler = new TestScheduler();
 
-test('CombineLatest_EmptyReturn', function () {
-    var e1, e2, msgs1, msgs2, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onCompleted(210)];
-    msgs2 = [onNext(150, 1), onNext(215, 2), onCompleted(220)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onCompleted(215));
-});
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(210));
+    var e2 = Observable.never();
 
-test('CombineLatest_ReturnEmpty', function () {
-    var e1, e2, msgs1, msgs2, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onCompleted(210)];
-    msgs2 = [onNext(150, 1), onNext(215, 2), onCompleted(220)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
     });
-    results.messages.assertEqual(onCompleted(215));
-});
 
-test('CombineLatest_NeverReturn', function () {
-    var e1, e2, msgs, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onNext(215, 2), onCompleted(220)];
-    e1 = scheduler.createHotObservable(msgs);
-    e2 = Observable.never();
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
     results.messages.assertEqual();
-});
+  });
 
-test('CombineLatest_ReturnNever', function () {
-    var e1, e2, msgs, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onNext(215, 2), onCompleted(210)];
-    e1 = scheduler.createHotObservable(msgs);
-    e2 = Observable.never();
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual();
-});
-test(
-    'CombineLatest_ReturnReturn', function () {
-    var e1, e2, msgs1, msgs2, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onNext(220, 3), onCompleted(240)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onNext(220, 2 + 3), onCompleted(240));
-});
+  test('combineLatest return return', function () {
+    var scheduler = new TestScheduler();
 
-test('CombineLatest_EmptyError', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onError(220, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex));
-});
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(220, 3),
+      onCompleted(240));
 
-test('CombineLatest_ErrorEmpty', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onError(220, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
     });
-    results.messages.assertEqual(onError(220, ex));
-});
 
-test('CombineLatest_ReturnThrow', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onError(220, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex));
-});
+    results.messages.assertEqual(
+      onNext(220, 2 + 3),
+      onCompleted(240));
+  });
 
-test('CombineLatest_ThrowReturn', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onError(220, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex));
-});
+  test('combineLatest empty error', function () {
+    var error = new Error();
 
-test('CombineLatest_ThrowThrow', function () {
-    var e1, e2, ex1, ex2, msgs1, msgs2, results, scheduler;
-    ex1 = 'ex1';
-    ex2 = 'ex2';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onError(220, ex1)];
-    msgs2 = [onNext(150, 1), onError(230, ex2)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex1));
-});
+    var scheduler = new TestScheduler();
 
-test('CombineLatest_ErrorThrow', function () {
-    var e1, e2, ex1, ex2, msgs1, msgs2, results, scheduler;
-    ex1 = 'ex1';
-    ex2 = 'ex2';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onError(220, ex1)];
-    msgs2 = [onNext(150, 1), onError(230, ex2)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex1));
-});
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error));
 
-test('CombineLatest_ThrowError', function () {
-    var e1, e2, ex1, ex2, msgs1, msgs2, results, scheduler;
-    ex1 = 'ex1';
-    ex2 = 'ex2';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(210, 2), onError(220, ex1)];
-    msgs2 = [onNext(150, 1), onError(230, ex2)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
     });
-    results.messages.assertEqual(onError(220, ex1));
-});
 
-test('CombineLatest_NeverThrow', function () {
-    var e1, e2, ex, msgs, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onError(220, ex)];
-    e1 = Observable.never();
-    e2 = scheduler.createHotObservable(msgs);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex));
-});
+    results.messages.assertEqual(
+      onError(220, error));
+  });
 
-test('CombineLatest_ThrowNever', function () {
-    var e1, e2, ex, msgs, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onError(220, ex)];
-    e1 = Observable.never();
-    e2 = scheduler.createHotObservable(msgs);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex));
-});
+  test('combineLatest error empty', function () {
+    var error = new Error();
 
-test('CombineLatest_SomeThrow', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onError(220, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex));
-});
+    var scheduler = new TestScheduler();
 
-test('CombineLatest_ThrowSome', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onError(220, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(220, ex));
-});
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error));
 
-test('CombineLatest_ThrowAfterCompleteLeft', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onCompleted(220)];
-    msgs2 = [onNext(150, 1), onError(230, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
     });
-    results.messages.assertEqual(onError(230, ex));
-});
 
-test('CombineLatest_ThrowAfterCompleteRight', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onCompleted(220)];
-    msgs2 = [onNext(150, 1), onError(230, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(230, ex));
-});
+    results.messages.assertEqual(
+      onError(220, error));
+  });
 
-test('CombineLatest_InterleavedWithTail', function () {
-    var e1, e2, msgs1, msgs2, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onNext(225, 4), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onNext(220, 3), onNext(230, 5), onNext(235, 6), onNext(240, 7), onCompleted(250)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onNext(220, 2 + 3), onNext(225, 3 + 4), onNext(230, 4 + 5), onNext(235, 4 + 6), onNext(240, 4 + 7), onCompleted(250));
-});
+  test('combineLatest return throw', function () {
+    var error = new Error();
 
-test('CombineLatest_Consecutive', function () {
-    var e1, e2, msgs1, msgs2, results, scheduler;
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onNext(225, 4), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onNext(235, 6), onNext(240, 7), onCompleted(250)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onNext(235, 4 + 6), onNext(240, 4 + 7), onCompleted(250));
-});
+    var scheduler = new TestScheduler();
 
-test('CombineLatest_ConsecutiveEndWithErrorLeft', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onNext(225, 4), onError(230, ex)];
-    msgs2 = [onNext(150, 1), onNext(235, 6), onNext(240, 7), onCompleted(250)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function (x, y) {
-            return x + y;
-        });
-    });
-    results.messages.assertEqual(onError(230, ex));
-});
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error));
 
-test('CombineLatest_ConsecutiveEndWithErrorRight', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onNext(225, 4), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onNext(235, 6), onNext(240, 7), onError(245, ex)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e2.combineLatest(e1, function (x, y) {
-            return x + y;
-        });
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
     });
-    results.messages.assertEqual(onNext(235, 4 + 6), onNext(240, 4 + 7), onError(245, ex));
-});
 
-test('CombineLatest_SelectorThrows', function () {
-    var e1, e2, ex, msgs1, msgs2, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onNext(150, 1), onNext(215, 2), onCompleted(230)];
-    msgs2 = [onNext(150, 1), onNext(220, 3), onCompleted(240)];
-    e1 = scheduler.createHotObservable(msgs1);
-    e2 = scheduler.createHotObservable(msgs2);
-    results = scheduler.startWithCreate(function () {
-        return e1.combineLatest(e2, function () {
-            throw ex;
-        });
+    results.messages.assertEqual(
+      onError(220, error));
+  });
+
+  test('combineLatest throw return', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
     });
-    results.messages.assertEqual(onError(220, ex));
-});
+
+    results.messages.assertEqual(
+      onError(220, error));
+  });
+
+  test('combineLatest throw throw', function () {
+    var error1 = new Error();
+    var error2 = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error1));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(230, error2));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onError(220, error1));
+  });
+
+  test('combineLatest ErrorThrow', function () {
+    var error1 = new Error();
+    var error2 = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onError(220, error1));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(230, error2));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onError(220, error1));
+  });
+
+  test('combineLatest throw error', function () {
+    var error1 = new Error();
+    var error2 = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onError(220, error1));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(230, error2));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
+    });
+
+    results.messages.assertEqual(
+      onError(220, error1));
+  });
+
+  test('combineLatest never throw', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = Observable.never();
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onError(220, error));
+  });
+
+  test('combineLatest throw never', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = Observable.never();
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
+    });
+
+    results.messages.assertEqual(
+      onError(220, error));
+  });
+
+  test('combineLatest some throw', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onError(220, error));
+  });
+
+  test('combineLatest throw some', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(220, error));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
+    });
+
+    results.messages.assertEqual(
+      onError(220, error));
+  });
+
+  test('combineLatest throw after complete left', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(220));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(230, error));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onError(230, error));
+  });
+
+  test('combineLatest throw after complete right', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(220));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(230, error));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
+    });
+
+    results.messages.assertEqual(
+      onError(230, error));
+  });
+
+  test('combineLatest interleaved with tail', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onNext(225, 4),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(220, 3),
+      onNext(230, 5),
+      onNext(235, 6),
+      onNext(240, 7),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onNext(220, 2 + 3),
+      onNext(225, 3 + 4),
+      onNext(230, 4 + 5),
+      onNext(235, 4 + 6),
+      onNext(240, 4 + 7),
+      onCompleted(250));
+  });
+
+  test('combineLatest consecutive', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onNext(225, 4),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(235, 6),
+      onNext(240, 7),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onNext(235, 4 + 6),
+      onNext(240, 4 + 7),
+      onCompleted(250));
+  });
+
+  test('combineLatest consecutive end with error left', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onNext(225, 4),
+      onError(230, error));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(235, 6),
+      onNext(240, 7),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, add);
+    });
+
+    results.messages.assertEqual(
+      onError(230, error));
+  });
+
+  test('combineLatest consecutive end with error right', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onNext(225, 4),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(235, 6),
+      onNext(240, 7),
+      onError(245, error));
+
+    var results = scheduler.startScheduler(function () {
+      return e2.combineLatest(e1, add);
+    });
+
+    results.messages.assertEqual(
+      onNext(235, 4 + 6),
+      onNext(240, 4 + 7),
+      onError(245, error));
+  });
+
+  test('combineLatest selector throws', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(220, 3),
+      onCompleted(240));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2, function () { throw error; });
+    });
+
+    results.messages.assertEqual(
+      onError(220, error));
+  });
+
+}());

@@ -8,7 +8,7 @@
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('Catch NoErrors', function () {
+  test('catch no errors', function () {
     var scheduler = new TestScheduler();
 
     var o1 = scheduler.createHotObservable(
@@ -20,7 +20,7 @@
       onNext(240, 5),
       onCompleted(250));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](o2);
     });
 
@@ -30,7 +30,7 @@
       onCompleted(230));
   });
 
-  test('Catch Never', function () {
+  test('catch never', function () {
     var scheduler = new TestScheduler();
 
     var o1 = Observable.never();
@@ -38,14 +38,14 @@
       onNext(240, 5),
       onCompleted(250));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](o2);
     });
 
     results.messages.assertEqual();
   });
 
-  test('Catch Empty', function () {
+  test('catch empty', function () {
     var scheduler = new TestScheduler();
 
     var o1 = scheduler.createHotObservable(
@@ -55,7 +55,7 @@
       onNext(240, 5),
       onCompleted(250));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](o2);
     });
 
@@ -63,7 +63,7 @@
       onCompleted(230));
   });
 
-  test('Catch Return', function () {
+  test('catch return', function () {
     var scheduler = new TestScheduler();
 
     var o1 = scheduler.createHotObservable(
@@ -75,7 +75,7 @@
       onNext(240, 5),
       onCompleted(250));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](o2);
     });
 
@@ -84,7 +84,7 @@
       onCompleted(230));
   });
 
-  test('Catch Error', function () {
+  test('catch Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -99,7 +99,7 @@
       onNext(240, 5),
       onCompleted(250));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](o2);
     });
 
@@ -110,7 +110,7 @@
       onCompleted(250));
   });
 
-  test('Catch Error Never', function () {
+  test('catch Error never', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -123,7 +123,7 @@
 
     var o2 = Observable.never();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](o2);
     });
 
@@ -132,7 +132,7 @@
       onNext(220, 3));
   });
 
-  test('Catch Error Error', function () {
+  test('catch Error Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -147,7 +147,7 @@
       onNext(240, 4),
       onError(250, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](o2);
     });
 
@@ -159,7 +159,7 @@
     );
   });
 
-  test('Catch Multiple', function () {
+  test('catch multiple', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -177,7 +177,7 @@
       onNext(230, 4),
       onCompleted(235));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['catch'](o1, o2, o3);
     });
 
@@ -189,7 +189,7 @@
     );
   });
 
-  test('Catch ErrorSpecific Caught', function () {
+  test('catch specific error caught', function () {
     var error = new Error();
 
     var handlerCalled = false;
@@ -207,7 +207,7 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](function () {
         handlerCalled = true;
         return o2;
@@ -224,7 +224,7 @@
     ok(handlerCalled);
   });
 
-  test('Catch ErrorSpecific CaughtImmediate', function () {
+  test('catch specific error caught immediately', function () {
     var error = new Error();
 
     var handlerCalled = false;
@@ -235,7 +235,7 @@
       onNext(240, 4),
       onCompleted(250));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['throw'](new Error())['catch'](function () {
         handlerCalled = true;
         return o2;
@@ -249,7 +249,7 @@
     ok(handlerCalled);
   });
 
-  test('Catch HandlerThrows', function () {
+  test('catch handler throws', function () {
     var error = new Error();
 
     var error2 = new Error();
@@ -264,7 +264,7 @@
       onNext(220, 3),
       onError(230, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](function (e) {
         handlerCalled = true;
         throw error2;
@@ -279,7 +279,7 @@
     ok(handlerCalled);
   });
 
-  test('Catch Nested OuterCatches', function () {
+  test('catch nester outer catches', function () {
     var error = new Error();
 
     var firstHandlerCalled = false;
@@ -300,7 +300,7 @@
       onNext(220, 4),
       onCompleted(225));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](function (e) {
         firstHandlerCalled = true;
         return o2;
@@ -319,7 +319,7 @@
     ok(!secondHandlerCalled);
   });
 
-  test('Catch ThrowFromNestedCatch', function () {
+  test('catch throw from nested catch', function () {
     var error = new Error();
 
     var error2 = new Error();
@@ -342,7 +342,7 @@
       onNext(230, 4),
       onCompleted(235));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1['catch'](function (e) {
         firstHandlerCalled = true;
         equal(e, error);
