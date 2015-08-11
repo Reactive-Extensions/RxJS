@@ -1,4 +1,13 @@
-  var spawn = Observable.spawn = function () {
+var wrap = Observable.wrap = function (fn) {
+    createObservable.__generatorFunction__ = fn;
+    return createObservable;
+
+    function createObservable() {
+        return Observable.spawn.call(this, fn.apply(this, arguments));
+    }
+};
+
+var spawn = Observable.spawn = function () {
     var gen = arguments[0], self = this, args = [];
     for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
 
