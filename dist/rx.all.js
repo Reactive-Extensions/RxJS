@@ -6263,7 +6263,9 @@ var spawn = Observable.spawn = function () {
         results[key] = obj[key];
       }
     }
-    return Observable.concat(observables).startWith(results);
+    return Observable.forkJoin.apply(Observable, observables).startWith(results).map(function() {
+      return results;
+    });
 
     function defer (observable, key) {
       results[key] = undefined;
