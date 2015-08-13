@@ -6345,7 +6345,7 @@ var spawn = Observable.spawn = function () {
     if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
     if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
     if (isArrayLike(obj) || isIterable(obj)) { return arrayToObservable.call(this, obj); }
-    if (isObject(obj)) return objectToObservable.call(this, obj);
+    if (isPlainObject(obj)) return objectToObservable.call(this, obj);
     return obj;
   }
 
@@ -6355,30 +6355,35 @@ var spawn = Observable.spawn = function () {
       .toArray();
   }
 
-  function objectToObservable (obj) {
-    var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
-    for (var i = 0, len = keys.length; i < len; i++) {
-      var key = keys[i], observable = toObservable.call(this, obj[key]);
-      if (observable && Observable.isObservable(observable)) {
+function objectToObservable (obj) {
+  var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
+  for (var i = 0, len = keys.length; i < len; i++) {
+    var key = keys[i];
+    if (obj[key] && Observable.isObservable(obj[key])) {
+      defer(obj[key], key);
+    } else {
+      var observable = toObservable.call(this, obj[key]);
+
+      if(observable && Observable.isObservable(observable)) {
         defer(observable, key);
       } else {
         results[key] = obj[key];
       }
     }
-    return Observable.forkJoin.apply(Observable, observables).startWith(results).map(function() {
-      return results;
-    });
-
-    function defer (observable, key) {
-      results[key] = undefined;
-      observables.push(new AnonymousObservable(function (o) {
-        return observable.subscribe(function (next) {
-          results[key] = next;
-          o.onCompleted();
-        });
-      }));
-    }
   }
+
+  return Observable.forkJoin.apply(Observable, observables).map(function() {
+    return results;
+  });
+
+
+  function defer (observable, key) {
+    results[key] = undefined;
+    observables.push(observable.do(function (next) {
+      results[key] = next;
+    }));
+  }
+}
 
   function thunkToObservable(fn) {
     var self = this;
@@ -6408,7 +6413,7 @@ var spawn = Observable.spawn = function () {
     return isGenerator(ctor.prototype);
   }
 
-  function isObject(val) {
+  function isPlainObject(val) {
     return Object == val.constructor;
   }
 
