@@ -22,7 +22,7 @@
     }
 
     ThrowSink.prototype.run = function () {
-      return this.p.scheduler.scheduleWithState([this.p.error, this.o], scheduleItem);
+      return this.p.scheduler.schedule([this.p.error, this.o], scheduleItem);
     };
 
     return ThrowObservable;

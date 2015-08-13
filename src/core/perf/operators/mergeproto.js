@@ -17,7 +17,8 @@
 
   }(ObservableBase));
 
-  var MergeObserver = (function () {
+  var MergeObserver = (function (__super__) {
+    inherits(MergeObserver, __super__);
     function MergeObserver(o, max, g) {
       this.o = o;
       this.max = max;
@@ -26,15 +27,17 @@
       this.q = [];
       this.activeCount = 0;
       this.isStopped = false;
+      __super__.call(this);
     }
+
     MergeObserver.prototype.handleSubscribe = function (xs) {
       var sad = new SingleAssignmentDisposable();
       this.g.add(sad);
       isPromise(xs) && (xs = observableFromPromise(xs));
       sad.setDisposable(xs.subscribe(new InnerObserver(this, sad)));
     };
-    MergeObserver.prototype.onNext = function (innerSource) {
-      if (this.isStopped) { return; }
+
+    MergeObserver.prototype.next = function (innerSource) {
         if(this.activeCount < this.max) {
           this.activeCount++;
           this.handleSubscribe(innerSource);
@@ -42,45 +45,27 @@
           this.q.push(innerSource);
         }
       };
-      MergeObserver.prototype.onError = function (e) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onError(e);
-        }
-      };
-      MergeObserver.prototype.onCompleted = function () {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.done = true;
-          this.activeCount === 0 && this.o.onCompleted();
-        }
-      };
-      MergeObserver.prototype.dispose = function() { this.isStopped = true; };
-      MergeObserver.prototype.fail = function (e) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onError(e);
-          return true;
-        }
 
-        return false;
+      MergeObserver.prototype.error = function (e) {
+        this.o.onError(e);
       };
 
-      function InnerObserver(parent, sad) {
-        this.parent = parent;
-        this.sad = sad;
-        this.isStopped = false;
-      }
-      InnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.parent.o.onNext(x); } };
-      InnerObserver.prototype.onError = function (e) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.parent.o.onError(e);
-        }
+      MergeObserver.prototype.completed = function () {
+        this.done = true;
+        this.activeCount === 0 && this.o.onCompleted();
       };
-      InnerObserver.prototype.onCompleted = function () {
-        if(!this.isStopped) {
-          this.isStopped = true;
+
+      var InnerObserver = (function(__super__) {
+        inherits(InnerObserver, __super__);
+        function InnerObserver(parent, sad) {
+          this.parent = parent;
+          this.sad = sad;
+          __super__.call(this);
+        }
+
+        InnerObserver.prototype.next = function (x) { this.parent.o.onNext(x); };
+        InnerObserver.prototype.error = function (e) { this.parent.o.onError(e); };
+        InnerObserver.prototype.completed = function () {
           var parent = this.parent;
           parent.g.remove(this.sad);
           if (parent.q.length > 0) {
@@ -89,25 +74,13 @@
             parent.activeCount--;
             parent.done && parent.activeCount === 0 && parent.o.onCompleted();
           }
-        }
-      };
-      InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-      InnerObserver.prototype.fail = function (e) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.parent.o.onError(e);
-          return true;
-        }
+        };
 
-        return false;
-      };
+        return InnerObserver;
+      }(AbstractObserver));
 
       return MergeObserver;
-  }());
-
-
-
-
+  }(AbstractObserver));
 
   /**
   * Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.
@@ -120,7 +93,8 @@
   * @returns {Observable} The observable sequence that merges the elements of the inner sequences.
   */
   observableProto.merge = function (maxConcurrentOrOther) {
-    return typeof maxConcurrentOrOther !== 'number' ?
-      observableMerge(this, maxConcurrentOrOther) :
-      new MergeObservable(this, maxConcurrentOrOther);
+    return typeof maxConcurrentOrOther === 'number' ?
+      new MergeObservable(this, maxConcurrentOrOther) :
+      observableMerge(this, maxConcurrentOrOther);
+
   };
