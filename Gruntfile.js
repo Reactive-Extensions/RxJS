@@ -2541,6 +2541,156 @@ module.exports = function (grunt) {
     'nuget-time',
     'nuget-virtualtime'
   ]);
+  
+  
+
+  grunt.registerTask('rebuild-ts', 'Rebuild typescript declarations', function() {
+    var path = require('path');
+    var fs = require('fs');
+
+    var cache = {};
+    var dependencies = {};
+    var concatItems = grunt.config.get('concat');
+
+    function loadFile(tsFile) {
+      if (cache[tsFile]) {
+        return;
+      }
+      var dependencyRegex = /\/\/\/ <reference path\=\"(.*?)\" \/>/g;
+      var c; //, count = 0;
+      var source = grunt.file.read(tsFile);
+
+      // source with tests
+      var s = source.match(/module Rx \{([\s\S]*)\}[\s\S]*\(function/);
+      if (s && s[1]) {
+        c = cache[tsFile] = s[1];
+	  }
+	  if (!s) {
+	    // source without tests
+		s = source.match(/module Rx \{([\s\S]*)\}/);
+		if (s && s[1]) {
+		  c = cache[tsFile] = s[1];
+		}
+	  }
+
+	  var deps = dependencies[tsFile] = [];
+	  var result;
+	  while (result = dependencyRegex.exec(source)) {
+		var dep = path.resolve(__dirname, path.dirname(tsFile), result[1])
+		  .substr(__dirname.length + 1)
+		  .replace(/\\/g, '/');
+
+		deps.push(dep);
+		loadFile(dep);
+	  }
+
+	  return c;
+	}
+
+    function addLoadedFile(tsFile) {
+      if (loadedFiles[tsFile]) {
+	    return;
+      }
+
+  	  if (!(tsFile.match(/\/toset\.ts$/) || tsFile.match(/\/tomap\.ts$/))) {
+  	    output.push(cache[tsFile]);
+	  }
+	  es6Output.push(cache[tsFile]);
+	  loadedFiles[tsFile] = true;
+    }
+
+	function addFileContent(tsFile) {
+      if (loadedFiles[tsFile]) {
+	    return;
+	  }
+
+	  var deps = dependencies[tsFile];
+	  for (var k = 0; k < deps.length; k++) {
+		addLoadedFile(deps[k]);
+		addFileContent(deps[k]);
+	  }
+
+	  addLoadedFile(tsFile);
+	}
+
+	loadFile('ts/core/es5.ts');
+	loadFile('ts/core/es6.ts');
+
+	for (var key in concatItems) {
+	  var loadedFiles = {};
+	  var output = [];
+	  var es6Output = [];
+	  var value = concatItems[key];
+	  var src = value.src;
+	  var dest = value.dest;
+
+	  var dist = false;
+
+	  if (key.indexOf('-compat') > -1) {
+	    continue;
+	  }
+
+	  if (dest.indexOf('dist/') === 0) {
+	    dist = dest.match(/dist\/(.*?)\.js/)[1];
+	    dest = dest.replace(/dist\/(.*?)\.js/, 'ts/$1.d.ts');
+	  } else if (dest.indexOf('modules/') === 0) {
+	    continue;
+	  } else {
+	    throw new Error("not sure how to handle " + dest);
+	  }
+
+	  for (var i = 0; i < src.length; i++) {
+	    var file = src[i];
+	    var tsFile = file
+	      .replace(/src\/(.*?).js/, 'ts/$1.ts')
+	      // Is this right 100% of the time?
+	      .replace('perf/operators', 'linq/observable');
+
+	    if (cache[tsFile] || fs.existsSync(tsFile)) {
+	      if (!cache[tsFile]) {
+	        loadFile(tsFile);
+	      }
+
+	      if (tsFile.indexOf('/es5') === -1 || tsFile.indexOf('/es6') === -1) {
+	        addFileContent(tsFile);
+	      }
+	    } else {
+	      var valid = ['/headers/', '/longstacktraces/', '/internal/', '/autodetachobserver', '/subjects/innersubscription', '/perf/observablebase', 'linq/enumerable/while', '.compat.', 'linq/observable/_', '/linq/observable/fromarrayobservable', '/joins/', '/linq/observable/flatmapbase', '/disposables/scheduleddisposable', '/concurrency/catchscheduler', '/core/observeonobserver', '/testing/mockpromise', '/testing/hotobservable', '/testing/coldobservable'];
+	      var validResult = false;
+	      for (var z = 0; z < valid.length; z++) {
+	        if (tsFile.indexOf(valid[z]) !== -1) {
+	          validResult = true;
+	          break;
+	        }
+	      }
+
+	      if (!validResult) {
+	        console.log('missing file: ' + tsFile);
+	      }
+	    }
+	  }
+
+      output.unshift(cache['ts/core/es5.ts']);
+      es6Output.unshift(cache['ts/core/es6.ts']);
+
+      var outputString = 'declare module Rx {\n' + output.join('') + '\n}\n';
+      outputString += '\ndeclare module "rx" { export = Rx; }\n';
+      if (dist) {
+        outputString += 'declare module "'+dist+'" { export = Rx; }';
+      }
+      grunt.file.write(dest, outputString);
+
+      outputString = 'declare module Rx {\n' + es6Output.join('') + '\n}\n';
+      outputString += '\ndeclare module "rx" { export = Rx; }\n';
+      if (dist) {
+        outputString += '\ndeclare module "'+dist+'" { export = Rx; }\n';
+      }
+      grunt.file.write(dest.replace(/^ts\//, 'ts/es6/'), outputString);
+    }
+
+    grunt.file.write('ts/es6/es6-iterable.d.ts', grunt.file.read('ts/core/es6-iterable.d.ts'));
+    grunt.file.write('ts/es6/es6-promise.d.ts', grunt.file.read('ts/core/es6-promise.d.ts'));  
+  });
 
   grunt.registerTask('concat-min', [
     'concat:core',
@@ -2633,7 +2783,7 @@ module.exports = function (grunt) {
     'copy:lite-extras-compat',
     'copy:core',
     'copy:core-binding',
-    'copy:core-testing',
+    'copy:core-testing'
   ]);
 
   // Default task
@@ -2730,6 +2880,7 @@ module.exports = function (grunt) {
     'copy:core-binding',
     'copy:core-testing',
 
-    'qunit'
+    'qunit',
+	'rebuild-ts'
   ]);
 };

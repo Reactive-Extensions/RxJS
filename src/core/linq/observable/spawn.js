@@ -1,4 +1,13 @@
-  var spawn = Observable.spawn = function () {
+var wrap = Observable.wrap = function (fn) {
+    createObservable.__generatorFunction__ = fn;
+    return createObservable;
+
+    function createObservable() {
+        return Observable.spawn.call(this, fn.apply(this, arguments));
+    }
+};
+
+var spawn = Observable.spawn = function () {
     var gen = arguments[0], self = this, args = [];
     for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
 
@@ -29,6 +38,7 @@
         if (ret.done) {
           o.onNext(ret.value);
           o.onCompleted();
+          return;
         }
         var value = toObservable.call(self, ret.value);
         if (Observable.isObservable(value)) {
@@ -55,7 +65,7 @@
 
   function arrayToObservable (obj) {
     return Observable.from(obj)
-      .map(toObservable, this)
+      .flatMap(toObservable)
       .toArray();
   }
 
