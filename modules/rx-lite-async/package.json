@@ -2,7 +2,7 @@
   "name": "rx-lite-async",
   "title": "Reactive Extensions for JavaScript (RxJS) Async",
   "description": "Lightweight library with asynchronous functions for composing asynchronous and event-based operations in JavaScript",
-  "version": "3.0.0",
+  "version": "3.0.1",
   "homepage": "https://github.com/Reactive-Extensions/RxJS",
   "author": {
     "name": "Cloud Programmability Team",
