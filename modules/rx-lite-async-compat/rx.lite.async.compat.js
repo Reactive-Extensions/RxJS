@@ -97,77 +97,76 @@ var spawn = Observable.spawn = function () {
     });
   }
 
-  function toObservable(obj) {
-    if (!obj) { return obj; }
-    if (Observable.isObservable(obj)) { return obj; }
-    if (isPromise(obj)) { return Observable.fromPromise(obj); }
-    if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
-    if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
-    if (isArrayLike(obj) || isIterable(obj)) { return arrayToObservable.call(this, obj); }
-    if (isObject(obj)) return objectToObservable.call(this, obj);
-    return obj;
-  }
+function toObservable(obj) {
+  if (!obj) { return obj; }
+  if (Observable.isObservable(obj)) { return obj; }
+  if (isPromise(obj)) { return Observable.fromPromise(obj); }
+  if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
+  if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
+  if (isArrayLike(obj) || isIterable(obj)) { return arrayToObservable.call(this, obj); }
+  if (isObject(obj)) {return objectToObservable.call(this, obj);}
+  return obj;
+}
 
-  function arrayToObservable (obj) {
-    return Observable.from(obj)
+function arrayToObservable (obj) {
+  return Observable.from(obj)
       .flatMap(toObservable)
       .toArray();
+}
+
+function objectToObservable (obj) {
+  var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
+  for (var i = 0, len = keys.length; i < len; i++) {
+    var key = keys[i];
+    var observable = toObservable.call(this, obj[key]);
+
+    if(observable && Observable.isObservable(observable)) {
+      defer(observable, key);
+    } else {
+      results[key] = obj[key];
+    }
   }
 
-  function objectToObservable (obj) {
-    var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
-    for (var i = 0, len = keys.length; i < len; i++) {
-      var key = keys[i], observable = toObservable.call(this, obj[key]);
-      if (observable && Observable.isObservable(observable)) {
-        defer(observable, key);
-      } else {
-        results[key] = obj[key];
+  return Observable.forkJoin.apply(Observable, observables).map(function() {
+    return results;
+  });
+
+
+  function defer (observable, key) {
+    results[key] = undefined;
+    observables.push(observable.map(function (next) {
+      results[key] = next;
+    }));
+  }
+}
+
+function thunkToObservable(fn) {
+  var self = this;
+  return new AnonymousObservable(function (o) {
+    fn.call(self, function () {
+      var err = arguments[0], res = arguments[1];
+      if (err) { return o.onError(err); }
+      if (arguments.length > 2) {
+        var args = [];
+        for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+        res = args;
       }
-    }
-    return Observable.concat(observables).startWith(results);
-
-    function defer (observable, key) {
-      results[key] = undefined;
-      observables.push(new AnonymousObservable(function (o) {
-        return observable.subscribe(function (next) {
-          results[key] = next;
-          o.onCompleted();
-        });
-      }));
-    }
-  }
-
-  function thunkToObservable(fn) {
-    var self = this;
-    return new AnonymousObservable(function (o) {
-      fn.call(self, function () {
-        var err = arguments[0], res = arguments[1];
-        if (err) { return o.onError(err); }
-        if (arguments.length > 2) {
-          var args = [];
-          for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-          res = args;
-        }
-        o.onNext(res);
-        o.onCompleted();
-      });
+      o.onNext(res);
+      o.onCompleted();
     });
-  }
+  });
+}
 
-  function isGenerator(obj) {
-    return isFunction (obj.next) && isFunction (obj.throw);
-  }
+function isGenerator(obj) {
+  return isFunction (obj.next) && isFunction (obj.throw);
+}
 
-  function isGeneratorFunction(obj) {
-    var ctor = obj.constructor;
-    if (!ctor) { return false; }
-    if (ctor.name === 'GeneratorFunction' || ctor.displayName === 'GeneratorFunction') { return true; }
-    return isGenerator(ctor.prototype);
-  }
-
-  function isObject(val) {
-    return Object == val.constructor;
-  }
+function isGeneratorFunction(obj) {
+  var ctor = obj.constructor;
+  if (!ctor) { return false; }
+  if (ctor.name === 'GeneratorFunction' || ctor.displayName === 'GeneratorFunction') { return true; }
+  return isGenerator(ctor.prototype);
+}
 
   /**
    * Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
