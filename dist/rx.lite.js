@@ -3750,7 +3750,7 @@ var FlatMapObservable = (function(__super__){
    * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
    * @returns {Observable} Source sequence with the action-invoking termination behavior applied.
    */
-  observableProto['finally'] = observableProto.ensure = function (action) {
+  observableProto['finally'] = function (action) {
     var source = this;
     return new AnonymousObservable(function (observer) {
       var subscription = tryCatch(source.subscribe).call(source, observer);
