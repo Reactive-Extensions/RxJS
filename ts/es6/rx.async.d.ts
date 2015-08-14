@@ -29,7 +29,8 @@ declare module Rx {
     export interface Observable<T> extends IObservable<T> {}
 
     export interface ObservableStatic {
-        spawn<T>(fn: () => T): Observable<T>;
+        wrap<T>(fn: Function): Observable<T>;
+        spawn<T>(fn: Function): Observable<T>;
     }
 
     export interface IScheduler {

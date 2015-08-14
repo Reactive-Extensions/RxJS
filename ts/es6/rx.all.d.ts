@@ -2852,7 +2852,8 @@ declare module Rx {
     }
 
     export interface ObservableStatic {
-        spawn<T>(fn: () => T): Observable<T>;
+        wrap<T>(fn: Function): Observable<T>;
+        spawn<T>(fn: Function): Observable<T>;
     }
 
     export interface ObservableStatic {
