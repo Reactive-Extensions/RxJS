@@ -45,7 +45,7 @@ module Rx {
     }
 
     interface NotificationStatic {
-        new <T>(kind, value, exception, accept, acceptObservable, toString) : Notification<T>;
+        new <T>(kind: any, value: any, exception: any, accept: any, acceptObservable: any, toString: any) : Notification<T>;
 
         /**
         * Creates an object that represents an OnNext notification to an observer.

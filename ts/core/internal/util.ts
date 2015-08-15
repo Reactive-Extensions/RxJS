@@ -2,8 +2,8 @@
 /// <reference path="../observable.ts" />
 module Rx {
     export module internals {
-        export var inherits: (child, parent) => void;
-        export var addProperties: (obj, ...sources: any[]) => void;
+        export var inherits: (child: any, parent: any) => void;
+        export var addProperties: (obj: any, ...sources: any[]) => void;
         export var addRef: <T>(xs: Observable<T>, r: { getDisposable(): IDisposable; }) => Observable<T>;
     }
 }

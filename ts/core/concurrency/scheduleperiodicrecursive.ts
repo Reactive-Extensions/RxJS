@@ -6,7 +6,7 @@ module Rx {
         }
 
         interface SchedulePeriodicRecursiveStatic {
-            new (scheduler, state, period, action) : SchedulePeriodicRecursive;
+            new (scheduler: any, state: any, period: any, action: any) : SchedulePeriodicRecursive;
         }
 
         export var SchedulePeriodicRecursive: SchedulePeriodicRecursiveStatic;

@@ -79,9 +79,9 @@ module Rx {
     var n : number = Rx.ReactiveTest.disposed;
 
     var r : Rx.Recorded = Rx.ReactiveTest.onNext(100, 'abc');
-    var r : Rx.Recorded = Rx.ReactiveTest.onNext(100, (v) => false);
+    var r : Rx.Recorded = Rx.ReactiveTest.onNext(100, (v: any) => false);
     var r : Rx.Recorded = Rx.ReactiveTest.onError(100, new Error('abc'));
-    var r : Rx.Recorded = Rx.ReactiveTest.onError(100, (v) => true);
+    var r : Rx.Recorded = Rx.ReactiveTest.onError(100, (v: any) => true);
     var r : Rx.Recorded = Rx.ReactiveTest.onCompleted(100);
 
     var s : Rx.Subscription = Rx.ReactiveTest.subscribe(100);
