@@ -12,20 +12,20 @@ module Rx {
     /**
      * Promise A+
      */
-    export type Promise<T> = PromiseLike<T>;
+    export interface Promise<T> extends PromiseLike<T> { }
 
     /**
      * Promise A+
      */
-    export type IPromise<T> = PromiseLike<T>;
+    export interface IPromise<T> extends PromiseLike<T> { }
 
     /**
     * Represents a push-style collection.
     */
-    export interface IObservable<T> {}
+    export interface IObservable<T> { }
 
     /**
     * Represents a push-style collection.
     */
-    export interface Observable<T> extends IObservable<T> {}
+    export interface Observable<T> extends IObservable<T> { }
 }

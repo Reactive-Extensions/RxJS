@@ -1,32 +1,32 @@
 declare module Rx {
 
     // Type alias for observables and promises
-    export type ObservableOrPromise<T> = IObservable<T> | Observable<T> | Promise<T>;
+    
 
-    export type ArrayLike<T> = Array<T> | { length: number;[index: number]: T; };
+    
 
     // Type alias for arrays and array like objects
-    export type ArrayOrIterable<T> = ArrayLike<T> | Iterable<T>;
+    
 
     /**
      * Promise A+
      */
-    export type Promise<T> = PromiseLike<T>;
+    export interface Promise<T> extends PromiseLike<T> { }
 
     /**
      * Promise A+
      */
-    export type IPromise<T> = PromiseLike<T>;
+    export interface IPromise<T> extends PromiseLike<T> { }
 
     /**
     * Represents a push-style collection.
     */
-    export interface IObservable<T> {}
+    export interface IObservable<T> { }
 
     /**
     * Represents a push-style collection.
     */
-    export interface Observable<T> extends IObservable<T> {}
+    export interface Observable<T> extends IObservable<T> { }
 
     export module internals {
         export interface EmptyError extends Error { message: string; }
@@ -119,14 +119,14 @@ declare module Rx {
         export var isFunction: (value: any) =>  boolean;
     }
 
-    export type _Selector<T, TResult> = (value: T, index: number, observable: Observable<T>) => TResult;
-    export type _ValueOrSelector<T, TResult> = TResult | _Selector<T, TResult>;
-    export type _Predicate<T> = _Selector<T, boolean>;
-    export type _Comparer<T, TResult> = (value1: T, value2: T) => TResult;
-    export type _Accumulator<T, TAcc> = (acc: TAcc, value: T) => TAcc;
+    
+    
+    
+    
+    
 
     export module special {
-        export type _FlatMapResultSelector<T1, T2, TResult> = (value: T1, selectorValue: T2, index: number, selectorOther: number) => TResult;
+        
     }
 
     export interface IObservable<T> {
@@ -411,7 +411,7 @@ declare module Rx {
         }
 
         interface ScheduledItemStatic {
-            new <TTime>(scheduler: IScheduler, state: any, action: (scheduler: IScheduler, state: any) => IDisposable, dueTime: TTime, comparer?: _Comparer<TTime, number>):ScheduledItem<TTime>;
+            new <TTime>(scheduler: IScheduler, state: any, action: (scheduler: IScheduler, state: any) => IDisposable, dueTime: TTime, comparer?: ((value1: TTime, value2: TTime) => number)):ScheduledItem<TTime>;
         }
 
         export var ScheduledItem: ScheduledItemStatic
@@ -832,7 +832,7 @@ declare module Rx {
           * @param {Function} observableFactory Observable factory function to invoke for each observer that subscribes to the resulting sequence or Promise.
           * @returns {Observable} An observable sequence whose observers trigger an invocation of the given observable factory function.
           */
-        defer<T>(observableFactory: () => ObservableOrPromise<T>): Observable<T>;
+        defer<T>(observableFactory: () => (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -856,7 +856,7 @@ declare module Rx {
          * @param {Any} [thisArg] The context to use calling the mapFn if provided.
          * @param {Scheduler} [scheduler] Optional scheduler to use for scheduling.  If not provided, defaults to Scheduler.currentThread.
          */
-        from<T>(array: ArrayOrIterable<T>): Observable<T>;
+        from<T>(array: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)): Observable<T>;
         /**
          * This method creates a new Observable sequence from an array-like or iterable object.
          * @param {Any} arrayLike An array-like or iterable object to convert to an Observable sequence.
@@ -864,7 +864,7 @@ declare module Rx {
          * @param {Any} [thisArg] The context to use calling the mapFn if provided.
          * @param {Scheduler} [scheduler] Optional scheduler to use for scheduling.  If not provided, defaults to Scheduler.currentThread.
          */
-        from<T, TResult>(array: ArrayOrIterable<T>, mapFn: (value: T, index: number) => TResult, thisArg?: any, scheduler?: IScheduler): Observable<TResult>;
+        from<T, TResult>(array: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>), mapFn: (value: T, index: number) => TResult, thisArg?: any, scheduler?: IScheduler): Observable<TResult>;
     }
 
     export interface ObservableStatic {
@@ -874,7 +874,7 @@ declare module Rx {
          * @param {Scheduler} [scheduler] Scheduler to run the enumeration of the input sequence on.
          * @returns {Observable} The observable sequence whose elements are pulled from the given enumerable sequence.
          */
-        fromArray<T>(array: ArrayLike<T>, scheduler?: IScheduler): Observable<T>;
+        fromArray<T>(array: (Array<T> | { length: number;[index: number]: T; }), scheduler?: IScheduler): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -1018,7 +1018,7 @@ declare module Rx {
         * @param {Observable} rightSource Second observable sequence or Promise.
         * @returns {Observable} {Observable} An observable sequence that surfaces either of the given sequences, whichever reacted first.
         */
-        amb(observable: ObservableOrPromise<T>): Observable<T>;
+        amb(observable: (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -1026,12 +1026,12 @@ declare module Rx {
         * Propagates the observable sequence or Promise that reacts first.
         * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
         */
-        amb<T>(observables: ObservableOrPromise<T>[]): Observable<T>;
+        amb<T>(observables: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
         /**
         * Propagates the observable sequence or Promise that reacts first.
         * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
         */
-        amb<T>(...observables: ObservableOrPromise<T>[]): Observable<T>;
+        amb<T>(...observables: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1040,13 +1040,13 @@ declare module Rx {
         * @param {Mixed} handlerOrSecond Exception handler function that returns an observable sequence given the error that occurred in the first sequence, or a second observable sequence used to produce results when an error occurred in the first sequence.
         * @returns {Observable} An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
         */
-        catch(handler: (exception: any) => ObservableOrPromise<T>): Observable<T>;
+        catch(handler: (exception: any) => (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
         /**
         * Continues an observable sequence that is terminated by an exception with the next observable sequence.
         * @param {Mixed} handlerOrSecond Exception handler function that returns an observable sequence given the error that occurred in the first sequence, or a second observable sequence used to produce results when an error occurred in the first sequence.
         * @returns {Observable} An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
         */
-        catch(second: ObservableOrPromise<T>): Observable<T>;
+        catch(second: (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -1055,13 +1055,13 @@ declare module Rx {
         * @param {Array | Arguments} args Arguments or an array to use as the next sequence if an error occurs.
         * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
         */
-        catch<T>(sources: ObservableOrPromise<T>[]): Observable<T>;
+        catch<T>(sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
         /**
         * Continues an observable sequence that is terminated by an exception with the next observable sequence.
         * @param {Array | Arguments} args Arguments or an array to use as the next sequence if an error occurs.
         * @returns {Observable} An observable sequence containing elements from consecutive source sequences until a source sequence terminates successfully.
         */
-        catch<T>(...sources: ObservableOrPromise<T>[]): Observable<T>;
+        catch<T>(...sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1074,7 +1074,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T2, TResult>(second: ObservableOrPromise<T2>, resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
+        combineLatest<T2, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         * This can be in the form of an argument list of observables or an array.
@@ -1084,7 +1084,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T2, T3, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
+        combineLatest<T2, T3, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         * This can be in the form of an argument list of observables or an array.
@@ -1094,7 +1094,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T2, T3, T4, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
+        combineLatest<T2, T3, T4, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         * This can be in the form of an argument list of observables or an array.
@@ -1104,7 +1104,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T2, T3, T4, T5, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
+        combineLatest<T2, T3, T4, T5, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         * This can be in the form of an argument list of observables or an array.
@@ -1114,7 +1114,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T2, T3, T4, T5, T6, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
+        combineLatest<T2, T3, T4, T5, T6, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         * This can be in the form of an argument list of observables or an array.
@@ -1124,7 +1124,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T2, T3, T4, T5, T6, T7, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
+        combineLatest<T2, T3, T4, T5, T6, T7, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         * This can be in the form of an argument list of observables or an array.
@@ -1134,7 +1134,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T2, T3, T4, T5, T6, T7, T8, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, eighth: ObservableOrPromise<T8>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
+        combineLatest<T2, T3, T4, T5, T6, T7, T8, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         * This can be in the form of an argument list of observables or an array.
@@ -1144,7 +1144,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T2, T3, T4, T5, T6, T7, T8, T9, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, eighth: ObservableOrPromise<T8>, ninth: ObservableOrPromise<T9>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
+        combineLatest<T2, T3, T4, T5, T6, T7, T8, T9, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), ninth: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         * This can be in the form of an argument list of observables or an array.
@@ -1154,7 +1154,7 @@ declare module Rx {
         * 2 - obs = observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<TOther, TResult>(souces: ObservableOrPromise<TOther>[], resultSelector: (firstValue: T, ...otherValues: TOther[]) => TResult): Observable<TResult>;
+        combineLatest<TOther, TResult>(souces: (IObservable<TOther> | Observable<TOther> | Promise<TOther>)[], resultSelector: (firstValue: T, ...otherValues: TOther[]) => TResult): Observable<TResult>;
     }
 
     export interface ObservableStatic {
@@ -1166,7 +1166,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T, T2, TResult>(first: ObservableOrPromise<T>, second: ObservableOrPromise<T2>, resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
+        combineLatest<T, T2, TResult>(first: (IObservable<T> | Observable<T> | Promise<T>), second: (IObservable<T2> | Observable<T2> | Promise<T2>), resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         *
@@ -1175,7 +1175,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T, T2, T3, TResult>(first: ObservableOrPromise<T>, second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
+        combineLatest<T, T2, T3, TResult>(first: (IObservable<T> | Observable<T> | Promise<T>), second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         *
@@ -1184,7 +1184,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T, T2, T3, T4, TResult>(first: ObservableOrPromise<T>, second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
+        combineLatest<T, T2, T3, T4, TResult>(first: (IObservable<T> | Observable<T> | Promise<T>), second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         *
@@ -1193,7 +1193,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T, T2, T3, T4, T5, TResult>(first: ObservableOrPromise<T>, second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
+        combineLatest<T, T2, T3, T4, T5, TResult>(first: (IObservable<T> | Observable<T> | Promise<T>), second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         *
@@ -1202,7 +1202,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T, T2, T3, T4, T5, T6, TResult>(first: ObservableOrPromise<T>, second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
+        combineLatest<T, T2, T3, T4, T5, T6, TResult>(first: (IObservable<T> | Observable<T> | Promise<T>), second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         *
@@ -1211,7 +1211,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T, T2, T3, T4, T5, T6, T7, TResult>(first: ObservableOrPromise<T>, second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, eventh: ObservableOrPromise<T7>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
+        combineLatest<T, T2, T3, T4, T5, T6, T7, TResult>(first: (IObservable<T> | Observable<T> | Promise<T>), second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), eventh: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         *
@@ -1220,7 +1220,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T, T2, T3, T4, T5, T6, T7, T8, TResult>(first: ObservableOrPromise<T>, second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, eighth: ObservableOrPromise<T8>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
+        combineLatest<T, T2, T3, T4, T5, T6, T7, T8, TResult>(first: (IObservable<T> | Observable<T> | Promise<T>), second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         *
@@ -1229,7 +1229,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<T, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(first: ObservableOrPromise<T>, second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, eighth: ObservableOrPromise<T8>, ninth: ObservableOrPromise<T9>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
+        combineLatest<T, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(first: (IObservable<T> | Observable<T> | Promise<T>), second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), ninth: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
         *
@@ -1238,7 +1238,7 @@ declare module Rx {
         * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        combineLatest<TOther, TResult>(souces: ObservableOrPromise<TOther>[], resultSelector: (...otherValues: TOther[]) => TResult): Observable<TResult>;
+        combineLatest<TOther, TResult>(souces: (IObservable<TOther> | Observable<TOther> | Promise<TOther>)[], resultSelector: (...otherValues: TOther[]) => TResult): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -1246,7 +1246,7 @@ declare module Rx {
         * Concatenates all the observable sequences.  This takes in either an array or variable arguments to concatenate.
         * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order.
         */
-        concat(...sources: ObservableOrPromise<T>[]): Observable<T>;
+        concat(...sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -1255,13 +1255,13 @@ declare module Rx {
         * @param {Array | Arguments} args Arguments or an array to concat to the observable sequence.
         * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order.
         */
-        concat<T>(...sources: ObservableOrPromise<T>[]): Observable<T>;
+        concat<T>(...sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
         /**
         * Concatenates all the observable sequences.
         * @param {Array | Arguments} args Arguments or an array to concat to the observable sequence.
         * @returns {Observable} An observable sequence that contains the elements of each given sequence, in sequential order.
         */
-        concat<T>(sources: ObservableOrPromise<T>[]): Observable<T>;
+        concat<T>(sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1294,7 +1294,7 @@ declare module Rx {
         * @param {Mixed} [maxConcurrentOrOther] Maximum number of inner observable sequences being subscribed to concurrently or the second observable sequence.
         * @returns {Observable} The observable sequence that merges the elements of the inner sequences.
         */
-        merge(other: ObservableOrPromise<T>): Observable<T>;
+        merge(other: (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -1303,25 +1303,25 @@ declare module Rx {
         * The scheduler is optional and if not specified, the immediate scheduler is used.
         * @returns {Observable} The observable sequence that merges the elements of the observable sequences.
         */
-        merge<T>(...sources: ObservableOrPromise<T>[]): Observable<T>;
+        merge<T>(...sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
         /**
         * Merges all the observable sequences into a single observable sequence.
         * The scheduler is optional and if not specified, the immediate scheduler is used.
         * @returns {Observable} The observable sequence that merges the elements of the observable sequences.
         */
-        merge<T>(sources: ObservableOrPromise<T>[]): Observable<T>;
+        merge<T>(sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
         /**
         * Merges all the observable sequences into a single observable sequence.
         * The scheduler is optional and if not specified, the immediate scheduler is used.
         * @returns {Observable} The observable sequence that merges the elements of the observable sequences.
         */
-        merge<T>(scheduler: IScheduler, ...sources: ObservableOrPromise<T>[]): Observable<T>;
+        merge<T>(scheduler: IScheduler, ...sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
         /**
         * Merges all the observable sequences into a single observable sequence.
         * The scheduler is optional and if not specified, the immediate scheduler is used.
         * @returns {Observable} The observable sequence that merges the elements of the observable sequences.
         */
-        merge<T>(scheduler: IScheduler, sources: ObservableOrPromise<T>[]): Observable<T>;
+        merge<T>(scheduler: IScheduler, sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -1336,7 +1336,7 @@ declare module Rx {
         * @param {Array | Arguments} args Arguments or an array to merge.
         * @returns {Observable} an Observable that emits all of the items emitted by the Observables emitted by the Observable
         */
-        mergeDelayError<T>(...sources: ObservableOrPromise<T>[]): Observable<T>;
+        mergeDelayError<T>(...sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
         /**
         * Flattens an Observable that emits Observables into one Observable, in a way that allows an Observer to
         * receive all successfully emitted items from all of the source Observables without being interrupted by
@@ -1348,7 +1348,7 @@ declare module Rx {
         * @param {Array | Arguments} args Arguments or an array to merge.
         * @returns {Observable} an Observable that emits all of the items emitted by the Observables emitted by the Observable
         */
-        mergeDelayError<T>(sources: ObservableOrPromise<T>[]): Observable<T>;
+        mergeDelayError<T>(sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1365,7 +1365,7 @@ declare module Rx {
         * @param {Observable} second Second observable sequence used to produce results after the first sequence terminates.
         * @returns {Observable} An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
         */
-        onErrorResumeNext(second: ObservableOrPromise<T>): Observable<T>;
+        onErrorResumeNext(second: (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -1377,7 +1377,7 @@ declare module Rx {
         * 1 - res = Rx.Observable.onErrorResumeNext([xs, ys, zs]);
         * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.
         */
-        onErrorResumeNext<T>(...sources: ObservableOrPromise<T>[]): Observable<T>;
+        onErrorResumeNext<T>(...sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
         /**
         * Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
         *
@@ -1386,7 +1386,7 @@ declare module Rx {
         * 1 - res = Rx.Observable.onErrorResumeNext([xs, ys, zs]);
         * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.
         */
-        onErrorResumeNext<T>(sources: ObservableOrPromise<T>[]): Observable<T>;
+        onErrorResumeNext<T>(sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1395,7 +1395,7 @@ declare module Rx {
         * @param {Observable | Promise} other The observable sequence or Promise that triggers propagation of elements of the source sequence.
         * @returns {Observable} An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.
         */
-        skipUntil<T2>(other: ObservableOrPromise<T2>): Observable<T>;
+        skipUntil<T2>(other: (IObservable<T2> | Observable<T2> | Promise<T2>)): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1417,7 +1417,7 @@ declare module Rx {
         * @param {Observable | Promise} other Observable sequence or Promise that terminates propagation of elements of the source sequence.
         * @returns {Observable} An observable sequence containing the elements of the source sequence up to the point the other sequence interrupted further propagation.
         */
-        takeUntil<T2>(other: ObservableOrPromise<T2>): Observable<T>;
+        takeUntil<T2>(other: (IObservable<T2> | Observable<T2> | Promise<T2>)): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1425,47 +1425,47 @@ declare module Rx {
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<T2, TResult>(second: ObservableOrPromise<T2>, resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
+        withLatestFrom<T2, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<T2, T3, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
+        withLatestFrom<T2, T3, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<T2, T3, T4, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
+        withLatestFrom<T2, T3, T4, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<T2, T3, T4, T5, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
+        withLatestFrom<T2, T3, T4, T5, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<T2, T3, T4, T5, T6, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
+        withLatestFrom<T2, T3, T4, T5, T6, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<T2, T3, T4, T5, T6, T7, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
+        withLatestFrom<T2, T3, T4, T5, T6, T7, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<T2, T3, T4, T5, T6, T7, T8, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, eighth: ObservableOrPromise<T8>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
+        withLatestFrom<T2, T3, T4, T5, T6, T7, T8, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<T2, T3, T4, T5, T6, T7, T8, T9, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, eighth: ObservableOrPromise<T8>, ninth: ObservableOrPromise<T9>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
+        withLatestFrom<T2, T3, T4, T5, T6, T7, T8, T9, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), ninth: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        withLatestFrom<TOther, TResult>(souces: ObservableOrPromise<TOther>[], resultSelector: (firstValue: T, ...otherValues: TOther[]) => TResult): Observable<TResult>;
+        withLatestFrom<TOther, TResult>(souces: (IObservable<TOther> | Observable<TOther> | Promise<TOther>)[], resultSelector: (firstValue: T, ...otherValues: TOther[]) => TResult): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -1474,55 +1474,55 @@ declare module Rx {
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, TResult>(second: ObservableOrPromise<T2>, resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
+        zip<T2, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
+        zip<T2, T3, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, T6, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, T6, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, T6, T7, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, T6, T7, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, T6, T7, T8, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, eighth: ObservableOrPromise<T8>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, T6, T7, T8, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, T6, T7, T8, T9, TResult>(second: ObservableOrPromise<T2>, third: ObservableOrPromise<T3>, fourth: ObservableOrPromise<T4>, fifth: ObservableOrPromise<T5>, sixth: ObservableOrPromise<T6>, seventh: ObservableOrPromise<T7>, eighth: ObservableOrPromise<T8>, ninth: ObservableOrPromise<T9>, resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, T6, T7, T8, T9, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), ninth: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<TOther, TResult>(souces: ObservableOrPromise<TOther>[], resultSelector: (firstValue: T, ...otherValues: TOther[]) => TResult): Observable<TResult>;
+        zip<TOther, TResult>(souces: (IObservable<TOther> | Observable<TOther> | Promise<TOther>)[], resultSelector: (firstValue: T, ...otherValues: TOther[]) => TResult): Observable<TResult>;
     }
 
     export interface ObservableStatic {
@@ -1532,63 +1532,63 @@ declare module Rx {
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, TResult>(sources: ObservableOrPromise<T2>[], resultSelector: (item1: T1, ...right: T2[]) => TResult): Observable<TResult>;
+        zip<T1, T2, TResult>(sources: (IObservable<T2> | Observable<T2> | Promise<T2>)[], resultSelector: (item1: T1, ...right: T2[]) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, TResult>(source1: ObservableOrPromise<T1>, ObservableOrPromise: Observable<T2>, resultSelector: (item1: T1, item2: T2) => TResult): Observable<TResult>;
+        zip<T1, T2, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), ObservableOrPromise: Observable<T2>, resultSelector: (item1: T1, item2: T2) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, TResult>(source1: ObservableOrPromise<T1>, source2: ObservableOrPromise<T2>, source3: ObservableOrPromise<T3>, resultSelector: (item1: T1, item2: T2, item3: T3) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector: (item1: T1, item2: T2, item3: T3) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, TResult>(source1: Observable<T1>, source2: ObservableOrPromise<T2>, source3: ObservableOrPromise<T3>, source4: ObservableOrPromise<T4>, resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, TResult>(source1: Observable<T1>, source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, TResult>(source1: ObservableOrPromise<T1>, source2: ObservableOrPromise<T2>, source3: ObservableOrPromise<T3>, source4: ObservableOrPromise<T4>, source5: ObservableOrPromise<T5>, resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, T6, TResult>(source1: ObservableOrPromise<T1>, source2: ObservableOrPromise<T2>, source3: ObservableOrPromise<T3>, source4: ObservableOrPromise<T4>, source5: ObservableOrPromise<T5>, source6: ObservableOrPromise<T6>, resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, T6, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, T6, T7, TResult>(source1: ObservableOrPromise<T1>, source2: ObservableOrPromise<T2>, source3: ObservableOrPromise<T3>, source4: ObservableOrPromise<T4>, source5: ObservableOrPromise<T5>, source6: ObservableOrPromise<T6>, source7: ObservableOrPromise<T7>, resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, T6, T7, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(source1: ObservableOrPromise<T1>, source2: ObservableOrPromise<T2>, source3: ObservableOrPromise<T3>, source4: ObservableOrPromise<T4>, source5: ObservableOrPromise<T5>, source6: ObservableOrPromise<T6>, source7: ObservableOrPromise<T7>, source8: ObservableOrPromise<T8>, resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), source8: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(source1: ObservableOrPromise<T1>, source2: ObservableOrPromise<T2>, source3: ObservableOrPromise<T3>, source4: ObservableOrPromise<T4>, source5: ObservableOrPromise<T5>, source6: ObservableOrPromise<T6>, source7: ObservableOrPromise<T7>, source8: ObservableOrPromise<T8>, source9: ObservableOrPromise<T9>, resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8, item9: T9) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), source8: (IObservable<T8> | Observable<T8> | Promise<T8>), source9: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8, item9: T9) => TResult): Observable<TResult>;
     }
 
     export interface ObservableStatic {
@@ -1644,7 +1644,7 @@ declare module Rx {
         * @param {Function} [comparer] Equality comparer for computed key values. If not provided, defaults to an equality comparer function.
         * @returns {Observable} An observable sequence only containing the distinct contiguous elements, based on a computed key value, from the source sequence.
         */
-        distinctUntilChanged<TValue>(keySelector?: (value: T) => TValue, comparer?: _Comparer<TValue, boolean>): Observable<T>;
+        distinctUntilChanged<TValue>(keySelector?: (value: T) => TValue, comparer?: ((value1: TValue, value2: TValue) => boolean)): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1817,7 +1817,7 @@ declare module Rx {
         * @param {Mixed} [seed] The initial accumulator value.
         * @returns {Observable} An observable sequence containing the accumulated values.
         */
-        scan<TAcc>(accumulator: _Accumulator<T, TAcc>, seed?: TAcc): Observable<TAcc>;
+        scan<TAcc>(accumulator: ((acc: T, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
         /**
         *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
         *  For aggregation behavior with no intermediate results, see Observable.aggregate.
@@ -1828,7 +1828,7 @@ declare module Rx {
         * @param {Mixed} [seed] The initial accumulator value.
         * @returns {Observable} An observable sequence containing the accumulated values.
         */
-        scan(accumulator: _Accumulator<T, T>, seed?: T): Observable<T>;
+        scan(accumulator: ((acc: T, value: T) => T), seed?: T): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -1922,7 +1922,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        concatMap<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        concatMap<TResult>(selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -1942,7 +1942,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        concatMap<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        concatMap<TResult>(selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -1962,7 +1962,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        concatMap<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        concatMap<TOther, TResult>(selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -1982,7 +1982,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        concatMap<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        concatMap<TOther, TResult>(selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2002,7 +2002,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectConcat<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        selectConcat<TResult>(selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2022,7 +2022,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectConcat<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        selectConcat<TResult>(selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2042,7 +2042,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectConcat<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectConcat<TOther, TResult>(selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2062,7 +2062,7 @@ declare module Rx {
         * @param {Function} [resultSelector]  A transform function to apply to each element of the intermediate sequence.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectConcat<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectConcat<TOther, TResult>(selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -2074,7 +2074,7 @@ declare module Rx {
         * @param {Any} [thisArg] An optional "this" to use to invoke each transform.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function corresponding to each notification in the input sequence.
         */
-        concatMapObserver<T, TResult>(onNext: (value: T, i: number) => ObservableOrPromise<TResult>, onError: (error: any) => ObservableOrPromise<any>, onCompleted: () => ObservableOrPromise<any>, thisArg?: any): Observable<TResult>;
+        concatMapObserver<T, TResult>(onNext: (value: T, i: number) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>), onError: (error: any) => (IObservable<any> | Observable<any> | Promise<any>), onCompleted: () => (IObservable<any> | Observable<any> | Promise<any>), thisArg?: any): Observable<TResult>;
         /**
         * Projects each notification of an observable sequence to an observable sequence and concats the resulting observable sequences into one observable sequence.
         * @param {Function} onNext A transform function to apply to each element; the second parameter of the function represents the index of the source element.
@@ -2083,7 +2083,7 @@ declare module Rx {
         * @param {Any} [thisArg] An optional "this" to use to invoke each transform.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function corresponding to each notification in the input sequence.
         */
-        selectConcatObserver<T, TResult>(onNext: (value: T, i: number) => ObservableOrPromise<TResult>, onError: (error: any) => ObservableOrPromise<any>, onCompleted: () => ObservableOrPromise<any>, thisArg?: any): Observable<TResult>;
+        selectConcatObserver<T, TResult>(onNext: (value: T, i: number) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>), onError: (error: any) => (IObservable<any> | Observable<any> | Promise<any>), onCompleted: () => (IObservable<any> | Observable<any> | Promise<any>), thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -2123,14 +2123,14 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source.
         */
-        select<TResult>(selector: _Selector<T, TResult>, thisArg?: any): Observable<TResult>;
+        select<TResult>(selector: ((value: T, index: number, observable: Observable<T>) => TResult), thisArg?: any): Observable<TResult>;
         /**
         * Projects each element of an observable sequence into a new form by incorporating the element's index.
         * @param {Function} selector A transform function to apply to each source element; the second parameter of the function represents the index of the source element.
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source.
         */
-        map<TResult>(selector: _Selector<T, TResult>, thisArg?: any): Observable<TResult>;
+        map<TResult>(selector: ((value: T, index: number, observable: Observable<T>) => TResult), thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -2185,7 +2185,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMap<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        flatMap<TResult>(selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2205,7 +2205,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMap<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        flatMap<TResult>(selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2225,7 +2225,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMap<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        flatMap<TOther, TResult>(selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2245,7 +2245,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMap<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        flatMap<TOther, TResult>(selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2265,7 +2265,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectMany<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        selectMany<TResult>(selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2285,7 +2285,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectMany<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        selectMany<TResult>(selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2305,7 +2305,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectMany<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectMany<TOther, TResult>(selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -2325,7 +2325,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectMany<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectMany<TOther, TResult>(selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -2337,7 +2337,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        selectSwitch<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        selectSwitch<TResult>(selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2346,7 +2346,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        selectSwitch<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        selectSwitch<TResult>(selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2355,7 +2355,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        selectSwitch<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectSwitch<TOther, TResult>(selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2364,7 +2364,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        selectSwitch<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        selectSwitch<TOther, TResult>(selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2373,7 +2373,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        flatMapLatest<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
+        flatMapLatest<TResult>(selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2382,7 +2382,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        flatMapLatest<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
+        flatMapLatest<TResult>(selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2391,7 +2391,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        flatMapLatest<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        flatMapLatest<TOther, TResult>(selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.
@@ -2400,7 +2400,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time produces the elements of the most recent inner observable sequence that has been received.
         */
-        flatMapLatest<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
+        flatMapLatest<TOther, TResult>(selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -2439,7 +2439,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
         */
-        takeWhile(predicate: _Predicate<T>, thisArg?: any): Observable<T>;
+        takeWhile(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -2453,7 +2453,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.
         */
-        where(predicate: _Predicate<T>, thisArg?: any): Observable<T>;
+        where(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
         /**
         *  Filters the elements of an observable sequence based on a predicate by incorporating the element's index.
         *
@@ -2464,7 +2464,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence that contains elements from the input sequence that satisfy the condition.
         */
-        filter(predicate: _Predicate<T>, thisArg?: any): Observable<T>;
+        filter(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -2549,5 +2549,4 @@ declare module Rx {
 }
 
 declare module "rx" { export = Rx; }
-
 declare module "rx" { export = Rx; }

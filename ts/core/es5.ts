@@ -1,6 +1,6 @@
 module Rx {
     // Type alias for observables and promises
-    export type ObservableOrPromise<T> = IObservable<T> | Promise<T>;
+    export type ObservableOrPromise<T> = IObservable<T> | Observable<T> | Promise<T>;
 
     export type ArrayLike<T> = Array<T> | { length: number;[index: number]: T; };
 
@@ -18,7 +18,7 @@ module Rx {
     /**
      * Promise A+
      */
-    export type IPromise<T> = Promise<T>;
+    export interface IPromise<T> extends Promise<T> { }
 
     /**
     * Represents a push-style collection.
@@ -28,5 +28,5 @@ module Rx {
     /**
     * Represents a push-style collection.
     */
-    export interface Observable<T> { }
+    export interface Observable<T> extends IObservable<T> { }
 }

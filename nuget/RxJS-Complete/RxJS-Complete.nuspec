@@ -20,20 +20,28 @@
     <file src="..\..\dist\rx.all.compat.js" target="content\Scripts\rx.all.compat.js" />
     <file src="..\..\dist\rx.all.compat.min.js" target="content\Scripts\rx.all.compat.min.js" />
     <file src="..\..\ts\rx.all.d.ts" target="content\Scripts\rx.all.d.ts" />
+    <file src="..\..\ts\rx.all.es6.d.ts" target="content\Scripts\rx.all.es6.d.ts" />
     <file src="..\..\ts\rx.d.ts" target="content\Scripts\rx.d.ts" />
-    <file src="..\..\ts\rx-lite.d.ts" target="content\Scripts\rx-lite.d.ts" />
+    <file src="..\..\ts\rx.es6.d.ts" target="content\Scripts\rx.es6.d.ts" />
+    <file src="..\..\ts\rx.lite.d.ts" target="content\Scripts\rx.lite.d.ts" />
+    <file src="..\..\ts\rx.lite.es6.d.ts" target="content\Scripts\rx.lite.es6.d.ts" />
+    <file src="..\..\ts\rx.lite.extras.d.ts" target="content\Scripts\rx.lite.extras.d.ts" />
+    <file src="..\..\ts\rx.lite.extras.es6.d.ts" target="content\Scripts\rx.lite.extras.es6.d.ts" />
     <file src="..\..\ts\rx.aggregates.d.ts" target="content\Scripts\rx.aggregates.d.ts" />
+    <file src="..\..\ts\rx.aggregates.es6.d.ts" target="content\Scripts\rx.aggregates.es6.d.ts" />
     <file src="..\..\ts\rx.async.d.ts" target="content\Scripts\rx.async.d.ts" />
-    <file src="..\..\ts\rx.async-lite.d.ts" target="content\Scripts\rx.async-lite.d.ts" />
+    <file src="..\..\ts\rx.async.es6.d.ts" target="content\Scripts\rx.async.es6.d.ts" />
     <file src="..\..\ts\rx.binding.d.ts" target="content\Scripts\rx.binding.d.ts" />
-    <file src="..\..\ts\rx.binding-lite.d.ts" target="content\Scripts\rx.binding-lite.d.ts" />
+    <file src="..\..\ts\rx.binding.es6.d.ts" target="content\Scripts\rx.binding.es6.d.ts" />
     <file src="..\..\ts\rx.coincidence.d.ts" target="content\Scripts\rx.coincidence.d.ts" />
-    <file src="..\..\ts\rx.coincidence-lite.d.ts" target="content\Scripts\rx.coincidence-lite.d.ts" />
+    <file src="..\..\ts\rx.coincidence.es6.d.ts" target="content\Scripts\rx.coincidence.es6.d.ts" />
     <file src="..\..\ts\rx.experimental.d.ts" target="content\Scripts\rx.experimental.d.ts" />
+    <file src="..\..\ts\rx.experimental.es6.d.ts" target="content\Scripts\rx.experimental.es6.d.ts" />
     <file src="..\..\ts\rx.joinpatterns.d.ts" target="content\Scripts\rx.joinpatterns.d.ts" />
+    <file src="..\..\ts\rx.joinpatterns.es6.d.ts" target="content\Scripts\rx.joinpatterns.es6.d.ts" />
     <file src="..\..\ts\rx.time.d.ts" target="content\Scripts\rx.time.d.ts" />
-    <file src="..\..\ts\rx.time-lite.d.ts" target="content\Scripts\rx.time-lite.d.ts" />
+    <file src="..\..\ts\rx.time.es6.d.ts" target="content\Scripts\rx.time.es6.d.ts" />
     <file src="..\..\ts\rx.virtualtime.d.ts" target="content\Scripts\rx.virtualtime.d.ts" />
-    <file src="..\..\ts\rx.virtualtime-lite.d.ts" target="content\Scripts\rx.virtualtime-lite.d.ts" />
+    <file src="..\..\ts\rx.virtualtime.es6.d.ts" target="content\Scripts\rx.virtualtime.es6.d.ts" />
   </files>
 </package>

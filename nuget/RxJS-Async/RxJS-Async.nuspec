@@ -25,6 +25,6 @@
     <file src="..\..\dist\rx.async.compat.js" target="content\Scripts\rx.async.compat.js" />
     <file src="..\..\dist\rx.async.compat.min.js" target="content\Scripts\rx.async.compat.min.js" />
     <file src="..\..\ts\rx.async.d.ts" target="content\Scripts\rx.async.d.ts" />
-    <file src="..\..\ts\rx.async-lite.d.ts" target="content\Scripts\rx.async-lite.d.ts" />
+    <file src="..\..\ts\rx.async.es6.d.ts" target="content\Scripts\rx.async.es6.d.ts" />
   </files>
 </package>
