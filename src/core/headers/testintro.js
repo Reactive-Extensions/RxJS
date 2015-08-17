@@ -16,7 +16,7 @@
 
   // Because of build optimizers
   if (typeof define === 'function' && define.amd) {
-    define(['rx.virtualtime', 'exports'], function (Rx, exports) {
+    define(['./rx.virtualtime', 'exports'], function (Rx, exports) {
       root.Rx = factory(root, exports, Rx);
       return root.Rx;
     });

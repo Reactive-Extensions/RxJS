@@ -18,7 +18,7 @@
 
   // Because of build optimizers
   if (typeof define === 'function' && define.amd) {
-    define(['rx.binding', 'exports'], function (Rx, exports) {
+    define(['./rx.binding', 'exports'], function (Rx, exports) {
       root.Rx = factory(root, exports, Rx);
       return root.Rx;
     });

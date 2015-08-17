@@ -16,9 +16,9 @@
   var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
   var Rx = {
-      internals: {},
-      config: {
-        Promise: root.Promise
-      },
-      helpers: { }
+    internals: {},
+    config: {
+      Promise: root.Promise
+    },
+    helpers: { }
   };
