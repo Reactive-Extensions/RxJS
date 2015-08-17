@@ -4388,54 +4388,42 @@ var FlatMapObservable = (function(__super__){
     return DistinctUntilChangedObservable;
   }(ObservableBase));
 
-  function DistinctUntilChangedObserver(o, keyFn, comparer) {
-    this.o = o;
-    this.keyFn = keyFn;
-    this.comparer = comparer;
-    this.hasCurrentKey = false;
-    this.currentKey = null;
-    this.isStopped = false;
-  }
+  var DistinctUntilChangedObserver = (function(__super__) {
+    inherits(DistinctUntilChangedObserver, __super__);
+    function DistinctUntilChangedObserver(o, keyFn, comparer) {
+      this.o = o;
+      this.keyFn = keyFn;
+      this.comparer = comparer;
+      this.hasCurrentKey = false;
+      this.currentKey = null;
+      __super__.call(this);
+    }
 
-  DistinctUntilChangedObserver.prototype.onNext = function (x) {
-    if (this.isStopped) { return; }
-    var key = x;
-    if (isFunction(this.keyFn)) {
-      key = tryCatch(this.keyFn)(x);
-      if (key === errorObj) { return this.o.onError(key.e); }
-    }
-    if (this.hasCurrentKey) {
-      comparerEquals = tryCatch(this.comparer)(this.currentKey, key);
-      if (comparerEquals === errorObj) { return this.o.onError(comparerEquals.e); }
-    }
-    if (!this.hasCurrentKey || !comparerEquals) {
-      this.hasCurrentKey = true;
-      this.currentKey = key;
-      this.o.onNext(x);
-    }
-  };
-  DistinctUntilChangedObserver.prototype.onError = function(e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
+    DistinctUntilChangedObserver.prototype.next = function (x) {
+      var key = x, comparerEquals;
+      if (isFunction(this.keyFn)) {
+        key = tryCatch(this.keyFn)(x);
+        if (key === errorObj) { return this.o.onError(key.e); }
+      }
+      if (this.hasCurrentKey) {
+        comparerEquals = tryCatch(this.comparer)(this.currentKey, key);
+        if (comparerEquals === errorObj) { return this.o.onError(comparerEquals.e); }
+      }
+      if (!this.hasCurrentKey || !comparerEquals) {
+        this.hasCurrentKey = true;
+        this.currentKey = key;
+        this.o.onNext(x);
+      }
+    };
+    DistinctUntilChangedObserver.prototype.error = function(e) {
       this.o.onError(e);
-    }
-  };
-  DistinctUntilChangedObserver.prototype.onCompleted = function () {
-    if (!this.isStopped) {
-      this.isStopped = true;
+    };
+    DistinctUntilChangedObserver.prototype.completed = function () {
       this.o.onCompleted();
-    }
-  };
-  DistinctUntilChangedObserver.prototype.dispose = function() { this.isStopped = true; };
-  DistinctUntilChangedObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.o.onError(e);
-      return true;
-    }
+    };
 
-    return false;
-  };
+    return DistinctUntilChangedObserver;
+  }(AbstractObserver));
 
   /**
   *  Returns an observable sequence that contains only distinct contiguous elements according to the keyFn and the comparer.
