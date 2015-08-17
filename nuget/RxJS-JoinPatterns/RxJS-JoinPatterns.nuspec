@@ -22,5 +22,6 @@
     <file src="..\..\dist\rx.joinpatterns.js" target="content\Scripts\rx.joinpatterns.js" />
     <file src="..\..\dist\rx.joinpatterns.min.js" target="content\Scripts\rx.joinpatterns.min.js" />
     <file src="..\..\ts\rx.joinpatterns.d.ts" target="content\Scripts\rx.joinpatterns.d.ts" />
+    <file src="..\..\ts\rx.joinpatterns.es6.d.ts" target="content\Scripts\rx.joinpatterns.es6.d.ts" />
   </files>
 </package>

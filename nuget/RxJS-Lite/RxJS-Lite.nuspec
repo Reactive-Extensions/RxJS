@@ -22,11 +22,8 @@
     <file src="..\..\dist\rx.lite.extras.js" target="content\Scripts\rx.lite.extras.js" />
     <file src="..\..\dist\rx.lite.extras.min.js" target="content\Scripts\rx.lite.extras.min.js" />
     <file src="..\..\ts\rx.lite.d.ts" target="content\Scripts\rx.lite.d.ts" />
-    <file src="..\..\ts\rx-lite.d.ts" target="content\Scripts\rx-lite.d.ts" />
-    <file src="..\..\ts\rx.async-lite.d.ts" target="content\Scripts\rx.async-lite.d.ts" />
-    <file src="..\..\ts\rx.binding-lite.d.ts" target="content\Scripts\rx.binding-lite.d.ts" />
-    <file src="..\..\ts\rx.time-lite.d.ts" target="content\Scripts\rx.time-lite.d.ts" />
-    <file src="..\..\ts\rx.backpressure-lite.d.ts" target="content\Scripts\rx.backpressure-lite.d.ts" />
-    <file src="..\..\ts\rx.coincidence-lite.d.ts" target="content\Scripts\rx.coincidence-lite.d.ts" />
+    <file src="..\..\ts\rx.lite.es6.d.ts" target="content\Scripts\rx.lite.es6.d.ts" />
+    <file src="..\..\ts\rx.lite.extras.d.ts" target="content\Scripts\rx.lite.extras.d.ts" />
+    <file src="..\..\ts\rx.lite.extras.es6.d.ts" target="content\Scripts\rx.lite.extras.es6.d.ts" />
   </files>
 </package>

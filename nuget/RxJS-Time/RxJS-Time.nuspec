@@ -22,6 +22,6 @@
     <file src="..\..\dist\rx.time.js" target="content\Scripts\rx.time.js" />
     <file src="..\..\dist\rx.time.min.js" target="content\Scripts\rx.time.min.js" />
     <file src="..\..\ts\rx.time.d.ts" target="content\Scripts\rx.time.d.ts" />
-    <file src="..\..\ts\rx.time-lite.d.ts" target="content\Scripts\rx.time-lite.d.ts" />
+    <file src="..\..\ts\rx.time.es6.d.ts" target="content\Scripts\rx.time.es6.d.ts" />
   </files>
 </package>
