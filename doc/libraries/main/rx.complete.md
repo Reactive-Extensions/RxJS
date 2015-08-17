@@ -62,6 +62,7 @@ NuGet Packages:
 - [`using`](../../api/core/operators/using.md)
 - [`when`](../../api/core/operators/when.md)
 - [`while`](../../api/core/operators/while.md)
+- [`wrap`](../../api/core/operators/wrap.md)
 - [`zip`](../../api/core/operators/zip.md)
 - [`zipArray`](../../api/core/operators/ziparray.md)
 

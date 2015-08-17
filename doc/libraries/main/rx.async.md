@@ -36,3 +36,4 @@ NuGet Dependencies:
 - [`startAsync`](../../api/core/operators/startasync.md)
 - [`toAsync`](../../api/core/operators/toasync.md)
 - [`toPromise`](../../api/core/operators/topromise.md)
+- [`wrap`](../../api/core/operators/wrap.md)

@@ -48,6 +48,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`using`](operators/using.md)
 - [`when`](operators/when.md)
 - [`while`](operators/while.md)
+- [`wrap`](operators/wrap.md)
 - [`zip`](operators/zip.md)
 - [`zipArray`](operators/ziparray.md)
 

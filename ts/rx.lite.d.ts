@@ -222,8 +222,8 @@ declare module Rx {
     export var Observable: ObservableStatic;
 
     export module internals {
-        export var inherits: (child, parent) => void;
-        export var addProperties: (obj, ...sources: any[]) => void;
+        export var inherits: (child: any, parent: any) => void;
+        export var addProperties: (obj: any, ...sources: any[]) => void;
         export var addRef: <T>(xs: Observable<T>, r: { getDisposable(): IDisposable; }) => Observable<T>;
     }
 
@@ -508,7 +508,7 @@ declare module Rx {
         }
 
         interface SchedulePeriodicRecursiveStatic {
-            new (scheduler, state, period, action) : SchedulePeriodicRecursive;
+            new (scheduler: any, state: any, period: any, action: any) : SchedulePeriodicRecursive;
         }
 
         export var SchedulePeriodicRecursive: SchedulePeriodicRecursiveStatic;
@@ -614,7 +614,7 @@ declare module Rx {
     }
 
     interface NotificationStatic {
-        new <T>(kind, value, exception, accept, acceptObservable, toString) : Notification<T>;
+        new <T>(kind: any, value: any, exception: any, accept: any, acceptObservable: any, toString: any) : Notification<T>;
 
         /**
         * Creates an object that represents an OnNext notification to an observer.
@@ -2935,7 +2935,7 @@ declare module Rx {
          * @param {Transducer} transducer A transducer to execute
          * @returns {Observable} An Observable sequence containing the results from the transducer.
          */
-        transduce(transducer: any);
+        transduce(transducer: any): any;
         //TODO: Setup transducer
     }
 

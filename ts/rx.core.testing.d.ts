@@ -105,7 +105,7 @@ declare module Rx {
          * @param {Number} subscribe Virtual time at which the subscription occurred.
          * @param {Number} unsubscribe Virtual time at which the unsubscription occurred.
          */
-        new (subscribeAt: number, unsubscribeAt?: number);
+        new (subscribeAt: number, unsubscribeAt?: number): Subscription;
     }
 
     export var Subscription: SubscriptionStatic;
