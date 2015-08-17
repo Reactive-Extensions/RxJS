@@ -1,19 +1,14 @@
-### `Rx.Observable.prototype.dematerialize()`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/dematerialize.js "View in source")
+### `Rx.Observable.prototype.materialize()`
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/materialize.js "View in source")
 
-Dematerializes the explicit notification values of an observable sequence as implicit notifications.
+Materializes the implicit notifications of an observable sequence as explicit notification values.
 
 #### Returns
-*(`Observable`)*: An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
+*(`Observable<Notification>`)*: An observable sequence containing the materialized notification values from the source sequence.
 
 #### Example
 ```js
-var source = Rx.Observable
-  .from([
-    Rx.Notification.createOnNext(42),
-    Rx.Notification.createOnError(new Error('woops'))
-  ])
-  .dematerialize();
+var source = Rx.Observable.of(1,2,3).materialize();
 
 var subscription = source.subscribe(
   function (x) {
@@ -26,13 +21,16 @@ var subscription = source.subscribe(
     console.log('Completed');
   });
 
-// => Next: 42
-// => Error: Error: woops
+// => Next OnNext(1)
+// => Next OnNext(2)
+// => Next OnNext(3)
+// => Next OnCompleted()
+// => Completed
 ```
 ### Location
 
 File:
-- [`/src/core/linq/observable/dematerialize.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/dematerialize.js)
+- [`/src/core/linq/observable/materialize.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/materialize.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -51,4 +49,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/dematerialize.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/dematerialize.js)
+- [`/tests/observable/materialize.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/materialize.js)
