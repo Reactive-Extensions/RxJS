@@ -1,4 +1,4 @@
-### `Rx.Observable.prototype.zip(...args, [resultSelector])`
+### `Rx.Observable.prototype.zipIterable(...args, [resultSelector])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zipiterable.js "View in source")
 
 Merges the current observable sequence with iterables such as `Map`, `Array`, `Set` into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
@@ -15,7 +15,7 @@ Merges the current observable sequence with iterables such as `Map`, `Array`, `S
 var array = [3, 4, 5];
 
 var source = Rx.Observable.range(0, 3)
-  .zip(
+  .zipIterable(
     array,
     function (s1, s2) { return s1 + ':' + s2; }
   );
