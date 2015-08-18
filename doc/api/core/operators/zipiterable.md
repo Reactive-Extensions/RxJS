@@ -4,7 +4,7 @@
 Merges the current observable sequence with iterables such as `Map`, `Array`, `Set` into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
 
 #### Arguments
-1. `args` *(`Arguments` | `Array`)*: Arguments or an array of observable sequences.
+1. `args` *(`Arguments` | `Array`)*: Arguments of Arrays, Maps, Sets or other iterables.
 2. `[resultSelector]` *(Function)*: A function which takes the inputs at the specified index and combines them together.  If omitted, a list with the elements of the observable sequences at corresponding indexes will be yielded.
 
 #### Returns
