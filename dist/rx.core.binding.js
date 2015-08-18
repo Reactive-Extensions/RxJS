@@ -819,5 +819,5 @@
     return ConnectableObservable;
   }(Observable));
 
-    return Rx;
+  return Rx;
 }));

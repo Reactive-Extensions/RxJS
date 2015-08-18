@@ -390,5 +390,5 @@
     return HistoricalScheduler;
   }(Rx.VirtualTimeScheduler));
 
-    return Rx;
+  return Rx;
 }));

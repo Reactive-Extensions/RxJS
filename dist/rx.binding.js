@@ -511,5 +511,5 @@
     });
   };
 
-    return Rx;
+  return Rx;
 }));

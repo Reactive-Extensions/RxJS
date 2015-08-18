@@ -320,5 +320,5 @@
     });
   };
 
-    return Rx;
+  return Rx;
 }));

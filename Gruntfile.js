@@ -217,7 +217,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -502,7 +502,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -786,7 +786,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -934,7 +934,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -1064,7 +1064,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -1233,7 +1233,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -2590,7 +2590,7 @@ module.exports = function (grunt) {
       if (loadedFiles[tsFile]) {
 	    return;
       }
-	  
+
 	  if (!(concatKey === 'all' || concatKey === 'main' || concatKey === 'lite' || concatKey === 'core')) {
 		if (allLoadedFiles['lite'][tsFile] || allLoadedFiles['core'][tsFile]) {
 		  loadedFiles[tsFile] = true;
@@ -2621,13 +2621,13 @@ module.exports = function (grunt) {
 
 	loadFile('ts/core/es5.ts');
 	loadFile('ts/core/es6.ts');
-	
+
 	var items = [];
 	for (var key in concatItems) {
 	  if (key.indexOf('-compat') > -1) {
 	    continue;
 	  }
-	  
+
 	  if (key === 'lite' || key === 'core') {
 		items.unshift(key);
 	  } else {
@@ -2637,11 +2637,11 @@ module.exports = function (grunt) {
 
 	for (var key = 0; key < items.length; key++) {
 	  var concatKey = items[key];
-	  
+
 	  if (!allLoadedFiles[concatKey])
 		allLoadedFiles[concatKey] = {};
 	  var loadedFiles = allLoadedFiles[concatKey];
-	  
+
 	  var output = [];
 	  var es6Output = [];
 	  var value = concatItems[concatKey];
@@ -2684,7 +2684,7 @@ module.exports = function (grunt) {
 	      }
 	    }
 	  }
-	  
+
 	  var writeOut = function(dest, output, es6) {
 		var outputString = 'declare module Rx {\n' + output.join('') + '\n}\n';
 		if (concatKey === 'all' || concatKey === 'main' || concatKey === 'lite' || concatKey === 'core') {
@@ -2693,7 +2693,7 @@ module.exports = function (grunt) {
 		if (dist && concatKey !== 'core') {
 		  outputString += 'declare module "'+dist+'" { export = Rx; }';
 		}
-		
+
 		// TS 1.5.4 support
 		  outputString = outputString
 			.replace(/export type ObservableOrPromise<T> = IObservable<T> \| Observable<T> \| Promise<T>;/g, '')
@@ -2720,7 +2720,7 @@ module.exports = function (grunt) {
 			.replace(/_Accumulator<(\w*?), (\w*?)>/g, '((acc: $1, value: $1) => $2)')
 			.replace(/special._FlatMapResultSelector<(\w*?), (\w*?), (\w*?)>/g, '((value: $1, selectorValue: $2, index: number, selectorOther: number) => $3)')
 			.replace(/ObservableOrPromise\<(\w*?)\>/g, '(IObservable<$1> | Observable<$1> \| Promise<$1>)')
-			
+
 			/*special._FlatMapResultSelector<T, TOther, TResult>*/
 		if (es6) {
 		  outputString = outputString
@@ -2729,13 +2729,13 @@ module.exports = function (grunt) {
 		  outputString = outputString
 			  .replace(/ArrayOrIterable<(\w*?)>/g, 'ArrayLike<$1>');
 		}
-		
+
 		outputString = outputString
 			.replace(/ArrayLike<(\w*?)>/g, '(Array<$1> | { length: number;[index: number]: $1; })')
-			
+
 		outputString = outputString + '\n';
 			//.replace(/\(IObservable<TResult> \| Observable<TResult> \| Promise<TResult>\) \| \(value: T, index: number, observable: \(IObservable<T> \| Observable<T> \| Promise<T>\)\) => \(IObservable<TResult> \| Observable<TResult> \| Promise<TResult>\)\): Observable<TResult>/, '(IObservable<TResult> | Observable<TResult> | Promise<TResult> | (value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>)): Observable<TResult>')
-			
+
 		grunt.file.write(dest, outputString);
 	  };
 
@@ -2743,13 +2743,13 @@ module.exports = function (grunt) {
         output.unshift(cache['ts/core/es5.ts']);
         es6Output.unshift(cache['ts/core/es6.ts']);
 	  }
-	  
+
 	  writeOut(dest, output);
 	  writeOut(dest.replace(/.d.ts$/, '.es6.d.ts'), es6Output, true);
     }
 
     grunt.file.write('ts/iterable.es6.d.ts', grunt.file.read('ts/core/es6-iterable.d.ts'));
-    grunt.file.write('ts/es6-promise.es6.d.ts', grunt.file.read('ts/core/es6-promise.d.ts'));  
+    grunt.file.write('ts/es6-promise.es6.d.ts', grunt.file.read('ts/core/es6-promise.d.ts'));
   });
 
   grunt.registerTask('concat-min', [

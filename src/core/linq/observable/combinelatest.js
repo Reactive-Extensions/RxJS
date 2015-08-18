@@ -1,3 +1,10 @@
+  function falseFactory() { return false; }
+  function argumentsToArray() {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return args;
+  }
+
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
    *
@@ -9,12 +16,11 @@
   var combineLatest = Observable.combineLatest = function () {
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-    var resultSelector = args.pop();
+    var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
     Array.isArray(args[0]) && (args = args[0]);
 
     return new AnonymousObservable(function (o) {
       var n = args.length,
-        falseFactory = function () { return false; },
         hasValue = arrayInitialize(n, falseFactory),
         hasValueAll = false,
         isDone = arrayInitialize(n, falseFactory),

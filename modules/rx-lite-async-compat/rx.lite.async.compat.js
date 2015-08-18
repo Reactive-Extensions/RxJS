@@ -204,5 +204,5 @@ function isGeneratorFunction(obj) {
     return observableFromPromise(promise);
   }
 
-    return Rx;
+  return Rx;
 }));

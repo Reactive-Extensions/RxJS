@@ -607,5 +607,5 @@ observableProto.controlled = function (enableQueue, scheduler) {
     return dest;
   };
 
-    return Rx;
+  return Rx;
 }));

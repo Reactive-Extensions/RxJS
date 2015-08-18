@@ -457,5 +457,5 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     return observableFromPromise(promise);
   }
 
-    return Rx;
+  return Rx;
 }));

@@ -578,5 +578,5 @@
     return GroupedObservable;
   }(Observable));
 
-    return Rx;
+  return Rx;
 }));

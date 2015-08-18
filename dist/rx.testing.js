@@ -522,5 +522,5 @@ var ReactiveTest = Rx.ReactiveTest = {
     return TestScheduler;
   })(VirtualTimeScheduler);
 
-    return Rx;
+  return Rx;
 }));

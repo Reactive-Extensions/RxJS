@@ -647,5 +647,5 @@
     });
   };
 
-    return Rx;
+  return Rx;
 }));

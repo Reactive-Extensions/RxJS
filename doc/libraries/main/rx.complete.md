@@ -64,7 +64,6 @@ NuGet Packages:
 - [`while`](../../api/core/operators/while.md)
 - [`wrap`](../../api/core/operators/wrap.md)
 - [`zip`](../../api/core/operators/zip.md)
-- [`zipArray`](../../api/core/operators/ziparray.md)
 
 ### `Observable Instance Methods`
 - [`aggregate`](../../api/core/operators/aggregate.md)
@@ -201,6 +200,7 @@ NuGet Packages:
 - [`windowWithTimeOrCount`](../../api/core/operators/windowwithtimeorcount.md)
 - [`withLatestFrom`](../../api/core/operators/withlatestfrom.md)
 - [`zip`](../../api/core/operators/zipproto.md)
+- [`zipIterable`](../../api/core/operators/zipiterable.md)
 
 ## Included Classes ##
 

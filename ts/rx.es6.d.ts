@@ -1591,21 +1591,6 @@ declare module Rx {
         zip<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), source8: (IObservable<T8> | Observable<T8> | Promise<T8>), source9: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8, item9: T9) => TResult): Observable<TResult>;
     }
 
-    export interface ObservableStatic {
-        /**
-        * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-        * @param arguments Observable sources.
-        * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
-        */
-        zipArray<T>(...sources: Observable<T>[]): Observable<T[]>;
-        /**
-        * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-        * @param arguments Observable sources.
-        * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
-        */
-        zipArray<T>(sources: Observable<T>[]): Observable<T[]>;
-    }
-
     export interface Observable<T> {
         /**
        *  Hides the identity of an observable sequence.
