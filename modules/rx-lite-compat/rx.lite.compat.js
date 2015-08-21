@@ -18,11 +18,11 @@
   var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
   var Rx = {
-      internals: {},
-      config: {
-        Promise: root.Promise
-      },
-      helpers: { }
+    internals: {},
+    config: {
+      Promise: root.Promise
+    },
+    helpers: { }
   };
 
   // Defaults
@@ -168,30 +168,35 @@
 
   var EmptyError = Rx.EmptyError = function() {
     this.message = 'Sequence contains no elements.';
+    this.name = 'EmptyError';
     Error.call(this);
   };
   EmptyError.prototype = Error.prototype;
 
   var ObjectDisposedError = Rx.ObjectDisposedError = function() {
     this.message = 'Object has been disposed';
+    this.name = 'ObjectDisposedError';
     Error.call(this);
   };
   ObjectDisposedError.prototype = Error.prototype;
 
   var ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError = function () {
     this.message = 'Argument out of range';
+    this.name = 'ArgumentOutOfRangeError';
     Error.call(this);
   };
   ArgumentOutOfRangeError.prototype = Error.prototype;
 
   var NotSupportedError = Rx.NotSupportedError = function (message) {
     this.message = message || 'This operation is not supported';
+    this.name = 'NotSupportedError';
     Error.call(this);
   };
   NotSupportedError.prototype = Error.prototype;
 
   var NotImplementedError = Rx.NotImplementedError = function (message) {
     this.message = message || 'This operation is not implemented';
+    this.name = 'NotImplementedError';
     Error.call(this);
   };
   NotImplementedError.prototype = Error.prototype;
@@ -538,7 +543,7 @@
   var hasProp = {}.hasOwnProperty,
       slice = Array.prototype.slice;
 
-  var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
+  var inherits = Rx.internals.inherits = function (child, parent) {
     function __() { this.constructor = child; }
     __.prototype = parent.prototype;
     child.prototype = new __();
@@ -2912,6 +2917,13 @@ var FlatMapObservable = (function(__super__){
     return combineLatest.apply(this, args);
   };
 
+  function falseFactory() { return false; }
+  function argumentsToArray() {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return args;
+  }
+
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
    *
@@ -2923,12 +2935,11 @@ var FlatMapObservable = (function(__super__){
   var combineLatest = Observable.combineLatest = function () {
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-    var resultSelector = args.pop();
+    var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
     Array.isArray(args[0]) && (args = args[0]);
 
     return new AnonymousObservable(function (o) {
       var n = args.length,
-        falseFactory = function () { return false; },
         hasValue = arrayInitialize(n, falseFactory),
         hasValueAll = false,
         isDone = arrayInitialize(n, falseFactory),
@@ -3609,24 +3620,13 @@ var FlatMapObservable = (function(__super__){
     }, this);
   };
 
-  function zipArray(second, resultSelector) {
-    var first = this;
-    return new AnonymousObservable(function (o) {
-      var index = 0, len = second.length;
-      return first.subscribe(function (left) {
-        if (index < len) {
-          var right = second[index++], res = tryCatch(resultSelector)(left, right);
-          if (res === errorObj) { return o.onError(res.e); }
-          o.onNext(res);
-        } else {
-          o.onCompleted();
-        }
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, first);
-  }
-
   function falseFactory() { return false; }
   function emptyArrayFactory() { return []; }
+  function argumentsToArray() {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return args;
+  }
 
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
@@ -3634,11 +3634,14 @@ var FlatMapObservable = (function(__super__){
    * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
    */
   observableProto.zip = function () {
-    if (Array.isArray(arguments[0])) { return zipArray.apply(this, arguments); }
+    if (arguments.length === 0) { throw new Error('invalid arguments'); }
+
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
+    Array.isArray(args[0]) && (args = args[0]);
 
-    var parent = this, resultSelector = args.pop();
+    var parent = this;
     args.unshift(parent);
     return new AnonymousObservable(function (o) {
       var n = args.length,
@@ -3649,7 +3652,9 @@ var FlatMapObservable = (function(__super__){
       for (var idx = 0; idx < n; idx++) {
         (function (i) {
           var source = args[i], sad = new SingleAssignmentDisposable();
+
           isPromise(source) && (source = observableFromPromise(source));
+
           sad.setDisposable(source.subscribe(function (x) {
             queues[i].push(x);
             if (queues.every(function (x) { return x.length > 0; })) {
@@ -3681,54 +3686,68 @@ var FlatMapObservable = (function(__super__){
   Observable.zip = function () {
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    if (Array.isArray(args[0])) {
+      args = isFunction(args[1]) ? args[0].concat(args[1]) : args[0];
+    }
     var first = args.shift();
     return first.zip.apply(first, args);
   };
 
-  function falseFactory() { return false; }
-  function arrayFactory() { return []; }
+function falseFactory() { return false; }
+function emptyArrayFactory() { return []; }
+function argumentsToArray() {
+  var len = arguments.length, args = new Array(len);
+  for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+  return args;
+}
 
-  /**
-   * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
-   * @param arguments Observable sources.
-   * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
-   */
-  Observable.zipArray = function () {
-    var sources;
-    if (Array.isArray(arguments[0])) {
-      sources = arguments[0];
-    } else {
-      var len = arguments.length;
-      sources = new Array(len);
-      for(var i = 0; i < len; i++) { sources[i] = arguments[i]; }
+/**
+ * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
+ * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
+ * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
+ */
+observableProto.zipIterable = function () {
+  if (arguments.length === 0) { throw new Error('invalid arguments'); }
+
+  var len = arguments.length, args = new Array(len);
+  for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+  var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
+
+  var parent = this;
+  args.unshift(parent);
+  return new AnonymousObservable(function (o) {
+    var n = args.length,
+      queues = arrayInitialize(n, emptyArrayFactory),
+      isDone = arrayInitialize(n, falseFactory);
+
+    var subscriptions = new Array(n);
+    for (var idx = 0; idx < n; idx++) {
+      (function (i) {
+        var source = args[i], sad = new SingleAssignmentDisposable();
+
+        (isArrayLike(source) || isIterable(source)) && (source = observableFrom(source));
+
+        sad.setDisposable(source.subscribe(function (x) {
+          queues[i].push(x);
+          if (queues.every(function (x) { return x.length > 0; })) {
+            var queuedValues = queues.map(function (x) { return x.shift(); }),
+                res = tryCatch(resultSelector).apply(parent, queuedValues);
+            if (res === errorObj) { return o.onError(res.e); }
+            o.onNext(res);
+          } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+            o.onCompleted();
+          }
+        }, function (e) { o.onError(e); }, function () {
+          isDone[i] = true;
+          isDone.every(identity) && o.onCompleted();
+        }));
+        subscriptions[i] = sad;
+      })(idx);
     }
-    return new AnonymousObservable(function (o) {
-      var n = sources.length,
-        queues = arrayInitialize(n, arrayFactory),
-        isDone = arrayInitialize(n, falseFactory);
 
-      var subscriptions = new Array(n);
-      for (var idx = 0; idx < n; idx++) {
-        (function (i) {
-          subscriptions[i] = new SingleAssignmentDisposable();
-          subscriptions[i].setDisposable(sources[i].subscribe(function (x) {
-            queues[i].push(x);
-            if (queues.every(function (x) { return x.length > 0; })) {
-              var res = queues.map(function (x) { return x.shift(); });
-              o.onNext(res);
-            } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-              return o.onCompleted();
-            }
-          }, function (e) { o.onError(e); }, function () {
-            isDone[i] = true;
-            isDone.every(identity) && o.onCompleted();
-          }));
-        })(idx);
-      }
-
-      return new CompositeDisposable(subscriptions);
-    });
-  };
+    return new CompositeDisposable(subscriptions);
+  }, parent);
+};
 
   function asObservable(source) {
     return function subscribe(o) { return source.subscribe(o); };
@@ -3769,54 +3788,42 @@ var FlatMapObservable = (function(__super__){
     return DistinctUntilChangedObservable;
   }(ObservableBase));
 
-  function DistinctUntilChangedObserver(o, keyFn, comparer) {
-    this.o = o;
-    this.keyFn = keyFn;
-    this.comparer = comparer;
-    this.hasCurrentKey = false;
-    this.currentKey = null;
-    this.isStopped = false;
-  }
+  var DistinctUntilChangedObserver = (function(__super__) {
+    inherits(DistinctUntilChangedObserver, __super__);
+    function DistinctUntilChangedObserver(o, keyFn, comparer) {
+      this.o = o;
+      this.keyFn = keyFn;
+      this.comparer = comparer;
+      this.hasCurrentKey = false;
+      this.currentKey = null;
+      __super__.call(this);
+    }
 
-  DistinctUntilChangedObserver.prototype.onNext = function (x) {
-    if (this.isStopped) { return; }
-    var key = x;
-    if (isFunction(this.keyFn)) {
-      key = tryCatch(this.keyFn)(x);
-      if (key === errorObj) { return this.o.onError(key.e); }
-    }
-    if (this.hasCurrentKey) {
-      comparerEquals = tryCatch(this.comparer)(this.currentKey, key);
-      if (comparerEquals === errorObj) { return this.o.onError(comparerEquals.e); }
-    }
-    if (!this.hasCurrentKey || !comparerEquals) {
-      this.hasCurrentKey = true;
-      this.currentKey = key;
-      this.o.onNext(x);
-    }
-  };
-  DistinctUntilChangedObserver.prototype.onError = function(e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
+    DistinctUntilChangedObserver.prototype.next = function (x) {
+      var key = x, comparerEquals;
+      if (isFunction(this.keyFn)) {
+        key = tryCatch(this.keyFn)(x);
+        if (key === errorObj) { return this.o.onError(key.e); }
+      }
+      if (this.hasCurrentKey) {
+        comparerEquals = tryCatch(this.comparer)(this.currentKey, key);
+        if (comparerEquals === errorObj) { return this.o.onError(comparerEquals.e); }
+      }
+      if (!this.hasCurrentKey || !comparerEquals) {
+        this.hasCurrentKey = true;
+        this.currentKey = key;
+        this.o.onNext(x);
+      }
+    };
+    DistinctUntilChangedObserver.prototype.error = function(e) {
       this.o.onError(e);
-    }
-  };
-  DistinctUntilChangedObserver.prototype.onCompleted = function () {
-    if (!this.isStopped) {
-      this.isStopped = true;
+    };
+    DistinctUntilChangedObserver.prototype.completed = function () {
       this.o.onCompleted();
-    }
-  };
-  DistinctUntilChangedObserver.prototype.dispose = function() { this.isStopped = true; };
-  DistinctUntilChangedObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.o.onError(e);
-      return true;
-    }
+    };
 
-    return false;
-  };
+    return DistinctUntilChangedObserver;
+  }(AbstractObserver));
 
   /**
   *  Returns an observable sequence that contains only distinct contiguous elements according to the keyFn and the comparer.
@@ -3935,7 +3942,7 @@ var FlatMapObservable = (function(__super__){
    * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
    * @returns {Observable} Source sequence with the action-invoking termination behavior applied.
    */
-  observableProto['finally'] = observableProto.ensure = function (action) {
+  observableProto['finally'] = function (action) {
     var source = this;
     return new AnonymousObservable(function (observer) {
       var subscription = tryCatch(source.subscribe).call(source, observer);

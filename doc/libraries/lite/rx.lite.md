@@ -45,7 +45,6 @@ NuGet Packages:
 - [`throw`](../../api/core/operators/throw.md)
 - [`timer`](../../api/core/operators/timer.md)
 - [`zip`](../../api/core/operators/zip.md)
-- [`zipArray`](../../api/core/operators/ziparray.md)
 
 ### `Observable Instance Methods`
 - [`asObservable`](../../api/core/operators/asobservable.md)
@@ -115,6 +114,7 @@ NuGet Packages:
 - [`where`](../../api/core/operators/where.md)
 - [`withLatestFrom`](../../api/core/operators/withlatestfrom.md)
 - [`zip`](../../api/core/operators/zipproto.md)
+- [`zipIterable`](../../api/core/operators/zipiterable.md)
 
 ## Included Classes ##
 

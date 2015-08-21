@@ -217,7 +217,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -502,7 +502,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -786,7 +786,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -934,7 +934,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -1064,7 +1064,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -1233,7 +1233,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/withlatestfrom.js',
               'src/core/linq/observable/zipproto.js',
               'src/core/linq/observable/zip.js',
-              'src/core/linq/observable/ziparray.js',
+              'src/core/linq/observable/zipiterable.js',
 
               // Single
               'src/core/linq/observable/asobservable.js',
@@ -2542,6 +2542,216 @@ module.exports = function (grunt) {
     'nuget-virtualtime'
   ]);
 
+  grunt.registerTask('rebuild-ts', 'Rebuild typescript declarations', function() {
+    var path = require('path');
+    var fs = require('fs');
+
+    var cache = {};
+    var dependencies = {};
+    var concatItems = grunt.config.get('concat');
+	var allLoadedFiles = {};
+
+    function loadFile(tsFile) {
+      if (cache[tsFile]) {
+        return;
+      }
+      var dependencyRegex = /\/\/\/ <reference path\=\"(.*?)\" \/>/g;
+      var c; //, count = 0;
+      var source = grunt.file.read(tsFile);
+
+      // source with tests
+      var s = source.match(/module Rx \{([\s\S]*)\}[\s\S]*\(function/);
+      if (s && s[1]) {
+        c = cache[tsFile] = s[1];
+	  }
+	  if (!s) {
+	    // source without tests
+		s = source.match(/module Rx \{([\s\S]*)\}/);
+		if (s && s[1]) {
+		  c = cache[tsFile] = s[1];
+		}
+	  }
+
+	  var deps = dependencies[tsFile] = [];
+	  var result;
+	  while (result = dependencyRegex.exec(source)) {
+		var dep = path.resolve(__dirname, path.dirname(tsFile), result[1])
+		  .substr(__dirname.length + 1)
+		  .replace(/\\/g, '/');
+
+		deps.push(dep);
+		loadFile(dep);
+	  }
+
+	  return c;
+	}
+
+    function addLoadedFile(concatKey, tsFile) {
+      if (loadedFiles[tsFile]) {
+	    return;
+      }
+
+	  if (!(concatKey === 'all' || concatKey === 'main' || concatKey === 'lite' || concatKey === 'core')) {
+		if (allLoadedFiles['lite'][tsFile] || allLoadedFiles['core'][tsFile]) {
+		  loadedFiles[tsFile] = true;
+		  return;
+		}
+	  }
+
+  	  if (!(tsFile.match(/\/toset\.ts$/) || tsFile.match(/\/tomap\.ts$/))) {
+  	    output.push(cache[tsFile]);
+	  }
+	  es6Output.push(cache[tsFile]);
+	  loadedFiles[tsFile] = true;
+    }
+
+	function addFileContent(concatKey, tsFile) {
+      if (loadedFiles[tsFile]) {
+	    return;
+	  }
+
+	  var deps = dependencies[tsFile];
+	  for (var k = 0; k < deps.length; k++) {
+		addLoadedFile(concatKey, deps[k]);
+		addFileContent(concatKey, deps[k]);
+	  }
+
+	  addLoadedFile(concatKey, tsFile);
+	}
+
+	loadFile('ts/core/es5.ts');
+	loadFile('ts/core/es6.ts');
+
+	var items = [];
+	for (var key in concatItems) {
+	  if (key.indexOf('-compat') > -1) {
+	    continue;
+	  }
+
+	  if (key === 'lite' || key === 'core') {
+		items.unshift(key);
+	  } else {
+		items.push(key);
+	  }
+	}
+
+	for (var key = 0; key < items.length; key++) {
+	  var concatKey = items[key];
+
+	  if (!allLoadedFiles[concatKey])
+		allLoadedFiles[concatKey] = {};
+	  var loadedFiles = allLoadedFiles[concatKey];
+
+	  var output = [];
+	  var es6Output = [];
+	  var value = concatItems[concatKey];
+	  var src = value.src;
+	  var dest = value.dest;
+	  var dist = false;
+
+	  if (dest.indexOf('dist/') === 0) {
+	    dist = dest.match(/dist\/(.*?)\.js/)[1];
+	    dest = dest.replace(/dist\/(.*?)\.js/, 'ts/$1.d.ts');
+	  } else if (dest.indexOf('modules/') === 0) {
+	    continue;
+	  } else {
+	    throw new Error("not sure how to handle " + dest);
+	  }
+
+	  for (var i = 0; i < src.length; i++) {
+	    var file = src[i];
+	    var tsFile = file
+	      .replace(/src\/(.*?).js/, 'ts/$1.ts')
+	      // Is this right 100% of the time?
+	      .replace('perf/operators', 'linq/observable');
+
+	    if (cache[tsFile] || fs.existsSync(tsFile)) {
+	      if (!cache[tsFile]) {
+	        loadFile(tsFile);
+	      }
+
+	      if (tsFile.indexOf('/es5') === -1 || tsFile.indexOf('/es6') === -1) {
+	        addFileContent(concatKey, tsFile);
+	      }
+	    } else {
+	      var valid = ['/headers/', '/longstacktraces/', '/internal/', '/autodetachobserver', '/subjects/innersubscription', '/perf/observablebase', 'linq/enumerable/while', '.compat.', 'linq/observable/_', '/linq/observable/fromarrayobservable', '/joins/', '/linq/observable/flatmapbase', '/disposables/scheduleddisposable', '/concurrency/catchscheduler', '/core/observeonobserver', '/testing/mockpromise', '/testing/hotobservable', '/testing/coldobservable'];
+	      var validResult = false;
+	      for (var z = 0; z < valid.length; z++) {
+	        if (tsFile.indexOf(valid[z]) !== -1) {
+	          validResult = true;
+	          break;
+	        }
+	      }
+	    }
+	  }
+
+	  var writeOut = function(dest, output, es6) {
+		var outputString = 'declare module Rx {\n' + output.join('') + '\n}\n';
+		if (concatKey === 'all' || concatKey === 'main' || concatKey === 'lite' || concatKey === 'core') {
+		  outputString += '\ndeclare module "rx" { export = Rx; }\n';
+		}
+		if (dist && concatKey !== 'core') {
+		  outputString += 'declare module "'+dist+'" { export = Rx; }';
+		}
+
+		// TS 1.5.4 support
+		  outputString = outputString
+			.replace(/export type ObservableOrPromise<T> = IObservable<T> \| Observable<T> \| Promise<T>;/g, '')
+			.replace(/export type ArrayLike<T> = Array<T> \| \{ length: number;\[index: number\]: T; \};/g, '')
+			.replace(/export type ArrayOrIterable<T> = ArrayLike<T> \| Iterable<T>;/g, '')
+			.replace(/export type ArrayOrIterable<T> = ArrayLike<T>;/g, '')
+			.replace(/export type _Selector<T, TResult> = \(value: T, index: number, observable: Observable<T>\) => TResult;/g, '')
+			.replace(/export type _ValueOrSelector<T, TResult> = TResult \| _Selector<T, TResult>;/g, '')
+			.replace(/export type _Predicate<T> = _Selector<T, boolean>;/g, '')
+			.replace(/export type _Comparer<T, TResult> = \(value1: T, value2: T\) => TResult;/g, '')
+			.replace(/export type _Accumulator<T, TAcc> = \(acc: TAcc, value: T\) => TAcc;/g, '')
+			.replace(/export type _FlatMapResultSelector<T1, T2, TResult> = \(value: T1, selectorValue: T2, index: number, selectorOther: number\) => TResult;/g, '')
+			.replace(/_Predicate<(\w*?)>/g, '_Selector<$1, boolean>')
+			.replace(/_ValueOrSelector<(\w*?), ObservableOrPromise<(\w*?)>>/g, 'ObservableOrPromise<$2> | _Selector<$1, ObservableOrPromise<$2>>')
+			.replace(/_ValueOrSelector<(\w*?), ArrayOrIterable<(\w*?)>>/g, 'ArrayOrIterable<$2> | _Selector<$1, ArrayOrIterable<$2>>')
+			.replace(/_ValueOrSelector<(\w*?), (\w*?)>/g, '$2 | _Selector<$1, $2>')
+			.replace(/_Selector<Observable<(\w*?)>, (\w*?)>/g, '((value: Observable<$1>, index: number, observable: Observable<Observable<$1>>) => $2)')
+			.replace(/_Selector<(\w*?), Observable<(\w*?)>>/g, '((value: $1, index: number, observable: Observable<$1>) => Observable<$2>)')
+			.replace(/_Selector<(\w*?), ObservableOrPromise<(\w*?)>>/g, '((value: $1, index: number, observable: ObservableOrPromise<$1>) => ObservableOrPromise<$2>)')
+			.replace(/_Selector<(\w*?), ArrayOrIterable<(\w*?)>>/g, '((value: $1, index: number, observable: ArrayOrIterable<$1>) => ArrayOrIterable<$2>)')
+			.replace(/_Selector<(\w*?), (\w*?)>/g, '((value: $1, index: number, observable: Observable<$1>) => $2)')
+			.replace(/_Comparer<(\w*?), (\w*?)>/g, '((value1: $1, value2: $1) => $2)')
+			.replace(/_Comparer<T \| TOther, boolean>/, '((value1: T | TOther, value2: T | TOther) => boolean)')
+			.replace(/_Accumulator<(\w*?), (\w*?)>/g, '((acc: $1, value: $1) => $2)')
+			.replace(/special._FlatMapResultSelector<(\w*?), (\w*?), (\w*?)>/g, '((value: $1, selectorValue: $2, index: number, selectorOther: number) => $3)')
+			.replace(/ObservableOrPromise\<(\w*?)\>/g, '(IObservable<$1> | Observable<$1> \| Promise<$1>)')
+
+			/*special._FlatMapResultSelector<T, TOther, TResult>*/
+		if (es6) {
+		  outputString = outputString
+			  .replace(/ArrayOrIterable<(\w*?)>/g, '(ArrayLike<$1> | Iterable<$1>)');
+		} else {
+		  outputString = outputString
+			  .replace(/ArrayOrIterable<(\w*?)>/g, 'ArrayLike<$1>');
+		}
+
+		outputString = outputString
+			.replace(/ArrayLike<(\w*?)>/g, '(Array<$1> | { length: number;[index: number]: $1; })')
+
+		outputString = outputString + '\n';
+			//.replace(/\(IObservable<TResult> \| Observable<TResult> \| Promise<TResult>\) \| \(value: T, index: number, observable: \(IObservable<T> \| Observable<T> \| Promise<T>\)\) => \(IObservable<TResult> \| Observable<TResult> \| Promise<TResult>\)\): Observable<TResult>/, '(IObservable<TResult> | Observable<TResult> | Promise<TResult> | (value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>)): Observable<TResult>')
+
+		grunt.file.write(dest, outputString);
+	  };
+
+	  if (concatKey === 'all' || concatKey === 'main' || concatKey === 'lite' || concatKey === 'core') {
+        output.unshift(cache['ts/core/es5.ts']);
+        es6Output.unshift(cache['ts/core/es6.ts']);
+	  }
+
+	  writeOut(dest, output);
+	  writeOut(dest.replace(/.d.ts$/, '.es6.d.ts'), es6Output, true);
+    }
+
+    grunt.file.write('ts/iterable.es6.d.ts', grunt.file.read('ts/core/es6-iterable.d.ts'));
+    grunt.file.write('ts/es6-promise.es6.d.ts', grunt.file.read('ts/core/es6-promise.d.ts'));
+  });
+
   grunt.registerTask('concat-min', [
     'concat:core',
     'concat:core-binding',
@@ -2633,7 +2843,7 @@ module.exports = function (grunt) {
     'copy:lite-extras-compat',
     'copy:core',
     'copy:core-binding',
-    'copy:core-testing',
+    'copy:core-testing'
   ]);
 
   // Default task
@@ -2730,6 +2940,7 @@ module.exports = function (grunt) {
     'copy:core-binding',
     'copy:core-testing',
 
-    'qunit'
+    'qunit',
+	'rebuild-ts'
   ]);
 };

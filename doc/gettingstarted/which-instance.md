@@ -293,8 +293,8 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
     <tr>
         <td colspan="2">and replay <em>n</em> number of values to future subscribers</td>
         <td>
-          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/publish.md">replay</a><br>
-          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/share.md">shareReplay</a>
+          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/replay.md">replay</a><br>
+          <a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/sharereplay.md">shareReplay</a>
         </td>
     </tr>
     <tr>

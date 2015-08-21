@@ -20,6 +20,6 @@
     <file src="..\..\dist\rx.binding.js" target="content\Scripts\rx.binding.js" />
     <file src="..\..\dist\rx.binding.min.js" target="content\Scripts\rx.binding.min.js" />
     <file src="..\..\ts\rx.binding.d.ts" target="content\Scripts\rx.binding.d.ts" />
-    <file src="..\..\ts\rx.binding-lite.d.ts" target="content\Scripts\rx.binding-lite.d.ts" />
+    <file src="..\..\ts\rx.binding.es6.d.ts" target="content\Scripts\rx.binding.es6.d.ts" />
   </files>
 </package>

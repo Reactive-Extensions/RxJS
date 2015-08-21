@@ -18,7 +18,7 @@
 
   // Because of build optimizers
   if (typeof define === 'function' && define.amd) {
-    define(['rx-lite'], function (Rx, exports) {
+    define(['./rx.lite'], function (Rx, exports) {
       return factory(root, exports, Rx);
     });
   } else if (typeof module === 'object' && module && module.exports === freeExports) {
@@ -253,5 +253,5 @@
     return dest;
   };
 
-    return Rx;
+  return Rx;
 }));

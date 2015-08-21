@@ -18,11 +18,11 @@
   var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
   var Rx = {
-      internals: {},
-      config: {
-        Promise: root.Promise
-      },
-      helpers: { }
+    internals: {},
+    config: {
+      Promise: root.Promise
+    },
+    helpers: { }
   };
 
 // Defaults
@@ -179,7 +179,7 @@ var
   var hasProp = {}.hasOwnProperty,
       slice = Array.prototype.slice;
 
-  var inherits = this.inherits = Rx.internals.inherits = function (child, parent) {
+  var inherits = Rx.internals.inherits = function (child, parent) {
     function __() { this.constructor = child; }
     __.prototype = parent.prototype;
     child.prototype = new __();

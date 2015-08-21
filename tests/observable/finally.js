@@ -1,5 +1,5 @@
 (function () {
-  QUnit.module('Finally');
+  QUnit.module('finally');
 
   var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
@@ -8,11 +8,11 @@
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-  test('Finally has orders of effects', function () {
+  test('finally has orders of effects', function () {
     var results = [];
     function noop () {}
 
-    var someObservable = Rx.Observable.empty().ensure(function () {
+    var someObservable = Rx.Observable.empty()['finally'](function () {
       results.push('invoked');
     });
 
@@ -24,10 +24,10 @@
     equal(results[1], 'invoked');
   });
 
-  test('Finally calls finally before throwing', function () {
+  test('finally calls finally before throwing', function () {
     var invoked = false;
 
-    var someObservable = Rx.Observable['throw'](new Error()).ensure(function () {
+    var someObservable = Rx.Observable['throw'](new Error())['finally'](function () {
       invoked = true;
     });
 
@@ -38,10 +38,10 @@
     ok(invoked);
   });
 
-  test('Finally only called once on empty', function () {
+  test('finally only called once on empty', function () {
     var invokeCount = 0;
 
-    var someObservable = Rx.Observable.empty().ensure(function () {
+    var someObservable = Rx.Observable.empty()['finally'](function () {
       invokeCount++;
     });
 
@@ -64,7 +64,7 @@
     var invoked = false;
 
     var results = scheduler.startWithCreate(function () {
-      return xs.ensure(function () {
+      return xs['finally'](function () {
         invoked = true;
       });
     }).messages;
@@ -80,7 +80,7 @@
     ok(invoked);
   });
 
-  test('Finally called with single value', function () {
+  test('finally called with single value', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -92,7 +92,7 @@
     var invoked = false;
 
     var results = scheduler.startWithCreate(function () {
-      return xs.ensure(function () {
+      return xs['finally'](function () {
         invoked = true;
       });
     }).messages;
@@ -109,7 +109,7 @@
     ok(invoked);
   });
 
-  test('Finally on throws', function () {
+  test('finally on throws', function () {
     var ex = new Error('ex');
 
     var scheduler = new TestScheduler();
@@ -122,7 +122,7 @@
     var invoked = false;
 
     var results = scheduler.startWithCreate(function () {
-      return xs.ensure(function () {
+      return xs['finally'](function () {
         invoked = true;
       });
     }).messages;

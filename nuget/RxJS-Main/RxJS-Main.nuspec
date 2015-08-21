@@ -20,6 +20,8 @@
     <file src="..\..\dist\rx.compat.js" target="content\Scripts\rx.compat.js" />
     <file src="..\..\dist\rx.compat.min.js" target="content\Scripts\rx.compat.min.js" />
     <file src="..\..\ts\rx.d.ts" target="content\Scripts\rx.d.ts" />
-    <file src="..\..\ts\rx-lite.d.ts" target="content\Scripts\rx-lite.d.ts" />
+    <file src="..\..\ts\rx.es6.d.ts" target="content\Scripts\rx.es6.d.ts" />
+    <file src="..\..\ts\rx.lite.d.ts" target="content\Scripts\rx.lite.d.ts" />
+    <file src="..\..\ts\rx.lite.es6.d.ts" target="content\Scripts\rx.lite.es6.d.ts" />
   </files>
 </package>

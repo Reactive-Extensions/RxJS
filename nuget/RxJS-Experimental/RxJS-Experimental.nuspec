@@ -22,5 +22,6 @@
     <file src="..\..\dist\rx.experimental.js" target="content\Scripts\rx.experimental.js" />
     <file src="..\..\dist\rx.experimental.min.js" target="content\Scripts\rx.experimental.min.js" />
     <file src="..\..\ts\rx.experimental.d.ts" target="content\Scripts\rx.experimental.d.ts" />
+    <file src="..\..\ts\rx.experimental.es6.d.ts" target="content\Scripts\rx.experimental.es6.d.ts" />
   </files>
 </package>

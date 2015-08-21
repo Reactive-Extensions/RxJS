@@ -18,7 +18,7 @@
 
   // Because of build optimizers
   if (typeof define === 'function' && define.amd) {
-    define(['rx-lite-compat'], function (Rx, exports) {
+    define(['./rx.lite.compat'], function (Rx, exports) {
       return factory(root, exports, Rx);
     });
   } else if (typeof module === 'object' && module && module.exports === freeExports) {
@@ -390,5 +390,5 @@
     return HistoricalScheduler;
   }(Rx.VirtualTimeScheduler));
 
-    return Rx;
+  return Rx;
 }));

@@ -2,7 +2,7 @@
     inherits(FinallyObservable, __super__);
     function FinallyObservable(source, action, thisArg) {
       this.source = source;
-      this.action = bindCallback(action, thisArg, 1);
+      this.action = bindCallback(action, thisArg, 0);
       __super__.call(this);
     }
 
@@ -33,6 +33,6 @@
    * @param {Function} finallyAction Action to invoke after the source observable sequence terminates.
    * @returns {Observable} Source sequence with the action-invoking termination behavior applied.
    */
-  observableProto['finally'] = observableProto.ensure = observableProto.finallyAction = function (action, thisArg) {
+  observableProto['finally'] = function (action, thisArg) {
     return new FinallyObservable(this, action, thisArg);
   };

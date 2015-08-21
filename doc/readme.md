@@ -80,8 +80,9 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
 
 Curious on how we designed RxJS? This is covered along with overall guidelines of how your RxJS code should operate.  In addition, we have contribution guidelines which set the bar for which we accept contributions.
 
+- [RxJS Code of Conduct](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
 - [RxJS Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
-- [RxJS Contribution Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/contributing)
+- [RxJS Contribution Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/contributing.md)
 
 ## Getting to Know RxJS Libraries ##
 

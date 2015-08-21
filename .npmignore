@@ -6,6 +6,8 @@ nuget/
 doc/
 examples/
 tests/
+logos/
+modules/
 .git*
 .jshint*
 .npmignore

@@ -22,5 +22,6 @@
     <file src="..\..\dist\rx.virtualtime.js" target="content\Scripts\rx.virtualtime.js" />
     <file src="..\..\dist\rx.virtualtime.min.js" target="content\Scripts\rx.virtualtime.min.js" />
     <file src="..\..\ts\rx.virtualtime.d.ts" target="content\Scripts\rx.virtualtime.d.ts" />
+    <file src="..\..\ts\rx.virtualtime.es6.d.ts" target="content\Scripts\rx.virtualtime.es6.d.ts" />
   </files>
 </package>

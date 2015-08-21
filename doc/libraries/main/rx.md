@@ -41,7 +41,6 @@ NuGet Packages:
 - [`return`](../../api/core/operators/return.md)
 - [`throw`](../../api/core/operators/throw.md)
 - [`zip`](../../api/core/operators/zip.md)
-- [`zipArray`](../../api/core/operators/ziparray.md)
 
 ### `Observable Instance Methods`
 - [`amb`](../../api/core/operators/ambproto.md)
@@ -103,6 +102,7 @@ NuGet Packages:
 - [`windowWithCount`](../../api/core/operators/windowwithcount.md)
 - [`withLatestFrom`](../../api/core/operators/withlatestfrom.md)
 - [`zip`](../../api/core/operators/zipproto.md)
+- [`zipIterable`](../../api/core/operators/zipiterable.md)
 
 ## Included Classes ##
 
