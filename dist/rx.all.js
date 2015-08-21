@@ -4139,6 +4139,9 @@ var FlatMapObservable = (function(__super__){
   Observable.zip = function () {
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    if (Array.isArray(args[0])) {
+      args = isFunction(args[1]) ? args[0].concat(args[1]) : args[0];
+    }
     var first = args.shift();
     return first.zip.apply(first, args);
   };
