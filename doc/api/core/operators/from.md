@@ -1,5 +1,5 @@
 ### `Rx.Observable.from(iterable, [mapFn], [thisArg], [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/from.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/from.js 'View in source')
 
 This method creates a new Observable sequence from an array-like or iterable object.
 
@@ -37,7 +37,7 @@ f(1, 2, 3).subscribe(
 
 // Any iterable object...
 // Set
-var s = new Set(["foo", window]);
+var s = new Set(['foo', window]);
 Rx.Observable.from(s).subscribe(
   function (x) {
     console.log('Next: ' + x);
@@ -70,7 +70,7 @@ Rx.Observable.from(m).subscribe(
 // => Completed
 
 // String
-Rx.Observable.from("foo").subscribe(
+Rx.Observable.from('foo').subscribe(
   function (x) {
     console.log('Next: ' + x);
   },

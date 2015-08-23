@@ -1,36 +1,32 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 ;(function (factory) {
-    var objectTypes = {
-        'boolean': false,
-        'function': true,
-        'object': true,
-        'number': false,
-        'string': false,
-        'undefined': false
-    };
+  var objectTypes = {
+    'function': true,
+    'object': true
+  };
 
-    var root = (objectTypes[typeof window] && window) || this,
-        freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
-        freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
-        moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
-        freeGlobal = objectTypes[typeof global] && global;
+  var
+    freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
+    freeSelf = objectTypes[typeof self] && self.Object && self,
+    freeWindow = objectTypes[typeof window] && window && window.Object && window,
+    freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
+    moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
+    freeGlobal = freeExports && freeModule && typeof global == 'object' && global && global.Object && global;
 
-    if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
-        root = freeGlobal;
-    }
+  var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
-    // Because of build optimizers
-    if (typeof define === 'function' && define.amd) {
-        define(['rx.binding', 'exports'], function (Rx, exports) {
-            root.Rx = factory(root, exports, Rx);
-            return root.Rx;
-        });
-    } else if (typeof module === 'object' && module && module.exports === freeExports) {
-        module.exports = factory(root, module.exports, require('./rx'));
-    } else {
-        root.Rx = factory(root, {}, root.Rx);
-    }
+  // Because of build optimizers
+  if (typeof define === 'function' && define.amd) {
+    define(['./rx.binding', 'exports'], function (Rx, exports) {
+      root.Rx = factory(root, exports, Rx);
+      return root.Rx;
+    });
+  } else if (typeof module === 'object' && module && module.exports === freeExports) {
+    module.exports = factory(root, module.exports, require('./rx'));
+  } else {
+    root.Rx = factory(root, {}, root.Rx);
+  }
 }.call(this, function (root, exp, Rx, undefined) {
 
   // Aliases
@@ -45,201 +41,152 @@
     immediateScheduler = Rx.Scheduler.immediate,
     timeoutScheduler = Rx.Scheduler['default'],
     isScheduler = Rx.Scheduler.isScheduler,
-    slice = Array.prototype.slice;
+    isPromise = Rx.helpers.isPromise,
+    isFunction = Rx.helpers.isFunction;
 
-  var fnString = 'function',
-      throwString = 'throw',
-      isObject = Rx.internals.isObject;
-
-  function toThunk(obj, ctx) {
-    if (Array.isArray(obj)) {  return objectToThunk.call(ctx, obj); }
-    if (isGeneratorFunction(obj)) { return observableSpawn(obj.call(ctx)); }
-    if (isGenerator(obj)) {  return observableSpawn(obj); }
-    if (isObservable(obj)) { return observableToThunk(obj); }
-    if (isPromise(obj)) { return promiseToThunk(obj); }
-    if (typeof obj === fnString) { return obj; }
-    if (isObject(obj) || Array.isArray(obj)) { return objectToThunk.call(ctx, obj); }
-
-    return obj;
-  }
-
-  function objectToThunk(obj) {
-    var ctx = this;
-
-    return function (done) {
-      var keys = Object.keys(obj),
-          pending = keys.length,
-          results = new obj.constructor(),
-          finished;
-
-      if (!pending) {
-        timeoutScheduler.schedule(function () { done(null, results); });
-        return;
-      }
-
-      for (var i = 0, len = keys.length; i < len; i++) {
-        run(obj[keys[i]], keys[i]);
-      }
-
-      function run(fn, key) {
-        if (finished) { return; }
-        try {
-          fn = toThunk(fn, ctx);
-
-          if (typeof fn !== fnString) {
-            results[key] = fn;
-            return --pending || done(null, results);
-          }
-
-          fn.call(ctx, function(err, res) {
-            if (finished) { return; }
-
-            if (err) {
-              finished = true;
-              return done(err);
-            }
-
-            results[key] = res;
-            --pending || done(null, results);
-          });
-        } catch (e) {
-          finished = true;
-          done(e);
-        }
-      }
+  var errorObj = {e: {}};
+  var tryCatchTarget;
+  function tryCatcher() {
+    try {
+      return tryCatchTarget.apply(this, arguments);
+    } catch (e) {
+      errorObj.e = e;
+      return errorObj;
     }
   }
-
-  function observableToThunk(observable) {
-    return function (fn) {
-      var value, hasValue = false;
-      observable.subscribe(
-        function (v) {
-          value = v;
-          hasValue = true;
-        },
-        fn,
-        function () {
-          hasValue && fn(null, value);
-        });
-    }
+  function tryCatch(fn) {
+    if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
+    tryCatchTarget = fn;
+    return tryCatcher;
+  }
+  function thrower(e) {
+    throw e;
   }
 
-  function promiseToThunk(promise) {
-    return function(fn) {
-      promise.then(function(res) {
-        fn(null, res);
-      }, fn);
-    }
-  }
+  Observable.wrap = function (fn) {
+    createObservable.__generatorFunction__ = fn;
+    return createObservable;
 
-  function isObservable(obj) {
-    return obj && typeof obj.subscribe === fnString;
-  }
-
-  function isGeneratorFunction(obj) {
-    return obj && obj.constructor && obj.constructor.name === 'GeneratorFunction';
-  }
-
-  function isGenerator(obj) {
-    return obj && typeof obj.next === fnString && typeof obj[throwString] === fnString;
-  }
-
-  /*
-   * Spawns a generator function which allows for Promises, Observable sequences, Arrays, Objects, Generators and functions.
-   * @param {Function} The spawning function.
-   * @returns {Function} a function which has a done continuation.
-   */
-  var observableSpawn = Rx.spawn = function (fn) {
-    var isGenFun = isGeneratorFunction(fn);
-
-    return function (done) {
-      var ctx = this,
-        gen = fn;
-
-      if (isGenFun) {
-        for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-        var len = args.length,
-          hasCallback = len && typeof args[len - 1] === fnString;
-
-        done = hasCallback ? args.pop() : handleError;
-        gen = fn.apply(this, args);
-      } else {
-        done = done || handleError;
-      }
-
-      next();
-
-      function exit(err, res) {
-        timeoutScheduler.schedule(done.bind(ctx, err, res));
-      }
-
-      function next(err, res) {
-        var ret;
-
-        // multiple args
-        if (arguments.length > 2) {
-          for(var res = [], i = 1, len = arguments.length; i < len; i++) { res.push(arguments[i]); }
-        }
-
-        if (err) {
-          try {
-            ret = gen[throwString](err);
-          } catch (e) {
-            return exit(e);
-          }
-        }
-
-        if (!err) {
-          try {
-            ret = gen.next(res);
-          } catch (e) {
-            return exit(e);
-          }
-        }
-
-        if (ret.done)  {
-          return exit(null, ret.value);
-        }
-
-        ret.value = toThunk(ret.value, ctx);
-
-        if (typeof ret.value === fnString) {
-          var called = false;
-          try {
-            ret.value.call(ctx, function() {
-              if (called) {
-                return;
-              }
-
-              called = true;
-              next.apply(ctx, arguments);
-            });
-          } catch (e) {
-            timeoutScheduler.schedule(function () {
-              if (called) {
-                return;
-              }
-
-              called = true;
-              next.call(ctx, e);
-            });
-          }
-          return;
-        }
-
-        // Not supported
-        next(new TypeError('Rx.spawn only supports a function, Promise, Observable, Object or Array.'));
-      }
+    function createObservable() {
+      return Observable.spawn.call(this, fn.apply(this, arguments));
     }
   };
 
-  function handleError(err) {
-    if (!err) { return; }
-    timeoutScheduler.schedule(function() {
-      throw err;
+  var spawn = Observable.spawn = function () {
+    var gen = arguments[0], self = this, args = [];
+    for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+
+    return new AnonymousObservable(function (o) {
+      var g = new CompositeDisposable();
+
+      if (isFunction(gen)) { gen = gen.apply(self, args); }
+      if (!gen || !isFunction(gen.next)) {
+        o.onNext(gen);
+        return o.onCompleted();
+      }
+
+      processGenerator();
+
+      function processGenerator(res) {
+        var ret = tryCatch(gen.next).call(gen, res);
+        if (ret === errorObj) { return o.onError(ret.e); }
+        next(ret);
+      }
+
+      function onError(err) {
+        var ret = tryCatch(gen.next).call(gen, err);
+        if (ret === errorObj) { return o.onError(ret.e); }
+        next(ret);
+      }
+
+      function next(ret) {
+        if (ret.done) {
+          o.onNext(ret.value);
+          o.onCompleted();
+          return;
+        }
+        var value = toObservable.call(self, ret.value);
+        if (Observable.isObservable(value)) {
+          g.add(value.subscribe(processGenerator, onError));
+        } else {
+          onError(new TypeError('type not supported'));
+        }
+      }
+
+      return g;
     });
   }
+
+function toObservable(obj) {
+  if (!obj) { return obj; }
+  if (Observable.isObservable(obj)) { return obj; }
+  if (isPromise(obj)) { return Observable.fromPromise(obj); }
+  if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
+  if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
+  if (isArrayLike(obj) || isIterable(obj)) { return arrayToObservable.call(this, obj); }
+  if (isObject(obj)) {return objectToObservable.call(this, obj);}
+  return obj;
+}
+
+function arrayToObservable (obj) {
+  return Observable.from(obj)
+      .flatMap(toObservable)
+      .toArray();
+}
+
+function objectToObservable (obj) {
+  var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
+  for (var i = 0, len = keys.length; i < len; i++) {
+    var key = keys[i];
+    var observable = toObservable.call(this, obj[key]);
+
+    if(observable && Observable.isObservable(observable)) {
+      defer(observable, key);
+    } else {
+      results[key] = obj[key];
+    }
+  }
+
+  return Observable.forkJoin.apply(Observable, observables).map(function() {
+    return results;
+  });
+
+
+  function defer (observable, key) {
+    results[key] = undefined;
+    observables.push(observable.map(function (next) {
+      results[key] = next;
+    }));
+  }
+}
+
+function thunkToObservable(fn) {
+  var self = this;
+  return new AnonymousObservable(function (o) {
+    fn.call(self, function () {
+      var err = arguments[0], res = arguments[1];
+      if (err) { return o.onError(err); }
+      if (arguments.length > 2) {
+        var args = [];
+        for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+        res = args;
+      }
+      o.onNext(res);
+      o.onCompleted();
+    });
+  });
+}
+
+function isGenerator(obj) {
+  return isFunction (obj.next) && isFunction (obj.throw);
+}
+
+function isGeneratorFunction(obj) {
+  var ctor = obj.constructor;
+  if (!ctor) { return false; }
+  if (ctor.name === 'GeneratorFunction' || ctor.displayName === 'GeneratorFunction') { return true; }
+  return isGenerator(ctor.prototype);
+}
 
   /**
    * Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
@@ -290,116 +237,128 @@
     };
   };
 
-  /**
-   * Converts a callback function to an observable sequence.
-   *
-   * @param {Function} function Function with a callback as the last parameter to convert to an Observable sequence.
-   * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
-   * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
-   * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
-   */
-  Observable.fromCallback = function (func, context, selector) {
-    return function () {
-      var len = arguments.length, args = new Array(len)
-      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+function createCbObservable(fn, ctx, selector, args) {
+  var o = new AsyncSubject();
 
-      return new AnonymousObservable(function (observer) {
-        function handler() {
-          var len = arguments.length, results = new Array(len);
-          for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
+  args.push(createCbHandler(o, ctx, selector));
+  fn.apply(ctx, args);
 
-          if (selector) {
-            try {
-              results = selector.apply(context, results);
-            } catch (e) {
-              return observer.onError(e);
-            }
+  return o.asObservable();
+}
 
-            observer.onNext(results);
-          } else {
-            if (results.length <= 1) {
-              observer.onNext.apply(observer, results);
-            } else {
-              observer.onNext(results);
-            }
-          }
+function createCbHandler(o, ctx, selector) {
+  return function handler () {
+    var len = arguments.length, results = new Array(len);
+    for(var i = 0; i < len; i++) { results[i] = arguments[i]; }
 
-          observer.onCompleted();
-        }
-
-        args.push(handler);
-        func.apply(context, args);
-      }).publishLast().refCount();
-    };
-  };
-
-  /**
-   * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
-   * @param {Function} func The function to call
-   * @param {Mixed} [context] The context for the func parameter to be executed.  If not specified, defaults to undefined.
-   * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.
-   * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
-   */
-  Observable.fromNodeCallback = function (func, context, selector) {
-    return function () {
-      var len = arguments.length, args = new Array(len);
-      for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-
-      return new AnonymousObservable(function (observer) {
-        function handler(err) {
-          if (err) {
-            observer.onError(err);
-            return;
-          }
-
-          var len = arguments.length, results = [];
-          for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
-
-          if (selector) {
-            try {
-              results = selector.apply(context, results);
-            } catch (e) {
-              return observer.onError(e);
-            }
-            observer.onNext(results);
-          } else {
-            if (results.length <= 1) {
-              observer.onNext.apply(observer, results);
-            } else {
-              observer.onNext(results);
-            }
-          }
-
-          observer.onCompleted();
-        }
-
-        args.push(handler);
-        func.apply(context, args);
-      }).publishLast().refCount();
-    };
-  };
-
-  function createListener (element, name, handler) {
-    if (element.addEventListener) {
-      element.addEventListener(name, handler, false);
-      return disposableCreate(function () {
-        element.removeEventListener(name, handler, false);
-      });
+    if (isFunction(selector)) {
+      results = tryCatch(selector).apply(ctx, results);
+      if (results === errorObj) { return o.onError(results.e); }
+      o.onNext(results);
+    } else {
+      if (results.length <= 1) {
+        o.onNext(results[0]);
+      } else {
+        o.onNext(results);
+      }
     }
-    throw new Error('No listener found');
+
+    o.onCompleted();
+  };
+}
+
+/**
+ * Converts a callback function to an observable sequence.
+ *
+ * @param {Function} fn Function with a callback as the last parameter to convert to an Observable sequence.
+ * @param {Mixed} [ctx] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+ * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
+ * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
+ */
+Observable.fromCallback = function (fn, ctx, selector) {
+  return function () {
+    typeof ctx === 'undefined' && (ctx = this); 
+
+    var len = arguments.length, args = new Array(len)
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return createCbObservable(fn, ctx, selector, args);
+  };
+};
+
+function createNodeObservable(fn, ctx, selector, args) {
+  var o = new AsyncSubject();
+
+  args.push(createNodeHandler(o, ctx, selector));
+  fn.apply(ctx, args);
+
+  return o.asObservable();
+}
+
+function createNodeHandler(o, ctx, selector) {
+  return function handler () {
+    var err = arguments[0];
+    if (err) { return o.onError(err); }
+
+    var len = arguments.length, results = [];
+    for(var i = 1; i < len; i++) { results[i - 1] = arguments[i]; }
+
+    if (isFunction(selector)) {
+      var results = tryCatch(selector).apply(ctx, results);
+      if (results === errorObj) { return o.onError(results.e); }
+      o.onNext(results);
+    } else {
+      if (results.length <= 1) {
+        o.onNext(results[0]);
+      } else {
+        o.onNext(results);
+      }
+    }
+
+    o.onCompleted();
+  };
+}
+
+/**
+ * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
+ * @param {Function} fn The function to call
+ * @param {Mixed} [ctx] The context for the func parameter to be executed.  If not specified, defaults to undefined.
+ * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.
+ * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
+ */
+Observable.fromNodeCallback = function (fn, ctx, selector) {
+  return function () {
+    typeof ctx === 'undefined' && (ctx = this); 
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return createNodeObservable(fn, ctx, selector, args);
+  };
+};
+
+  function ListenDisposable(e, n, fn) {
+    this._e = e;
+    this._n = n;
+    this._fn = fn;
+    this._e.addEventListener(this._n, this._fn, false);
+    this.isDisposed = false;
   }
+  ListenDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this._e.removeEventListener(this._n, this._fn, false);
+      this.isDisposed = true;
+    }
+  };
 
   function createEventListener (el, eventName, handler) {
     var disposables = new CompositeDisposable();
 
     // Asume NodeList or HTMLCollection
-    var toStr = Object.prototype.toString;
-    if (toStr.call(el) === '[object NodeList]' || toStr.call(el) === '[object HTMLCollection]') {
+    var elemToString = Object.prototype.toString.call(el);
+    if (elemToString === '[object NodeList]' || elemToString === '[object HTMLCollection]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
     } else if (el) {
-      disposables.add(createListener(el, eventName, handler));
+      disposables.add(new ListenDisposable(el, eventName, handler));
     }
 
     return disposables;
@@ -410,12 +369,19 @@
    */
   Rx.config.useNativeEvents = false;
 
+  function eventHandler(o, selector) {
+    return function handler () {
+      var results = arguments[0];
+      if (isFunction(selector)) {
+        results = tryCatch(selector).apply(null, arguments);
+        if (results === errorObj) { return o.onError(results.e); }
+      }
+      o.onNext(results);
+    };
+  }
+
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
-   *
-   * @example
-   *   var source = Rx.Observable.fromEvent(element, 'mouseup');
-   *
    * @param {Object} element The DOMElement or NodeList to attach a listener.
    * @param {String} eventName The event name to attach the observable sequence.
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
@@ -440,23 +406,12 @@
           selector);
       }
     }
-    return new AnonymousObservable(function (observer) {
+
+    return new AnonymousObservable(function (o) {
       return createEventListener(
         element,
         eventName,
-        function handler (e) {
-          var results = e;
-
-          if (selector) {
-            try {
-              results = selector(arguments);
-            } catch (err) {
-              return observer.onError(err);
-            }
-          }
-
-          observer.onNext(results);
-        });
+        eventHandler(o, selector));
     }).publish().refCount();
   };
 
@@ -465,27 +420,24 @@
    * @param {Function} addHandler The function to add a handler to the emitter.
    * @param {Function} [removeHandler] The optional function to remove a handler from an emitter.
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
+   * @param {Scheduler} [scheduler] A scheduler used to schedule the remove handler.
    * @returns {Observable} An observable sequence which wraps an event from an event emitter
    */
-  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
-    return new AnonymousObservable(function (observer) {
-      function innerHandler (e) {
-        var result = e;
-        if (selector) {
-          try {
-            result = selector(arguments);
-          } catch (err) {
-            return observer.onError(err);
-          }
+  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector, scheduler) {
+    isScheduler(scheduler) || (scheduler = immediateScheduler);
+    return new AnonymousObservable(function (o) {
+      function innerHandler () {
+        var result = arguments[0];
+        if (isFunction(selector)) {
+          result = tryCatch(selector).apply(null, arguments);
+          if (result === errorObj) { return o.onError(result.e); }
         }
-        observer.onNext(result);
+        o.onNext(result);
       }
 
       var returnValue = addHandler(innerHandler);
       return disposableCreate(function () {
-        if (removeHandler) {
-          removeHandler(innerHandler, returnValue);
-        }
+        isFunction(removeHandler) && removeHandler(innerHandler, returnValue);
       });
     }).publish().refCount();
   };
@@ -505,5 +457,5 @@
     return observableFromPromise(promise);
   }
 
-    return Rx;
+  return Rx;
 }));

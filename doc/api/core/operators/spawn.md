@@ -1,4 +1,4 @@
-### `Rx.spawn(fn)`
+### `Rx.Observable.spawn(fn)`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/spawn.js "View in source")
 
 Spawns a generator function which allows for Promises, Observable sequences, Arrays, Objects, Generators and functions.
@@ -7,24 +7,35 @@ Spawns a generator function which allows for Promises, Observable sequences, Arr
 1. `fn` *(`Function`)*: The spawning function.
 
 #### Returns
-*(`Function`)*: A function which has a done continuation.
+*(`Observable`)*: An Observable with the final result
 
 #### Example
 ```js
 var Rx = require('rx');
-var request = require('request');
-var get = Rx.Observable.fromNodeCallback(request);
 
-Rx.spawn(function* () {
-  var data;
-  try {
-    data = yield get('http://bing.com').timeout(5000 /*ms*/);
-  } catch (e) {
-    console.log('Error %s', e);
-  } 
+var thunk = function (val) {
+  return function (cb) {
+    cb(null, val);
+  };
+};
 
-  console.log(data);
-})();
+var spawned = Rx.Observable.spawn(function* () {
+  var v = yield thunk(12);
+  var w = yield [24];
+  var x = yield Rx.Observable.just(42);
+  var y = yield Rx.Observable.just(56);
+  var z = yield Promise.resolve(78);
+  return v + w[0] + x + y + z;
+});
+
+spawned.subscribe(
+  function (x) { console.log('next %s', x); },
+  function (e) { console.log('error %s', e); },
+  function () { console.log('completed'); }
+);
+
+// => next 212
+// => completed
 ```
 
 ### Location
@@ -52,4 +63,4 @@ NuGet Packages:
 - [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
 
 Unit Tests:
-- [/tests/observable/spawn.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/spawn.js)
+- [``/tests/observable/spawn.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/spawn.js)

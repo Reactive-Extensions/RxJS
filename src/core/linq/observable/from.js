@@ -1,6 +1,6 @@
   var maxSafeInteger = Math.pow(2, 53) - 1;
 
-  function StringIterable(str) {
+  function StringIterable(s) {
     this._s = s;
   }
 
@@ -8,7 +8,7 @@
     return new StringIterator(this._s);
   };
 
-  function StringIterator(str) {
+  function StringIterator(s) {
     this._s = s;
     this._l = s.length;
     this._i = 0;

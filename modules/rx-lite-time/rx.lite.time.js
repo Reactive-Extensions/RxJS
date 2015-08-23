@@ -1,35 +1,31 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 ;(function (factory) {
-    var objectTypes = {
-        'boolean': false,
-        'function': true,
-        'object': true,
-        'number': false,
-        'string': false,
-        'undefined': false
-    };
+  var objectTypes = {
+    'function': true,
+    'object': true
+  };
 
-    var root = (objectTypes[typeof window] && window) || this,
-        freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
-        freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
-        moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
-        freeGlobal = objectTypes[typeof global] && global;
+  var
+    freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
+    freeSelf = objectTypes[typeof self] && self.Object && self,
+    freeWindow = objectTypes[typeof window] && window && window.Object && window,
+    freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
+    moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
+    freeGlobal = freeExports && freeModule && typeof global == 'object' && global && global.Object && global;
 
-    if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
-        root = freeGlobal;
-    }
+  var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
-    // Because of build optimizers
-    if (typeof define === 'function' && define.amd) {
-        define(['rx-lite'], function (Rx, exports) {
-            return factory(root, exports, Rx);
-        });
-    } else if (typeof module === 'object' && module && module.exports === freeExports) {
-        module.exports = factory(root, module.exports, require('rx-lite'));
-    } else {
-        root.Rx = factory(root, {}, root.Rx);
-    }
+  // Because of build optimizers
+  if (typeof define === 'function' && define.amd) {
+    define(['./rx.lite'], function (Rx, exports) {
+      return factory(root, exports, Rx);
+    });
+  } else if (typeof module === 'object' && module && module.exports === freeExports) {
+    module.exports = factory(root, module.exports, require('rx-lite'));
+  } else {
+    root.Rx = factory(root, {}, root.Rx);
+  }
 }.call(this, function (root, exp, Rx, undefined) {
 
   // Refernces
@@ -39,7 +35,7 @@
     observableDefer = Observable.defer,
     observableEmpty = Observable.empty,
     observableNever = Observable.never,
-    observableThrow = Observable.throwException,
+    observableThrow = Observable['throw'],
     observableFromArray = Observable.fromArray,
     timeoutScheduler = Rx.Scheduler['default'],
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
@@ -215,39 +211,31 @@
     }, source);
   };
 
-    /**
-     *  Projects each element of an observable sequence into zero or more buffers which are produced based on timing information.
-     *
-     * @example
-     *  1 - res = xs.bufferWithTime(1000, scheduler); // non-overlapping segments of 1 second
-     *  2 - res = xs.bufferWithTime(1000, 500, scheduler; // segments of 1 second with time shift 0.5 seconds
-     *
-     * @param {Number} timeSpan Length of each buffer (specified as an integer denoting milliseconds).
-     * @param {Mixed} [timeShiftOrScheduler]  Interval between creation of consecutive buffers (specified as an integer denoting milliseconds), or an optional scheduler parameter. If not specified, the time shift corresponds to the timeSpan parameter, resulting in non-overlapping adjacent buffers.
-     * @param {Scheduler} [scheduler]  Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
-     * @returns {Observable} An observable sequence of buffers.
-     */
-    observableProto.bufferWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
-        return this.windowWithTime.apply(this, arguments).selectMany(function (x) { return x.toArray(); });
-    };
+  function toArray(x) { return x.toArray(); }
 
-    /**
-     *  Projects each element of an observable sequence into a buffer that is completed when either it's full or a given amount of time has elapsed.
-     *
-     * @example
-     *  1 - res = source.bufferWithTimeOrCount(5000, 50); // 5s or 50 items in an array
-     *  2 - res = source.bufferWithTimeOrCount(5000, 50, scheduler); // 5s or 50 items in an array
-     *
-     * @param {Number} timeSpan Maximum time length of a buffer.
-     * @param {Number} count Maximum element count of a buffer.
-     * @param {Scheduler} [scheduler]  Scheduler to run bufferin timers on. If not specified, the timeout scheduler is used.
-     * @returns {Observable} An observable sequence of buffers.
-     */
-    observableProto.bufferWithTimeOrCount = function (timeSpan, count, scheduler) {
-        return this.windowWithTimeOrCount(timeSpan, count, scheduler).selectMany(function (x) {
-            return x.toArray();
-        });
-    };
+  /**
+   *  Projects each element of an observable sequence into zero or more buffers which are produced based on timing information.
+   * @param {Number} timeSpan Length of each buffer (specified as an integer denoting milliseconds).
+   * @param {Mixed} [timeShiftOrScheduler]  Interval between creation of consecutive buffers (specified as an integer denoting milliseconds), or an optional scheduler parameter. If not specified, the time shift corresponds to the timeSpan parameter, resulting in non-overlapping adjacent buffers.
+   * @param {Scheduler} [scheduler]  Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
+   * @returns {Observable} An observable sequence of buffers.
+   */
+  observableProto.bufferWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
+    return this.windowWithTime(timeSpan, timeShiftOrScheduler, scheduler).flatMap(toArray);
+  };
+
+  function toArray(x) { return x.toArray(); }
+
+  /**
+   *  Projects each element of an observable sequence into a buffer that is completed when either it's full or a given amount of time has elapsed.
+   * @param {Number} timeSpan Maximum time length of a buffer.
+   * @param {Number} count Maximum element count of a buffer.
+   * @param {Scheduler} [scheduler]  Scheduler to run bufferin timers on. If not specified, the timeout scheduler is used.
+   * @returns {Observable} An observable sequence of buffers.
+   */
+  observableProto.bufferWithTimeOrCount = function (timeSpan, count, scheduler) {
+    return this.windowWithTimeOrCount(timeSpan, count, scheduler).flatMap(toArray);
+  };
 
   /**
    *  Records the time interval between consecutive values in an observable sequence.
@@ -542,55 +530,50 @@
    */
   observableProto.debounceWithSelector = function (durationSelector) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var value, hasValue = false, cancelable = new SerialDisposable(), id = 0;
-      var subscription = source.subscribe(function (x) {
-        var throttle;
-        try {
-          throttle = durationSelector(x);
-        } catch (e) {
-          observer.onError(e);
-          return;
+      var subscription = source.subscribe(
+        function (x) {
+          var throttle = tryCatch(durationSelector)(x);
+          if (throttle === errorObj) { return o.onError(throttle.e); }
+
+          isPromise(throttle) && (throttle = observableFromPromise(throttle));
+
+          hasValue = true;
+          value = x;
+          id++;
+          var currentid = id, d = new SingleAssignmentDisposable();
+          cancelable.setDisposable(d);
+          d.setDisposable(throttle.subscribe(
+            function () {
+              hasValue && id === currentid && o.onNext(value);
+              hasValue = false;
+              d.dispose();
+            },
+            function (e) { o.onError(e); },
+            function () {
+              hasValue && id === currentid && o.onNext(value);
+              hasValue = false;
+              d.dispose();
+            }
+          ));
+        },
+        function (e) {
+          cancelable.dispose();
+          o.onError(e);
+          hasValue = false;
+          id++;
+        },
+        function () {
+          cancelable.dispose();
+          hasValue && o.onNext(value);
+          o.onCompleted();
+          hasValue = false;
+          id++;
         }
-
-        isPromise(throttle) && (throttle = observableFromPromise(throttle));
-
-        hasValue = true;
-        value = x;
-        id++;
-        var currentid = id, d = new SingleAssignmentDisposable();
-        cancelable.setDisposable(d);
-        d.setDisposable(throttle.subscribe(function () {
-          hasValue && id === currentid && observer.onNext(value);
-          hasValue = false;
-          d.dispose();
-        }, observer.onError.bind(observer), function () {
-          hasValue && id === currentid && observer.onNext(value);
-          hasValue = false;
-          d.dispose();
-        }));
-      }, function (e) {
-        cancelable.dispose();
-        observer.onError(e);
-        hasValue = false;
-        id++;
-      }, function () {
-        cancelable.dispose();
-        hasValue && observer.onNext(value);
-        observer.onCompleted();
-        hasValue = false;
-        id++;
-      });
+      );
       return new CompositeDisposable(subscription, cancelable);
     }, source);
-  };
-
-  /**
-   * @deprecated use #debounceWithSelector instead.
-   */
-  observableProto.throttleWithSelector = function (durationSelector) {
-    //deprecate('throttleWithSelector', 'debounceWithSelector');
-    return this.debounceWithSelector(durationSelector);
   };
 
   /**
@@ -786,5 +769,5 @@
     }, source);
   };
 
-    return Rx;
+  return Rx;
 }));

@@ -5,15 +5,17 @@
    * @returns {Observable} An observable sequence whose lifetime controls the lifetime of the dependent resource object.
    */
   Observable.using = function (resourceFactory, observableFactory) {
-    return new AnonymousObservable(function (observer) {
-      var disposable = disposableEmpty, resource, source;
-      try {
-        resource = resourceFactory();
-        resource && (disposable = resource);
-        source = observableFactory(resource);
-      } catch (exception) {
-        return new CompositeDisposable(observableThrow(exception).subscribe(observer), disposable);
+    return new AnonymousObservable(function (o) {
+      var disposable = disposableEmpty;
+      var resource = tryCatch(resourceFactory)();
+      if (resource === errorObj) {
+        return new CompositeDisposable(observableThrow(resource.e).subscribe(o), disposable);
       }
-      return new CompositeDisposable(source.subscribe(observer), disposable);
+      resource && (disposable = resource);
+      var source = tryCatch(observableFactory)(resource);
+      if (source === errorObj) {
+        return new CompositeDisposable(observableThrow(source.e).subscribe(o), disposable);
+      }
+      return new CompositeDisposable(source.subscribe(o), disposable);
     });
   };

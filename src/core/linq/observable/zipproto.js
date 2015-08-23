@@ -1,21 +1,10 @@
-  function zipArray(second, resultSelector) {
-    var first = this;
-    return new AnonymousObservable(function (o) {
-      var index = 0, len = second.length;
-      return first.subscribe(function (left) {
-        if (index < len) {
-          var right = second[index++], res = tryCatch(resultSelector)(left, right);
-          if (res === errorObj) { return o.onError(res.e); }
-          o.onNext(res);
-        } else {
-          o.onCompleted();
-        }
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, first);
-  }
-
   function falseFactory() { return false; }
   function emptyArrayFactory() { return []; }
+  function argumentsToArray() {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return args;
+  }
 
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
@@ -23,11 +12,14 @@
    * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
    */
   observableProto.zip = function () {
-    if (Array.isArray(arguments[0])) { return zipArray.apply(this, arguments); }
+    if (arguments.length === 0) { throw new Error('invalid arguments'); }
+
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
+    Array.isArray(args[0]) && (args = args[0]);
 
-    var parent = this, resultSelector = args.pop();
+    var parent = this;
     args.unshift(parent);
     return new AnonymousObservable(function (o) {
       var n = args.length,
@@ -38,7 +30,9 @@
       for (var idx = 0; idx < n; idx++) {
         (function (i) {
           var source = args[i], sad = new SingleAssignmentDisposable();
+
           isPromise(source) && (source = observableFromPromise(source));
+
           sad.setDisposable(source.subscribe(function (x) {
             queues[i].push(x);
             if (queues.every(function (x) { return x.length > 0; })) {

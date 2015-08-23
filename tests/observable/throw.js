@@ -1,42 +1,51 @@
-QUnit.module('Throw');
+(function () {
+  QUnit.module('Throw');
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      subscribe = Rx.ReactiveTest.subscribe,
+      created = Rx.ReactiveTest.created,
+      subscribed = Rx.ReactiveTest.subscribed,
+      disposed = Rx.ReactiveTest.disposed;
 
-test('Throw_Basic', function () {
-    var ex, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    results = scheduler.startWithCreate(function () {
-        return Observable.throwException(ex, scheduler);
+  function noop () { }
+
+  test('Throw Basic', function () {
+    var scheduler = new TestScheduler();
+
+    var error = new Error();
+
+    var results = scheduler.startWithCreate(function () {
+      return Observable['throw'](error, scheduler);
     });
-    results.messages.assertEqual(onError(201, ex));
-});
 
-test('Throw_Disposed', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithDispose(function () {
-        return Observable.throwException('ex', scheduler);
+    results.messages.assertEqual(
+      onError(201, error));
+  });
+
+  test('Throw Disposed', function () {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startWithDispose(function () {
+      return Observable['throw'](new Error(), scheduler);
     }, 200);
-    results.messages.assertEqual();
-});
 
-test('Throw_ObserverThrows', function () {
-    var scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = Observable.throwException('ex', scheduler);
-    xs.subscribe(function (x) { }, function (ex) {
-        throw 'ex';
-    }, function () { });
+    results.messages.assertEqual();
+  });
+
+  test('Throw ObserverThrows', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = Observable['throw'](new Error(), scheduler);
+
+    xs.subscribe(noop, function () { throw new Error(); });
+
     raises(function () {
-        return scheduler.start();
+      scheduler.start();
     });
-});
+  });
+
+}());

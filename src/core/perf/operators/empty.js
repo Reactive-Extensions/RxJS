@@ -6,25 +6,28 @@
     }
 
     EmptyObservable.prototype.subscribeCore = function (observer) {
-      var sink = new EmptySink(observer, this);
+      var sink = new EmptySink(observer, this.scheduler);
       return sink.run();
     };
 
-    function EmptySink(observer, parent) {
+    function EmptySink(observer, scheduler) {
       this.observer = observer;
-      this.parent = parent;
+      this.scheduler = scheduler;
     }
 
     function scheduleItem(s, state) {
       state.onCompleted();
+      return disposableEmpty;
     }
 
     EmptySink.prototype.run = function () {
-      return this.parent.scheduler.scheduleWithState(this.observer, scheduleItem);
+      return this.scheduler.scheduleWithState(this.observer, scheduleItem);
     };
 
     return EmptyObservable;
   }(ObservableBase));
+
+  var EMPTY_OBSERVABLE = new EmptyObservable(immediateScheduler);
 
   /**
    *  Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
@@ -37,5 +40,5 @@
    */
   var observableEmpty = Observable.empty = function (scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new EmptyObservable(scheduler);
+    return scheduler === immediateScheduler ? EMPTY_OBSERVABLE : new EmptyObservable(scheduler);
   };

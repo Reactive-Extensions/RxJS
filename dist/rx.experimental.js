@@ -1,35 +1,31 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 ;(function (factory) {
-    var objectTypes = {
-        'boolean': false,
-        'function': true,
-        'object': true,
-        'number': false,
-        'string': false,
-        'undefined': false
-    };
+  var objectTypes = {
+    'function': true,
+    'object': true
+  };
 
-    var root = (objectTypes[typeof window] && window) || this,
-        freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
-        freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
-        moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
-        freeGlobal = objectTypes[typeof global] && global;
+  var
+    freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
+    freeSelf = objectTypes[typeof self] && self.Object && self,
+    freeWindow = objectTypes[typeof window] && window && window.Object && window,
+    freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
+    moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
+    freeGlobal = freeExports && freeModule && typeof global == 'object' && global && global.Object && global;
 
-    if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
-        root = freeGlobal;
-    }
+  var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
-    // Because of build optimizers
-    if (typeof define === 'function' && define.amd) {
-        define(['rx'], function (Rx, exports) {
-            return factory(root, exports, Rx);
-        });
-    } else if (typeof module === 'object' && module && module.exports === freeExports) {
-        module.exports = factory(root, module.exports, require('./rx'));
-    } else {
-        root.Rx = factory(root, {}, root.Rx);
-    }
+  // Because of build optimizers
+  if (typeof define === 'function' && define.amd) {
+    define(['./rx'], function (Rx, exports) {
+      return factory(root, exports, Rx);
+    });
+  } else if (typeof module === 'object' && module && module.exports === freeExports) {
+    module.exports = factory(root, module.exports, require('./rx'));
+  } else {
+    root.Rx = factory(root, {}, root.Rx);
+  }
 }.call(this, function (root, exp, Rx, undefined) {
 
   // Aliases
@@ -57,8 +53,28 @@
     helpers = Rx.helpers,
     noop = helpers.noop,
     isPromise = helpers.isPromise,
+    isFunction = helpers.isFunction,
     isScheduler = Rx.Scheduler.isScheduler,
     observableFromPromise = Observable.fromPromise;
+
+  var errorObj = {e: {}};
+  var tryCatchTarget;
+  function tryCatcher() {
+    try {
+      return tryCatchTarget.apply(this, arguments);
+    } catch (e) {
+      errorObj.e = e;
+      return errorObj;
+    }
+  }
+  function tryCatch(fn) {
+    if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
+    tryCatchTarget = fn;
+    return tryCatcher;
+  }
+  function thrower(e) {
+    throw e;
+  }
 
   // Shim in iterator support
   var $iterator$ = (typeof Symbol === 'function' && Symbol.iterator) ||
@@ -115,7 +131,7 @@
   };
 
    /**
-   *  Determines whether an observable collection contains values. There is an alias for this method called 'ifThen' for browsers <IE9
+   *  Determines whether an observable collection contains values. 
    *
    * @example
    *  1 - res = Rx.Observable.if(condition, obs1);
@@ -126,7 +142,7 @@
    * @param {Observable} [elseSource] The observable sequence or Promise that will be run if the condition function returns false. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.
    * @returns {Observable} An observable sequence which is either the thenSource or elseSource.
    */
-  Observable['if'] = Observable.ifThen = function (condition, thenSource, elseSourceOrScheduler) {
+  Observable['if'] = function (condition, thenSource, elseSourceOrScheduler) {
     return observableDefer(function () {
       elseSourceOrScheduler || (elseSourceOrScheduler = observableEmpty());
 
@@ -176,25 +192,19 @@
 
    /**
    *  Uses selector to determine which source in sources to use.
-   *  There is an alias 'switchCase' for browsers <IE9.
-   *
-   * @example
-   *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 });
-   *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 }, obs0);
-   *  1 - res = Rx.Observable.case(selector, { '1': obs1, '2': obs2 }, scheduler);
-   *
+
    * @param {Function} selector The function which extracts the value for to test in a case statement.
    * @param {Array} sources A object which has keys which correspond to the case statement labels.
    * @param {Observable} [elseSource] The observable sequence or Promise that will be run if the sources are not matched. If this is not provided, it defaults to Rx.Observabe.empty with the specified scheduler.
    *
    * @returns {Observable} An observable sequence which is determined by a case statement.
    */
-  Observable['case'] = Observable.switchCase = function (selector, sources, defaultSourceOrScheduler) {
+  Observable['case'] = function (selector, sources, defaultSourceOrScheduler) {
     return observableDefer(function () {
       isPromise(defaultSourceOrScheduler) && (defaultSourceOrScheduler = observableFromPromise(defaultSourceOrScheduler));
       defaultSourceOrScheduler || (defaultSourceOrScheduler = observableEmpty());
 
-      typeof defaultSourceOrScheduler.now === 'function' && (defaultSourceOrScheduler = observableEmpty(defaultSourceOrScheduler));
+      isScheduler(defaultSourceOrScheduler) && (defaultSourceOrScheduler = observableEmpty(defaultSourceOrScheduler));
 
       var result = sources[selector()];
       isPromise(result) && (result = observableFromPromise(result));
@@ -468,7 +478,7 @@
         this.onNext(Observable.empty());
       },
       onError: function (e) {
-        this.onNext(Observable.throwError(e));
+        this.onNext(Observable['throw'](e));
       },
       onNext: function (v) {
         this.tail.onNext(v);
@@ -480,14 +490,14 @@
 
   }(Observable));
 
-  /*
+  /**
    * Performs a exclusive waiting for the first to finish before subscribing to another observable.
    * Observables that come in between subscriptions will be dropped on the floor.
    * @returns {Observable} A exclusive observable with only the results that happen when subscribed.
    */
-  observableProto.exclusive = function () {
+  observableProto.switchFirst = function () {
     var sources = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var hasCurrent = false,
         isStopped = false,
         m = new SingleAssignmentDisposable(),
@@ -506,92 +516,31 @@
             g.add(innerSubscription);
 
             innerSubscription.setDisposable(innerSource.subscribe(
-              observer.onNext.bind(observer),
-              observer.onError.bind(observer),
+              function (x) { o.onNext(x); },
+              function (e) { o.onError(e); },
               function () {
                 g.remove(innerSubscription);
                 hasCurrent = false;
-                if (isStopped && g.length === 1) {
-                  observer.onCompleted();
-                }
+                isStopped && g.length === 1 && o.onCompleted();
             }));
           }
         },
-        observer.onError.bind(observer),
+        function (e) { o.onError(e); },
         function () {
           isStopped = true;
-          if (!hasCurrent && g.length === 1) {
-            observer.onCompleted();
-          }
+          !hasCurrent && g.length === 1 && o.onCompleted();
         }));
 
       return g;
     }, this);
   };
 
-  /*
-   * Performs a exclusive map waiting for the first to finish before subscribing to another observable.
-   * Observables that come in between subscriptions will be dropped on the floor.
-   * @param {Function} selector Selector to invoke for every item in the current subscription.
-   * @param {Any} [thisArg] An optional context to invoke with the selector parameter.
-   * @returns {Observable} An exclusive observable with only the results that happen when subscribed.
-   */
-  observableProto.exclusiveMap = function (selector, thisArg) {
-    var sources = this,
-        selectorFunc = bindCallback(selector, thisArg, 3);
-    return new AnonymousObservable(function (observer) {
-      var index = 0,
-        hasCurrent = false,
-        isStopped = true,
-        m = new SingleAssignmentDisposable(),
-        g = new CompositeDisposable();
+observableProto.flatMapFirst = observableProto.selectManyFirst = function(selector, resultSelector, thisArg) {
+    return new FlatMapObservable(this, selector, resultSelector, thisArg).switchFirst();
+};
 
-      g.add(m);
-
-      m.setDisposable(sources.subscribe(
-        function (innerSource) {
-
-          if (!hasCurrent) {
-            hasCurrent = true;
-
-            innerSubscription = new SingleAssignmentDisposable();
-            g.add(innerSubscription);
-
-            isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
-
-            innerSubscription.setDisposable(innerSource.subscribe(
-              function (x) {
-                var result;
-                try {
-                  result = selectorFunc(x, index++, innerSource);
-                } catch (e) {
-                  observer.onError(e);
-                  return;
-                }
-
-                observer.onNext(result);
-              },
-              function (e) { observer.onError(e); },
-              function () {
-                g.remove(innerSubscription);
-                hasCurrent = false;
-
-                if (isStopped && g.length === 1) {
-                  observer.onCompleted();
-                }
-              }));
-          }
-        },
-        function (e) { observer.onError(e); },
-        function () {
-          isStopped = true;
-          if (g.length === 1 && !hasCurrent) {
-            observer.onCompleted();
-          }
-        }));
-      return g;
-    }, this);
-  };
-
-    return Rx;
+Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, resultSelector, thisArg) {
+    return new FlatMapObservable(this, selector, resultSelector, thisArg).merge(limit);
+};
+  return Rx;
 }));

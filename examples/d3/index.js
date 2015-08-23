@@ -217,9 +217,9 @@
   });
 
   // Calculate the rate of updates over time
-  var updateCount = updateStream.scan(0, function(value) {
+  var updateCount = updateStream.scan(function(value) {
       return ++value;
-  });
+  }, 0);
 
   var sampledUpdates = updateCount.sample(samplingTime);
   var totalUpdatesBeforeLastSample = 0;

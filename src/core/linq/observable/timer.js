@@ -8,7 +8,7 @@
   var observableTimer = Observable.timer = function (dueTime, periodOrScheduler, scheduler) {
     var period;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    if (periodOrScheduler !== undefined && typeof periodOrScheduler === 'number') {
+    if (periodOrScheduler != null && typeof periodOrScheduler === 'number') {
       period = periodOrScheduler;
     } else if (isScheduler(periodOrScheduler)) {
       scheduler = periodOrScheduler;
@@ -17,8 +17,7 @@
       return observableTimerDate(dueTime.getTime(), scheduler);
     }
     if (dueTime instanceof Date && period !== undefined) {
-      period = periodOrScheduler;
-      return observableTimerDateAndPeriod(dueTime.getTime(), period, scheduler);
+      return observableTimerDateAndPeriod(dueTime.getTime(), periodOrScheduler, scheduler);
     }
     return period === undefined ?
       observableTimerTimeSpan(dueTime, scheduler) :

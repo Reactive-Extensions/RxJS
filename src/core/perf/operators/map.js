@@ -6,7 +6,7 @@
       this.selector = bindCallback(selector, thisArg, 3);
       __super__.call(this);
     }
-    
+
     function innerMap(selector, self) {
       return function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); }
     }
@@ -18,7 +18,7 @@
     MapObservable.prototype.subscribeCore = function (o) {
       return this.source.subscribe(new InnerObserver(o, this.selector, this));
     };
-    
+
     function InnerObserver(o, selector, source) {
       this.o = o;
       this.selector = selector;
@@ -26,13 +26,11 @@
       this.i = 0;
       this.isStopped = false;
     }
-  
+
     InnerObserver.prototype.onNext = function(x) {
       if (this.isStopped) { return; }
       var result = tryCatch(this.selector)(x, this.i++, this.source);
-      if (result === errorObj) {
-        return this.o.onError(result.e);
-      }
+      if (result === errorObj) { return this.o.onError(result.e); }
       this.o.onNext(result);
     };
     InnerObserver.prototype.onError = function (e) {
@@ -48,7 +46,7 @@
         this.o.onError(e);
         return true;
       }
-  
+
       return false;
     };
 

@@ -1,35 +1,31 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 ;(function (factory) {
-    var objectTypes = {
-        'boolean': false,
-        'function': true,
-        'object': true,
-        'number': false,
-        'string': false,
-        'undefined': false
-    };
+  var objectTypes = {
+    'function': true,
+    'object': true
+  };
 
-    var root = (objectTypes[typeof window] && window) || this,
-        freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
-        freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
-        moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
-        freeGlobal = objectTypes[typeof global] && global;
+  var
+    freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
+    freeSelf = objectTypes[typeof self] && self.Object && self,
+    freeWindow = objectTypes[typeof window] && window && window.Object && window,
+    freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
+    moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
+    freeGlobal = freeExports && freeModule && typeof global == 'object' && global && global.Object && global;
 
-    if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
-        root = freeGlobal;
-    }
+  var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
-    // Because of build optimizers
-    if (typeof define === 'function' && define.amd) {
-        define(['rx-lite'], function (Rx, exports) {
-            return factory(root, exports, Rx);
-        });
-    } else if (typeof module === 'object' && module && module.exports === freeExports) {
-        module.exports = factory(root, module.exports, require('rx-lite'));
-    } else {
-        root.Rx = factory(root, {}, root.Rx);
-    }
+  // Because of build optimizers
+  if (typeof define === 'function' && define.amd) {
+    define(['./rx.lite'], function (Rx, exports) {
+      return factory(root, exports, Rx);
+    });
+  } else if (typeof module === 'object' && module && module.exports === freeExports) {
+    module.exports = factory(root, module.exports, require('rx-lite'));
+  } else {
+    root.Rx = factory(root, {}, root.Rx);
+  }
 }.call(this, function (root, exp, Rx, undefined) {
 
   // Aliases
@@ -47,30 +43,45 @@
     Enumerable = Rx.internals.Enumerable,
     Enumerator = Rx.internals.Enumerator,
     $iterator$ = Rx.iterator,
-    doneEnumerator = Rx.doneEnumerator;
+    doneEnumerator = Rx.doneEnumerator,
+    bindCallback = Rx.internals.bindCallback;
 
-  /** @private */
   var Map = root.Map || (function () {
-
     function Map() {
-      this._keys = [];
+      this.size = 0;
       this._values = [];
+      this._keys = [];
     }
+
+    Map.prototype['delete'] = function (key) {
+      var i = this._keys.indexOf(key);
+      if (i === -1) { return false }
+      this._values.splice(i, 1);
+      this._keys.splice(i, 1);
+      this.size--;
+      return true;
+    };
 
     Map.prototype.get = function (key) {
       var i = this._keys.indexOf(key);
-      return i !== -1 ? this._values[i] : undefined;
+      return i === -1 ? undefined : this._values[i];
     };
 
     Map.prototype.set = function (key, value) {
       var i = this._keys.indexOf(key);
-      i !== -1 && (this._values[i] = value);
-      this._values[this._keys.push(key) - 1] = value;
+      if (i === -1) {
+        this._keys.push(key);
+        this._values.push(value);
+        this.size++;
+      } else {
+        this._values[i] = value;
+      }
+      return this;
     };
 
-    Map.prototype.forEach = function (callback, thisArg) {
-      for (var i = 0, len = this._keys.length; i < len; i++) {
-        callback.call(thisArg, this._values[i], this._keys[i]);
+    Map.prototype.forEach = function (cb, thisArg) {
+      for (var i = 0; i < this.size; i++) {
+        cb.call(thisArg, this._values[i], this._keys[i]);
       }
     };
 
@@ -309,5 +320,5 @@
     });
   };
 
-    return Rx;
+  return Rx;
 }));

@@ -11,97 +11,97 @@ var Observable = Rx.Observable,
     disposed = Rx.ReactiveTest.disposed;
 
 test('Buffer_Boundaries_Simple', function () {
-    var scheduler = new TestScheduler();
+  var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(
-        onNext(90, 1),
-        onNext(180, 2),
-        onNext(250, 3),
-        onNext(260, 4),
-        onNext(310, 5),
-        onNext(340, 6),
-        onNext(410, 7),
-        onNext(420, 8),
-        onNext(470, 9),
-        onNext(550, 10),
-        onCompleted(590)
-    );
+  var xs = scheduler.createHotObservable(
+    onNext(90, 1),
+    onNext(180, 2),
+    onNext(250, 3),
+    onNext(260, 4),
+    onNext(310, 5),
+    onNext(340, 6),
+    onNext(410, 7),
+    onNext(420, 8),
+    onNext(470, 9),
+    onNext(550, 10),
+    onCompleted(590)
+  );
 
-    var ys = scheduler.createHotObservable(
-        onNext(255, true),
-        onNext(330, true),
-        onNext(350, true),
-        onNext(400, true),
-        onNext(500, true),
-        onCompleted(900)
-    );
+  var ys = scheduler.createHotObservable(
+    onNext(255, true),
+    onNext(330, true),
+    onNext(350, true),
+    onNext(400, true),
+    onNext(500, true),
+    onCompleted(900)
+  );
 
-    var res = scheduler.startWithCreate(function () {
-      return xs.buffer(ys)
-    });
+  var res = scheduler.startWithCreate(function () {
+    return xs.buffer(ys)
+  });
 
-    res.messages.assertEqual(
-      onNext(255, [3]),
-      onNext(330, [4, 5]),
-      onNext(350, [6]),
-      onNext(400, [ ]),
-      onNext(500, [7, 8, 9]),
-      onNext(590, [10]),
-      onCompleted(590)
-    );
+  res.messages.assertEqual(
+    onNext(255, [3]),
+    onNext(330, [4, 5]),
+    onNext(350, [6]),
+    onNext(400, [ ]),
+    onNext(500, [7, 8, 9]),
+    onNext(590, [10]),
+    onCompleted(590)
+  );
 
-    xs.subscriptions.assertEqual(
-        subscribe(200, 590)
-    );
+  xs.subscriptions.assertEqual(
+    subscribe(200, 590)
+  );
 
-    ys.subscriptions.assertEqual(
-        subscribe(200, 590)
-    );
+  ys.subscriptions.assertEqual(
+    subscribe(200, 590)
+  );
 });
 
 test('Buffer_Boundaries_onCompletedBoundaries', function () {
-    var scheduler = new TestScheduler();
+  var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(
-        onNext(90, 1),
-        onNext(180, 2),
-        onNext(250, 3),
-        onNext(260, 4),
-        onNext(310, 5),
-        onNext(340, 6),
-        onNext(410, 7),
-        onNext(420, 8),
-        onNext(470, 9),
-        onNext(550, 10),
-        onCompleted(590)
-    );
+  var xs = scheduler.createHotObservable(
+    onNext(90, 1),
+    onNext(180, 2),
+    onNext(250, 3),
+    onNext(260, 4),
+    onNext(310, 5),
+    onNext(340, 6),
+    onNext(410, 7),
+    onNext(420, 8),
+    onNext(470, 9),
+    onNext(550, 10),
+    onCompleted(590)
+  );
 
-    var ys = scheduler.createHotObservable(
-        onNext(255, true),
-        onNext(330, true),
-        onNext(350, true),
-        onCompleted(400)
-    );
+  var ys = scheduler.createHotObservable(
+    onNext(255, true),
+    onNext(330, true),
+    onNext(350, true),
+    onCompleted(400)
+  );
 
-    var res = scheduler.startWithCreate(function () {
-        return xs.buffer(ys)
-    });
+  var res = scheduler.startWithCreate(function () {
+    return xs.buffer(ys)
+  });
 
-    res.messages.assertEqual(
-        onNext(255, [3]),
-        onNext(330, [4, 5]),
-        onNext(350, [6]),
-        onNext(400, []),
-        onCompleted(400)
-    );
+  res.messages.assertEqual(
+    onNext(255, [3]),
+    onNext(330, [4, 5]),
+    onNext(350, [6]),
+    onNext(400, []),
+    onCompleted(400)
+  );
 
-    xs.subscriptions.assertEqual(
-        subscribe(200, 400)
-    );
+  xs.subscriptions.assertEqual(
+    subscribe(200, 400)
+  );
 
-    ys.subscriptions.assertEqual(
-        subscribe(200, 400)
-    );
+  ys.subscriptions.assertEqual(
+    subscribe(200, 400)
+  );
 });
 
 test('Buffer_Boundaries_onErrorSource', function () {
@@ -438,79 +438,79 @@ test('Buffer_Closings_Throw', function () {
 });
 
 test('Buffer_Closings_WindowClose_Error', function () {
-    var scheduler = new TestScheduler();
+  var scheduler = new TestScheduler();
 
-    var ex = new Error();
+  var ex = new Error();
 
-    var xs = scheduler.createHotObservable(
-        onNext(90, 1),
-        onNext(180, 2),
-        onNext(250, 3),
-        onNext(260, 4),
-        onNext(310, 5),
-        onNext(340, 6),
-        onNext(410, 7),
-        onNext(420, 8),
-        onNext(470, 9),
-        onNext(550, 10),
-        onError(590, new Error())
-    );
+  var xs = scheduler.createHotObservable(
+    onNext(90, 1),
+    onNext(180, 2),
+    onNext(250, 3),
+    onNext(260, 4),
+    onNext(310, 5),
+    onNext(340, 6),
+    onNext(410, 7),
+    onNext(420, 8),
+    onNext(470, 9),
+    onNext(550, 10),
+    onError(590, new Error())
+  );
 
-    var res = scheduler.startWithCreate(function () {
-        return xs.buffer(function () { return Observable.throwException(ex, scheduler); });
-    });
+  var res = scheduler.startWithCreate(function () {
+    return xs.buffer(function () { return Observable['throw'](ex, scheduler); });
+  });
 
-    res.messages.assertEqual(
-        onError(201, ex)
-    );
+  res.messages.assertEqual(
+    onError(201, ex)
+  );
 
-    xs.subscriptions.assertEqual(
-        subscribe(200, 201)
-    );
+  xs.subscriptions.assertEqual(
+    subscribe(200, 201)
+  );
 });
 
 test('Buffer_OpeningClosings_Basic', function () {
-    var scheduler = new TestScheduler();
+  var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(
-        onNext(90, 1),
-        onNext(180, 2),
-        onNext(250, 3),
-        onNext(260, 4),
-        onNext(310, 5),
-        onNext(340, 6),
-        onNext(410, 7),
-        onNext(420, 8),
-        onNext(470, 9),
-        onNext(550, 10),
-        onCompleted(590)
-    );
+  var xs = scheduler.createHotObservable(
+    onNext(90, 1),
+    onNext(180, 2),
+    onNext(250, 3),
+    onNext(260, 4),
+    onNext(310, 5),
+    onNext(340, 6),
+    onNext(410, 7),
+    onNext(420, 8),
+    onNext(470, 9),
+    onNext(550, 10),
+    onCompleted(590)
+  );
 
-    var ys = scheduler.createHotObservable(
-        onNext(255, 50),
-        onNext(330, 100),
-        onNext(350, 50),
-        onNext(400, 90),
-        onCompleted(900)
-    );
+  var ys = scheduler.createHotObservable(
+    onNext(255, 50),
+    onNext(330, 100),
+    onNext(350, 50),
+    onNext(400, 90),
+    onCompleted(900)
+  );
 
-    var res = scheduler.startWithCreate(function () {
-        return xs.buffer(ys, function (x) { return Observable.timer(x, scheduler); });
-    });
+  var res = scheduler.startWithCreate(function () {
+    return xs.buffer(ys, function (x) { return Observable.timer(x, null, scheduler); });
+  });
 
-    res.messages.assertEqual(
-        onNext(305, [4 ]),
-        onNext(400, [ ]),
-        onNext(430, [6, 7, 8]),
-        onNext(490, [7, 8, 9]),
-        onCompleted(900)
-    );
+  res.messages.assertEqual(
+    onNext(305, [4 ]),
+    onNext(400, [ ]),
+    onNext(430, [6, 7, 8]),
+    onNext(490, [7, 8, 9]),
+    onCompleted(900)
+  );
 
-    xs.subscriptions.assertEqual(
-        subscribe(200, 900)
-    );
+  xs.subscriptions.assertEqual(
+    subscribe(200, 900)
+  );
 
-    ys.subscriptions.assertEqual(
-        subscribe(200, 900)
-    );
+  ys.subscriptions.assertEqual(
+    subscribe(200, 900)
+  );
 });

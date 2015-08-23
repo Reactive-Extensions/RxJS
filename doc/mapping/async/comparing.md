@@ -149,7 +149,7 @@ var async = require('async'),
 
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
-async.filter(files, fs.exists, function (err, results) {
+async.filter(files, fs.exists, function (results) {
 
   results.forEach(function (result) {
     console.log('exists: %s', result);
@@ -201,7 +201,7 @@ var async = require('async'),
 
 var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
-async.reject(files, fs.exists, function (err, results) {
+async.reject(files, fs.exists, function (results) {
 
   results.forEach(function (result) {
     console.log('exists: %s', result);
@@ -245,11 +245,10 @@ The `async.reduce` method reduces a list of values into a single value using an 
 
 #### async version ####
 
-In this example, we'll determine whether the file exists by calling `fs.exists` for each file given and have the results returned as an array.
+In this example, we'll call `reduction` for each value which will return the result of adding them all together.
 
 ```js
-var async = require('async'),
-    fs = require('fs');
+var async = require('async');
 
 function reduction (acc, x, cb) {
     process.nextTick(function () {
@@ -257,7 +256,7 @@ function reduction (acc, x, cb) {
     });
 }
 
-async.reduce([1,2,3], 0, fs.reduction, function (err, results) {
+async.reduce([1,2,3], 0, reduction, function (err, results) {
     console.log(results);
 });
 
@@ -269,13 +268,13 @@ async.reduce([1,2,3], 0, fs.reduction, function (err, results) {
 In RxJS, we have a number of ways of doing this including using `Rx.Observable.from` to turn an array into observable sequence, then we can call `reduce` to add the numbers.  To ensure that it is indeed async, we can switch to the `Rx.Scheduler.timeout` to ensure that it is done via a `setImmediate` call.
 
 ```js
-var Rx = require('rx'),
-    fs = require('fs');
+var Rx = require('rx');
 
 Rx.Observable
   .from([1,2,3], Rx.Scheduler.timeout)
   .reduce(function (acc, x) { return acc + x; }, 0)
   .forEach( function (results) { console.log(results); });
+
 // => 6
 ```
 
@@ -293,7 +292,7 @@ In this example, we'll get the first file that matches.
 var async = require('async'),
     fs = require('fs');
 
-var files = ['file1','file2','file3'];
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 async.detect(files, fs.exists, function (result){
   // result now equals the first file in the list that exists
@@ -308,7 +307,7 @@ In RxJS, we can iterate over the files as above using `Rx.Observable.from`, call
 var Rx = require('rx'),
     fs = require('fs');
 
-var files = ['file1','file2','file3'];
+var files = ['file1.txt', 'file2.txt', 'file3.txt'];
 
 var exists = Rx.Observable.fromCallback(fs.exists);
 
@@ -316,7 +315,7 @@ Rx.Observable
   .from(files)
   .concatMap(
     function (file) { return exists(file); },
-    function (file, exists) { file: file, exists: exists})
+    function (file, exists) { return {file: file, exists: exists}})
   .first(function (x) { return x.exists; })
   .forEach(
       function (result) {
@@ -401,7 +400,7 @@ var exists = Rx.Observable.fromCallback(fs.exists);
 
 Rx.Observable
   .for(files, function (file) { return exists(file); })
-  .every()
+  .every(function (x) { return x; })
   .forEach(
     function (results) {
         // if result is true then every file exists
@@ -443,7 +442,7 @@ var readdir = Rx.Observable.fromNodeCallback(fs.readdir);
 
 Rx.Observable
   .for(directories, function (dir) { return readdir(dir); })
-  .toArray()
+  .reduce(function (acc, x) { return acc.concat(x) }, [])
   .forEach(
     function (files) {
       // files is now a list of filenames that exist in the 3 directories
@@ -720,9 +719,9 @@ var count = 0;
 
 Rx.Observable.while(
     function () { return count < 5; },
-    Rx.Observable.create(function (obs) {
+    Rx.Observable.create(function (observer) {
       setTimeout(function () {
-        observer.onNext(count++);
+        observer.onCompleted(count++);
       }, 1000);
     })
   )
@@ -735,7 +734,7 @@ Rx.Observable.while(
 
 ## `async.doWhilst` ##
 
-The `async.doWhilst` method is a post check version of `whilst`. To reflect the difference in the order of operations test and fn arguments are switched. `doWhils`t is to `whilst` as `do while` is to `while` in plain JavaScript.
+The `async.doWhilst` method is a post check version of `whilst`. To reflect the difference in the order of operations test and fn arguments are switched. `doWhilst` is to `whilst` as `do while` is to `while` in plain JavaScript.
 
 #### async version ####
 
@@ -746,12 +745,12 @@ var async = require('async');
 
 var count = 0;
 
-async.dowWilst(
-  function () { return count < 5; },
+async.doWhilst(
   function (callback) {
     count++;
     setTimeout(callback, 1000);
   },
+  function () { return count < 5; },
   function (err) {
     // 5 seconds have passed
   }
@@ -836,7 +835,7 @@ var file = path.join(__dirname, 'file.txt'),
 async.waterfall([
     function (callback) {
       fs.exists(file, function (flag) {
-        if (flag) {
+        if (!flag) {
             callback(new Error('File does not exist.'))
         } else {
             callback(null);

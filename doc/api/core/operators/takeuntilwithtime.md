@@ -1,7 +1,7 @@
 ### <a id="rxobservableprototypetakeuntilwithtimeendtime-scheduler"></a>`Rx.Observable.prototype.takeUntilWithTime(endTime, [scheduler])`
 <a href="#rxobservableprototypetakeuntilwithtimeendtime-scheduler">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js "View in source")
 
-Returns the values from the source observable sequence until the other observable sequence produces a value.
+Returns the values from the source observable sequence until the end time.
 
 #### Arguments
 1. `endTime` *(`Date` | `Number`)*: Time to stop taking elements from the source sequence. If this value is less than or equal to the current time, the result stream will complete immediately.
@@ -42,19 +42,17 @@ File:
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
 - [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.time.js)
 
 Prerequisites:
-- [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js) | [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js) | [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
+- If using `rx.time.js`
+  - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js) | [`rx.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.compat.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
 
 NuGet Packages:
 - [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 - [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
 
 Unit Tests:

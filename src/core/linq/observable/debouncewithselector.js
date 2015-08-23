@@ -5,53 +5,48 @@
    */
   observableProto.debounceWithSelector = function (durationSelector) {
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var value, hasValue = false, cancelable = new SerialDisposable(), id = 0;
-      var subscription = source.subscribe(function (x) {
-        var throttle;
-        try {
-          throttle = durationSelector(x);
-        } catch (e) {
-          observer.onError(e);
-          return;
+      var subscription = source.subscribe(
+        function (x) {
+          var throttle = tryCatch(durationSelector)(x);
+          if (throttle === errorObj) { return o.onError(throttle.e); }
+
+          isPromise(throttle) && (throttle = observableFromPromise(throttle));
+
+          hasValue = true;
+          value = x;
+          id++;
+          var currentid = id, d = new SingleAssignmentDisposable();
+          cancelable.setDisposable(d);
+          d.setDisposable(throttle.subscribe(
+            function () {
+              hasValue && id === currentid && o.onNext(value);
+              hasValue = false;
+              d.dispose();
+            },
+            function (e) { o.onError(e); },
+            function () {
+              hasValue && id === currentid && o.onNext(value);
+              hasValue = false;
+              d.dispose();
+            }
+          ));
+        },
+        function (e) {
+          cancelable.dispose();
+          o.onError(e);
+          hasValue = false;
+          id++;
+        },
+        function () {
+          cancelable.dispose();
+          hasValue && o.onNext(value);
+          o.onCompleted();
+          hasValue = false;
+          id++;
         }
-
-        isPromise(throttle) && (throttle = observableFromPromise(throttle));
-
-        hasValue = true;
-        value = x;
-        id++;
-        var currentid = id, d = new SingleAssignmentDisposable();
-        cancelable.setDisposable(d);
-        d.setDisposable(throttle.subscribe(function () {
-          hasValue && id === currentid && observer.onNext(value);
-          hasValue = false;
-          d.dispose();
-        }, observer.onError.bind(observer), function () {
-          hasValue && id === currentid && observer.onNext(value);
-          hasValue = false;
-          d.dispose();
-        }));
-      }, function (e) {
-        cancelable.dispose();
-        observer.onError(e);
-        hasValue = false;
-        id++;
-      }, function () {
-        cancelable.dispose();
-        hasValue && observer.onNext(value);
-        observer.onCompleted();
-        hasValue = false;
-        id++;
-      });
+      );
       return new CompositeDisposable(subscription, cancelable);
     }, source);
-  };
-
-  /**
-   * @deprecated use #debounceWithSelector instead.
-   */
-  observableProto.throttleWithSelector = function (durationSelector) {
-    //deprecate('throttleWithSelector', 'debounceWithSelector');
-    return this.debounceWithSelector(durationSelector);
   };

@@ -1,13 +1,16 @@
-### `Rx.Observable.prototype.scan([seed], accumulator)`
+### `Rx.Observable.prototype.scan(accumulator, [seed])` **New as of v3.0**
+### `Rx.Observable.prototype.scan([seed], accumulator)` **Removed as of v3.0**
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js "View in source")
 
 Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
 
-For aggregation behavior with no intermediate results, see `Rx.Observable#aggregate` or `Rx.Observable#reduce`.
+For aggregation behavior with no intermediate results, see `Rx.Observable#reduce`.
+
+Note the `Rx.Observable.prototype.scan([seed], accumulator)` has been removed as per v3.0 and replaced with `Rx.Observable.prototype.scan(accumulator, [seed])`.
 
 #### Arguments
-1. `[seed]` *(`Any`)*: The initial accumulator value.
-2. `accumulator` *(`Function`)*: An accumulator function to be invoked on each element.
+1. `accumulator` *(`Function`)*: An accumulator function to be invoked on each element.
+2. `[seed]` *(`Any`)*: The initial accumulator value.
 
 #### Returns
 *(`Observable`)*: An observable sequence which results from the comonadic bind operation.
@@ -16,21 +19,18 @@ For aggregation behavior with no intermediate results, see `Rx.Observable#aggreg
 ```js
 /* Without a seed */
 var source = Rx.Observable.range(1, 3)
-    .scan(
-        function (acc, x) {
-            return acc + x;
-        });
+  .scan(function (acc, x) { return acc + x; });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 1
 // => Next: 3
@@ -39,22 +39,18 @@ var subscription = source.subscribe(
 
 /* With a seed */
 var source = Rx.Observable.range(1, 3)
-    .scan(
-        1,
-        function (acc, x) {
-            return acc * x;
-        });
+    .scan(function (acc, x) { return acc * x; }, 1);
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 1
 // => Next: 2

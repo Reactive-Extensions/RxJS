@@ -115,7 +115,7 @@
 
     var scheduler2 = new TestScheduler();
 
-    var ys = Observable.throwError(new Error(), scheduler2).retry();
+    var ys = Observable['throw'](new Error(), scheduler2).retry();
 
     var d = ys.subscribe(noop, function (err) { throw err; });
 
@@ -277,7 +277,7 @@
 
     var scheduler2 = new TestScheduler();
 
-    var ys = Observable.throwError(new Error(), scheduler2).retry(100);
+    var ys = Observable['throw'](new Error(), scheduler2).retry(100);
 
     var d = ys.subscribe(noop, function (err) { throw err; });
 

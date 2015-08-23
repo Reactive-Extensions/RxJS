@@ -1,193 +1,124 @@
-  var fnString = 'function',
-      throwString = 'throw',
-      isObject = Rx.internals.isObject;
+  Observable.wrap = function (fn) {
+    createObservable.__generatorFunction__ = fn;
+    return createObservable;
 
-  function toThunk(obj, ctx) {
-    if (Array.isArray(obj)) {  return objectToThunk.call(ctx, obj); }
-    if (isGeneratorFunction(obj)) { return observableSpawn(obj.call(ctx)); }
-    if (isGenerator(obj)) {  return observableSpawn(obj); }
-    if (isObservable(obj)) { return observableToThunk(obj); }
-    if (isPromise(obj)) { return promiseToThunk(obj); }
-    if (typeof obj === fnString) { return obj; }
-    if (isObject(obj) || Array.isArray(obj)) { return objectToThunk.call(ctx, obj); }
-
-    return obj;
-  }
-
-  function objectToThunk(obj) {
-    var ctx = this;
-
-    return function (done) {
-      var keys = Object.keys(obj),
-          pending = keys.length,
-          results = new obj.constructor(),
-          finished;
-
-      if (!pending) {
-        timeoutScheduler.schedule(function () { done(null, results); });
-        return;
-      }
-
-      for (var i = 0, len = keys.length; i < len; i++) {
-        run(obj[keys[i]], keys[i]);
-      }
-
-      function run(fn, key) {
-        if (finished) { return; }
-        try {
-          fn = toThunk(fn, ctx);
-
-          if (typeof fn !== fnString) {
-            results[key] = fn;
-            return --pending || done(null, results);
-          }
-
-          fn.call(ctx, function(err, res) {
-            if (finished) { return; }
-
-            if (err) {
-              finished = true;
-              return done(err);
-            }
-
-            results[key] = res;
-            --pending || done(null, results);
-          });
-        } catch (e) {
-          finished = true;
-          done(e);
-        }
-      }
-    }
-  }
-
-  function observableToThunk(observable) {
-    return function (fn) {
-      var value, hasValue = false;
-      observable.subscribe(
-        function (v) {
-          value = v;
-          hasValue = true;
-        },
-        fn,
-        function () {
-          hasValue && fn(null, value);
-        });
-    }
-  }
-
-  function promiseToThunk(promise) {
-    return function(fn) {
-      promise.then(function(res) {
-        fn(null, res);
-      }, fn);
-    }
-  }
-
-  function isObservable(obj) {
-    return obj && typeof obj.subscribe === fnString;
-  }
-
-  function isGeneratorFunction(obj) {
-    return obj && obj.constructor && obj.constructor.name === 'GeneratorFunction';
-  }
-
-  function isGenerator(obj) {
-    return obj && typeof obj.next === fnString && typeof obj[throwString] === fnString;
-  }
-
-  /*
-   * Spawns a generator function which allows for Promises, Observable sequences, Arrays, Objects, Generators and functions.
-   * @param {Function} The spawning function.
-   * @returns {Function} a function which has a done continuation.
-   */
-  var observableSpawn = Rx.spawn = function (fn) {
-    var isGenFun = isGeneratorFunction(fn);
-
-    return function (done) {
-      var ctx = this,
-        gen = fn;
-
-      if (isGenFun) {
-        for(var args = [], i = 0, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-        var len = args.length,
-          hasCallback = len && typeof args[len - 1] === fnString;
-
-        done = hasCallback ? args.pop() : handleError;
-        gen = fn.apply(this, args);
-      } else {
-        done = done || handleError;
-      }
-
-      next();
-
-      function exit(err, res) {
-        timeoutScheduler.schedule(done.bind(ctx, err, res));
-      }
-
-      function next(err, res) {
-        var ret;
-
-        // multiple args
-        if (arguments.length > 2) {
-          for(var res = [], i = 1, len = arguments.length; i < len; i++) { res.push(arguments[i]); }
-        }
-
-        if (err) {
-          try {
-            ret = gen[throwString](err);
-          } catch (e) {
-            return exit(e);
-          }
-        }
-
-        if (!err) {
-          try {
-            ret = gen.next(res);
-          } catch (e) {
-            return exit(e);
-          }
-        }
-
-        if (ret.done)  {
-          return exit(null, ret.value);
-        }
-
-        ret.value = toThunk(ret.value, ctx);
-
-        if (typeof ret.value === fnString) {
-          var called = false;
-          try {
-            ret.value.call(ctx, function() {
-              if (called) {
-                return;
-              }
-
-              called = true;
-              next.apply(ctx, arguments);
-            });
-          } catch (e) {
-            timeoutScheduler.schedule(function () {
-              if (called) {
-                return;
-              }
-
-              called = true;
-              next.call(ctx, e);
-            });
-          }
-          return;
-        }
-
-        // Not supported
-        next(new TypeError('Rx.spawn only supports a function, Promise, Observable, Object or Array.'));
-      }
+    function createObservable() {
+      return Observable.spawn.call(this, fn.apply(this, arguments));
     }
   };
 
-  function handleError(err) {
-    if (!err) { return; }
-    timeoutScheduler.schedule(function() {
-      throw err;
+  var spawn = Observable.spawn = function () {
+    var gen = arguments[0], self = this, args = [];
+    for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+
+    return new AnonymousObservable(function (o) {
+      var g = new CompositeDisposable();
+
+      if (isFunction(gen)) { gen = gen.apply(self, args); }
+      if (!gen || !isFunction(gen.next)) {
+        o.onNext(gen);
+        return o.onCompleted();
+      }
+
+      processGenerator();
+
+      function processGenerator(res) {
+        var ret = tryCatch(gen.next).call(gen, res);
+        if (ret === errorObj) { return o.onError(ret.e); }
+        next(ret);
+      }
+
+      function onError(err) {
+        var ret = tryCatch(gen.next).call(gen, err);
+        if (ret === errorObj) { return o.onError(ret.e); }
+        next(ret);
+      }
+
+      function next(ret) {
+        if (ret.done) {
+          o.onNext(ret.value);
+          o.onCompleted();
+          return;
+        }
+        var value = toObservable.call(self, ret.value);
+        if (Observable.isObservable(value)) {
+          g.add(value.subscribe(processGenerator, onError));
+        } else {
+          onError(new TypeError('type not supported'));
+        }
+      }
+
+      return g;
     });
   }
+
+function toObservable(obj) {
+  if (!obj) { return obj; }
+  if (Observable.isObservable(obj)) { return obj; }
+  if (isPromise(obj)) { return Observable.fromPromise(obj); }
+  if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
+  if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
+  if (isArrayLike(obj) || isIterable(obj)) { return arrayToObservable.call(this, obj); }
+  if (isObject(obj)) {return objectToObservable.call(this, obj);}
+  return obj;
+}
+
+function arrayToObservable (obj) {
+  return Observable.from(obj)
+      .flatMap(toObservable)
+      .toArray();
+}
+
+function objectToObservable (obj) {
+  var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
+  for (var i = 0, len = keys.length; i < len; i++) {
+    var key = keys[i];
+    var observable = toObservable.call(this, obj[key]);
+
+    if(observable && Observable.isObservable(observable)) {
+      defer(observable, key);
+    } else {
+      results[key] = obj[key];
+    }
+  }
+
+  return Observable.forkJoin.apply(Observable, observables).map(function() {
+    return results;
+  });
+
+
+  function defer (observable, key) {
+    results[key] = undefined;
+    observables.push(observable.map(function (next) {
+      results[key] = next;
+    }));
+  }
+}
+
+function thunkToObservable(fn) {
+  var self = this;
+  return new AnonymousObservable(function (o) {
+    fn.call(self, function () {
+      var err = arguments[0], res = arguments[1];
+      if (err) { return o.onError(err); }
+      if (arguments.length > 2) {
+        var args = [];
+        for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+        res = args;
+      }
+      o.onNext(res);
+      o.onCompleted();
+    });
+  });
+}
+
+function isGenerator(obj) {
+  return isFunction (obj.next) && isFunction (obj.throw);
+}
+
+function isGeneratorFunction(obj) {
+  var ctor = obj.constructor;
+  if (!ctor) { return false; }
+  if (ctor.name === 'GeneratorFunction' || ctor.displayName === 'GeneratorFunction') { return true; }
+  return isGenerator(ctor.prototype);
+}

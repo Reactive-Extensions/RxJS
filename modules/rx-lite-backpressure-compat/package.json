@@ -1,8 +1,8 @@
 {
   "name": "rx-lite-backpressure-compat",
   "title": "Reactive Extensions for JavaScript (RxJS) Async",
-    "description": "Lightweight older browser compatible library with backpressure functions for composing asynchronous and event-based operations in JavaScript",
-  "version": "2.5.2",
+  "description": "Lightweight older browser compatible library with backpressure functions for composing asynchronous and event-based operations in JavaScript",
+  "version": "3.1.1",
   "homepage": "https://github.com/Reactive-Extensions/RxJS",
   "author": {
     "name": "Cloud Programmability Team",

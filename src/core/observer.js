@@ -17,7 +17,11 @@
    * @returns An observer that hides the identity of the specified observer.
    */
   Observer.prototype.asObserver = function () {
-    return new AnonymousObserver(this.onNext.bind(this), this.onError.bind(this), this.onCompleted.bind(this));
+    var self = this;
+    return new AnonymousObserver(
+      function (x) { self.onNext(x); },
+      function (err) { self.onError(err); },
+      function () { self.onCompleted(); });
   };
 
   /**
@@ -50,12 +54,13 @@
    * @returns The observer object that invokes the specified handler using a notification corresponding to each message it receives.
    */
   Observer.fromNotifier = function (handler, thisArg) {
+    var cb = bindCallback(handler, thisArg, 1);
     return new AnonymousObserver(function (x) {
-      return handler.call(thisArg, notificationCreateOnNext(x));
+      return cb(notificationCreateOnNext(x));
     }, function (e) {
-      return handler.call(thisArg, notificationCreateOnError(e));
+      return cb(notificationCreateOnError(e));
     }, function () {
-      return handler.call(thisArg, notificationCreateOnCompleted());
+      return cb(notificationCreateOnCompleted());
     });
   };
 

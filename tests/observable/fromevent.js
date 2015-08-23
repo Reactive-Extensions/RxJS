@@ -93,8 +93,8 @@
     var d = Observable.fromEvent(
       element,
       'someEvent',
-      function (arr) {
-        return { foo: arr[0], bar: arr[1] };
+      function (baz, quux) {
+        return { foo: baz, bar: quux };
       }
     )
     .subscribe(function (x) {
@@ -159,8 +159,8 @@
     var d = Observable.fromEvent(
       element,
       'someEvent',
-      function (arr) {
-        return { foo: arr[0], bar: arr[1] };
+      function (baz, quux) {
+        return { foo: baz, bar: quux };
       }
     )
     .subscribe(function (x) {

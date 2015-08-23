@@ -8,7 +8,8 @@
 <body>
   <div id="qunit"></div>
   <script src="./vendor/qunit-1.11.0.js"></script>
-  <script src="./vendor/es6-shim.min.js"></script>
+  <script src="./vendor/es5-shim.js"></script>
+  <script src="./vendor/es6-shim.js"></script>
   <script src="./vendor/rsvp.js"></script>
   <script src="./vendor/transducers-0.4.158-min.js"></script>
   <script src="../dist/rx.all.js"></script>
@@ -139,7 +140,7 @@
   <!-- Multiple -->
 
   <script src="observable/ambproto.js"></script>
-  <script src="observable/catchexceptionproto.js"></script>
+  <script src="observable/catch.js"></script>
   <script src="observable/combinelatestproto.js"></script>
   <script src="observable/concatproto.js"></script>
   <script src="observable/merge.js"></script>
@@ -151,7 +152,6 @@
   <script src="observable/switch.js"></script>
   <script src="observable/takeuntil.js"></script>
   <script src="observable/zip.js"></script>
-  <script src="observable/zipproto.js"></script>
 
   <!-- Single -->
 
@@ -190,7 +190,6 @@
   <script src="observable/where.js"></script>
 
   <!-- Aggregate operators -->
-  <script src="observable/aggregate.js"></script>
   <script src="observable/reduce.js"></script>
   <script src="observable/some.js"></script>
   <script src="observable/every.js"></script>
@@ -206,13 +205,9 @@
   <script src="observable/sequenceequal.js"></script>
   <script src="observable/isempty.js"></script>
   <script src="observable/elementat.js"></script>
-  <script src="observable/elementatordefault.js"></script>
   <script src="observable/first.js"></script>
-  <script src="observable/firstordefault.js"></script>
   <script src="observable/last.js"></script>
-  <script src="observable/lastordefault.js"></script>
   <script src="observable/single.js"></script>
-  <script src="observable/singleordefault.js"></script>
   <script src="observable/findindex.js"></script>
   <script src="observable/find.js"></script>
   <script src="observable/toset.js"></script>

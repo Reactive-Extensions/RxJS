@@ -22,5 +22,6 @@
     <file src="..\..\dist\rx.aggregates.js" target="content\Scripts\rx.aggregates.js" />
     <file src="..\..\dist\rx.aggregates.min.js" target="content\Scripts\rx.aggregates.min.js" />
     <file src="..\..\ts\rx.aggregates.d.ts" target="content\Scripts\rx.aggregates.d.ts" />
+    <file src="..\..\ts\rx.aggregates.es6.d.ts" target="content\Scripts\rx.aggregates.es6.d.ts" />
   </files>
 </package>

@@ -102,7 +102,7 @@ var p = new Promise(function (resolve, reject) {
 });
 ```
 
-We can use the [`toPromise`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/frompromise.md) method which allows you to convert an Observable sequence to a Promise.  This method accepts a Promise constructor, and if not provided, will default to a default implementation.  In this first example, we will use [RSVP](https://github.com/tildeio/rsvp.js) to construct our Promise objects.
+We can use the [`toPromise`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/topromise.md) method which allows you to convert an Observable sequence to a Promise.  This method accepts a Promise constructor, and if not provided, will default to a default implementation.  In this first example, we will use [RSVP](https://github.com/tildeio/rsvp.js) to construct our Promise objects.
 
 ```js
 // Return a single value
@@ -132,7 +132,7 @@ source2.then(
 // => Rejected reason: Error: reason
 ```
 
-If an implementation is not given with the [`toPromise`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/frompromise.md) method, it will fall back to the Promise implementation specified in the `Rx.config.Promise` field.  By default this will be set to the runtime's ES6 Promise implementation, but can easily be overridden by specifying the configuration information.
+If an implementation is not given with the [`toPromise`](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/api/core/operators/topromise.md) method, it will fall back to the Promise implementation specified in the `Rx.config.Promise` field.  By default this will be set to the runtime's ES6 Promise implementation, but can easily be overridden by specifying the configuration information.
 
 ```js
 Rx.config.Promise = RSVP.Promise;

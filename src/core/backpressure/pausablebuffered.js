@@ -7,7 +7,7 @@
         err;
 
       function next(x, i) {
-        values[i] = x
+        values[i] = x;
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
           if (err) { return o.onError(err); }
@@ -59,7 +59,7 @@
       var subscription =
         combineLatestSource(
           this.source,
-          this.pauser.distinctUntilChanged().startWith(false),
+          this.pauser.startWith(false).distinctUntilChanged(),
           function (data, shouldFire) {
             return { data: data, shouldFire: shouldFire };
           })

@@ -44,8 +44,6 @@ Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
 - [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
 - [`rx.time.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.time.js)
-- [`rx.lite.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.js)
-- [`rx.lite.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.lite.compat.js)
 
 Prerequisites:
 - If using `rx.time.js`
@@ -57,7 +55,6 @@ NPM Packages:
 NuGet Packages:
 - [`RxJS-All`](http://www.nuget.org/packages/RxJS-All/)
 - [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
-- [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
 - [`/tests/observable/skipuntilwithtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/skipuntilwithtime.js)

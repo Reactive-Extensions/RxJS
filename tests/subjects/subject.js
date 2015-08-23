@@ -318,7 +318,7 @@ test('Subject_Create', function () {
         done = true;
     });
 
-    var o = Observable.returnValue(42);
+    var o = Observable.just(42);
 
     var s = Subject.create(v, o);
     s.subscribe(function (x) {

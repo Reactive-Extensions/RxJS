@@ -27,27 +27,37 @@
         }
       }
 
-      leftSubscription.setDisposable(leftSource.subscribe(function (left) {
-        choiceL();
-        choice === leftChoice && observer.onNext(left);
-      }, function (err) {
-        choiceL();
-        choice === leftChoice && observer.onError(err);
-      }, function () {
-        choiceL();
-        choice === leftChoice && observer.onCompleted();
-      }));
+      var leftSubscribe = observerCreate(
+        function (left) {
+          choiceL();
+          choice === leftChoice && observer.onNext(left);
+        },
+        function (e) {
+          choiceL();
+          choice === leftChoice && observer.onError(e);
+        },
+        function () {
+          choiceL();
+          choice === leftChoice && observer.onCompleted();
+        }
+      );
+      var rightSubscribe = observerCreate(
+        function (right) {
+          choiceR();
+          choice === rightChoice && observer.onNext(right);
+        },
+        function (e) {
+          choiceR();
+          choice === rightChoice && observer.onError(e);
+        },
+        function () {
+          choiceR();
+          choice === rightChoice && observer.onCompleted();
+        }
+      );
 
-      rightSubscription.setDisposable(rightSource.subscribe(function (right) {
-        choiceR();
-        choice === rightChoice && observer.onNext(right);
-      }, function (err) {
-        choiceR();
-        choice === rightChoice && observer.onError(err);
-      }, function () {
-        choiceR();
-        choice === rightChoice && observer.onCompleted();
-      }));
+      leftSubscription.setDisposable(leftSource.subscribe(leftSubscribe));
+      rightSubscription.setDisposable(rightSource.subscribe(rightSubscribe));
 
       return new CompositeDisposable(leftSubscription, rightSubscription);
     });

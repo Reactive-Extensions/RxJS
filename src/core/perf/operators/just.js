@@ -7,23 +7,28 @@
     }
 
     JustObservable.prototype.subscribeCore = function (observer) {
-      var sink = new JustSink(observer, this);
+      var sink = new JustSink(observer, this.value, this.scheduler);
       return sink.run();
     };
 
-    function JustSink(observer, parent) {
+    function JustSink(observer, value, scheduler) {
       this.observer = observer;
-      this.parent = parent;
+      this.value = value;
+      this.scheduler = scheduler;
     }
 
     function scheduleItem(s, state) {
       var value = state[0], observer = state[1];
       observer.onNext(value);
       observer.onCompleted();
+      return disposableEmpty;
     }
 
     JustSink.prototype.run = function () {
-      return this.parent.scheduler.scheduleWithState([this.parent.value, this.observer], scheduleItem);
+      var state = [this.value, this.observer];
+      return this.scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this.scheduler.scheduleWithState(state, scheduleItem);
     };
 
     return JustObservable;
@@ -36,7 +41,7 @@
    * @param {Scheduler} scheduler Scheduler to send the single element on. If not specified, defaults to Scheduler.immediate.
    * @returns {Observable} An observable sequence containing the single specified element.
    */
-  var observableReturn = Observable['return'] = Observable.just = Observable.returnValue = function (value, scheduler) {
+  var observableReturn = Observable['return'] = Observable.just = function (value, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     return new JustObservable(value, scheduler);
   };

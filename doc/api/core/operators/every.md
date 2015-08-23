@@ -1,5 +1,4 @@
 ### `Rx.Observable.prototype.every(predicate, [thisArg])` ##
-### `Rx.Observable.prototype.all(predicate, [thisArg])` **DEPRECATED** ##
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/every.js "View in source")
 
 Determines whether all elements of an observable sequence satisfy a condition.

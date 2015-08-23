@@ -16,7 +16,7 @@ This topic lists all major operators implemented by the [`Observable`](https://g
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generate.md">generate</a></li>
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generatewithabsolutetime.md">generateWithAbsoluteTime</a></li>
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/generatewithrelativetime.md">generateWithRelativeTime</a></li>
-      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/rxobservablerangestart-count-scheduler">range</a></li>
+      <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/range.md">range</a></li>
       <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/using.md">using</a></li>
       </ol>
       </td>
@@ -173,7 +173,7 @@ This topic lists all major operators implemented by the [`Observable`](https://g
    <td>
    <ol>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/buffer.md">buffer</a></li>
-   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferiwthcount.md">bufferWithCount</a></li>
+   <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferwithcount.md">bufferWithCount</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/bufferwithtimeorcount.md">bufferWithTimeOrCount</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupby.md">groupBy</a></li>
    <li><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/groupbyuntil.md">groupByUntil</a></li>

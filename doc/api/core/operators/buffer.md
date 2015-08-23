@@ -106,7 +106,7 @@ var openings = Rx.Observable.interval(500);
 
 // Convert the window to an array
 var source = Rx.Observable.timer(0, 100)
-  .window(openings)
+  .buffer(openings)
   .take(3);
 
 var subscription = source.subscribe(

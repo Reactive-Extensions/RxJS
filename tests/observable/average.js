@@ -10,7 +10,9 @@
   test('Average_Number_Empty', function () {
     var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(onNext(150, 1), onCompleted(250));
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(250));
 
     var results = scheduler.startWithCreate(function () {
       return xs.average();

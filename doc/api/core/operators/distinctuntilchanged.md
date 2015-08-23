@@ -13,31 +13,27 @@ Returns an observable sequence that contains only distinct contiguous elements a
 #### Example
 ```js
 /* Without key selector */
-var source = Rx.Observable.from([
-        42, 42, 24, 24
-    ])
-    .distinctUntilChanged();
+var source = Rx.Observable.of(42, 42, 24, 24)
+  .distinctUntilChanged();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 42
 // => Next: 24
 // => Completed
 
 /* With key selector */
-var source = Rx.Observable.from([
-        {value: 42}, {value: 42}, {value: 24}, {value: 24}
-    ])
-    .distinctUntilChanged(function (x) { return x.value; });
+var source = Rx.Observable.of({value: 42}, {value: 42}, {value: 24}, {value: 24})
+  .distinctUntilChanged(function (x) { return x.value; });
 
 var subscription = source.subscribe(
     function (x) {

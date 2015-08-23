@@ -13,9 +13,9 @@ test('Scan_Seed_Never', function () {
   var seed = 42;
 
   var results = scheduler.startWithCreate(function () {
-    return Rx.Observable.never().scan(seed, function (acc, x) {
+    return Rx.Observable.never().scan(function (acc, x) {
       return acc + x;
-    });
+    }, seed);
   });
 
   results.messages.assertEqual();
@@ -32,9 +32,9 @@ test('Scan_Seed_Empty', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.scan(seed, function (acc, x) {
+    return xs.scan(function (acc, x) {
       return acc + x;
-    });
+    }, seed);
   });
 
   results.messages.assertEqual(
@@ -56,9 +56,9 @@ test('Scan_Seed_Return', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.scan(seed, function (acc, x) {
+    return xs.scan(function (acc, x) {
       return acc + x;
-    });
+    }, seed);
   });
 
   results.messages.assertEqual(
@@ -80,9 +80,9 @@ test('Scan_Seed_Throw', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.scan(seed, function (acc, x) {
+    return xs.scan(function (acc, x) {
       return acc + x;
-    });
+    }, seed);
   });
 
   results.messages.assertEqual(
@@ -105,9 +105,9 @@ test('Scan_Seed_SomeData', function () {
   );
 
   var results = scheduler.startWithCreate(function () {
-    return xs.scan(seed, function (acc, x) {
+    return xs.scan(function (acc, x) {
       return acc + x;
-    });
+    }, seed);
   });
 
   results.messages.assertEqual(
@@ -146,25 +146,25 @@ test('Scan_NoSeed_Empty', function () {
 });
 
 test('Scan_NoSeed_Return', function () {
-    var scheduler = new TestScheduler();
+  var scheduler = new TestScheduler();
 
-    var xs = scheduler.createHotObservable(
-      onNext(150, 1),
-      onNext(220, 2),
-      onCompleted(250)
-    );
+  var xs = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(220, 2),
+    onCompleted(250)
+  );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.scan(function (acc, x) {
-        acc === undefined && (acc = 0);
-        return acc + x;
-      });
+  var results = scheduler.startWithCreate(function () {
+    return xs.scan(function (acc, x) {
+      acc === undefined && (acc = 0);
+      return acc + x;
     });
+  });
 
-    results.messages.assertEqual(
-      onNext(220, 2),
-      onCompleted(250)
-    );
+  results.messages.assertEqual(
+    onNext(220, 2),
+    onCompleted(250)
+  );
 });
 
 test('Scan_NoSeed_Throw', function () {

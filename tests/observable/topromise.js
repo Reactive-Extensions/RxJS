@@ -3,7 +3,7 @@ module('ToPromise');
 var TestScheduler = Rx.TestScheduler,
     Observable = Rx.Observable;
 
-asyncTest('Promise_Success', function () {
+asyncTest('Promise Success', function () {
   var source = Rx.Observable.just(42);
 
   var promise = source.toPromise(RSVP.Promise);
@@ -19,10 +19,10 @@ asyncTest('Promise_Success', function () {
   );
 });
 
-asyncTest('Promise_Failure', function () {
+asyncTest('Promise Failure', function () {
   var error = new Error('woops');
 
-  var source = Rx.Observable.throwError(error);
+  var source = Rx.Observable['throw'](error);
 
   var promise = source.toPromise(RSVP.Promise);
 

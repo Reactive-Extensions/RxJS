@@ -47,13 +47,13 @@ var subscription = subject.subscribe(
 - [`hasObservers`](#rxasyncsubjectprototypehasobservers)
 
 ## Inherited Classes ##
-- [`Rx.Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/core/observable.md)
-- [`Rx.Observer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/core/observer.md)
+- [`Rx.Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md)
+- [`Rx.Observer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observer.md)
 
 ## _AsyncSubject Constructor_ ##
 
 ### <a id="rxasyncsubject"></a>`Rx.AsyncSubject()`
-<a href="#rxasyncsubject">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L33-L42 "View in source")
+<a href="#rxasyncsubject">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L33-L41 "View in source")
 
 Creates a subject that can only receive one value and that value is cached for all future observations.
 
@@ -88,7 +88,7 @@ var subscription = source.subscribe(
 ## _AsyncSubject Instance Methods_ ##
 
 ### <a id="rxasyncsubjectprototypedispose"></a>`Rx.AsyncSubject.prototype.dispose()`
-<a href="#rxasyncsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L111-L116 "View in source")
+<a href="#rxasyncsubjectprototypedispose">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L108-L113 "View in source")
 
 Unsubscribe all observers and release resources.
 
@@ -131,7 +131,7 @@ try {
 * * *
 
 ### <a id="rxasyncsubjectprototypehasobservers"></a>`Rx.AsyncSubject.prototype.hasObservers()`
-<a href="#rxasyncsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L49-L51 "View in source")
+<a href="#rxasyncsubjectprototypehasobservers">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L48-L51 "View in source")
 
 Indicates whether the subject has observers subscribed to it.
 

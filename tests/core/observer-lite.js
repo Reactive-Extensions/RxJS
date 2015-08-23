@@ -1,10 +1,7 @@
 (function () {
   QUnit.module('Observer');
 
-  var Observer = Rx.Observer,
-    createOnNext = Rx.Notification.createOnNext,
-    createOnError = Rx.Notification.createOnError,
-    createOnCompleted = Rx.Notification.createOnCompleted;
+  var Observer = Rx.Observer;
 
   test('Create_OnNext', function () {
     var next, res;
@@ -20,7 +17,7 @@
 
   test('Create_OnNext_HasError', function () {
     var e_;
-    var ex = 'ex';
+    var ex = new Error();
     var next = false;
     var res = Observer.create(function (x) {
       equal(42, x);
@@ -61,7 +58,7 @@
 
   test('Create_OnNextOnCompleted_HasError', function () {
     var e_;
-    var ex = 'ex';
+    var ex = new Error();
     var next = false;
     var completed = false;
     var res = Observer.create(function (x) {
@@ -84,7 +81,7 @@
   });
 
   test('Create_OnNextOnError', function () {
-    var ex = 'ex';
+    var ex = new Error();
     var next = true;
     var error = false;
     var res = Observer.create(function (x) {
@@ -105,7 +102,7 @@
   });
 
   test('Create_OnNextOnError_HitCompleted', function () {
-    var ex = 'ex';
+    var ex = new Error();
     var next = true;
     var error = false;
     var res = Observer.create(function (x) {
@@ -126,7 +123,7 @@
   });
 
   test('Create_OnNextOnErrorOnCompleted1', function () {
-    var ex = 'ex';
+    var ex = new Error();
     var next = true;
     var error = false;
     var completed = false;
@@ -153,7 +150,7 @@
   });
 
   test('Create_OnNextOnErrorOnCompleted2', function () {
-    var ex = 'ex';
+    var ex = new Error();
     var next = true;
     var error = false;
     var completed = false;

@@ -15,5 +15,7 @@
     noop = Rx.helpers.noop,
     identity = Rx.helpers.identity,
     isPromise = Rx.helpers.isPromise,
+    isFunction = Rx.helpers.isFunction,
+    bindCallback = Rx.internals.bindCallback,
     observableFromPromise = Observable.fromPromise,
     ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;

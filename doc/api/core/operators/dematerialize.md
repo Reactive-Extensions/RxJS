@@ -9,22 +9,22 @@ Dematerializes the explicit notification values of an observable sequence as imp
 #### Example
 ```js
 var source = Rx.Observable
-    .from([
-        Rx.Notification.createOnNext(42),
-        Rx.Notification.createOnError(new Error('woops'))
-    ])
-    .dematerialize();
+  .from([
+    Rx.Notification.createOnNext(42),
+    Rx.Notification.createOnError(new Error('woops'))
+  ])
+  .dematerialize();
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x.toString());
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 42
 // => Error: Error: woops

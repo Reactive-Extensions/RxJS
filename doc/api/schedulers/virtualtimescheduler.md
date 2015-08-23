@@ -255,13 +255,13 @@ var scheduler = new MyVirtualScheduler(
     0 /* initial time */
 );
 
-scheduler.scheduleAbsoluteWithState('world', 100, function (x) {
-    console.log('hello ' + x);
+scheduler.scheduleAbsoluteWithState('world', 100, function (scheduler, state) {
+    console.log('hello ' + state);
 });
 
-scheduler.scheduleAbsoluteWithState(200, function () {
-    console.log('goodnight ' + x);
-}, 'moon');
+scheduler.scheduleAbsoluteWithState('moon', 200, function (scheduler, state) {
+    console.log('goodnight ' + state);
+});
 
 scheduler.start();
 // => hello world
@@ -336,12 +336,12 @@ var scheduler = new MyVirtualScheduler(
     0 /* initial time */
 );
 
-scheduler.scheduleRelativeWithState('world', 100, function (x) {
-    console.log('hello ' + x);
+scheduler.scheduleRelativeWithState('world', 100, function (scheduler, state) {
+    console.log('hello ' + state);
 });
 
-scheduler.scheduleRelativeWithState('moon', 200, function () {
-    console.log('goodnight ' + x);
+scheduler.scheduleRelativeWithState('moon', 200, function (scheduler, state) {
+    console.log('goodnight ' + state);
 });
 
 scheduler.start();
@@ -395,12 +395,12 @@ var scheduler = new MyVirtualScheduler(
     0 /* initial time */
 );
 
-scheduler.scheduleRelativeWithState('world', 100, function (x) {
-    console.log('hello ' + x);
+scheduler.scheduleRelativeWithState('world', 100, function (scheduler, state) {
+    console.log('hello ' + state);
 });
 
-scheduler.scheduleRelativeWithState('moon', 200, function () {
-    console.log('goodnight ' + x);
+scheduler.scheduleRelativeWithState('moon', 200, function (scheduler, state) {
+    console.log('goodnight ' + state);
 });
 
 scheduler.start();

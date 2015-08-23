@@ -2317,7 +2317,7 @@
       // ...the z-stat is greater than 1.96 or less than -1.96
       // http://www.statisticslectures.com/topics/mannwhitneyu/
       zStat = getZ(u);
-      return abs(zStat) > 1.96 ? (zStat > 0 ? -1 : 1) : 0;
+      return abs(zStat) > 1.96 ? (u == u1 ? 1 : -1) : 0;
     }
     // ...the U value is less than or equal the critical U value
     // http://www.geoib.com/mann-whitney-u-test.html

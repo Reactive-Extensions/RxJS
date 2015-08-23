@@ -1,38 +1,64 @@
-### `Rx.Observable.zip(...args)`
+### `Rx.Observable.zip(...args, [resultSelector])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/zip.js "View in source")
 
-Merges the specified observable sequences or Promises into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
+Merges the specified observable sequences or Promises into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.  If the result selector function is omitted, a list with the elements of the observable sequences at corresponding indexes will be yielded.
 
 #### Arguments
 1. `args` *(Array|arguments)*: Observable sources.
+2. `[resultSelector]` *(Function)*: A function which takes the inputs at the specified index and combines them together.  If omitted, a list with the elements of the observable sequences at corresponding indexes will be yielded.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function.
 
 #### Example
 ```js
-/* Using arguments */
+/* Without a result selector */
 var range = Rx.Observable.range(0, 5);
 
 var source = Observable.zip(
-    range,
-    range.skip(1),
-    range.skip(2),
-    function (s1, s2, s3) {
-        return s1 + ':' + s2 + ':' + s3;
-    }
+  range,
+  range.skip(1),
+  range.skip(2)
 );
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
+
+// => Next: 0,1,2
+// => Next: 1,2,3
+// => Next: 2,3,4
+// => Completed
+
+/* With a result selector */
+var range = Rx.Observable.range(0, 5);
+
+var source = Observable.zip(
+  range,
+  range.skip(1),
+  range.skip(2),
+  function (s1, s2, s3) {
+    return s1 + ':' + s2 + ':' + s3;
+  }
+);
+
+var subscription = source.subscribe(
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 0:1:2
 // => Next: 1:2:3
@@ -43,24 +69,24 @@ var subscription = source.subscribe(
 var range = Rx.Observable.range(0, 5);
 
 var source = Observable.zip(
-    RSVP.Promise.resolve(0),
-    RSVP.Promise.resolve(1),
-    Rx.Observable.return(2)
-    function (s1, s2, s3) {
-        return s1 + ':' + s2 + ':' + s3;
-    }
+  Promise.resolve(0),
+  Promise.resolve(1),
+  Rx.Observable.return(2)
+  function (s1, s2, s3) {
+    return s1 + ':' + s2 + ':' + s3;
+  }
 );
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 0:1:2
 // => Completed

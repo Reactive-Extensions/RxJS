@@ -4,7 +4,7 @@
    * @param {Scheduler} [scheduler]  Scheduler to run the debounce timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} The debounced sequence.
    */
-  observableProto.debounce = observableProto.throttleWithTimeout = function (dueTime, scheduler) {
+  observableProto.debounce = function (dueTime, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var source = this;
     return new AnonymousObservable(function (observer) {

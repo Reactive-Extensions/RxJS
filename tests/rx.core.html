@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reactive Extensions for JavaScript Tests</title>
+  <link rel="stylesheet" href="./vendor/qunit-1.11.0.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <script src="./vendor/qunit-1.11.0.js"></script>
+  <script src="../dist/rx.core.js"></script>
+  <script src="../dist/rx.core.testing.js"></script>
+  <script src="helpers/reactiveassert.js"></script>
+  <script>
+    // Backfill for Phantom.js / JSCore
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (context) {
+        var self = this;
+        return function () {
+          return self.apply(context, arguments);
+        };
+      };
+    }
+
+    // Polyfills
+    if (!Array.prototype.forEach)
+    {
+      Array.prototype.forEach = function(fun /*, thisArg */)
+      {
+        "use strict";
+
+        if (this === void 0 || this === null)
+          throw new TypeError();
+
+        var t = Object(this);
+        var len = t.length >>> 0;
+        if (typeof fun !== "function")
+          throw new TypeError();
+
+        var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+        for (var i = 0; i < len; i++)
+        {
+          if (i in t)
+            fun.call(thisArg, t[i], i, t);
+        }
+      };
+    }
+
+    if (!Object.keys) {
+      Object.keys = (function () {
+        'use strict';
+        var hasOwnProperty = Object.prototype.hasOwnProperty,
+            hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+            dontEnums = [
+              'toString',
+              'toLocaleString',
+              'valueOf',
+              'hasOwnProperty',
+              'isPrototypeOf',
+              'propertyIsEnumerable',
+              'constructor'
+            ],
+            dontEnumsLength = dontEnums.length;
+
+        return function (obj) {
+          if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
+            throw new TypeError('Object.keys called on non-object');
+          }
+
+          var result = [], prop, i;
+
+          for (prop in obj) {
+            if (hasOwnProperty.call(obj, prop)) {
+              result.push(prop);
+            }
+          }
+
+          if (hasDontEnumBug) {
+            for (i = 0; i < dontEnumsLength; i++) {
+              if (hasOwnProperty.call(obj, dontEnums[i])) {
+                result.push(dontEnums[i]);
+              }
+            }
+          }
+          return result;
+        };
+      }());
+    }
+  </script>
+  <script>
+  // RxJS Polyfills
+  Rx.Observable.empty = function () {
+    return new Rx.AnonymousObservable(function (observer) {
+      return Rx.Scheduler.immediate.scheduleWithState(null, function () {
+        observer.onCompleted();
+      });
+    });
+  };
+
+  Rx.Observable['return'] = Rx.Observable.just = function (value) {
+    return new Rx.AnonymousObservable(function (o) {
+      return Rx.Scheduler.immediate.scheduleWithState(value, function(_,v) {
+        o.onNext(v);
+        o.onCompleted();
+      });
+    });
+  };
+
+  Rx.Observable['throw'] = Rx.Observable.throwError = function (error) {
+    return new Rx.AnonymousObservable(function (observer) {
+      return Rx.Scheduler.immediate.scheduleWithState(error, function (_,e) {
+        observer.onError(e);
+      });
+    });
+  };
+  </script>
+
+  <!-- Individual Tests -->
+  <script src="concurrency/scheduler-lite.js"></script>
+  <script src="concurrency/immediatescheduler.js"></script>
+  <script src="concurrency/currentthreadscheduler.js"></script>
+  <script src="concurrency/defaultscheduler.js"></script>
+
+  <script src="disposables/compositedisposable.js"></script>
+  <script src="disposables/disposable.js"></script>
+  <script src="disposables/serialdisposable.js"></script>
+  <script src="disposables/singleassignmentdisposable.js"></script>
+
+  <script src="core/observer-lite.js"></script>
+  <script src="core/observable.js"></script>
+  <script src="observable/create.js"></script>
+
+</body>
+</html>

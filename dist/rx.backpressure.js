@@ -1,35 +1,31 @@
 // Copyright (c) Microsoft Open Technologies, Inc. All rights reserved. See License.txt in the project root for license information.
 
 ;(function (factory) {
-    var objectTypes = {
-        'boolean': false,
-        'function': true,
-        'object': true,
-        'number': false,
-        'string': false,
-        'undefined': false
-    };
+  var objectTypes = {
+    'function': true,
+    'object': true
+  };
 
-    var root = (objectTypes[typeof window] && window) || this,
-        freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
-        freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
-        moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
-        freeGlobal = objectTypes[typeof global] && global;
+  var
+    freeExports = objectTypes[typeof exports] && exports && !exports.nodeType && exports,
+    freeSelf = objectTypes[typeof self] && self.Object && self,
+    freeWindow = objectTypes[typeof window] && window && window.Object && window,
+    freeModule = objectTypes[typeof module] && module && !module.nodeType && module,
+    moduleExports = freeModule && freeModule.exports === freeExports && freeExports,
+    freeGlobal = freeExports && freeModule && typeof global == 'object' && global && global.Object && global;
 
-    if (freeGlobal && (freeGlobal.global === freeGlobal || freeGlobal.window === freeGlobal)) {
-        root = freeGlobal;
-    }
+  var root = root = freeGlobal || ((freeWindow !== (this && this.window)) && freeWindow) || freeSelf || this;
 
-    // Because of build optimizers
-    if (typeof define === 'function' && define.amd) {
-        define(['rx'], function (Rx, exports) {
-            return factory(root, exports, Rx);
-        });
-    } else if (typeof module === 'object' && module && module.exports === freeExports) {
-        module.exports = factory(root, module.exports, require('./rx'));
-    } else {
-        root.Rx = factory(root, {}, root.Rx);
-    }
+  // Because of build optimizers
+  if (typeof define === 'function' && define.amd) {
+    define(['./rx'], function (Rx, exports) {
+      return factory(root, exports, Rx);
+    });
+  } else if (typeof module === 'object' && module && module.exports === freeExports) {
+    module.exports = factory(root, module.exports, require('./rx'));
+  } else {
+    root.Rx = factory(root, {}, root.Rx);
+  }
 }.call(this, function (root, exp, Rx, undefined) {
 
   // References
@@ -161,7 +157,7 @@
         err;
 
       function next(x, i) {
-        values[i] = x
+        values[i] = x;
         hasValue[i] = true;
         if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
           if (err) { return o.onError(err); }
@@ -213,7 +209,7 @@
       var subscription =
         combineLatestSource(
           this.source,
-          this.pauser.distinctUntilChanged().startWith(false),
+          this.pauser.startWith(false).distinctUntilChanged(),
           function (data, shouldFire) {
             return { data: data, shouldFire: shouldFire };
           })
@@ -283,144 +279,147 @@
     return new PausableBufferedObservable(this, subject);
   };
 
-  var ControlledObservable = (function (__super__) {
+var ControlledObservable = (function (__super__) {
 
-    inherits(ControlledObservable, __super__);
+  inherits(ControlledObservable, __super__);
 
-    function subscribe (observer) {
-      return this.source.subscribe(observer);
-    }
+  function subscribe (observer) {
+    return this.source.subscribe(observer);
+  }
 
-    function ControlledObservable (source, enableQueue, scheduler) {
-      __super__.call(this, subscribe, source);
-      this.subject = new ControlledSubject(enableQueue, scheduler);
-      this.source = source.multicast(this.subject).refCount();
-    }
+  function ControlledObservable (source, enableQueue, scheduler) {
+    __super__.call(this, subscribe, source);
+    this.subject = new ControlledSubject(enableQueue, scheduler);
+    this.source = source.multicast(this.subject).refCount();
+  }
 
-    ControlledObservable.prototype.request = function (numberOfItems) {
-      return this.subject.request(numberOfItems == null ? -1 : numberOfItems);
-    };
-
-    return ControlledObservable;
-
-  }(Observable));
-
-  var ControlledSubject = (function (__super__) {
-
-    function subscribe (observer) {
-      return this.subject.subscribe(observer);
-    }
-
-    inherits(ControlledSubject, __super__);
-
-    function ControlledSubject(enableQueue, scheduler) {
-      enableQueue == null && (enableQueue = true);
-
-      __super__.call(this, subscribe);
-      this.subject = new Subject();
-      this.enableQueue = enableQueue;
-      this.queue = enableQueue ? [] : null;
-      this.requestedCount = 0;
-      this.requestedDisposable = disposableEmpty;
-      this.error = null;
-      this.hasFailed = false;
-      this.hasCompleted = false;
-      this.scheduler = scheduler || currentThreadScheduler;
-    }
-
-    addProperties(ControlledSubject.prototype, Observer, {
-      onCompleted: function () {
-        this.hasCompleted = true;
-        if (!this.enableQueue || this.queue.length === 0) {
-          this.subject.onCompleted();
-        } else {
-          this.queue.push(Notification.createOnCompleted());
-        }
-      },
-      onError: function (error) {
-        this.hasFailed = true;
-        this.error = error;
-        if (!this.enableQueue || this.queue.length === 0) {
-          this.subject.onError(error);
-        } else {
-          this.queue.push(Notification.createOnError(error));
-        }
-      },
-      onNext: function (value) {
-        var hasRequested = false;
-
-        if (this.requestedCount === 0) {
-          this.enableQueue && this.queue.push(Notification.createOnNext(value));
-        } else {
-          (this.requestedCount !== -1 && this.requestedCount-- === 0) && this.disposeCurrentRequest();
-          hasRequested = true;
-        }
-        hasRequested && this.subject.onNext(value);
-      },
-      _processRequest: function (numberOfItems) {
-        if (this.enableQueue) {
-          while ((this.queue.length >= numberOfItems && numberOfItems > 0) ||
-          (this.queue.length > 0 && this.queue[0].kind !== 'N')) {
-            var first = this.queue.shift();
-            first.accept(this.subject);
-            if (first.kind === 'N') {
-              numberOfItems--;
-            } else {
-              this.disposeCurrentRequest();
-              this.queue = [];
-            }
-          }
-
-          return { numberOfItems : numberOfItems, returnValue: this.queue.length !== 0};
-        }
-
-        return { numberOfItems: numberOfItems, returnValue: false };
-      },
-      request: function (number) {
-        this.disposeCurrentRequest();
-        var self = this;
-
-        this.requestedDisposable = this.scheduler.scheduleWithState(number,
-        function(s, i) {
-          var r = self._processRequest(i), remaining = r.numberOfItems;
-          if (!r.returnValue) {
-            self.requestedCount = remaining;
-            self.requestedDisposable = disposableCreate(function () {
-              self.requestedCount = 0;
-            });
-          }
-        });
-
-        return this.requestedDisposable;
-      },
-      disposeCurrentRequest: function () {
-        this.requestedDisposable.dispose();
-        this.requestedDisposable = disposableEmpty;
-      }
-    });
-
-    return ControlledSubject;
-  }(Observable));
-
-  /**
-   * Attaches a controller to the observable sequence with the ability to queue.
-   * @example
-   * var source = Rx.Observable.interval(100).controlled();
-   * source.request(3); // Reads 3 values
-   * @param {bool} enableQueue truthy value to determine if values should be queued pending the next request
-   * @param {Scheduler} scheduler determines how the requests will be scheduled
-   * @returns {Observable} The observable sequence which only propagates values on request.
-   */
-  observableProto.controlled = function (enableQueue, scheduler) {
-
-    if (enableQueue && isScheduler(enableQueue)) {
-        scheduler = enableQueue;
-        enableQueue = true;
-    }
-
-    if (enableQueue == null) {  enableQueue = true; }
-    return new ControlledObservable(this, enableQueue, scheduler);
+  ControlledObservable.prototype.request = function (numberOfItems) {
+    return this.subject.request(numberOfItems == null ? -1 : numberOfItems);
   };
+
+  return ControlledObservable;
+
+}(Observable));
+
+var ControlledSubject = (function (__super__) {
+
+  function subscribe (observer) {
+    return this.subject.subscribe(observer);
+  }
+
+  inherits(ControlledSubject, __super__);
+
+  function ControlledSubject(enableQueue, scheduler) {
+    enableQueue == null && (enableQueue = true);
+
+    __super__.call(this, subscribe);
+    this.subject = new Subject();
+    this.enableQueue = enableQueue;
+    this.queue = enableQueue ? [] : null;
+    this.requestedCount = 0;
+    this.requestedDisposable = null;
+    this.error = null;
+    this.hasFailed = false;
+    this.hasCompleted = false;
+    this.scheduler = scheduler || currentThreadScheduler;
+  }
+
+  addProperties(ControlledSubject.prototype, Observer, {
+    onCompleted: function () {
+      this.hasCompleted = true;
+      if (!this.enableQueue || this.queue.length === 0) {
+        this.subject.onCompleted();
+        this.disposeCurrentRequest()
+      } else {
+        this.queue.push(Notification.createOnCompleted());
+      }
+    },
+    onError: function (error) {
+      this.hasFailed = true;
+      this.error = error;
+      if (!this.enableQueue || this.queue.length === 0) {
+        this.subject.onError(error);
+        this.disposeCurrentRequest()
+      } else {
+        this.queue.push(Notification.createOnError(error));
+      }
+    },
+    onNext: function (value) {
+      if (this.requestedCount <= 0) {
+        this.enableQueue && this.queue.push(Notification.createOnNext(value));
+      } else {
+        (this.requestedCount-- === 0) && this.disposeCurrentRequest();
+        this.subject.onNext(value);
+      }
+    },
+    _processRequest: function (numberOfItems) {
+      if (this.enableQueue) {
+        while (this.queue.length > 0 && (numberOfItems > 0 || this.queue[0].kind !== 'N')) {
+          var first = this.queue.shift();
+          first.accept(this.subject);
+          if (first.kind === 'N') {
+            numberOfItems--;
+          } else {
+            this.disposeCurrentRequest();
+            this.queue = [];
+          }
+        }
+      }
+
+      return numberOfItems;
+    },
+    request: function (number) {
+      this.disposeCurrentRequest();
+      var self = this;
+
+      this.requestedDisposable = this.scheduler.scheduleWithState(number,
+      function(s, i) {
+        var remaining = self._processRequest(i);
+        var stopped = self.hasCompleted || self.hasFailed
+        if (!stopped && remaining > 0) {
+          self.requestedCount = remaining;
+
+          return disposableCreate(function () {
+            self.requestedCount = 0;
+          });
+            // Scheduled item is still in progress. Return a new
+            // disposable to allow the request to be interrupted
+            // via dispose.
+        }
+      });
+
+      return this.requestedDisposable;
+    },
+    disposeCurrentRequest: function () {
+      if (this.requestedDisposable) {
+        this.requestedDisposable.dispose();
+        this.requestedDisposable = null;
+      }
+    }
+  });
+
+  return ControlledSubject;
+}(Observable));
+
+/**
+ * Attaches a controller to the observable sequence with the ability to queue.
+ * @example
+ * var source = Rx.Observable.interval(100).controlled();
+ * source.request(3); // Reads 3 values
+ * @param {bool} enableQueue truthy value to determine if values should be queued pending the next request
+ * @param {Scheduler} scheduler determines how the requests will be scheduled
+ * @returns {Observable} The observable sequence which only propagates values on request.
+ */
+observableProto.controlled = function (enableQueue, scheduler) {
+
+  if (enableQueue && isScheduler(enableQueue)) {
+      scheduler = enableQueue;
+      enableQueue = true;
+  }
+
+  if (enableQueue == null) {  enableQueue = true; }
+  return new ControlledObservable(this, enableQueue, scheduler);
+};
 
   var StopAndWaitObservable = (function (__super__) {
 
@@ -576,5 +575,37 @@
     return new WindowedObservable(this, windowSize);
   };
 
-    return Rx;
+  /**
+   * Pipes the existing Observable sequence into a Node.js Stream.
+   * @param {Stream} dest The destination Node.js stream.
+   * @returns {Stream} The destination stream.
+   */
+  observableProto.pipe = function (dest) {
+    var source = this.pausableBuffered();
+
+    function onDrain() {
+      source.resume();
+    }
+
+    dest.addListener('drain', onDrain);
+
+    source.subscribe(
+      function (x) {
+        !dest.write(String(x)) && source.pause();
+      },
+      function (err) {
+        dest.emit('error', err);
+      },
+      function () {
+        // Hack check because STDIO is not closable
+        !dest._isStdio && dest.end();
+        dest.removeListener('drain', onDrain);
+      });
+
+    source.resume();
+
+    return dest;
+  };
+
+  return Rx;
 }));

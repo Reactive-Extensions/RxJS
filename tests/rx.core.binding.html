@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Reactive Extensions for JavaScript Binding Tests</title>
+  <link rel="stylesheet" href="./vendor/qunit-1.11.0.css">
+</head>
+<body>
+  <div id="qunit"></div>
+  <script src="./vendor/qunit-1.11.0.js"></script>
+  <script src="../dist/rx.core.js"></script>
+  <script src="../dist/rx.core.binding.js"></script>
+  <script src="../dist/rx.core.testing.js"></script>
+  <script src="helpers/reactiveassert.js"></script>
+  <script>
+    // Backfill for Phantom.js / JSCore
+    if (!Function.prototype.bind) {
+      Function.prototype.bind = function (context) {
+        var self = this;
+        return function () {
+          return self.apply(context, arguments);
+        };
+      };
+    }
+
+    // Polyfills
+    if (!Array.prototype.forEach)
+    {
+      Array.prototype.forEach = function(fun /*, thisArg */)
+      {
+        "use strict";
+
+        if (this === void 0 || this === null)
+          throw new TypeError();
+
+        var t = Object(this);
+        var len = t.length >>> 0;
+        if (typeof fun !== "function")
+          throw new TypeError();
+
+        var thisArg = arguments.length >= 2 ? arguments[1] : void 0;
+        for (var i = 0; i < len; i++)
+        {
+          if (i in t)
+            fun.call(thisArg, t[i], i, t);
+        }
+      };
+    }
+
+    if (!Object.keys) {
+      Object.keys = (function () {
+        'use strict';
+        var hasOwnProperty = Object.prototype.hasOwnProperty,
+            hasDontEnumBug = !({toString: null}).propertyIsEnumerable('toString'),
+            dontEnums = [
+              'toString',
+              'toLocaleString',
+              'valueOf',
+              'hasOwnProperty',
+              'isPrototypeOf',
+              'propertyIsEnumerable',
+              'constructor'
+            ],
+            dontEnumsLength = dontEnums.length;
+
+        return function (obj) {
+          if (typeof obj !== 'object' && (typeof obj !== 'function' || obj === null)) {
+            throw new TypeError('Object.keys called on non-object');
+          }
+
+          var result = [], prop, i;
+
+          for (prop in obj) {
+            if (hasOwnProperty.call(obj, prop)) {
+              result.push(prop);
+            }
+          }
+
+          if (hasDontEnumBug) {
+            for (i = 0; i < dontEnumsLength; i++) {
+              if (hasOwnProperty.call(obj, dontEnums[i])) {
+                result.push(dontEnums[i]);
+              }
+            }
+          }
+          return result;
+        };
+      }());
+    }
+  </script>
+
+  <script>
+  // Missing RxJS operators
+  Rx.Observable.prototype.asObservable = function () {
+    var source = this;
+    return new Rx.AnonymousObservable(function (o) { return source.subscribe(o); }, source);
+  };
+
+  Rx.Observable.defer = function (observableFactory) {
+    return new Rx.AnonymousObservable(function (observer) {
+      var result;
+      try {
+        result = observableFactory();
+      } catch (e) {
+        return Rx.Observable.throwError(e).subscribe(observer);
+      }
+
+      return result.subscribe(observer);
+    });
+  };
+
+  Rx.Observable.never = function () {
+    return new Rx.AnonymousObservable(function () {
+      return Rx.Disposable.empty;
+    });
+  };
+
+  Rx.Observable.prototype.repeat = function (repeatCount) {
+    return Enumerable.repeat(this, repeatCount).concat();
+  };
+
+  Rx.Observable['return'] = Rx.Observable.just = function (value) {
+    return new Rx.AnonymousObservable(function (o) {
+      return Rx.Scheduler.immediate.scheduleWithState(value, function(_,v) {
+        o.onNext(v);
+        o.onCompleted();
+      });
+    });
+  };
+
+  Rx.Observable.prototype.skip = function (count) {
+    var source = this;
+    return new Rx.AnonymousObservable(function (o) {
+      var remaining = count;
+      return source.subscribe(function (x) {
+        if (remaining <= 0) {
+          o.onNext(x);
+        } else {
+          remaining--;
+        }
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
+    }, source);
+  };
+
+  Rx.Observable.prototype.take = function (count) {
+    var source = this;
+    return new Rx.AnonymousObservable(function (o) {
+      var remaining = count;
+      return source.subscribe(function (x) {
+        if (remaining-- > 0) {
+          o.onNext(x);
+          remaining <= 0 && o.onCompleted();
+        }
+      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
+    }, source);
+  };
+
+  Rx.Observable['throw'] = Rx.Observable.throwError = function (error) {
+    return new Rx.AnonymousObservable(function (observer) {
+      return Rx.Scheduler.immediate.scheduleWithState(error, function (_,e) {
+        observer.onError(e);
+      });
+    });
+  };
+
+  function arrayInitialize(count, factory) {
+    var a = new Array(count);
+    for (var i = 0; i < count; i++) {
+      a[i] = factory();
+    }
+    return a;
+  }
+
+  function identity(x) { return x; }
+  function falseFactory() { return false; }
+  function emptyArrayFactory() { return []; }
+
+  Rx.Observable.prototype.zip = function () {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+
+    var parent = this, resultSelector = args.pop();
+    args.unshift(parent);
+    return new Rx.AnonymousObservable(function (o) {
+      var n = args.length,
+        queues = arrayInitialize(n, emptyArrayFactory),
+        isDone = arrayInitialize(n, falseFactory);
+
+      var subscriptions = new Array(n);
+      for (var idx = 0; idx < n; idx++) {
+        (function (i) {
+          var source = args[i], sad = new Rx.SingleAssignmentDisposable();
+          sad.setDisposable(source.subscribe(function (x) {
+            queues[i].push(x);
+            if (queues.every(function (x) { return x.length > 0; })) {
+              var queuedValues = queues.map(function (x) { return x.shift(); }),
+                  res = tryCatch(resultSelector).apply(parent, queuedValues);
+              if (res === errorObj) { return o.onError(res.e); }
+              o.onNext(res);
+            } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
+              o.onCompleted();
+            }
+          }, function (e) { o.onError(e); }, function () {
+            isDone[i] = true;
+            isDone.every(identity) && o.onCompleted();
+          }));
+          subscriptions[i] = sad;
+        })(idx);
+      }
+
+      return new Rx.CompositeDisposable(subscriptions);
+    }, parent);
+  };
+
+  var errorObj = {e: {}};
+  var tryCatchTarget;
+  function tryCatcher() {
+    try {
+      return tryCatchTarget.apply(this, arguments);
+    } catch (e) {
+      errorObj.e = e;
+      return errorObj;
+    }
+  }
+  function tryCatch(fn) {
+    tryCatchTarget = fn;
+    return tryCatcher;
+  }
+  function thrower(e) {
+    throw e;
+  }
+
+  // Shim in iterator support
+  var $iterator$ = (typeof Symbol === 'function' && Symbol.iterator) ||
+    '_es6shim_iterator_';
+  // Bug for mozilla version
+  if (window.Set && typeof new window.Set()['@@iterator'] === 'function') {
+    $iterator$ = '@@iterator';
+  }
+
+  var doneEnumerator = Rx.doneEnumerator = { done: true, value: undefined };
+
+  function Enumerator(next) {
+    this._next = next;
+  }
+
+  Enumerator.prototype.next = function () {
+    return this._next();
+  };
+
+  Enumerator.prototype[$iterator$] = function () { return this; };
+
+  function Enumerable (iterator) {
+    this._iterator = iterator;
+  };
+
+  Enumerable.prototype[$iterator$] = function () {
+    return this._iterator();
+  };
+
+  Enumerable.prototype.concat = function () {
+    var sources = this;
+    return new Rx.AnonymousObservable(function (o) {
+      var e = sources[$iterator$]();
+
+      var isDisposed, subscription = new Rx.SerialDisposable();
+      var cancelable = Rx.Scheduler.immediate.scheduleRecursive(function (self) {
+        if (isDisposed) { return; }
+        try {
+          var currentItem = e.next();
+        } catch (ex) {
+          return o.onError(ex);
+        }
+
+        if (currentItem.done) {
+          return o.onCompleted();
+        }
+
+        var currentValue = currentItem.value;
+
+        var d = new Rx.SingleAssignmentDisposable();
+        subscription.setDisposable(d);
+        d.setDisposable(currentValue.subscribe(
+          function(x) { o.onNext(x); },
+          function(err) { o.onError(err); },
+          self)
+        );
+      });
+
+      return new Rx.CompositeDisposable(subscription, cancelable, Rx.Disposable.create(function () {
+        isDisposed = true;
+      }));
+    });
+  };
+
+  Enumerable.repeat = function (value, repeatCount) {
+    if (repeatCount == null) { repeatCount = -1; }
+    return new Enumerable(function () {
+      var left = repeatCount;
+      return new Enumerator(function () {
+        if (left === 0) { return doneEnumerator; }
+        if (left > 0) { left--; }
+        return { done: false, value: value };
+      });
+    });
+  };
+  </script>
+
+  <!-- Individual Tests -->
+  <script src="observable/multicast.js"></script>
+  <script src="observable/publish.js"></script>
+  <script src="observable/publishlast.js"></script>
+  <script src="observable/replay.js"></script>
+  <script src="observable/publishvalue.js"></script>
+  <script src="subjects/subject.js"></script>
+  <script src="subjects/asyncsubject.js"></script>
+  <script src="subjects/behaviorsubject.js"></script>
+  <script src="subjects/replaysubject.js"></script>
+  <script src="observable/connectableobservable.js"></script>
+</body>
+</html>
