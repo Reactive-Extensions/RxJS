@@ -161,6 +161,27 @@
       onCompleted(240));
   });
 
+  test('combineLatest return return no selector', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onCompleted(230));
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(220, 3),
+      onCompleted(240));
+
+    var results = scheduler.startScheduler(function () {
+      return e1.combineLatest(e2);
+    });
+
+    results.messages.assertEqual(
+      onNext(220, [2, 3]),
+      onCompleted(240));
+  });
+
   test('combineLatest empty error', function () {
     var error = new Error();
 
