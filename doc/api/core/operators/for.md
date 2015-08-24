@@ -24,7 +24,7 @@ var array = [1, 2, 3];
 var source = Rx.Observable.for(
     array,
     function (x) {
-        return Rx.Observable.returnValue(x);
+        return Rx.Observable.return(x);
     });
 
 var subscription = source.subscribe(
