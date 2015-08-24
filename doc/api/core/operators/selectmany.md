@@ -93,22 +93,24 @@ var subscription = source.subscribe(
 
 /* Using an array */
 Rx.Observable.of(2, 3, 5)
-.selectMany(function(outer) {
-  //Return x^2, x^3 and x^4
-  return [x * x, 
-             x * x * x, 
-             x * x * x * x];
-},
-function(outer, inner, outerIndex, innerIndex)
-{
-  return { outer : outer, inner : inner, outerIdx : outerIndex, innerIdx : innerIndex };
-}
+    .selectMany(function(x) {
+        // Return x^2, x^3 and x^4
+        return [
+            x * x, 
+            x * x * x, 
+            x * x * x * x
+        ];
+    },
+    function(outer, inner, outerIndex, innerIndex) {
+        return { outer : outer, inner : inner, outerIdx : outerIndex, innerIdx : innerIndex };
+    }
 ).subscribe(function(next) {
-
-  console.log('Outer: ' + next.outer + ', Inner: ' + next.inner, + 
-              ', InnerIndex: ' + next.innerIdx + ', OuterIndex: ' + next.outerIdx);
+    console.log(
+        'Outer: ' + next.outer + ', Inner: ' + next.inner, + 
+        ', InnerIndex: ' + next.innerIdx + ', OuterIndex: ' + next.outerIdx
+    );
 }, function() {
-  console.log('Completed');
+    console.log('Completed');
 });
 
 //=> Outer: 2, Inner: 4, InnerIndex : 0, OuterIndex : 0
