@@ -1477,55 +1477,55 @@ declare module Rx {
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), resultSelector: (v1: T, v2: T2) => TResult): Observable<TResult>;
+        zip<T2, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), resultSelector?: (v1: T, v2: T2) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
+        zip<T2, T3, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector?: (v1: T, v2: T2, v3: T3) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector?: (v1: T, v2: T2, v3: T3, v4: T4) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector?: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, T6, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, T6, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector?: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, T6, T7, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, T6, T7, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector?: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, T6, T7, T8, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, T6, T7, T8, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector?: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<T2, T3, T4, T5, T6, T7, T8, T9, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), ninth: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
+        zip<T2, T3, T4, T5, T6, T7, T8, T9, TResult>(second: (IObservable<T2> | Observable<T2> | Promise<T2>), third: (IObservable<T3> | Observable<T3> | Promise<T3>), fourth: (IObservable<T4> | Observable<T4> | Promise<T4>), fifth: (IObservable<T5> | Observable<T5> | Promise<T5>), sixth: (IObservable<T6> | Observable<T6> | Promise<T6>), seventh: (IObservable<T7> | Observable<T7> | Promise<T7>), eighth: (IObservable<T8> | Observable<T8> | Promise<T8>), ninth: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector?: (v1: T, v2: T2, v3: T3, v4: T4, v5: T5, v6: T6, v7: T7, v8: T8, v9: T9) => TResult): Observable<TResult>;
         /**
          * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
          * The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
          * @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
          */
-        zip<TOther, TResult>(souces: (IObservable<TOther> | Observable<TOther> | Promise<TOther>)[], resultSelector: (firstValue: T, ...otherValues: TOther[]) => TResult): Observable<TResult>;
+        zip<TOther, TResult>(souces: (IObservable<TOther> | Observable<TOther> | Promise<TOther>)[], resultSelector?: (firstValue: T, ...otherValues: TOther[]) => TResult): Observable<TResult>;
     }
 
     export interface ObservableStatic {
@@ -1535,63 +1535,63 @@ declare module Rx {
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, TResult>(sources: (IObservable<T2> | Observable<T2> | Promise<T2>)[], resultSelector: (item1: T1, ...right: T2[]) => TResult): Observable<TResult>;
+        zip<T1, T2, TResult>(sources: (IObservable<T2> | Observable<T2> | Promise<T2>)[], resultSelector?: (item1: T1, ...right: T2[]) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), ObservableOrPromise: Observable<T2>, resultSelector: (item1: T1, item2: T2) => TResult): Observable<TResult>;
+        zip<T1, T2, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), ObservableOrPromise: Observable<T2>, resultSelector?: (item1: T1, item2: T2) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector: (item1: T1, item2: T2, item3: T3) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), resultSelector?: (item1: T1, item2: T2, item3: T3) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, TResult>(source1: Observable<T1>, source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, TResult>(source1: Observable<T1>, source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), resultSelector?: (item1: T1, item2: T2, item3: T3, item4: T4) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), resultSelector?: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, T6, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, T6, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), resultSelector?: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, T6, T7, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, T6, T7, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), resultSelector?: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), source8: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), source8: (IObservable<T8> | Observable<T8> | Promise<T8>), resultSelector?: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8) => TResult): Observable<TResult>;
         /**
         * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences have produced an element at a corresponding index.
         * @param arguments Observable sources.
         * @param {Function} resultSelector Function to invoke for each series of elements at corresponding indexes in the sources.
         * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
         */
-        zip<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), source8: (IObservable<T8> | Observable<T8> | Promise<T8>), source9: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8, item9: T9) => TResult): Observable<TResult>;
+        zip<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(source1: (IObservable<T1> | Observable<T1> | Promise<T1>), source2: (IObservable<T2> | Observable<T2> | Promise<T2>), source3: (IObservable<T3> | Observable<T3> | Promise<T3>), source4: (IObservable<T4> | Observable<T4> | Promise<T4>), source5: (IObservable<T5> | Observable<T5> | Promise<T5>), source6: (IObservable<T6> | Observable<T6> | Promise<T6>), source7: (IObservable<T7> | Observable<T7> | Promise<T7>), source8: (IObservable<T8> | Observable<T8> | Promise<T8>), source9: (IObservable<T9> | Observable<T9> | Promise<T9>), resultSelector?: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8, item9: T9) => TResult): Observable<TResult>;
     }
 
     export interface Observable<T> {
