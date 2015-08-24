@@ -64,7 +64,7 @@ var Rx = require('rx');
 var request = require('request');
 var get = Rx.Observable.fromNodeCallback(request);
 
-Rx.spawn(function* () {
+Rx.Observable.spawn(function* () {
   var data;
   try {
     data = yield get('http://bing.com').timeout(5000 /*ms*/);
@@ -73,7 +73,7 @@ Rx.spawn(function* () {
   } 
 
   console.log(data);
-})();
+}).subscribe();
 ```
 
 ## Mixing Operators with Generators ##
