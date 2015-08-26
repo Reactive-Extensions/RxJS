@@ -2402,7 +2402,15 @@ declare module Rx {
         *  Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
         *  The element's index is used in the logic of the predicate function.
         *
-        *  var res = source.skipWhile(function (value) { return value < 10; 
+        *  var res = source.skipWhile(function (value) { return value < 10; });
+        *  var res = source.skipWhile(function (value, index) { return value < 10 || index < 10; });
+        * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
+        */
+        skipWhile(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
+    }
+
     export interface Observable<T> {
         /**
         *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).

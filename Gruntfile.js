@@ -2560,7 +2560,7 @@ module.exports = function (grunt) {
       var source = grunt.file.read(tsFile);
 
       // source with tests
-      var s = source.match(/module Rx \{([\s\S]*)\}[\s\S]*\(function/);
+      var s = source.match(/module Rx \{([\s\S]*)\}[\s\S]*\(function\s*\(\)\s*\{[\s\S]*\}\)/);
       if (s && s[1]) {
         c = cache[tsFile] = s[1];
 	  }
