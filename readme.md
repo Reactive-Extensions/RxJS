@@ -56,7 +56,7 @@ source
   });
 ```
 
-Now what if this data were to come as some sort of event, for example a stream, such as as a WebSocket, then we could pretty much write the same query to iterate our data, with very little change.
+Now what if this data were to come as some sort of event, for example a stream, such as a WebSocket, then we could pretty much write the same query to iterate our data, with very little change.
 
 ```js
 /* Get stock data somehow */
