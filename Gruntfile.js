@@ -367,9 +367,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
-              'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/timeoutwithselector.js',
-              'src/core/linq/observable/debouncewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
               'src/core/linq/observable/takelastbufferwithtime.js',
@@ -377,7 +374,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/skipwithtime.js',
               'src/core/linq/observable/skipuntilwithtime.js',
               'src/core/linq/observable/takeuntilwithtime.js',
-              'src/core/linq/observable/throttlefirst.js',
+              'src/core/linq/observable/throttle.js',
 
               // Transducers
               'src/core/linq/observable/transduce.js',
@@ -652,9 +649,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
-              'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/timeoutwithselector.js',
-              'src/core/linq/observable/debouncewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
               'src/core/linq/observable/takelastbufferwithtime.js',
@@ -662,7 +656,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/skipwithtime.js',
               'src/core/linq/observable/skipuntilwithtime.js',
               'src/core/linq/observable/takeuntilwithtime.js',
-              'src/core/linq/observable/throttlefirst.js',
+              'src/core/linq/observable/throttle.js',
 
               // Experimental Flattening
               'src/core/linq/observable/switchfirst.js',
@@ -1126,7 +1120,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-              'src/core/linq/observable/throttlefirst.js',
+              'src/core/linq/observable/throttle.js',
 
               // Backpressure operators
               'src/core/backpressure/pausable.js',
@@ -1295,7 +1289,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/timestamp.js', // timeoutScheduler, select
               'src/core/linq/observable/sample.js', // AnonymousObservable, CompositeDisposable, interval, timeoutScheduler
               'src/core/linq/observable/timeout.js', // AnonymousObservable, timeoutScheduler, throw, SingleAssignmentDisposable, SerialDisposable, CompositeDisposable
-              'src/core/linq/observable/throttlefirst.js',
+              'src/core/linq/observable/throttle.js',
 
               // Backpressure operators
               'src/core/backpressure/pausable.js',
@@ -1920,9 +1914,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
-              'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/timeoutwithselector.js',
-              'src/core/linq/observable/debouncewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
               'src/core/linq/observable/takelastbufferwithtime.js',
@@ -1930,7 +1921,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/skipwithtime.js',
               'src/core/linq/observable/skipuntilwithtime.js',
               'src/core/linq/observable/takeuntilwithtime.js',
-              'src/core/linq/observable/throttlefirst.js',
+              'src/core/linq/observable/throttle.js',
               'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.time.js'
@@ -1949,9 +1940,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
-              'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/timeoutwithselector.js',
-              'src/core/linq/observable/debouncewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
               'src/core/linq/observable/takelastbufferwithtime.js',
@@ -1977,9 +1965,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/generatewithabsolutetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/generatewithrelativetime.js', // timeoutScheduler, AnonymousObservable
               'src/core/linq/observable/delaysubscription.js', // delayWithSelector, timer, empty
-              'src/core/linq/observable/delaywithselector.js',
-              'src/core/linq/observable/timeoutwithselector.js',
-              'src/core/linq/observable/debouncewithselector.js',
               'src/core/linq/observable/skiplastwithtime.js',
               'src/core/linq/observable/takelastwithtime.js',
               'src/core/linq/observable/takelastbufferwithtime.js',

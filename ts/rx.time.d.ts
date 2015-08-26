@@ -154,54 +154,6 @@ declare module Rx {
 
     export interface Observable<T> {
         /**
-        *  Time shifts the observable sequence based on a subscription delay and a delay selector function for each element.
-        *
-        * @example
-        *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(5000); }); // with selector only
-        *  1 - res = source.delayWithSelector(Rx.Observable.timer(2000), function (x) { return Rx.Observable.timer(x); }); // with delay and selector
-        *
-        * @param {Observable} [subscriptionDelay]  Sequence indicating the delay for the subscription to the source.
-        * @param {Function} delayDurationSelector Selector function to retrieve a sequence indicating the delay for each given element.
-        * @returns {Observable} Time-shifted sequence.
-        */
-        delayWithSelector(delayDurationSelector: (item: T) => (IObservable<number> | Observable<number> | Promise<number>)): Observable<T>;
-
-        /**
-        *  Time shifts the observable sequence based on a subscription delay and a delay selector function for each element.
-        *
-        * @example
-        *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(5000); }); // with selector only
-        *  1 - res = source.delayWithSelector(Rx.Observable.timer(2000), function (x) { return Rx.Observable.timer(x); }); // with delay and selector
-        *
-        * @param {Observable} [subscriptionDelay]  Sequence indicating the delay for the subscription to the source.
-        * @param {Function} delayDurationSelector Selector function to retrieve a sequence indicating the delay for each given element.
-        * @returns {Observable} Time-shifted sequence.
-        */
-        delayWithSelector(subscriptionDelay: Observable<number>, delayDurationSelector: (item: T) => (IObservable<number> | Observable<number> | Promise<number>)): Observable<T>;
-    }
-
-    export interface Observable<T> {
-        /**
-        *  Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
-        * @param {Observable} [firstTimeout]  Observable sequence that represents the timeout for the first element. If not provided, this defaults to Observable.never().
-        * @param {Function} timeoutDurationSelector Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
-        * @param {Observable} [other]  Sequence to return in case of a timeout. If not provided, this is set to Observable.throwException().
-        * @returns {Observable} The source sequence switching to the other sequence in case of a timeout.
-        */
-        timeoutWithSelector<TTimeout>(firstTimeout: Observable<TTimeout>, timeoutdurationSelector?: (item: T) => Observable<TTimeout>, other?: Observable<T>): Observable<T>;
-    }
-
-    export interface Observable<T> {
-        /**
-        * Ignores values from an observable sequence which are followed by another value within a computed throttle duration.
-        * @param {Function} durationSelector Selector function to retrieve a sequence indicating the throttle duration for each given element.
-        * @returns {Observable} The debounced sequence.
-        */
-        debounceWithSelector(debounceDurationSelector: (item: T) => (IObservable<number> | Observable<number> | Promise<number>)): Observable<T>;
-    }
-
-    export interface Observable<T> {
-        /**
         *  Skips elements for the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
         *
         *  1 - res = source.skipLastWithTime(5000);

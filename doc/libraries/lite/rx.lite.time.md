@@ -25,9 +25,7 @@ File Dependencies:
 ### `Observable Instance Methods`
 - [`bufferWithTime`](../../api/core/operators/bufferwithtime.md)
 - [`bufferWithTimeOrCount`](../../api/core/operators/bufferwithtimeorcount.md)
-- [`debounceWithSelector`](../../api/core/operators/debouncewithselector.md)
 - [`delaySubscription`](../../api/core/operators/delaysubscription.md)
-- [`delayWithSelector`](../../api/core/operators/delaywithselector.md)
 - [`sample`](../../api/core/operators/sample.md)
 - [`skipLastWithTime`](../../api/core/operators/skiplastwithtime.md)
 - [`takeLastBufferWithTime`](../../api/core/operators/takelastbufferwithtime.md)

@@ -4,7 +4,7 @@
    * @param {Scheduler} [scheduler] the Scheduler to use internally to manage the timers that handle timeout for each item. If not provided, defaults to Scheduler.timeout.
    * @returns {Observable} An Observable that performs the throttle operation.
    */
-  observableProto.throttleFirst = function (windowDuration, scheduler) {
+  observableProto.throttle = function (windowDuration, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var duration = +windowDuration || 0;
     if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }

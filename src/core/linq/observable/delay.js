@@ -1,5 +1,5 @@
-  function observableDelayTimeSpan(source, dueTime, scheduler) {
-    return new AnonymousObservable(function (observer) {
+  function observableDelayRelative(source, dueTime, scheduler) {
+    return new AnonymousObservable(function (o) {
       var active = false,
         cancelable = new SerialDisposable(),
         exception = null,
@@ -20,7 +20,7 @@
         }
         if (shouldRun) {
           if (exception !== null) {
-            observer.onError(exception);
+            o.onError(exception);
           } else {
             d = new SingleAssignmentDisposable();
             cancelable.setDisposable(d);
@@ -36,7 +36,7 @@
                   result = q.shift().value;
                 }
                 if (result !== null) {
-                  result.accept(observer);
+                  result.accept(o);
                 }
               } while (result !== null);
               shouldRecurse = false;
@@ -50,7 +50,7 @@
               e = exception;
               running = false;
               if (e !== null) {
-                observer.onError(e);
+                o.onError(e);
               } else if (shouldRecurse) {
                 self(recurseDueTime);
               }
@@ -62,29 +62,85 @@
     }, source);
   }
 
-  function observableDelayDate(source, dueTime, scheduler) {
+  function observableDelayAbsolute(source, dueTime, scheduler) {
     return observableDefer(function () {
-      return observableDelayTimeSpan(source, dueTime - scheduler.now(), scheduler);
+      return observableDelayRelative(source, dueTime - scheduler.now(), scheduler);
     });
   }
 
+  function delayWithSelector(source, subscriptionDelay, delayDurationSelector) {
+    var subDelay, selector;
+    if (isFunction(subscriptionDelay)) {
+      selector = subscriptionDelay;
+    } else {
+      subDelay = subscriptionDelay;
+      selector = delayDurationSelector;
+    }
+    return new AnonymousObservable(function (o) {
+      var delays = new CompositeDisposable(), atEnd = false, subscription = new SerialDisposable();
+
+      function start() {
+        subscription.setDisposable(source.subscribe(
+          function (x) {
+            var delay = tryCatch(selector)(x);
+            if (delay === errorObj) { return o.onError(delay.e); }
+            var d = new SingleAssignmentDisposable();
+            delays.add(d);
+            d.setDisposable(delay.subscribe(
+              function () {
+                o.onNext(x);
+                delays.remove(d);
+                done();
+              },
+              function (e) { o.onError(e); },
+              function () {
+                o.onNext(x);
+                delays.remove(d);
+                done();
+              }
+            ));
+          },
+          function (e) { o.onError(e); },
+          function () {
+            atEnd = true;
+            subscription.dispose();
+            done();
+          }
+        ));
+      }
+
+      function done () {
+        atEnd && delays.length === 0 && o.onCompleted();
+      }
+
+      if (!subDelay) {
+        start();
+      } else {
+        subscription.setDisposable(subDelay.subscribe(start, function (e) { o.onError(e); }, start));
+      }
+
+      return new CompositeDisposable(subscription, delays);
+    }, this);
+  }
+
   /**
-   *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
+   *  Time shifts the observable sequence by dueTime.
+   *  The relative time intervals between the values are preserved.
    *
-   * @example
-   *  1 - res = Rx.Observable.delay(new Date());
-   *  2 - res = Rx.Observable.delay(new Date(), Rx.Scheduler.timeout);
-   *
-   *  3 - res = Rx.Observable.delay(5000);
-   *  4 - res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
-   * @memberOf Observable#
    * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
    * @param {Scheduler} [scheduler] Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} Time-shifted sequence.
    */
-  observableProto.delay = function (dueTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return dueTime instanceof Date ?
-      observableDelayDate(this, dueTime.getTime(), scheduler) :
-      observableDelayTimeSpan(this, dueTime, scheduler);
+  observableProto.delay = function () {
+    if (typeof arguments[0] === 'number' || arguments[0] instanceof Date) {
+      var dueTime = arguments[0], scheduler = arguments[1];
+      isScheduler(scheduler) || (scheduler = timeoutScheduler);
+      return dueTime instanceof Date ?
+        observableDelayAbsolute(this, dueTime, scheduler) :
+        observableDelayRelative(this, dueTime, scheduler);
+    } else if (isFunction(arguments[0])) {
+      return delayWithSelector(this, arguments[0], arguments[1]);
+    } else {
+      throw new Error('Invalid arguments');
+    }
   };

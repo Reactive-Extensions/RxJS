@@ -1,5 +1,8 @@
+/* jshint undef: true, unused: true */
+/* globals QUnit, test, Rx */
+
 (function () {
-  QUnit.module('ThrottleFirst');
+  QUnit.module('throttle');
 
   var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
@@ -7,7 +10,7 @@
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('throttleFirst completed', function () {
+  test('throttle completed', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -22,7 +25,7 @@
     );
 
     var results = scheduler.startWithCreate(function () {
-      return xs.throttleFirst(200, scheduler);
+      return xs.throttle(200, scheduler);
     });
 
     results.messages.assertEqual(
@@ -36,7 +39,7 @@
     );
   });
 
-  test('throttleFirst never', function () {
+  test('throttle never', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -44,7 +47,7 @@
     );
 
     var results = scheduler.startWithCreate(function () {
-      return xs.throttleFirst(200, scheduler);
+      return xs.throttle(200, scheduler);
     });
 
     results.messages.assertEqual(
@@ -55,7 +58,7 @@
     );
   });
 
-  test('throttleFirst empty', function () {
+  test('throttle empty', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -64,7 +67,7 @@
     );
 
     var results = scheduler.startWithCreate(function () {
-      return xs.throttleFirst(200, scheduler);
+      return xs.throttle(200, scheduler);
     });
 
     results.messages.assertEqual(
@@ -76,7 +79,7 @@
     );
   });
 
-  test('throttleFirst error', function () {
+  test('throttle error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -93,7 +96,7 @@
     );
 
     var results = scheduler.startWithCreate(function () {
-      return xs.throttleFirst(200, scheduler);
+      return xs.throttle(200, scheduler);
     });
 
     results.messages.assertEqual(
@@ -106,7 +109,7 @@
     );
   });
 
-  test('throttleFirst no end', function () {
+  test('throttle no end', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -120,7 +123,7 @@
     );
 
     var results = scheduler.startWithCreate(function () {
-      return xs.throttleFirst(200, scheduler);
+      return xs.throttle(200, scheduler);
     });
 
     results.messages.assertEqual(

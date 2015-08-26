@@ -9,6 +9,13 @@ module Rx {
         * @returns {Observable} The debounced sequence.
         */
         debounce(dueTime: number, scheduler?: IScheduler): Observable<T>;
+
+        /**
+        * Ignores values from an observable sequence which are followed by another value within a computed throttle duration.
+        * @param {Function} durationSelector Selector function to retrieve a sequence indicating the throttle duration for each given element.
+        * @returns {Observable} The debounced sequence.
+        */
+        debounce(debounceDurationSelector: (item: T) => ObservableOrPromise<number>): Observable<T>;
     }
 }
 
@@ -16,4 +23,5 @@ module Rx {
     var o: Rx.Observable<string>;
     o.debounce(100);
     o.debounce(100, Rx.Scheduler.timeout);
+    o.debounce(x => Rx.Observable.just(x.length));
 });

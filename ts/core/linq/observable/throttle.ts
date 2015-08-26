@@ -8,13 +8,13 @@ module Rx {
         * @param {Scheduler} [scheduler] the Scheduler to use internally to manage the timers that handle timeout for each item. If not provided, defaults to Scheduler.timeout.
         * @returns {Observable} An Observable that performs the throttle operation.
         */
-        throttleFirst(windowDuration: number, scheduler?: IScheduler): Observable<T>;
+        throttle(windowDuration: number, scheduler?: IScheduler): Observable<T>;
     }
 }
 
 
 (function () {
     var o: Rx.Observable<string>;
-    o.throttleFirst(100);
-    o.throttleFirst(100, Rx.Scheduler.timeout);
+    o.throttle(100);
+    o.throttle(100, Rx.Scheduler.timeout);
 });

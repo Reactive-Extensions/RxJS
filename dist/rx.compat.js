@@ -169,35 +169,35 @@
     this.name = 'EmptyError';
     Error.call(this);
   };
-  EmptyError.prototype = Error.prototype;
+  EmptyError.prototype = Object.create(Error.prototype);
 
   var ObjectDisposedError = Rx.ObjectDisposedError = function() {
     this.message = 'Object has been disposed';
     this.name = 'ObjectDisposedError';
     Error.call(this);
   };
-  ObjectDisposedError.prototype = Error.prototype;
+  ObjectDisposedError.prototype = Object.create(Error.prototype);
 
   var ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError = function () {
     this.message = 'Argument out of range';
     this.name = 'ArgumentOutOfRangeError';
     Error.call(this);
   };
-  ArgumentOutOfRangeError.prototype = Error.prototype;
+  ArgumentOutOfRangeError.prototype = Object.create(Error.prototype);
 
   var NotSupportedError = Rx.NotSupportedError = function (message) {
     this.message = message || 'This operation is not supported';
     this.name = 'NotSupportedError';
     Error.call(this);
   };
-  NotSupportedError.prototype = Error.prototype;
+  NotSupportedError.prototype = Object.create(Error.prototype);
 
   var NotImplementedError = Rx.NotImplementedError = function (message) {
     this.message = message || 'This operation is not implemented';
     this.name = 'NotImplementedError';
     Error.call(this);
   };
-  NotImplementedError.prototype = Error.prototype;
+  NotImplementedError.prototype = Object.create(Error.prototype);
 
   var notImplemented = Rx.helpers.notImplemented = function () {
     throw new NotImplementedError();
@@ -573,6 +573,9 @@
   }
 
   // Utilities
+  var slice = Array.prototype.slice,
+      toString = Object.prototype.toString;
+
   if (!Function.prototype.bind) {
     Function.prototype.bind = function (that) {
       var target = this,
@@ -601,14 +604,14 @@
       var T, k;
 
       if (this == null) {
-        throw new TypeError(" this is null or not defined");
+        throw new TypeError(' this is null or not defined');
       }
 
       var O = Object(this);
       var len = O.length >>> 0;
 
-      if (typeof callback !== "function") {
-        throw new TypeError(callback + " is not a function");
+      if (typeof callback !== 'function') {
+        throw new TypeError(callback + ' is not a function');
       }
 
       if (arguments.length > 1) {
@@ -627,19 +630,19 @@
     };
   }
 
-  var boxedString = Object("a"),
-      splitString = boxedString[0] != "a" || !(0 in boxedString);
+  var boxedString = Object('a'),
+      splitString = boxedString[0] !== 'a' || !(0 in boxedString);
   if (!Array.prototype.every) {
     Array.prototype.every = function every(fun /*, thisp */) {
       var object = Object(this),
-        self = splitString && {}.toString.call(this) == stringClass ?
-          this.split("") :
+        self = splitString && toString.call(this) === stringClass ?
+          this.split('') :
           object,
         length = self.length >>> 0,
         thisp = arguments[1];
 
-      if ({}.toString.call(fun) != funcClass) {
-        throw new TypeError(fun + " is not a function");
+      if (toString.call(fun) !== funcClass) {
+        throw new TypeError(fun + ' is not a function');
       }
 
       for (var i = 0; i < length; i++) {
@@ -654,15 +657,15 @@
   if (!Array.prototype.map) {
     Array.prototype.map = function map(fun /*, thisp*/) {
       var object = Object(this),
-        self = splitString && {}.toString.call(this) == stringClass ?
-            this.split("") :
+        self = splitString && toString.call(this) === stringClass ?
+            this.split('') :
             object,
         length = self.length >>> 0,
-        result = Array(length),
+        result = new Array(length),
         thisp = arguments[1];
 
-      if ({}.toString.call(fun) != funcClass) {
-        throw new TypeError(fun + " is not a function");
+      if (toString.call(fun) !== funcClass) {
+        throw new TypeError(fun + ' is not a function');
       }
 
       for (var i = 0; i < length; i++) {
@@ -689,7 +692,7 @@
 
   if (!Array.isArray) {
     Array.isArray = function (arg) {
-      return {}.toString.call(arg) == arrayClass;
+      return toString.call(arg) === arrayClass;
     };
   }
 
@@ -705,7 +708,7 @@
         n = Number(arguments[1]);
         if (n !== n) {
           n = 0;
-        } else if (n !== 0 && n != Infinity && n !== -Infinity) {
+        } else if (n !== 0 && n !== Infinity && n !== -Infinity) {
           n = (n > 0 || -1) * Math.floor(Math.abs(n));
         }
       }
@@ -760,6 +763,39 @@
       };
     }());
   }
+
+  if (typeof Object.create !== 'function') {
+  // Production steps of ECMA-262, Edition 5, 15.2.3.5
+  // Reference: http://es5.github.io/#x15.2.3.5
+  Object.create = (function() {
+    function Temp() {}
+
+    var hasOwn = Object.prototype.hasOwnProperty;
+
+    return function (O) {
+      if (typeof O !== 'object') {
+        throw new TypeError('Object prototype may only be an Object or null');
+      }
+
+      Temp.prototype = O;
+      var obj = new Temp();
+      Temp.prototype = null;
+
+      if (arguments.length > 1) {
+        // Object.defineProperties does ToObject on its first argument.
+        var Properties = Object(arguments[1]);
+        for (var prop in Properties) {
+          if (hasOwn.call(Properties, prop)) {
+            obj[prop] = Properties[prop];
+          }
+        }
+      }
+
+      // 5. Return obj
+      return obj;
+    };
+  })();
+}
 
   /**
    * Represents a group of disposable resources that are disposed together.

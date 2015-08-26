@@ -169,35 +169,35 @@
     this.name = 'EmptyError';
     Error.call(this);
   };
-  EmptyError.prototype = Error.prototype;
+  EmptyError.prototype = Object.create(Error.prototype);
 
   var ObjectDisposedError = Rx.ObjectDisposedError = function() {
     this.message = 'Object has been disposed';
     this.name = 'ObjectDisposedError';
     Error.call(this);
   };
-  ObjectDisposedError.prototype = Error.prototype;
+  ObjectDisposedError.prototype = Object.create(Error.prototype);
 
   var ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError = function () {
     this.message = 'Argument out of range';
     this.name = 'ArgumentOutOfRangeError';
     Error.call(this);
   };
-  ArgumentOutOfRangeError.prototype = Error.prototype;
+  ArgumentOutOfRangeError.prototype = Object.create(Error.prototype);
 
   var NotSupportedError = Rx.NotSupportedError = function (message) {
     this.message = message || 'This operation is not supported';
     this.name = 'NotSupportedError';
     Error.call(this);
   };
-  NotSupportedError.prototype = Error.prototype;
+  NotSupportedError.prototype = Object.create(Error.prototype);
 
   var NotImplementedError = Rx.NotImplementedError = function (message) {
     this.message = message || 'This operation is not implemented';
     this.name = 'NotImplementedError';
     Error.call(this);
   };
-  NotImplementedError.prototype = Error.prototype;
+  NotImplementedError.prototype = Object.create(Error.prototype);
 
   var notImplemented = Rx.helpers.notImplemented = function () {
     throw new NotImplementedError();
@@ -573,6 +573,9 @@
   }
 
   // Utilities
+  var slice = Array.prototype.slice,
+      toString = Object.prototype.toString;
+
   if (!Function.prototype.bind) {
     Function.prototype.bind = function (that) {
       var target = this,
@@ -601,14 +604,14 @@
       var T, k;
 
       if (this == null) {
-        throw new TypeError(" this is null or not defined");
+        throw new TypeError(' this is null or not defined');
       }
 
       var O = Object(this);
       var len = O.length >>> 0;
 
-      if (typeof callback !== "function") {
-        throw new TypeError(callback + " is not a function");
+      if (typeof callback !== 'function') {
+        throw new TypeError(callback + ' is not a function');
       }
 
       if (arguments.length > 1) {
@@ -627,19 +630,19 @@
     };
   }
 
-  var boxedString = Object("a"),
-      splitString = boxedString[0] != "a" || !(0 in boxedString);
+  var boxedString = Object('a'),
+      splitString = boxedString[0] !== 'a' || !(0 in boxedString);
   if (!Array.prototype.every) {
     Array.prototype.every = function every(fun /*, thisp */) {
       var object = Object(this),
-        self = splitString && {}.toString.call(this) == stringClass ?
-          this.split("") :
+        self = splitString && toString.call(this) === stringClass ?
+          this.split('') :
           object,
         length = self.length >>> 0,
         thisp = arguments[1];
 
-      if ({}.toString.call(fun) != funcClass) {
-        throw new TypeError(fun + " is not a function");
+      if (toString.call(fun) !== funcClass) {
+        throw new TypeError(fun + ' is not a function');
       }
 
       for (var i = 0; i < length; i++) {
@@ -654,15 +657,15 @@
   if (!Array.prototype.map) {
     Array.prototype.map = function map(fun /*, thisp*/) {
       var object = Object(this),
-        self = splitString && {}.toString.call(this) == stringClass ?
-            this.split("") :
+        self = splitString && toString.call(this) === stringClass ?
+            this.split('') :
             object,
         length = self.length >>> 0,
-        result = Array(length),
+        result = new Array(length),
         thisp = arguments[1];
 
-      if ({}.toString.call(fun) != funcClass) {
-        throw new TypeError(fun + " is not a function");
+      if (toString.call(fun) !== funcClass) {
+        throw new TypeError(fun + ' is not a function');
       }
 
       for (var i = 0; i < length; i++) {
@@ -689,7 +692,7 @@
 
   if (!Array.isArray) {
     Array.isArray = function (arg) {
-      return {}.toString.call(arg) == arrayClass;
+      return toString.call(arg) === arrayClass;
     };
   }
 
@@ -705,7 +708,7 @@
         n = Number(arguments[1]);
         if (n !== n) {
           n = 0;
-        } else if (n !== 0 && n != Infinity && n !== -Infinity) {
+        } else if (n !== 0 && n !== Infinity && n !== -Infinity) {
           n = (n > 0 || -1) * Math.floor(Math.abs(n));
         }
       }
@@ -760,6 +763,39 @@
       };
     }());
   }
+
+  if (typeof Object.create !== 'function') {
+  // Production steps of ECMA-262, Edition 5, 15.2.3.5
+  // Reference: http://es5.github.io/#x15.2.3.5
+  Object.create = (function() {
+    function Temp() {}
+
+    var hasOwn = Object.prototype.hasOwnProperty;
+
+    return function (O) {
+      if (typeof O !== 'object') {
+        throw new TypeError('Object prototype may only be an Object or null');
+      }
+
+      Temp.prototype = O;
+      var obj = new Temp();
+      Temp.prototype = null;
+
+      if (arguments.length > 1) {
+        // Object.defineProperties does ToObject on its first argument.
+        var Properties = Object(arguments[1]);
+        for (var prop in Properties) {
+          if (hasOwn.call(Properties, prop)) {
+            obj[prop] = Properties[prop];
+          }
+        }
+      }
+
+      // 5. Return obj
+      return obj;
+    };
+  })();
+}
 
   // Collections
   function IndexedItem(id, value) {
@@ -8855,8 +8891,8 @@ observableProto.controlled = function (enableQueue, scheduler) {
       observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
   };
 
-  function observableDelayTimeSpan(source, dueTime, scheduler) {
-    return new AnonymousObservable(function (observer) {
+  function observableDelayRelative(source, dueTime, scheduler) {
+    return new AnonymousObservable(function (o) {
       var active = false,
         cancelable = new SerialDisposable(),
         exception = null,
@@ -8877,7 +8913,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
         }
         if (shouldRun) {
           if (exception !== null) {
-            observer.onError(exception);
+            o.onError(exception);
           } else {
             d = new SingleAssignmentDisposable();
             cancelable.setDisposable(d);
@@ -8893,7 +8929,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
                   result = q.shift().value;
                 }
                 if (result !== null) {
-                  result.accept(observer);
+                  result.accept(o);
                 }
               } while (result !== null);
               shouldRecurse = false;
@@ -8907,7 +8943,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
               e = exception;
               running = false;
               if (e !== null) {
-                observer.onError(e);
+                o.onError(e);
               } else if (shouldRecurse) {
                 self(recurseDueTime);
               }
@@ -8919,42 +8955,91 @@ observableProto.controlled = function (enableQueue, scheduler) {
     }, source);
   }
 
-  function observableDelayDate(source, dueTime, scheduler) {
+  function observableDelayAbsolute(source, dueTime, scheduler) {
     return observableDefer(function () {
-      return observableDelayTimeSpan(source, dueTime - scheduler.now(), scheduler);
+      return observableDelayRelative(source, dueTime - scheduler.now(), scheduler);
     });
   }
 
+  function delayWithSelector(source, subscriptionDelay, delayDurationSelector) {
+    var subDelay, selector;
+    if (isFunction(subscriptionDelay)) {
+      selector = subscriptionDelay;
+    } else {
+      subDelay = subscriptionDelay;
+      selector = delayDurationSelector;
+    }
+    return new AnonymousObservable(function (o) {
+      var delays = new CompositeDisposable(), atEnd = false, subscription = new SerialDisposable();
+
+      function start() {
+        subscription.setDisposable(source.subscribe(
+          function (x) {
+            var delay = tryCatch(selector)(x);
+            if (delay === errorObj) { return o.onError(delay.e); }
+            var d = new SingleAssignmentDisposable();
+            delays.add(d);
+            d.setDisposable(delay.subscribe(
+              function () {
+                o.onNext(x);
+                delays.remove(d);
+                done();
+              },
+              function (e) { o.onError(e); },
+              function () {
+                o.onNext(x);
+                delays.remove(d);
+                done();
+              }
+            ));
+          },
+          function (e) { o.onError(e); },
+          function () {
+            atEnd = true;
+            subscription.dispose();
+            done();
+          }
+        ));
+      }
+
+      function done () {
+        atEnd && delays.length === 0 && o.onCompleted();
+      }
+
+      if (!subDelay) {
+        start();
+      } else {
+        subscription.setDisposable(subDelay.subscribe(start, function (e) { o.onError(e); }, start));
+      }
+
+      return new CompositeDisposable(subscription, delays);
+    }, this);
+  }
+
   /**
-   *  Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
+   *  Time shifts the observable sequence by dueTime.
+   *  The relative time intervals between the values are preserved.
    *
-   * @example
-   *  1 - res = Rx.Observable.delay(new Date());
-   *  2 - res = Rx.Observable.delay(new Date(), Rx.Scheduler.timeout);
-   *
-   *  3 - res = Rx.Observable.delay(5000);
-   *  4 - res = Rx.Observable.delay(5000, 1000, Rx.Scheduler.timeout);
-   * @memberOf Observable#
    * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) by which to shift the observable sequence.
    * @param {Scheduler} [scheduler] Scheduler to run the delay timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} Time-shifted sequence.
    */
-  observableProto.delay = function (dueTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return dueTime instanceof Date ?
-      observableDelayDate(this, dueTime.getTime(), scheduler) :
-      observableDelayTimeSpan(this, dueTime, scheduler);
+  observableProto.delay = function () {
+    if (typeof arguments[0] === 'number' || arguments[0] instanceof Date) {
+      var dueTime = arguments[0], scheduler = arguments[1];
+      isScheduler(scheduler) || (scheduler = timeoutScheduler);
+      return dueTime instanceof Date ?
+        observableDelayAbsolute(this, dueTime, scheduler) :
+        observableDelayRelative(this, dueTime, scheduler);
+    } else if (isFunction(arguments[0])) {
+      return delayWithSelector(this, arguments[0], arguments[1]);
+    } else {
+      throw new Error('Invalid arguments');
+    }
   };
 
-  /**
-   *  Ignores values from an observable sequence which are followed by another value before dueTime.
-   * @param {Number} dueTime Duration of the debounce period for each value (specified as an integer denoting milliseconds).
-   * @param {Scheduler} [scheduler]  Scheduler to run the debounce timers on. If not specified, the timeout scheduler is used.
-   * @returns {Observable} The debounced sequence.
-   */
-  observableProto.debounce = function (dueTime, scheduler) {
+  function debounce(source, dueTime, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this;
     return new AnonymousObservable(function (observer) {
       var cancelable = new SerialDisposable(), hasvalue = false, value, id = 0;
       var subscription = source.subscribe(
@@ -8985,14 +9070,63 @@ observableProto.controlled = function (enableQueue, scheduler) {
         });
       return new CompositeDisposable(subscription, cancelable);
     }, this);
-  };
+  }
 
-  /**
-   * @deprecated use #debounce or #throttleWithTimeout instead.
-   */
-  observableProto.throttle = function(dueTime, scheduler) {
-    //deprecate('throttle', 'debounce or throttleWithTimeout');
-    return this.debounce(dueTime, scheduler);
+  function debounceWithSelector(source, durationSelector) {
+    return new AnonymousObservable(function (o) {
+      var value, hasValue = false, cancelable = new SerialDisposable(), id = 0;
+      var subscription = source.subscribe(
+        function (x) {
+          var throttle = tryCatch(durationSelector)(x);
+          if (throttle === errorObj) { return o.onError(throttle.e); }
+
+          isPromise(throttle) && (throttle = observableFromPromise(throttle));
+
+          hasValue = true;
+          value = x;
+          id++;
+          var currentid = id, d = new SingleAssignmentDisposable();
+          cancelable.setDisposable(d);
+          d.setDisposable(throttle.subscribe(
+            function () {
+              hasValue && id === currentid && o.onNext(value);
+              hasValue = false;
+              d.dispose();
+            },
+            function (e) { o.onError(e); },
+            function () {
+              hasValue && id === currentid && o.onNext(value);
+              hasValue = false;
+              d.dispose();
+            }
+          ));
+        },
+        function (e) {
+          cancelable.dispose();
+          o.onError(e);
+          hasValue = false;
+          id++;
+        },
+        function () {
+          cancelable.dispose();
+          hasValue && o.onNext(value);
+          o.onCompleted();
+          hasValue = false;
+          id++;
+        }
+      );
+      return new CompositeDisposable(subscription, cancelable);
+    }, source);
+  }
+
+  observableProto.debounce = function () {
+    if (isFunction (arguments[0])) {
+      return debounceWithSelector(this, arguments[0]);
+    } else if (typeof arguments[0] === 'number') {
+      return debounce(this, arguments[0], arguments[1]);
+    } else {
+      throw new Error('Invalid arguments');
+    }
   };
 
   /**
@@ -9253,22 +9387,78 @@ observableProto.controlled = function (enableQueue, scheduler) {
       sampleObservable(this, intervalOrSampler);
   };
 
-  /**
-   *  Returns the source observable sequence or the other observable sequence if dueTime elapses.
-   * @param {Number} dueTime Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
-   * @param {Observable} [other]  Sequence to return in case of a timeout. If not specified, a timeout error throwing sequence will be used.
-   * @param {Scheduler} [scheduler]  Scheduler to run the timeout timers on. If not specified, the timeout scheduler is used.
-   * @returns {Observable} The source sequence switching to the other sequence in case of a timeout.
-   */
-  observableProto.timeout = function (dueTime, other, scheduler) {
-    (other == null || typeof other === 'string') && (other = observableThrow(new Error(other || 'Timeout')));
+  var TimeoutError = Rx.TimeoutError = function(message) {
+    this.message = message || 'Timeout has occurred';
+    this.name = 'TimeoutError';
+    Error.call(this);
+  };
+  TimeoutError.prototype = Object.create(Error.prototype);
+
+  function timeoutWithSelector(source, firstTimeout, timeoutDurationSelector, other) {
+    if (isFunction(firstTimeout)) {
+      other = timeoutDurationSelector;
+      timeoutDurationSelector = firstTimeout;
+      firstTimeout = observableNever();
+    }
+    other || (other = observableThrow(new TimeoutError()));
+    return new AnonymousObservable(function (o) {
+      var subscription = new SerialDisposable(), timer = new SerialDisposable(), original = new SingleAssignmentDisposable();
+
+      subscription.setDisposable(original);
+
+      var id = 0, switched = false;
+
+      function setTimer(timeout) {
+        var myId = id, d = new SingleAssignmentDisposable();
+        timer.setDisposable(d);
+        d.setDisposable(timeout.subscribe(function () {
+          id === myId && subscription.setDisposable(other.subscribe(o));
+          d.dispose();
+        }, function (e) {
+          id === myId && o.onError(e);
+        }, function () {
+          id === myId && subscription.setDisposable(other.subscribe(o));
+        }));
+      };
+
+      setTimer(firstTimeout);
+
+      function oWins() {
+        var res = !switched;
+        if (res) { id++; }
+        return res;
+      }
+
+      original.setDisposable(source.subscribe(function (x) {
+        if (oWins()) {
+          o.onNext(x);
+          var timeout = tryCatch(timeoutDurationSelector)(x);
+          if (timeout === errorObj) { return o.onError(timeout.e); }
+          setTimer(isPromise(timeout) ? observableFromPromise(timeout) : timeout);
+        }
+      }, function (e) {
+        oWins() && o.onError(e);
+      }, function () {
+        oWins() && o.onCompleted();
+      }));
+      return new CompositeDisposable(subscription, timer);
+    }, source);
+  }
+
+  function timeout(source, dueTime, other, scheduler) {
+    if (other == null) { throw new Error('other or scheduler must be specified'); }
+    if (isScheduler(other)) {
+      scheduler = other;
+      other = observableThrow(new TimeoutError());
+    }
+    if (other instanceof Error) { other = observableThrow(other); }
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
 
-    var source = this, schedulerMethod = dueTime instanceof Date ?
+    var schedulerMethod = dueTime instanceof Date ?
       'scheduleWithAbsolute' :
       'scheduleWithRelative';
 
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var id = 0,
         original = new SingleAssignmentDisposable(),
         subscription = new SerialDisposable(),
@@ -9282,7 +9472,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
         timer.setDisposable(scheduler[schedulerMethod](dueTime, function () {
           if (id === myId) {
             isPromise(other) && (other = observableFromPromise(other));
-            subscription.setDisposable(other.subscribe(observer));
+            subscription.setDisposable(other.subscribe(o));
           }
         }));
       }
@@ -9292,22 +9482,33 @@ observableProto.controlled = function (enableQueue, scheduler) {
       original.setDisposable(source.subscribe(function (x) {
         if (!switched) {
           id++;
-          observer.onNext(x);
+          o.onNext(x);
           createTimer();
         }
       }, function (e) {
         if (!switched) {
           id++;
-          observer.onError(e);
+          o.onError(e);
         }
       }, function () {
         if (!switched) {
           id++;
-          observer.onCompleted();
+          o.onCompleted();
         }
       }));
       return new CompositeDisposable(subscription, timer);
     }, source);
+  }
+
+  observableProto.timeout = function () {
+    var firstArg = arguments[0];
+    if (firstArg instanceof Date || typeof firstArg === 'number') {
+      return timeout(this, firstArg, arguments[1], arguments[2]);
+    } else if (Observable.isObservable(firstArg) || isFunction(firstArg)) {
+      return timeoutWithSelector(this, firstArg, arguments[1], arguments[2]);
+    } else {
+      throw new Error('Invalid arguments');
+    }
   };
 
   /**
@@ -9436,194 +9637,6 @@ observableProto.controlled = function (enableQueue, scheduler) {
 
       return d;
     }, this);
-  };
-
-  /**
-   *  Time shifts the observable sequence based on a subscription delay and a delay selector function for each element.
-   *
-   * @example
-   *  1 - res = source.delayWithSelector(function (x) { return Rx.Scheduler.timer(5000); }); // with selector only
-   *  1 - res = source.delayWithSelector(Rx.Observable.timer(2000), function (x) { return Rx.Observable.timer(x); }); // with delay and selector
-   *
-   * @param {Observable} [subscriptionDelay]  Sequence indicating the delay for the subscription to the source.
-   * @param {Function} delayDurationSelector Selector function to retrieve a sequence indicating the delay for each given element.
-   * @returns {Observable} Time-shifted sequence.
-   */
-  observableProto.delayWithSelector = function (subscriptionDelay, delayDurationSelector) {
-    var source = this, subDelay, selector;
-    if (isFunction(subscriptionDelay)) {
-      selector = subscriptionDelay;
-    } else {
-      subDelay = subscriptionDelay;
-      selector = delayDurationSelector;
-    }
-    return new AnonymousObservable(function (observer) {
-      var delays = new CompositeDisposable(), atEnd = false, subscription = new SerialDisposable();
-
-      function start() {
-        subscription.setDisposable(source.subscribe(
-          function (x) {
-            var delay = tryCatch(selector)(x);
-            if (delay === errorObj) { return observer.onError(delay.e); }
-            var d = new SingleAssignmentDisposable();
-            delays.add(d);
-            d.setDisposable(delay.subscribe(
-              function () {
-                observer.onNext(x);
-                delays.remove(d);
-                done();
-              },
-              function (e) { observer.onError(e); },
-              function () {
-                observer.onNext(x);
-                delays.remove(d);
-                done();
-              }
-            ))
-          },
-          function (e) { observer.onError(e); },
-          function () {
-            atEnd = true;
-            subscription.dispose();
-            done();
-          }
-        ))
-      }
-
-      function done () {
-        atEnd && delays.length === 0 && observer.onCompleted();
-      }
-
-      if (!subDelay) {
-        start();
-      } else {
-        subscription.setDisposable(subDelay.subscribe(start, function (e) { observer.onError(e); }, start));
-      }
-
-      return new CompositeDisposable(subscription, delays);
-    }, this);
-  };
-
-    /**
-     *  Returns the source observable sequence, switching to the other observable sequence if a timeout is signaled.
-     * @param {Observable} [firstTimeout]  Observable sequence that represents the timeout for the first element. If not provided, this defaults to Observable.never().
-     * @param {Function} timeoutDurationSelector Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
-     * @param {Observable} [other]  Sequence to return in case of a timeout. If not provided, this is set to Observable.throwException().
-     * @returns {Observable} The source sequence switching to the other sequence in case of a timeout.
-     */
-    observableProto.timeoutWithSelector = function (firstTimeout, timeoutdurationSelector, other) {
-      if (arguments.length === 1) {
-          timeoutdurationSelector = firstTimeout;
-          firstTimeout = observableNever();
-      }
-      other || (other = observableThrow(new Error('Timeout')));
-      var source = this;
-      return new AnonymousObservable(function (observer) {
-        var subscription = new SerialDisposable(), timer = new SerialDisposable(), original = new SingleAssignmentDisposable();
-
-        subscription.setDisposable(original);
-
-        var id = 0, switched = false;
-
-        function setTimer(timeout) {
-          var myId = id;
-
-          function timerWins () {
-            return id === myId;
-          }
-
-          var d = new SingleAssignmentDisposable();
-          timer.setDisposable(d);
-          d.setDisposable(timeout.subscribe(function () {
-            timerWins() && subscription.setDisposable(other.subscribe(observer));
-            d.dispose();
-          }, function (e) {
-            timerWins() && observer.onError(e);
-          }, function () {
-            timerWins() && subscription.setDisposable(other.subscribe(observer));
-          }));
-        };
-
-        setTimer(firstTimeout);
-
-        function observerWins() {
-          var res = !switched;
-          if (res) { id++; }
-          return res;
-        }
-
-        original.setDisposable(source.subscribe(function (x) {
-          if (observerWins()) {
-            observer.onNext(x);
-            var timeout;
-            try {
-              timeout = timeoutdurationSelector(x);
-            } catch (e) {
-              observer.onError(e);
-              return;
-            }
-            setTimer(isPromise(timeout) ? observableFromPromise(timeout) : timeout);
-          }
-        }, function (e) {
-          observerWins() && observer.onError(e);
-        }, function () {
-          observerWins() && observer.onCompleted();
-        }));
-        return new CompositeDisposable(subscription, timer);
-      }, source);
-    };
-
-  /**
-   * Ignores values from an observable sequence which are followed by another value within a computed throttle duration.
-   * @param {Function} durationSelector Selector function to retrieve a sequence indicating the throttle duration for each given element.
-   * @returns {Observable} The debounced sequence.
-   */
-  observableProto.debounceWithSelector = function (durationSelector) {
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var value, hasValue = false, cancelable = new SerialDisposable(), id = 0;
-      var subscription = source.subscribe(
-        function (x) {
-          var throttle = tryCatch(durationSelector)(x);
-          if (throttle === errorObj) { return o.onError(throttle.e); }
-
-          isPromise(throttle) && (throttle = observableFromPromise(throttle));
-
-          hasValue = true;
-          value = x;
-          id++;
-          var currentid = id, d = new SingleAssignmentDisposable();
-          cancelable.setDisposable(d);
-          d.setDisposable(throttle.subscribe(
-            function () {
-              hasValue && id === currentid && o.onNext(value);
-              hasValue = false;
-              d.dispose();
-            },
-            function (e) { o.onError(e); },
-            function () {
-              hasValue && id === currentid && o.onNext(value);
-              hasValue = false;
-              d.dispose();
-            }
-          ));
-        },
-        function (e) {
-          cancelable.dispose();
-          o.onError(e);
-          hasValue = false;
-          id++;
-        },
-        function () {
-          cancelable.dispose();
-          hasValue && o.onNext(value);
-          o.onCompleted();
-          hasValue = false;
-          id++;
-        }
-      );
-      return new CompositeDisposable(subscription, cancelable);
-    }, source);
   };
 
   /**
@@ -9825,7 +9838,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
    * @param {Scheduler} [scheduler] the Scheduler to use internally to manage the timers that handle timeout for each item. If not provided, defaults to Scheduler.timeout.
    * @returns {Observable} An Observable that performs the throttle operation.
    */
-  observableProto.throttleFirst = function (windowDuration, scheduler) {
+  observableProto.throttle = function (windowDuration, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     var duration = +windowDuration || 0;
     if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
