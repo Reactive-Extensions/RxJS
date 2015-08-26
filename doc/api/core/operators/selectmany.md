@@ -108,7 +108,7 @@ Rx.Observable.of(2, 3, 5).selectMany(
 ).subscribe(
   function(next) {
     console.log(
-      'Outer: ' + next.outer + ', Inner: ' + next.inner, +
+      'Outer: ' + next.outer + ', Inner: ' + next.inner +
       ', InnerIndex: ' + next.innerIdx + ', OuterIndex: ' + next.outerIdx
     );
   },
