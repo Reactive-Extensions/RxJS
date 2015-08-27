@@ -1,8 +1,10 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+
   QUnit.module('delaySubsription');
 
-  var Observable = Rx.Observable,
-      TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted,
@@ -17,8 +19,8 @@
       onCompleted(70)
     );
 
-    var results = scheduler.startWithCreate(function() {
-      return xs.delaySubscription(30, scheduler)
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(30, scheduler);
     });
 
     results.messages.assertEqual(
@@ -44,8 +46,8 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function() {
-      return xs.delaySubscription(20, scheduler)
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(20, scheduler);
     });
 
     results.messages.assertEqual(
@@ -71,8 +73,8 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function() {
-      return xs.delaySubscription(200, scheduler)
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(200, scheduler);
     });
 
     results.messages.assertEqual(
@@ -95,9 +97,9 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithDispose(function() {
-      return xs.delaySubscription(20, scheduler)
-    }, 210);
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(20, scheduler);
+    }, { disposed: 210 });
 
     results.messages.assertEqual(
     );
@@ -117,8 +119,8 @@
       onError(70, error)
     );
 
-    var results = scheduler.startWithCreate(function() {
-      return xs.delaySubscription(30, scheduler)
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(30, scheduler);
     });
 
     results.messages.assertEqual(
@@ -141,8 +143,8 @@
       onCompleted(70)
     );
 
-    var results = scheduler.startWithCreate(function() {
-      return xs.delaySubscription(new Date(230), scheduler)
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(new Date(230), scheduler);
     });
 
     results.messages.assertEqual(
@@ -168,8 +170,8 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function() {
-      return xs.delaySubscription(new Date(220), scheduler)
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(new Date(220), scheduler);
     });
 
     results.messages.assertEqual(
@@ -195,8 +197,8 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function() {
-      return xs.delaySubscription(new Date(400), scheduler)
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(new Date(400), scheduler);
     });
 
     results.messages.assertEqual(
@@ -219,9 +221,9 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithDispose(function() {
-      return xs.delaySubscription(new Date(220), scheduler)
-    }, 210);
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(new Date(220), scheduler);
+    }, { disposed: 210 });
 
     results.messages.assertEqual(
     );
@@ -241,8 +243,8 @@
       onError(70, error)
     );
 
-    var results = scheduler.startWithCreate(function() {
-      return xs.delaySubscription(new Date(230), scheduler)
+    var results = scheduler.startScheduler(function() {
+      return xs.delaySubscription(new Date(230), scheduler);
     });
 
     results.messages.assertEqual(
