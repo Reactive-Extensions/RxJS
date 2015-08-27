@@ -1,4 +1,7 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+
   QUnit.module('elementAt');
 
   var TestScheduler = Rx.TestScheduler,
@@ -17,7 +20,7 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.elementAt(0);
     });
 
@@ -41,7 +44,7 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.elementAt(2);
     });
 
@@ -55,7 +58,7 @@
     );
   });
 
-  test('elementAt OutOfRange', function () {
+  test('elementAt out of range', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -65,11 +68,13 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.elementAt(3);
     });
 
-    ok(results.messages[0].time === 600 && results.messages[0].value.exception !== null);
+    results.messages.assertEqual(
+      onError(600, function (n) { return n.exception instanceof Rx.ArgumentOutOfRangeError; })
+    );
 
     xs.subscriptions.assertEqual(
       subscribe(200, 600)
@@ -86,7 +91,7 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.elementAt(3, 84);
     });
 
