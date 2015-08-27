@@ -17,7 +17,7 @@
           i++;
         }
       }, function (e) { o.onError(e); }, function () {
-        o.onNext(yieldIndex ? -1 : undefined);
+        yieldIndex && o.onNext(-1);
         o.onCompleted();
       });
     }, source);
