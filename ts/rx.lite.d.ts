@@ -1629,7 +1629,7 @@ declare module Rx {
         * @param {Mixed} [seed] The initial accumulator value.
         * @returns {Observable} An observable sequence containing the accumulated values.
         */
-        scan<TAcc>(accumulator: ((acc: T, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
+        scan<TAcc>(accumulator: ((acc: TAcc, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
         /**
         *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
         *  For aggregation behavior with no intermediate results, see Observable.aggregate.
