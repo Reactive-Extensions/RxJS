@@ -296,7 +296,7 @@
 
     var xs = Rx.Observable.range(1, 10, scheduler);
 
-    var result = scheduler.startWithCreate(function(){
+    var result = scheduler.startScheduler(function(){
       return xs.count();
     });
 
@@ -308,7 +308,7 @@
 
     var xs = Rx.Observable.range(1, 10, scheduler).skip(1);
 
-    var result = scheduler.startWithCreate(function(){
+    var result = scheduler.startScheduler(function(){
       return xs.count();
     });
 
@@ -320,7 +320,7 @@
 
     var xs = Rx.Observable.range(1, 10, scheduler).take(1);
 
-    var result = scheduler.startWithCreate(function(){
+    var result = scheduler.startScheduler(function(){
       return xs.count();
     });
 
