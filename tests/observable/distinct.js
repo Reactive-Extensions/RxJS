@@ -1,130 +1,134 @@
-QUnit.module('Distinct');
+(function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
 
-var Observable = Rx.Observable,
-  TestScheduler = Rx.TestScheduler,
-  onNext = Rx.ReactiveTest.onNext,
-  onError = Rx.ReactiveTest.onError,
-  onCompleted = Rx.ReactiveTest.onCompleted,
-  subscribe = Rx.ReactiveTest.subscribe;
+  QUnit.module('distinct');
 
-test('Distinct_DefaultComparer_AllDistinct', function () {
-  var scheduler = new TestScheduler();
+  var TestScheduler = Rx.TestScheduler,
+    onNext = Rx.ReactiveTest.onNext,
+    onCompleted = Rx.ReactiveTest.onCompleted,
+    subscribe = Rx.ReactiveTest.subscribe;
 
-  var xs = scheduler.createHotObservable(
-    onNext(280, 4),
-    onNext(300, 2),
-    onNext(350, 1),
-    onNext(380, 3),
-    onNext(400, 5),
-    onCompleted(420)
-  );
+  test('distinct default comparer all distinct', function () {
+    var scheduler = new TestScheduler();
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.distinct();
+    var xs = scheduler.createHotObservable(
+      onNext(280, 4),
+      onNext(300, 2),
+      onNext(350, 1),
+      onNext(380, 3),
+      onNext(400, 5),
+      onCompleted(420)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return xs.distinct();
+    });
+
+    results.messages.assertEqual(
+      onNext(280, 4),
+      onNext(300, 2),
+      onNext(350, 1),
+      onNext(380, 3),
+      onNext(400, 5),
+      onCompleted(420)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 420)
+    );
   });
 
-  results.messages.assertEqual(
-    onNext(280, 4),
-    onNext(300, 2),
-    onNext(350, 1),
-    onNext(380, 3),
-    onNext(400, 5),
-    onCompleted(420)
-  );
+  test('distinct default comparer some duplicates', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(
-    subscribe(200, 420)
-  );
-});
+    var xs = scheduler.createHotObservable(
+      onNext(280, 4),
+      onNext(300, 2),
+      onNext(350, 2),
+      onNext(380, 3),
+      onNext(400, 4),
+      onCompleted(420)
+    );
 
-test('Distinct_DefaultComparer_SomeDuplicates', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.distinct();
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(280, 4),
-    onNext(300, 2),
-    onNext(350, 2),
-    onNext(380, 3),
-    onNext(400, 4),
-    onCompleted(420)
-  );
+    results.messages.assertEqual(
+      onNext(280, 4),
+      onNext(300, 2),
+      onNext(380, 3),
+      onCompleted(420)
+    );
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.distinct();
+    xs.subscriptions.assertEqual(
+      subscribe(200, 420)
+    );
   });
 
-  results.messages.assertEqual(
-    onNext(280, 4),
-    onNext(300, 2),
-    onNext(380, 3),
-    onCompleted(420)
-  );
+  function modComparer(mod) {
+    return function (x, y) {
+      return Rx.helpers.defaultComparer(x % mod, y % mod);
+    };
+  }
 
-  xs.subscriptions.assertEqual(
-    subscribe(200, 420)
-  );
-});
+  test('distinct CustomComparer all distinct', function () {
+    var scheduler = new TestScheduler();
 
-function modComparer(mod) {
-  return function (x, y) {
-    return Rx.helpers.defaultComparer(x % mod, y % mod);
-  };
-}
+    var xs = scheduler.createHotObservable(
+      onNext(280, 4),
+      onNext(300, 2),
+      onNext(350, 1),
+      onNext(380, 3),
+      onNext(400, 5),
+      onCompleted(420)
+    );
 
-test('Distinct_CustomComparer_AllDistinct', function () {
-  var scheduler = new TestScheduler();
+    var res = scheduler.startScheduler(function () {
+      return xs.distinct(null, modComparer(10));
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(280, 4),
-    onNext(300, 2),
-    onNext(350, 1),
-    onNext(380, 3),
-    onNext(400, 5),
-    onCompleted(420)
-  );
+    res.messages.assertEqual(
+      onNext(280, 4),
+      onNext(300, 2),
+      onNext(350, 1),
+      onNext(380, 3),
+      onNext(400, 5),
+      onCompleted(420)
+    );
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.distinct(null, modComparer(10));
+    xs.subscriptions.assertEqual(
+      subscribe(200, 420)
+    );
   });
 
-  res.messages.assertEqual(
-    onNext(280, 4),
-    onNext(300, 2),
-    onNext(350, 1),
-    onNext(380, 3),
-    onNext(400, 5),
-    onCompleted(420)
-  );
+  test('distinct CustomComparer some duplicates', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(
-    subscribe(200, 420)
-  );
-});
+    var xs = scheduler.createHotObservable(
+      onNext(280, 4),
+      onNext(300, 2),
+      onNext(350, 12),
+      onNext(380, 3),
+      onNext(400, 24),
+      onCompleted(420)
+    );
 
-test('Distinct_CustomComparer_SomeDuplicates', function () {
-  var scheduler = new TestScheduler();
+    var res = scheduler.startScheduler(function () {
+      return xs.distinct(null, modComparer(10));
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(280, 4),
-    onNext(300, 2),
-    onNext(350, 12),
-    onNext(380, 3),
-    onNext(400, 24),
-    onCompleted(420)
-  );
+    res.messages.assertEqual(
+      onNext(280, 4),
+      onNext(300, 2),
+      onNext(380, 3),
+      onCompleted(420)
+    );
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.distinct(null, modComparer(10));
+    xs.subscriptions.assertEqual(
+      subscribe(200, 420)
+    );
   });
 
-  res.messages.assertEqual(
-    onNext(280, 4),
-    onNext(300, 2),
-    onNext(380, 3),
-    onCompleted(420)
-  );
-
-  xs.subscriptions.assertEqual(
-    subscribe(200, 420)
-  );
-});
+}());
