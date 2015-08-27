@@ -1,8 +1,10 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, raises, ok */
+
   QUnit.module('finally');
 
-  var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
@@ -16,7 +18,7 @@
       results.push('invoked');
     });
 
-    var d = someObservable.subscribe(noop, noop, function () {
+    someObservable.subscribe(noop, noop, function () {
       results.push('completed');
     });
 
@@ -31,7 +33,7 @@
       invoked = true;
     });
 
-    throws(function () {
+    raises(function () {
       someObservable.subscribe();
     });
 
@@ -63,13 +65,13 @@
 
     var invoked = false;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs['finally'](function () {
         invoked = true;
       });
-    }).messages;
+    });
 
-    results.assertEqual(
+    results.messages.assertEqual(
       onCompleted(250)
     );
 
@@ -91,13 +93,13 @@
 
     var invoked = false;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs['finally'](function () {
         invoked = true;
       });
-    }).messages;
+    });
 
-    results.assertEqual(
+    results.messages.assertEqual(
       onNext(210, 2),
       onCompleted(250)
     );
@@ -110,25 +112,25 @@
   });
 
   test('finally on throws', function () {
-    var ex = new Error('ex');
+    var error = new Error();
 
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
       onNext(150, 1),
-      onError(250, ex)
+      onError(250, error)
     );
 
     var invoked = false;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs['finally'](function () {
         invoked = true;
       });
-    }).messages;
+    });
 
-    results.assertEqual(
-      onError(250, ex)
+    results.messages.assertEqual(
+      onError(250, error)
     );
 
     xs.subscriptions.assertEqual(
