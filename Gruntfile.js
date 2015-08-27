@@ -2702,7 +2702,7 @@ module.exports = function (grunt) {
 			.replace(/_Selector<(\w*?), (\w*?)>/g, '((value: $1, index: number, observable: Observable<$1>) => $2)')
 			.replace(/_Comparer<(\w*?), (\w*?)>/g, '((value1: $1, value2: $1) => $2)')
 			.replace(/_Comparer<T \| TOther, boolean>/, '((value1: T | TOther, value2: T | TOther) => boolean)')
-			.replace(/_Accumulator<(\w*?), (\w*?)>/g, '((acc: $1, value: $1) => $2)')
+			.replace(/_Accumulator<(\w*?), (\w*?)>/g, '((acc: $2, value: $1) => $2)')
 			.replace(/special._FlatMapResultSelector<(\w*?), (\w*?), (\w*?)>/g, '((value: $1, selectorValue: $2, index: number, selectorOther: number) => $3)')
 			.replace(/ObservableOrPromise\<(\w*?)\>/g, '(IObservable<$1> | Observable<$1> \| Promise<$1>)')
 
