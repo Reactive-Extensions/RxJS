@@ -1,41 +1,46 @@
-QUnit.module('Empty');
+(function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, raises */
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;
+  QUnit.module('empty');
 
-test('Empty_Basic', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Observable.empty(scheduler);
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onCompleted = Rx.ReactiveTest.onCompleted;
+
+  test('empty basic', function () {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.empty(scheduler);
     });
-    results.messages.assertEqual(onCompleted(201));
-});
 
-test('Empty_Disposed', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithDispose(function () {
-        return Observable.empty(scheduler);
-    }, 200);
+    results.messages.assertEqual(
+      onCompleted(201));
+  });
+
+  test('empty disposed', function () {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.empty(scheduler);
+    }, { disposed: 200 });
+
     results.messages.assertEqual();
-});
+  });
 
-test('Empty_ObserverThrows', function () {
-    var scheduler, xs;
-    scheduler = new TestScheduler();
-    xs = Observable.empty(scheduler);
-    xs.subscribe(function (x) { }, function (ex) { }, function () {
-        throw 'ex';
-    });
+  function noop () { }
+
+  test('empty observer throws', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = Observable.empty(scheduler);
+
+    xs.subscribe(noop, noop, function () { throw new Error(); });
+
     raises(function () {
-        scheduler.start();
+      scheduler.start();
     });
-});
+  });
+
+}());
