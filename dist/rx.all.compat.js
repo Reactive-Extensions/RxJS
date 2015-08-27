@@ -9948,24 +9948,19 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
   var VirtualTimeScheduler = Rx.VirtualTimeScheduler = (function (__super__) {
 
     function localNow() {
-      return this.toDateTimeOffset(this.clock);
+      return this.toAbsoluteTime(this.clock);
     }
 
     function scheduleNow(state, action) {
-      return this.scheduleAbsoluteWithState(state, this.clock, action);
+      return this.scheduleAbsolute(state, this.clock, action);
     }
 
     function scheduleRelative(state, dueTime, action) {
-      return this.scheduleRelativeWithState(state, this.toRelative(dueTime), action);
+      return this.scheduleRelative(state, this.toRelativeTime(dueTime), action);
     }
 
     function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleRelativeWithState(state, this.toRelative(dueTime - this.now()), action);
-    }
-
-    function invokeAction(scheduler, action) {
-      action();
-      return disposableEmpty;
+      return this.scheduleRelative(state, this.toRelativeTime(dueTime - this.now()), action);
     }
 
     inherits(VirtualTimeScheduler, __super__);
@@ -10000,14 +9995,14 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
      * @param {Any} The absolute time.
      * @returns {Number} The absolute time in ms
      */
-    VirtualTimeSchedulerPrototype.toDateTimeOffset = notImplemented;
+    VirtualTimeSchedulerPrototype.toAbsoluteTime = notImplemented;
 
     /**
      * Converts the TimeSpan value to a relative virtual time value.
      * @param {Number} timeSpan TimeSpan value to convert.
      * @return {Number} Corresponding relative virtual time value.
      */
-    VirtualTimeSchedulerPrototype.toRelative = notImplemented;
+    VirtualTimeSchedulerPrototype.toRelativeTime = notImplemented;
 
     /**
      * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be emulated using recursive scheduling.
@@ -10028,19 +10023,9 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    VirtualTimeSchedulerPrototype.scheduleRelativeWithState = function (state, dueTime, action) {
+    VirtualTimeSchedulerPrototype.scheduleRelative = function (state, dueTime, action) {
       var runAt = this.add(this.clock, dueTime);
-      return this.scheduleAbsoluteWithState(state, runAt, action);
-    };
-
-    /**
-     * Schedules an action to be executed at dueTime.
-     * @param {Number} dueTime Relative time after which to execute the action.
-     * @param {Function} action Action to be executed.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    VirtualTimeSchedulerPrototype.scheduleRelative = function (dueTime, action) {
-      return this.scheduleRelativeWithState(action, dueTime, invokeAction);
+      return this.scheduleAbsolute(state, runAt, action);
     };
 
     /**
@@ -10133,23 +10118,12 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
 
     /**
      * Schedules an action to be executed at dueTime.
-     * @param {Scheduler} scheduler Scheduler to execute the action on.
-     * @param {Number} dueTime Absolute time at which to execute the action.
-     * @param {Function} action Action to be executed.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    VirtualTimeSchedulerPrototype.scheduleAbsolute = function (dueTime, action) {
-      return this.scheduleAbsoluteWithState(action, dueTime, invokeAction);
-    };
-
-    /**
-     * Schedules an action to be executed at dueTime.
      * @param {Mixed} state State passed to the action to be executed.
      * @param {Number} dueTime Absolute time at which to execute the action.
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    VirtualTimeSchedulerPrototype.scheduleAbsoluteWithState = function (state, dueTime, action) {
+    VirtualTimeSchedulerPrototype.scheduleAbsolute = function (state, dueTime, action) {
       var self = this;
 
       function run(scheduler, state1) {
@@ -10194,7 +10168,7 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
       return absolute + relative;
     };
 
-    HistoricalSchedulerProto.toDateTimeOffset = function (absolute) {
+    HistoricalSchedulerProto.toAbsoluteTime = function (absolute) {
       return new Date(absolute).getTime();
     };
 
@@ -10204,7 +10178,7 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
      * @param {Number} timeSpan TimeSpan value to convert.
      * @return {Number} Corresponding relative virtual time value.
      */
-    HistoricalSchedulerProto.toRelative = function (timeSpan) {
+    HistoricalSchedulerProto.toRelativeTime = function (timeSpan) {
       return timeSpan;
     };
 

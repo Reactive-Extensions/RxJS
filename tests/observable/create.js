@@ -1,165 +1,177 @@
-QUnit.module('Create');
+(function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, raises */
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;
+  QUnit.module('create');
 
-test('Create_Next', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Observable.create(function (o) {
-            o.onNext(1);
-            o.onNext(2);
-        });
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted;
+
+  function noop () { }
+
+  test('create next', function () {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.create(function (o) {
+        o.onNext(1);
+        o.onNext(2);
+        return Rx.Disposable.empty;
+      });
     });
-    results.messages.assertEqual(onNext(200, 1), onNext(200, 2));
-});
 
-test('Create_Completed', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Observable.create(function (o) {
-            o.onCompleted();
-            o.onNext(100);
-            o.onError('ex');
-            o.onCompleted();
-        });
+    results.messages.assertEqual(
+      onNext(200, 1),
+      onNext(200, 2));
+  });
+
+  test('create completed', function () {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.create(function (o) {
+        o.onCompleted();
+        o.onNext(100);
+        o.onError(new Error());
+        o.onCompleted();
+        return Rx.Disposable.empty;
+      });
     });
-    results.messages.assertEqual(onCompleted(200));
-});
 
-test('Create_Error', function () {
-    var ex, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    results = scheduler.startWithCreate(function () {
-        return Observable.create(function (o) {
-            o.onError(ex);
-            o.onNext(100);
-            o.onError('foo');
-            o.onCompleted();
-        });
+    results.messages.assertEqual(
+      onCompleted(200));
+  });
+
+  test('create Error', function () {
+    var scheduler = new TestScheduler();
+
+    var error = new Error();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.create(function (o) {
+        o.onError(error);
+        o.onNext(100);
+        o.onError(new Error());
+        o.onCompleted();
+        return Rx.Disposable.empty;
+      });
     });
-    results.messages.assertEqual(onError(200, ex));
-});
 
-test('Create_Noop_Next', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
+    results.messages.assertEqual(
+      onError(200, error));
+  });
+
+  test('create noop next', function () {
+
+      var scheduler = new TestScheduler();
+      var results = scheduler.startScheduler(function () {
         return Observable.create(function (o) {
-            o.onNext(1);
-            o.onNext(2);
+          o.onNext(1);
+          o.onNext(2);
+          return noop;
         });
-    });
-    results.messages.assertEqual(onNext(200, 1), onNext(200, 2));
-});
+      });
 
-test('Create_Noop_Completed', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Observable.create(function (o) {
-            o.onCompleted();
-            o.onNext(100);
-            o.onError('ex');
-            o.onCompleted();
-        });
-    });
-    results.messages.assertEqual(onCompleted(200));
-});
+      results.messages.assertEqual(onNext(200, 1), onNext(200, 2));
+  });
 
-test('Create_Noop_Error', function () {
-    var ex, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    results = scheduler.startWithCreate(function () {
-        return Observable.create(function (o) {
-            o.onError(ex);
-            o.onNext(100);
-            o.onError('foo');
-            o.onCompleted();
-        });
-    });
-    results.messages.assertEqual(onError(200, ex));
-});
+  test('create no op completed', function () {
+    var scheduler = new TestScheduler();
 
-test('Create_Exception', function () {
+    var results = scheduler.startScheduler(function () {
+      return Observable.create(function (o) {
+        o.onCompleted();
+        o.onNext(100);
+        o.onError(new Error());
+        o.onCompleted();
+        return noop;
+      });
+    });
+
+    results.messages.assertEqual(
+      onCompleted(200));
+  });
+
+  test('create no op Error', function () {
+    var scheduler = new TestScheduler();
+
+    var error = new Error();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.create(function (o) {
+        o.onError(error);
+        o.onNext(100);
+        o.onError('foo');
+        o.onCompleted();
+        return noop;
+      });
+    });
+
+    results.messages.assertEqual(
+      onError(200, error));
+  });
+
+  test('create throws errors', function () {
     raises(function () {
-        return Observable.create(function (o) {
-            throw 'ex';
-        }).subscribe();
+      Observable.create(function () { throw new Error(); }).subscribe();
     });
-});
+  });
 
-test('Create_Dispose', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
-        return Observable.create(function (o) {
-            var isStopped;
-            isStopped = false;
-            o.onNext(1);
-            o.onNext(2);
-            scheduler.scheduleWithRelative(600, function () {
-                if (!isStopped) {
-                    return o.onNext(3);
-                }
-            });
-            scheduler.scheduleWithRelative(700, function () {
-                if (!isStopped) {
-                    return o.onNext(4);
-                }
-            });
-            scheduler.scheduleWithRelative(900, function () {
-                if (!isStopped) {
-                    return o.onNext(5);
-                }
-            });
-            scheduler.scheduleWithRelative(1100, function () {
-                if (!isStopped) {
-                    return o.onNext(6);
-                }
-            });
-            return function () {
-                return isStopped = true;
-            };
-        });
-    });
-    results.messages.assertEqual(onNext(200, 1), onNext(200, 2), onNext(800, 3), onNext(900, 4));
-});
+  test('create dispose', function () {
+    var scheduler = new TestScheduler();
 
-test('Create_ObserverThrows', function () {
-    raises(function () {
-        Observable.create(function (o) {
-            o.onNext(1);
-            return function () { };
-        }).subscribe(function (x) {
-            throw 'ex';
+    var results = scheduler.startScheduler(function () {
+      return Observable.create(function (o) {
+        var isStopped = false;
+
+        o.onNext(1);
+        o.onNext(2);
+
+        scheduler.scheduleWithRelativeAndState(null, 600, function () {
+          !isStopped && o.onNext(3);
         });
-    });
-    raises(function () {
-        Observable.create(function (o) {
-            o.onError('exception');
-            return function () { };
-        }).subscribe(function (x) { }, function (ex) {
-            throw 'ex';
+
+        scheduler.scheduleWithRelativeAndState(null, 700, function () {
+          !isStopped && o.onNext(4);
         });
-    });
-    raises(function () {
-        Observable.create(function (o) {
-            o.onCompleted();
-            return function () { };
-        }).subscribe(function (x) { }, function (ex) { }, function () {
-            throw 'ex';
+
+        scheduler.scheduleWithRelativeAndState(null, 900, function () {
+          !isStopped && o.onNext(5);
         });
+
+        scheduler.scheduleWithRelativeAndState(null, 1100, function () {
+          !isStopped && o.onNext(6);
+        });
+
+        return function () { isStopped = true; };
+      });
     });
-});
+
+    results.messages.assertEqual(
+      onNext(200, 1),
+      onNext(200, 2),
+      onNext(800, 3),
+      onNext(900, 4));
+  });
+
+  test('create observer does not catch', function () {
+    raises(function () {
+      Observable.create(function (o) { o.onNext(1); })
+        .subscribe(function () { throw new Error(); });
+    });
+
+    raises(function () {
+      Observable.create(function (o) { o.onError(new Error()); })
+        .subscribe(noop, function () { throw new Error(); });
+    });
+
+    raises(function () {
+      Observable.create(function (o) { o.onCompleted(); })
+        .subscribe(noop, noop, function () { throw new Error(); });
+    });
+  });
+
+}());

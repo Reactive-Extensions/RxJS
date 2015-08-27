@@ -1,5 +1,8 @@
 (function () {
-  QUnit.module('Average');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok */
+
+  QUnit.module('average');
 
   var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
@@ -7,14 +10,14 @@
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('Average_Number_Empty', function () {
+  test('average Number Empty', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
       onNext(150, 1),
       onCompleted(250));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.average();
     });
 
@@ -23,7 +26,7 @@
     ok(results.messages[0].time === 250);
   });
 
-  test('Average_Number_Return', function () {
+  test('average Number Return', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -32,7 +35,7 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.average();
     });
     results.messages.assertEqual(
@@ -41,7 +44,7 @@
     );
   });
 
-  test('Average_Number_Some', function () {
+  test('average Number Some', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -52,7 +55,7 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.average();
     });
 
@@ -62,7 +65,7 @@
     );
   });
 
-  test('Average_Number_Throw', function () {
+  test('average Number Throw', function () {
     var error = new Error();
     var scheduler = new TestScheduler();
 
@@ -71,7 +74,7 @@
       onError(210, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.average();
     });
 
@@ -80,14 +83,14 @@
     );
   });
 
-  test('Average_Number_Never', function () {
+  test('average Number Never', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
       onNext(150, 1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.average();
     });
     results.messages.assertEqual();
@@ -97,7 +100,7 @@
     );
   });
 
-  test('Average_Selector_Regular_Number', function () {
+  test('average Selector Regular Number', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -107,7 +110,7 @@
       onCompleted(240)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.average(function (x) { return x.length; });
     });
 
@@ -119,7 +122,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 240));
   });
 
-  test('Average_Selector_Throws', function () {
+  test('average Selector Throws', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -131,8 +134,8 @@
       onCompleted(240)
     );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.average(function (x) { throw error; });
+    var results = scheduler.startScheduler(function () {
+      return xs.average(function () { throw error; });
     });
 
     results.messages.assertEqual(

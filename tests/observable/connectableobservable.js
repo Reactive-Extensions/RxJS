@@ -1,78 +1,79 @@
-﻿QUnit.module('ConnectableObservableTest');
+(function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, notEqual */
 
-var Observable = Rx.Observable,
-    Subject = Rx.Subject,
-    inherits = Rx.internals.inherits,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  QUnit.module('ConnectableObservableTest');
 
-var ConnectableObservable = (function (_super) {
+  var Observable = Rx.Observable,
+      Subject = Rx.Subject,
+      inherits = Rx.internals.inherits,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      subscribe = Rx.ReactiveTest.subscribe;
 
-  function subscribe(observer) {
-    return this._o.subscribe(observer);
-  }
-
-  inherits(ConnectableObservable, _super);
-
-  function ConnectableObservable(o, s) {
-    _super.call(this, subscribe);
-    this._o = o.multicast(s);
-  }
-
-  ConnectableObservable.prototype.connect = function () {
-    return this._o.connect();
-  };
-
-  ConnectableObservable.prototype.refCount = function () {
-    return this._o.refCount();
-  };
-
-  return ConnectableObservable;
-}(Observable));
-
-var MySubject = (function (_super) {
+  var ConnectableObservable = (function (__super__) {
 
     function subscribe(observer) {
-        var self = this;
-        this.subscribeCount++;
-        this.observer = observer;
-        return {
-            dispose: function () {
-                self.disposed = true;
-            }
-        };
+      return this.o.subscribe(observer);
     }
 
-    inherits(MySubject, _super);
-    function MySubject() {
-        _super.call(this, subscribe);
-        this.disposeOnMap = {};
-        this.subscribeCount = 0;
-        this.disposed = false;
+    inherits(ConnectableObservable,  __super__);
+
+    function ConnectableObservable(o, s) {
+      __super__.call(this, subscribe);
+      this.o = o.multicast(s);
     }
+
+    ConnectableObservable.prototype.connect = function () {
+      return this.o.connect();
+    };
+
+    ConnectableObservable.prototype.refCount = function () {
+      return this.o.refCount();
+    };
+
+    return ConnectableObservable;
+  }(Observable));
+
+  var MySubject = (function (__super__) {
+    inherits(MySubject, __super__);
+
+    function subscribe(o) {
+      var self = this;
+      this.subscribeCount++;
+      this.o = o;
+      return Rx.Disposable.create(function () { self.disposed = true; });
+    }
+
+    function MySubject() {
+      __super__.call(this, subscribe);
+      this.disposeOnMap = {};
+      this.subscribeCount = 0;
+      this.disposed = false;
+    }
+
     MySubject.prototype.disposeOn = function (value, disposable) {
-        this.disposeOnMap[value] = disposable;
+      this.disposeOnMap[value] = disposable;
     };
+
     MySubject.prototype.onNext = function (value) {
-        this.observer.onNext(value);
-        if (this.disposeOnMap[value] !== undefined) {
-            this.disposeOnMap[value].dispose();
-        }
+      this.o.onNext(value);
+      this.disposeOnMap[value] && this.disposeOnMap[value].dispose();
     };
-    MySubject.prototype.onError = function (exception) {
-        this.observer.onError(exception);
+
+    MySubject.prototype.onError = function (e) {
+      this.o.onError(e);
     };
+
     MySubject.prototype.onCompleted = function () {
-        this.observer.onCompleted();
+      this.o.onCompleted();
     };
 
     return MySubject;
-})(Observable);
+  })(Observable);
 
-test('ConnectableObservable_Creation', function () {
+  test('ConnectableObservable creation', function () {
     var y = 0;
 
     var s2 = new Subject();
@@ -83,65 +84,64 @@ test('ConnectableObservable_Creation', function () {
 
     co2.connect();
     equal(1, y);
-});
+  });
 
-test('ConnectableObservable_Connected', function () {
+  test('ConnectableObservable connected', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-        onNext(210, 1),
-        onNext(220, 2),
-        onNext(230, 3),
-        onNext(240, 4),
-        onCompleted(250)
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onNext(240, 4),
+      onCompleted(250)
     );
 
     var subject = new MySubject();
 
     var conn = new ConnectableObservable(xs, subject);
-    var disconnect = conn.connect();
+    conn.connect();
 
-    var res = scheduler.startWithCreate(function () { return conn; });
+    var res = scheduler.startScheduler(function () { return conn; });
 
     res.messages.assertEqual(
-        onNext(210, 1),
-        onNext(220, 2),
-        onNext(230, 3),
-        onNext(240, 4),
-        onCompleted(250)
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onNext(240, 4),
+      onCompleted(250)
     );
-});
+  });
 
-test('ConnectableObservable_NotConnected', function () {
+  test('ConnectableObservable not connected', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-        onNext(210, 1),
-        onNext(220, 2),
-        onNext(230, 3),
-        onNext(240, 4),
-        onCompleted(250)
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onNext(240, 4),
+      onCompleted(250)
     );
 
     var subject = new MySubject();
 
     var conn = new ConnectableObservable(xs, subject);
 
-    var res = scheduler.startWithCreate(function () { return conn; });
+    var res = scheduler.startScheduler(function () { return conn; });
 
-    res.messages.assertEqual(
-    );
-});
+    res.messages.assertEqual();
+  });
 
-test('ConnectableObservable_Disconnected', function () {
+  test('ConnectableObservable disconnected', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-        onNext(210, 1),
-        onNext(220, 2),
-        onNext(230, 3),
-        onNext(240, 4),
-        onCompleted(250)
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onNext(240, 4),
+      onCompleted(250)
     );
 
     var subject = new MySubject();
@@ -150,21 +150,20 @@ test('ConnectableObservable_Disconnected', function () {
     var disconnect = conn.connect();
     disconnect.dispose();
 
-    var res = scheduler.startWithCreate(function () { return conn; });
+    var res = scheduler.startScheduler(function () { return conn; });
 
-    res.messages.assertEqual(
-    );
-});
+    res.messages.assertEqual();
+  });
 
-test('ConnectableObservable_DisconnectFuture', function () {
+  test('ConnectableObservable disconnect future', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-        onNext(210, 1),
-        onNext(220, 2),
-        onNext(230, 3),
-        onNext(240, 4),
-        onCompleted(250)
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onNext(240, 4),
+      onCompleted(250)
     );
 
     var subject = new MySubject();
@@ -172,29 +171,29 @@ test('ConnectableObservable_DisconnectFuture', function () {
     var conn = new ConnectableObservable(xs, subject);
     subject.disposeOn(3, conn.connect());
 
-    var res = scheduler.startWithCreate(function () { return conn; });
+    var res = scheduler.startScheduler(function () { return conn; });
 
     res.messages.assertEqual(
-        onNext(210, 1),
-        onNext(220, 2),
-        onNext(230, 3)
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3)
     );
-});
+  });
 
-test('ConnectableObservable_MultipleNonOverlappedConnections', function () {
+  test('ConnectableObservable multiple non-overlapped connections', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-        onNext(210, 1),
-        onNext(220, 2),
-        onNext(230, 3),
-        onNext(240, 4),
-        onNext(250, 5),
-        onNext(260, 6),
-        onNext(270, 7),
-        onNext(280, 8),
-        onNext(290, 9),
-        onCompleted(300)
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onNext(240, 4),
+      onNext(250, 5),
+      onNext(260, 6),
+      onNext(270, 7),
+      onNext(280, 8),
+      onNext(290, 9),
+      onCompleted(300)
     );
 
     var subject = new Subject();
@@ -202,35 +201,37 @@ test('ConnectableObservable_MultipleNonOverlappedConnections', function () {
     var conn = xs.multicast(subject);
 
     var c1;
-    scheduler.scheduleAbsolute(225, function () { c1 = conn.connect(); });
-    scheduler.scheduleAbsolute(241, function () { c1.dispose(); });
-    scheduler.scheduleAbsolute(245, function () { c1.dispose(); }); // idempotency test
-    scheduler.scheduleAbsolute(251, function () { c1.dispose(); }); // idempotency test
-    scheduler.scheduleAbsolute(260, function () { c1.dispose(); }); // idempotency test
+    scheduler.scheduleAbsolute(null, 225, function () { c1 = conn.connect(); });
+    scheduler.scheduleAbsolute(null, 241, function () { c1.dispose(); });
+    scheduler.scheduleAbsolute(null, 245, function () { c1.dispose(); }); // idempotency test
+    scheduler.scheduleAbsolute(null, 251, function () { c1.dispose(); }); // idempotency test
+    scheduler.scheduleAbsolute(null, 260, function () { c1.dispose(); }); // idempotency test
 
     var c2;
-    scheduler.scheduleAbsolute(249, function () { c2 = conn.connect(); });
-    scheduler.scheduleAbsolute(255, function () { c2.dispose(); });
-    scheduler.scheduleAbsolute(265, function () { c2.dispose(); }); // idempotency test
-    scheduler.scheduleAbsolute(280, function () { c2.dispose(); }); // idempotency test
+    scheduler.scheduleAbsolute(null, 249, function () { c2 = conn.connect(); });
+    scheduler.scheduleAbsolute(null, 255, function () { c2.dispose(); });
+    scheduler.scheduleAbsolute(null, 265, function () { c2.dispose(); }); // idempotency test
+    scheduler.scheduleAbsolute(null, 280, function () { c2.dispose(); }); // idempotency test
 
     var c3;
-    scheduler.scheduleAbsolute(275, function () { c3 = conn.connect(); });
-    scheduler.scheduleAbsolute(295, function () { c3.dispose(); });
+    scheduler.scheduleAbsolute(null, 275, function () { c3 = conn.connect(); });
+    scheduler.scheduleAbsolute(null, 295, function () { c3.dispose(); });
 
-    var res = scheduler.startWithCreate(function () { return conn; });
+    var res = scheduler.startScheduler(function () { return conn; });
 
     res.messages.assertEqual(
-        onNext(230, 3),
-        onNext(240, 4),
-        onNext(250, 5),
-        onNext(280, 8),
-        onNext(290, 9)
+      onNext(230, 3),
+      onNext(240, 4),
+      onNext(250, 5),
+      onNext(280, 8),
+      onNext(290, 9)
     );
 
     xs.subscriptions.assertEqual(
-        subscribe(225, 241),
-        subscribe(249, 255),
-        subscribe(275, 295)
+      subscribe(225, 241),
+      subscribe(249, 255),
+      subscribe(275, 295)
     );
-});
+  });
+
+}());

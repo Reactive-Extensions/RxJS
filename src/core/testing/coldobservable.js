@@ -9,7 +9,7 @@
         message = this.messages[i];
         notification = message.value;
         (function (innerNotification) {
-          d.add(observable.scheduler.scheduleRelativeWithState(null, message.time, function () {
+          d.add(observable.scheduler.scheduleRelative(null, message.time, function () {
             innerNotification.accept(observer);
             return disposableEmpty;
           }));

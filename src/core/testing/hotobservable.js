@@ -25,7 +25,7 @@
         message = this.messages[i];
         notification = message.value;
         (function (innerNotification) {
-          scheduler.scheduleAbsoluteWithState(null, message.time, function () {
+          scheduler.scheduleAbsolute(null, message.time, function () {
             var obs = observable.observers.slice(0);
 
             for (var j = 0, jLen = obs.length; j < jLen; j++) {

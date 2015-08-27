@@ -303,7 +303,7 @@ var ReactiveTest = Rx.ReactiveTest = {
         message = this.messages[i];
         notification = message.value;
         (function (innerNotification) {
-          scheduler.scheduleAbsoluteWithState(null, message.time, function () {
+          scheduler.scheduleAbsolute(null, message.time, function () {
             var obs = observable.observers.slice(0);
 
             for (var j = 0, jLen = obs.length; j < jLen; j++) {
@@ -329,7 +329,7 @@ var ReactiveTest = Rx.ReactiveTest = {
         message = this.messages[i];
         notification = message.value;
         (function (innerNotification) {
-          d.add(observable.scheduler.scheduleRelativeWithState(null, message.time, function () {
+          d.add(observable.scheduler.scheduleRelative(null, message.time, function () {
             innerNotification.accept(observer);
             return disposableEmpty;
           }));
@@ -373,9 +373,9 @@ var ReactiveTest = Rx.ReactiveTest = {
      * @param action Action to be executed.
      * @return Disposable object used to cancel the scheduled action (best effort).
      */
-    TestScheduler.prototype.scheduleAbsoluteWithState = function (state, dueTime, action) {
+    TestScheduler.prototype.scheduleAbsolute = function (state, dueTime, action) {
       dueTime <= this.clock && (dueTime = this.clock + 1);
-        return __super__.prototype.scheduleAbsoluteWithState.call(this, state, dueTime, action);
+        return __super__.prototype.scheduleAbsolute.call(this, state, dueTime, action);
     };
     /**
      * Adds a relative virtual time to an absolute virtual time value.
@@ -393,7 +393,7 @@ var ReactiveTest = Rx.ReactiveTest = {
      * @param absolute Absolute virtual time value to convert.
      * @return Corresponding DateTimeOffset value.
      */
-    TestScheduler.prototype.toDateTimeOffset = function (absolute) {
+    TestScheduler.prototype.toAbsoluteTime = function (absolute) {
       return new Date(absolute).getTime();
     };
     /**
@@ -402,7 +402,7 @@ var ReactiveTest = Rx.ReactiveTest = {
      * @param timeSpan TimeSpan value to convert.
      * @return Corresponding relative virtual time value.
      */
-    TestScheduler.prototype.toRelative = function (timeSpan) {
+    TestScheduler.prototype.toRelativeTime = function (timeSpan) {
       return timeSpan;
     };
     /**
@@ -414,20 +414,25 @@ var ReactiveTest = Rx.ReactiveTest = {
      * @param disposed Virtual time at which to dispose the subscription.
      * @return Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.
      */
-    TestScheduler.prototype.startWithTiming = function (create, created, subscribed, disposed) {
+    TestScheduler.prototype.startScheduler = function (createFn, settings) {
+      settings || (settings = {});
+      settings.created == null && (settings.created = ReactiveTest.created);
+      settings.subscribed == null && (settings.subscribed = ReactiveTest.subscribed);
+      settings.disposed == null && (settings.disposed = ReactiveTest.disposed);
+
       var observer = this.createObserver(), source, subscription;
 
-      this.scheduleAbsoluteWithState(null, created, function () {
-        source = create();
+      this.scheduleAbsolute(null, settings.created, function () {
+        source = createFn();
         return disposableEmpty;
       });
 
-      this.scheduleAbsoluteWithState(null, subscribed, function () {
+      this.scheduleAbsolute(null, settings.subscribed, function () {
         subscription = source.subscribe(observer);
         return disposableEmpty;
       });
 
-      this.scheduleAbsoluteWithState(null, disposed, function () {
+      this.scheduleAbsolute(null, settings.disposed, function () {
         subscription.dispose();
         return disposableEmpty;
       });
@@ -435,28 +440,6 @@ var ReactiveTest = Rx.ReactiveTest = {
       this.start();
 
       return observer;
-    };
-
-    /**
-     * Starts the test scheduler and uses the specified virtual time to dispose the subscription to the sequence obtained through the factory function.
-     * Default virtual times are used for factory invocation and sequence subscription.
-     *
-     * @param create Factory method to create an observable sequence.
-     * @param disposed Virtual time at which to dispose the subscription.
-     * @return Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.
-     */
-    TestScheduler.prototype.startWithDispose = function (create, disposed) {
-        return this.startWithTiming(create, ReactiveTest.created, ReactiveTest.subscribed, disposed);
-    };
-
-    /**
-     * Starts the test scheduler and uses default virtual times to invoke the factory function, to subscribe to the resulting sequence, and to dispose the subscription.
-     *
-     * @param create Factory method to create an observable sequence.
-     * @return Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.
-     */
-    TestScheduler.prototype.startWithCreate = function (create) {
-        return this.startWithTiming(create, ReactiveTest.created, ReactiveTest.subscribed, ReactiveTest.disposed);
     };
 
     /**
