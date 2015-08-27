@@ -1,5 +1,8 @@
 (function () {
-  QUnit.module('First');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal */
+
+  QUnit.module('first');
 
   var TestScheduler = Rx.TestScheduler,
     onNext = Rx.ReactiveTest.onNext,
@@ -8,8 +11,8 @@
     subscribe = Rx.ReactiveTest.subscribe;
 
   // First Async
-  test('FirstAsync Empty', function () {
-    var res, scheduler, xs;
+  test('first empty', function () {
+
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -17,17 +20,18 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first();
     });
 
-    ok(res.messages[0].time === 250 && res.messages[0].value.exception !== null);
+    res.messages.assertEqual(
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; }));
 
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
-  test('FirstAsync Default', function () {
-    var res, scheduler, xs;
+  test('first default', function () {
+
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -35,7 +39,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first({defaultValue: 42});
     });
 
@@ -44,24 +48,28 @@
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
-  test('FirstAsync One', function () {
+  test('first one', function () {
     var scheduler = new TestScheduler();
+
     var xs = scheduler.createHotObservable(
       onNext(150, 1),
       onNext(210, 2),
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first();
     });
 
-    res.messages.assertEqual(onNext(210, 2), onCompleted(210));
+    res.messages.assertEqual(
+      onNext(210, 2),
+      onCompleted(210));
 
-    xs.subscriptions.assertEqual(subscribe(200, 210));
+    xs.subscriptions.assertEqual(
+      subscribe(200, 210));
   });
 
-  test('FirstAsync Many', function () {
+  test('first many', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -71,7 +79,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first();
     });
 
@@ -79,7 +87,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 210));
   });
 
-  test('FirstAsync Error', function () {
+  test('first Error', function () {
     var ex = new Error();
 
     var scheduler = new TestScheduler();
@@ -89,8 +97,8 @@
       onError(210, ex)
     );
 
-    var res = scheduler.startWithCreate(function () {
-        return xs.first();
+    var res = scheduler.startScheduler(function () {
+      return xs.first();
     });
 
     res.messages.assertEqual(onError(210, ex));
@@ -98,7 +106,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 210));
   });
 
-  test('FirstAsync Predicate', function () {
+  test('first predicate', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -110,7 +118,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first(function (x) {
         return x % 2 === 1;
       });
@@ -121,7 +129,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 220));
   });
 
-  test('FirstAsync Predicate Obj', function () {
+  test('first Predicate Obj', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -133,7 +141,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first({
         predicate: function (x) {
           return x % 2 === 1;
@@ -146,7 +154,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 220));
   });
 
-  test('FirstAsync Predicate thisArg', function () {
+  test('first Predicate thisArg', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -158,7 +166,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first(function (x) {
         equal(this, 42);
         return x % 2 === 1;
@@ -170,7 +178,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 220));
   });
 
-  test('FirstAsync Predicate Obj thisArg', function () {
+  test('first Predicate Obj thisArg', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -182,7 +190,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first({
         predicate: function (x) {
           equal(this, 42);
@@ -197,7 +205,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 220));
   });
 
-  test('FirstAsync Predicate None', function () {
+  test('first Predicate None', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -209,18 +217,19 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first(function (x) {
         return x > 10;
       });
     });
 
-    ok(res.messages[0].time === 250 && res.messages[0].value.exception !== null);
+    res.messages.assertEqual(
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; }));
 
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
-  test('FirstAsync Predicate Obj None', function () {
+  test('first Predicate Obj None', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -232,7 +241,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first({
         predicate: function (x) {
           return x > 10;
@@ -240,12 +249,13 @@
       });
     });
 
-    ok(res.messages[0].time === 250 && res.messages[0].value.exception !== null);
+    res.messages.assertEqual(
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; }));
 
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
-  test('FirstAsync Predicate Obj None Default', function () {
+  test('first Predicate Obj None Default', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -257,7 +267,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first({
         predicate: function (x) {
           return x > 10;
@@ -271,7 +281,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
 
-  test('FirstAsync Predicate Error', function () {
+  test('first Predicate Error', function () {
     var ex = new Error();
 
     var scheduler = new TestScheduler();
@@ -282,7 +292,7 @@
       onError(220, ex)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first(function (x) {
         return x % 2 === 1;
       });
@@ -293,7 +303,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 220));
   });
 
-  test('FirstAsync PredicateThrows', function () {
+  test('first PredicateThrows', function () {
     var ex = new Error();
 
     var scheduler = new TestScheduler();
@@ -307,7 +317,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.first(function (x) {
         if (x < 4) {
           return false;
