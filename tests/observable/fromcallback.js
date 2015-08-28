@@ -1,9 +1,12 @@
 (function () {
-  QUnit.module('FromCallback');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok */
+
+  QUnit.module('fromCallback');
 
   var Observable = Rx.Observable;
 
-  test('FromCallback', function () {
+  test('fromCallback', function () {
     var res = Observable.fromCallback(function (cb) {
       cb(true);
     })();
@@ -12,7 +15,7 @@
       function (r) {
         equal(r, true);
       },
-      function (err) {
+      function () {
         ok(false);
       },
       function () {
@@ -20,7 +23,7 @@
       });
   });
 
-  test('FromCallback Single', function () {
+  test('fromCallback single argument', function () {
     var res = Observable.fromCallback(function (file, cb) {
       cb(file);
     })('file.txt');
@@ -29,7 +32,7 @@
       function (r) {
         equal(r, 'file.txt');
       },
-      function (err) {
+      function () {
         ok(false);
       },
       function () {
@@ -37,13 +40,13 @@
       });
   });
 
-  test('FromCallback Selector', function () {
+  test('fromCallback selector', function () {
     var res = Observable.fromCallback(
       function (f,s,t,cb) {
         cb(f,s,t);
       },
       null,
-      function (f,s,t) {
+      function (f) {
         return f;
       })(1,2,3);
 
@@ -51,7 +54,7 @@
       function (r) {
         equal(r, 1);
       },
-      function (err) {
+      function () {
         ok(false);
       },
       function () {
@@ -59,7 +62,7 @@
       });
   });
 
-  test('FromCallback Context', function () {
+  test('fromCallback context', function () {
     var res = Observable.fromCallback(
       function (cb) {
         equal(this, 42);
@@ -71,7 +74,7 @@
       function () {
         ok(true);
       },
-      function (err) {
+      function () {
         ok(false);
       },
       function () {
@@ -79,7 +82,7 @@
       });
   });
 
-  test('FromCallback_Resubscribe', function() {
+  test('fromCallback resubscribe', function() {
 
     var count = 0;
 
@@ -89,9 +92,9 @@
         })();
 
     var observer = Rx.Observer.create(
-        function (v) {
+        function () {
           ok(1);
-        }, function (err) {
+        }, function () {
           ok(false);
         }, function () {
           ok(true);
@@ -100,9 +103,9 @@
 
     res.subscribe(observer);
 
-    res.subscribe(function (v) {
+    res.subscribe(function () {
       ok(1);
-    }, function (err) {
+    }, function () {
       ok(false);
     }, function () {
       ok(true);
