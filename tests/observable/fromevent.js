@@ -1,8 +1,10 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal */
+
   module('FromEvent');
 
-  var TestScheduler = Rx.TestScheduler,
-    Observable = Rx.Observable,
+  var Observable = Rx.Observable,
     slice = Array.prototype.slice;
 
   /** Fake DOM Element */

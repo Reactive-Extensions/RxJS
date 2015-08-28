@@ -1,8 +1,10 @@
 (function () {
-  module('FromEvent');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal */
 
-  var TestScheduler = Rx.TestScheduler,
-    Observable = Rx.Observable,
+  QUnit.module('FromEvent');
+
+  var Observable = Rx.Observable,
     slice = Array.prototype.slice;
 
   /** Fake DOM Element */
@@ -50,7 +52,7 @@
   /** Fake DOM Element */
   function FakeDOMIEElement(nodeName) {
     this.listeners = {};
-    this.nodeName = nodeName
+    this.nodeName = nodeName;
     this.attachEventCalled = false;
     this.detachEventCalled = false;
   }
