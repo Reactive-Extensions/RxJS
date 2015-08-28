@@ -1,4 +1,7 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok */
+
   QUnit.module('FromNodeCallback');
 
   var Observable = Rx.Observable;
@@ -13,7 +16,7 @@
     });
   });
 
-  test('FromNodeCallback_Single', function () {
+  test('fromNodeCallback Single', function () {
     var res = Observable.fromNodeCallback(function (file, cb) {
       cb(null, file);
     })('foo');
@@ -22,7 +25,7 @@
       function (r) {
         equal(r, 'foo');
       },
-      function (err) {
+      function () {
         ok(false);
       },
       function () {
@@ -30,13 +33,13 @@
       });
   });
 
-  test('FromNodeCallback_Selector', function () {
+  test('fromNodeCallback Selector', function () {
     var res = Observable.fromNodeCallback(
       function (f,s,t,cb) {
         cb(null, f,s,t);
       },
       null,
-      function (f,s,t) {
+      function (f) {
         return f;
       })(1,2,3);
 
@@ -44,7 +47,7 @@
       function (r) {
         equal(r, 1);
       },
-      function (err) {
+      function () {
         ok(false);
       },
       function () {
@@ -52,7 +55,7 @@
       });
   });
 
-  test('FromNodeCallback_Context', function () {
+  test('fromNodeCallback Context', function () {
     var res = Observable.fromNodeCallback(
       function (cb) {
         equal(this, 42);
@@ -64,7 +67,7 @@
       function () {
         ok(true);
       },
-      function (err) {
+      function () {
         ok(false);
       },
       function () {
@@ -72,7 +75,7 @@
       });
   });
 
-  test('FromNodeCallback_Error', function () {
+  test('fromNodeCallback Error', function () {
     var error = new Error();
 
     var res = Observable.fromNodeCallback(function (cb) {
@@ -101,9 +104,9 @@
         })();
 
     var observer = Rx.Observer.create(
-        function (v) {
+        function () {
           ok(1);
-        }, function (err) {
+        }, function () {
           ok(false);
         }, function () {
           ok(true);
@@ -112,9 +115,9 @@
 
     res.subscribe(observer);
 
-    res.subscribe(function (v) {
+    res.subscribe(function () {
       ok(1);
-    }, function (err) {
+    }, function () {
       ok(false);
     }, function () {
       ok(true);
