@@ -1,101 +1,112 @@
-QUnit.module('Generate');
+(function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;
+  QUnit.module('generate');
 
-test('Generate_Finite', function () {
-    var results, scheduler;
-    scheduler = new TestScheduler();
-    results = scheduler.startWithCreate(function () {
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted;
+
+  test('generate finite', function () {
+      var scheduler = new TestScheduler();
+
+      var results = scheduler.startScheduler(function () {
         return Observable.generate(0, function (x) {
-            return x <= 3;
+          return x <= 3;
         }, function (x) {
-            return x + 1;
+          return x + 1;
         }, function (x) {
-            return x;
+          return x;
         }, scheduler);
+      });
+
+      results.messages.assertEqual(
+        onNext(201, 0),
+        onNext(202, 1),
+        onNext(203, 2),
+        onNext(204, 3),
+        onCompleted(205)
+      );
+  });
+
+  test('generate throw condition', function () {
+    var scheduler = new TestScheduler();
+
+    var error = new Error();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.generate(0, function () {
+        throw error;
+      }, function (x) {
+        return x + 1;
+      }, function (x) {
+        return x;
+      }, scheduler);
     });
+
     results.messages.assertEqual(
-                        onNext(201, 0),
-                        onNext(202, 1),
-                        onNext(203, 2),
-                        onNext(204, 3),
-                        onCompleted(205)
-                    );
-});
+      onError(201, error));
+  });
 
-test('Generate_Throw_Condition', function () {
-    var ex, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    results = scheduler.startWithCreate(function () {
-        return Observable.generate(0, function (x) {
-            throw ex;
+  test('generate throw result selector', function () {
+    var scheduler = new TestScheduler();
+
+    var error = new Error();
+
+    var results = scheduler.startScheduler(function () {
+        return Observable.generate(0, function () {
+          return true;
         }, function (x) {
-            return x + 1;
-        }, function (x) {
-            return x;
+          return x + 1;
+        }, function () {
+          throw error;
         }, scheduler);
     });
-    results.messages.assertEqual(onError(201, ex));
-});
 
-test('Generate_Throw_ResultSelector', function () {
-    var ex, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    results = scheduler.startWithCreate(function () {
-        return Observable.generate(0, function (x) {
-            return true;
-        }, function (x) {
-            return x + 1;
-        }, function (x) {
-            throw ex;
-        }, scheduler);
-    });
-    results.messages.assertEqual(onError(201, ex));
-});
-
-test('Generate_Throw_Iterate', function () {
-    var ex, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    results = scheduler.startWithCreate(function () {
-        return Observable.generate(0, function (x) {
-            return true;
-        }, function (x) {
-            throw ex;
-        }, function (x) {
-            return x;
-        }, scheduler);
-    });
     results.messages.assertEqual(
-                        onNext(201, 0),
-                        onError(202, ex)
-                    );
-});
+      onError(201, error));
+  });
 
-test('Generate_Dispose', function () {
-    var ex, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    results = scheduler.startWithDispose(function () {
-        return Observable.generate(0, function (x) {
-            return true;
-        }, function (x) {
-            return x + 1;
-        }, function (x) {
-            return x;
-        }, scheduler);
-    }, 203);
+  test('generate throw iterate', function () {
+    var scheduler = new TestScheduler();
+
+    var error = new Error();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.generate(0, function () {
+        return true;
+      }, function () {
+        throw error;
+      }, function (x) {
+        return x;
+      }, scheduler);
+    });
+
     results.messages.assertEqual(
-                        onNext(201, 0),
-                        onNext(202, 1));
-});
+      onNext(201, 0),
+      onError(202, error)
+    );
+  });
+
+  test('generate dispose', function () {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.generate(0, function () {
+        return true;
+      }, function (x) {
+        return x + 1;
+      }, function (x) {
+        return x;
+      }, scheduler);
+    }, {disposed: 203 });
+
+    results.messages.assertEqual(
+      onNext(201, 0),
+      onNext(202, 1));
+  });
+
+}());
