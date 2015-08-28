@@ -8,7 +8,7 @@
       var message = this.messages[i],
           notification = message.value;
       (function (innerNotification) {
-        scheduler.scheduleAbsoluteWithState(null, message.time, function () {
+        scheduler.scheduleAbsolute(null, message.time, function () {
           var obs = self.observers.slice(0);
 
           for (var j = 0, jLen = obs.length; j < jLen; j++) {

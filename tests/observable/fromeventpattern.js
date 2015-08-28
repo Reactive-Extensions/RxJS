@@ -40,11 +40,6 @@
       function (h) { element.removeEventListener('someEvent', h, false); }
     );
 
-    Observable.fromEvent(element, 'someEvent')
-      .subscribe(function (x) {
-        equal(x, 42);
-      });
-
     element.trigger('someEvent', 42);
     equal(element.addEventListenerCalled, true);
     equal(element.removeEventListenerCalled, false);
