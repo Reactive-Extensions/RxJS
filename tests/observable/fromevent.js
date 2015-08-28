@@ -2,7 +2,7 @@
   /* jshint undef: true, unused: true */
   /* globals QUnit, test, Rx, equal */
 
-  module('FromEvent');
+  QUnit.module('FromEvent');
 
   var Observable = Rx.Observable,
     slice = Array.prototype.slice;
