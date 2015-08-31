@@ -1,4 +1,7 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok */
+
   QUnit.module('HistoricalScheduler');
 
   var HistoricalScheduler = Rx.HistoricalScheduler;
@@ -47,13 +50,13 @@
 
     var list = [];
 
-    s.scheduleAbsolute(time(0), function () { list.push(new Timestamped(1, s.now())); });
-    s.scheduleAbsolute(time(1), function () { list.push(new Timestamped(2, s.now())); });
-    s.scheduleAbsolute(time(2), function () { s.stop(); });
-    s.scheduleAbsolute(time(3), function () { list.push(new Timestamped(3, s.now())); });
-    s.scheduleAbsolute(time(4), function () { s.stop(); });
-    s.scheduleAbsolute(time(5), function () { s.start(); });
-    s.scheduleAbsolute(time(6), function () { list.push(new Timestamped(4, s.now())); });
+    s.scheduleAbsolute(null, time(0), function () { list.push(new Timestamped(1, s.now())); });
+    s.scheduleAbsolute(null, time(1), function () { list.push(new Timestamped(2, s.now())); });
+    s.scheduleAbsolute(null, time(2), function () { s.stop(); });
+    s.scheduleAbsolute(null, time(3), function () { list.push(new Timestamped(3, s.now())); });
+    s.scheduleAbsolute(null, time(4), function () { s.stop(); });
+    s.scheduleAbsolute(null, time(5), function () { s.start(); });
+    s.scheduleAbsolute(null, time(6), function () { list.push(new Timestamped(4, s.now())); });
 
     s.start();
 
@@ -88,12 +91,12 @@
 
     var list = [];
 
-    s.scheduleAbsolute(time(2), function () { list.push(new Timestamped(2, s.now())); });
+    s.scheduleAbsolute(null, time(2), function () { list.push(new Timestamped(2, s.now())); });
 
-    s.scheduleAbsolute(time(3), function () { list.push(new Timestamped(3, s.now())); });
+    s.scheduleAbsolute(null, time(3), function () { list.push(new Timestamped(3, s.now())); });
 
-    s.scheduleAbsolute(time(1), function () { list.push(new Timestamped(0, s.now())); });
-    s.scheduleAbsolute(time(1), function () { list.push(new Timestamped(1, s.now())); });
+    s.scheduleAbsolute(null, time(1), function () { list.push(new Timestamped(0, s.now())); });
+    s.scheduleAbsolute(null, time(1), function () { list.push(new Timestamped(1, s.now())); });
 
     s.start();
 
@@ -110,9 +113,9 @@
 
     var list = [];
 
-    var d = s.scheduleAbsolute(time(2), function () { list.push(new Timestamped(2, s.now())); });
+    var d = s.scheduleAbsolute(null, time(2), function () { list.push(new Timestamped(2, s.now())); });
 
-    s.scheduleAbsolute(time(1), function () {
+    s.scheduleAbsolute(null, time(1), function () {
       list.push(new Timestamped(0, s.now()));
       d.dispose();
     });
@@ -129,11 +132,11 @@
 
     var list = [];
 
-    s.scheduleAbsolute(time(0), function () { list.push(new Timestamped(0, s.now())); });
-    s.scheduleAbsolute(time(1), function () { list.push(new Timestamped(1, s.now())); });
-    s.scheduleAbsolute(time(2), function () { list.push(new Timestamped(2, s.now())); });
-    s.scheduleAbsolute(time(10), function () { list.push(new Timestamped(10, s.now())); });
-    s.scheduleAbsolute(time(11), function () { list.push(new Timestamped(11, s.now())); });
+    s.scheduleAbsolute(null, time(0), function () { list.push(new Timestamped(0, s.now())); });
+    s.scheduleAbsolute(null, time(1), function () { list.push(new Timestamped(1, s.now())); });
+    s.scheduleAbsolute(null, time(2), function () { list.push(new Timestamped(2, s.now())); });
+    s.scheduleAbsolute(null, time(10), function () { list.push(new Timestamped(10, s.now())); });
+    s.scheduleAbsolute(null, time(11), function () { list.push(new Timestamped(11, s.now())); });
 
     s.advanceTo(time(8));
 
@@ -157,8 +160,8 @@
       new Timestamped(2, time(2))
     ]);
 
-    s.scheduleAbsolute(time(7), function () { list.push(new Timestamped(7, s.now())); });
-    s.scheduleAbsolute(time(8), function () { list.push(new Timestamped(8, s.now())); });
+    s.scheduleAbsolute(null, time(7), function () { list.push(new Timestamped(7, s.now())); });
+    s.scheduleAbsolute(null, time(8), function () { list.push(new Timestamped(8, s.now())); });
 
     equal(time(8), s.now());
     equal(time(8), s.clock);
@@ -204,11 +207,11 @@
 
     var list = [];
 
-    s.scheduleAbsolute(time(0), function () { list.push(new Timestamped(0, s.now())); });
-    s.scheduleAbsolute(time(1), function () { list.push(new Timestamped(1, s.now())); });
-    s.scheduleAbsolute(time(2), function () { list.push(new Timestamped(2, s.now())); });
-    s.scheduleAbsolute(time(10), function () { list.push(new Timestamped(10, s.now())); });
-    s.scheduleAbsolute(time(11), function () { list.push(new Timestamped(11, s.now())); });
+    s.scheduleAbsolute(null, time(0), function () { list.push(new Timestamped(0, s.now())); });
+    s.scheduleAbsolute(null, time(1), function () { list.push(new Timestamped(1, s.now())); });
+    s.scheduleAbsolute(null, time(2), function () { list.push(new Timestamped(2, s.now())); });
+    s.scheduleAbsolute(null, time(10), function () { list.push(new Timestamped(10, s.now())); });
+    s.scheduleAbsolute(null, time(11), function () { list.push(new Timestamped(11, s.now())); });
 
     s.advanceBy(time(8) - s.now());
 
@@ -221,8 +224,8 @@
       new Timestamped(2, time(2))
     ]);
 
-    s.scheduleAbsolute(time(7), function () { list.push(new Timestamped(7, s.now())); });
-    s.scheduleAbsolute(time(8), function () { list.push(new Timestamped(8, s.now())); });
+    s.scheduleAbsolute(null, time(7), function () { list.push(new Timestamped(7, s.now())); });
+    s.scheduleAbsolute(null, time(8), function () { list.push(new Timestamped(8, s.now())); });
 
     equal(time(8), s.now());
     equal(time(8), s.clock);
@@ -330,8 +333,8 @@
 
     var res = [];
 
-    s.scheduleAbsolute(now - 1000, function () { res.push(1); });
-    s.scheduleAbsolute(now - 2000, function () { res.push(2); });
+    s.scheduleAbsolute(null, now - 1000, function () { res.push(1); });
+    s.scheduleAbsolute(null, now - 2000, function () { res.push(2); });
 
     s.start();
 

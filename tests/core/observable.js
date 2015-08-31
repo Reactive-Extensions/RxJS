@@ -1,16 +1,18 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok */
+
   QUnit.module('Observable');
 
-  var Scheduler = Rx.Scheduler,
-      Observable = Rx.Observable;
+  var Observable = Rx.Observable;
 
-  test('Subscribe_None_Return', function () {
+  test('subscribe none return', function () {
     Observable.just(1).subscribe();
 
     ok(true);
   });
 
-  test('Subscribe_None_Throw', function () {
+  test('subscribe none throw', function () {
     var e, error = new Error();
 
     try {
@@ -22,7 +24,7 @@
     equal(e, error);
   });
 
-  test('Subscribe_None_Empty', function () {
+  test('subscribe none return', function () {
     Observable.empty().subscribe(function () {
       ok(false);
     });
@@ -30,13 +32,13 @@
     ok(true);
   });
 
-  test('Subscribe_OnNext_Return', function () {
+  test('subscribe onNext return', function () {
     var x1;
     Observable.just(42).subscribe(function (x) { x1 = x; });
     equal(42, x1);
   });
 
-  test('Subscribe_OnNext_Throw', function () {
+  test('subscribe onNext throw', function () {
     var e;
     var error = new Error();
 
@@ -49,15 +51,15 @@
     equal(e, error);
   });
 
-  test('Subscribe_OnNext_Empty', function () {
-    Observable.empty().subscribe(function (x) {
+  test('subscribe onNext empty', function () {
+    Observable.empty().subscribe(function () {
       ok(false);
     });
 
     ok(true);
   });
 
-  test('Subscribe_OnNext_Empty', function () {
+  test('subscribe onNext empty finished', function () {
     var finished = false, x1 = -1;
 
     Observable.just(42).subscribe(
@@ -73,7 +75,7 @@
     ok(finished);
   });
 
-  test('Subscribe_OnNextOnCompleted_Throw', function () {
+  test('subscribe onNext, onCompleted throw', function () {
     var e;
     var error = new Error();
 
@@ -93,7 +95,7 @@
     equal(error, e);
   });
 
-  test('Subscribe_OnNextOnCompleted_Empty', function () {
+  test('subscribe onNext onCompleted empty', function () {
     var finished = false;
     Observable.empty().subscribe(
       function () {
@@ -107,7 +109,7 @@
     ok(finished);
   });
 
-  test('SubscribeNext_Empty', function () {
+  test('subscribeOnNext next empty', function () {
     Observable.empty().subscribeOnNext(function () {
       ok(false);
     });
@@ -129,15 +131,17 @@
     equal(error, e1);
   });
 
-  test('SubscribeNext_Next', function () {
+  test('subscribeOnNext return', function () {
     var val;
+
     Observable.just(42).subscribeOnNext(function (v) {
       val = v;
     });
+
     equal(42, val);
   });
 
-  test('SubscribeNext_ThisArg', function () {
+  test('subscribeonNext thisArg', function () {
     var val, thisArg = 56;
 
     Observable.just(42).subscribeOnNext(function (v) {
@@ -148,7 +152,7 @@
     equal(42, val);
   });
 
-  test('SubscribeError_Empty', function () {
+  test('subscribeOnError empty', function () {
     Observable.empty().subscribeOnError(function () {
       ok(false);
     });
@@ -156,8 +160,8 @@
     ok(true);
   });
 
-  test('SubscribeError_Throw', function () {
-    var error = new Error, err;
+  test('subscribeOnError throw', function () {
+    var error = new Error(), err;
 
     Observable['throw'](error).subscribeOnError(function (e) {
       err = e;
@@ -166,7 +170,7 @@
     equal(err, error);
   });
 
-  test('SubscribeError_Next', function () {
+  test('subscirbeOnError next', function () {
     Observable.just(42).subscribeOnError(function () {
       ok(false);
     });
@@ -174,16 +178,16 @@
     ok(true);
   });
 
-  test('SubscribeError_ThisArg', function () {
+  test('subscribeOnError thisArg', function () {
     var thisArg = 56, that;
     Observable['throw'](new Error()).subscribeOnError(function () {
-      that = this;;
+      that = this;
     }, thisArg);
 
     equal(thisArg, that);
   });
 
-  test('SubscribeCompleted_Empty', function () {
+  test('subscribeOnCompleted empty', function () {
     var hit = false;
     Observable.empty().subscribeOnCompleted(function () {
       hit = true;
@@ -192,7 +196,7 @@
     ok(hit);
   });
 
-  test('SubscribeCompleted_Throw', function () {
+  test('subscribeOnCompleted throw', function () {
     var error = new Error(), e1;
     try {
       Observable['throw'](error).subscribeOnCompleted(function () {
@@ -204,19 +208,23 @@
     equal(error, e1);
   });
 
-  test('SubscribeCompleted_Next', function () {
+  test('subscribeOnCompleted completed', function () {
     var hit = false;
+
     Observable.just(42).subscribeOnCompleted(function () {
       hit = true;
     });
+
     ok(hit);
   });
 
-  test('SubscribeCompleted_ThisArg', function () {
+  test('subscribeOnCompleted thisArg', function () {
     var thisArg = 56, that;
+
     Observable.just(42).subscribeOnCompleted(function () {
       that = this;
     }, thisArg);
+
     equal(that, thisArg);
   });
 

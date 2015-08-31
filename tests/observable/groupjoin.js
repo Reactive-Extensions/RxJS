@@ -1,4 +1,7 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal */
+
   QUnit.module('GroupJoin');
 
   var TestScheduler = Rx.TestScheduler,
@@ -53,12 +56,12 @@
       var xsd = [];
       var ysd = [];
 
-      var res = scheduler.startWithCreate(function (){
+      var res = scheduler.startScheduler(function (){
         return xs.groupJoin(
           ys,
           function (x) { return newTimer(xsd, x.interval, scheduler); },
           function (y) { return newTimer(ysd, y.interval, scheduler); },
-          function (x, yy) { return yy.map(function (y) { return x.value + y.value; })})
+          function (x, yy) { return yy.map(function (y) { return x.value + y.value; }); })
         .mergeAll();
       });
 
@@ -129,12 +132,12 @@
     var xsd = [];
     var ysd = [];
 
-    var res = scheduler.startWithCreate(function (){
+    var res = scheduler.startScheduler(function (){
       return xs.groupJoin(
         ys,
         function (x) { return newTimer(xsd, x.interval, scheduler); },
         function (y) { return newTimer(ysd, y.interval, scheduler); },
-        function (x, yy) { return yy.map(function (y) { return x.value + y.value; })})
+        function (x, yy) { return yy.map(function (y) { return x.value + y.value; }); })
       .mergeAll();
     });
 
@@ -200,7 +203,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler).filter(function () { return false; });
       }, function (y) {
@@ -263,7 +266,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(980));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -325,7 +328,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(900));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -388,7 +391,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(900));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -441,7 +444,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(900));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -465,7 +468,7 @@
       onNext(220, new TimeInterval('hat', 100)),
       onCompleted(230));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -559,7 +562,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -608,7 +611,7 @@
       onNext(712, new TimeInterval('man', 10)),
       onError(722, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -668,7 +671,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler).flatMap(x.value === 6 ? Observable['throw'](error) : Observable.empty());
       }, function (y) {
@@ -731,7 +734,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -791,7 +794,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         if (x.value >= 0) { throw error; }
         return Observable.empty();
@@ -837,7 +840,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -883,7 +886,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -929,7 +932,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {

@@ -1,5 +1,8 @@
 (function () {
-  QUnit.module('NotificationTest');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok */
+
+  QUnit.module('Notification');
 
   var createOnNext = Rx.Notification.createOnNext,
       createOnError = Rx.Notification.createOnError,
@@ -79,7 +82,7 @@
     var n1 = createOnNext(42);
 
     var results = n1.accept(new AcceptObserver(
-      function (x) {
+      function () {
         return 'OK';
       },
       function () {
@@ -118,7 +121,7 @@
     var n1 = createOnNext(42);
 
     var results = n1.accept(
-      function (x) {
+      function () {
         return 'OK';
       },
       function () {
@@ -339,7 +342,7 @@
   test('toObservable empty', function () {
     var scheduler = new Rx.TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return createOnCompleted().toObservable(scheduler);
     });
 
@@ -351,8 +354,8 @@
   test('toObservable just', function () {
     var scheduler = new Rx.TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
-        return createOnNext(42).toObservable(scheduler);
+    var results = scheduler.startScheduler(function () {
+      return createOnNext(42).toObservable(scheduler);
     });
 
     results.messages.assertEqual(
@@ -366,7 +369,7 @@
 
     var scheduler = new Rx.TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return createOnError(error).toObservable(scheduler);
     });
 

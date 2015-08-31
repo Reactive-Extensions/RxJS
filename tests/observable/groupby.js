@@ -626,7 +626,7 @@
       scheduler.scheduleAbsolute(null, 400, function () {
         outerSubscription.dispose();
         for (var key in innerSubscriptions) {
-          if (!Object.prototype.hasOwnProperty.call(innerSubscriptions, key)) { continue; }
+
           innerSubscriptions[key].dispose();
         }
       });
@@ -711,7 +711,7 @@
     scheduler.scheduleAbsolute(null, disposed, function () {
       outerSubscription.dispose();
       for (var key in innerSubscriptions) {
-        if (!Object.prototype.hasOwnProperty.call(innerSubscriptions, key)) { continue; }
+
         innerSubscriptions[key].dispose();
       }
     });
@@ -796,7 +796,7 @@
     scheduler.scheduleAbsolute(null, disposed, function () {
       outerSubscription.dispose();
       for (var key in innerSubscriptions) {
-        if (!Object.prototype.hasOwnProperty.call(innerSubscriptions, key)) { continue; }
+
         innerSubscriptions[key].dispose();
       }
     });
@@ -885,7 +885,7 @@
     scheduler.scheduleAbsolute(null, disposed, function () {
       outerSubscription.dispose();
       for (var key in innerSubscriptions) {
-        if (!Object.prototype.hasOwnProperty.call(innerSubscriptions, key)) { continue; }
+
         innerSubscriptions[key].dispose();
       }
     });
@@ -978,7 +978,7 @@
     scheduler.scheduleAbsolute(null, disposed, function () {
       outerSubscription.dispose();
       for (var key in innerSubscriptions) {
-        if (!Object.prototype.hasOwnProperty.call(innerSubscriptions, key)) { continue; }
+
         innerSubscriptions[key].dispose();
       }
     });
@@ -1072,7 +1072,7 @@
     scheduler.scheduleAbsolute(null, disposed, function () {
       outerSubscription.dispose();
       for (var key in innerSubscriptions) {
-        if (!Object.prototype.hasOwnProperty.call(innerSubscriptions, key)) { continue; }
+
         innerSubscriptions[key].dispose();
       }
     });

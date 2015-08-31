@@ -1,4 +1,7 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+
   QUnit.module('If');
 
   var Observable = Rx.Observable,
@@ -18,10 +21,10 @@
 
     var ys = scheduler.createHotObservable(
       onNext(310, 3),
-      onNext(350, 4), 
+      onNext(350, 4),
       onCompleted(400));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['if'](function () { return true; }, xs, ys);
     });
 
@@ -49,7 +52,7 @@
       onNext(350, 4),
       onCompleted(400));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['if'](function () { return false; }, xs, ys);
     });
 
@@ -79,7 +82,7 @@
       onNext(350, 4),
       onCompleted(400));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['if'](function () { throw error; }, xs, ys);
     });
 
@@ -103,7 +106,7 @@
       onNext(350, 4),
       onCompleted(400));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['if'](function () { return true; }, xs, ys);
     });
 
@@ -128,11 +131,11 @@
       onNext(330, 3),
       onCompleted(440));
 
-    scheduler.scheduleAbsolute(150, function () {
+    scheduler.scheduleAbsolute(null, 150, function () {
       b = true;
     });
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['if'](function () { return b; }, xs);
     });
 
@@ -158,11 +161,11 @@
       onNext(330, 3),
       onError(440, error));
 
-    scheduler.scheduleAbsolute(150, function () {
+    scheduler.scheduleAbsolute(null, 150, function () {
       b = true;
     });
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['if'](function () { return b; }, xs);
     });
 
@@ -185,11 +188,11 @@
       onNext(220, 2),
       onNext(330, 3));
 
-    scheduler.scheduleAbsolute(150, function () {
+    scheduler.scheduleAbsolute(null, 150, function () {
       b = true;
     });
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['if'](function () { return b; }, xs);
     });
 
@@ -212,11 +215,11 @@
       onNext(330, 3),
       onError(440, new Error()));
 
-    scheduler.scheduleAbsolute(150, function () {
+    scheduler.scheduleAbsolute(null, 150, function () {
       b = false;
     });
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['if'](function () { return b; }, xs);
     });
 
