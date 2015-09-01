@@ -1,24 +1,32 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok */
   QUnit.module('Observer');
 
   var Observer = Rx.Observer;
 
-  test('Create_OnNext', function () {
-    var next, res;
-    next = false;
-    res = Observer.create(function (x) {
+  test('create onNext', function () {
+    var next = false;
+
+    var res = Observer.create(function (x) {
       equal(42, x);
       next = true;
     });
+
     res.onNext(42);
+
     ok(next);
-    return res.onCompleted();
+
+    res.onCompleted();
   });
 
-  test('Create_OnNext_HasError', function () {
+  test('create onNext has error', function () {
     var e_;
-    var ex = new Error();
+
+    var err = new Error();
+
     var next = false;
+
     var res = Observer.create(function (x) {
       equal(42, x);
       next = true;
@@ -28,22 +36,24 @@
     ok(next);
 
     try {
-      res.onError(ex);
+      res.onError(err);
       ok(false);
     } catch (e) {
       e_ = e;
     }
-    equal(ex, e_);
+    equal(err, e_);
   });
 
-  test('Create_OnNextOnCompleted', function () {
+  test('create onNext onCompleted', function () {
     var next = false;
+
     var completed = false;
+
     var res = Observer.create(function (x) {
       equal(42, x);
-      return next = true;
-    }, undefined, function () {
-      return completed = true;
+      next = true;
+    }, null, function () {
+      completed = true;
     });
 
     res.onNext(42);
@@ -56,39 +66,46 @@
     ok(completed);
   });
 
-  test('Create_OnNextOnCompleted_HasError', function () {
+  test('create onNext onCompleted has error', function () {
     var e_;
-    var ex = new Error();
+
+    var err = new Error();
+
     var next = false;
     var completed = false;
+
     var res = Observer.create(function (x) {
       equal(42, x);
       next = true;
-    }, undefined, function () {
+    }, null, function () {
       completed = true;
     });
+
     res.onNext(42);
+
     ok(next);
     ok(!completed);
+
     try {
-      res.onError(ex);
+      res.onError(err);
       ok(false);
     } catch (e) {
       e_ = e;
     }
-    equal(ex, e_);
+
+    equal(err, e_);
     ok(!completed);
   });
 
-  test('Create_OnNextOnError', function () {
-    var ex = new Error();
+  test('create onNext onError', function () {
+    var err = new Error();
     var next = true;
     var error = false;
     var res = Observer.create(function (x) {
       equal(42, x);
       next = true;
     }, function (e) {
-      equal(ex, e);
+      equal(err, e);
       error = true;
     });
 
@@ -97,23 +114,26 @@
     ok(next);
     ok(!error);
 
-    res.onError(ex);
+    res.onError(err);
     ok(error);
   });
 
-  test('Create_OnNextOnError_HitCompleted', function () {
-    var ex = new Error();
+  test('create onNext onError hit completed', function () {
+    var err = new Error();
+
     var next = true;
     var error = false;
+
     var res = Observer.create(function (x) {
       equal(42, x);
       next = true;
     }, function (e) {
-      equal(ex, e);
+      equal(err, e);
       error = true;
     });
 
     res.onNext(42);
+
     ok(next);
     ok(!error);
 
@@ -122,16 +142,18 @@
     ok(!error);
   });
 
-  test('Create_OnNextOnErrorOnCompleted1', function () {
-    var ex = new Error();
-    var next = true;
+  test('create onNext onError onCompleted 1', function () {
+    var err = new Error();
+
+    var next = false;
     var error = false;
     var completed = false;
+
     var res = Observer.create(function (x) {
       equal(42, x);
       next = true;
     }, function (e) {
-      equal(ex, e);
+      equal(err, e);
       error = true;
     }, function () {
       completed = true;
@@ -149,16 +171,18 @@
     ok(!error);
   });
 
-  test('Create_OnNextOnErrorOnCompleted2', function () {
-    var ex = new Error();
-    var next = true;
+  test('create onNext onError onCompleted 2', function () {
+    var err = new Error();
+
+    var next = false;
     var error = false;
     var completed = false;
+
     var res = Observer.create(function (x) {
       equal(42, x);
       next = true;
     }, function (e) {
-      equal(ex, e);
+      equal(err, e);
       error = true;
     }, function () {
       completed = true;
@@ -170,7 +194,7 @@
     ok(!error);
     ok(!completed);
 
-    res.onError(ex);
+    res.onError(err);
 
     ok(!completed);
     ok(error);

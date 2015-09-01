@@ -1,17 +1,19 @@
-QUnit.module('Let');
+(function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, ok */
+  QUnit.module('let');
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  var Observable = Rx.Observable;
 
-test('Let_CallsFunctionImmediately', function () {
+  test('let calls function immediately', function () {
     var called = false;
-    Observable.empty().letBind(function (x) {
-        called = true;
-        return x;
+
+    Observable.empty()['let'](function (x) {
+      called = true;
+      return x;
     });
+
     ok(called);
-});
+  });
+
+}());

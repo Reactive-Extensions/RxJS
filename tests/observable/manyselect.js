@@ -1,5 +1,7 @@
 (function () {
-  QUnit.module('ManySelect');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, ok */
+  QUnit.module('manySelect');
 
   var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
@@ -8,7 +10,7 @@
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe;
 
-  test('ManySelect Law 1', function () {
+  test('manySelect Law 1', function () {
     var xs = Observable.range(1, 0);
 
     var left = xs.manySelect(function (x) { return x.first(); });
@@ -17,7 +19,7 @@
     left.sequenceEqual(right).first().subscribe(ok);
   });
 
-  test('ManySelect Basic', function () {
+  test('manySelect Basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -28,7 +30,7 @@
       onCompleted(500)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.manySelect(function (ys) { return ys.first(); }, scheduler).mergeAll();
     });
 
@@ -44,7 +46,7 @@
     );
   });
 
-  test('ManySelect Error', function () {
+  test('manySelect Error', function () {
     var scheduler = new TestScheduler();
 
     var ex = new Error();
@@ -57,8 +59,8 @@
       onError(500, ex)
     );
 
-    var res = scheduler.startWithCreate(function () {
-      return xs.manySelect(function (ys) { return ys.first(); }, scheduler).mergeAll();;
+    var res = scheduler.startScheduler(function () {
+      return xs.manySelect(function (ys) { return ys.first(); }, scheduler).mergeAll();
     });
 
     res.messages.assertEqual(
@@ -72,5 +74,5 @@
       subscribe(200, 500)
     );
   });
-  
+
 }());

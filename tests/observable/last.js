@@ -1,4 +1,6 @@
 (function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal */
   QUnit.module('last');
 
   var TestScheduler = Rx.TestScheduler,
@@ -15,11 +17,13 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last();
     });
 
-    ok(res.messages[0].time === 250 && res.messages[0].value.exception !== null);
+    results.messages.assertEqual(
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+    );
 
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
@@ -32,11 +36,11 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last({defaultValue: 42});
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(250, 42),
       onCompleted(250)
     );
@@ -53,11 +57,11 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last();
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(250, 2),
       onCompleted(250)
     );
@@ -75,11 +79,11 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last();
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(250, 3),
       onCompleted(250)
     );
@@ -97,11 +101,11 @@
       onError(210, ex)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last();
     });
 
-    res.messages.assertEqual(onError(210, ex));
+    results.messages.assertEqual(onError(210, ex));
 
     xs.subscriptions.assertEqual(subscribe(200, 210));
   });
@@ -118,13 +122,13 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last(function (x) {
         return x % 2 === 1;
       });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(250, 5),
       onCompleted(250)
     );
@@ -144,7 +148,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last({
         predicate: function (x) {
           return x % 2 === 1;
@@ -152,7 +156,7 @@
       });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(250, 5),
       onCompleted(250)
     );
@@ -172,14 +176,14 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last(function (x) {
         equal(this, 42);
         return x % 2 === 1;
       }, 42);
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(250, 5),
       onCompleted(250)
     );
@@ -199,7 +203,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last({
         predicate: function (x) {
           equal(this, 42);
@@ -209,7 +213,7 @@
       });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(250, 5),
       onCompleted(250)
     );
@@ -229,13 +233,15 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last(function (x) {
         return x > 10;
       });
     });
 
-    ok(res.messages[0].time === 250 && res.messages[0].value.exception !== null);
+    results.messages.assertEqual(
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+    );
 
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
@@ -252,7 +258,7 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last({
         predicate: function (x) {
           return x > 10;
@@ -261,7 +267,7 @@
       });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(250, 42),
       onCompleted(250)
     );
@@ -279,18 +285,18 @@
       onError(210, ex)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last(function (x) {
         return x % 2 === 1;
       });
     });
 
-    res.messages.assertEqual(onError(210, ex));
+    results.messages.assertEqual(onError(210, ex));
 
     xs.subscriptions.assertEqual(subscribe(200, 210));
   });
 
-  test('last predicateThrows', function () {
+  test('last predicate throws', function () {
     var ex = new Error();
 
     var scheduler = new TestScheduler();
@@ -304,17 +310,16 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.last(function (x) {
         if (x < 4) {
           return x % 2 === 1;
-        } else {
-          throw ex;
         }
+        throw ex;
       });
     });
 
-    res.messages.assertEqual(onError(230, ex));
+    results.messages.assertEqual(onError(230, ex));
 
     xs.subscriptions.assertEqual(subscribe(200, 230));
   });

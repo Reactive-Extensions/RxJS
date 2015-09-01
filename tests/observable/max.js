@@ -1,183 +1,199 @@
-QUnit.module('Max');
+(function () {
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('max');
 
-var TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  function reverseComparer(a, b) {
+    return a > b ? -1 : a < b ? 1 : 0;
+  }
 
-test('Max_Int32_Empty', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onCompleted(250)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
+  var TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted;
+
+  test('max number empty', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.max();
+    });
+
+    results.messages.assertEqual(
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+    );
+  });
+
+  test('max number Return', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.max();
+    });
+
+    results.messages.assertEqual(
+      onNext(250, 2),
+      onCompleted(250));
+  });
+
+  test('max number Some', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 3),
+      onNext(220, 4),
+      onNext(230, 2),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.max();
+    });
+
+    results.messages.assertEqual(
+      onNext(250, 4),
+      onCompleted(250));
+  });
+
+  test('max number throw', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(210, error));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.max();
+    });
+
+    results.messages.assertEqual(
+      onError(210, error));
+  });
+
+  test('max number Never', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1));
+
+    var results = scheduler.startScheduler(function () {
         return xs.max();
-    }).messages;
-    equal(1, res.length);
-    ok(res[0].value.kind === 'E' && res[0].value.exception !== null);
-    ok(res[0].time === 250);
-});
+    });
 
-test('Max_Int32_Return', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onNext(210, 2), onCompleted(250)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max();
-    }).messages;
-    res.assertEqual(onNext(250, 2), onCompleted(250));
-});
+    results.messages.assertEqual();
+  });
 
-test('Max_Int32_Some', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onNext(210, 3), onNext(220, 4), onNext(230, 2), onCompleted(250)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max();
-    }).messages;
-    res.assertEqual(onNext(250, 4), onCompleted(250));
-});
+  test('max comparer empty', function () {
+    var scheduler = new TestScheduler();
 
-test('Max_Int32_Throw', function () {
-    var ex, msgs, res, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onError(210, ex)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max();
-    }).messages;
-    res.assertEqual(onError(210, ex));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(250));
 
-test('Max_Int32_Never', function () {
-    var msgs, res, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1)];
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max();
-    }).messages;
-    res.assertEqual();
-});
+    var results = scheduler.startScheduler(function () {
+      return xs.max(reverseComparer);
+    });
 
-test('MaxOfT_Comparer_Empty', function () {
-    var msgs, res, reverseComparer, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 1), onCompleted(250)];
-    reverseComparer = function (a, b) {
-        if (a > b) {
-            return -1;
-        }
-        if (a < b) {
-            return 1;
-        }
-        return 0;
-    };
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max(reverseComparer);
-    }).messages;
-    equal(1, res.length);
-    ok(res[0].value.kind === 'E' && res[0].value.exception !== null);
-    ok(res[0].time === 250);
-});
+    results.messages.assertEqual(
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+    );
+  });
 
-test('MaxOfT_Comparer_Return', function () {
-    var msgs, res, reverseComparer, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 'z'), onNext(210, 'a'), onCompleted(250)];
-    reverseComparer = function (a, b) {
-        if (a > b) {
-            return -1;
-        }
-        if (a < b) {
-            return 1;
-        }
-        return 0;
-    };
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max(reverseComparer);
-    }).messages;
-    res.assertEqual(onNext(250, 'a'), onCompleted(250));
-});
+  test('max comparer return', function () {
+    var scheduler = new TestScheduler();
 
-test('MaxOfT_Comparer_Some', function () {
-    var msgs, res, reverseComparer, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 'z'), onNext(210, 'b'), onNext(220, 'c'), onNext(230, 'a'), onCompleted(250)];
-    reverseComparer = function (a, b) {
-        if (a > b) {
-            return -1;
-        }
-        if (a < b) {
-            return 1;
-        }
-        return 0;
-    };
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max(reverseComparer);
-    }).messages;
-    res.assertEqual(onNext(250, 'a'), onCompleted(250));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(150, 'z'),
+      onNext(210, 'a'),
+      onCompleted(250));
 
-test('MaxOfT_Comparer_Throw', function () {
-    var ex, msgs, res, reverseComparer, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 'z'), onError(210, ex)];
-    reverseComparer = function (a, b) {
-        if (a > b) {
-            return -1;
-        }
-        if (a < b) {
-            return 1;
-        }
-        return 0;
-    };
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max(reverseComparer);
-    }).messages;
-    res.assertEqual(onError(210, ex));
-});
+    var results = scheduler.startScheduler(function () {
+      return xs.max(reverseComparer);
+    });
 
-test('MaxOfT_Comparer_Never', function () {
-    var msgs, res, reverseComparer, scheduler, xs;
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 'z')];
-    reverseComparer = function (a, b) {
-        if (a > b) {
-            return -1;
-        }
-        if (a < b) {
-            return 1;
-        }
-        return 0;
-    };
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max(reverseComparer);
-    }).messages;
-    res.assertEqual();
-});
+    results.messages.assertEqual(
+      onNext(250, 'a'),
+      onCompleted(250));
+  });
 
-test('MaxOfT_ComparerThrows', function () {
-    var ex, msgs, res, reverseComparer, scheduler, xs;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs = [onNext(150, 'z'), onNext(210, 'b'), onNext(220, 'c'), onNext(230, 'a'), onCompleted(250)];
-    reverseComparer = function (a, b) {
-        throw ex;
-    };
-    xs = scheduler.createHotObservable(msgs);
-    res = scheduler.startWithCreate(function () {
-        return xs.max(reverseComparer);
-    }).messages;
-    res.assertEqual(onError(220, ex));
-});
+  test('max comparer some', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 'z'),
+      onNext(210, 'b'),
+      onNext(220, 'c'),
+      onNext(230, 'a'),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.max(reverseComparer);
+    });
+
+    results.messages.assertEqual(
+      onNext(250, 'a'),
+      onCompleted(250));
+  });
+
+  test('max comparer throw', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 'z'),
+      onError(210, error));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.max(reverseComparer);
+    });
+
+    results.messages.assertEqual(
+      onError(210, error));
+  });
+
+  test('max comparer never', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 'z'));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.max(reverseComparer);
+    });
+
+    results.messages.assertEqual();
+  });
+
+  test('max comparer throws', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 'z'),
+      onNext(210, 'b'),
+      onNext(220, 'c'),
+      onNext(230, 'a'),
+      onCompleted(250));
+
+    var results = scheduler.startScheduler(function () {
+      return xs.max(function () { throw error; });
+    });
+
+    results.messages.assertEqual(
+      onError(220, error));
+  });
+
+}());

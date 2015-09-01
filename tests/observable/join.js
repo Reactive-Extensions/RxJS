@@ -1,19 +1,21 @@
 (function () {
-  QUnit.module('Join');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+
+  QUnit.module('join');
 
   var TestScheduler = Rx.TestScheduler,
       Observable = Rx.Observable,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
-      onCompleted = Rx.ReactiveTest.onCompleted,
-      subscribe = Rx.ReactiveTest.subscribe;
+      onCompleted = Rx.ReactiveTest.onCompleted;
 
   function TimeInterval(value, interval) {
     this.value = value;
     this.interval = interval;
   }
 
-  test('JoinOp_Normal_I', function () {
+  test('join normal I', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -42,11 +44,11 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
@@ -77,7 +79,7 @@
       onCompleted(900));
   });
 
-  test('JoinOp_Normal_II', function () {
+  test('join normal II', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -105,11 +107,11 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(990));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
@@ -139,7 +141,7 @@
       onCompleted(910));
   });
 
-  test('JoinOp_Normal_III', function () {
+  test('join normal III', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -168,7 +170,7 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler).filter(function () {
           return false;
@@ -207,7 +209,7 @@
       onCompleted(900));
   });
 
-  test('JoinOp_Normal_IV', function () {
+  test('join normal IV', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -235,11 +237,11 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(980));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
@@ -269,7 +271,7 @@
       onCompleted(980));
   });
 
-  test('JoinOp_Normal_V', function () {
+  test('join normal V', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -297,11 +299,11 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(900));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
@@ -331,7 +333,7 @@
       onCompleted(922));
   });
 
-  test('JoinOp_Normal_VI', function () {
+  test('join normal VI', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -360,11 +362,11 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(900));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
@@ -393,7 +395,7 @@
       onCompleted(900));
   });
 
-  test('JoinOp_Normal_VII', function () {
+  test('join normal VII', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -422,15 +424,15 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
-    }, 713);
+    }, { disposed: 713 });
 
     results.messages.assertEqual(
       onNext(215, '0hat'),
@@ -448,7 +450,7 @@
       onNext(712, '7man'));
   });
 
-  test('JoinOp_Error_I', function () {
+  test('join error I', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -470,18 +472,18 @@
       onNext(702, new TimeInterval('tin', 20)),
       onNext(712, new TimeInterval('man', 10)),
       onNext(722, new TimeInterval('rat', 200)),
-       onNext(732, new TimeInterval('wig', 5)),
-       onCompleted(800));
+      onNext(732, new TimeInterval('wig', 5)),
+      onCompleted(800));
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
-    }, 713);
+    }, { disposed: 713 });
 
     results.messages.assertEqual(
       onNext(215, '0hat'),
@@ -493,7 +495,7 @@
       onError(310, error));
   });
 
-  test('JoinOp_Error_II', function () {
+  test('join error II', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -522,11 +524,11 @@
       onNext(712, new TimeInterval('man', 10)),
       onError(722, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
@@ -551,7 +553,7 @@
       onError(722, error));
   });
 
-  test('JoinOp_Error_III', function () {
+  test('join error III', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -582,12 +584,12 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler)
           .flatMap(x.value === 6 ? Observable['throw'](error) : Observable.empty());
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
@@ -615,7 +617,7 @@
       onError(725, error));
   });
 
-  test('JoinOp_Error_IV', function () {
+  test('join error IV', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -646,9 +648,9 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
         return Observable.timer(y.interval, null, scheduler)
           .flatMap(y.value === 'tin' ? Observable['throw'](error) : Observable.empty());
@@ -676,7 +678,7 @@
       onError(721, error));
   });
 
-  test('JoinOp_Error_V', function () {
+  test('join error V', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -707,12 +709,12 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
         if (x.value >= 0) { throw error; }
         return Observable.empty();
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         return x.value + y.value;
       });
@@ -722,7 +724,7 @@
       onError(210, error));
   });
 
-  test('JoinOp_Error_VI', function () {
+  test('join error VI', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -753,9 +755,9 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
         if (y.value.length >= 0) { throw error; }
         return Observable.empty();
@@ -768,7 +770,7 @@
       onError(215, error));
   });
 
-  test('JoinOp_Error_VII', function () {
+  test('join error VII', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -799,11 +801,11 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         if (x.value >= 0) { throw error; }
         return x.value + y.value;
@@ -814,7 +816,7 @@
       onError(215, error));
   });
 
-  test('JoinOp_Error_VIII', function () {
+  test('join error VIII', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -845,11 +847,11 @@
       onNext(732, new TimeInterval('wig', 5)),
       onCompleted(800));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.join(ys, function (x) {
-        return Observable.timer(x.interval, null, scheduler);
+        return Observable.timer(x.interval, scheduler);
       }, function (y) {
-        return Observable.timer(y.interval, null, scheduler);
+        return Observable.timer(y.interval, scheduler);
       }, function (x, y) {
         if (x.value >= 0) { throw error; }
         return x.value + y.value;

@@ -77,7 +77,7 @@
     res.onCompleted();
   });
 
-  test('Create_OnNext_HasError', function () {
+  test('create OnNext has error', function () {
     var e_;
     var error = new Error();
     var next = false;
@@ -98,14 +98,16 @@
     equal(error, e_);
   });
 
-  test('Create_OnNextOnCompleted', function () {
+  test('create OnNext OnCompleted', function () {
     var next = false;
+
     var completed = false;
+
     var res = Observer.create(function (x) {
         equal(42, x);
-        return next = true;
-    }, undefined, function () {
-        return completed = true;
+        next = true;
+    }, null, function () {
+        completed = true;
     });
 
     res.onNext(42);
@@ -193,11 +195,11 @@
 
     res.onNext(42);
     ok(next);
-    ok(!error);
+    ok(!hasError);
 
     res.onCompleted();
 
-    ok(!error);
+    ok(!hasError);
   });
 
   test('Create OnNext OnError OnCompleted 1', function () {
@@ -252,13 +254,13 @@
     res.onNext(42);
 
     ok(next);
-    ok(!error);
+    ok(!hasError);
     ok(!completed);
 
     res.onError(error);
 
     ok(!completed);
-    ok(error);
+    ok(hasError);
   });
 
   function MyObserver() {
