@@ -1,17 +1,16 @@
 (function () {
-  QUnit.module('MergeAll');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, RSVP, asyncTest, start, ok, equal */
+  QUnit.module('mergeAll');
 
-  var Observable = Rx.Observable,
-      TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted,
-      subscribe = Rx.ReactiveTest.subscribe,
       isEqual = Rx.internals.isEqual;
 
-    isEqual = Rx.internals.isEqual;
 
-  asyncTest('MergeAll_Task', function () {
+  asyncTest('mergeAll Task', function () {
     var sources = Rx.Observable.fromArray([
       new RSVP.Promise(function (res) { res(0); }),
       new RSVP.Promise(function (res) { res(1); }),
@@ -24,7 +23,7 @@
       function (x) {
         res.push(x);
       },
-      function (err) {
+      function () {
         ok(false);
         start();
       },
@@ -34,7 +33,7 @@
       });
   });
 
-  asyncTest('MergeAll_Task_Error', function () {
+  asyncTest('mergeAll Task Error', function () {
     var sources = Rx.Observable.fromArray([
       new RSVP.Promise(function (res) { res(0); }),
       new RSVP.Promise(function (res, rej) { rej(1); }),
@@ -58,7 +57,7 @@
       });
   });
 
-  test('Merge_ObservableOfObservable_Data', function () {
+  test('mergeAll Observable of Observable data', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -88,7 +87,7 @@
           onCompleted(150))),
       onCompleted(600));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.mergeAll();
     });
 
@@ -111,7 +110,7 @@
       onCompleted(650));
   });
 
-  test('Merge_ObservableOfObservable_Data_NonOverlapped', function () {
+  test('mergeAll Observable of Observable data non-overlapped', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -136,7 +135,7 @@
           onCompleted(50))),
       onCompleted(600));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.mergeAll();
     });
 
@@ -154,7 +153,7 @@
       onCompleted(600));
   });
 
-  test('Merge_ObservableOfObservable_InnerThrows', function () {
+  test('mergeAll Observable of Observable inner throws', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -181,7 +180,7 @@
           onCompleted(50))),
       onCompleted(600));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.mergeAll();
     });
 
@@ -195,7 +194,7 @@
       onError(450, error));
   });
 
-  test('Merge_ObservableOfObservable_OuterThrows', function () {
+  test('mergeAll Observable of Observable outer throws', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -215,7 +214,7 @@
           onCompleted(50))),
       onError(500, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.mergeAll();
     });
 

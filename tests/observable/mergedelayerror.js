@@ -1,12 +1,13 @@
 (function () {
-  QUnit.module('MergeDelayError');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('mergeDelayError');
 
   var Observable = Rx.Observable,
       TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
-      onCompleted = Rx.ReactiveTest.onCompleted,
-      subscribe = Rx.ReactiveTest.subscribe;
+      onCompleted = Rx.ReactiveTest.onCompleted;
 
   test('mergeDelayError never never', function () {
     var scheduler = new TestScheduler();
@@ -18,7 +19,7 @@
       onNext(160, 1)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -37,7 +38,7 @@
       onCompleted(260)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -58,7 +59,7 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -83,7 +84,7 @@
       onCompleted(270)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2, o3);
     });
 
@@ -103,7 +104,7 @@
       onNext(160, 1)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -121,7 +122,7 @@
       onCompleted(260)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -140,7 +141,7 @@
       onNext(160, 1)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -161,7 +162,7 @@
       onNext(160, 1)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o2, o1);
     });
 
@@ -184,7 +185,7 @@
       onNext(160, 1)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -207,7 +208,7 @@
       onNext(160, 1)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o2, o1);
     });
 
@@ -231,7 +232,7 @@
       onCompleted(260)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -256,7 +257,7 @@
       onCompleted(260)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o2, o1);
     });
 
@@ -280,7 +281,7 @@
       onCompleted(260)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -309,7 +310,7 @@
       onError(260, error2)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o2, o1);
     });
 
@@ -338,7 +339,7 @@
       onCompleted(260)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -367,7 +368,7 @@
       onCompleted(260)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o2, o1);
     });
 
@@ -396,7 +397,7 @@
       onError(260, error) // Error dropped
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o1, o2);
     });
 
@@ -427,7 +428,7 @@
       onError(260, error) // Error dropped
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return Observable.mergeDelayError(o2, o1);
     });
 
