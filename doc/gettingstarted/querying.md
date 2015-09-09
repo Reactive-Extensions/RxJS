@@ -213,7 +213,7 @@ Note that if you are using any of the `buffer*` or `window*` operators, you have
 
 ## Operators by Categories ##
 
-The [Operators by Categories](operators.md) topic lists of all major operators implemented by the `Observable` type by their categories; specifically: creation, conversion, combine, functional, mathematical, time, exceptions, miscellaneous, selection and primitives.
+The [Operators by Categories](categories.md) topic lists of all major operators implemented by the `Observable` type by their categories; specifically: creation, conversion, combine, functional, mathematical, time, exceptions, miscellaneous, selection and primitives.
 
 ## See Also ##
 
@@ -221,4 +221,4 @@ The [Operators by Categories](operators.md) topic lists of all major operators i
  - [Observable](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md)
 
 *Concepts*
-- [Operators by Categories](operators.md)
+- [Operators by Categories](categories.md)
