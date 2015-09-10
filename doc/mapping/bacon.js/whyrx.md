@@ -161,22 +161,25 @@ source.subscribeOnNext(function (value) {
 // => 3
 ```
 
-Generators also give the developer pretty powerful capabilities when dealing with asynchronous actions.  RxJS introduced the `Rx.spawn` method which allows you to write async/await style code over Observables, Promises, Arrays, and just plain objects.
+Generators also give the developer pretty powerful capabilities when dealing with asynchronous actions.  RxJS introduced the `Rx.Observable.spawn` method which allows you to write async/await style code over Observables, Promises, Arrays, and just plain objects.
 
 ```js
-Rx.spawn(function* () {
+var spawned = Rx.Observable.spawn(function* () {
   var x = yield Rx.Observable.just(42);
   var y = yield Promise.resolve(42);
   console.log(x + y);
 
   try {
-    var source = yield Rx.Observable.throwError(new Error('woops'));
+    var source = yield Rx.Observable.throw(new Error('woops'));
+    console.log('Source is: %s', source);
   } catch (e) {
-    console.log(e.message);
+    console.log('Catched: %s', e.message);
   }
-})();
+});
+
+spawned.subscribe();
 // => 84
-// => woops
+// => Source is: Error: woops
 ```
 
 ### Promises ###
@@ -341,7 +344,7 @@ source.subscribeOnError(
 
 As people try to learn RxJS, it's always great to have [examples](https://github.com/Reactive-Extensions/RxJS/tree/master/examples) to get them started.  To that end, RxJS ships a number of examples out of the box including simple scenarios such as Autocomplete, Follow the Mouse, Drawing, to more complete examples like databinding using a little demo project called `TKO`, to a complete game of Alphabet Invasion.
 
-Want to learn RxJS at your own pace?  We also have tutorials for that as well called [LearnRx](http://jhusain.github.io/learnrx/) which will walk you through the basics of learning to compose arrays, and then how that applies to observable sequences.
+Want to learn RxJS at your own pace?  We also have tutorials for that as well called [LearnRx](http://reactivex.io/learnrx/) which will walk you through the basics of learning to compose arrays, and then how that applies to observable sequences.
 
 There are also many [community resources](https://github.com/Reactive-Extensions/RxJS#resources) to learn RxJS from videos, to presentations, to examples with integration with such libraries as AngularJS and React.
 
