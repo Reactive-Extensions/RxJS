@@ -1,4 +1,4 @@
-﻿(function () {
+(function () {
 
     // Non-standard custom operator
     Rx.Observable.random = function (low, high, intervalLow, intervalHigh, howMany, scheduler) {
@@ -90,7 +90,7 @@
             if (window.localStorage) {
                 var hs = window.localStorage.getItem(HIGH_SCORE_STORAGE_KEY);
                 if (hs !== null) {
-                    this.highScore.innerText = hs;
+                    this.highScore.textContent = hs;
                 }
             }
         };
@@ -113,7 +113,7 @@
             var config = levels[level];
 
             this.gameState = GameState.playing;
-            this.level.innerText = this.currentLevel;
+            this.level.textContent = this.currentLevel;
             this.showMessage(title);
 
             // nested method to handle the actual gameplay loop
@@ -121,7 +121,7 @@
             var play = function () {
                 self.hideMessage();
                 var enemiesThisLevel = self.currentLevel * 2 + 13;
-                self.remainingEnemies.innerText = enemiesThisLevel;
+                self.remainingEnemies.textContent = enemiesThisLevel;
 
                 var capitalLetterProbability = 1 - ((self.currentLevel * 2.5) / 100);
                 var killed = 0;
@@ -144,11 +144,11 @@
                         return;
                     }
                     var key = e.shiftKey ? String.fromCharCode(e.keyCode) : String.fromCharCode(e.keyCode).toLowerCase();
-                    console.log('key pressed: ' + key + ' enemy text: ' + self.enemies[0].innerText);
-                    if (key === self.enemies[0].innerText) {
+                    console.log('key pressed: ' + key + ' enemy text: ' + self.enemies[0].textContent);
+                    if (key === self.enemies[0].textContent) {
                         var enemy = self.enemies.shift();
                         self.killEnemy(enemy);
-                        self.remainingEnemies.innerText = enemiesThisLevel - ++killed;
+                        self.remainingEnemies.textContent = enemiesThisLevel - ++killed;
 
                         if (self.enemies.length === 0 && allEnemiesLaunched) {
                             self.nextLevel();
@@ -230,7 +230,7 @@
             for (var i = 0, len = this.enemies.length; i < len; i++) {
                 var enemy = this.enemies[i];
                 if (enemy !== this.enemies[0]) {
-                    enemy.innerText = ':P';
+                    enemy.textContent = ':P';
                     enemy.className += ' rotate';
                     enemy.style.fontSize = '72px';
                 }
@@ -249,7 +249,7 @@
             // adjust the enemy visual
             enemy.style.color = 'red';
             enemy.style.fontSize = '48px';
-            enemy.innerText = '@';
+            enemy.textContent = '@';
 
             // calculate a score
             var v = enemy.offsetTop;
@@ -294,7 +294,7 @@
             enemy.style.top = this.playfield.offsetTop + 'px';
             enemy.style.left = (Math.random() * (this.playfield.clientWidth - 25)) + 'px';
             enemy.className = 'enemy';
-            enemy.innerText = v;
+            enemy.textContent = v;
 
             // update the tracking queue and add the enemy to the DOM
             this.enemies.push(enemy);
@@ -302,11 +302,11 @@
         };
 
         AlphabetInvasion.prototype.addToScore = function (amount) {
-            var newScore = parseInt(this.score.innerText) + amount;
-            this.score.innerText = newScore;
+            var newScore = parseInt(this.score.textContent) + amount;
+            this.score.textContent = newScore;
 
-            if (newScore > parseInt(this.highScore.innerText)) {
-                this.highScore.innerText = newScore;
+            if (newScore > parseInt(this.highScore.textContent)) {
+                this.highScore.textContent = newScore;
                 if (window.localStorage){
                     window.localStorage.setItem(HIGH_SCORE_STORAGE_KEY, newScore);
                 }
@@ -319,9 +319,9 @@
 
             this.currentLevel = 1;
 
-            this.score.innerText = '0';
-            this.level.innerText = '1';
-            this.remainingEnemies.innerText = '-';
+            this.score.textContent = '0';
+            this.level.textContent = '1';
+            this.remainingEnemies.textContent = '-';
 
             this.clearPlayfield();
 
@@ -354,7 +354,7 @@
             for (var i = 0, len = msg.length; i < len; i++) {
                 (function (i) {
                     Rx.Observable.just(i).delay(30 * i).subscribe(function (x) {
-                        self.message.innerText = msg.substring(0, x + 1);
+                        self.message.textContent = msg.substring(0, x + 1);
                     });
                 })(i);
             }
