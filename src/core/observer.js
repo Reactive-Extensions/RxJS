@@ -47,9 +47,6 @@
 
   /**
    *  Creates an observer from a notification callback.
-   *
-   * @static
-   * @memberOf Observer
    * @param {Function} handler Action that handles a notification.
    * @returns The observer object that invokes the specified handler using a notification corresponding to each message it receives.
    */
