@@ -1,23 +1,19 @@
 (function () {
-  QUnit.module('SelectManyObserver');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('selectManyObserver');
 
   var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
-    SerialDisposable = Rx.SerialDisposable,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed,
-    isEqual = Rx.internals.isEqual;
+    subscribe = Rx.ReactiveTest.subscribe;
 
-  function throwError(err) {
-    throw err;
-  }
+  function throwError(err) { throw err; }
 
-  test('SelectMany_Triple_Identity', function () {
+  test('selectManyObserver identity', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -29,7 +25,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.just(x, scheduler); },
         function (err) { return Observable['throw'](err, scheduler); },
@@ -51,7 +47,7 @@
     );
   });
 
-  test('SelectMany_Triple_InnersWithTiming1', function () {
+  test('selectManyObserver inners with timing 1', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -80,7 +76,7 @@
       onCompleted(20)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return ysn; },
         function (err) { return yse; },
@@ -128,7 +124,7 @@
     );
   });
 
-  test('SelectMany_Triple_InnersWithTiming2', function () {
+  test('selectManyObserver inners with timing 2', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -157,7 +153,7 @@
       onCompleted(50)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return ysn; },
         function (err) { return yse; },
@@ -205,7 +201,7 @@
     );
   });
 
-  test('SelectMany_Triple_InnersWithTiming3', function () {
+  test('selectManyObserver inners with timing 3', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -234,7 +230,7 @@
       onCompleted(100)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return ysn; },
         function (err) { return yse; },
@@ -282,7 +278,7 @@
     );
   });
 
-  test('SelectMany_Triple_Error_Identity', function () {
+  test('selectManyObserver error identity', function () {
     var scheduler = new TestScheduler();
 
     var err = new Error();
@@ -296,7 +292,7 @@
         onError(305, err)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.just(x, scheduler); },
         function (ex1) { return Observable['throw'](ex1, scheduler); },
@@ -318,7 +314,7 @@
     );
   });
 
-  test('SelectMany_Triple_SelectMany', function () {
+  test('selectManyObserver selectMany', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -330,7 +326,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.repeat(x, x, scheduler); },
         function (err) { return Observable['throw'](err, scheduler); },
@@ -357,7 +353,7 @@
     );
   });
 
-  test('SelectMany_Triple_Concat', function () {
+  test('selectManyObserver Concat', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -369,7 +365,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.just(x, scheduler); },
         function (err) { return Observable['throw'](err, scheduler); },
@@ -394,7 +390,7 @@
     );
   });
 
-  test('SelectMany_Triple_Catch', function () {
+  test('selectManyObserver Catch', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -406,7 +402,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.just(x, scheduler); },
         function (err) { return Observable.range(1, 3, scheduler); },
@@ -428,7 +424,7 @@
     );
   });
 
-  test('SelectMany_Triple_Error_Catch', function () {
+  test('selectManyObserver error Catch', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -440,7 +436,7 @@
         onError(305, new Error())
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.just(x, scheduler); },
         function (err) { return Observable.range(1, 3, scheduler); },
@@ -465,7 +461,7 @@
     );
   });
 
-  test('SelectMany_Triple_All', function () {
+  test('selectManyObserver all', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -477,7 +473,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.repeat(x, x, scheduler); },
         function (err) { return Observable.repeat(0, 2, scheduler); },
@@ -506,7 +502,7 @@
     );
   });
 
-  test('SelectMany_Triple_Error_All', function () {
+  test('selectManyObserver error all', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -518,7 +514,7 @@
       onError(305, new Error())
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.repeat(x, x, scheduler); },
         function (err) { return Observable.repeat(0, 2, scheduler); },
@@ -547,7 +543,7 @@
     );
   });
 
-  test('SelectMany_Triple_All_Dispose', function () {
+  test('selectManyObserver all dispose', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -559,13 +555,13 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithDispose(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.repeat(x, x, scheduler); },
-        function (err) { return Observable.repeat(0, 2, scheduler); },
+        function () { return Observable.repeat(0, 2, scheduler); },
         function () { return Observable.repeat(-1, 2, scheduler); }
       );
-    }, 307);
+    }, { disposed: 307 });
 
     res.messages.assertEqual(
       onNext(302, 1),
@@ -584,7 +580,7 @@
     );
   });
 
-  test('SelectMany_Triple_All_Dispose_Before_First', function () {
+  test('selectManyObserver all dispose before first', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -596,13 +592,13 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithDispose(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.repeat(x, x, scheduler); },
-        function (err) { return Observable.repeat(0, 2, scheduler); },
+        function () { return Observable.repeat(0, 2, scheduler); },
         function () { return Observable.repeat(-1, 2, scheduler); }
       );
-    }, 304);
+    }, { disposed: 304 });
 
     res.messages.assertEqual(
       onNext(302, 1),
@@ -614,7 +610,7 @@
     );
   });
 
-  test('SelectMany_Triple_OnNextThrow', function () {
+  test('selectManyObserver on next throw', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -628,10 +624,10 @@
 
     var err = new Error();
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
-        function (x) { return throwError(err); },
-        function (ex1) { return Observable.repeat(0, 2, scheduler); },
+        function () { return throwError(err); },
+        function () { return Observable.repeat(0, 2, scheduler); },
         function () { return Observable.repeat(-1, 2, scheduler); }
       );
     });
@@ -645,7 +641,7 @@
     );
   });
 
-  test('SelectMany_Triple_OnErrorThrow', function () {
+  test('selectManyObserver on errror throw', function () {
     var scheduler = new TestScheduler();
 
     var err = new Error();
@@ -659,10 +655,10 @@
       onError(305, new Error())
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.repeat(x, x, scheduler); },
-        function (ex1) { throw err; },
+        function () { throw err; },
         function () { return Observable.repeat(-1, 2, scheduler); }
       );
     });
@@ -680,7 +676,7 @@
     );
   });
 
-  test('SelectMany_Triple_OnCompletedThrow', function () {
+  test('selectManyObserver on completed throw', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -694,10 +690,10 @@
 
     var err = new Error();
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x) { return Observable.repeat(x, x, scheduler); },
-        function (ex1) { return Observable.repeat(0, 2, scheduler); },
+        function () { return Observable.repeat(0, 2, scheduler); },
         function () { throw err; }
       );
     });
@@ -715,7 +711,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_Identity', function () {
+  test('selectManyObserver with index identity', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -727,9 +723,9 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
-        function (x, _) { return Observable.just(x, scheduler); },
+        function (x) { return Observable.just(x, scheduler); },
         function (err) { return Observable['throw'](err, scheduler); },
         function () { return Observable.empty(scheduler); }
       );
@@ -749,7 +745,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_InnersWithTiming1', function () {
+  test('selectManyObserver with index inners with timing 1', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -778,7 +774,7 @@
       onCompleted(20)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return  ysn; },
         function (err) { return yse; },
@@ -826,7 +822,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_InnersWithTiming2', function () {
+  test('selectManyObserver with index inners with timing 2', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -855,7 +851,7 @@
       onCompleted(50)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return ysn; },
         function (err) { return yse; },
@@ -903,7 +899,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_InnersWithTiming3', function () {
+  test('selectManyObserver with index inners with timing 3', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -932,7 +928,7 @@
       onCompleted(100)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return ysn; },
         function (err) { return yse; },
@@ -980,7 +976,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_Error_Identity', function () {
+  test('selectManyObserver with index error identity', function () {
     var scheduler = new TestScheduler();
 
     var err = new Error();
@@ -994,7 +990,7 @@
       onError(305, err)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return Observable.just(x, scheduler); },
         function (ex1) { return Observable['throw'](ex1, scheduler); },
@@ -1016,7 +1012,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_SelectMany', function () {
+  test('selectManyObserver with index selectMany', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1028,7 +1024,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return Observable.repeat(x, x, scheduler); },
         function (err) { return Observable['throw'](err, scheduler); },
@@ -1055,7 +1051,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_Concat', function () {
+  test('selectManyObserver with index Concat', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1067,7 +1063,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return  Observable.just(x, scheduler); },
         function (err) { return Observable['throw'](err, scheduler); },
@@ -1092,7 +1088,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_Catch', function () {
+  test('selectManyObserver with index Catch', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1104,7 +1100,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return  Observable.just(x, scheduler); },
         function (err) { return Observable.range(1, 3, scheduler); },
@@ -1126,7 +1122,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_Error_Catch', function () {
+  test('selectManyObserver with index error Catch', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1138,7 +1134,7 @@
       onError(305, new Error())
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return  Observable.just(x, scheduler); },
         function (err) { return Observable.range(1, 3, scheduler); },
@@ -1163,7 +1159,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_All', function () {
+  test('selectManyObserver with index all', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1175,7 +1171,7 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
           function (x, _) { return Observable.repeat(x, x, scheduler); },
           function (err) { return Observable.repeat(0, 2, scheduler); },
@@ -1204,7 +1200,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_Error_All', function () {
+  test('selectManyObserver with index error all', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1216,7 +1212,7 @@
       onError(305, new Error())
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return Observable.repeat(x, x, scheduler); },
         function (err) { return Observable.repeat(0, 2, scheduler); },
@@ -1245,7 +1241,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_All_Dispose', function () {
+  test('selectManyObserver with index all dispose', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1257,13 +1253,13 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithDispose(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
-        function (x, _) { return Observable.repeat(x, x, scheduler); },
-        function (err) { return Observable.repeat(0, 2, scheduler); },
+        function (x) { return Observable.repeat(x, x, scheduler); },
+        function () { return Observable.repeat(0, 2, scheduler); },
         function () { return Observable.repeat(-1, 2, scheduler); }
       );
-    }, 307);
+    }, { disposed: 307 });
 
     res.messages.assertEqual(
       onNext(302, 1),
@@ -1282,7 +1278,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_All_Dispose_Before_First', function () {
+  test('selectManyObserver with index all dispose before first', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1294,13 +1290,13 @@
       onCompleted(305)
     );
 
-    var res = scheduler.startWithDispose(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
-        function (x, _) { return Observable.repeat(x, x, scheduler); },
-        function (err) { return Observable.repeat(0, 2, scheduler); },
+        function (x) { return Observable.repeat(x, x, scheduler); },
+        function () { return Observable.repeat(0, 2, scheduler); },
         function () { return Observable.repeat(-1, 2, scheduler); }
       );
-    }, 304);
+    }, { disposed: 304 });
 
     res.messages.assertEqual(
       onNext(302, 1),
@@ -1312,7 +1308,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_OnNextThrow', function () {
+  test('selectManyObserver with index on next throw', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1326,7 +1322,7 @@
 
     var err = new Error();
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { throw err; },
         function (ex1) { Observable.repeat(0, 2, scheduler); },
@@ -1343,7 +1339,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_OnErrorThrow', function () {
+  test('selectManyObserver with index on errror throw', function () {
     var scheduler = new TestScheduler();
 
     var err = new Error();
@@ -1357,7 +1353,7 @@
       onError(305, new Error())
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return Observable.repeat(x, x, scheduler); },
         function (ex1) { throw err; },
@@ -1378,7 +1374,7 @@
     );
   });
 
-  test('SelectManyWithIndex_Triple_OnCompletedThrow', function () {
+  test('selectManyObserver with index on completed throw', function () {
       var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1392,7 +1388,7 @@
 
     var err = new Error();
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.selectManyObserver(
         function (x, _) { return Observable.repeat(x, x, scheduler); },
         function (ex1) { return Observable.repeat(0, 2, scheduler); },
@@ -1412,5 +1408,5 @@
       subscribe(200, 305)
     );
   });
-  
+
 }());

@@ -1,7 +1,10 @@
 if (!!window.Map) {
   (function () {
 
-    QUnit.module('ToMap');
+    'use strict';
+    /* jshint undef: true, unused: true */
+    /* globals QUnit, test, Rx */
+    QUnit.module('toMap');
 
     var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
@@ -17,7 +20,7 @@ if (!!window.Map) {
       return arr;
     }
 
-    test('toMap_Completed', function () {
+    test('toMap completed', function () {
       var scheduler = new TestScheduler();
 
       var xs = scheduler.createHotObservable(
@@ -29,7 +32,7 @@ if (!!window.Map) {
         onCompleted(660)
       );
 
-      var res = scheduler.startWithCreate(function () {
+      var res = scheduler.startScheduler(function () {
         return xs.toMap(function (x){ return x * 2; }, function (x) { return x * 4; }).map(extractValues);
       });
 
@@ -43,10 +46,10 @@ if (!!window.Map) {
       );
     });
 
-    test('toMap_Error', function () {
+    test('toMap error', function () {
       var scheduler = new TestScheduler();
 
-      var ex = new Error();
+      var error = new Error();
 
       var xs = scheduler.createHotObservable(
         onNext(110, 1),
@@ -54,15 +57,15 @@ if (!!window.Map) {
         onNext(330, 3),
         onNext(440, 4),
         onNext(550, 5),
-        onError(660, ex)
+        onError(660, error)
       );
 
-      var res = scheduler.startWithCreate(function () {
+      var res = scheduler.startScheduler(function () {
         return xs.toMap(function (x) { return x * 2; }, function (x) { return x * 4; }).map(extractValues);
       });
 
       res.messages.assertEqual(
-        onError(660, ex)
+        onError(660, error)
       );
 
       xs.subscriptions.assertEqual(
@@ -70,10 +73,10 @@ if (!!window.Map) {
       );
     });
 
-    test('toMap_KeySelectorThrows', function () {
+    test('toMap key selector throws', function () {
       var scheduler = new TestScheduler();
 
-      var ex = new Error();
+      var error = new Error();
 
       var xs = scheduler.createHotObservable(
         onNext(110, 1),
@@ -84,12 +87,12 @@ if (!!window.Map) {
         onCompleted(600)
       );
 
-      var res = scheduler.startWithCreate(function () {
-        return xs.toMap(function (x) { if (x < 4) { return x * 2; } else { throw ex; } }, function (x) { return x * 4; }).map(extractValues);
+      var res = scheduler.startScheduler(function () {
+        return xs.toMap(function (x) { if (x < 4) { return x * 2; } else { throw error; } }, function (x) { return x * 4; }).map(extractValues);
       });
 
       res.messages.assertEqual(
-        onError(440, ex)
+        onError(440, error)
       );
 
       xs.subscriptions.assertEqual(
@@ -97,10 +100,10 @@ if (!!window.Map) {
       );
     });
 
-    test('toMap_ElementSelectorThrows', function () {
+    test('toMap element selector throws', function () {
       var scheduler = new TestScheduler();
 
-      var ex = new Error();
+      var error = new Error();
 
       var xs = scheduler.createHotObservable(
           onNext(110, 1),
@@ -111,12 +114,12 @@ if (!!window.Map) {
           onCompleted(600)
       );
 
-      var res = scheduler.startWithCreate(function () {
-        return xs.toMap(function (x) { return x * 2; }, function (x) { if (x < 4) { return x * 4; } else { throw ex; } }).map(extractValues);
+      var res = scheduler.startScheduler(function () {
+        return xs.toMap(function (x) { return x * 2; }, function (x) { if (x < 4) { return x * 4; } else { throw error; } }).map(extractValues);
       });
 
       res.messages.assertEqual(
-        onError(440, ex)
+        onError(440, error)
       );
 
       xs.subscriptions.assertEqual(
@@ -124,7 +127,7 @@ if (!!window.Map) {
       );
     });
 
-    test('toMap_Disposed', function () {
+    test('toMap disposed', function () {
       var scheduler = new TestScheduler();
 
       var xs = scheduler.createHotObservable(
@@ -135,7 +138,7 @@ if (!!window.Map) {
         onNext(550, 5)
       );
 
-      var res = scheduler.startWithCreate(function () {
+      var res = scheduler.startScheduler(function () {
         return xs.toMap(function (x) { return x * 2; }, function (x) { return x * 4; }).map(extractValues);
       });
 

@@ -1,7 +1,10 @@
 if (!!window.Set) {
   (function () {
+    'use strict';
+    /* jshint undef: true, unused: true */
+    /* globals QUnit, test, Rx */
 
-    QUnit.module('ToSet');
+    QUnit.module('toSet');
 
     var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
@@ -17,7 +20,7 @@ if (!!window.Set) {
       return arr;
     }
 
-    test('ToSet_Completed', function () {
+    test('toSet completed', function () {
       var scheduler = new TestScheduler();
 
       var xs = scheduler.createHotObservable(
@@ -29,7 +32,7 @@ if (!!window.Set) {
         onCompleted(660)
       );
 
-      var results = scheduler.startWithCreate(function () {
+      var results = scheduler.startScheduler(function () {
         return xs.toSet().map(extractValues);
       });
 
@@ -43,7 +46,7 @@ if (!!window.Set) {
       );
     });
 
-    test('ToSet_Error', function () {
+    test('toSet error', function () {
       var error = new Error();
 
       var scheduler = new TestScheduler();
@@ -57,7 +60,7 @@ if (!!window.Set) {
         onError(660, error)
       );
 
-      var results = scheduler.startWithCreate(function () {
+      var results = scheduler.startScheduler(function () {
         return xs.toSet().map(extractValues);
       });
 
@@ -70,7 +73,7 @@ if (!!window.Set) {
       );
     });
 
-    test('ToSet_Disposed', function () {
+    test('toSet disposed', function () {
       var scheduler = new TestScheduler();
 
       var xs = scheduler.createHotObservable(
@@ -81,7 +84,7 @@ if (!!window.Set) {
         onNext(550, 5)
       );
 
-      var results = scheduler.startWithCreate(function () {
+      var results = scheduler.startScheduler(function () {
         return xs.toSet().map(extractValues);
       });
 

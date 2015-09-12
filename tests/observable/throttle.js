@@ -1,7 +1,7 @@
-/* jshint undef: true, unused: true */
-/* globals QUnit, test, Rx */
-
 (function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
   QUnit.module('throttle');
 
   var TestScheduler = Rx.TestScheduler,
@@ -24,7 +24,7 @@
       onCompleted(500)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.throttle(200, scheduler);
     });
 
@@ -46,7 +46,7 @@
       onNext(150, 1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.throttle(200, scheduler);
     });
 
@@ -66,7 +66,7 @@
       onCompleted(500)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.throttle(200, scheduler);
     });
 
@@ -95,7 +95,7 @@
       onCompleted(500)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.throttle(200, scheduler);
     });
 
@@ -122,7 +122,7 @@
       onNext(450, 7)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.throttle(200, scheduler);
     });
 

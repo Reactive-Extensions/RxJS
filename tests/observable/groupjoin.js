@@ -2,7 +2,7 @@
   /* jshint undef: true, unused: true */
   /* globals QUnit, test, Rx, equal */
 
-  QUnit.module('GroupJoin');
+  QUnit.module('groupJoin');
 
   var TestScheduler = Rx.TestScheduler,
       Observable = Rx.Observable,
@@ -22,7 +22,7 @@
     return timer;
   }
 
-  test('GroupJoinOp_Normal_I', function () {
+  test('groupJoin normal I', function () {
       var scheduler = new TestScheduler();
 
       var xs = scheduler.createHotObservable(
@@ -99,7 +99,7 @@
       );
   });
 
-  test('GroupJoinOp_Normal_II', function () {
+  test('groupJoin normal II', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -174,7 +174,7 @@
     );
   });
 
-  test('GroupJoinOp_Normal_III', function () {
+  test('groupJoin normal III', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -238,7 +238,7 @@
       onCompleted(990));
   });
 
-  test('GroupJoinOp_Normal_IV', function () {
+  test('groupJoin normal IV', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -300,7 +300,7 @@
       onCompleted(990));
   });
 
-  test('GroupJoinOp_Normal_V', function () {
+  test('groupJoin normal V', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -362,7 +362,7 @@
       onCompleted(990));
   });
 
-  test('GroupJoinOp_Normal_VI', function () {
+  test('groupJoin normal VI', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -425,7 +425,7 @@
       onCompleted(920));
   });
 
-  test('GroupJoinOp_Normal_VII', function () {
+  test('groupJoin normal VII', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -458,7 +458,7 @@
       onCompleted(210));
   });
 
-  test('GroupJoinOp_Normal_VIII', function () {
+  test('groupJoin normal VIII', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -482,7 +482,7 @@
       onNext(220, '0hat'));
   });
 
-  test('GroupJoinOp_Normal_IX', function () {
+  test('groupJoin normal IX', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -509,9 +509,10 @@
       onNext(712, new TimeInterval('man', 10)),
       onNext(722, new TimeInterval('rat', 200)),
       onNext(732, new TimeInterval('wig', 5)),
-      onCompleted(800));
+      onCompleted(800)
+    );
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.groupJoin(ys, function (x) {
         return Observable.timer(x.interval, null, scheduler);
       }, function (y) {
@@ -519,7 +520,7 @@
       }, function (x, yy) {
         return yy.map(function (y) { return x.value + y.value; });
       }).mergeAll();
-    }, 713);
+    }, { disposed: 713 });
 
     results.messages.assertEqual(
       onNext(215, '0hat'),
@@ -537,7 +538,7 @@
       onNext(712, '7man'));
   });
 
-  test('GroupJoinOp_Error_I', function () {
+  test('groupJoin Error I', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -582,7 +583,7 @@
       onError(310, error));
   });
 
-  test('GroupJoinOp_Error_II', function () {
+  test('groupJoin Error II', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -640,7 +641,7 @@
       onError(722, error));
   });
 
-  test('GroupJoinOp_Error_III', function () {
+  test('groupJoin Error III', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -703,7 +704,7 @@
       onError(725, error));
   });
 
-  test('GroupJoinOp_Error_IV', function () {
+  test('groupJoin Error IV', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -763,7 +764,7 @@
       onError(721, error));
   });
 
-  test('GroupJoinOp_Error_V', function () {
+  test('groupJoin Error V', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -809,7 +810,7 @@
       onError(210, error));
   });
 
-  test('GroupJoinOp_Error_VI', function () {
+  test('groupJoin Error VI', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -855,7 +856,7 @@
       onError(215, error));
   });
 
-  test('GroupJoinOp_Error_VII', function () {
+  test('groupJoin Error VII', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -901,7 +902,7 @@
       onError(215, error));
   });
 
-  test('GroupJoinOp_Error_VIII', function () {
+  test('groupJoin Error VIII', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();

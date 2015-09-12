@@ -2,7 +2,7 @@
   /* jshint undef: true, unused: true */
   /* globals QUnit, test, Rx */
 
-  QUnit.module('BufferWithCount');
+  QUnit.module('bufferWithCount');
 
   var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
@@ -11,7 +11,7 @@
       subscribe = Rx.ReactiveTest.subscribe;
 
 
-  test('Buffer Count PartialWindow', function () {
+  test('bufferWithCount partial window', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -32,7 +32,7 @@
     );
   });
 
-  test('Buffer Count FullWindows', function () {
+  test('bufferWithCount full windows', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -54,7 +54,7 @@
     );
   });
 
-  test('Buffer Count FullAndPartialWindows', function () {
+  test('bufferWithCount full and partial windows', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -71,12 +71,12 @@
 
     results.messages.assertEqual(
       onNext(230, [2,3,4]),
-      onNext(240, [5]),
+      onNext(250, [5]),
       onCompleted(250)
     );
   });
 
-  test('Buffer Count Error', function () {
+  test('bufferWithCount Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -98,7 +98,7 @@
     );
   });
 
-  test('Buffer Count Skip Less', function () {
+  test('bufferWithCount skip less', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -122,7 +122,7 @@
     );
   });
 
-  test('Buffer Count Skip More', function () {
+  test('bufferWithCount skip more', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -144,7 +144,7 @@
     );
   });
 
-  test('BufferWithCount Basic', function () {
+  test('bufferWithCount basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -173,7 +173,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 600));
   });
 
-  test('BufferWithCount Disposed', function () {
+  test('BufferWithCount disposed', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(

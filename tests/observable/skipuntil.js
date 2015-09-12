@@ -1,126 +1,210 @@
-QUnit.module('SkipUntil');
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, ok */
+  QUnit.module('skipUntil');
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted;
 
-test('SkipUntil_SomeData_Next', function () {
-    var l, lMsgs, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    rMsgs = [onNext(150, 1), onNext(225, 99), onCompleted(230)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
+  test('skipUntil some data next', function () {
+    var scheduler = new TestScheduler();
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(225, 99),
+      onCompleted(230)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
     });
-    results.messages.assertEqual(onNext(230, 4), onNext(240, 5), onCompleted(250));
-});
+    results.messages.assertEqual(
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+  });
 
-test('SkipUntil_SomeData_Error', function () {
-    var ex, l, lMsgs, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    ex = 'ex';
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    rMsgs = [onNext(150, 1), onError(225, ex)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
-    });
-    results.messages.assertEqual(onError(225, ex));
-});
+  test('skipUntil some data error', function () {
+    var scheduler = new TestScheduler();
 
-test('SkipUntil_SomeData_Empty', function () {
-    var l, lMsgs, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    rMsgs = [onNext(150, 1), onCompleted(225)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
+    var error = new Error();
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(225, error)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
     });
+
+    results.messages.assertEqual(
+      onError(225, error)
+    );
+  });
+
+  test('skipUntil some data empty', function () {
+    var scheduler = new TestScheduler();
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(225)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
+    });
+
     results.messages.assertEqual();
-});
+  });
 
-test('SkipUntil_Never_Next', function () {
-    var l, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    rMsgs = [onNext(150, 1), onNext(225, 2), onCompleted(250)];
-    l = Observable.never();
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
+  test('skipUntil never next', function () {
+    var scheduler = new TestScheduler();
+
+    var l = Observable.never();
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(225, 2),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
     });
+
     results.messages.assertEqual();
-});
+  });
 
-test('SkipUntil_Never_Error', function () {
-    var ex, l, r, rMsgs, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    rMsgs = [onNext(150, 1), onError(225, ex)];
-    l = Observable.never();
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
-    });
-    results.messages.assertEqual(onError(225, ex));
-});
+  test('skipUntil never error', function () {
+    var error = new Error();
 
-test('SkipUntil_SomeData_Never', function () {
-    var l, lMsgs, r, results, scheduler;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = Observable.never();
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
+    var scheduler = new TestScheduler();
+
+    var l = Observable.never();
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(225, error));
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
     });
+
+    results.messages.assertEqual(
+      onError(225, error)
+    );
+  });
+
+  test('skipUntil some data Never', function () {
+    var scheduler = new TestScheduler();
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var r = Observable.never();
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
+    });
+
     results.messages.assertEqual();
-});
+  });
 
-test('SkipUntil_Never_Empty', function () {
-    var l, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    rMsgs = [onNext(150, 1), onCompleted(225)];
-    l = Observable.never();
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
-    });
-    results.messages.assertEqual();
-});
+  test('skipUntil never empty', function () {
+    var scheduler = new TestScheduler();
 
-test('SkipUntil_Never_Never', function () {
-    var l, r, results, scheduler;
-    scheduler = new TestScheduler();
-    l = Observable.never();
-    r = Observable.never();
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
-    });
-    results.messages.assertEqual();
-});
+    var l = Observable.never();
 
-test('SkipUntil_HasCompletedCausesDisposal', function () {
-    var disposed, l, lMsgs, r, results, scheduler;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    disposed = false;
-    l = scheduler.createHotObservable(lMsgs);
-    r = Observable.create(function () {
-        return function () {
-            disposed = true;
-        };
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(225)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
     });
-    results = scheduler.startWithCreate(function () {
-        return l.skipUntil(r);
-    });
+
     results.messages.assertEqual();
+  });
+
+  test('skipUntil never never', function () {
+    var scheduler = new TestScheduler();
+
+    var l = Observable.never();
+
+    var r = Observable.never();
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
+    });
+
+    results.messages.assertEqual();
+  });
+
+  test('SkipUntil has completed causes disposal', function () {
+    var scheduler = new TestScheduler();
+
+    var disposed = false;
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var r = Observable.create(function () {
+      return function () { disposed = true; };
+    });
+
+    var results = scheduler.startScheduler(function () {
+      return l.skipUntil(r);
+    });
+
+    results.messages.assertEqual();
+
     ok(disposed);
-});
+  });
+
+}());

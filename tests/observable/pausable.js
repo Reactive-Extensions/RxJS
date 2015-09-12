@@ -1,198 +1,204 @@
-QUnit.module('Pausable');
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
 
-var TestScheduler = Rx.TestScheduler,
-  Subject = Rx.Subject,
-  onNext = Rx.ReactiveTest.onNext,
-  onError = Rx.ReactiveTest.onError,
-  onCompleted = Rx.ReactiveTest.onCompleted,
-  subscribe = Rx.ReactiveTest.subscribe;
+  QUnit.module('pausable');
 
-test('paused_no_skip', function () {
-  var subscription;
+  var TestScheduler = Rx.TestScheduler,
+    Subject = Rx.Subject,
+    onNext = Rx.ReactiveTest.onNext,
+    onError = Rx.ReactiveTest.onError,
+    onCompleted = Rx.ReactiveTest.onCompleted;
 
-  var scheduler = new TestScheduler();
+  test('paused no skip', function () {
+    var subscription;
 
-  var controller = new Subject();
+    var scheduler = new TestScheduler();
 
-  var results = scheduler.createObserver();
+    var controller = new Subject();
 
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(210, 2),
-    onNext(230, 3),
-    onNext(301, 4),
-    onNext(350, 5),
-    onNext(399, 6),
-    onCompleted(500)
-  );
+    var results = scheduler.createObserver();
 
-  scheduler.scheduleAbsolute(200, function () {
-    subscription = xs.pausable(controller).subscribe(results);
-    controller.onNext(true);
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(230, 3),
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
+
+    scheduler.scheduleAbsolute(null, 200, function () {
+      subscription = xs.pausable(controller).subscribe(results);
+      controller.onNext(true);
+    });
+
+    scheduler.scheduleAbsolute(null, 205, function () {
+      controller.onNext(false);
+    });
+
+    scheduler.scheduleAbsolute(null, 209, function () {
+      controller.onNext(true);
+    });
+
+    scheduler.scheduleAbsolute(null, 1000, function () {
+        subscription.dispose();
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(230, 3),
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
   });
 
-  scheduler.scheduleAbsolute(205, function () {
-    controller.onNext(false);
+  test('paused skips', function () {
+    var subscription;
+
+    var scheduler = new TestScheduler();
+
+    var controller = new Subject();
+
+    var results = scheduler.createObserver();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(230, 3),
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
+
+    scheduler.scheduleAbsolute(null, 200, function () {
+      subscription = xs.pausable(controller).subscribe(results);
+      controller.onNext(true);
+    });
+
+    scheduler.scheduleAbsolute(null, 300, function () {
+      controller.onNext(false);
+    });
+
+    scheduler.scheduleAbsolute(null, 400, function () {
+      controller.onNext(true);
+    });
+
+    scheduler.scheduleAbsolute(null, 1000, function () {
+        subscription.dispose();
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(230, 3),
+      onCompleted(500)
+    );
   });
 
-  scheduler.scheduleAbsolute(209, function () {
-    controller.onNext(true);
-  });
+  test('paused error', function () {
+    var subscription;
 
-  scheduler.scheduleAbsolute(1000, function () {
+    var err = new Error();
+    var scheduler = new TestScheduler();
+
+    var controller = new Subject();
+
+    var results = scheduler.createObserver();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onError(230, err),
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
+
+    scheduler.scheduleAbsolute(null, 200, function () {
+      subscription = xs.pausable(controller).subscribe(results);
+      controller.onNext(true);
+    });
+
+    scheduler.scheduleAbsolute(null, 300, function () {
+      controller.onNext(false);
+    });
+
+    scheduler.scheduleAbsolute(null, 400, function () {
+      controller.onNext(true);
+    });
+
+    scheduler.scheduleAbsolute(null, 1000, function () {
       subscription.dispose();
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onError(230, err)
+    );
   });
 
-  scheduler.start();
+  test('paused with observable controller and pause and unpause', function(){
+    var subscription;
 
-  results.messages.assertEqual(
-    onNext(210, 2),
-    onNext(230, 3),
-    onNext(301, 4),
-    onNext(350, 5),
-    onNext(399, 6),
-    onCompleted(500)
-  );
-});
+    var scheduler = new TestScheduler();
 
-test('paused_skips', function () {
-  var subscription;
+    var results = scheduler.createObserver();
 
-  var scheduler = new TestScheduler();
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(230, 3),
+      onNext(270, 4),
+      onNext(301, 5),
+      onNext(350, 6),
+      onNext(450, 7),
+      onCompleted(500)
+    );
 
-  var controller = new Subject();
+    var controller = scheduler.createHotObservable(
+      onNext(201, true),
+      onNext(220, false),
+      onNext(250, true)
+    );
 
-  var results = scheduler.createObserver();
+    var pausable = xs.pausable(controller);
 
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(210, 2),
-    onNext(230, 3),
-    onNext(301, 4),
-    onNext(350, 5),
-    onNext(399, 6),
-    onCompleted(500)
-  );
+    scheduler.scheduleAbsolute(null, 200, function () {
+      subscription = pausable.subscribe(results);
+    });
 
-  scheduler.scheduleAbsolute(200, function () {
-    subscription = xs.pausable(controller).subscribe(results);
-    controller.onNext(true);
-  });
+    scheduler.scheduleAbsolute(null, 300, function () {
+      pausable.pause();
+    });
 
-  scheduler.scheduleAbsolute(300, function () {
-    controller.onNext(false);
-  });
+    scheduler.scheduleAbsolute(null, 400, function () {
+      pausable.resume();
+    });
 
-  scheduler.scheduleAbsolute(400, function () {
-    controller.onNext(true);
-  });
-
-  scheduler.scheduleAbsolute(1000, function () {
+    scheduler.scheduleAbsolute(null, 1000, function () {
       subscription.dispose();
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(270, 4),
+      onNext(450, 7),
+      onCompleted(500)
+    );
   });
 
-  scheduler.start();
-
-  results.messages.assertEqual(
-    onNext(210, 2),
-    onNext(230, 3),
-    onCompleted(500)
-  );
-});
-
-test('paused_error', function () {
-  var subscription;
-
-  var err = new Error();
-  var scheduler = new TestScheduler();
-
-  var controller = new Subject();
-
-  var results = scheduler.createObserver();
-
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(210, 2),
-    onError(230, err),
-    onNext(301, 4),
-    onNext(350, 5),
-    onNext(399, 6),
-    onCompleted(500)
-  );
-
-  scheduler.scheduleAbsolute(200, function () {
-    subscription = xs.pausable(controller).subscribe(results);
-    controller.onNext(true);
-  });
-
-  scheduler.scheduleAbsolute(300, function () {
-    controller.onNext(false);
-  });
-
-  scheduler.scheduleAbsolute(400, function () {
-    controller.onNext(true);
-  });
-
-  scheduler.scheduleAbsolute(1000, function () {
-    subscription.dispose();
-  });
-
-  scheduler.start();
-
-  results.messages.assertEqual(
-    onNext(210, 2),
-    onError(230, err)
-  );
-});
-
-test('paused_with_observable_controller_and_pause_and_unpause', function(){
-  var subscription;
-
-  var scheduler = new TestScheduler();
-
-  var results = scheduler.createObserver();
-
-  var xs = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(210, 2),
-    onNext(230, 3),
-    onNext(270, 4),
-    onNext(301, 5),
-    onNext(350, 6),
-    onNext(450, 7),
-    onCompleted(500)
-  );
-
-  var controller = scheduler.createHotObservable(
-    onNext(201, true),
-    onNext(220, false),
-    onNext(250, true)
-  );
-
-  pausable = xs.pausable(controller);
-
-  scheduler.scheduleAbsolute(200, function () {
-    subscription = pausable.subscribe(results);
-  });
-
-  scheduler.scheduleAbsolute(300, function () {
-    pausable.pause();
-  });
-
-  scheduler.scheduleAbsolute(400, function () {
-    pausable.resume();
-  });
-
-  scheduler.scheduleAbsolute(1000, function () {
-    subscription.dispose();
-  });
-
-  scheduler.start();
-
-  results.messages.assertEqual(
-    onNext(210, 2),
-    onNext(270, 4),
-    onNext(450, 7),
-    onCompleted(500)
-  );
-});
+}());

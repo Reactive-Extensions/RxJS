@@ -1,77 +1,218 @@
-QUnit.module('OnErrorResumeNext');
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  QUnit.module('onErrorResumeNext');
 
-test('OnErrorResumeNext_ErrorMultiple', function () {
-    scheduler = new TestScheduler();
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted;
 
-    var o1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onError(220, 'ex'));
-    var o2 = scheduler.createHotObservable(onNext(230, 4), onError(240, 'ex'));
-    var o3 = scheduler.createHotObservable(onCompleted(250));
-
-    var results = scheduler.startWithCreate(function () {
-        return Observable.onErrorResumeNext(o1, o2, o3);
-    });
-
-    results.messages.assertEqual(onNext(210, 2), onNext(230, 4), onCompleted(250));
-});
-
-test('OnErrorResumeNext_EmptyReturnThrowAndMore', function () {
+  test('onErrorResumeNext error multiple', function () {
     var scheduler = new TestScheduler();
 
-    var o1 = scheduler.createHotObservable(onNext(150, 1), onCompleted(205));
-    var o2 = scheduler.createHotObservable(onNext(215, 2), onCompleted(220));
-    var o3 = scheduler.createHotObservable(onNext(225, 3), onNext(230, 4), onCompleted(235));
-    var o4 = scheduler.createHotObservable(onError(240, 'ex'));
-    var o5 = scheduler.createHotObservable(onNext(245, 5), onCompleted(250));
+    var o1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onError(220, new Error())
+    );
 
-    var results = scheduler.startWithCreate(function () {
-        return Observable.onErrorResumeNext(o1, o2, o3, o4, o5);
+    var o2 = scheduler.createHotObservable(
+      onNext(230, 4),
+      onError(240, new Error())
+    );
+
+    var o3 = scheduler.createHotObservable(
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.onErrorResumeNext(o1, o2, o3);
     });
 
-    results.messages.assertEqual(onNext(215, 2), onNext(225, 3), onNext(230, 4), onNext(245, 5), onCompleted(250));
-});
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(230, 4),
+      onCompleted(250)
+    );
+  });
 
-test('OnErrorResumeNext_SingleSourceThrows', function () {
-    var ex, msgs1, o1, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    msgs1 = [onError(230, ex)];
-    o1 = scheduler.createHotObservable(msgs1);
-    results = scheduler.startWithCreate(function () {
-        return Observable.onErrorResumeNext(o1);
-    });
-    results.messages.assertEqual(onCompleted(230));
-});
-
-test('OnErrorResumeNext_EndWithNever', function () {
-    var msgs1, o1, o2, results, scheduler;
+  test('onErrorResumeNext empty return throw and more', function () {
     var scheduler = new TestScheduler();
 
-    var o1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onCompleted(220));
+    var o1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(205)
+    );
+
+    var o2 = scheduler.createHotObservable(
+      onNext(215, 2),
+      onCompleted(220)
+    );
+
+    var o3 = scheduler.createHotObservable(
+      onNext(225, 3),
+      onNext(230, 4),
+      onCompleted(235)
+    );
+
+    var o4 = scheduler.createHotObservable(
+      onError(240, new Error())
+    );
+
+    var o5 = scheduler.createHotObservable(
+      onNext(245, 5), onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.onErrorResumeNext(o1, o2, o3, o4, o5);
+    });
+
+    results.messages.assertEqual(
+      onNext(215, 2),
+      onNext(225, 3),
+      onNext(230, 4),
+      onNext(245, 5),
+      onCompleted(250)
+    );
+  });
+
+  test('onErrorResumeNext single source throws', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var o1 = scheduler.createHotObservable(
+      onError(230, error)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.onErrorResumeNext(o1);
+    });
+
+    results.messages.assertEqual(
+      onCompleted(230)
+    );
+  });
+
+  test('onErrorResumeNext end with never', function () {
+    var scheduler = new TestScheduler();
+
+    var o1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(220)
+    );
+
     var o2 = Observable.never();
 
-    var results = scheduler.startWithCreate(function () {
-        return Observable.onErrorResumeNext(o1, o2);
+    var results = scheduler.startScheduler(function () {
+      return Observable.onErrorResumeNext(o1, o2);
     });
 
-    results.messages.assertEqual(onNext(210, 2));
-});
+    results.messages.assertEqual(
+      onNext(210, 2)
+    );
+  });
 
-test('OnErrorResumeNext_StartWithNever', function () {
+  test('onErrorResumeNext start with never', function () {
+      var scheduler = new TestScheduler();
+
+      var o1 = Observable.never();
+      
+      var o2 = scheduler.createHotObservable(
+        onNext(150, 1),
+        onNext(210, 2),
+        onCompleted(220)
+      );
+
+      var results = scheduler.startScheduler(function () {
+        return Observable.onErrorResumeNext(o1, o2);
+      });
+
+      results.messages.assertEqual();
+  });
+
+  test('onErrorResumeNext no errors', function () {
     var scheduler = new TestScheduler();
 
-    var o1 = Observable.never();
-    var o2 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onCompleted(220));
+    var o1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onCompleted(230)
+    );
 
-    var results = scheduler.startWithCreate(function () {
-        return Observable.onErrorResumeNext(o1, o2);
+    var o2 = scheduler.createHotObservable(
+      onNext(240, 4),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return o1.onErrorResumeNext(o2);
     });
 
-    results.messages.assertEqual();
-});
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(240, 4),
+      onCompleted(250)
+    );
+  });
+
+  test('onErrorResumeNext error', function () {
+    var scheduler = new TestScheduler();
+
+    var o1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onError(230, new Error())
+    );
+
+    var o2 = scheduler.createHotObservable(
+      onNext(240, 4),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return o1.onErrorResumeNext(o2);
+    });
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(240, 4),
+      onCompleted(250)
+    );
+  });
+
+  test('onErrorResumeNext empty return throw and more', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var o1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(220)
+    );
+
+    var o2 = scheduler.createHotObservable(
+      onError(230, error)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return o1.onErrorResumeNext(o2);
+    });
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onCompleted(230)
+    );
+  });
+
+}());

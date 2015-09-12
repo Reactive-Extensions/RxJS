@@ -1,155 +1,280 @@
-QUnit.module('TakeUntil');
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, ok */
+  QUnit.module('takeUntil');
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      subscribe = Rx.ReactiveTest.subscribe;
 
-test('TakeUntil_Preempt_SomeData_Next', function () {
-    var l, lMsgs, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    rMsgs = [onNext(150, 1), onNext(225, 99), onCompleted(230)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
+  test('takeUntil preempt some data next', function () {
+    var scheduler = new TestScheduler();
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(225, 99),
+      onCompleted(230)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
     });
-    results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onCompleted(225));
-});
 
-test('TakeUntil_Preempt_SomeData_Error', function () {
-    var ex, l, lMsgs, r, rMsgs, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    rMsgs = [onNext(150, 1), onError(225, ex)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
-    });
-    results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onError(225, ex));
-});
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(220, 3),
+      onCompleted(225)
+    );
+  });
 
-test('TakeUntil_NoPreempt_SomeData_Empty', function () {
-    var l, lMsgs, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    rMsgs = [onNext(150, 1), onCompleted(225)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
-    });
-    results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250));
-});
+  test('takeUntil preempt some data error', function () {
+    var error = new Error();
 
-test('TakeUntil_NoPreempt_SomeData_Never', function () {
-    var l, lMsgs, r, results, scheduler;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = Observable.never();
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
-    });
-    results.messages.assertEqual(onNext(210, 2), onNext(220, 3), onNext(230, 4), onNext(240, 5), onCompleted(250));
-});
+    var scheduler = new TestScheduler();
 
-test('TakeUntil_Preempt_Never_Next', function () {
-    var l, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    rMsgs = [onNext(150, 1), onNext(225, 2), onCompleted(250)];
-    l = Observable.never();
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
-    });
-    results.messages.assertEqual(onCompleted(225));
-});
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
 
-test('TakeUntil_Preempt_Never_Error', function () {
-    var ex, l, r, rMsgs, results, scheduler;
-    ex = 'ex';
-    scheduler = new TestScheduler();
-    rMsgs = [onNext(150, 1), onError(225, ex)];
-    l = Observable.never();
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
-    });
-    results.messages.assertEqual(onError(225, ex));
-});
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(225, error)
+    );
 
-test('TakeUntil_NoPreempt_Never_Empty', function () {
-    var l, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    rMsgs = [onNext(150, 1), onCompleted(225)];
-    l = Observable.never();
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
     });
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(220, 3),
+      onError(225, error)
+    );
+  });
+
+  test('takeUntil no preempt some data empty', function () {
+    var scheduler = new TestScheduler();
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(225)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
+    });
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+  });
+
+  test('takeUntil no preempt some data never', function () {
+    var scheduler = new TestScheduler();
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var r = Observable.never();
+
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
+    });
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+  });
+
+  test('takeUntil preempt never next', function () {
+    var scheduler = new TestScheduler();
+
+    var l = Observable.never();
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(225, 2),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
+    });
+
+    results.messages.assertEqual(
+      onCompleted(225)
+    );
+  });
+
+  test('takeUntil preempt never error', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var l = Observable.never();
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(225, error)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
+    });
+
+    results.messages.assertEqual(
+      onError(225, error)
+    );
+  });
+
+  test('takeUntil no preempt never empty', function () {
+    var scheduler = new TestScheduler();
+
+    var l = Observable.never();
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(225)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
+    });
+
     results.messages.assertEqual();
-});
+  });
 
-test('TakeUntil_NoPreempt_Never_Never', function () {
-    var l, r, results, scheduler;
-    scheduler = new TestScheduler();
-    l = Observable.never();
-    r = Observable.never();
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
+  test('takeUntil no preempt never never', function () {
+    var scheduler = new TestScheduler();
+
+    var l = Observable.never();
+
+    var r = Observable.never();
+
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
     });
+
     results.messages.assertEqual();
-});
+  });
 
-test('TakeUntil_Preempt_BeforeFirstProduced', function () {
-    var l, lMsgs, r, rMsgs, results, scheduler;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(230, 2), onCompleted(240)];
-    rMsgs = [onNext(150, 1), onNext(210, 2), onCompleted(220)];
-    l = scheduler.createHotObservable(lMsgs);
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
+  test('takeUntil preempt before first produced', function () {
+    var scheduler = new TestScheduler();
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(230, 2),
+      onCompleted(240)
+    );
+
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(220)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
     });
-    results.messages.assertEqual(onCompleted(210));
-});
 
-test('TakeUntil_Preempt_BeforeFirstProduced_RemainSilentAndProperDisposed', function () {
-    var l, lMsgs, r, rMsgs, results, scheduler, sourceNotDisposed;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onError(215, 'ex'), onCompleted(240)];
-    rMsgs = [onNext(150, 1), onNext(210, 2), onCompleted(220)];
-    sourceNotDisposed = false;
-    l = scheduler.createHotObservable(lMsgs).doAction(function () {
+    results.messages.assertEqual(
+      onCompleted(210)
+    );
+  });
+
+  test('takeUntil preempt before first produced remain silent and proper disposed', function () {
+      var scheduler = new TestScheduler();
+
+      var sourceNotDisposed = false;
+
+      var l = scheduler.createHotObservable(
+        onNext(150, 1),
+        onError(215, new Error()),
+        onCompleted(240)
+      ).tap(function () {
         sourceNotDisposed = true;
-    });
-    r = scheduler.createHotObservable(rMsgs);
-    results = scheduler.startWithCreate(function () {
-        return l.takeUntil(r);
-    });
-    results.messages.assertEqual(onCompleted(210));
-    ok(!sourceNotDisposed);
-});
+      });
 
-test('TakeUntil_NoPreempt_AfterLastProduced_ProperDisposedSignal', function () {
-    var l, lMsgs, r, rMsgs, results, scheduler, signalNotDisposed;
-    scheduler = new TestScheduler();
-    lMsgs = [onNext(150, 1), onNext(230, 2), onCompleted(240)];
-    rMsgs = [onNext(150, 1), onNext(250, 2), onCompleted(260)];
-    signalNotDisposed = false;
-    l = scheduler.createHotObservable(lMsgs);
-    r = scheduler.createHotObservable(rMsgs).doAction(function () {
-        signalNotDisposed = true;
+      var r = scheduler.createHotObservable(
+        onNext(150, 1),
+        onNext(210, 2),
+        onCompleted(220)
+      );
+
+      var results = scheduler.startScheduler(function () {
+        return l.takeUntil(r);
+      });
+
+      results.messages.assertEqual(
+        onCompleted(210)
+      );
+
+      ok(!sourceNotDisposed);
+  });
+
+  test('takeUntil no preempt after last produced proper disposed signal', function () {
+    var scheduler = new TestScheduler();
+
+    var signalNotDisposed = false;
+
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(230, 2),
+      onCompleted(240)
+    );
+
+    var r = scheduler.createHotObservable(onNext(150, 1), onNext(250, 2), onCompleted(260)).tap(function () {
+      signalNotDisposed = true;
     });
-    results = scheduler.startWithCreate(function () {
+
+    var results = scheduler.startScheduler(function () {
         return l.takeUntil(r);
     });
+
     results.messages.assertEqual(onNext(230, 2), onCompleted(240));
+
     ok(!signalNotDisposed);
-});
+  });
+
+}());

@@ -1,15 +1,19 @@
 (function () {
-  QUnit.module('Sample');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
 
-  var Observable = Rx.Observable,
-      TestScheduler = Rx.TestScheduler,
+  QUnit.module('sample');
+
+  var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('Sample Regular', function () {
+  test('sample regular', function () {
     var scheduler = new TestScheduler();
+
     var xs = scheduler.createHotObservable(
       onNext(150, 1),
       onNext(210, 2),
@@ -21,7 +25,7 @@
       onCompleted(390)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.sample(50, scheduler);
     });
 
@@ -34,7 +38,7 @@
     );
   });
 
-  test('Sample ErrorInFlight', function () {
+  test('sample error in flight', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -49,7 +53,7 @@
       onError(330, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.sample(50, scheduler);
     });
 
@@ -60,10 +64,10 @@
     );
   });
 
-  test('Sample Empty', function () {
+  test('sample Empty', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable.empty(scheduler).sample(0, scheduler);
     });
 
@@ -72,12 +76,12 @@
     );
   });
 
-  test('Sample Error', function () {
+  test('sample Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable['throw'](error, scheduler).sample(0, scheduler);
     });
 
@@ -86,19 +90,17 @@
     );
   });
 
-  test('Sample Never', function () {
-    var results, scheduler;
-
+  test('sample never', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable.never().sample(0, scheduler);
     });
 
     results.messages.assertEqual();
   });
 
-  test('Sample Sampler Simple1', function () {
+  test('sample sampler simple 1', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -112,15 +114,15 @@
     );
 
     var ys = scheduler.createHotObservable(
-      onNext(150, ""),
-      onNext(210, "bar"),
-      onNext(250, "foo"),
-      onNext(260, "qux"),
-      onNext(320, "baz"),
+      onNext(150, ''),
+      onNext(210, 'bar'),
+      onNext(250, 'foo'),
+      onNext(260, 'qux'),
+      onNext(320, 'baz'),
       onCompleted(500)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.sample(ys);
     });
 
@@ -139,7 +141,7 @@
     );
   });
 
-  test('Sample Sampler Simple2', function () {
+  test('sample sampler simple 2', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -154,15 +156,15 @@
     );
 
     var ys = scheduler.createHotObservable(
-      onNext(150, ""),
-      onNext(210, "bar"),
-      onNext(250, "foo"),
-      onNext(260, "qux"),
-      onNext(320, "baz"),
+      onNext(150, ''),
+      onNext(210, 'bar'),
+      onNext(250, 'foo'),
+      onNext(260, 'qux'),
+      onNext(320, 'baz'),
       onCompleted(500)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.sample(ys);
     });
 
@@ -182,7 +184,7 @@
     );
   });
 
-  test('Sample Sampler Simple3', function () {
+  test('sample sampler simple 3', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -194,15 +196,15 @@
      );
 
     var ys = scheduler.createHotObservable(
-      onNext(150, ""),
-      onNext(210, "bar"),
-      onNext(250, "foo"),
-      onNext(260, "qux"),
-      onNext(320, "baz"),
+      onNext(150, ''),
+      onNext(210, 'bar'),
+      onNext(250, 'foo'),
+      onNext(260, 'qux'),
+      onNext(320, 'baz'),
       onCompleted(500)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.sample(ys);
     });
 
@@ -221,7 +223,7 @@
     );
   });
 
-  test('Sample completes if earlier completes', function () {
+  test('sample completes if earlier completes', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -233,11 +235,11 @@
      );
 
     var ys = scheduler.createHotObservable(
-      onNext(150, ""),
+      onNext(150, ''),
       onCompleted(210)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.sample(ys);
     });
 
@@ -253,7 +255,7 @@
     );
   });
 
-  test('Sample Sampler SourceThrows', function() {
+  test('sample sampler source throws', function() {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -269,15 +271,15 @@
     );
 
     var ys = scheduler.createHotObservable(
-      onNext(150, ""),
-      onNext(210, "bar"),
-      onNext(250, "foo"),
-      onNext(260, "qux"),
-      onNext(330, "baz"),
+      onNext(150, ''),
+      onNext(210, 'bar'),
+      onNext(250, 'foo'),
+      onNext(260, 'qux'),
+      onNext(330, 'baz'),
       onCompleted(400)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.sample(ys);
     });
 

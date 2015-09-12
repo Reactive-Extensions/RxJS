@@ -7,7 +7,8 @@
   var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
-      onCompleted = Rx.ReactiveTest.onCompletedsubscribe = Rx.ReactiveTest.subscribe;
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      subscribe = Rx.ReactiveTest.subscribe;
 
   test('find never', function () {
     var scheduler = new TestScheduler();
@@ -16,11 +17,11 @@
         onNext(150, 1)
     );
 
-    var res = scheduler.startScheduler(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.find(function () { return true; });
     });
 
-    res.messages.assertEqual();
+    results.messages.assertEqual();
   });
 
   test('find empty', function () {
@@ -31,11 +32,11 @@
       onCompleted(210)
     );
 
-    var res = scheduler.startScheduler(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.find(function () { return true; });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onCompleted(210)
     );
   });
@@ -49,11 +50,11 @@
       onCompleted(220)
     );
 
-    var res = scheduler.startScheduler(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.find(function (x) { return x === 2; });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onNext(210, 2),
       onCompleted(210)
     );
@@ -68,11 +69,11 @@
       onCompleted(220)
     );
 
-    var res = scheduler.startScheduler(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.find(function (x) { return x === 3; });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onCompleted(220)
     );
   });
@@ -88,13 +89,13 @@
       onError(220, error)
     );
 
-    var res = scheduler.startScheduler(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.find(function (x) { return x === 3; });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onError(220, error)
-      );
+    );
   });
 
   test('find throws', function () {
@@ -108,11 +109,11 @@
       onCompleted(220)
     );
 
-    var res = scheduler.startScheduler(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.find(function () { throw error; });
     });
 
-    res.messages.assertEqual(
+    results.messages.assertEqual(
       onError(210, error)
     );
   });

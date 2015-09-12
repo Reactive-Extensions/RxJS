@@ -1,17 +1,17 @@
 (function () {
-  QUnit.module('RetryWhen');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('retryWhen');
 
   var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;
+    subscribe = Rx.ReactiveTest.subscribe;
 
-  test('RetryWhen Never', function () {
+  test('retryWhen never', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -19,8 +19,8 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.retryWhen(function (attempts) {
+    var results = scheduler.startScheduler(function () {
+      return xs.retryWhen(function () {
         return Observable.empty(scheduler);
       });
     });
@@ -34,7 +34,7 @@
     );
   });
 
-  test('RetryWhen Observable Never', function () {
+  test('retryWhen Observable never', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -48,8 +48,8 @@
       onError(250, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.retryWhen(function (attempts) {
+    var results = scheduler.startScheduler(function () {
+      return xs.retryWhen(function () {
         return Observable.never();
       });
     });
@@ -66,7 +66,7 @@
     );
   });
 
-  test('RetryWhen Observable Never Complete', function () {
+  test('retryWhen Observable never complete', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -78,8 +78,8 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.retryWhen(function (attempts) {
+    var results = scheduler.startScheduler(function () {
+      return xs.retryWhen(function () {
         return Observable.never();
       });
     });
@@ -97,7 +97,7 @@
     );
   });
 
-  test('RetryWhen Observable Empty', function () {
+  test('retryWhen Observable Empty', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -107,8 +107,8 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.retryWhen(function(attempts) {
+    var results = scheduler.startScheduler(function () {
+      return xs.retryWhen(function() {
         return Observable.empty(scheduler);
       });
     });
@@ -125,7 +125,7 @@
     );
   });
 
-  test('RetryWhen Observable Next Error', function () {
+  test('retryWhen Observable Next Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -137,9 +137,9 @@
       onCompleted(40)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retryWhen(function(attempts) {
-        return attempts.scan(function(count, ex) {
+        return attempts.scan(function(count) {
           if(++count === 2) {
             throw error;
           }
@@ -162,7 +162,7 @@
     );
   });
 
-  test('RetryWhen Observable Complete', function () {
+  test('retryWhen Observable complete', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -174,8 +174,8 @@
       onCompleted(40)
     );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.retryWhen(function(attempts) {
+    var results = scheduler.startScheduler(function () {
+      return xs.retryWhen(function() {
         return Observable.empty(scheduler); // a completing observable completes
       });
     });
@@ -191,7 +191,7 @@
     );
   });
 
-  test('RetryWhen Observable Next Complete', function () {
+  test('retryWhen Observable next complete', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -203,9 +203,9 @@
       onCompleted(40)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retryWhen(function(attempts) {
-        return attempts.scan(function(count, error) {
+        return attempts.scan(function(count) {
           return count + 1;
         }, 0).takeWhile(function(count) {
           return count < 2;
@@ -227,7 +227,7 @@
     );
   });
 
-  test('RetryWhen Observable Infinite', function () {
+  test('retryWhen Observable infinite', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -239,7 +239,7 @@
       onCompleted(40)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retryWhen(function(){
         return Observable.never();
       });

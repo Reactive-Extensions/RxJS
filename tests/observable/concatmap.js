@@ -92,7 +92,7 @@
       });
   });
 
-  asyncTest('concatMap ResultSelector Complete Task', function () {
+  asyncTest('concatMap result selector Complete Task', function () {
     var xs = Rx.Observable.fromArray([4,3,2,1]);
 
     var results = [];
@@ -117,7 +117,7 @@
         });
   });
 
-  asyncTest('concatMap ResultSelector Error Task', function () {
+  asyncTest('concatMap result selector Error Task', function () {
     var xs = Rx.Observable.fromArray([4,3,2,1]);
 
     xs.concatMap(
@@ -721,7 +721,7 @@
     xs.messages[6].value.value.subscriptions.assertEqual();
   });
 
-  test('concatMap Dispose', function () {
+  test('concatMap dispose', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -756,7 +756,7 @@
       return xs.concatMap(function (x) {
         return x;
       });
-    }, 700);
+    }, { disposed: 700 });
 
     results.messages.assertEqual(
       onNext(310, 102),
@@ -871,7 +871,7 @@
     return results;
   }
 
-  test('concatMap Iterable Complete', function () {
+  test('concatMap iterable Complete', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -914,7 +914,7 @@
     equal(4, inners.length);
   });
 
-  test('concatMap Iterable Complete ResultSelector', function () {
+  test('concatMap iterable Complete result selector', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -949,7 +949,7 @@
     );
   });
 
-  test('concatMap Iterable Error', function () {
+  test('concatMap iterable Error', function () {
     var scheduler = new TestScheduler();
 
     var ex = new Error();
@@ -986,7 +986,7 @@
     );
   });
 
-  test('concatMap Iterable Error ResultSelector', function () {
+  test('concatMap iterable Error result selector', function () {
     var scheduler = new TestScheduler();
 
     var ex = new Error();
@@ -1023,7 +1023,7 @@
     );
   });
 
-  test('concatMap Iterable Dispose', function () {
+  test('concatMap iterable dispose', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1055,7 +1055,7 @@
     );
   });
 
-  test('concatMap Iterable Dispose ResultSelector', function () {
+  test('concatMap iterable dispose result selector', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -1070,7 +1070,7 @@
       function () {
         return xs.concatMap(function (x) { return arrayRepeat(x, x); }, function (x, y) { return x + y; });
       },
-      350
+      { disposed: 350 }
     );
 
     res.messages.assertEqual(
@@ -1172,7 +1172,7 @@
     equal(3, inners.length);
   });
 
-  test('concatMap Iterable SelectorThrows ResultSelector', function () {
+  test('concatMap iterable SelectorThrows result selector', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(

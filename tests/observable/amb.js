@@ -1,8 +1,9 @@
 (function () {
+  'use strict';
   /* jshint undef: true, unused: true */
   /* globals QUnit, test, Rx, ok */
 
-  QUnit.module('AmbProto');
+  QUnit.module('amb');
 
   var Observable = Rx.Observable,
       TestScheduler = Rx.TestScheduler,

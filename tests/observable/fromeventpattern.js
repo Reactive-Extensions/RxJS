@@ -15,12 +15,12 @@
     this.removeEventListenerCalled = false;
   }
 
-  FakeDOMStandardElement.prototype.addEventListener = function (eventName, handler, useCapture) {
+  FakeDOMStandardElement.prototype.addEventListener = function (eventName, handler) {
     this.listeners[eventName] = handler;
     this.addEventListenerCalled = true;
   };
 
-  FakeDOMStandardElement.prototype.removeEventListener = function (eventName, handler, useCapture) {
+  FakeDOMStandardElement.prototype.removeEventListener = function (eventName, handler) {
     delete this.listeners[eventName];
     this.removeEventListenerCalled = true;
   };
@@ -32,13 +32,16 @@
     }
   };
 
-  test('Event_1', function () {
+  test('Event 1', function () {
     var element = new FakeDOMStandardElement('foo');
 
     var d = Observable.fromEventPattern(
       function (h) { element.addEventListener('someEvent', h, false); },
       function (h) { element.removeEventListener('someEvent', h, false); }
-    );
+    )
+    .subscribe(function (x) {
+      equal(x, 42);
+    });
 
     element.trigger('someEvent', 42);
     equal(element.addEventListenerCalled, true);
@@ -49,7 +52,7 @@
     equal(element.removeEventListenerCalled, true);
   });
 
-  test('Event_2', function () {
+  test('Event 2', function () {
     var element = new FakeDOMStandardElement('foo');
 
     var d = Observable.fromEventPattern(

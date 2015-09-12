@@ -1,5 +1,8 @@
 (function () {
-  QUnit.module('Select');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, raises, equal */
+  QUnit.module('map');
 
   var Observable = Rx.Observable,
     TestScheduler = Rx.TestScheduler,
@@ -8,8 +11,6 @@
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
     subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
     disposed = Rx.ReactiveTest.disposed;
 
   // Function shortcuts
@@ -17,8 +18,7 @@
   function identity (x) { return x; }
   function throwError () { throw new Error(); }
 
-  test('Select_Throws', function () {
-
+  test('map throws', function () {
     raises(function () {
       Observable.just(1)
         .map(identity)
@@ -45,7 +45,7 @@
 
   });
 
-  test('SelectWithIndex_DisposeInsideSelector', function () {
+  test('map with index dispose inside selector', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -62,14 +62,14 @@
     var d = new SerialDisposable();
     d.setDisposable(
       xs.map(function(x, index) {
-          invoked++;
-          scheduler.clock > 400 && d.dispose();
-          return x + index * 10;
-        })
-        .subscribe(results)
+        invoked++;
+        scheduler.clock > 400 && d.dispose();
+        return x + index * 10;
+      })
+      .subscribe(results)
     );
 
-    scheduler.scheduleAbsolute(disposed, d.dispose.bind(d));
+    scheduler.scheduleAbsolute(null, disposed, function () { d.dispose(); });
 
     scheduler.start();
 
@@ -85,7 +85,7 @@
     equal(3, invoked);
   });
 
-  test('SelectWithIndex_Completed', function () {
+  test('map with index Completed', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -102,7 +102,7 @@
       onError(430, new Error())
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.map(function (x, index) {
         invoked++;
         return (x + 1) + (index * 10);
@@ -124,7 +124,7 @@
     equal(4, invoked);
   });
 
-  test('SelectWithIndex_NotCompleted', function () {
+  test('map with index not completed', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -137,7 +137,7 @@
       onNext(350, 1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.map(function (x, index) {
         invoked++;
         return (x + 1) + (index * 10);
@@ -158,7 +158,7 @@
     equal(4, invoked);
   });
 
-  test('SelectWithIndex_Error', function () {
+  test('map with index error', function () {
     var scheduler = new TestScheduler();
 
     var error = new Error();
@@ -177,7 +177,7 @@
       onError(430, new Error())
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.map(function (x, index) {
         invoked++;
         return (x + 1) + (index * 10);
@@ -199,7 +199,7 @@
     equal(4, invoked);
   });
 
-  test('Select_SelectorThrows', function () {
+  test('map selector throws', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -218,7 +218,7 @@
       onError(430, new Error())
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.map(function (x, index) {
         invoked++;
         if (invoked === 3) { throw error; }
@@ -239,7 +239,7 @@
     equal(3, invoked);
   });
 
-  test('Select value', function () {
+  test('map value', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -251,7 +251,7 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.map(-1);
     });
 
@@ -264,7 +264,7 @@
     );
   });
 
-  test('Select thisArg', function () {
+  test('map thisArg', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -282,7 +282,7 @@
       onError(430, new Error())
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.map(function (x, index) {
         invoked++;
         equal(this, foo);
@@ -305,7 +305,7 @@
     equal(4, invoked);
   });
 
-  test('Map and Map Optimization', function () {
+  test('map and map Optimization', function () {
     var scheduler = new TestScheduler();
 
     var invoked1 = 0;
@@ -329,10 +329,10 @@
       onCompleted(630)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs
       .map(function(x) { invoked1++; return x * 2; })
-      .map(function(x) { invoked2++; return x / 2; })
+      .map(function(x) { invoked2++; return x / 2; });
     });
 
     results.messages.assertEqual(
@@ -356,38 +356,39 @@
     equal(9, invoked2);
   });
 
-  test('Map and Map thisArg', function(){
+  test('map and map thisArg', function(){
 
     var scheduler = new TestScheduler();
 
     function Filterer() {
-      this.selector1 = function(item) {return item + 2};
-      this.selector2 = function(item) {return item * 3};
+      this.selector1 = function(item) { return item + 2; };
+      this.selector2 = function(item) { return item * 3; };
     }
 
     var filterer = new Filterer();
 
     var xs = scheduler.createColdObservable(
-        onNext(10, 1),
-        onNext(20, 2),
-        onNext(30, 3),
-        onNext(40, 4),
-        onCompleted(100)
+      onNext(10, 1),
+      onNext(20, 2),
+      onNext(30, 3),
+      onNext(40, 4),
+      onCompleted(100)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return xs
-          .map(function(x){ return this.selector1(x);}, filterer)
-          .map(function(x){ return this.selector2(x);}, filterer)
-          .map(function(x){ return this.selector1(x);}, filterer);
+        .map(function(x){ return this.selector1(x);}, filterer)
+        .map(function(x){ return this.selector2(x);}, filterer)
+        .map(function(x){ return this.selector1(x);}, filterer);
     });
 
     results.messages.assertEqual(
-        onNext(210, 11),
-        onNext(220, 14),
-        onNext(230, 17),
-        onNext(240, 20),
-        onCompleted(300));
+      onNext(210, 11),
+      onNext(220, 14),
+      onNext(230, 17),
+      onNext(240, 20),
+      onCompleted(300)
+    );
   });
 
 }());

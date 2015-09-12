@@ -1,156 +1,163 @@
-QUnit.module('pairwise');
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
 
-var TestScheduler = Rx.TestScheduler,
-  onNext = Rx.ReactiveTest.onNext,
-  onError = Rx.ReactiveTest.onError,
-  onCompleted = Rx.ReactiveTest.onCompleted,
-  subscribe = Rx.ReactiveTest.subscribe;
+  QUnit.module('pairwise');
 
-test('pairwise_empty', function () {
-  var scheduler = new TestScheduler();
+  var TestScheduler = Rx.TestScheduler,
+    onNext = Rx.ReactiveTest.onNext,
+    onError = Rx.ReactiveTest.onError,
+    onCompleted = Rx.ReactiveTest.onCompleted,
+    subscribe = Rx.ReactiveTest.subscribe;
 
-  var xs = scheduler.createHotObservable(
-    onNext(180, 5),
-    onCompleted(210)
-  );
+  test('pairwise empty', function () {
+    var scheduler = new TestScheduler();
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.pairwise();
+    var xs = scheduler.createHotObservable(
+      onNext(180, 5),
+      onCompleted(210)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return xs.pairwise();
+    });
+
+    results.messages.assertEqual(
+      onCompleted(210)
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 210)
+    );
   });
 
-  results.messages.assertEqual(
-    onCompleted(210)
-  );
+  test('pairwise single', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(
-    subscribe(200, 210)
-  );
-});
+    var xs = scheduler.createHotObservable(
+      onNext(180, 5),
+      onNext(210, 4),
+      onCompleted(220)
+    );
 
-test('pairwise_single', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.pairwise();
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(180, 5),
-    onNext(210, 4),
-    onCompleted(220)
-  );
+    results.messages.assertEqual(
+      onCompleted(220)
+    );
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.pairwise();
+    xs.subscriptions.assertEqual(
+      subscribe(200, 220)
+    );
   });
 
-  results.messages.assertEqual(
-    onCompleted(220)
-  );
+  test('pairwise completed', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(
-    subscribe(200, 220)
-  );
-});
+    var xs = scheduler.createHotObservable(
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onNext(290, 2),
+      onNext(350, 1),
+      onCompleted(360)
+    );
 
-test('pairwise_completed', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.pairwise();
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(180, 5),
-    onNext(210, 4),
-    onNext(240, 3),
-    onNext(290, 2),
-    onNext(350, 1),
-    onCompleted(360)
-  );
+    results.messages.assertEqual(
+      onNext(240, [4,3]),
+      onNext(290, [3, 2]),
+      onNext(350, [2, 1]),
+      onCompleted(360)
+    );
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.pairwise();
+    xs.subscriptions.assertEqual(
+      subscribe(200, 360)
+    );
   });
 
-  results.messages.assertEqual(
-    onNext(240, [4,3]),
-    onNext(290, [3, 2]),
-    onNext(350, [2, 1]),
-    onCompleted(360)
-  );
+  test('pairwise not completed', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(
-    subscribe(200, 360)
-  );
-});
+    var xs = scheduler.createHotObservable(
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onNext(290, 2),
+      onNext(350, 1)
+    );
 
-test('pairwise_not_completed', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.pairwise();
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(180, 5),
-    onNext(210, 4),
-    onNext(240, 3),
-    onNext(290, 2),
-    onNext(350, 1)
-  );
+    results.messages.assertEqual(
+      onNext(240, [4,3]),
+      onNext(290, [3, 2]),
+      onNext(350, [2, 1])
+    );
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.pairwise();
+    xs.subscriptions.assertEqual(
+      subscribe(200, 1000)
+    );
   });
 
-  results.messages.assertEqual(
-    onNext(240, [4,3]),
-    onNext(290, [3, 2]),
-    onNext(350, [2, 1])
-  );
+  test('pairwise error', function () {
+    var error = new Error();
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(
-    subscribe(200, 1000)
-  );
-});
+    var xs = scheduler.createHotObservable(
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onError(290, error),
+      onNext(350, 1),
+      onCompleted(360)
+    );
 
-test('pairwise_error', function () {
-  var error = new Error();
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.pairwise();
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(180, 5),
-    onNext(210, 4),
-    onNext(240, 3),
-    onError(290, error),
-    onNext(350, 1),
-    onCompleted(360)
-  );
+    results.messages.assertEqual(
+      onNext(240, [4,3]),
+      onError(290, error)
+    );
 
-  var results = scheduler.startWithCreate(function () {
-    return xs.pairwise();
+    xs.subscriptions.assertEqual(
+      subscribe(200, 290)
+    );
   });
 
-  results.messages.assertEqual(
-    onNext(240, [4,3]),
-    onError(290, error)
-  );
+  test('pairwise disposed', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(
-    subscribe(200, 290)
-  );
-});
+    var xs = scheduler.createHotObservable(
+      onNext(180, 5),
+      onNext(210, 4),
+      onNext(240, 3),
+      onNext(290, 2),
+      onNext(350, 1),
+      onCompleted(360)
+    );
 
-test('pairwise_disposed', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.pairwise();
+    }, { disposed: 280 });
 
-  var xs = scheduler.createHotObservable(
-    onNext(180, 5),
-    onNext(210, 4),
-    onNext(240, 3),
-    onNext(290, 2),
-    onNext(350, 1),
-    onCompleted(360)
-  );
+    results.messages.assertEqual(
+      onNext(240, [4,3])
+    );
 
-  var results = scheduler.startWithDispose(function () {
-    return xs.pairwise();
-  }, 280);
+    xs.subscriptions.assertEqual(
+      subscribe(200, 280)
+    );
+  });
 
-  results.messages.assertEqual(
-    onNext(240, [4,3])
-  );
-
-  xs.subscriptions.assertEqual(
-    subscribe(200, 280)
-  );
-});
+}());

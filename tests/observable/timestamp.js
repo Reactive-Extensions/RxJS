@@ -1,5 +1,8 @@
 (function () {
-  QUnit.module('TimeStamp');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('timestamp');
 
   if (!Rx.Observable.prototype.timeInterval) {
     // Add timeInterval for tests
@@ -17,19 +20,17 @@
     };
   }
 
-  var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+    onCompleted = Rx.ReactiveTest.onCompleted;
 
   function Timestamp(value, timestamp) {
-      this.value = value;
-      this.timestamp = timestamp;
+    this.value = value;
+    this.timestamp = timestamp;
   }
 
-  test('Timestamp Regular', function () {
+  test('timestamp regular', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -42,7 +43,7 @@
       onCompleted(400)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timestamp(scheduler).map(function (x) {
         return new Timestamp(x.value, x.timestamp);
       });
@@ -58,33 +59,36 @@
     );
   });
 
-  test('Timestamp Empty', function () {
+  test('timestamp empty', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable.empty(scheduler).timeInterval(scheduler);
     });
 
-    results.messages.assertEqual(onCompleted(201));
+    results.messages.assertEqual(
+      onCompleted(201)
+    );
   });
 
-  test('Timestamp Error', function () {
+  test('timestamp error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable['throw'](error, scheduler).timeInterval(scheduler);
     });
 
     results.messages.assertEqual(
-      onError(201, error));
+      onError(201, error)
+    );
   });
 
-  test('Timestamp Never', function () {
+  test('timestamp never', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable.never().timeInterval(scheduler);
     });
 

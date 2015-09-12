@@ -1,19 +1,20 @@
 (function () {
-  QUnit.module('TimeInterval');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('timeInterval');
 
-  var Observable = Rx.Observable,
-      TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
-      onCompleted = Rx.ReactiveTest.onCompleted,
-      subscribe = Rx.ReactiveTest.subscribe;
+      onCompleted = Rx.ReactiveTest.onCompleted;
 
   function TimeInterval(value, interval) {
     this.value = value;
     this.interval = interval;
   }
 
-  test('TimeInterval Regular', function () {
+  test('timeInterval regular', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -25,7 +26,7 @@
       onNext(350, 6),
       onCompleted(400));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeInterval(scheduler).map(function (x) {
         return new TimeInterval(x.value, x.interval);
       });
@@ -37,39 +38,40 @@
       onNext(260, new TimeInterval(4, 30)),
       onNext(300, new TimeInterval(5, 40)),
       onNext(350, new TimeInterval(6, 50)),
-      onCompleted(400));
+      onCompleted(400)
+    );
   });
 
-  test('TimeInterval Empty', function () {
-    var results, scheduler;
-
+  test('timeInterval empty', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable.empty(scheduler).timeInterval(scheduler);
     });
 
     results.messages.assertEqual(
-      onCompleted(201));
+      onCompleted(201)
+    );
   });
 
-  test('TimeInterval Error', function () {
+  test('timeInterval error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable['throw'](error, scheduler).timeInterval(scheduler);
     });
-    
+
     results.messages.assertEqual(
-      onError(201, error));
+      onError(201, error)
+    );
   });
 
-  test('TimeInterval Never', function () {
+  test('timeInterval never', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Rx.Observable.never().timeInterval(scheduler);
     });
 

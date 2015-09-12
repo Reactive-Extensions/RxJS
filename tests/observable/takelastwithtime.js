@@ -1,191 +1,214 @@
-QUnit.module('TakeLastWithTime');
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('takeLastWithTime');
 
-var Observable = Rx.Observable,
-  TestScheduler = Rx.TestScheduler,
-  onNext = Rx.ReactiveTest.onNext,
-  onError = Rx.ReactiveTest.onError,
-  onCompleted = Rx.ReactiveTest.onCompleted,
-  subscribe = Rx.ReactiveTest.subscribe;
+  var TestScheduler = Rx.TestScheduler,
+    onNext = Rx.ReactiveTest.onNext,
+    onError = Rx.ReactiveTest.onError,
+    onCompleted = Rx.ReactiveTest.onCompleted,
+    subscribe = Rx.ReactiveTest.subscribe;
 
-test('TakeLast_Zero1', function () {
-  var scheduler = new TestScheduler();
+  test('takeLastWithTime zero 1', function () {
+    var scheduler = new TestScheduler();
 
-  var xs = scheduler.createHotObservable(
-    onNext(210, 1),
-    onNext(220, 2),
-    onCompleted(230));
+    var xs = scheduler.createHotObservable(
+      onNext(210, 1),
+      onNext(220, 2),
+      onCompleted(230));
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(0, scheduler);
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(0, scheduler);
+    });
+
+    results.messages.assertEqual(onCompleted(230));
+
+    xs.subscriptions.assertEqual(subscribe(200, 230));
   });
 
-  res.messages.assertEqual(onCompleted(230));
+  test('takeLastWithTime zero 2', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(subscribe(200, 230));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onCompleted(230)
+    );
 
-test('TakeLast_Zero2', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(0, scheduler);
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(210, 1),
-    onNext(220, 2),
-    onNext(230, 3),
-    onCompleted(230)
-  );
+    results.messages.assertEqual(onCompleted(230));
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(0, scheduler);
+    xs.subscriptions.assertEqual(subscribe(200, 230));
   });
 
-  res.messages.assertEqual(onCompleted(230));
+  test('takeLastWithTime some 1', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(subscribe(200, 230));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onCompleted(240)
+    );
 
-test('TakeLast_Some1', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(25, scheduler);
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(210, 1),
-    onNext(220, 2),
-    onNext(230, 3),
-    onCompleted(240)
-  );
+    results.messages.assertEqual(
+      onNext(240, 2),
+      onNext(240, 3),
+      onCompleted(240)
+    );
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(25, scheduler);
+    xs.subscriptions.assertEqual(subscribe(200, 240));
   });
 
-  res.messages.assertEqual(
-    onNext(240, 2),
-    onNext(240, 3),
-    onCompleted(240)
-  );
+  test('takeLastWithTime some 2', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(subscribe(200, 240));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onCompleted(300)
+    );
 
-test('TakeLast_Some2', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(25, scheduler);
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(210, 1),
-    onNext(220, 2),
-    onNext(230, 3),
-    onCompleted(300)
-  );
+    results.messages.assertEqual(
+      onCompleted(300)
+    );
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(25, scheduler);
+    xs.subscriptions.assertEqual(
+      subscribe(200, 300)
+    );
   });
 
-  res.messages.assertEqual(onCompleted(300));
+  test('takeLastWithTime some 3', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(subscribe(200, 300));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(210, 1),
+      onNext(220, 2),
+      onNext(230, 3),
+      onNext(240, 4),
+      onNext(250, 5),
+      onNext(260, 6),
+      onNext(270, 7),
+      onNext(280, 8),
+      onNext(290, 9),
+      onCompleted(300)
+    );
 
-test('TakeLast_Some3', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(45, scheduler);
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(210, 1),
-    onNext(220, 2),
-    onNext(230, 3),
-    onNext(240, 4),
-    onNext(250, 5),
-    onNext(260, 6),
-    onNext(270, 7),
-    onNext(280, 8),
-    onNext(290, 9),
-    onCompleted(300)
-  );
+    results.messages.assertEqual(
+      onNext(300, 6),
+      onNext(300, 7),
+      onNext(300, 8),
+      onNext(300, 9),
+      onCompleted(300)
+    );
 
-  res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(45, scheduler);
+    xs.subscriptions.assertEqual(subscribe(200, 300));
   });
 
-  res.messages.assertEqual(
-    onNext(300, 6),
-    onNext(300, 7),
-    onNext(300, 8),
-    onNext(300, 9),
-    onCompleted(300)
-  );
+  test('takeLastWithTime some 4', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(subscribe(200, 300));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(210, 1),
+      onNext(240, 2),
+      onNext(250, 3),
+      onNext(280, 4),
+      onNext(290, 5),
+      onNext(300, 6),
+      onCompleted(350)
+    );
 
-test('TakeLast_Some4', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(25, scheduler);
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(210, 1),
-    onNext(240, 2),
-    onNext(250, 3),
-    onNext(280, 4),
-    onNext(290, 5),
-    onNext(300, 6),
-    onCompleted(350)
-  );
+    results.messages.assertEqual(
+      onCompleted(350)
+    );
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(25, scheduler);
+    xs.subscriptions.assertEqual(
+      subscribe(200, 350)
+    );
   });
 
-  res.messages.assertEqual(onCompleted(350));
+  test('takeLastWithTime all', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(subscribe(200, 350));
-});
+    var xs = scheduler.createHotObservable(
+      onNext(210, 1),
+      onNext(220, 2),
+      onCompleted(230)
+    );
 
-test('TakeLast_All', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(50, scheduler);
+    });
 
-  var xs = scheduler.createHotObservable(
-    onNext(210, 1),
-    onNext(220, 2),
-    onCompleted(230)
-  );
+    results.messages.assertEqual(
+      onNext(230, 1),
+      onNext(230, 2),
+      onCompleted(230)
+    );
 
-  res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(50, scheduler);
+    xs.subscriptions.assertEqual(
+      subscribe(200, 230)
+    );
   });
 
-  res.messages.assertEqual(
-    onNext(230, 1),
-    onNext(230, 2),
-    onCompleted(230)
-  );
+  test('takeLastWithTime error', function () {
+    var error = new Error();
 
-  xs.subscriptions.assertEqual(subscribe(200, 230));
-});
+    var scheduler = new TestScheduler();
 
-test('TakeLast_Error', function () {
-  var ex = new Error();
+    var xs = scheduler.createHotObservable(
+      onError(210, error)
+    );
 
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(50, scheduler);
+    });
 
-  var xs = scheduler.createHotObservable(onError(210, ex));
+    results.messages.assertEqual(
+      onError(210, error)
+    );
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(50, scheduler);
+    xs.subscriptions.assertEqual(
+      subscribe(200, 210)
+    );
   });
 
-  res.messages.assertEqual(onError(210, ex));
+  test('takeLastWithTime never', function () {
+    var scheduler = new TestScheduler();
 
-  xs.subscriptions.assertEqual(subscribe(200, 210));
-});
+    var xs = scheduler.createHotObservable();
 
-test('TakeLast_Never', function () {
-  var scheduler = new TestScheduler();
+    var results = scheduler.startScheduler(function () {
+      return xs.takeLastWithTime(50, scheduler);
+    });
 
-  var xs = scheduler.createHotObservable();
+    results.messages.assertEqual();
 
-  var res = scheduler.startWithCreate(function () {
-    return xs.takeLastWithTime(50, scheduler);
+    xs.subscriptions.assertEqual(
+      subscribe(200, 1000)
+    );
   });
 
-  res.messages.assertEqual();
-
-  xs.subscriptions.assertEqual(subscribe(200, 1000));
-});
+}());

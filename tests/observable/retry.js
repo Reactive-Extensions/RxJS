@@ -1,5 +1,9 @@
 (function () {
-  QUnit.module('Retry');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, raises */
+
+  QUnit.module('retry');
 
   function noop() { }
 
@@ -8,12 +12,9 @@
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;
+    subscribe = Rx.ReactiveTest.subscribe;
 
-  test('Retry Observable Basic', function () {
+  test('retry Observable basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -23,7 +24,7 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retry();
     });
 
@@ -39,7 +40,7 @@
     );
   });
 
-  test('Retry Observable Infinite', function () {
+  test('retry Observable infinite', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createColdObservable(
@@ -48,7 +49,7 @@
       onNext(200, 3)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retry();
     });
 
@@ -63,7 +64,7 @@
     );
   });
 
-  test('Retry Observable Error', function () {
+  test('retry Observable error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -75,9 +76,9 @@
       onError(250, error)
     );
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retry();
-    }, 1100);
+    }, { disposed: 1100 });
 
     results.messages.assertEqual(
       onNext(300, 1),
@@ -92,20 +93,20 @@
       onNext(1050, 1)
     );
 
-    return xs.subscriptions.assertEqual(
+    xs.subscriptions.assertEqual(
       subscribe(200, 450),
       subscribe(450, 700),
       subscribe(700, 950),
       subscribe(950, 1100)
     );
   });
-/*
-  test('Retry Observable Throws', function () {
+
+  test('retry Observable throws', function () {
     var scheduler1 = new TestScheduler();
 
     var xs = Observable.just(1, scheduler1).retry();
 
-    xs.subscribe(function (x) {
+    xs.subscribe(function () {
       throw new Error();
     });
 
@@ -119,7 +120,7 @@
 
     var d = ys.subscribe(noop, function (err) { throw err; });
 
-    scheduler2.scheduleAbsolute(210, function () {
+    scheduler2.scheduleAbsolute(null, 210, function () {
       return d.dispose();
     });
 
@@ -141,8 +142,8 @@
       return xss.subscribe();
     });
   });
-*/
-  test('Retry Observable RetryCount Basic', function () {
+
+  test('retry Observable retry count basic', function () {
     var scheduler = new TestScheduler();
 
     var error = new Error();
@@ -154,7 +155,7 @@
       onError(20, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retry(3);
     });
 
@@ -178,7 +179,7 @@
     );
   });
 
-  test('Retry Observable RetryCount Dispose', function () {
+  test('retry Observable retry count dispose', function () {
     var scheduler = new TestScheduler();
 
     var error = new Error();
@@ -190,9 +191,9 @@
       onError(20, error)
     );
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retry(3);
-    }, 231);
+    }, { disposed: 231 });
 
     results.messages.assertEqual(
       onNext(205, 1),
@@ -208,10 +209,8 @@
     );
   });
 
-  test('RetryObservable RetryCount_Dispose', function () {
+  test('retry retry count dispose', function () {
     var scheduler = new TestScheduler();
-
-    var error = new Error();
 
     var xs = scheduler.createColdObservable(
       onNext(100, 1),
@@ -219,7 +218,7 @@
       onNext(200, 3)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retry(3);
     });
 
@@ -234,10 +233,8 @@
     );
   });
 
-  test('Retry Observable RetryCount Dispose', function () {
+  test('retry Observable retry count dispose', function () {
     var scheduler = new TestScheduler();
-
-    var error = new Error();
 
     var xs = scheduler.createColdObservable(
       onNext(100, 1),
@@ -246,7 +243,7 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.retry(3);
     });
 
@@ -262,12 +259,12 @@
     );
   });
 
-  test('Retry Observable RetryCount Throws', function () {
+  test('retry Observable retry count Throws', function () {
     var scheduler1 = new TestScheduler();
 
     var xs = Observable.just(1, scheduler1).retry(3);
 
-    xs.subscribe(function (x) {
+    xs.subscribe(function () {
       throw new Error();
     });
 
@@ -281,7 +278,7 @@
 
     var d = ys.subscribe(noop, function (err) { throw err; });
 
-    scheduler2.scheduleAbsolute(10, function () {
+    scheduler2.scheduleAbsolute(null, 10, function () {
       return d.dispose();
     });
 
@@ -297,7 +294,7 @@
       return scheduler3.start();
     });
 
-    xss = Observable.create(function () { throw new Error(); }).retry(100);
+    var xss = Observable.create(function () { throw new Error(); }).retry(100);
 
     raises(function () {
       return xss.subscribe();

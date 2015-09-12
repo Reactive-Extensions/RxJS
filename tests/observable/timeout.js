@@ -1,7 +1,7 @@
-/* jshint undef: true, unused: true */
-/* globals QUnit, test, Rx, ok, equal */
-
 (function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, ok, equal */
   QUnit.module('timeout');
 
   var TestScheduler = Rx.TestScheduler,
@@ -23,7 +23,7 @@
       onCompleted(400)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(500, scheduler);
     });
 
@@ -44,7 +44,7 @@
       onNext(410, 1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(200, scheduler);
     });
 
@@ -66,7 +66,7 @@
       onNext(410, 1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(200, error, scheduler);
     });
 
@@ -86,7 +86,7 @@
       onNext(410, 1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(new Date(400), scheduler);
     });
 
@@ -108,7 +108,7 @@
       onNext(410, 1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(new Date(400), error, scheduler);
     });
 
@@ -121,7 +121,7 @@
     );
   });
 
-  test('timeout OutOfTime', function () {
+  test('timeout out of time', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -134,7 +134,7 @@
       onCompleted(400)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(205, scheduler);
     });
 
@@ -166,7 +166,7 @@
       onCompleted(320)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(100, ys, scheduler);
     });
 
@@ -205,7 +205,7 @@
       onCompleted(320)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(100, ys, scheduler);
     });
 
@@ -241,7 +241,7 @@
 
     var ys = scheduler.createColdObservable();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(100, ys, scheduler);
     });
 
@@ -270,7 +270,7 @@
       onNext(100, -1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(100, ys, scheduler);
     });
 
@@ -298,7 +298,7 @@
       onNext(100, -1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(100, ys, scheduler);
     });
 
@@ -326,7 +326,7 @@
       onNext(100, -1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(100, ys, scheduler);
     });
 
@@ -354,7 +354,7 @@
       onNext(100, -1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(100, ys, scheduler);
     });
 
@@ -387,7 +387,7 @@
       onCompleted(320)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(100, ys, scheduler);
     });
 
@@ -416,7 +416,7 @@
       onNext(100, -1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(new Date(400), ys, scheduler);
     });
 
@@ -443,7 +443,7 @@
       onNext(100, -1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(new Date(400), ys, scheduler);
     });
 
@@ -472,7 +472,7 @@
       onNext(100, -1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(new Date(400), ys, scheduler);
     });
 
@@ -502,7 +502,7 @@
       onNext(100, -1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(new Date(400), ys, scheduler);
     });
 
@@ -533,7 +533,7 @@
 
     var ys = scheduler.createColdObservable();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(new Date(400), ys, scheduler);
     });
 
@@ -562,7 +562,7 @@
 
     var ys = scheduler.createColdObservable();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(ys, function () { return ys; });
     });
 
@@ -596,7 +596,7 @@
 
     var zs = scheduler.createColdObservable();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(ys, function () { return zs; });
     });
 
@@ -625,7 +625,7 @@
 
     var zs = scheduler.createColdObservable(onNext(50, 'boo!'));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(ys, function () { return zs; });
     });
 
@@ -659,7 +659,7 @@
     var zs = scheduler.createColdObservable(
       onCompleted(50));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(ys, function () { return zs; });
     });
 
@@ -695,7 +695,7 @@
 
     var zs = scheduler.createColdObservable();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(ys, function (x) {
         if (x < 3) { return zs; }
         throw error;
@@ -735,7 +735,7 @@
     var zs = scheduler.createColdObservable(
       onError(50, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(ys, function () { return zs; });
     });
 
@@ -771,7 +771,7 @@
 
     var zs = scheduler.createColdObservable();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(ys, function () { return zs; });
     });
 
@@ -796,7 +796,7 @@
 
     var zs = scheduler.createColdObservable();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.timeout(ys, function () { return zs; });
     });
 

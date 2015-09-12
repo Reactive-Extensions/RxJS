@@ -1,22 +1,21 @@
 (function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+
   QUnit.module('pairs');
 
   var TestScheduler = Rx.TestScheduler,
-    Observable = Rx.Observable;
+    Observable = Rx.Observable,
     onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    created = Rx.ReactiveTest.created,
-    subscribed = Rx.ReactiveTest.subscribed,
-    disposed = Rx.ReactiveTest.disposed;
+    onCompleted = Rx.ReactiveTest.onCompleted;
 
   test('pairs empty', function () {
     var scheduler = new TestScheduler();
 
     var xs = {};
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable.pairs(xs, scheduler);
     });
 
@@ -30,7 +29,7 @@
 
     var xs = {foo: 42, bar: 56, baz: 78};
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable.pairs(xs, scheduler);
     });
 

@@ -1,16 +1,14 @@
-QUnit.module('Never');
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
 
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-	created = Rx.ReactiveTest.created,
-	subscribed = Rx.ReactiveTest.subscribed,
-	disposed = Rx.ReactiveTest.disposed;
+  QUnit.module('never');
 
-test('Never_Basic', function () {
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler;
+
+  test('never basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = Observable.never();
@@ -22,4 +20,6 @@ test('Never_Basic', function () {
     scheduler.start();
 
     results.messages.assertEqual();
-});
+  });
+
+}());

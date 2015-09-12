@@ -1,101 +1,104 @@
-var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, asyncTest, start, equal, ok, RSVP */
+  var Observable = Rx.Observable,
+      TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onError = Rx.ReactiveTest.onError,
+      onCompleted = Rx.ReactiveTest.onCompleted;
 
-function noop() {}
+  function noop() {}
 
-QUnit.module('StartAsync');
+  QUnit.module('startAsync');
 
-asyncTest('StartAsync', function () {
-  var source = Rx.Observable.startAsync(function () {
-    return new RSVP.Promise(function (res) { res(42); })
+  asyncTest('StartAsync', function () {
+    var source = Rx.Observable.startAsync(function () {
+      return new RSVP.Promise(function (res) { res(42); });
+    });
+
+    source.subscribe(function (x) {
+      equal(42, x);
+      start();
+    });
   });
 
-  source.subscribe(function (x) {
-    equal(42, x);
-    start();
-  });
-});
+  asyncTest('StartAsync_Error', function () {
+    var source = Rx.Observable.startAsync(function () {
+      return new RSVP.Promise(function (res, rej) { rej(42); });
+    });
 
-asyncTest('StartAsync_Error', function () {
-  var source = Rx.Observable.startAsync(function () {
-    return new RSVP.Promise(function (res, rej) { rej(42); })
-  });
-
-  source.subscribe(noop, function (err) {
-    equal(42, err);
-    start();
-  });
-});
-
-QUnit.module('Start');
-
-test('Start_Action2', function () {
-  var scheduler = new TestScheduler();
-
-  var done = false;
-
-  var res = scheduler.startWithCreate(function () {
-    return Observable.start(function () {
-      done = true;
-    }, null, scheduler);
+    source.subscribe(noop, function (err) {
+      equal(42, err);
+      start();
+    });
   });
 
-  res.messages.assertEqual(
-    onNext(200, undefined),
-    onCompleted(200)
-  );
+  test('start action 2', function () {
+    var scheduler = new TestScheduler();
 
-  ok(done);
-});
+    var done = false;
 
-test('Start_Func2', function () {
-  var scheduler = new TestScheduler();
+    var res = scheduler.startScheduler(function () {
+      return Observable.start(function () {
+        done = true;
+      }, null, scheduler);
+    });
 
-  var res = scheduler.startWithCreate(function () {
-    return Observable.start(function () {
-      return 1;
-    }, null, scheduler);
+    res.messages.assertEqual(
+      onNext(200, undefined),
+      onCompleted(200)
+    );
+
+    ok(done);
   });
 
-  res.messages.assertEqual(
-    onNext(200, 1),
-    onCompleted(200)
-  );
-});
+  test('start function 2', function () {
+    var scheduler = new TestScheduler();
 
-test('Start_FuncError', function () {
-  var ex = new Error();
+    var res = scheduler.startScheduler(function () {
+      return Observable.start(function () {
+        return 1;
+      }, null, scheduler);
+    });
 
-  var scheduler = new TestScheduler();
-
-  var res = scheduler.startWithCreate(function () {
-    return Observable.start(function () {
-      throw ex;
-    }, null, scheduler);
+    res.messages.assertEqual(
+      onNext(200, 1),
+      onCompleted(200)
+    );
   });
 
-  res.messages.assertEqual(
-    onError(200, ex)
-  );
-});
+  test('start with error', function () {
+    var error = new Error();
 
-test('Start_FuncContext', function () {
-  var context = { value: 42 };
+    var scheduler = new TestScheduler();
 
-  var scheduler = new TestScheduler();
+    var res = scheduler.startScheduler(function () {
+      return Observable.start(function () {
+        throw error;
+      }, null, scheduler);
+    });
 
-  var res = scheduler.startWithCreate(function () {
-    return Observable.start(function () {
-      return this.value;
-    }, context, scheduler);
+    res.messages.assertEqual(
+      onError(200, error)
+    );
   });
 
-  res.messages.assertEqual(
-    onNext(200, 42),
-    onCompleted(200)
-  );
-});
+  test('start with context', function () {
+    var context = { value: 42 };
+
+    var scheduler = new TestScheduler();
+
+    var res = scheduler.startScheduler(function () {
+      return Observable.start(function () {
+        return this.value;
+      }, context, scheduler);
+    });
+
+    res.messages.assertEqual(
+      onNext(200, 42),
+      onCompleted(200)
+    );
+  });
+
+}());

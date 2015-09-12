@@ -10,7 +10,7 @@
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('bufferWithTimeOrCount Basic', function () {
+  test('bufferWithTimeOrCount basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -23,9 +23,10 @@
       onNext(370, 7),
       onNext(420, 8),
       onNext(470, 9),
-      onCompleted(600));
+      onCompleted(600)
+    );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.bufferWithTimeOrCount(70, 3, scheduler);
     });
 
@@ -37,13 +38,15 @@
       onNext(510, [9]),
       onNext(580, []),
       onNext(600, []),
-      onCompleted(600));
+      onCompleted(600)
+    );
 
     xs.subscriptions.assertEqual(
-      subscribe(200, 600));
+      subscribe(200, 600)
+    );
   });
 
-  test('bufferWithTimeOrCount Error', function () {
+  test('bufferWithTimeOrCount error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -58,9 +61,10 @@
       onNext(370, 7),
       onNext(420, 8),
       onNext(470, 9),
-      onError(600, error));
+      onError(600, error)
+    );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.bufferWithTimeOrCount(70, 3, scheduler);
     });
 
@@ -71,13 +75,15 @@
       onNext(440, [8]),
       onNext(510, [9]),
       onNext(580, []),
-      onError(600, error));
+      onError(600, error)
+    );
 
     xs.subscriptions.assertEqual(
-      subscribe(200, 600));
+      subscribe(200, 600)
+    );
   });
 
-  test('bufferWithTimeOrCount Disposed', function () {
+  test('bufferWithTimeOrCount disposed', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -90,19 +96,22 @@
       onNext(370, 7),
       onNext(420, 8),
       onNext(470, 9),
-      onCompleted(600));
+      onCompleted(600)
+    );
 
     var results = scheduler.startScheduler(function () {
       return xs.bufferWithTimeOrCount(70, 3, scheduler);
-    }, 370);
+    }, { disposed: 370 });
 
     results.messages.assertEqual(
       onNext(240, [1,2,3]),
       onNext(310, [4]),
-      onNext(370, [5,6,7]));
+      onNext(370, [5,6,7])
+    );
 
     xs.subscriptions.assertEqual(
-      subscribe(200, 370));
+      subscribe(200, 370)
+    );
   });
 
   test('multiple bufferWithTimeOrCounts', function(){
@@ -129,13 +138,15 @@
       onNext(570, []),
       onNext(670, []),
       onNext(700, []),
-      onCompleted(700));
+      onCompleted(700)
+    );
 
     results2.messages.assertEqual(
       onNext(520, []),
       onNext(670, []),
       onNext(700, []),
-      onCompleted(700));
+      onCompleted(700)
+    );
   });
 
 }());

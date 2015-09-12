@@ -13,7 +13,7 @@
     return a > b ? -1 : a < b ? 1 : 0;
   }
 
-  test('maxBy Empty', function () {
+  test('maxBy empty', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -21,9 +21,7 @@
       onCompleted(250));
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      });
+      return xs.maxBy(function (x) { return x.key; });
     });
 
     results.messages.assertEqual(
@@ -41,9 +39,7 @@
       onCompleted(250));
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      });
+      return xs.maxBy(function (x) { return x.key; });
     });
 
     results.messages.assertEqual(
@@ -63,9 +59,7 @@
       onCompleted(250));
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      });
+      return xs.maxBy(function (x) { return x.key; });
     });
 
     results.messages.assertEqual(
@@ -89,9 +83,7 @@
     );
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      });
+      return xs.maxBy(function (x) { return x.key; });
     });
 
     results.messages.assertEqual(
@@ -111,9 +103,7 @@
     );
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      });
+      return xs.maxBy(function (x) { return x.key; });
     });
 
     results.messages.assertEqual(
@@ -127,9 +117,7 @@
       onNext(150, { key: 1, value: 'z' }));
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      });
+      return xs.maxBy(function (x) { return x.key; });
     });
 
     results.messages.assertEqual();
@@ -144,9 +132,7 @@
     );
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      }, reverseComparer);
+      return xs.maxBy(function (x) { return x.key; }, reverseComparer);
     });
 
     results.messages.assertEqual(
@@ -165,9 +151,7 @@
     );
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      }, reverseComparer);
+      return xs.maxBy(function (x) { return x.key; }, reverseComparer);
     });
 
     results.messages.assertEqual(
@@ -187,9 +171,7 @@
       onCompleted(250)
     );
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      }, reverseComparer);
+      return xs.maxBy(function (x) { return x.key; }, reverseComparer);
     });
 
     results.messages.assertEqual(
@@ -209,9 +191,7 @@
     );
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-        return x.key;
-      }, reverseComparer);
+      return xs.maxBy(function (x) { return x.key; }, reverseComparer);
     });
 
     results.messages.assertEqual(
@@ -225,9 +205,7 @@
       onNext(150, { key: 1, value: 'z' }));
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-          return x.key;
-      }, reverseComparer);
+      return xs.maxBy(function (x) { return x.key; }, reverseComparer);
     });
 
     results.messages.assertEqual();
@@ -247,9 +225,7 @@
     );
 
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function () {
-          throw error;
-      }, reverseComparer);
+      return xs.maxBy(function () { throw error; }, reverseComparer);
     });
 
     results.messages.assertEqual(
@@ -268,10 +244,9 @@
       onNext(230, { key: 4, value: 'a' }),
       onCompleted(250)
     );
+
     var results = scheduler.startScheduler(function () {
-      return xs.maxBy(function (x) {
-          return x.key;
-      }, function () { throw error; });
+      return xs.maxBy(function (x) { return x.key; }, function () { throw error; });
     });
 
     results.messages.assertEqual(

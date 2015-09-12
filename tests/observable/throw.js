@@ -1,51 +1,47 @@
 (function () {
-  QUnit.module('Throw');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, raises */
+  QUnit.module('throw');
 
   var Observable = Rx.Observable,
       TestScheduler = Rx.TestScheduler,
-      onNext = Rx.ReactiveTest.onNext,
-      onError = Rx.ReactiveTest.onError,
-      onCompleted = Rx.ReactiveTest.onCompleted,
-      subscribe = Rx.ReactiveTest.subscribe,
-      created = Rx.ReactiveTest.created,
-      subscribed = Rx.ReactiveTest.subscribed,
-      disposed = Rx.ReactiveTest.disposed;
+      onError = Rx.ReactiveTest.onError;
 
   function noop () { }
 
-  test('Throw Basic', function () {
+  test('throw basic', function () {
     var scheduler = new TestScheduler();
 
     var error = new Error();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['throw'](error, scheduler);
     });
 
     results.messages.assertEqual(
-      onError(201, error));
+      onError(201, error)
+    );
   });
 
-  test('Throw Disposed', function () {
+  test('throw disposed', function () {
     var scheduler = new TestScheduler();
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable['throw'](new Error(), scheduler);
-    }, 200);
+    }, { disposed: 200 });
 
     results.messages.assertEqual();
   });
 
-  test('Throw ObserverThrows', function () {
+  test('throw observer throws', function () {
     var scheduler = new TestScheduler();
 
     var xs = Observable['throw'](new Error(), scheduler);
 
     xs.subscribe(noop, function () { throw new Error(); });
 
-    raises(function () {
-      scheduler.start();
-    });
+    raises(function () { scheduler.start(); });
   });
 
 }());

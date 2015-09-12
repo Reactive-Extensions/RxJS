@@ -1,7 +1,11 @@
 (function () {
-  QUnit.module('Transduce');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, transducers, raises, equal */
+  QUnit.module('transduce');
 
   var TestScheduler = Rx.TestScheduler,
+    Observable = Rx.Observable,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
     onCompleted = Rx.ReactiveTest.onCompleted,
@@ -11,13 +15,12 @@
   function even (x) { return x % 2 === 0; }
   function mul10(x) { return x * 10; }
   function noop () { }
-  function identity (x) { return x; }
   function throwError () { throw new Error(); }
 
   test('transduce raises', function () {
 
     raises(function () {
-      Observable.throwError(new Error())
+      Observable['throw'](new Error())
         .transduce(t.comp(t.filter(even), t.map(mul10)))
         .subscribe(noop, throwError);
     });
@@ -43,7 +46,7 @@
       onNext(150, 1)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
     });
 
@@ -67,8 +70,8 @@
       i++; return x % 2 === 0;
     };
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
+    var results = scheduler.startScheduler(function () {
+      return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
     });
 
     results.messages.assertEqual(
@@ -79,7 +82,7 @@
       subscribe(200, 250)
     );
 
-    equal(0, i);
+    equal(i, 0);
   });
 
   test('transduce some', function () {
@@ -99,7 +102,7 @@
       i++; return x % 2 === 0;
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
     });
 
@@ -132,7 +135,7 @@
       i++; return x % 2 === 0;
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
     });
 
@@ -158,7 +161,7 @@
       onError(210, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.transduce(t.comp(t.filter(even), t.map(mul10)));
     });
 
@@ -190,7 +193,7 @@
       if (i++ > 2) { throw error; } else { return x % 2 === 0; }
     };
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.transduce(t.comp(t.filter(evenFilter), t.map(mul10)));
     });
 

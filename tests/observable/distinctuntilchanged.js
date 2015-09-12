@@ -194,13 +194,14 @@
       onCompleted(250));
 
     var results = scheduler.startScheduler(function () {
-      return xs.distinctUntilChanged(function (x) { return x % 2; });
+      return xs.distinctUntilChanged(function (x) { return x % 2 === 0; });
     });
 
     results.messages.assertEqual(
       onNext(210, 2),
-      onNext(220, 4),
-      onCompleted(250));
+      onNext(230, 3),
+      onCompleted(250)
+    );
   });
 
   test('distinctUntilChanged key selector throws', function () {

@@ -1,21 +1,19 @@
-QUnit.module('SingleInstance');
+(function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('singleInstance');
 
-var TestScheduler = Rx.TestScheduler,
-    Observable = Rx.Observable,
-    onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe,
-    Subject = Rx.Subject,
-    created = Rx.ReactiveTest.created,
-    disposed = Rx.ReactiveTest.disposed,
-    subscribed = Rx.ReactiveTest.subscribed,
-    inherits = Rx.internals.inherits;
+  var TestScheduler = Rx.TestScheduler,
+      onNext = Rx.ReactiveTest.onNext,
+      onCompleted = Rx.ReactiveTest.onCompleted,
+      subscribe = Rx.ReactiveTest.subscribe,
+      created = Rx.ReactiveTest.created,
+      disposed = Rx.ReactiveTest.disposed,
+      subscribed = Rx.ReactiveTest.subscribed;
 
-test('SingleInstance_Basic', function () {
+  test('singleInstance basic', function () {
     var scheduler = new TestScheduler();
-    
-    var counter = 0;
 
     var xs = scheduler.createColdObservable(
       onNext(100, 1),
@@ -24,51 +22,49 @@ test('SingleInstance_Basic', function () {
       onCompleted(250)
     );
 
-    var ys = null;
+    var ys;
     var results1 = scheduler.createObserver();
     var results2 = scheduler.createObserver();
-    var disposable = null;
+    var disposable;
 
-    scheduler.scheduleAbsolute(created, function() {
-        ys = xs.singleInstance();
+    scheduler.scheduleAbsolute(null, created, function() {
+      ys = xs.singleInstance();
     });
 
-    scheduler.scheduleAbsolute(subscribed, function() {
-        disposable = new Rx.CompositeDisposable(
-            ys.subscribe(results1),
-            ys.subscribe(results2)
-        );
+    scheduler.scheduleAbsolute(null, subscribed, function() {
+      disposable = new Rx.CompositeDisposable(
+        ys.subscribe(results1),
+        ys.subscribe(results2)
+      );
     });
 
-    scheduler.scheduleAbsolute(disposed, function() {
-        disposable.dispose();
+    scheduler.scheduleAbsolute(null, disposed, function() {
+      disposable.dispose();
     });
 
     scheduler.start();
 
     results1.messages.assertEqual(
-        onNext(300, 1),
-        onNext(350, 2),
-        onNext(400, 3),
-        onCompleted(450)
+      onNext(300, 1),
+      onNext(350, 2),
+      onNext(400, 3),
+      onCompleted(450)
     );
 
     results2.messages.assertEqual(
-        onNext(300, 1),
-        onNext(350, 2),
-        onNext(400, 3),
-        onCompleted(450)
+      onNext(300, 1),
+      onNext(350, 2),
+      onNext(400, 3),
+      onCompleted(450)
     );
 
     xs.subscriptions.assertEqual(
       subscribe(200, 450)
     );
-});
+  });
 
-test('SingleInstance_Can_Resubscribe_After_Stopped', function () {
+  test('singleInstance can resubscribe after stopped', function () {
     var scheduler = new TestScheduler();
-    
-    var counter = 0;
 
     var xs = scheduler.createColdObservable(
       onNext(100, 1),
@@ -77,47 +73,46 @@ test('SingleInstance_Can_Resubscribe_After_Stopped', function () {
       onCompleted(250)
     );
 
-    var ys = null;
+    var ys;
     var results1 = scheduler.createObserver();
     var results2 = scheduler.createObserver();
     var disposable = new Rx.SerialDisposable();
 
-    scheduler.scheduleAbsolute(100, function() {
+    scheduler.scheduleAbsolute(null, 100, function() {
         ys = xs.singleInstance();
     });
 
-    scheduler.scheduleAbsolute(200, function() {
-        disposable.setDisposable(ys.subscribe(results1));
+    scheduler.scheduleAbsolute(null, 200, function() {
+      disposable.setDisposable(ys.subscribe(results1));
     });
 
-    scheduler.scheduleAbsolute(600, function() {
-        disposable.setDisposable(ys.subscribe(results2));
+    scheduler.scheduleAbsolute(null, 600, function() {
+      disposable.setDisposable(ys.subscribe(results2));
     });
 
-    scheduler.scheduleAbsolute(900, function(){
-        disposable.dispose();
+    scheduler.scheduleAbsolute(null, 900, function(){
+      disposable.dispose();
     });
 
     scheduler.start();
 
     results1.messages.assertEqual(
-        onNext(300, 1),
-        onNext(350, 2),
-        onNext(400, 3),
-        onCompleted(450)
+      onNext(300, 1),
+      onNext(350, 2),
+      onNext(400, 3),
+      onCompleted(450)
     );
 
     results2.messages.assertEqual(
-        onNext(700, 1),
-        onNext(750, 2),
-        onNext(800, 3),
-        onCompleted(850)
+      onNext(700, 1),
+      onNext(750, 2),
+      onNext(800, 3),
+      onCompleted(850)
     );
 
     xs.subscriptions.assertEqual(
       subscribe(200, 450),
       subscribe(600, 850)
     );
-});
-
-
+  });
+}());

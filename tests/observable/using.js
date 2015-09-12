@@ -1,17 +1,17 @@
 (function () {
-  QUnit.module('Using');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal */
+  QUnit.module('using');
 
   var Observable = Rx.Observable,
       TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted,
-      subscribe = Rx.ReactiveTest.subscribe,
-      created = Rx.ReactiveTest.created,
-      subscribed = Rx.ReactiveTest.subscribed,
-      disposed = Rx.ReactiveTest.disposed;
+      subscribe = Rx.ReactiveTest.subscribe;
 
-  test('using Null', function () {
+  test('using null', function () {
     var xs, _d, disposable;
 
     var scheduler = new TestScheduler();
@@ -19,7 +19,7 @@
     var disposeInvoked = 0;
     var createInvoked = 0;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable.using(function () {
         disposeInvoked++;
         disposable = null;
@@ -51,7 +51,7 @@
     equal(disposable, null);
   });
 
-  test('using Complete', function () {
+  test('using complete', function () {
     var disposable, xs, _d;
 
     var scheduler = new TestScheduler();
@@ -59,7 +59,7 @@
     var disposeInvoked = 0;
     var createInvoked = 0;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable.using(function () {
         disposeInvoked++;
         disposable = new Rx.MockDisposable(scheduler);
@@ -87,7 +87,7 @@
     disposable.disposes.assertEqual(200, 400);
   });
 
-  test('using Error', function () {
+  test('using error', function () {
     var disposable, xs, _d;
 
     var scheduler = new TestScheduler();
@@ -97,7 +97,7 @@
 
     var error = new Error();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable.using(function () {
         disposeInvoked++;
         disposable = new Rx.MockDisposable(scheduler);
@@ -136,7 +136,7 @@
     var disposeInvoked = 0;
     var createInvoked = 0;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable.using(function () {
         disposeInvoked++;
         disposable = new Rx.MockDisposable(scheduler);
@@ -166,7 +166,7 @@
     disposable.disposes.assertEqual(200, 1000);
   });
 
-  test('using ThrowResourceSelector', function () {
+  test('using throw resource selector', function () {
     var scheduler = new TestScheduler();
 
     var disposeInvoked = 0;
@@ -174,11 +174,11 @@
 
     var error = new Error();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable.using(function () {
         disposeInvoked++;
         throw error;
-      }, function (d) {
+      }, function () {
         createInvoked++;
         return Observable.never();
       });
@@ -191,7 +191,7 @@
     equal(1, disposeInvoked);
   });
 
-  test('using ThrowResourceUsage', function () {
+  test('using throw resource usage', function () {
     var disposable;
 
     var scheduler = new TestScheduler();
@@ -201,12 +201,12 @@
 
     var error = new Error();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return Observable.using(function () {
         disposeInvoked++;
         disposable = new Rx.MockDisposable(scheduler);
         return disposable;
-      }, function (d) {
+      }, function () {
         createInvoked++;
         throw error;
       });

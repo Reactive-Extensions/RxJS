@@ -6226,13 +6226,8 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     return new AnonymousObservable(function (o) {
       var i = 0;
       return source.subscribe(function (x) {
-        var shouldRun;
-        try {
-          shouldRun = callback(x, i, source);
-        } catch (e) {
-          o.onError(e);
-          return;
-        }
+        var shouldRun = tryCatch(callback)(x, i, source);
+        if (shouldRun === errorObj) { return o.onError(shouldRun.e); }
         if (shouldRun) {
           o.onNext(yieldIndex ? i : x);
           o.onCompleted();
