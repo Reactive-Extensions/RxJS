@@ -165,7 +165,7 @@
 
     function scheduleRelative(state, dueTime, action) {
       var scheduler = this, dt = Scheduler.normalize(dueTime), disposable = new SingleAssignmentDisposable();
-      if (dt === 0) { return scheduler.scheduleWithState(state, action); }
+      if (dt === 0) { return scheduler.schedule(state, action); }
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
       }, dt);

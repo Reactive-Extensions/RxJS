@@ -13,7 +13,7 @@
     return new AnonymousObservable(function (observer) {
       var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
       d.setDisposable(m);
-      m.setDisposable(scheduler.schedule(function () {
+      m.setDisposable(scheduler.schedule(source, function (scheduler, source) {
         d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
       }));
       return d;

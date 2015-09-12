@@ -95,7 +95,7 @@
   }
 
   ScheduledDisposable.prototype.dispose = function () {
-    this.scheduler.scheduleWithState(this, scheduleItem);
+    this.scheduler.schedule(this, scheduleItem);
   };
 
   var CheckedObserver = (function (__super__) {
@@ -257,7 +257,7 @@
     return new AnonymousObservable(function (observer) {
       var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
       d.setDisposable(m);
-      m.setDisposable(scheduler.schedule(function () {
+      m.setDisposable(scheduler.schedule(source, function (scheduler, source) {
         d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
       }));
       return d;

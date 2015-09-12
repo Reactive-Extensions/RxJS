@@ -135,12 +135,6 @@
     raises(function () {
       return scheduler3.start();
     });
-
-    var xss = Observable.create(function () { throw new Error(); }).retry();
-
-    raises(function () {
-      return xss.subscribe();
-    });
   });
 
   test('retry Observable retry count basic', function () {

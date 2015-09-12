@@ -102,7 +102,7 @@
       try {
         result = observableFactory();
       } catch (e) {
-        return Rx.Observable.throwError(e).subscribe(observer);
+        return Rx.Observable['throw'](e).subscribe(observer);
       }
 
       return result.subscribe(observer);
@@ -121,7 +121,7 @@
 
   Rx.Observable['return'] = Rx.Observable.just = function (value) {
     return new Rx.AnonymousObservable(function (o) {
-      return Rx.Scheduler.immediate.scheduleWithState(value, function(_,v) {
+      return Rx.Scheduler.immediate.schedule(value, function(_,v) {
         o.onNext(v);
         o.onCompleted();
       });
@@ -157,7 +157,7 @@
 
   Rx.Observable['throw'] = Rx.Observable.throwError = function (error) {
     return new Rx.AnonymousObservable(function (observer) {
-      return Rx.Scheduler.immediate.scheduleWithState(error, function (_,e) {
+      return Rx.Scheduler.immediate.schedule(error, function (_,e) {
         observer.onError(e);
       });
     });

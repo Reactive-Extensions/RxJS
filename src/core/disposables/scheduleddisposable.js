@@ -12,5 +12,5 @@
   }
 
   ScheduledDisposable.prototype.dispose = function () {
-    this.scheduler.scheduleWithState(this, scheduleItem);
+    this.scheduler.schedule(this, scheduleItem);
   };

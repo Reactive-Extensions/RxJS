@@ -1119,7 +1119,7 @@
   }
 
   ScheduledDisposable.prototype.dispose = function () {
-    this.scheduler.scheduleWithState(this, scheduleItem);
+    this.scheduler.schedule(this, scheduleItem);
   };
 
   var ScheduledItem = Rx.internals.ScheduledItem = function (scheduler, state, action, dueTime, comparer) {
@@ -1160,7 +1160,7 @@
     /** Determines whether the given object is a scheduler */
     Scheduler.isScheduler = function (s) {
       return s instanceof Scheduler;
-    }
+    };
 
     function invokeAction(scheduler, action) {
       action();
@@ -1169,14 +1169,9 @@
 
     var schedulerProto = Scheduler.prototype;
 
-    /**
-     * Schedules an action to be executed.
-     * @param {Function} action Action to execute.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.schedule = function (action) {
-      return this._schedule(action, invokeAction);
-    };
+    function fixupDisposable(result) {
+      return isDisposable(result) ? result : disposableEmpty;
+    }
 
     /**
      * Schedules an action to be executed.
@@ -1184,8 +1179,8 @@
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    schedulerProto.scheduleWithState = function (state, action) {
-      return this._schedule(state, action);
+    schedulerProto.schedule = function (state, action) {
+      return fixupDisposable(this._schedule(state, action));
     };
 
     /**
@@ -1258,7 +1253,7 @@
       function innerAction(state2) {
         var isAdded = false, isDone = false;
 
-        var d = scheduler.scheduleWithState(state2, scheduleWork);
+        var d = scheduler.schedule(state2, scheduleWork);
         if (!isDone) {
           group.add(d);
           isAdded = true;
@@ -1330,7 +1325,7 @@
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithState = function (state, action) {
-      return this.scheduleWithState([state, action], invokeRecImmediate);
+      return this.schedule([state, action], invokeRecImmediate);
     };
 
     /**
@@ -1651,7 +1646,7 @@
 
     function scheduleRelative(state, dueTime, action) {
       var scheduler = this, dt = Scheduler.normalize(dueTime), disposable = new SingleAssignmentDisposable();
-      if (dt === 0) { return scheduler.scheduleWithState(state, action); }
+      if (dt === 0) { return scheduler.schedule(state, action); }
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
       }, dt);
@@ -1670,7 +1665,7 @@
   var CatchScheduler = (function (__super__) {
 
     function scheduleNow(state, action) {
-      return this._scheduler.scheduleWithState(state, this._wrap(action));
+      return this._scheduler.schedule(state, this._wrap(action));
     }
 
     function scheduleRelative(state, dueTime, action) {
@@ -1778,7 +1773,7 @@
       var self = this;
       isScheduler(scheduler) || (scheduler = immediateScheduler);
       return new AnonymousObservable(function (observer) {
-        return scheduler.scheduleWithState(self, function (_, notification) {
+        return scheduler.schedule(self, function (_, notification) {
           notification._acceptObservable(observer);
           notification.kind === 'N' && observer.onCompleted();
         });
@@ -2265,7 +2260,7 @@
       var ado = new AutoDetachObserver(observer), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
-        currentThreadScheduler.scheduleWithState(state, setDisposable);
+        currentThreadScheduler.schedule(state, setDisposable);
       } else {
         setDisposable(null, state);
       }
@@ -2600,7 +2595,7 @@ var FlatMapObservable = (function(__super__){
     return new AnonymousObservable(function (observer) {
       var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
       d.setDisposable(m);
-      m.setDisposable(scheduler.schedule(function () {
+      m.setDisposable(scheduler.schedule(source, function (scheduler, source) {
         d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
       }));
       return d;
@@ -2769,7 +2764,7 @@ var FlatMapObservable = (function(__super__){
     }
 
     EmptySink.prototype.run = function () {
-      return this.scheduler.scheduleWithState(this.observer, scheduleItem);
+      return this.scheduler.schedule(this.observer, scheduleItem);
     };
 
     return EmptyObservable;
@@ -3261,7 +3256,7 @@ var FlatMapObservable = (function(__super__){
       var state = [this.value, this.observer];
       return this.scheduler === immediateScheduler ?
         scheduleItem(null, state) :
-        this.scheduler.scheduleWithState(state, scheduleItem);
+        this.scheduler.schedule(state, scheduleItem);
     };
 
     return JustObservable;
@@ -3303,7 +3298,7 @@ var FlatMapObservable = (function(__super__){
     }
 
     ThrowSink.prototype.run = function () {
-      return this.p.scheduler.scheduleWithState([this.p.error, this.o], scheduleItem);
+      return this.p.scheduler.schedule([this.p.error, this.o], scheduleItem);
     };
 
     return ThrowObservable;
@@ -6481,7 +6476,7 @@ function isGeneratorFunction(obj) {
       var args = arguments,
         subject = new AsyncSubject();
 
-      scheduler.schedule(function () {
+      scheduler.schedule(null, function () {
         var result;
         try {
           result = func.apply(context, args);
@@ -7091,7 +7086,7 @@ var ControlledSubject = (function (__super__) {
       this.disposeCurrentRequest();
       var self = this;
 
-      this.requestedDisposable = this.scheduler.scheduleWithState(number,
+      this.requestedDisposable = this.scheduler.schedule(number,
       function(s, i) {
         var remaining = self._processRequest(i);
         var stopped = self.hasCompleted || self.hasFailed
@@ -7145,8 +7140,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new StopAndWaitObserver(observer, this, this.subscription));
 
-      var self = this;
-      timeoutScheduler.schedule(function () { self.source.request(1); });
+      timeoutScheduler.schedule(this, function (_, self) { self.source.request(1); });
 
       return this.subscription;
     }
@@ -7184,8 +7178,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
       stopAndWaitObserverProto.next = function (value) {
         this.observer.onNext(value);
 
-        var self = this;
-        timeoutScheduler.schedule(function () {
+        timeoutScheduler.schedule(this, function (_, self) {
           self.observable.source.request(1);
         });
       };
@@ -7219,8 +7212,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
 
-      var self = this;
-      timeoutScheduler.schedule(function () {
+      timeoutScheduler.schedule(this, function (self) {
         self.source.request(self.windowSize);
       });
 
@@ -7263,8 +7255,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
 
         this.received = ++this.received % this.observable.windowSize;
         if (this.received === 0) {
-          var self = this;
-          timeoutScheduler.schedule(function () {
+          timeoutScheduler.schedule(this, function (_, self) {
             self.observable.source.request(self.observable.windowSize);
           });
         }
@@ -8491,8 +8482,8 @@ observableProto.controlled = function (enableQueue, scheduler) {
   var ChainObservable = (function (__super__) {
 
     function subscribe (observer) {
-      var self = this, g = new CompositeDisposable();
-      g.add(currentThreadScheduler.schedule(function () {
+      var g = new CompositeDisposable();
+      g.add(currentThreadScheduler.schedule(this, function (_, self) {
         observer.onNext(self.head);
         g.add(self.tail.mergeAll().subscribe(observer));
       }));
@@ -10203,7 +10194,7 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
       var ado = new AutoDetachObserver(observer), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
-        currentThreadScheduler.scheduleWithState(state, setDisposable);
+        currentThreadScheduler.schedule(state, setDisposable);
       } else {
         setDisposable(null, state);
       }

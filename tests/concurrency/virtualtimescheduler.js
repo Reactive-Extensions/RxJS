@@ -9,31 +9,31 @@
 
   var VirtualSchedulerTestScheduler = (function () {
 
-      function comparer(a, b) {
-        return a > b ? 1 : a < b ? -1 : 0;
-      }
+    function comparer(a, b) {
+      return a > b ? 1 : a < b ? -1 : 0;
+    }
 
-      function add(absolute, relative) {
-        absolute == null && (absolute = '');
-        return absolute + relative;
-      }
+    function add(absolute, relative) {
+      absolute == null && (absolute = '');
+      return absolute + relative;
+    }
 
-      function toAbsoluteTime(absolute) {
-        absolute == null && (absolute = '');
-        return new Date(absolute.length);
-      }
+    function toAbsoluteTime(absolute) {
+      absolute == null && (absolute = '');
+      return new Date(absolute.length);
+    }
 
-      function toRelative (timeSpan) {
-        return String.fromCharCode(timeSpan % 65535);
-      }
+    function toRelative (timeSpan) {
+      return String.fromCharCode(timeSpan % 65535);
+    }
 
-      return function () {
-        var scheduler = new VirtualTimeScheduler(null, comparer);
-        scheduler.add = add;
-        scheduler.toAbsoluteTime = toAbsoluteTime;
-        scheduler.toRelative = toRelative;
-        return scheduler;
-      };
+    return function () {
+      var scheduler = new VirtualTimeScheduler(null, comparer);
+      scheduler.add = add;
+      scheduler.toAbsoluteTime = toAbsoluteTime;
+      scheduler.toRelative = toRelative;
+      return scheduler;
+    };
   }());
 
   test('Virtual Now', function () {
@@ -46,7 +46,7 @@
 
     var scheduler = new VirtualSchedulerTestScheduler();
 
-    scheduler.schedule(function () { ran = true; });
+    scheduler.schedule(null, function () { ran = true; });
 
     scheduler.start();
 
@@ -59,8 +59,8 @@
     try {
       var scheduler = new VirtualSchedulerTestScheduler();
 
-      scheduler.schedule(function () {
-        throw error;
+      scheduler.schedule(error, function (_, e) {
+        throw e;
       });
 
       scheduler.start();

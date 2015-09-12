@@ -412,7 +412,7 @@ var
     /** Determines whether the given object is a scheduler */
     Scheduler.isScheduler = function (s) {
       return s instanceof Scheduler;
-    }
+    };
 
     function invokeAction(scheduler, action) {
       action();
@@ -421,14 +421,9 @@ var
 
     var schedulerProto = Scheduler.prototype;
 
-    /**
-     * Schedules an action to be executed.
-     * @param {Function} action Action to execute.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.schedule = function (action) {
-      return this._schedule(action, invokeAction);
-    };
+    function fixupDisposable(result) {
+      return isDisposable(result) ? result : disposableEmpty;
+    }
 
     /**
      * Schedules an action to be executed.
@@ -436,8 +431,8 @@ var
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    schedulerProto.scheduleWithState = function (state, action) {
-      return this._schedule(state, action);
+    schedulerProto.schedule = function (state, action) {
+      return fixupDisposable(this._schedule(state, action));
     };
 
     /**
@@ -510,7 +505,7 @@ var
       function innerAction(state2) {
         var isAdded = false, isDone = false;
 
-        var d = scheduler.scheduleWithState(state2, scheduleWork);
+        var d = scheduler.schedule(state2, scheduleWork);
         if (!isDone) {
           group.add(d);
           isAdded = true;
@@ -582,7 +577,7 @@ var
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
     schedulerProto.scheduleRecursiveWithState = function (state, action) {
-      return this.scheduleWithState([state, action], invokeRecImmediate);
+      return this.schedule([state, action], invokeRecImmediate);
     };
 
     /**
@@ -892,7 +887,7 @@ var
 
     function scheduleRelative(state, dueTime, action) {
       var scheduler = this, dt = Scheduler.normalize(dueTime), disposable = new SingleAssignmentDisposable();
-      if (dt === 0) { return scheduler.scheduleWithState(state, action); }
+      if (dt === 0) { return scheduler.schedule(state, action); }
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
       }, dt);
@@ -1147,7 +1142,7 @@ var
       var ado = new AutoDetachObserver(observer), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
-        currentThreadScheduler.scheduleWithState(state, setDisposable);
+        currentThreadScheduler.schedule(state, setDisposable);
       } else {
         setDisposable(null, state);
       }
@@ -1186,7 +1181,7 @@ var
       var ado = new AutoDetachObserver(observer), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
-        currentThreadScheduler.scheduleWithState(state, setDisposable);
+        currentThreadScheduler.schedule(state, setDisposable);
       } else {
         setDisposable(null, state);
       }

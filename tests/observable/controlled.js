@@ -239,8 +239,8 @@
             source.request(1); // request next
           } else {
             //Delayed
-            scheduler.schedule(function () {
-                source.request(1); // request next
+            scheduler.schedule(source, function (_, source) {
+              source.request(1); // request next
             });
           }
           results.onNext(x);

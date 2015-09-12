@@ -32,8 +32,8 @@
   var ChainObservable = (function (__super__) {
 
     function subscribe (observer) {
-      var self = this, g = new CompositeDisposable();
-      g.add(currentThreadScheduler.schedule(function () {
+      var g = new CompositeDisposable();
+      g.add(currentThreadScheduler.schedule(this, function (_, self) {
         observer.onNext(self.head);
         g.add(self.tail.mergeAll().subscribe(observer));
       }));

@@ -1,59 +1,61 @@
 (function () {
-  QUnit.module('CurrentThreadScheduler');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, ok, equal */
+  QUnit.module('currentThreadScheduler');
 
   var Scheduler = Rx.Scheduler;
 
   Scheduler.currentThread.ensureTrampoline = function (action) {
-    if (this.scheduleRequired()) { this.schedule(action); } else { action(); }
+    if (this.scheduleRequired()) { this.schedule(null, action); } else { action(); }
   };
 
-  test('CurrentThread_Now', function () {
+  test('current thread now', function () {
     var res = Scheduler.currentThread.now() - new Date().getTime();
     ok(res < 1000);
   });
 
-  test('CurrentThread_ScheduleAction', function () {
+  test('current thread schedule action', function () {
     var ran = false;
 
-    Scheduler.currentThread.schedule(function () { ran = true; });
+    Scheduler.currentThread.schedule(null, function () { ran = true; });
 
     ok(ran);
   });
 
-  test('CurrentThread_ScheduleActionError', function () {
+  test('current thread schedule action error', function () {
     var error = new Error();
 
     try {
-      Scheduler.currentThread.schedule(function () { throw error; });
+      Scheduler.currentThread.schedule(error, function (_, e) { throw e; });
       ok(false);
     } catch (e) {
       equal(e, error);
     }
   });
 
-  test('CurrentThread_ScheduleActionNested', function () {
+  test('current thread schedule nested', function () {
     var ran = false;
 
-    Scheduler.currentThread.schedule(function () {
-      Scheduler.currentThread.schedule(function () { ran = true; });
+    Scheduler.currentThread.schedule(null, function () {
+      Scheduler.currentThread.schedule(null, function () { ran = true; });
     });
 
     ok(ran);
   });
 
-  test('CurrentThread_EnsureTrampoline', function () {
+  test('current thread ensure trampoline', function () {
     var ran1 = false, ran2 = false;
 
     Scheduler.currentThread.ensureTrampoline(function () {
-      Scheduler.currentThread.schedule(function () { ran1 = true; });
-      Scheduler.currentThread.schedule(function () { ran2 = true; });
+      Scheduler.currentThread.schedule(null, function () { ran1 = true; });
+      Scheduler.currentThread.schedule(null, function () { ran2 = true; });
     });
 
     ok(ran1);
     ok(ran2);
   });
 
-  test('CurrentThread_EnsureTrampoline_Nested', function () {
+  test('current thread ensure trampoline nested', function () {
     var ran1 = false, ran2 = false;
 
     Scheduler.currentThread.ensureTrampoline(function () {
@@ -65,13 +67,13 @@
     ok(ran2);
   });
 
-  test('CurrentThread_EnsureTrampolineAndCancel', function () {
+  test('current thread ensure trampoline and cancel', function () {
     var ran1 = false, ran2 = false;
 
     Scheduler.currentThread.ensureTrampoline(function () {
-      Scheduler.currentThread.schedule(function () {
+      Scheduler.currentThread.schedule(null, function () {
         ran1 = true;
-        var d = Scheduler.currentThread.schedule(function () { ran2 = true; });
+        var d = Scheduler.currentThread.schedule(null, function () { ran2 = true; });
         d.dispose();
       });
     });
@@ -81,4 +83,3 @@
   });
 
 }());
-﻿

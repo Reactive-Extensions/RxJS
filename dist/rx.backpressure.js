@@ -372,7 +372,7 @@ var ControlledSubject = (function (__super__) {
       this.disposeCurrentRequest();
       var self = this;
 
-      this.requestedDisposable = this.scheduler.scheduleWithState(number,
+      this.requestedDisposable = this.scheduler.schedule(number,
       function(s, i) {
         var remaining = self._processRequest(i);
         var stopped = self.hasCompleted || self.hasFailed
@@ -426,8 +426,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new StopAndWaitObserver(observer, this, this.subscription));
 
-      var self = this;
-      timeoutScheduler.schedule(function () { self.source.request(1); });
+      timeoutScheduler.schedule(this, function (_, self) { self.source.request(1); });
 
       return this.subscription;
     }
@@ -465,8 +464,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
       stopAndWaitObserverProto.next = function (value) {
         this.observer.onNext(value);
 
-        var self = this;
-        timeoutScheduler.schedule(function () {
+        timeoutScheduler.schedule(this, function (_, self) {
           self.observable.source.request(1);
         });
       };
@@ -500,8 +498,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
 
-      var self = this;
-      timeoutScheduler.schedule(function () {
+      timeoutScheduler.schedule(this, function (self) {
         self.source.request(self.windowSize);
       });
 
@@ -544,8 +541,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
 
         this.received = ++this.received % this.observable.windowSize;
         if (this.received === 0) {
-          var self = this;
-          timeoutScheduler.schedule(function () {
+          timeoutScheduler.schedule(this, function (_, self) {
             self.observable.source.request(self.observable.windowSize);
           });
         }

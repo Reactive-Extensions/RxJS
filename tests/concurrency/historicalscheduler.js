@@ -1,4 +1,5 @@
 (function () {
+  'use strict';
   /* jshint undef: true, unused: true */
   /* globals QUnit, test, Rx, equal, ok */
 
@@ -34,6 +35,7 @@
     this.value = value;
     this.timestamp = timestamp;
   }
+
   Timestamped.prototype.equals = function (other) {
     if (other == null) { return false; }
     return other.value === this.value && other.timestamp === this.timestamp;
@@ -282,7 +284,7 @@
 
     equal(false, s.isEnabled);
 
-    s.schedule(function () {
+    s.schedule(s, function (s) {
       equal(true, s.isEnabled);
       s.stop();
       equal(false, s.isEnabled);

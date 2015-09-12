@@ -11,7 +11,7 @@
     /** Determines whether the given object is a scheduler */
     Scheduler.isScheduler = function (s) {
       return s instanceof Scheduler;
-    }
+    };
 
     function invokeAction(scheduler, action) {
       action();
@@ -20,14 +20,9 @@
 
     var schedulerProto = Scheduler.prototype;
 
-    /**
-     * Schedules an action to be executed.
-     * @param {Function} action Action to execute.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.schedule = function (action) {
-      return this._schedule(action, invokeAction);
-    };
+    function fixupDisposable(result) {
+      return isDisposable(result) ? result : disposableEmpty;
+    }
 
     /**
      * Schedules an action to be executed.
@@ -35,8 +30,8 @@
      * @param {Function} action Action to be executed.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    schedulerProto.scheduleWithState = function (state, action) {
-      return this._schedule(state, action);
+    schedulerProto.schedule = function (state, action) {
+      return fixupDisposable(this._schedule(state, action));
     };
 
     /**

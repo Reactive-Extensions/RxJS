@@ -28,7 +28,7 @@
       var state = [this.value, this.observer];
       return this.scheduler === immediateScheduler ?
         scheduleItem(null, state) :
-        this.scheduler.scheduleWithState(state, scheduleItem);
+        this.scheduler.schedule(state, scheduleItem);
     };
 
     return JustObservable;

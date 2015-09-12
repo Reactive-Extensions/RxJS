@@ -82,7 +82,7 @@
       var self = this;
       isScheduler(scheduler) || (scheduler = immediateScheduler);
       return new AnonymousObservable(function (observer) {
-        return scheduler.scheduleWithState(self, function (_, notification) {
+        return scheduler.schedule(self, function (_, notification) {
           notification._acceptObservable(observer);
           notification.kind === 'N' && observer.onCompleted();
         });

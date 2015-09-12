@@ -72,8 +72,7 @@
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new StopAndWaitObserver(observer, this, this.subscription));
 
-      var self = this;
-      timeoutScheduler.schedule(function () { self.source.request(1); });
+      timeoutScheduler.schedule(this, function (_, self) { self.source.request(1); });
 
       return this.subscription;
     }
@@ -111,8 +110,7 @@
       stopAndWaitObserverProto.next = function (value) {
         this.observer.onNext(value);
 
-        var self = this;
-        timeoutScheduler.schedule(function () {
+        timeoutScheduler.schedule(this, function (_, self) {
           self.observable.source.request(1);
         });
       };
@@ -146,8 +144,7 @@
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
 
-      var self = this;
-      timeoutScheduler.schedule(function () {
+      timeoutScheduler.schedule(this, function (self) {
         self.source.request(self.windowSize);
       });
 
@@ -190,8 +187,7 @@
 
         this.received = ++this.received % this.observable.windowSize;
         if (this.received === 0) {
-          var self = this;
-          timeoutScheduler.schedule(function () {
+          timeoutScheduler.schedule(this, function (_, self) {
             self.observable.source.request(self.observable.windowSize);
           });
         }

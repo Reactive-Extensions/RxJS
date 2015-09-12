@@ -1,7 +1,7 @@
   var CatchScheduler = (function (__super__) {
 
     function scheduleNow(state, action) {
-      return this._scheduler.scheduleWithState(state, this._wrap(action));
+      return this._scheduler.schedule(state, this._wrap(action));
     }
 
     function scheduleRelative(state, dueTime, action) {

@@ -1,34 +1,34 @@
 (function () {
-  module('DefaultScheduler');
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, ok, asyncTest, start */
 
-  var DefaultScheduler = Rx.Scheduler.timeout;
+  QUnit.module('defaultScheduler');
 
-  test('Timeout_Now', function () {
-    var res;
-    res = DefaultScheduler.now() - new Date().getTime();
+  var DefaultScheduler = Rx.Scheduler['default'];
+
+  test('default now', function () {
+    var res = DefaultScheduler.now() - new Date().getTime();
     ok(res < 1000);
   });
 
-  asyncTest('Timeout_ScheduleAction', 1, function () {
-    expect(1);
-    DefaultScheduler.schedule(function () {
+  asyncTest('default schedule action', 1, function () {
+    DefaultScheduler.schedule(null, function () {
       ok(true);
       start();
     });
   });
 
-  asyncTest('ThreadPool_ScheduleActionDue', function () {
-    expect(1);
-    var startTime = new Date().getTime(), endTime;
+  asyncTest('default schedule relative', 1, function () {
+    var startTime = +new Date();
 
     DefaultScheduler.scheduleWithRelative(200, function () {
-      endTime = new Date().getTime();
+      var endTime = +new Date();
       ok(endTime - startTime > 180, endTime - startTime);
       start();
     });
   });
 
-  asyncTest('Timeout_ScheduleActionCancel', 1, function () {
+  asyncTest('default schedule action cancel', 1, function () {
     var set = false;
     var d = DefaultScheduler.scheduleWithRelative(200, function () {
       set = true;

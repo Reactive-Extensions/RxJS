@@ -21,7 +21,7 @@
     }
 
     EmptySink.prototype.run = function () {
-      return this.scheduler.scheduleWithState(this.observer, scheduleItem);
+      return this.scheduler.schedule(this.observer, scheduleItem);
     };
 
     return EmptyObservable;

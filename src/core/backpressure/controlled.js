@@ -91,7 +91,7 @@ var ControlledSubject = (function (__super__) {
       this.disposeCurrentRequest();
       var self = this;
 
-      this.requestedDisposable = this.scheduler.scheduleWithState(number,
+      this.requestedDisposable = this.scheduler.schedule(number,
       function(s, i) {
         var remaining = self._processRequest(i);
         var stopped = self.hasCompleted || self.hasFailed
