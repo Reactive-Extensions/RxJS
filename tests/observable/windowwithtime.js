@@ -1,14 +1,16 @@
 (function() {
-  QUnit.module('WindowWithTime');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('windowWithTime');
 
-  var Observable = Rx.Observable,
-      TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('Window_Time_Basic', function () {
+  test('windowWithTime basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -24,7 +26,7 @@
       onNext(470, 10),
       onCompleted(490));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithTime(100, scheduler).map(function (ys, i) {
         return ys.map(function (y) { return i + ' ' + y; }).concat(Rx.Observable.just(i + ' end'));
       }).mergeAll();
@@ -49,7 +51,7 @@
       subscribe(200, 490));
   });
 
-  test('Window_Time_Basic_Both', function () {
+  test('windowWithTime basic both', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -65,7 +67,7 @@
       onNext(470, 10),
       onCompleted(490));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithTime(100, 50, scheduler).map(function (ys, i) {
         return ys.map(function (y) { return i + ' ' + y; }).concat(Rx.Observable.just(i + ' end'));
       }).mergeAll();
@@ -100,7 +102,7 @@
       subscribe(200, 490));
   });
 
-  test('WindowWithTime_Basic', function () {
+  test('windowWithTime basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -115,7 +117,7 @@
       onNext(470, 9),
       onCompleted(600));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithTime(100, 70, scheduler).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
@@ -139,7 +141,7 @@
       subscribe(200, 600));
   });
 
-  test('WindowWithTime_Error', function () {
+  test('windowWithTime Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -156,7 +158,7 @@
       onNext(470, 9),
       onError(600, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithTime(100, 70, scheduler).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x;   });
       }).mergeAll();
@@ -179,7 +181,7 @@
     xs.subscriptions.assertEqual(subscribe(200, 600));
   });
 
-  test('WindowWithTime_Disposed', function () {
+  test('windowWithTime disposed', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -194,11 +196,11 @@
       onNext(470, 9),
       onCompleted(600));
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
         return xs.windowWithTime(100, 70, scheduler).map(function (w, i) {
           return w.map(function (x) { return i + ' ' + x; });
         }).mergeAll();
-    }, 370);
+    }, { disposed: 370 });
 
     results.messages.assertEqual(
       onNext(210, '0 2'),
@@ -213,7 +215,7 @@
       subscribe(200, 370));
   });
 
-  test('WindowWithTime_Basic_Same', function () {
+  test('windowWithTime basic same', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -228,7 +230,7 @@
       onNext(470, 9),
       onCompleted(600));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithTime(100, scheduler).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();

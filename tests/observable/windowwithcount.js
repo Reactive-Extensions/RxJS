@@ -1,14 +1,16 @@
 (function () {
-  QUnit.module('WindowWithCount');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('windowWithCount');
 
-  var Observable = Rx.Observable,
-      TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('WindowWithCount_Basic', function () {
+  test('windowWithCount basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -23,7 +25,7 @@
       onNext(470, 9),
       onCompleted(600));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithCount(3, 2).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
@@ -41,13 +43,15 @@
       onNext(420, '2 8'),
       onNext(420, '3 8'),
       onNext(470, '3 9'),
-      onCompleted(600));
+      onCompleted(600)
+    );
 
     xs.subscriptions.assertEqual(
-      subscribe(200, 600));
+      subscribe(200, 600)
+    );
   });
 
-  test('WindowWithCount_Disposed', function () {
+  test('windowWithCount disposed', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -62,11 +66,11 @@
       onNext(470, 9),
       onCompleted(600));
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithCount(3, 2).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
-    }, 370);
+    }, { disposed: 370 });
 
     results.messages.assertEqual(
       onNext(210, '0 2'),
@@ -75,13 +79,14 @@
       onNext(280, '1 4'),
       onNext(320, '1 5'),
       onNext(350, '1 6'),
-      onNext(350, '2 6'));
+      onNext(350, '2 6')
+    );
 
     xs.subscriptions.assertEqual(
       subscribe(200, 370));
   });
 
-  test('WindowWithCount_Error', function () {
+  test('windowWithCount error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -98,7 +103,7 @@
       onNext(470, 9),
       onError(600, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithCount(3, 2).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
@@ -116,10 +121,12 @@
       onNext(420, '2 8'),
       onNext(420, '3 8'),
       onNext(470, '3 9'),
-      onError(600, error));
+      onError(600, error)
+    );
 
     xs.subscriptions.assertEqual(
-      subscribe(200, 600));
+      subscribe(200, 600)
+    );
   });
 
 }());

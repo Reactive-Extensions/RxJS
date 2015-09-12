@@ -1,14 +1,16 @@
 (function () {
-  QUnit.module('WindowWithTimeOrCount');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('windowWithTimeOrCount');
 
-  var Observable = Rx.Observable,
-      TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted,
       subscribe = Rx.ReactiveTest.subscribe;
 
-  test('WindowWithTimeOrCount_Basic', function () {
+  test('windowWithTimeOrCount basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -23,7 +25,7 @@
       onNext(470, 9),
       onCompleted(600));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithTimeOrCount(70, 3, scheduler).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
@@ -45,7 +47,7 @@
       subscribe(200, 600));
   });
 
-  test('WindowWithTimeOrCount_Error', function () {
+  test('windowWithTimeOrCount Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -62,7 +64,7 @@
       onNext(470, 9),
       onError(600, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithTimeOrCount(70, 3, scheduler).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
@@ -84,7 +86,7 @@
       subscribe(200, 600));
   });
 
-  test('WindowWithTimeOrCount_Disposed', function () {
+  test('windowWithTimeOrCount disposed', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -99,11 +101,11 @@
       onNext(470, 9),
       onCompleted(600));
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.windowWithTimeOrCount(70, 3, scheduler).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
-    }, 370);
+    }, { disposed: 370 });
 
     results.messages.assertEqual(
       onNext(205, '0 1'),

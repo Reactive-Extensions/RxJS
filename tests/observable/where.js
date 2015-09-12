@@ -1,8 +1,10 @@
 (function () {
-  QUnit.module('Where');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal */
+  QUnit.module('filter');
 
-  var Observable = Rx.Observable,
-    TestScheduler = Rx.TestScheduler,
+  var TestScheduler = Rx.TestScheduler,
     SerialDisposable = Rx.SerialDisposable,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
@@ -13,20 +15,15 @@
     disposed = Rx.ReactiveTest.disposed;
 
   function isPrime(i) {
-    if (i <= 1) {
-      return false;
-    }
-    var max = Math.floor(Math.sqrt(i))
+    if (i <= 1) { return false; }
+    var max = Math.floor(Math.sqrt(i));
     for (var j = 2; j <= max; ++j) {
-      if (i % j === 0) {
-        return false;
-      }
+      if (i % j === 0) { return false; }
     }
-
     return true;
   }
 
-  test('Where_Complete', function () {
+  test('filter complete', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -48,7 +45,7 @@
       onError(620, new Error()),
       onCompleted(630));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x) {
         invoked++;
         return isPrime(x);
@@ -70,7 +67,7 @@
     equal(9, invoked);
   });
 
-  test('Where_True', function () {
+  test('filter True', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -90,8 +87,8 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithCreate(function () {
-      return xs.filter(function (x) {
+    var results = scheduler.startScheduler(function () {
+      return xs.filter(function () {
         invoked++;
         return true;
       });
@@ -117,7 +114,7 @@
     equal(9, invoked);
   });
 
-  test('Where_False', function () {
+  test('filter False', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -137,7 +134,7 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x) {
         invoked++;
         return false;
@@ -155,7 +152,7 @@
     equal(9, invoked);
   });
 
-  test('Where_Dispose', function () {
+  test('filter dispose', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -175,12 +172,12 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x) {
         invoked++;
         return isPrime(x);
       });
-    }, 400);
+    }, { disposed: 400 });
 
     results.messages.assertEqual(
       onNext(230, 3),
@@ -195,7 +192,7 @@
     equal(5, invoked);
   });
 
-  test('Where_Error', function () {
+  test('filter error', function () {
     var scheduler = new TestScheduler();
     var invoked = 0;
 
@@ -219,7 +216,7 @@
       onCompleted(630)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x) {
         invoked++;
         return isPrime(x);
@@ -241,7 +238,7 @@
     equal(9, invoked);
   });
 
-  test('Where_Throw', function () {
+  test('filter Throw', function () {
     var scheduler = new TestScheduler();
     var invoked = 0;
 
@@ -265,7 +262,7 @@
       onCompleted(630)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x) {
         invoked++;
         if (x > 5) {
@@ -288,7 +285,7 @@
     equal(4, invoked);
   });
 
-  test('Where_DisposeInPredicate', function () {
+  test('filter DisposeInPredicate', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -316,7 +313,7 @@
     var d = new SerialDisposable();
 
     var ys;
-    scheduler.scheduleAbsolute(created, function () {
+    scheduler.scheduleAbsolute(null, created, function () {
       return ys = xs.filter(function (x) {
         invoked++;
         if (x === 8) {
@@ -326,11 +323,11 @@
       });
     });
 
-    scheduler.scheduleAbsolute(subscribed, function () {
+    scheduler.scheduleAbsolute(null, subscribed, function () {
       d.setDisposable(ys.subscribe(results));
     });
 
-    scheduler.scheduleAbsolute(disposed, function () {
+    scheduler.scheduleAbsolute(null, disposed, function () {
       d.dispose();
     });
 
@@ -349,7 +346,7 @@
     equal(6, invoked);
   });
 
-  test('WhereIndex_Complete', function () {
+  test('filter with index complete', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -372,7 +369,7 @@
       onCompleted(630)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x, index) {
         invoked++;
         return isPrime(x + index * 10);
@@ -392,7 +389,7 @@
     equal(9, invoked);
   });
 
-  test('WhereIndex_True', function () {
+  test('filter with index True', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -412,7 +409,7 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x, index) {
         invoked++;
         return true;
@@ -439,7 +436,7 @@
     equal(9, invoked);
   });
 
-  test('WhereIndex_False', function () {
+  test('filter with index False', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -459,7 +456,7 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x, index) {
         invoked++;
         return false;
@@ -477,7 +474,7 @@
     equal(9, invoked);
   });
 
-  test('WhereIndex_Dispose', function () {
+  test('filter with index dispose', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -497,12 +494,12 @@
       onCompleted(600)
     );
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x, index) {
         invoked++;
         return isPrime(x + index * 10);
       });
-    }, 400);
+    }, { disposed: 400 });
 
     results.messages.assertEqual(
       onNext(230, 3),
@@ -516,7 +513,7 @@
     equal(5, invoked);
   });
 
-  test('WhereIndex_Error', function () {
+  test('filter with index error', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -541,7 +538,7 @@
       onCompleted(630)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x, index) {
         invoked++;
         return isPrime(x + index * 10);
@@ -561,7 +558,7 @@
     equal(9, invoked);
   });
 
-  test('WhereIndex_Throw', function () {
+  test('filter with index Throw', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -586,7 +583,7 @@
       onCompleted(630)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.filter(function (x, index) {
         invoked++;
         if (x > 5) {
@@ -608,7 +605,7 @@
     equal(4, invoked);
   });
 
-  test('WhereIndex_DisposeInPredicate', function () {
+  test('filter with index dispose in predicate', function () {
     var scheduler = new TestScheduler();
 
     var invoked = 0;
@@ -636,7 +633,7 @@
     var d = new SerialDisposable();
 
     var ys;
-    scheduler.scheduleAbsolute(created, function () {
+    scheduler.scheduleAbsolute(null, created, function () {
       ys = xs.filter(function (x, index) {
         invoked++;
         if (x === 8) {
@@ -646,11 +643,11 @@
       });
     });
 
-    scheduler.scheduleAbsolute(subscribed, function () {
+    scheduler.scheduleAbsolute(null, subscribed, function () {
       d.setDisposable(ys.subscribe(results));
     });
 
-    scheduler.scheduleAbsolute(disposed, function () {
+    scheduler.scheduleAbsolute(null, disposed, function () {
       d.dispose();
     });
 
@@ -668,7 +665,7 @@
     equal(6, invoked);
   });
 
-  test('Where multiple subscribers', function () {
+  test('filter multiple subscribers', function () {
     var s = new TestScheduler();
 
     var xs = s.createHotObservable(onCompleted(100)).filter(function () { return true; });
@@ -709,10 +706,10 @@
       onCompleted(630)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs
         .filter(function(x) { invoked1++; return x % 2 === 0; })
-        .filter(function(x) { invoked2++; return x % 3 === 0; })
+        .filter(function(x) { invoked2++; return x % 3 === 0; });
     });
 
     results.messages.assertEqual(
@@ -732,8 +729,8 @@
     var scheduler = new TestScheduler();
 
     function Filterer() {
-      this.filter1 = function(item) {return item % 2 == 0};
-      this.filter2 = function(item) {return item % 3 == 0};
+      this.filter1 = function(item) { return item % 2 === 0; };
+      this.filter2 = function(item) { return item % 3 === 0; };
     }
 
     var filterer = new Filterer();
@@ -751,18 +748,18 @@
         onCompleted(100)
     );
 
-    var results = scheduler.startWithCreate(function() {
+    var results = scheduler.startScheduler(function() {
       return xs
-          .filter(function(x){ return this.filter1(x);}, filterer)
-          .filter(function(x){ return this.filter2(x);}, filterer)
-          .filter(function(x){ return this.filter1(x);}, filterer);
+        .filter(function(x){ return this.filter1(x);}, filterer)
+        .filter(function(x){ return this.filter2(x);}, filterer)
+        .filter(function(x){ return this.filter1(x);}, filterer);
     });
 
     results.messages.assertEqual(onNext(260, 6), onCompleted(300));
 
   });
 
-  test('Filter and Map Optimization', function () {
+  test('filter and map optimization', function () {
     var scheduler = new TestScheduler();
 
     var invoked1 = 0;
@@ -786,10 +783,10 @@
       onCompleted(630)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs
       .filter(function(x) { invoked1++; return x % 2 === 0; })
-      .map(function(x) { invoked2++; return x * x; })
+      .map(function(x) { invoked2++; return x * x; });
     });
 
     results.messages.assertEqual(

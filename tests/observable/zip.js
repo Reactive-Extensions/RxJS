@@ -1,4 +1,7 @@
 (function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok */
   QUnit.module('zip');
 
   function add (x, y) { return x + y; }
@@ -31,8 +34,8 @@
       onNext(260, 6),
       onCompleted(400));
 
-    var res = scheduler.startWithCreate(function () {
-      return Observable.zip(e0, e1, e2)
+    var res = scheduler.startScheduler(function () {
+      return Observable.zip(e0, e1, e2);
     });
 
     res.messages.assertEqual(
@@ -75,7 +78,7 @@
       onNext(260, 6),
       onCompleted(400));
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return Observable.zip(e0, e1, e2, function (r0, r1, r2) { return [r0, r1, r2]; });
     });
 
@@ -119,8 +122,8 @@
       onNext(260, 6),
       onCompleted(400));
 
-    var res = scheduler.startWithCreate(function () {
-      return Observable.zip([e0, e1, e2])
+    var res = scheduler.startScheduler(function () {
+      return Observable.zip([e0, e1, e2]);
     });
 
     res.messages.assertEqual(
@@ -163,7 +166,7 @@
       onNext(260, 6),
       onCompleted(400));
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return Observable.zip([e0, e1, e2], function (r0, r1, r2) { return [r0, r1, r2]; });
     });
 
@@ -192,7 +195,7 @@
     var o1 = Observable.never();
     var o2 = Observable.never();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1.zip(o2, add);
     });
 
@@ -208,7 +211,7 @@
       onCompleted(210)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return o1.zip(o2, add);
     });
 
@@ -227,7 +230,7 @@
       onCompleted(210)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     });
 
@@ -249,7 +252,7 @@
       onCompleted(220)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     });
 
@@ -271,7 +274,7 @@
       onCompleted(220)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e2.zip(e1, add);
     });
 
@@ -290,7 +293,7 @@
     );
     var e2 = Observable.never();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e2.zip(e1, add);
     });
 
@@ -307,7 +310,7 @@
     );
     var e2 = Observable.never();
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     });
 
@@ -328,7 +331,7 @@
       onCompleted(240)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     });
 
@@ -351,7 +354,7 @@
       onError(220, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     });
 
@@ -374,7 +377,7 @@
       onError(220, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e2.zip(e1, add);
     });
 
@@ -394,7 +397,7 @@
       onError(220, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     });
 
@@ -412,7 +415,7 @@
       onError(220, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
         return e2.zip(e1, add);
     });
 
@@ -436,7 +439,7 @@
       onError(220, error2)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e2.zip(e1, add);
     });
 
@@ -460,7 +463,7 @@
       onError(220, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     });
 
@@ -479,12 +482,13 @@
       onNext(215, 2),
       onCompleted(230)
     );
+
     var e2 = scheduler.createHotObservable(
       onNext(150, 1),
       onError(220, error)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e2.zip(e1, add);
     });
 
@@ -494,6 +498,7 @@
   });
 
   test('zip some data asymmetric 1', function () {
+    var i;
     var scheduler = new TestScheduler();
 
     var msgs1 = (function () {
@@ -517,20 +522,21 @@
     var e1 = scheduler.createHotObservable(msgs1);
     var e2 = scheduler.createHotObservable(msgs2);
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     }).messages;
 
     equal(len, results.length);
 
     for (i = 0; i < len; i++) {
-      sum = msgs1[i].value.value + msgs2[i].value.value;
-      time = Math.max(msgs1[i].time, msgs2[i].time);
+      var sum = msgs1[i].value.value + msgs2[i].value.value;
+      var time = Math.max(msgs1[i].time, msgs2[i].time);
       ok(results[i].value.kind === 'N' && results[i].time === time && results[i].value.value === sum);
     }
   });
 
   test('zip some data asymmetric 2', function () {
+    var i;
     var scheduler = new TestScheduler();
 
     var msgs1 = (function () {
@@ -554,20 +560,22 @@
     var e1 = scheduler.createHotObservable(msgs1);
     var e2 = scheduler.createHotObservable(msgs2);
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     }).messages;
 
     equal(len, results.length);
 
     for (i = 0; i < len; i++) {
-      sum = msgs1[i].value.value + msgs2[i].value.value;
-      time = Math.max(msgs1[i].time, msgs2[i].time);
+      var sum = msgs1[i].value.value + msgs2[i].value.value;
+      var time = Math.max(msgs1[i].time, msgs2[i].time);
       ok(results[i].value.kind === 'N' && results[i].time === time && results[i].value.value === sum);
     }
   });
 
   test('zip some data symmetric', function () {
+    var i;
+
     var scheduler = new TestScheduler();
 
     var msgs1 = (function () {
@@ -577,6 +585,7 @@
       }
       return results;
     })();
+
     var msgs2 = (function () {
       var results = [];
       for (i = 0; i < 10; i++) {
@@ -590,15 +599,15 @@
     var e1 = scheduler.createHotObservable(msgs1);
     var e2 = scheduler.createHotObservable(msgs2);
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, add);
     }).messages;
 
     equal(len, results.length);
 
     for (i = 0; i < len; i++) {
-      sum = msgs1[i].value.value + msgs2[i].value.value;
-      time = Math.max(msgs1[i].time, msgs2[i].time);
+      var sum = msgs1[i].value.value + msgs2[i].value.value;
+      var time = Math.max(msgs1[i].time, msgs2[i].time);
       ok(results[i].value.kind === 'N' && results[i].time === time && results[i].value.value === sum);
     }
   });
@@ -621,7 +630,7 @@
       onCompleted(250)
     );
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return e1.zip(e2, function (x, y) {
         if (y === 5) {
           throw error;
@@ -652,8 +661,8 @@
       onCompleted(220)
     );
 
-    var res = scheduler.startWithCreate(function () {
-      return o.zip(e, add)
+    var res = scheduler.startScheduler(function () {
+      return o.zip(e, add);
     });
 
     res.messages.assertEqual(
@@ -678,7 +687,7 @@
     );
     var n2 = [];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zip(n2, add);
     });
 
@@ -698,7 +707,7 @@
     );
     var n2 = [];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, add);
     });
 
@@ -719,7 +728,7 @@
     );
     var n2 = [2];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, add);
     });
 
@@ -741,7 +750,7 @@
     );
     var n2 = [];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, add);
     });
 
@@ -761,7 +770,7 @@
     );
     var n2 = [2];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, add);
     });
 
@@ -781,7 +790,7 @@
     );
     var n2 = [3];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, add);
     });
 
@@ -806,7 +815,7 @@
     );
     var n2 = [];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, add);
     });
 
@@ -830,7 +839,7 @@
     );
     var n2 = [2];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, add);
     });
 
@@ -855,7 +864,7 @@
     );
     var n2 = [5, 4, 3, 2];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, add);
     });
 
@@ -884,7 +893,7 @@
     );
     var n2 = [3, 5];
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return n1.zipIterable(n2, function (x, y) {
         if (y === 5) { throw error; }
         return x + y;

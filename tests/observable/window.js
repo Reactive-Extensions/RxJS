@@ -1,17 +1,17 @@
 (function () {
-  QUnit.module('Window');
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx */
+  QUnit.module('window');
 
   var Observable = Rx.Observable,
       TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted,
-      subscribe = Rx.ReactiveTest.subscribe,
-      created = Rx.ReactiveTest.created,
-      subscribed = Rx.ReactiveTest.subscribed,
-      disposed = Rx.ReactiveTest.disposed;
+      subscribe = Rx.ReactiveTest.subscribe;
 
-  test('Window_Closings_Basic', function () {
+  test('window closings basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -30,7 +30,7 @@
 
     var window = 1;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(function () {
         return Observable.timer(window++ * 100, null, scheduler);
       }).map(function (w, i) {
@@ -54,7 +54,7 @@
       subscribe(200, 590));
   });
 
-  test('Window_Closings_Dispose', function () {
+  test('window closings Dispose', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -72,25 +72,26 @@
 
     var window = 1;
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(function () {
         return Observable.timer(window++ * 100, null, scheduler);
       }).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
-    }, 400);
+    }, { disposed: 400 });
 
     results.messages.assertEqual(
       onNext(250, '0 3'),
       onNext(260, '0 4'),
       onNext(310, '1 5'),
-      onNext(340, '1 6'));
+      onNext(340, '1 6')
+    );
 
     xs.subscriptions.assertEqual(
       subscribe(200, 400));
   });
 
-  test('Window_Closings_Error', function () {
+  test('window closings Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -110,7 +111,7 @@
 
     var window = 1;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(function () {
         return Observable.timer(window++ * 100, null, scheduler);
       }).map(function (w, i) {
@@ -133,7 +134,7 @@
       subscribe(200, 590));
   });
 
-  test('Window_Closings_Throw', function () {
+  test('window closings Throw', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -153,7 +154,7 @@
 
     var window = 1;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(function () { throw error; })
         .map(function (w, i) { return w.map(function (x) { return i + ' ' + x; }); })
         .mergeAll();
@@ -165,7 +166,7 @@
       subscribe(200, 200));
   });
 
-  test('Window_Closings_WindowClose_Error', function () {
+  test('window closings WindowClose_Error', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -185,7 +186,7 @@
 
     var window = 1;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(function () {
         return Observable['throw'](error, scheduler);
       }).map(function (w, i) {
@@ -200,7 +201,7 @@
       subscribe(200, 201));
   });
 
-  test('Window_Closings_Default', function () {
+  test('window closings Default', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -218,7 +219,7 @@
 
     var window = 1;
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(function () {
         return Observable.timer(window++ * 100, null, scheduler);
       }).map(function (w, i) {
@@ -241,7 +242,7 @@
       subscribe(200, 590));
   });
 
-  test('Window_OpeningClosings_Basic', function () {
+  test('Window_OpeningClosings_basic', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -264,7 +265,7 @@
       onNext(400, 90),
       onCompleted(900));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(ys, function (x) {
         return Observable.timer(x, null, scheduler);
       }).map(function (w, i) {
@@ -314,7 +315,7 @@
       onNext(400, 90),
       onCompleted(900));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(ys, function (x) { throw error; })
         .map(function (w, i) { return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
@@ -353,13 +354,13 @@
       onNext(400, 90),
       onCompleted(900));
 
-    var results = scheduler.startWithDispose(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(ys, function (x) {
         return Observable.timer(x, null, scheduler);
       }).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
-    }, 415);
+    }, { disposed: 415 });
 
     results.messages.assertEqual(
       onNext(260, '0 4'),
@@ -396,7 +397,7 @@
       onNext(400, 90),
       onCompleted(900));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(ys, function (x) {
         return Observable.timer(x, null, scheduler);
       }).map(function (w, i) {
@@ -443,7 +444,7 @@
       onNext(400, 90),
       onError(415, error));
 
-    var results = scheduler.startWithCreate(function () {
+    var results = scheduler.startScheduler(function () {
       return xs.window(ys, function (x) {
         return Observable.timer(x, null, scheduler);
       }).map(function (w, i) {
@@ -491,7 +492,7 @@
       onCompleted(900)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.window(ys).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; })
       }).mergeAll();
@@ -542,7 +543,7 @@
       onCompleted(400)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.window(ys).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
@@ -588,7 +589,7 @@
       onCompleted(500)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.window(ys).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
       }).mergeAll();
@@ -638,7 +639,7 @@
       onError(400, error)
     );
 
-    var res = scheduler.startWithCreate(function () {
+    var res = scheduler.startScheduler(function () {
       return xs.window(ys).map(function (w, i) {
         return w.map(function (x) {
           return i + ' ' + x;
