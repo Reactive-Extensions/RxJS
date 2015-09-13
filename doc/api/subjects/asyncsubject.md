@@ -6,7 +6,7 @@ This class inherits both from the `Rx.Observable` and `Rx.Observer` classes.
 
 ## Usage ##
 
-The follow example shows caching on the last value produced when followed by an onCompleted notification which makes it available to all subscribers.
+The following example shows caching on the last value produced when followed by an onCompleted notification which makes it available to all subscribers.
 
 ```js
 var subject = new Rx.AsyncSubject();
