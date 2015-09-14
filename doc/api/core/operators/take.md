@@ -8,7 +8,7 @@ Returns a specified number of contiguous elements from the start of an observabl
 2. `[schduler]` *(`Scheduler`)*: Scheduler used to produce an onCompleted message in case `count` is set to 0.
 
 #### Returns
-*(`Observable`)*: An observable sequence that contains the elements that occur after the specified index in the input sequence.
+*(`Observable`)*: An observable sequence that contains the elements before and including the specified index in the input sequence.
 
 #### Example
 ```js
