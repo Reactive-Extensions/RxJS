@@ -64,7 +64,7 @@
      * @param {Function} action Action to be executed, potentially updating the state.
      * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
      */
-    VirtualTimeSchedulerPrototype.schedulePeriodicWithState = function (state, period, action) {
+    VirtualTimeSchedulerPrototype.schedulePeriodic = function (state, period, action) {
       var s = new SchedulePeriodicRecursive(this, state, period, action);
       return s.start();
     };

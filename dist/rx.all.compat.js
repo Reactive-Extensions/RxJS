@@ -1336,22 +1336,12 @@
 
     /**
      * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.
-     * @param {Number} period Period for running the work periodically.
-     * @param {Function} action Action to be executed.
-     * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
-     */
-    Scheduler.prototype.schedulePeriodic = function (period, action) {
-      return this.schedulePeriodicWithState(null, period, action);
-    };
-
-    /**
-     * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.
      * @param {Mixed} state Initial state passed to the action upon the first iteration.
      * @param {Number} period Period for running the work periodically.
      * @param {Function} action Action to be executed, potentially updating the state.
      * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
      */
-    Scheduler.prototype.schedulePeriodicWithState = function(state, period, action) {
+    Scheduler.prototype.schedulePeriodic = function(state, period, action) {
       if (typeof root.setInterval === 'undefined') { throw new NotSupportedError(); }
       period = normalizeTime(period);
       var s = state, id = root.setInterval(function () { s = action(s); }, period);
@@ -1689,10 +1679,10 @@
       return this._recursiveWrapper;
     };
 
-    CatchScheduler.prototype.schedulePeriodicWithState = function (state, period, action) {
+    CatchScheduler.prototype.schedulePeriodic = function (state, period, action) {
       var self = this, failed = false, d = new SingleAssignmentDisposable();
 
-      d.setDisposable(this._scheduler.schedulePeriodicWithState(state, period, function (state1) {
+      d.setDisposable(this._scheduler.schedulePeriodic(state, period, function (state1) {
         if (failed) { return null; }
         var res = tryCatch(action)(state1);
         if (res === errorObj) {
@@ -8793,13 +8783,13 @@ observableProto.controlled = function (enableQueue, scheduler) {
   function observableTimerTimeSpanAndPeriod(dueTime, period, scheduler) {
     return dueTime === period ?
       new AnonymousObservable(function (observer) {
-        return scheduler.schedulePeriodicWithState(0, period, function (count) {
+        return scheduler.schedulePeriodic(0, period, function (count) {
           observer.onNext(count);
           return count + 1;
         });
       }) :
       observableDefer(function () {
-        return observableTimerDateAndPeriod(scheduler.now() + dueTime, period, scheduler);
+        return observableTimerDateAndPeriod(new Date(scheduler.now() + dueTime), period, scheduler);
       });
   }
 
@@ -9952,7 +9942,7 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
      * @param {Function} action Action to be executed, potentially updating the state.
      * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
      */
-    VirtualTimeSchedulerPrototype.schedulePeriodicWithState = function (state, period, action) {
+    VirtualTimeSchedulerPrototype.schedulePeriodic = function (state, period, action) {
       var s = new SchedulePeriodicRecursive(this, state, period, action);
       return s.start();
     };

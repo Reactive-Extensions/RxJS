@@ -46,10 +46,10 @@
       return this._recursiveWrapper;
     };
 
-    CatchScheduler.prototype.schedulePeriodicWithState = function (state, period, action) {
+    CatchScheduler.prototype.schedulePeriodic = function (state, period, action) {
       var self = this, failed = false, d = new SingleAssignmentDisposable();
 
-      d.setDisposable(this._scheduler.schedulePeriodicWithState(state, period, function (state1) {
+      d.setDisposable(this._scheduler.schedulePeriodic(state, period, function (state1) {
         if (failed) { return null; }
         var res = tryCatch(action)(state1);
         if (res === errorObj) {

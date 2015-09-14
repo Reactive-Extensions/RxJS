@@ -143,7 +143,7 @@
       }
     };
 
-    MyErrorScheduler.prototype.schedulePeriodicWithState = function (state, period, action) {
+    MyErrorScheduler.prototype.schedulePeriodic = function (state, period, action) {
       Scheduler.immediate.schedule(this, function (_, self) {
         try {
           var s = state;
@@ -185,7 +185,7 @@
 
     var catcher = scheduler.catchError(function () { return true; });
 
-    catcher.schedulePeriodicWithState(42, 0, function () {
+    catcher.schedulePeriodic(42, 0, function () {
       throw new Error('Should be caught');
     });
 
@@ -201,7 +201,7 @@
 
     var catcher = scheduler.catchError(function (e) { return e instanceof String; });
 
-    catcher.schedulePeriodicWithState(42, 0, function () { throw ex; });
+    catcher.schedulePeriodic(42, 0, function () { throw ex; });
 
     equal(err, ex);
   });
