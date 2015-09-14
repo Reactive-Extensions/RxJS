@@ -10,7 +10,7 @@
           var currentId = id,
             d = new SingleAssignmentDisposable();
           cancelable.setDisposable(d);
-          d.setDisposable(scheduler.scheduleWithRelative(dueTime, function () {
+          d.setDisposable(scheduler.scheduleFuture(null, dueTime, function () {
             hasvalue && id === currentId && observer.onNext(value);
             hasvalue = false;
           }));

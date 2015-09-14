@@ -66,8 +66,8 @@
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
 
     var schedulerMethod = dueTime instanceof Date ?
-      'scheduleWithAbsolute' :
-      'scheduleWithRelative';
+      'scheduleWithAbsoluteAndState' :
+      'scheduleFuture';
 
     return new AnonymousObservable(function (o) {
       var id = 0,
@@ -80,7 +80,7 @@
 
       function createTimer() {
         var myId = id;
-        timer.setDisposable(scheduler[schedulerMethod](dueTime, function () {
+        timer.setDisposable(scheduler[schedulerMethod](null, dueTime, function () {
           if (id === myId) {
             isPromise(other) && (other = observableFromPromise(other));
             subscription.setDisposable(other.subscribe(o));

@@ -21,7 +21,7 @@
   asyncTest('default schedule relative', 1, function () {
     var startTime = +new Date();
 
-    DefaultScheduler.scheduleWithRelative(200, function () {
+    DefaultScheduler.scheduleFuture(null, 200, function () {
       var endTime = +new Date();
       ok(endTime - startTime > 180, endTime - startTime);
       start();
@@ -30,9 +30,7 @@
 
   asyncTest('default schedule action cancel', 1, function () {
     var set = false;
-    var d = DefaultScheduler.scheduleWithRelative(200, function () {
-      set = true;
-    });
+    var d = DefaultScheduler.scheduleFuture(null, 200, function () { set = true; });
 
     d.dispose();
 

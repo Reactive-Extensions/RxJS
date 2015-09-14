@@ -10,13 +10,13 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delaySubscription = function (dueTime, scheduler) {
-    var scheduleMethod = dueTime instanceof Date ? 'scheduleWithAbsolute' : 'scheduleWithRelative';
+    var scheduleMethod = dueTime instanceof Date ? 'scheduleWithAbsoluteAndState' : 'scheduleFuture';
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (o) {
       var d = new SerialDisposable();
 
-      d.setDisposable(scheduler[scheduleMethod](dueTime, function() {
+      d.setDisposable(scheduler[scheduleMethod](null, dueTime, function() {
         d.setDisposable(source.subscribe(o));
       }));
 

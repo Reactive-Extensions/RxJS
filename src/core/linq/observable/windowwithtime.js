@@ -48,7 +48,7 @@
         if (isShift) {
           nextShift += timeShift;
         }
-        m.setDisposable(scheduler.scheduleWithRelative(ts, function () {
+        m.setDisposable(scheduler.scheduleFuture(null, ts, function () {
           if (isShift) {
             var s = new Subject();
             q.push(s);

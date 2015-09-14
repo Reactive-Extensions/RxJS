@@ -5,7 +5,7 @@
     }
 
     function scheduleRelative(state, dueTime, action) {
-      return this._scheduler.scheduleWithRelativeAndState(state, dueTime, this._wrap(action));
+      return this._scheduler.scheduleFuture(state, dueTime, this._wrap(action));
     }
 
     function scheduleAbsolute(state, dueTime, action) {

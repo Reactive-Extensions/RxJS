@@ -957,24 +957,14 @@
     };
 
     /**
-     * Schedules an action to be executed after the specified relative due time.
-     * @param {Function} action Action to execute.
-     * @param {Number} dueTime Relative time after which to execute the action.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.scheduleWithRelative = function (dueTime, action) {
-      return this._scheduleRelative(action, dueTime, invokeAction);
-    };
-
-    /**
      * Schedules an action to be executed after dueTime.
      * @param state State passed to the action to be executed.
      * @param {Function} action Action to be executed.
      * @param {Number} dueTime Relative time after which to execute the action.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    schedulerProto.scheduleWithRelativeAndState = function (state, dueTime, action) {
-      return this._scheduleRelative(state, dueTime, action);
+    schedulerProto.scheduleFuture = function (state, dueTime, action) {
+      return fixupDisposable(this._scheduleRelative(state, dueTime, action));
     };
 
     /**
@@ -1071,7 +1061,7 @@
     }
 
     function invokeRecDateRelative(s, p) {
-      return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
+      return invokeRecDate(s, p, 'scheduleFuture');
     }
 
     function invokeRecDateAbsolute(s, p) {
@@ -1405,7 +1395,7 @@
   /**
    * Gets a scheduler that schedules work via a timed callback based upon platform.
    */
-  var timeoutScheduler = Scheduler.timeout = Scheduler['default'] = (function () {
+  var timeoutScheduler = Scheduler.async = Scheduler['default'] = (function () {
 
     function scheduleNow(state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();
@@ -1429,7 +1419,7 @@
     }
 
     function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
+      return this.scheduleFuture(state, dueTime - this.now(), action);
     }
 
     return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
@@ -1442,7 +1432,7 @@
     }
 
     function scheduleRelative(state, dueTime, action) {
-      return this._scheduler.scheduleWithRelativeAndState(state, dueTime, this._wrap(action));
+      return this._scheduler.scheduleFuture(state, dueTime, this._wrap(action));
     }
 
     function scheduleAbsolute(state, dueTime, action) {
@@ -8585,7 +8575,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
 
   function observableTimerTimeSpan(dueTime, scheduler) {
     return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleWithRelative(normalizeTime(dueTime), function () {
+      return scheduler.scheduleFuture(null, normalizeTime(dueTime), function () {
         observer.onNext(0);
         observer.onCompleted();
       });
@@ -8805,7 +8795,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
           var currentId = id,
             d = new SingleAssignmentDisposable();
           cancelable.setDisposable(d);
-          d.setDisposable(scheduler.scheduleWithRelative(dueTime, function () {
+          d.setDisposable(scheduler.scheduleFuture(null, dueTime, function () {
             hasvalue && id === currentId && observer.onNext(value);
             hasvalue = false;
           }));
@@ -8934,7 +8924,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
         if (isShift) {
           nextShift += timeShift;
         }
-        m.setDisposable(scheduler.scheduleWithRelative(ts, function () {
+        m.setDisposable(scheduler.scheduleFuture(null, ts, function () {
           if (isShift) {
             var s = new Subject();
             q.push(s);
@@ -8985,7 +8975,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
       function createTimer(id) {
         var m = new SingleAssignmentDisposable();
         timerD.setDisposable(m);
-        m.setDisposable(scheduler.scheduleWithRelative(timeSpan, function () {
+        m.setDisposable(scheduler.scheduleFuture(null, timeSpan, function () {
           if (id !== windowId) { return; }
           n = 0;
           var newId = ++windowId;
@@ -9210,8 +9200,8 @@ observableProto.controlled = function (enableQueue, scheduler) {
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
 
     var schedulerMethod = dueTime instanceof Date ?
-      'scheduleWithAbsolute' :
-      'scheduleWithRelative';
+      'scheduleWithAbsoluteAndState' :
+      'scheduleFuture';
 
     return new AnonymousObservable(function (o) {
       var id = 0,
@@ -9224,7 +9214,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
 
       function createTimer() {
         var myId = id;
-        timer.setDisposable(scheduler[schedulerMethod](dueTime, function () {
+        timer.setDisposable(scheduler[schedulerMethod](null, dueTime, function () {
           if (id === myId) {
             isPromise(other) && (other = observableFromPromise(other));
             subscription.setDisposable(other.subscribe(o));
@@ -9380,13 +9370,13 @@ observableProto.controlled = function (enableQueue, scheduler) {
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delaySubscription = function (dueTime, scheduler) {
-    var scheduleMethod = dueTime instanceof Date ? 'scheduleWithAbsolute' : 'scheduleWithRelative';
+    var scheduleMethod = dueTime instanceof Date ? 'scheduleWithAbsoluteAndState' : 'scheduleFuture';
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (o) {
       var d = new SerialDisposable();
 
-      d.setDisposable(scheduler[scheduleMethod](dueTime, function() {
+      d.setDisposable(scheduler[scheduleMethod](null, dueTime, function() {
         d.setDisposable(source.subscribe(o));
       }));
 
@@ -9511,7 +9501,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (o) {
-      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, function () { o.onCompleted(); }), source.subscribe(o));
+      return new CompositeDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
     }, source);
   };
 
@@ -9534,11 +9524,11 @@ observableProto.controlled = function (enableQueue, scheduler) {
   observableProto.skipWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var open = false;
       return new CompositeDisposable(
-        scheduler.scheduleWithRelative(duration, function () { open = true; }),
-        source.subscribe(function (x) { open && observer.onNext(x); }, observer.onError.bind(observer), observer.onCompleted.bind(observer)));
+        scheduler.scheduleFuture(null, duration, function () { open = true; }),
+        source.subscribe(function (x) { open && o.onNext(x); }, function (e) { o.onError(e); }, function () { o.onCompleted(); }));
     }, source);
   };
 

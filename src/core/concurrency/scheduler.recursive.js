@@ -53,7 +53,7 @@
     }
 
     function invokeRecDateRelative(s, p) {
-      return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
+      return invokeRecDate(s, p, 'scheduleFuture');
     }
 
     function invokeRecDateAbsolute(s, p) {

@@ -120,7 +120,7 @@
         if (isShift) {
           nextShift += timeShift;
         }
-        m.setDisposable(scheduler.scheduleWithRelative(ts, function () {
+        m.setDisposable(scheduler.scheduleFuture(null, ts, function () {
           if (isShift) {
             var s = new Subject();
             q.push(s);
@@ -171,7 +171,7 @@
       function createTimer(id) {
         var m = new SingleAssignmentDisposable();
         timerD.setDisposable(m);
-        m.setDisposable(scheduler.scheduleWithRelative(timeSpan, function () {
+        m.setDisposable(scheduler.scheduleFuture(null, timeSpan, function () {
           if (id !== windowId) { return; }
           n = 0;
           var newId = ++windowId;
@@ -374,13 +374,13 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delaySubscription = function (dueTime, scheduler) {
-    var scheduleMethod = dueTime instanceof Date ? 'scheduleWithAbsolute' : 'scheduleWithRelative';
+    var scheduleMethod = dueTime instanceof Date ? 'scheduleWithAbsoluteAndState' : 'scheduleFuture';
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (o) {
       var d = new SerialDisposable();
 
-      d.setDisposable(scheduler[scheduleMethod](dueTime, function() {
+      d.setDisposable(scheduler[scheduleMethod](null, dueTime, function() {
         d.setDisposable(source.subscribe(o));
       }));
 
@@ -505,7 +505,7 @@
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (o) {
-      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, function () { o.onCompleted(); }), source.subscribe(o));
+      return new CompositeDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
     }, source);
   };
 
@@ -528,11 +528,11 @@
   observableProto.skipWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var open = false;
       return new CompositeDisposable(
-        scheduler.scheduleWithRelative(duration, function () { open = true; }),
-        source.subscribe(function (x) { open && observer.onNext(x); }, observer.onError.bind(observer), observer.onCompleted.bind(observer)));
+        scheduler.scheduleFuture(null, duration, function () { open = true; }),
+        source.subscribe(function (x) { open && o.onNext(x); }, function (e) { o.onError(e); }, function () { o.onCompleted(); }));
     }, source);
   };
 

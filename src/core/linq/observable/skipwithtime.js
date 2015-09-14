@@ -17,10 +17,10 @@
   observableProto.skipWithTime = function (duration, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var open = false;
       return new CompositeDisposable(
-        scheduler.scheduleWithRelative(duration, function () { open = true; }),
-        source.subscribe(function (x) { open && observer.onNext(x); }, observer.onError.bind(observer), observer.onCompleted.bind(observer)));
+        scheduler.scheduleFuture(null, duration, function () { open = true; }),
+        source.subscribe(function (x) { open && o.onNext(x); }, function (e) { o.onError(e); }, function () { o.onCompleted(); }));
     }, source);
   };

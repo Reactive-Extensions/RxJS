@@ -871,24 +871,14 @@
     };
 
     /**
-     * Schedules an action to be executed after the specified relative due time.
-     * @param {Function} action Action to execute.
-     * @param {Number} dueTime Relative time after which to execute the action.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.scheduleWithRelative = function (dueTime, action) {
-      return this._scheduleRelative(action, dueTime, invokeAction);
-    };
-
-    /**
      * Schedules an action to be executed after dueTime.
      * @param state State passed to the action to be executed.
      * @param {Function} action Action to be executed.
      * @param {Number} dueTime Relative time after which to execute the action.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    schedulerProto.scheduleWithRelativeAndState = function (state, dueTime, action) {
-      return this._scheduleRelative(state, dueTime, action);
+    schedulerProto.scheduleFuture = function (state, dueTime, action) {
+      return fixupDisposable(this._scheduleRelative(state, dueTime, action));
     };
 
     /**
@@ -985,7 +975,7 @@
     }
 
     function invokeRecDateRelative(s, p) {
-      return invokeRecDate(s, p, 'scheduleWithRelativeAndState');
+      return invokeRecDate(s, p, 'scheduleFuture');
     }
 
     function invokeRecDateAbsolute(s, p) {
@@ -1319,7 +1309,7 @@
   /**
    * Gets a scheduler that schedules work via a timed callback based upon platform.
    */
-  var timeoutScheduler = Scheduler.timeout = Scheduler['default'] = (function () {
+  var timeoutScheduler = Scheduler.async = Scheduler['default'] = (function () {
 
     function scheduleNow(state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();
@@ -1343,7 +1333,7 @@
     }
 
     function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
+      return this.scheduleFuture(state, dueTime - this.now(), action);
     }
 
     return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
@@ -1356,7 +1346,7 @@
     }
 
     function scheduleRelative(state, dueTime, action) {
-      return this._scheduler.scheduleWithRelativeAndState(state, dueTime, this._wrap(action));
+      return this._scheduler.scheduleFuture(state, dueTime, this._wrap(action));
     }
 
     function scheduleAbsolute(state, dueTime, action) {

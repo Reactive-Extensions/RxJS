@@ -130,19 +130,19 @@
         o.onNext(1);
         o.onNext(2);
 
-        scheduler.scheduleWithRelativeAndState(null, 600, function () {
+        scheduler.scheduleFuture(null, 600, function () {
           !isStopped && o.onNext(3);
         });
 
-        scheduler.scheduleWithRelativeAndState(null, 700, function () {
+        scheduler.scheduleFuture(null, 700, function () {
           !isStopped && o.onNext(4);
         });
 
-        scheduler.scheduleWithRelativeAndState(null, 900, function () {
+        scheduler.scheduleFuture(null, 900, function () {
           !isStopped && o.onNext(5);
         });
 
-        scheduler.scheduleWithRelativeAndState(null, 1100, function () {
+        scheduler.scheduleFuture(null, 1100, function () {
           !isStopped && o.onNext(6);
         });
 

@@ -19,7 +19,7 @@
       function createTimer(id) {
         var m = new SingleAssignmentDisposable();
         timerD.setDisposable(m);
-        m.setDisposable(scheduler.scheduleWithRelative(timeSpan, function () {
+        m.setDisposable(scheduler.scheduleFuture(null, timeSpan, function () {
           if (id !== windowId) { return; }
           n = 0;
           var newId = ++windowId;

@@ -25,7 +25,7 @@
     }
 
     function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
+      return this.scheduleFuture(state, dueTime - this.now(), action);
     }
 
     return function (now) {
@@ -40,7 +40,7 @@
   test('scheduler ScheduleNonRecursive', function () {
       var ms = new MyScheduler();
       var res = false;
-      ms.scheduleRecursive(function (a) {
+      ms.scheduleRecursive(function () {
   	    res = true;
       });
       ok(res);

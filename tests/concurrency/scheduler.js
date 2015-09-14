@@ -25,7 +25,7 @@
     }
 
     function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
+      return this.scheduleFuture(state, dueTime - this.now(), action);
     }
 
     return function (now) {

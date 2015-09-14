@@ -15,6 +15,6 @@
     var source = this;
     isScheduler(scheduler) || (scheduler = timeoutScheduler);
     return new AnonymousObservable(function (o) {
-      return new CompositeDisposable(scheduler.scheduleWithRelative(duration, function () { o.onCompleted(); }), source.subscribe(o));
+      return new CompositeDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
     }, source);
   };

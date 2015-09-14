@@ -151,7 +151,7 @@
   /**
    * Gets a scheduler that schedules work via a timed callback based upon platform.
    */
-  var timeoutScheduler = Scheduler.timeout = Scheduler['default'] = (function () {
+  var timeoutScheduler = Scheduler.async = Scheduler['default'] = (function () {
 
     function scheduleNow(state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();
@@ -175,7 +175,7 @@
     }
 
     function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
+      return this.scheduleFuture(state, dueTime - this.now(), action);
     }
 
     return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
