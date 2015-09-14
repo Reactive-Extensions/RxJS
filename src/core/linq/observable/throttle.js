@@ -5,7 +5,7 @@
    * @returns {Observable} An Observable that performs the throttle operation.
    */
   observableProto.throttle = function (windowDuration, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     var duration = +windowDuration || 0;
     if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
     var source = this;

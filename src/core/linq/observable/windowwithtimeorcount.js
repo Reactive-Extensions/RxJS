@@ -7,7 +7,7 @@
    */
   observableProto.windowWithTimeOrCount = function (timeSpan, count, scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (observer) {
       var timerD = new SerialDisposable(),
           groupDisposable = new CompositeDisposable(timerD),

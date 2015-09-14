@@ -1,17 +1,4 @@
   var CatchScheduler = (function (__super__) {
-
-    function scheduleNow(state, action) {
-      return this._scheduler.schedule(state, this._wrap(action));
-    }
-
-    function scheduleRelative(state, dueTime, action) {
-      return this._scheduler.scheduleFuture(state, dueTime, this._wrap(action));
-    }
-
-    function scheduleAbsolute(state, dueTime, action) {
-      return this._scheduler.scheduleWithAbsoluteAndState(state, dueTime, this._wrap(action));
-    }
-
     inherits(CatchScheduler, __super__);
 
     function CatchScheduler(scheduler, handler) {
@@ -19,8 +6,18 @@
       this._handler = handler;
       this._recursiveOriginal = null;
       this._recursiveWrapper = null;
-      __super__.call(this, this._scheduler.now.bind(this._scheduler), scheduleNow, scheduleRelative, scheduleAbsolute);
+      __super__.call(this);
     }
+
+    CatchScheduler.prototype.schedule = function (state, action) {
+      return this._scheduler.schedule(state, this._wrap(action));
+    };
+
+    CatchScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
+      return this._scheduler.schedule(state, dueTime, this._wrap(action));
+    };
+
+    CatchScheduler.prototype.now = function () { return this._scheduler.now(); };
 
     CatchScheduler.prototype._clone = function (scheduler) {
         return new CatchScheduler(scheduler, this._handler);
@@ -29,12 +26,12 @@
     CatchScheduler.prototype._wrap = function (action) {
       var parent = this;
       return function (self, state) {
-        try {
-          return action(parent._getRecursiveWrapper(self), state);
-        } catch (e) {
-          if (!parent._handler(e)) { throw e; }
+        var res = tryCatch(action)(parent._getRecursiveWrapper(self), state);
+        if (res === errorObj) {
+          if (!parent._handler(res.e)) { thrower(res.e); }
           return disposableEmpty;
         }
+        return disposableFixup(ret);
       };
     };
 
@@ -54,14 +51,14 @@
 
       d.setDisposable(this._scheduler.schedulePeriodicWithState(state, period, function (state1) {
         if (failed) { return null; }
-        try {
-          return action(state1);
-        } catch (e) {
+        var res = tryCatch(action)(state1);
+        if (res === errorObj) {
           failed = true;
-          if (!self._handler(e)) { throw e; }
+          if (!self._handler(res.e)) { thrower(res.e); }
           d.dispose();
           return null;
         }
+        return ret;
       }));
 
       return d;

@@ -1,43 +1,35 @@
 (function () {
+  'use strict';
   /* jshint undef: true, unused: true */
   /* globals QUnit, test, Rx, ok, equal */
   QUnit.module('Scheduler');
 
-  var Scheduler = Rx.Scheduler;
+  var Scheduler = Rx.Scheduler,
+      inherits = Rx.internals.inherits;
 
-  var MyScheduler = (function () {
-
-    function defaultNow() {
-      return new Date().getTime();
+  var MyScheduler = (function (__super__) {
+    inherits(MyScheduler, __super__);
+    function MyScheduler(now) {
+      if (now !== undefined) { this.now = function () { return now; }; }
+      this.waitCycles = 0;
+      __super__.call(this);
     }
 
-    function schedule(state, action) {
+    MyScheduler.prototype.schedule = function (state, action) {
       return action(this, state);
-    }
+    };
 
-    function scheduleRelative(state, dueTime, action) {
+    MyScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
       var self = this;
-      this.check(function (o) {
-          return action(self, o);
-      }, state, dueTime);
+      this.check(function (o) { return action(self, o); }, state, dueTime);
       this.waitCycles += dueTime;
       return action(this, state);
-    }
-
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleFuture(state, dueTime - this.now(), action);
-    }
-
-    return function (now) {
-      var nowFunc = now === undefined ? defaultNow : function () { return now; };
-      var scheduler = new Scheduler(nowFunc, schedule, scheduleRelative, scheduleAbsolute);
-      scheduler.waitCycles = 0;
-
-      return scheduler;
     };
-  }());
 
-  test('scheduler ScheduleNonRecursive', function () {
+    return MyScheduler;
+  }(Scheduler));
+
+  test('scheduler schedule non-recursive', function () {
       var ms = new MyScheduler();
       var res = false;
       ms.scheduleRecursive(function () {
@@ -46,7 +38,7 @@
       ok(res);
   });
 
-  test('scheduler ScheduleRecursive', function () {
+  test('scheduler schedule recursive', function () {
       var ms = new MyScheduler();
       var i = 0;
       ms.scheduleRecursive(function (a) {
@@ -57,44 +49,42 @@
       equal(10, i);
   });
 
-  test('scheduler ScheduleWithTimeNonRecursive', function () {
-      var now = new Date().getTime();
-      var ms = new MyScheduler(now);
-      var res = false;
-      ms.check = function (a, s, t) {
-  	    equal(t, 0);
-      };
-      ms.scheduleWithAbsolute(now, function () {
-  	    res = true;
-      });
-      ok(res);
-      equal(ms.waitCycles, 0);
+  test('scheduler schedule with time non-recursive', function () {
+    var now = new Date();
+
+    var ms = new MyScheduler(now);
+
+    var res = false;
+
+    ms.check = function (a, s, t) { equal(t, 0); };
+    ms.scheduleFuture(null, now, function () { res = true; });
+
+    ok(res);
+
+    equal(ms.waitCycles, 0);
   });
 
-  test('scheduler ScheduleWithTimeRecursive', function () {
-      var now = new Date().getTime();
+  test('scheduler schedule with time recursive', function () {
+      var now = new Date();
+
       var i = 0;
+
       var ms = new MyScheduler(now);
-      ms.check = function (a, s, t) {
-          equal(t, 0);
-      };
+
+      ms.check = function (a, s, t) { equal(t, 0); };
 
       ms.scheduleRecursiveWithAbsolute(now, function (a) {
-  	    if (++i < 10) {
-  	        a(now);
-  	    }
+  	    if (++i < 10) { a(now); }
       });
 
       equal(ms.waitCycles, 0);
       equal(10, i);
   });
 
-  test('scheduler ScheduleWithTimeSpanNonRecursive', function () {
+  test('scheduler schedule with relative time non-recursive', function () {
       var now = new Date().getTime();
       var ms = new MyScheduler(now);
-      ms.check = function (a, s, t) {
-  	    equal(t, 0);
-      };
+      ms.check = function (a, s, t) { equal(t, 0);   };
 
       var res = false;
       ms.scheduleRecursiveWithRelative(0, function () {

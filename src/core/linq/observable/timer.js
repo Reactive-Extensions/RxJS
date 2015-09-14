@@ -7,19 +7,17 @@
    */
   var observableTimer = Observable.timer = function (dueTime, periodOrScheduler, scheduler) {
     var period;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     if (periodOrScheduler != null && typeof periodOrScheduler === 'number') {
       period = periodOrScheduler;
     } else if (isScheduler(periodOrScheduler)) {
       scheduler = periodOrScheduler;
     }
-    if (dueTime instanceof Date && period === undefined) {
-      return observableTimerDate(dueTime.getTime(), scheduler);
+    if ((dueTime instanceof Date || typeof dueTime === 'number') && period === undefined) {
+      return _observableTimer(dueTime, scheduler);
     }
     if (dueTime instanceof Date && period !== undefined) {
       return observableTimerDateAndPeriod(dueTime.getTime(), periodOrScheduler, scheduler);
     }
-    return period === undefined ?
-      observableTimerTimeSpan(dueTime, scheduler) :
-      observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
+    return observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
   };

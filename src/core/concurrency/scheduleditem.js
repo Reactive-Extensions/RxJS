@@ -20,5 +20,5 @@
   };
 
   ScheduledItem.prototype.invokeCore = function () {
-    return this.action(this.scheduler, this.state);
+    return disposableFixup(this.action(this.scheduler, this.state));
   };

@@ -10,15 +10,13 @@
    * @returns {Observable} An observable sequence with the elements skipped until the specified start time.
    */
   observableProto.skipUntilWithTime = function (startTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this, schedulerMethod = startTime instanceof Date ?
-      'scheduleWithAbsolute' :
-      'scheduleWithRelative';
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
+    var source = this;
     return new AnonymousObservable(function (o) {
       var open = false;
 
       return new CompositeDisposable(
-        scheduler[schedulerMethod](startTime, function () { open = true; }),
+        scheduler.scheduleFuture(null, startTime, function () { open = true; }),
         source.subscribe(
           function (x) { open && o.onNext(x); },
           function (e) { o.onError(e); }, function () { o.onCompleted(); }));

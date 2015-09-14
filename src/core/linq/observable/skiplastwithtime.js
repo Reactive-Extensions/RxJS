@@ -13,7 +13,7 @@
    * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
    */
   observableProto.skipLastWithTime = function (duration, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     var source = this;
     return new AnonymousObservable(function (o) {
       var q = [];

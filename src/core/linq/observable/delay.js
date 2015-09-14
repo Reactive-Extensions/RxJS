@@ -134,7 +134,7 @@
   observableProto.delay = function () {
     if (typeof arguments[0] === 'number' || arguments[0] instanceof Date) {
       var dueTime = arguments[0], scheduler = arguments[1];
-      isScheduler(scheduler) || (scheduler = timeoutScheduler);
+      isScheduler(scheduler) || (scheduler = defaultScheduler);
       return dueTime instanceof Date ?
         observableDelayAbsolute(this, dueTime, scheduler) :
         observableDelayRelative(this, dueTime, scheduler);

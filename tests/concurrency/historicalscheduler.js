@@ -41,13 +41,13 @@
     return other.value === this.value && other.timestamp === this.timestamp;
   };
 
-  test('Ctor', function () {
+  test('constructor', function () {
     var s = new HistoricalScheduler();
     equal(0, s.clock);
     equal(false, s.isEnabled);
   });
 
-  test('StartStop', function () {
+  test('start and stop', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -88,7 +88,7 @@
     ]);
   });
 
-  test('Order', function () {
+  test('order', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -110,7 +110,7 @@
     ]);
   });
 
-  test('Cancellation', function () {
+  test('cancellation', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -129,7 +129,7 @@
     ]);
   });
 
-  test('AdvanceTo', function () {
+  test('advance to', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -204,7 +204,7 @@
     ]);
   });
 
-  test('AdvanceBy', function () {
+  test('advance by', function () {
     var s = new HistoricalScheduler();
 
     var list = [];
@@ -279,7 +279,7 @@
     ]);
   });
 
-  test('IsEnabled', function () {
+  test('is enabled', function () {
     var s = new HistoricalScheduler();
 
     equal(false, s.isEnabled);
@@ -297,7 +297,7 @@
     equal(false, s.isEnabled);
   });
 
-  test('Sleep1', function () {
+  test('Sleep 1', function () {
     var now = new Date(1983, 2, 11, 12, 0, 0).getTime();
 
     var s = new HistoricalScheduler(now);
@@ -307,16 +307,16 @@
     equal(now + fromDays(1), s.clock);
   });
 
-  test('Sleep2', function () {
+  test('sleep 2', function () {
     var s = new HistoricalScheduler();
 
     var n = 0;
 
-    s.scheduleRecursiveWithAbsolute(s.now() + 6000, function (rec) {
+    s.scheduleRecursiveWithAbsolute(new Date(s.now() + 6000), function (rec) {
       s.sleep(3 * 6000);
       n++;
 
-      rec(s.now() + 6000);
+      rec(new Date(s.now() + 6000));
     });
 
     s.advanceTo(s.now() + (5 * 6000));
@@ -328,7 +328,7 @@
     return y - x;
   }
 
-  test('WithComparer', function () {
+  test('with comparer', function () {
     var now = new Date();
 
     var s = new HistoricalScheduler(now, reverseComparer);

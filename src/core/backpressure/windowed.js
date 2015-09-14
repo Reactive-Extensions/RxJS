@@ -3,7 +3,7 @@
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
 
-      timeoutScheduler.schedule(this, function (self) {
+      defaultScheduler.schedule(this, function (self) {
         self.source.request(self.windowSize);
       });
 
@@ -46,7 +46,7 @@
 
         this.received = ++this.received % this.observable.windowSize;
         if (this.received === 0) {
-          timeoutScheduler.schedule(this, function (_, self) {
+          defaultScheduler.schedule(this, function (_, self) {
             self.observable.source.request(self.observable.windowSize);
           });
         }

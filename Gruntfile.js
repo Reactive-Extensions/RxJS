@@ -348,9 +348,9 @@ module.exports = function (grunt) {
               'src/core/linq/observable/when.js', // CompositeDisposable
 
               // Time based operators
-              'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+              'src/core/linq/observable/_observabletimer.js', // AnonymousObservable
               'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
-              'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
+              
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
               'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
@@ -630,9 +630,9 @@ module.exports = function (grunt) {
               'src/core/linq/observable/when.js', // CompositeDisposable
 
               // Time based operators
-              'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+              'src/core/linq/observable/_observabletimer.js', // AnonymousObservable
               'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
-              'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
+
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
               'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
@@ -1109,9 +1109,9 @@ module.exports = function (grunt) {
               'src/core/linq/connectableobservable.js',
 
               // Time operators
-              'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+              'src/core/linq/observable/_observabletimer.js', // AnonymousObservable
               'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
-              'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
+
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
               'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
@@ -1278,9 +1278,9 @@ module.exports = function (grunt) {
               'src/core/linq/connectableobservable.js',
 
               // Time operators
-              'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+              'src/core/linq/observable/_observabletimer.js', // AnonymousObservable
               'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
-              'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
+
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
               'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
@@ -1895,9 +1895,9 @@ module.exports = function (grunt) {
               'src/core/headers/subintro.js',
               'src/core/headers/timeheader.js',
               'src/core/internal/trycatch.js',
-              'src/core/linq/observable/_observabletimerdate.js', // AnonymousObservable
+              'src/core/linq/observable/_observabletimer.js', // AnonymousObservable
               'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
-              'src/core/linq/observable/_observabletimertimespan.js', // AnonymousObservable, normalizeTime
+
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
               'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod

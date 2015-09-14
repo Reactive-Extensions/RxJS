@@ -426,7 +426,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new StopAndWaitObserver(observer, this, this.subscription));
 
-      timeoutScheduler.schedule(this, function (_, self) { self.source.request(1); });
+      defaultScheduler.schedule(this, function (_, self) { self.source.request(1); });
 
       return this.subscription;
     }
@@ -464,7 +464,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
       stopAndWaitObserverProto.next = function (value) {
         this.observer.onNext(value);
 
-        timeoutScheduler.schedule(this, function (_, self) {
+        defaultScheduler.schedule(this, function (_, self) {
           self.observable.source.request(1);
         });
       };
@@ -498,7 +498,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     function subscribe (observer) {
       this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
 
-      timeoutScheduler.schedule(this, function (self) {
+      defaultScheduler.schedule(this, function (self) {
         self.source.request(self.windowSize);
       });
 
@@ -541,7 +541,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
 
         this.received = ++this.received % this.observable.windowSize;
         if (this.received === 0) {
-          timeoutScheduler.schedule(this, function (_, self) {
+          defaultScheduler.schedule(this, function (_, self) {
             self.observable.source.request(self.observable.windowSize);
           });
         }

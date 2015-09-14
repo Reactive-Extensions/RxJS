@@ -8,7 +8,7 @@
           d <= now && (d = now + p);
         }
         observer.onNext(count);
-        self(count + 1, d);
+        self(count + 1, new Date(d));
       });
     });
   }

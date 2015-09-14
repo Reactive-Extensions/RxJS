@@ -39,3 +39,7 @@
   var checkDisposed = Disposable.checkDisposed = function (disposable) {
     if (disposable.isDisposed) { throw new ObjectDisposedError(); }
   };
+
+  var disposableFixup = Disposable._fixup = function (result) {
+    return isDisposable(result) ? result : disposableEmpty;
+  };

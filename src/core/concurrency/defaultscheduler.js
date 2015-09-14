@@ -32,7 +32,7 @@
 
     function runTask(handle) {
       if (currentlyRunning) {
-        localSetTimeout(function () { runTask(handle) }, 0);
+        localSetTimeout(function () { runTask(handle); }, 0);
       } else {
         var task = tasksByHandle[handle];
         if (task) {
@@ -45,7 +45,7 @@
       }
     }
 
-    var reNative = RegExp('^' +
+    var reNative = new RegExp('^' +
       String(toString)
         .replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
         .replace(/toString| for [^\]]+/g, '.*?') + '$'
@@ -151,32 +151,34 @@
   /**
    * Gets a scheduler that schedules work via a timed callback based upon platform.
    */
-  var timeoutScheduler = Scheduler.async = Scheduler['default'] = (function () {
+   var DefaultScheduler = (function (__super__) {
+     inherits(DefaultScheduler, __super__);
+     function DefaultScheduler() {
+       __super__.call(this);
+     }
 
-    function scheduleNow(state, action) {
+    DefaultScheduler.prototype.schedule = function (state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();
       var id = scheduleMethod(function () {
-        !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
+        !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       });
       return new CompositeDisposable(disposable, disposableCreate(function () {
         clearMethod(id);
       }));
-    }
+    };
 
-    function scheduleRelative(state, dueTime, action) {
+    DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
       var scheduler = this, dt = Scheduler.normalize(dueTime), disposable = new SingleAssignmentDisposable();
       if (dt === 0) { return scheduler.schedule(state, action); }
       var id = localSetTimeout(function () {
-        !disposable.isDisposed && disposable.setDisposable(action(scheduler, state));
+        !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       }, dt);
       return new CompositeDisposable(disposable, disposableCreate(function () {
         localClearTimeout(id);
       }));
-    }
+    };
 
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleFuture(state, dueTime - this.now(), action);
-    }
+    return DefaultScheduler;
+  }(Scheduler));
 
-    return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
-  })();
+  var defaultScheduler = Scheduler['default'] = Scheduler.async = new DefaultScheduler();

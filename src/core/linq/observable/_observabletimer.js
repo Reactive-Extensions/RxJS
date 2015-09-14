@@ -1,6 +1,6 @@
-  function observableTimerDate(dueTime, scheduler) {
+  function _observableTimer(dueTime, scheduler) {
     return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleWithAbsolute(dueTime, function () {
+      return scheduler.scheduleFuture(null, dueTime, function () {
         observer.onNext(0);
         observer.onCompleted();
       });

@@ -1,5 +1,5 @@
   function debounce(source, dueTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (observer) {
       var cancelable = new SerialDisposable(), hasvalue = false, value, id = 0;
       var subscription = source.subscribe(

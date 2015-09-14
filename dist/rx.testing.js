@@ -375,7 +375,7 @@ var ReactiveTest = Rx.ReactiveTest = {
      */
     TestScheduler.prototype.scheduleAbsolute = function (state, dueTime, action) {
       dueTime <= this.clock && (dueTime = this.clock + 1);
-        return __super__.prototype.scheduleAbsolute.call(this, state, dueTime, action);
+      return __super__.prototype.scheduleAbsolute.call(this, state, dueTime, action);
     };
     /**
      * Adds a relative virtual time to an absolute virtual time value.

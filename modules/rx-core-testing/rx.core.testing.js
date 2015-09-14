@@ -538,23 +538,6 @@
 
   /** Provides a set of extension methods for virtual time scheduling. */
   var VirtualTimeScheduler = Rx.VirtualTimeScheduler = (function (__super__) {
-
-    function localNow() {
-      return this.toAbsoluteTime(this.clock);
-    }
-
-    function scheduleNow(state, action) {
-      return this.scheduleAbsolute(state, this.clock, action);
-    }
-
-    function scheduleRelative(state, dueTime, action) {
-      return this.scheduleRelative(state, this.toRelativeTime(dueTime), action);
-    }
-
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleRelative(state, this.toRelativeTime(dueTime - this.now()), action);
-    }
-
     inherits(VirtualTimeScheduler, __super__);
 
     /**
@@ -569,10 +552,26 @@
       this.comparer = comparer;
       this.isEnabled = false;
       this.queue = new PriorityQueue(1024);
-      __super__.call(this, localNow, scheduleNow, scheduleRelative, scheduleAbsolute);
+      __super__.call(this);
     }
 
     var VirtualTimeSchedulerPrototype = VirtualTimeScheduler.prototype;
+
+    VirtualTimeSchedulerPrototype.now = function () {
+      return this.toAbsoluteTime(this.clock);
+    };
+
+    VirtualTimeSchedulerPrototype.schedule = function (state, action) {
+      return this.scheduleAbsolute(state, this.clock, action);
+    };
+
+    VirtualTimeSchedulerPrototype.scheduleFuture = function (state, dueTime, action) {
+      var dt = dueTime instanceof Date ?
+        this.toRelativeTime(dueTime - this.now()) :
+        this.toRelativeTime(dueTime);
+
+      return this.scheduleRelative(state, dt, action);
+    };
 
     /**
      * Adds a relative time value to an absolute time value.
@@ -1065,7 +1064,7 @@ var ReactiveTest = Rx.ReactiveTest = {
      */
     TestScheduler.prototype.scheduleAbsolute = function (state, dueTime, action) {
       dueTime <= this.clock && (dueTime = this.clock + 1);
-        return __super__.prototype.scheduleAbsolute.call(this, state, dueTime, action);
+      return __super__.prototype.scheduleAbsolute.call(this, state, dueTime, action);
     };
     /**
      * Adds a relative virtual time to an absolute virtual time value.

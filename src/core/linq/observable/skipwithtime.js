@@ -16,7 +16,7 @@
    */
   observableProto.skipWithTime = function (duration, scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       var open = false;
       return new CompositeDisposable(

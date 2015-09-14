@@ -37,7 +37,7 @@
     observableNever = Observable.never,
     observableThrow = Observable['throw'],
     observableFromArray = Observable.fromArray,
-    timeoutScheduler = Rx.Scheduler['default'],
+    defaultScheduler = Rx.Scheduler['default'],
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     SerialDisposable = Rx.SerialDisposable,
     CompositeDisposable = Rx.CompositeDisposable,
@@ -70,9 +70,9 @@
     throw e;
   }
 
-  function observableTimerDate(dueTime, scheduler) {
+  function _observableTimer(dueTime, scheduler) {
     return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleWithAbsolute(dueTime, function () {
+      return scheduler.scheduleFuture(null, dueTime, function () {
         observer.onNext(0);
         observer.onCompleted();
       });
@@ -89,16 +89,7 @@
           d <= now && (d = now + p);
         }
         observer.onNext(count);
-        self(count + 1, d);
-      });
-    });
-  }
-
-  function observableTimerTimeSpan(dueTime, scheduler) {
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleFuture(null, normalizeTime(dueTime), function () {
-        observer.onNext(0);
-        observer.onCompleted();
+        self(count + 1, new Date(d));
       });
     });
   }
@@ -128,7 +119,7 @@
    * @returns {Observable} An observable sequence that produces a value after each period.
    */
   var observableinterval = Observable.interval = function (period, scheduler) {
-    return observableTimerTimeSpanAndPeriod(period, period, isScheduler(scheduler) ? scheduler : timeoutScheduler);
+    return observableTimerTimeSpanAndPeriod(period, period, isScheduler(scheduler) ? scheduler : defaultScheduler);
   };
 
   /**
@@ -140,21 +131,19 @@
    */
   var observableTimer = Observable.timer = function (dueTime, periodOrScheduler, scheduler) {
     var period;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     if (periodOrScheduler != null && typeof periodOrScheduler === 'number') {
       period = periodOrScheduler;
     } else if (isScheduler(periodOrScheduler)) {
       scheduler = periodOrScheduler;
     }
-    if (dueTime instanceof Date && period === undefined) {
-      return observableTimerDate(dueTime.getTime(), scheduler);
+    if ((dueTime instanceof Date || typeof dueTime === 'number') && period === undefined) {
+      return _observableTimer(dueTime, scheduler);
     }
     if (dueTime instanceof Date && period !== undefined) {
       return observableTimerDateAndPeriod(dueTime.getTime(), periodOrScheduler, scheduler);
     }
-    return period === undefined ?
-      observableTimerTimeSpan(dueTime, scheduler) :
-      observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
+    return observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
   };
 
   function observableDelayRelative(source, dueTime, scheduler) {
@@ -293,7 +282,7 @@
   observableProto.delay = function () {
     if (typeof arguments[0] === 'number' || arguments[0] instanceof Date) {
       var dueTime = arguments[0], scheduler = arguments[1];
-      isScheduler(scheduler) || (scheduler = timeoutScheduler);
+      isScheduler(scheduler) || (scheduler = defaultScheduler);
       return dueTime instanceof Date ?
         observableDelayAbsolute(this, dueTime, scheduler) :
         observableDelayRelative(this, dueTime, scheduler);
@@ -305,7 +294,7 @@
   };
 
   function debounce(source, dueTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (observer) {
       var cancelable = new SerialDisposable(), hasvalue = false, value, id = 0;
       var subscription = source.subscribe(
@@ -405,7 +394,7 @@
   observableProto.windowWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
     var source = this, timeShift;
     timeShiftOrScheduler == null && (timeShift = timeSpan);
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     if (typeof timeShiftOrScheduler === 'number') {
       timeShift = timeShiftOrScheduler;
     } else if (isScheduler(timeShiftOrScheduler)) {
@@ -484,7 +473,7 @@
    */
   observableProto.windowWithTimeOrCount = function (timeSpan, count, scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (observer) {
       var timerD = new SerialDisposable(),
           groupDisposable = new CompositeDisposable(timerD),
@@ -574,7 +563,7 @@
    */
   observableProto.timeInterval = function (scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return observableDefer(function () {
       var last = scheduler.now();
       return source.map(function (x) {
@@ -596,7 +585,7 @@
    * @returns {Observable} An observable sequence with timestamp information on values.
    */
   observableProto.timestamp = function (scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return this.map(function (x) {
       return { value: x, timestamp: scheduler.now() };
     });
@@ -623,7 +612,7 @@
         function (e) { o.onError(e); },
         function () {
           atEnd = true;
-          sourceSubscription.dispose(); 
+          sourceSubscription.dispose();
         }
       ));
 
@@ -647,7 +636,7 @@
    * @returns {Observable} Sampled observable sequence.
    */
   observableProto.sample = observableProto.throttleLatest = function (intervalOrSampler, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return typeof intervalOrSampler === 'number' ?
       sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
       sampleObservable(this, intervalOrSampler);
@@ -718,11 +707,7 @@
       other = observableThrow(new TimeoutError());
     }
     if (other instanceof Error) { other = observableThrow(other); }
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-
-    var schedulerMethod = dueTime instanceof Date ?
-      'scheduleWithAbsoluteAndState' :
-      'scheduleFuture';
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
 
     return new AnonymousObservable(function (o) {
       var id = 0,
@@ -735,7 +720,7 @@
 
       function createTimer() {
         var myId = id;
-        timer.setDisposable(scheduler[schedulerMethod](null, dueTime, function () {
+        timer.setDisposable(scheduler.scheduleFuture(null, dueTime, function () {
           if (id === myId) {
             isPromise(other) && (other = observableFromPromise(other));
             subscription.setDisposable(other.subscribe(o));
@@ -797,11 +782,11 @@
    * @returns {Observable} The generated sequence.
    */
   Observable.generateWithAbsoluteTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false;
-      return scheduler.scheduleRecursiveWithAbsoluteAndState(initialState, scheduler.now(), function (state, self) {
+      return scheduler.scheduleRecursiveWithAbsoluteAndState(initialState, new Date(scheduler.now()), function (state, self) {
         hasResult && observer.onNext(state);
 
         try {
@@ -848,7 +833,7 @@
    * @returns {Observable} The generated sequence.
    */
   Observable.generateWithRelativeTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false;
@@ -891,13 +876,12 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delaySubscription = function (dueTime, scheduler) {
-    var scheduleMethod = dueTime instanceof Date ? 'scheduleWithAbsoluteAndState' : 'scheduleFuture';
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       var d = new SerialDisposable();
 
-      d.setDisposable(scheduler[scheduleMethod](null, dueTime, function() {
+      d.setDisposable(scheduler.scheduleFuture(null, dueTime, function() {
         d.setDisposable(source.subscribe(o));
       }));
 
@@ -920,7 +904,7 @@
    * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the end of the source sequence.
    */
   observableProto.skipLastWithTime = function (duration, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     var source = this;
     return new AnonymousObservable(function (o) {
       var q = [];
@@ -952,7 +936,7 @@
    */
   observableProto.takeLastWithTime = function (duration, scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
@@ -984,7 +968,7 @@
    */
   observableProto.takeLastBufferWithTime = function (duration, scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       var q = [];
       return source.subscribe(function (x) {
@@ -1020,7 +1004,7 @@
    */
   observableProto.takeWithTime = function (duration, scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       return new CompositeDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
     }, source);
@@ -1044,7 +1028,7 @@
    */
   observableProto.skipWithTime = function (duration, scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       var open = false;
       return new CompositeDisposable(
@@ -1065,15 +1049,13 @@
    * @returns {Observable} An observable sequence with the elements skipped until the specified start time.
    */
   observableProto.skipUntilWithTime = function (startTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this, schedulerMethod = startTime instanceof Date ?
-      'scheduleWithAbsolute' :
-      'scheduleWithRelative';
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
+    var source = this;
     return new AnonymousObservable(function (o) {
       var open = false;
 
       return new CompositeDisposable(
-        scheduler[schedulerMethod](startTime, function () { open = true; }),
+        scheduler.scheduleFuture(null, startTime, function () { open = true; }),
         source.subscribe(
           function (x) { open && o.onNext(x); },
           function (e) { o.onError(e); }, function () { o.onCompleted(); }));
@@ -1087,13 +1069,11 @@
    * @returns {Observable} An observable sequence with the elements taken until the specified end time.
    */
   observableProto.takeUntilWithTime = function (endTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-    var source = this, schedulerMethod = endTime instanceof Date ?
-      'scheduleWithAbsolute' :
-      'scheduleWithRelative';
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
+    var source = this;
     return new AnonymousObservable(function (o) {
       return new CompositeDisposable(
-        scheduler[schedulerMethod](endTime, function () { o.onCompleted(); }),
+        scheduler.scheduleFuture(o, endTime, function (_, o) { o.onCompleted(); }),
         source.subscribe(o));
     }, source);
   };
@@ -1105,7 +1085,7 @@
    * @returns {Observable} An Observable that performs the throttle operation.
    */
   observableProto.throttle = function (windowDuration, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     var duration = +windowDuration || 0;
     if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
     var source = this;

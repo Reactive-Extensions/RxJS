@@ -19,7 +19,7 @@
         function (e) { o.onError(e); },
         function () {
           atEnd = true;
-          sourceSubscription.dispose(); 
+          sourceSubscription.dispose();
         }
       ));
 
@@ -43,7 +43,7 @@
    * @returns {Observable} Sampled observable sequence.
    */
   observableProto.sample = observableProto.throttleLatest = function (intervalOrSampler, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return typeof intervalOrSampler === 'number' ?
       sampleObservable(this, observableinterval(intervalOrSampler, scheduler)) :
       sampleObservable(this, intervalOrSampler);

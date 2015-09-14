@@ -6,7 +6,7 @@
    * @returns {Function} Asynchronous function.
    */
   var observableToAsync = Observable.toAsync = function (func, context, scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return function () {
       var args = arguments,
         subject = new AsyncSubject();

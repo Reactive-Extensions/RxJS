@@ -63,11 +63,7 @@
       other = observableThrow(new TimeoutError());
     }
     if (other instanceof Error) { other = observableThrow(other); }
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
-
-    var schedulerMethod = dueTime instanceof Date ?
-      'scheduleWithAbsoluteAndState' :
-      'scheduleFuture';
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
 
     return new AnonymousObservable(function (o) {
       var id = 0,
@@ -80,7 +76,7 @@
 
       function createTimer() {
         var myId = id;
-        timer.setDisposable(scheduler[schedulerMethod](null, dueTime, function () {
+        timer.setDisposable(scheduler.scheduleFuture(null, dueTime, function () {
           if (id === myId) {
             isPromise(other) && (other = observableFromPromise(other));
             subscription.setDisposable(other.subscribe(o));

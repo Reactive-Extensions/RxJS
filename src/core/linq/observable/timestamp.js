@@ -9,7 +9,7 @@
    * @returns {Observable} An observable sequence with timestamp information on values.
    */
   observableProto.timestamp = function (scheduler) {
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return this.map(function (x) {
       return { value: x, timestamp: scheduler.now() };
     });

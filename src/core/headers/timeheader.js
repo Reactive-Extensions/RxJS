@@ -7,7 +7,7 @@
     observableNever = Observable.never,
     observableThrow = Observable['throw'],
     observableFromArray = Observable.fromArray,
-    timeoutScheduler = Rx.Scheduler['default'],
+    defaultScheduler = Rx.Scheduler['default'],
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     SerialDisposable = Rx.SerialDisposable,
     CompositeDisposable = Rx.CompositeDisposable,

@@ -10,7 +10,7 @@
    */
   observableProto.timeInterval = function (scheduler) {
     var source = this;
-    isScheduler(scheduler) || (scheduler = timeoutScheduler);
+    isScheduler(scheduler) || (scheduler = defaultScheduler);
     return observableDefer(function () {
       var last = scheduler.now();
       return source.map(function (x) {
