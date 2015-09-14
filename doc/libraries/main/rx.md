@@ -109,7 +109,7 @@ NuGet Packages:
 ### Core Objects
 
 - [`Rx.Observer`](../../api/core/observer.md)
-- [`Rx.Observable`](../../api/core/Observable.md)
+- [`Rx.Observable`](../../api/core/observable.md)
 - [`Rx.Notification`](../../api/core/notification.md)
 
 ### Subjects
