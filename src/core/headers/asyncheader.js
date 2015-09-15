@@ -10,4 +10,6 @@
     defaultScheduler = Rx.Scheduler['default'],
     isScheduler = Rx.Scheduler.isScheduler,
     isPromise = Rx.helpers.isPromise,
-    isFunction = Rx.helpers.isFunction;
+    isFunction = Rx.helpers.isFunction,
+    isIterable = Rx.helpers.isIterable,
+    isArrayLike = Rx.helpers.isArrayLike;

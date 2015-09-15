@@ -2210,65 +2210,50 @@
     return ObservableBase;
   }(Observable));
 
-var FlatMapObservable = (function(__super__){
+var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
     inherits(FlatMapObservable, __super__);
 
     function FlatMapObservable(source, selector, resultSelector, thisArg) {
-        this.resultSelector = Rx.helpers.isFunction(resultSelector) ?
-            resultSelector : null;
-
-        this.selector = Rx.internals.bindCallback(Rx.helpers.isFunction(selector) ? selector : function() { return selector; }, thisArg, 3);
-        this.source = source;
-
-        __super__.call(this);
-
+      this.resultSelector = isFunction(resultSelector) ? resultSelector : null;
+      this.selector = bindCallback(isFunction(selector) ? selector : function() { return selector; }, thisArg, 3);
+      this.source = source;
+      __super__.call(this);
     }
 
     FlatMapObservable.prototype.subscribeCore = function(o) {
-        return this.source.subscribe(new InnerObserver(o, this.selector, this.resultSelector, this));
+      return this.source.subscribe(new InnerObserver(o, this.selector, this.resultSelector, this));
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(observer, selector, resultSelector, source) {
-        this.i = 0;
-        this.selector = selector;
-        this.resultSelector = resultSelector;
-        this.source = source;
-        this.isStopped = false;
-        this.o = observer;
+      this.i = 0;
+      this.selector = selector;
+      this.resultSelector = resultSelector;
+      this.source = source;
+      this.o = observer;
+      AbstractObserver.call(this);
     }
 
     InnerObserver.prototype._wrapResult = function(result, x, i) {
-        return this.resultSelector ?
-            result.map(function(y, i2) { return this.resultSelector(x, y, i, i2); }, this) :
-            result;
+      return this.resultSelector ?
+        result.map(function(y, i2) { return this.resultSelector(x, y, i, i2); }, this) :
+        result;
     };
 
-    InnerObserver.prototype.onNext = function(x) {
+    InnerObserver.prototype.next = function(x) {
+      var i = this.i++;
+      var result = tryCatch(this.selector)(x, i, this.source);
+      if (result === errorObj) { return this.o.onError(result.e); }
 
-        if (this.isStopped) return;
-
-        var i = this.i++;
-        var result = tryCatch(this.selector)(x, i, this.source);
-
-        if (result === errorObj) {
-            return this.o.onError(result.e);
-        }
-
-        Rx.helpers.isPromise(result) && (result = Rx.Observable.fromPromise(result));
-        (Rx.helpers.isArrayLike(result) || Rx.helpers.isIterable(result)) && (result = Rx.Observable.from(result));
-
-        this.o.onNext(this._wrapResult(result, x, i));
-
+      isPromise(result) && (result = observableFromPromise(result));
+      (isArrayLike(result) || isIterable(result)) && (result = Observable.from(result));
+      this.o.onNext(this._wrapResult(result, x, i));
     };
 
-    InnerObserver.prototype.onError = function(e) {
-        if(!this.isStopped) { this.isStopped = true; this.o.onError(e); }
-    };
+    InnerObserver.prototype.error = function(e) { this.o.onError(e); };
 
-    InnerObserver.prototype.onCompleted = function() {
-        if (!this.isStopped) {this.isStopped = true; this.o.onCompleted(); }
-    };
+    InnerObserver.prototype.onCompleted = function() { this.o.onCompleted(); };
 
     return FlatMapObservable;
 
@@ -6291,78 +6276,82 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
 
       return g;
     });
+  };
+
+  function toObservable(obj) {
+    if (!obj) { return obj; }
+    if (Observable.isObservable(obj)) { return obj; }
+    if (isPromise(obj)) { return Observable.fromPromise(obj); }
+    if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
+    if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
+    if (isArrayLike(obj) || isIterable(obj)) { return arrayToObservable.call(this, obj); }
+    if (isObject(obj)) {return objectToObservable.call(this, obj);}
+    return obj;
   }
 
-function toObservable(obj) {
-  if (!obj) { return obj; }
-  if (Observable.isObservable(obj)) { return obj; }
-  if (isPromise(obj)) { return Observable.fromPromise(obj); }
-  if (isGeneratorFunction(obj) || isGenerator(obj)) { return spawn.call(this, obj); }
-  if (isFunction(obj)) { return thunkToObservable.call(this, obj); }
-  if (isArrayLike(obj) || isIterable(obj)) { return arrayToObservable.call(this, obj); }
-  if (isObject(obj)) {return objectToObservable.call(this, obj);}
-  return obj;
-}
+  function arrayToObservable (obj) {
+    return Observable.from(obj)
+        .flatMap(toObservable)
+        .toArray();
+  }
 
-function arrayToObservable (obj) {
-  return Observable.from(obj)
-      .flatMap(toObservable)
-      .toArray();
-}
+  function objectToObservable (obj) {
+    var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
+    for (var i = 0, len = keys.length; i < len; i++) {
+      var key = keys[i];
+      var observable = toObservable.call(this, obj[key]);
 
-function objectToObservable (obj) {
-  var results = new obj.constructor(), keys = Object.keys(obj), observables = [];
-  for (var i = 0, len = keys.length; i < len; i++) {
-    var key = keys[i];
-    var observable = toObservable.call(this, obj[key]);
+      if(observable && Observable.isObservable(observable)) {
+        defer(observable, key);
+      } else {
+        results[key] = obj[key];
+      }
+    }
 
-    if(observable && Observable.isObservable(observable)) {
-      defer(observable, key);
-    } else {
-      results[key] = obj[key];
+    return Observable.forkJoin.apply(Observable, observables).map(function() {
+      return results;
+    });
+
+
+    function defer (observable, key) {
+      results[key] = undefined;
+      observables.push(observable.map(function (next) {
+        results[key] = next;
+      }));
     }
   }
 
-  return Observable.forkJoin.apply(Observable, observables).map(function() {
-    return results;
-  });
-
-
-  function defer (observable, key) {
-    results[key] = undefined;
-    observables.push(observable.map(function (next) {
-      results[key] = next;
-    }));
-  }
-}
-
-function thunkToObservable(fn) {
-  var self = this;
-  return new AnonymousObservable(function (o) {
-    fn.call(self, function () {
-      var err = arguments[0], res = arguments[1];
-      if (err) { return o.onError(err); }
-      if (arguments.length > 2) {
-        var args = [];
-        for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-        res = args;
-      }
-      o.onNext(res);
-      o.onCompleted();
+  function thunkToObservable(fn) {
+    var self = this;
+    return new AnonymousObservable(function (o) {
+      fn.call(self, function () {
+        var err = arguments[0], res = arguments[1];
+        if (err) { return o.onError(err); }
+        if (arguments.length > 2) {
+          var args = [];
+          for (var i = 1, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
+          res = args;
+        }
+        o.onNext(res);
+        o.onCompleted();
+      });
     });
-  });
-}
+  }
 
-function isGenerator(obj) {
-  return isFunction (obj.next) && isFunction (obj.throw);
-}
+  function isGenerator(obj) {
+    return isFunction (obj.next) && isFunction (obj.throw);
+  }
 
-function isGeneratorFunction(obj) {
-  var ctor = obj.constructor;
-  if (!ctor) { return false; }
-  if (ctor.name === 'GeneratorFunction' || ctor.displayName === 'GeneratorFunction') { return true; }
-  return isGenerator(ctor.prototype);
-}
+  function isGeneratorFunction(obj) {
+    var ctor = obj.constructor;
+    if (!ctor) { return false; }
+    if (ctor.name === 'GeneratorFunction' || ctor.displayName === 'GeneratorFunction') { return true; }
+    return isGenerator(ctor.prototype);
+  }
+
+  function isObject(val) {
+    return Object == val.constructor;
+  }
 
   /**
    * Invokes the specified function asynchronously on the specified scheduler, surfacing the result through an observable sequence.
@@ -6717,14 +6706,10 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @returns {Observable} An observable sequence exposing the function's result value, or an exception.
    */
   Observable.startAsync = function (functionAsync) {
-    var promise;
-    try {
-      promise = functionAsync();
-    } catch (e) {
-      return observableThrow(e);
-    }
+    var promise = tryCatch(functionAsync)();
+    if (promise === errorObj) { return observableThrow(promise.e); }
     return observableFromPromise(promise);
-  }
+  };
 
   var PausableObservable = (function (__super__) {
 

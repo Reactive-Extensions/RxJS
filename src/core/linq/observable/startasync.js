@@ -4,11 +4,7 @@
    * @returns {Observable} An observable sequence exposing the function's result value, or an exception.
    */
   Observable.startAsync = function (functionAsync) {
-    var promise;
-    try {
-      promise = functionAsync();
-    } catch (e) {
-      return observableThrow(e);
-    }
+    var promise = tryCatch(functionAsync)();
+    if (promise === errorObj) { return observableThrow(promise.e); }
     return observableFromPromise(promise);
-  }
+  };
