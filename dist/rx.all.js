@@ -1039,70 +1039,27 @@
       }
     }
 
-    function scheduleInnerRecursive(action, self) {
-      action(function(dt) { self(action, dt); });
-    }
-
-    /**
-     * Schedules an action to be executed recursively.
-     * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.scheduleRecursive = function (action) {
-      return this.scheduleRecursiveWithState(action, scheduleInnerRecursive);
-    };
-
     /**
      * Schedules an action to be executed recursively.
      * @param {Mixed} state State passed to the action to be executed.
      * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in recursive invocation state.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    schedulerProto.scheduleRecursiveWithState = function (state, action) {
+    schedulerProto.scheduleRecursive = function (state, action) {
       return this.schedule([state, action], invokeRecImmediate);
     };
 
     /**
-     * Schedules an action to be executed recursively after a specified relative due time.
-     * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action at the specified relative time.
-     * @param {Number}dueTime Relative time after which to execute the action for the first time.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.scheduleRecursiveWithRelative = function (dueTime, action) {
-      return this.scheduleRecursiveWithRelativeAndState(action, dueTime, scheduleInnerRecursive);
-    };
-
-    /**
-     * Schedules an action to be executed recursively after a specified relative due time.
+     * Schedules an action to be executed recursively after a specified relative or absolute due time.
      * @param {Mixed} state State passed to the action to be executed.
      * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in the recursive due time and invocation state.
-     * @param {Number}dueTime Relative time after which to execute the action for the first time.
+     * @param {Number | Date} dueTime Relative or absolute time after which to execute the action for the first time.
      * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
      */
-    schedulerProto.scheduleRecursiveWithRelativeAndState = function (state, dueTime, action) {
+    schedulerProto.scheduleRecursiveFuture = function (state, dueTime, action) {
       return this.scheduleFuture([state, action], dueTime, invokeRecDate);
     };
 
-    /**
-     * Schedules an action to be executed recursively at a specified absolute due time.
-     * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action at the specified absolute time.
-     * @param {Number}dueTime Absolute time at which to execute the action for the first time.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.scheduleRecursiveWithAbsolute = function (dueTime, action) {
-      return this.scheduleRecursiveWithAbsoluteAndState(action, dueTime, scheduleInnerRecursive);
-    };
-
-    /**
-     * Schedules an action to be executed recursively at a specified absolute due time.
-     * @param {Mixed} state State passed to the action to be executed.
-     * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in the recursive due time and invocation state.
-     * @param {Number}dueTime Absolute time at which to execute the action for the first time.
-     * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-     */
-    schedulerProto.scheduleRecursiveWithAbsoluteAndState = function (state, dueTime, action) {
-      return this.scheduleFuture([state, action], dueTime, invokeRecDate);
-    };
   }(Scheduler.prototype));
 
   (function (schedulerProto) {
@@ -1155,7 +1112,7 @@
     SchedulePeriodicRecursive.prototype.start = function () {
       var d = new SingleAssignmentDisposable();
       this._cancel = d;
-      d.setDisposable(this._scheduler.scheduleRecursiveWithRelativeAndState(0, this._period, tick.bind(this)));
+      d.setDisposable(this._scheduler.scheduleRecursiveFuture(0, this._period, tick.bind(this)));
 
       return d;
     };
@@ -1832,7 +1789,7 @@
         this.isAcquired = true;
       }
       if (isOwner) {
-        this.disposable.setDisposable(this.scheduler.scheduleRecursiveWithState(this, function (parent, self) {
+        this.disposable.setDisposable(this.scheduler.scheduleRecursive(this, function (parent, self) {
           var work;
           if (parent.queue.length > 0) {
             work = parent.queue.shift();
@@ -2087,10 +2044,10 @@ var FlatMapObservable = (function(__super__){
       this.sources = sources;
       __super__.call(this);
     }
-    
+
     ConcatEnumerableObservable.prototype.subscribeCore = function (o) {
       var isDisposed, subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursiveWithState(this.sources[$iterator$](), function (e, self) {
+      var cancelable = immediateScheduler.scheduleRecursive(this.sources[$iterator$](), function (e, self) {
         if (isDisposed) { return; }
         var currentItem = tryCatch(e.next).call(e);
         if (currentItem === errorObj) { return o.onError(currentItem.e); }
@@ -2112,7 +2069,7 @@ var FlatMapObservable = (function(__super__){
         isDisposed = true;
       }));
     };
-    
+
     function InnerObserver(o, s, e) {
       this.o = o;
       this.s = s;
@@ -2141,26 +2098,26 @@ var FlatMapObservable = (function(__super__){
       }
       return false;
     };
-    
+
     return ConcatEnumerableObservable;
   }(ObservableBase));
 
   Enumerable.prototype.concat = function () {
     return new ConcatEnumerableObservable(this);
   };
-  
+
   var CatchErrorObservable = (function(__super__) {
     inherits(CatchErrorObservable, __super__);
     function CatchErrorObservable(sources) {
       this.sources = sources;
       __super__.call(this);
     }
-    
+
     CatchErrorObservable.prototype.subscribeCore = function (o) {
       var e = this.sources[$iterator$]();
 
       var isDisposed, subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursiveWithState(null, function (lastException, self) {
+      var cancelable = immediateScheduler.scheduleRecursive(null, function (lastException, self) {
         if (isDisposed) { return; }
         var currentItem = tryCatch(e.next).call(e);
         if (currentItem === errorObj) { return o.onError(currentItem.e); }
@@ -2184,7 +2141,7 @@ var FlatMapObservable = (function(__super__){
         isDisposed = true;
       }));
     };
-    
+
     return CatchErrorObservable;
   }(ObservableBase));
 
@@ -2205,7 +2162,7 @@ var FlatMapObservable = (function(__super__){
       var isDisposed,
         lastException,
         subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursive(function (self) {
+      var cancelable = immediateScheduler.scheduleRecursive(null, function (_, self) {
         if (isDisposed) { return; }
         var currentItem = tryCatch(e.next).call(e);
         if (currentItem === errorObj) { return o.onError(currentItem.e); }
@@ -2245,18 +2202,18 @@ var FlatMapObservable = (function(__super__){
       }));
     });
   };
-  
+
   var RepeatEnumerable = (function (__super__) {
     inherits(RepeatEnumerable, __super__);
-    
+
     function RepeatEnumerable(v, c) {
       this.v = v;
       this.c = c == null ? -1 : c;
     }
     RepeatEnumerable.prototype[$iterator$] = function () {
-      return new RepeatEnumerator(this); 
+      return new RepeatEnumerator(this);
     };
-    
+
     function RepeatEnumerator(p) {
       this.v = p.v;
       this.l = p.c;
@@ -2264,16 +2221,16 @@ var FlatMapObservable = (function(__super__){
     RepeatEnumerator.prototype.next = function () {
       if (this.l === 0) { return doneEnumerator; }
       if (this.l > 0) { this.l--; }
-      return { done: false, value: this.v }; 
+      return { done: false, value: this.v };
     };
-    
+
     return RepeatEnumerable;
   }(Enumerable));
 
   var enumerableRepeat = Enumerable.repeat = function (value, repeatCount) {
     return new RepeatEnumerable(value, repeatCount);
   };
-  
+
   var OfEnumerable = (function(__super__) {
     inherits(OfEnumerable, __super__);
     function OfEnumerable(s, fn, thisArg) {
@@ -2283,7 +2240,7 @@ var FlatMapObservable = (function(__super__){
     OfEnumerable.prototype[$iterator$] = function () {
       return new OfEnumerator(this);
     };
-    
+
     function OfEnumerator(p) {
       this.i = -1;
       this.s = p.s;
@@ -2293,9 +2250,9 @@ var FlatMapObservable = (function(__super__){
     OfEnumerator.prototype.next = function () {
      return ++this.i < this.l ?
        { done: false, value: !this.fn ? this.s[this.i] : this.fn(this.s[this.i], this.i, this.s) } :
-       doneEnumerator; 
+       doneEnumerator;
     };
-    
+
     return OfEnumerable;
   }(Enumerable));
 
@@ -2570,7 +2527,7 @@ var FlatMapObservable = (function(__super__){
         recurse(i + 1);
       }
 
-      return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
+      return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
     };
 
     return FromSink;
@@ -2714,7 +2671,7 @@ var FlatMapObservable = (function(__super__){
       }
     }
 
-    return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
+    return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
   };
 
   /**
@@ -2745,7 +2702,7 @@ var FlatMapObservable = (function(__super__){
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (o) {
       var first = true;
-      return scheduler.scheduleRecursiveWithState(initialState, function (state, self) {
+      return scheduler.scheduleRecursive(initialState, function (state, self) {
         var hasResult, result;
         try {
           if (first) {
@@ -2897,7 +2854,7 @@ var FlatMapObservable = (function(__super__){
       }
     }
 
-    return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
+    return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
   };
 
   /**
@@ -2945,7 +2902,7 @@ var FlatMapObservable = (function(__super__){
         }
       }
 
-      return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
+      return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
     };
 
     return RangeSink;
@@ -2996,7 +2953,7 @@ var FlatMapObservable = (function(__super__){
       recurse(i);
     }
 
-    return this.parent.scheduler.scheduleRecursiveWithState(this.parent.repeatCount, loopRecursive);
+    return this.parent.scheduler.scheduleRecursive(this.parent.repeatCount, loopRecursive);
   };
 
   /**
@@ -3383,7 +3340,7 @@ var FlatMapObservable = (function(__super__){
     }
     ConcatSink.prototype.run = function () {
       var isDisposed, subscription = new SerialDisposable(), sources = this.sources, length = sources.length, o = this.o;
-      var cancelable = immediateScheduler.scheduleRecursiveWithState(0, function (i, self) {
+      var cancelable = immediateScheduler.scheduleRecursive(0, function (i, self) {
         if (isDisposed) { return; }
         if (i === length) {
           return o.onCompleted();
@@ -3789,7 +3746,7 @@ var FlatMapObservable = (function(__super__){
     }
     return new AnonymousObservable(function (observer) {
       var pos = 0, subscription = new SerialDisposable(),
-      cancelable = immediateScheduler.scheduleRecursive(function (self) {
+      cancelable = immediateScheduler.scheduleRecursive(null, function (_, self) {
         var current, d;
         if (pos < sources.length) {
           current = sources[pos++];
@@ -7984,7 +7941,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
   observableProto.expand = function (selector, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [],
         m = new SerialDisposable(),
         d = new CompositeDisposable(m),
@@ -7998,7 +7955,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
           isAcquired = true;
         }
         if (isOwner) {
-          m.setDisposable(scheduler.scheduleRecursive(function (self) {
+          m.setDisposable(scheduler.scheduleRecursive(null, function (_, self) {
             var work;
             if (q.length > 0) {
               work = q.shift();
@@ -8009,21 +7966,21 @@ observableProto.controlled = function (enableQueue, scheduler) {
             var m1 = new SingleAssignmentDisposable();
             d.add(m1);
             m1.setDisposable(work.subscribe(function (x) {
-              observer.onNext(x);
+              o.onNext(x);
               var result = null;
               try {
                 result = selector(x);
               } catch (e) {
-                observer.onError(e);
+                o.onError(e);
               }
               q.push(result);
               activeCount++;
               ensureActive();
-            }, observer.onError.bind(observer), function () {
+            }, function (e) { o.onError(e); }, function () {
               d.remove(m1);
               activeCount--;
               if (activeCount === 0) {
-                observer.onCompleted();
+                o.onCompleted();
               }
             }));
             self();
@@ -8537,7 +8494,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
   function observableTimerDateAndPeriod(dueTime, period, scheduler) {
     return new AnonymousObservable(function (observer) {
       var d = dueTime, p = normalizeTime(period);
-      return scheduler.scheduleRecursiveWithAbsoluteAndState(0, d, function (count, self) {
+      return scheduler.scheduleRecursiveFuture(0, d, function (count, self) {
         if (p > 0) {
           var now = scheduler.now();
           d = d + p;
@@ -8627,7 +8584,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
           } else {
             d = new SingleAssignmentDisposable();
             cancelable.setDisposable(d);
-            d.setDisposable(scheduler.scheduleRecursiveWithRelative(dueTime, function (self) {
+            d.setDisposable(scheduler.scheduleRecursiveFuture(null, dueTime, function (_, self) {
               var e, recurseDueTime, result, shouldRecurse;
               if (exception !== null) {
                 return;
@@ -8655,7 +8612,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
               if (e !== null) {
                 o.onError(e);
               } else if (shouldRecurse) {
-                self(recurseDueTime);
+                self(null, recurseDueTime);
               }
             }));
           }
@@ -9241,7 +9198,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false;
-      return scheduler.scheduleRecursiveWithAbsoluteAndState(initialState, new Date(scheduler.now()), function (state, self) {
+      return scheduler.scheduleRecursiveFuture(initialState, new Date(scheduler.now()), function (state, self) {
         hasResult && observer.onNext(state);
 
         try {
@@ -9292,7 +9249,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false;
-      return scheduler.scheduleRecursiveWithRelativeAndState(initialState, 0, function (state, self) {
+      return scheduler.scheduleRecursiveFuture(initialState, 0, function (state, self) {
         hasResult && observer.onNext(state);
 
         try {

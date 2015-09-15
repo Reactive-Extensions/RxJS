@@ -264,7 +264,7 @@
       var e = sources[$iterator$]();
 
       var isDisposed, subscription = new Rx.SerialDisposable();
-      var cancelable = Rx.Scheduler.immediate.scheduleRecursive(function (self) {
+      var cancelable = Rx.Scheduler.immediate.scheduleRecursive(null, function (_, self) {
         if (isDisposed) { return; }
         try {
           var currentItem = e.next();

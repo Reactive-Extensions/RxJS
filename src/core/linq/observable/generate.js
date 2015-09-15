@@ -15,7 +15,7 @@
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (o) {
       var first = true;
-      return scheduler.scheduleRecursiveWithState(initialState, function (state, self) {
+      return scheduler.scheduleRecursive(initialState, function (state, self) {
         var hasResult, result;
         try {
           if (first) {

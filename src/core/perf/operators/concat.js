@@ -16,7 +16,7 @@
     }
     ConcatSink.prototype.run = function () {
       var isDisposed, subscription = new SerialDisposable(), sources = this.sources, length = sources.length, o = this.o;
-      var cancelable = immediateScheduler.scheduleRecursiveWithState(0, function (i, self) {
+      var cancelable = immediateScheduler.scheduleRecursive(0, function (i, self) {
         if (isDisposed) { return; }
         if (i === length) {
           return o.onCompleted();

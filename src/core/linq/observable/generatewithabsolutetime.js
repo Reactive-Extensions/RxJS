@@ -22,7 +22,7 @@
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false;
-      return scheduler.scheduleRecursiveWithAbsoluteAndState(initialState, new Date(scheduler.now()), function (state, self) {
+      return scheduler.scheduleRecursiveFuture(initialState, new Date(scheduler.now()), function (state, self) {
         hasResult && observer.onNext(state);
 
         try {

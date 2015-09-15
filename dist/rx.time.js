@@ -82,7 +82,7 @@
   function observableTimerDateAndPeriod(dueTime, period, scheduler) {
     return new AnonymousObservable(function (observer) {
       var d = dueTime, p = normalizeTime(period);
-      return scheduler.scheduleRecursiveWithAbsoluteAndState(0, d, function (count, self) {
+      return scheduler.scheduleRecursiveFuture(0, d, function (count, self) {
         if (p > 0) {
           var now = scheduler.now();
           d = d + p;
@@ -172,7 +172,7 @@
           } else {
             d = new SingleAssignmentDisposable();
             cancelable.setDisposable(d);
-            d.setDisposable(scheduler.scheduleRecursiveWithRelative(dueTime, function (self) {
+            d.setDisposable(scheduler.scheduleRecursiveFuture(null, dueTime, function (_, self) {
               var e, recurseDueTime, result, shouldRecurse;
               if (exception !== null) {
                 return;
@@ -200,7 +200,7 @@
               if (e !== null) {
                 o.onError(e);
               } else if (shouldRecurse) {
-                self(recurseDueTime);
+                self(null, recurseDueTime);
               }
             }));
           }
@@ -786,7 +786,7 @@
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false;
-      return scheduler.scheduleRecursiveWithAbsoluteAndState(initialState, new Date(scheduler.now()), function (state, self) {
+      return scheduler.scheduleRecursiveFuture(initialState, new Date(scheduler.now()), function (state, self) {
         hasResult && observer.onNext(state);
 
         try {
@@ -837,7 +837,7 @@
     return new AnonymousObservable(function (observer) {
       var first = true,
         hasResult = false;
-      return scheduler.scheduleRecursiveWithRelativeAndState(initialState, 0, function (state, self) {
+      return scheduler.scheduleRecursiveFuture(initialState, 0, function (state, self) {
         hasResult && observer.onNext(state);
 
         try {

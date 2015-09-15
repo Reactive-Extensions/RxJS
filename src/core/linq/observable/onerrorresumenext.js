@@ -15,7 +15,7 @@
     }
     return new AnonymousObservable(function (observer) {
       var pos = 0, subscription = new SerialDisposable(),
-      cancelable = immediateScheduler.scheduleRecursive(function (self) {
+      cancelable = immediateScheduler.scheduleRecursive(null, function (_, self) {
         var current, d;
         if (pos < sources.length) {
           current = sources[pos++];

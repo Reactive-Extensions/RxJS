@@ -281,7 +281,7 @@
     isScheduler(scheduler) || (scheduler = currentThreadScheduler);
     return new AnonymousObservable(function (o) {
       var first = true;
-      return scheduler.scheduleRecursiveWithState(initialState, function (state, self) {
+      return scheduler.scheduleRecursive(initialState, function (state, self) {
         var hasResult, result;
         try {
           if (first) {
@@ -439,7 +439,7 @@
     }
     return new AnonymousObservable(function (observer) {
       var pos = 0, subscription = new SerialDisposable(),
-      cancelable = immediateScheduler.scheduleRecursive(function (self) {
+      cancelable = immediateScheduler.scheduleRecursive(null, function (_, self) {
         var current, d;
         if (pos < sources.length) {
           current = sources[pos++];

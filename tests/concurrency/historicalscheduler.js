@@ -312,11 +312,11 @@
 
     var n = 0;
 
-    s.scheduleRecursiveWithAbsolute(new Date(s.now() + 6000), function (rec) {
+    s.scheduleRecursiveFuture(null, new Date(s.now() + 6000), function (_, rec) {
       s.sleep(3 * 6000);
       n++;
 
-      rec(new Date(s.now() + 6000));
+      rec(null, new Date(s.now() + 6000));
     });
 
     s.advanceTo(s.now() + (5 * 6000));

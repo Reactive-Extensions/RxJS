@@ -223,7 +223,7 @@
   observableProto.expand = function (selector, scheduler) {
     isScheduler(scheduler) || (scheduler = immediateScheduler);
     var source = this;
-    return new AnonymousObservable(function (observer) {
+    return new AnonymousObservable(function (o) {
       var q = [],
         m = new SerialDisposable(),
         d = new CompositeDisposable(m),
@@ -237,7 +237,7 @@
           isAcquired = true;
         }
         if (isOwner) {
-          m.setDisposable(scheduler.scheduleRecursive(function (self) {
+          m.setDisposable(scheduler.scheduleRecursive(null, function (_, self) {
             var work;
             if (q.length > 0) {
               work = q.shift();
@@ -248,21 +248,21 @@
             var m1 = new SingleAssignmentDisposable();
             d.add(m1);
             m1.setDisposable(work.subscribe(function (x) {
-              observer.onNext(x);
+              o.onNext(x);
               var result = null;
               try {
                 result = selector(x);
               } catch (e) {
-                observer.onError(e);
+                o.onError(e);
               }
               q.push(result);
               activeCount++;
               ensureActive();
-            }, observer.onError.bind(observer), function () {
+            }, function (e) { o.onError(e); }, function () {
               d.remove(m1);
               activeCount--;
               if (activeCount === 0) {
-                observer.onCompleted();
+                o.onCompleted();
               }
             }));
             self();

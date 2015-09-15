@@ -24,7 +24,7 @@
           } else {
             d = new SingleAssignmentDisposable();
             cancelable.setDisposable(d);
-            d.setDisposable(scheduler.scheduleRecursiveWithRelative(dueTime, function (self) {
+            d.setDisposable(scheduler.scheduleRecursiveFuture(null, dueTime, function (_, self) {
               var e, recurseDueTime, result, shouldRecurse;
               if (exception !== null) {
                 return;
@@ -52,7 +52,7 @@
               if (e !== null) {
                 o.onError(e);
               } else if (shouldRecurse) {
-                self(recurseDueTime);
+                self(null, recurseDueTime);
               }
             }));
           }

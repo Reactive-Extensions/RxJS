@@ -43,7 +43,7 @@
         recurse(i + 1);
       }
 
-      return this.parent.scheduler.scheduleRecursiveWithState(0, loopRecursive);
+      return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
     };
 
     return FromSink;

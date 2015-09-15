@@ -31,7 +31,7 @@
       recurse(i);
     }
 
-    return this.parent.scheduler.scheduleRecursiveWithState(this.parent.repeatCount, loopRecursive);
+    return this.parent.scheduler.scheduleRecursive(this.parent.repeatCount, loopRecursive);
   };
 
   /**

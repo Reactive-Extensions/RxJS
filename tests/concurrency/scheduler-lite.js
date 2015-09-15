@@ -32,7 +32,7 @@
   test('scheduler schedule non-recursive', function () {
       var ms = new MyScheduler();
       var res = false;
-      ms.scheduleRecursive(function () {
+      ms.scheduleRecursive(null, function () {
   	    res = true;
       });
       ok(res);
@@ -41,7 +41,7 @@
   test('scheduler schedule recursive', function () {
       var ms = new MyScheduler();
       var i = 0;
-      ms.scheduleRecursive(function (a) {
+      ms.scheduleRecursive(null, function (_, a) {
   	    if (++i < 10) {
   	        a();
   	    }
@@ -64,7 +64,7 @@
     equal(ms.waitCycles, 0);
   });
 
-  test('scheduler schedule with time recursive', function () {
+  test('scheduler schedule with absolute time recursive', function () {
       var now = new Date();
 
       var i = 0;
@@ -73,8 +73,8 @@
 
       ms.check = function (a, s, t) { equal(t, 0); };
 
-      ms.scheduleRecursiveWithAbsolute(now, function (a) {
-  	    if (++i < 10) { a(now); }
+      ms.scheduleRecursiveFuture(null, now, function (_, a) {
+  	    if (++i < 10) { a(null, now); }
       });
 
       equal(ms.waitCycles, 0);
@@ -83,13 +83,13 @@
 
   test('scheduler schedule with relative time non-recursive', function () {
       var now = new Date().getTime();
+
       var ms = new MyScheduler(now);
+
       ms.check = function (a, s, t) { equal(t, 0);   };
 
       var res = false;
-      ms.scheduleRecursiveWithRelative(0, function () {
-  	    res = true;
-      });
+      ms.scheduleRecursiveFuture(null, 0, function () { res = true; });
 
       ok(res);
       equal(ms.waitCycles, 0);
@@ -97,14 +97,17 @@
 
   test('scheduler schedule with time recursive', function () {
     var now = new Date().getTime();
+
     var i = 0;
+
     var ms = new MyScheduler(now);
+
     ms.check = function (a, s, t) {
 	    return ok(t < 10);
     };
 
-    ms.scheduleRecursiveWithRelative(0, function (a) {
-	    if (++i < 10) { a(i); }
+    ms.scheduleRecursiveFuture(null, 0, function (_, a) {
+	    if (++i < 10) { a(null, i); }
     });
 
     equal(ms.waitCycles, 45);
