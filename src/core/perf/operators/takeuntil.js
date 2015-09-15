@@ -8,38 +8,24 @@
     }
 
     TakeUntilObservable.prototype.subscribeCore = function(o) {
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         this.source.subscribe(o),
         this.other.subscribe(new InnerObserver(o))
       );
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o) {
       this.o = o;
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) {
-      if (this.isStopped) { return; }
+    InnerObserver.prototype.next = function () {
       this.o.onCompleted();
     };
-    InnerObserver.prototype.onError = function (err) {
-      if (!this.isStopped) {
-        this.isStopped = true;
+    InnerObserver.prototype.error = function (err) {
         this.o.onError(err);
-      }
     };
-    InnerObserver.prototype.onCompleted = function () {
-      !this.isStopped && (this.isStopped = true);
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
-    };
+    InnerObserver.prototype.onCompleted = noop;
 
     return TakeUntilObservable;
   }(ObservableBase));

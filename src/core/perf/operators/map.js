@@ -19,35 +19,27 @@
       return this.source.subscribe(new InnerObserver(o, this.selector, this));
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o, selector, source) {
       this.o = o;
       this.selector = selector;
       this.source = source;
       this.i = 0;
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
 
-    InnerObserver.prototype.onNext = function(x) {
-      if (this.isStopped) { return; }
+    InnerObserver.prototype.next = function(x) {
       var result = tryCatch(this.selector)(x, this.i++, this.source);
       if (result === errorObj) { return this.o.onError(result.e); }
       this.o.onNext(result);
     };
-    InnerObserver.prototype.onError = function (e) {
-      if(!this.isStopped) { this.isStopped = true; this.o.onError(e); }
-    };
-    InnerObserver.prototype.onCompleted = function () {
-      if(!this.isStopped) { this.isStopped = true; this.o.onCompleted(); }
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
 
-      return false;
+    InnerObserver.prototype.error = function (e) {
+      this.o.onError(e);
+    };
+
+    InnerObserver.prototype.completed = function () {
+      this.o.onCompleted();
     };
 
     return MapObservable;

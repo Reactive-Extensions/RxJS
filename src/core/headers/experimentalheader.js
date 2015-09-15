@@ -7,6 +7,7 @@
     observableEmpty = Observable.empty,
     disposableEmpty = Rx.Disposable.empty,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     SerialDisposable = Rx.SerialDisposable,
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     Enumerator = Rx.internals.Enumerator,

@@ -47,6 +47,7 @@
     SerialDisposable = Rx.SerialDisposable,
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     RefCountDisposable = Rx.RefCountDisposable,
     disposableEmpty = Rx.Disposable.empty,
     immediateScheduler = Rx.Scheduler.immediate,
@@ -315,14 +316,14 @@
       var disposable = disposableEmpty;
       var resource = tryCatch(resourceFactory)();
       if (resource === errorObj) {
-        return new CompositeDisposable(observableThrow(resource.e).subscribe(o), disposable);
+        return new BinaryDisposable(observableThrow(resource.e).subscribe(o), disposable);
       }
       resource && (disposable = resource);
       var source = tryCatch(observableFactory)(resource);
       if (source === errorObj) {
-        return new CompositeDisposable(observableThrow(source.e).subscribe(o), disposable);
+        return new BinaryDisposable(observableThrow(source.e).subscribe(o), disposable);
       }
-      return new CompositeDisposable(source.subscribe(o), disposable);
+      return new BinaryDisposable(source.subscribe(o), disposable);
     });
   };
 
@@ -387,7 +388,7 @@
       leftSubscription.setDisposable(leftSource.subscribe(leftSubscribe));
       rightSubscription.setDisposable(rightSource.subscribe(rightSubscribe));
 
-      return new CompositeDisposable(leftSubscription, rightSubscription);
+      return new BinaryDisposable(leftSubscription, rightSubscription);
     });
   };
 
@@ -451,7 +452,7 @@
           observer.onCompleted();
         }
       });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     });
   };
 

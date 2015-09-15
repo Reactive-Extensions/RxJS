@@ -8,7 +8,7 @@
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     var source = this;
     return new AnonymousObservable(function (o) {
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(o, endTime, function (_, o) { o.onCompleted(); }),
         source.subscribe(o));
     }, source);

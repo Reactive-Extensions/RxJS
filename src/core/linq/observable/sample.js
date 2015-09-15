@@ -23,7 +23,7 @@
         }
       ));
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         sourceSubscription,
         sampler.subscribe(sampleSubscribe, function (e) { o.onError(e); }, sampleSubscribe)
       );

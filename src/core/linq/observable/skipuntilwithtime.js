@@ -15,7 +15,7 @@
     return new AnonymousObservable(function (o) {
       var open = false;
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(null, startTime, function () { open = true; }),
         source.subscribe(
           function (x) { open && o.onNext(x); },

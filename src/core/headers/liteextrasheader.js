@@ -17,6 +17,7 @@
     SerialDisposable = Rx.SerialDisposable,
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     RefCountDisposable = Rx.RefCountDisposable,
     disposableEmpty = Rx.Disposable.empty,
     immediateScheduler = Rx.Scheduler.immediate,

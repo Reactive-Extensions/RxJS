@@ -34,6 +34,7 @@
     AnonymousObservable = Rx.AnonymousObservable,
     AbstractObserver = Rx.internals.AbstractObserver,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     Notification = Rx.Notification,
     Subject = Rx.Subject,
     Observer = Rx.Observer,

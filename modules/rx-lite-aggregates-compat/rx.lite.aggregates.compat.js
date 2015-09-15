@@ -32,6 +32,7 @@
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     AnonymousObservable = Rx.AnonymousObservable,
     AbstractObserver = Rx.internals.AbstractObserver,
     disposableEmpty = Rx.Disposable.empty,
@@ -518,15 +519,10 @@
     return new AnonymousObservable(function (o) {
       var donel = false, doner = false, ql = [], qr = [];
       var subscription1 = first.subscribe(function (x) {
-        var equal, v;
         if (qr.length > 0) {
-          v = qr.shift();
-          try {
-            equal = comparer(v, x);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
+          var v = qr.shift();
+          var equal = tryCatch(comparer)(v, x);
+          if (equal === errorObj) { return o.onError(equal.e); }
           if (!equal) {
             o.onNext(false);
             o.onCompleted();
@@ -553,15 +549,10 @@
       (isArrayLike(second) || isIterable(second)) && (second = observableFrom(second));
       isPromise(second) && (second = observableFromPromise(second));
       var subscription2 = second.subscribe(function (x) {
-        var equal;
         if (ql.length > 0) {
           var v = ql.shift();
-          try {
-            equal = comparer(v, x);
-          } catch (exception) {
-            o.onError(exception);
-            return;
-          }
+          var equal = tryCatch(comparer)(v, x);
+          if (equal === errorObj) { return o.onError(equal.e); }
           if (!equal) {
             o.onNext(false);
             o.onCompleted();
@@ -584,7 +575,7 @@
           }
         }
       });
-      return new CompositeDisposable(subscription1, subscription2);
+      return new BinaryDisposable(subscription1, subscription2);
     }, first);
   };
 

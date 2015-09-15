@@ -58,7 +58,7 @@
           }
         }
       });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, source);
   }
 
@@ -119,7 +119,7 @@
         subscription.setDisposable(subDelay.subscribe(start, function (e) { o.onError(e); }, start));
       }
 
-      return new CompositeDisposable(subscription, delays);
+      return new BinaryDisposable(subscription, delays);
     }, this);
   }
 

@@ -30,6 +30,7 @@
 
   var Observable = Rx.Observable,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     RefCountDisposable = Rx.RefCountDisposable,
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     SerialDisposable = Rx.SerialDisposable,
@@ -571,7 +572,7 @@
       this.underlyingObservable = !mergedDisposable ?
         underlyingObservable :
         new AnonymousObservable(function (observer) {
-          return new CompositeDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
+          return new BinaryDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
         });
     }
 

@@ -59,6 +59,6 @@
       leftSubscription.setDisposable(leftSource.subscribe(leftSubscribe));
       rightSubscription.setDisposable(rightSource.subscribe(rightSubscribe));
 
-      return new CompositeDisposable(leftSubscription, rightSubscription);
+      return new BinaryDisposable(leftSubscription, rightSubscription);
     });
   };

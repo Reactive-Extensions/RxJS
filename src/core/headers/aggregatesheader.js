@@ -2,6 +2,7 @@
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     AnonymousObservable = Rx.AnonymousObservable,
     AbstractObserver = Rx.internals.AbstractObserver,
     disposableEmpty = Rx.Disposable.empty,

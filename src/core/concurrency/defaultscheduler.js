@@ -162,9 +162,7 @@
       var id = scheduleMethod(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       });
-      return new CompositeDisposable(disposable, disposableCreate(function () {
-        clearMethod(id);
-      }));
+      return new BinaryDisposable(disposable, disposableCreate(function () { clearMethod(id); }));
     };
 
     DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
@@ -173,9 +171,7 @@
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       }, dt);
-      return new CompositeDisposable(disposable, disposableCreate(function () {
-        localClearTimeout(id);
-      }));
+      return new BinaryDisposable(disposable, disposableCreate(function () { localClearTimeout(id); }));
     };
 
     return DefaultScheduler;

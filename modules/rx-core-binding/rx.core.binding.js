@@ -36,6 +36,7 @@
     disposableCreate = Rx.Disposable.create,
     disposableEmpty = Rx.Disposable.empty,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     SerialDisposable = Rx.SerialDisposable,
     currentThreadScheduler = Rx.Scheduler.currentThread,
     isFunction = Rx.helpers.isFunction,
@@ -91,7 +92,7 @@
     return typeof subjectOrSubjectSelector === 'function' ?
       new AnonymousObservable(function (observer) {
         var connectable = source.multicast(subjectOrSubjectSelector());
-        return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
+        return new BinaryDisposable(selector(connectable).subscribe(observer), connectable.connect());
       }, source) :
       new ConnectableObservable(source, subjectOrSubjectSelector);
   };
@@ -793,7 +794,7 @@
       this.connect = function () {
         if (!hasSubscription) {
           hasSubscription = true;
-          subscription = new CompositeDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
+          subscription = new BinaryDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
             hasSubscription = false;
           }));
         }

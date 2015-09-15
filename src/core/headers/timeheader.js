@@ -11,6 +11,7 @@
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     SerialDisposable = Rx.SerialDisposable,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     RefCountDisposable = Rx.RefCountDisposable,
     Subject = Rx.Subject,
     addRef = Rx.internals.addRef,

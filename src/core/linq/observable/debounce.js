@@ -28,7 +28,7 @@
           hasvalue = false;
           id++;
         });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, this);
   }
 
@@ -75,7 +75,7 @@
           id++;
         }
       );
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, source);
   }
 

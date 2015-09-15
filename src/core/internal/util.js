@@ -20,7 +20,7 @@
   // Rx Utils
   var addRef = Rx.internals.addRef = function (xs, r) {
     return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
+      return new BinaryDisposable(r.getDisposable(), xs.subscribe(observer));
     });
   };
 

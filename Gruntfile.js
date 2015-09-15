@@ -36,6 +36,7 @@ module.exports = function (grunt) {
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
+              'src/core/disposables/binarydisposable.js',
 
               // Schedulers
               'src/core/concurrency/scheduleditem.js',
@@ -144,6 +145,7 @@ module.exports = function (grunt) {
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
+              'src/core/disposables/binarydisposable.js',
               'src/core/disposables/refcountdisposable.js',
               'src/core/disposables/scheduleddisposable.js',
               'src/core/concurrency/scheduleditem.js',
@@ -205,7 +207,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/concatproto.js',
               'src/core/perf/operators/concat.js',
               'src/core/linq/observable/concatall.js',
-              'src/core/perf/operators/mergeproto.js',
+              'src/core/perf/operators/mergeconcat.js',
               'src/core/linq/observable/merge.js',
               'src/core/perf/operators/mergeall.js',
               'src/core/linq/observable/mergedelayerror.js',
@@ -350,7 +352,7 @@ module.exports = function (grunt) {
               // Time based operators
               'src/core/linq/observable/_observabletimer.js', // AnonymousObservable
               'src/core/linq/observable/_observabletimerdateandperiod.js', // AnonymousObservable, normalizeTime
-              
+
               'src/core/linq/observable/_observabletimertimespanandperiod.js', // AnonymousObservable, defer, _observabletimerdateandperiod
               'src/core/linq/observable/interval.js', // timeoutScheduler, _observabletimertimespanandperiod
               'src/core/linq/observable/timer.js', // timeoutScheduler, _observabletimerdate, _observabletimerdateandperiod, _observabletimertimespan, _observabletimertimespanandperiod
@@ -429,6 +431,7 @@ module.exports = function (grunt) {
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
+              'src/core/disposables/binarydisposable.js',
               'src/core/disposables/refcountdisposable.js',
               'src/core/disposables/scheduleddisposable.js',
               'src/core/concurrency/scheduleditem.js',
@@ -487,7 +490,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/concatproto.js',
               'src/core/perf/operators/concat.js',
               'src/core/linq/observable/concatall.js',
-              'src/core/perf/operators/mergeproto.js',
+              'src/core/perf/operators/mergeconcat.js',
               'src/core/linq/observable/merge.js',
               'src/core/perf/operators/mergeall.js',
               'src/core/linq/observable/mergedelayerror.js',
@@ -709,6 +712,7 @@ module.exports = function (grunt) {
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
+              'src/core/disposables/binarydisposable.js',
               'src/core/disposables/refcountdisposable.js',
               'src/core/disposables/scheduleddisposable.js',
               'src/core/concurrency/scheduleditem.js',
@@ -768,7 +772,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/concatproto.js',
               'src/core/perf/operators/concat.js',
               'src/core/linq/observable/concatall.js',
-              'src/core/perf/operators/mergeproto.js',
+              'src/core/perf/operators/mergeconcat.js',
               'src/core/linq/observable/merge.js',
               'src/core/linq/observable/mergedelayerror.js',
               'src/core/perf/operators/mergeall.js',
@@ -858,6 +862,7 @@ module.exports = function (grunt) {
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
+              'src/core/disposables/binarydisposable.js',
               'src/core/disposables/refcountdisposable.js',
               'src/core/disposables/scheduleddisposable.js',
               'src/core/concurrency/scheduleditem.js',
@@ -916,7 +921,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/concatproto.js',
               'src/core/perf/operators/concat.js',
               'src/core/linq/observable/concatall.js',
-              'src/core/perf/operators/mergeproto.js',
+              'src/core/perf/operators/mergeconcat.js',
               'src/core/linq/observable/merge.js',
               'src/core/perf/operators/mergeall.js',
               'src/core/linq/observable/mergedelayerror.js',
@@ -1004,6 +1009,7 @@ module.exports = function (grunt) {
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
+              'src/core/disposables/binarydisposable.js',
               'src/core/disposables/refcountdisposable.js',
 
               'src/core/concurrency/scheduleditem.js',
@@ -1048,7 +1054,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/concatproto.js',
               'src/core/perf/operators/concat.js',
               'src/core/linq/observable/concatall.js',
-              'src/core/perf/operators/mergeproto.js',
+              'src/core/perf/operators/mergeconcat.js',
               'src/core/linq/observable/merge.js',
               'src/core/linq/observable/mergedelayerror.js',
               'src/core/perf/operators/mergeall.js',
@@ -1173,6 +1179,7 @@ module.exports = function (grunt) {
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
+              'src/core/disposables/binarydisposable.js',
               'src/core/disposables/refcountdisposable.js',
 
               'src/core/concurrency/scheduleditem.js',
@@ -1217,7 +1224,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/concatproto.js',
               'src/core/perf/operators/concat.js',
               'src/core/linq/observable/concatall.js',
-              'src/core/perf/operators/mergeproto.js',
+              'src/core/perf/operators/mergeconcat.js',
               'src/core/linq/observable/merge.js',
               'src/core/perf/operators/mergeall.js',
               'src/core/linq/observable/mergedelayerror.js',

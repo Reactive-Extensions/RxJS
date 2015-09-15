@@ -12,9 +12,6 @@
       args = new Array(len);
       for(i = 0; i < len; i++) { args[i] = arguments[i]; }
     }
-    for(i = 0; i < len; i++) {
-      if (!isDisposable(args[i])) { throw new TypeError('Not a disposable'); }
-    }
     this.disposables = args;
     this.isDisposed = false;
     this.length = args.length;

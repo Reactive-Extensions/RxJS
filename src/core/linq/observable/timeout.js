@@ -52,7 +52,7 @@
       }, function () {
         oWins() && o.onCompleted();
       }));
-      return new CompositeDisposable(subscription, timer);
+      return new BinaryDisposable(subscription, timer);
     }, source);
   }
 
@@ -103,7 +103,7 @@
           o.onCompleted();
         }
       }));
-      return new CompositeDisposable(subscription, timer);
+      return new BinaryDisposable(subscription, timer);
     }, source);
   }
 

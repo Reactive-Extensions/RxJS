@@ -34,6 +34,7 @@
     AnonymousObservable = Rx.AnonymousObservable,
     AbstractObserver = Rx.internals.AbstractObserver,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     Notification = Rx.Notification,
     Subject = Rx.Subject,
     Observer = Rx.Observer,
@@ -168,7 +169,7 @@
         isDone && values[1] && o.onCompleted();
       }
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         source.subscribe(
           function (x) {
             next(x, 0);

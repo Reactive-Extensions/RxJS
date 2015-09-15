@@ -41,6 +41,7 @@
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     SerialDisposable = Rx.SerialDisposable,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     RefCountDisposable = Rx.RefCountDisposable,
     Subject = Rx.Subject,
     addRef = Rx.internals.addRef,
@@ -206,7 +207,7 @@
           }
         }
       });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, source);
   }
 
@@ -267,7 +268,7 @@
         subscription.setDisposable(subDelay.subscribe(start, function (e) { o.onError(e); }, start));
       }
 
-      return new CompositeDisposable(subscription, delays);
+      return new BinaryDisposable(subscription, delays);
     }, this);
   }
 
@@ -323,7 +324,7 @@
           hasvalue = false;
           id++;
         });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, this);
   }
 
@@ -370,7 +371,7 @@
           id++;
         }
       );
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, source);
   }
 
@@ -616,7 +617,7 @@
         }
       ));
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         sourceSubscription,
         sampler.subscribe(sampleSubscribe, function (e) { o.onError(e); }, sampleSubscribe)
       );
@@ -696,7 +697,7 @@
       }, function () {
         oWins() && o.onCompleted();
       }));
-      return new CompositeDisposable(subscription, timer);
+      return new BinaryDisposable(subscription, timer);
     }, source);
   }
 
@@ -747,7 +748,7 @@
           o.onCompleted();
         }
       }));
-      return new CompositeDisposable(subscription, timer);
+      return new BinaryDisposable(subscription, timer);
     }, source);
   }
 
@@ -1006,7 +1007,7 @@
     var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
-      return new CompositeDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
+      return new BinaryDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
     }, source);
   };
 
@@ -1031,7 +1032,7 @@
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       var open = false;
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(null, duration, function () { open = true; }),
         source.subscribe(function (x) { open && o.onNext(x); }, function (e) { o.onError(e); }, function () { o.onCompleted(); }));
     }, source);
@@ -1054,7 +1055,7 @@
     return new AnonymousObservable(function (o) {
       var open = false;
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(null, startTime, function () { open = true; }),
         source.subscribe(
           function (x) { open && o.onNext(x); },
@@ -1072,7 +1073,7 @@
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     var source = this;
     return new AnonymousObservable(function (o) {
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(o, endTime, function (_, o) { o.onCompleted(); }),
         source.subscribe(o));
     }, source);

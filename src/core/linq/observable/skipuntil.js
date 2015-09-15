@@ -7,23 +7,27 @@
     var source = this;
     return new AnonymousObservable(function (o) {
       var isOpen = false;
-      var disposables = new CompositeDisposable(source.subscribe(function (left) {
-        isOpen && o.onNext(left);
-      }, function (e) { o.onError(e); }, function () {
-        isOpen && o.onCompleted();
-      }));
+      var leftSubscription = new SingleAssignmentDisposable();
+      leftSubscription.setDisposable(
+        source.subscribe(function (left) {
+          isOpen && o.onNext(left);
+        }, function (e) { o.onError(e); }, function () {
+          isOpen && o.onCompleted();
+        })
+      );
 
       isPromise(other) && (other = observableFromPromise(other));
 
       var rightSubscription = new SingleAssignmentDisposable();
-      disposables.add(rightSubscription);
-      rightSubscription.setDisposable(other.subscribe(function () {
-        isOpen = true;
-        rightSubscription.dispose();
-      }, function (e) { o.onError(e); }, function () {
-        rightSubscription.dispose();
-      }));
+      rightSubscription.setDisposable(
+        other.subscribe(function () {
+          isOpen = true;
+          rightSubscription.dispose();
+        }, function (e) { o.onError(e); }, function () {
+          rightSubscription.dispose();
+        })
+      );
 
-      return disposables;
+      return new BinaryDisposable(leftSubscription, rightSubscription);
     }, source);
   };

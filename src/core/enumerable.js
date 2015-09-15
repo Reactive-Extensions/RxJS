@@ -144,7 +144,7 @@
 
         var outer = new SingleAssignmentDisposable();
         var inner = new SingleAssignmentDisposable();
-        subscription.setDisposable(new CompositeDisposable(inner, outer));
+        subscription.setDisposable(new BinaryDisposable(inner, outer));
         outer.setDisposable(currentValue.subscribe(
           function(x) { o.onNext(x); },
           function (exn) {

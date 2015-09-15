@@ -27,6 +27,6 @@
           observer.onCompleted();
         }
       });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     });
   };

@@ -37,6 +37,7 @@
     observableEmpty = Observable.empty,
     disposableEmpty = Rx.Disposable.empty,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     SerialDisposable = Rx.SerialDisposable,
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     Enumerator = Rx.internals.Enumerator,
@@ -345,7 +346,6 @@
 
    /**
    *  Runs two observable sequences in parallel and combines their last elemenets.
-   *
    * @param {Observable} second Second observable sequence.
    * @param {Function} resultSelector Result selector function to invoke with the last elements of both sequences.
    * @returns {Observable} An observable sequence with the result of calling the selector function with the last elements of both input sequences.
@@ -375,13 +375,8 @@
               } else if (!hasRight) {
                   observer.onCompleted();
               } else {
-                var result;
-                try {
-                  result = resultSelector(lastLeft, lastRight);
-                } catch (e) {
-                  observer.onError(e);
-                  return;
-                }
+                var result = tryCatch(resultSelector)(lastLeft, lastRight);
+                if (result === errorObj) { return observer.onError(e); }
                 observer.onNext(result);
                 observer.onCompleted();
               }
@@ -404,13 +399,8 @@
             } else if (!hasRight) {
               observer.onCompleted();
             } else {
-              var result;
-              try {
-                result = resultSelector(lastLeft, lastRight);
-              } catch (e) {
-                observer.onError(e);
-                return;
-              }
+              var result = tryCatch(resultSelector)(lastLeft, lastRight);
+              if (result === errorObj) { return observer.onError(result.e); }
               observer.onNext(result);
               observer.onCompleted();
             }
@@ -418,7 +408,7 @@
         })
       );
 
-      return new CompositeDisposable(leftSubscription, rightSubscription);
+      return new BinaryDisposable(leftSubscription, rightSubscription);
     }, first);
   };
 

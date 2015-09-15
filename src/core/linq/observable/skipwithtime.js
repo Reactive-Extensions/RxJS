@@ -19,7 +19,7 @@
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       var open = false;
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(null, duration, function () { open = true; }),
         source.subscribe(function (x) { open && o.onNext(x); }, function (e) { o.onError(e); }, function () { o.onCompleted(); }));
     }, source);

@@ -8,6 +8,7 @@
     disposableCreate = Rx.Disposable.create,
     disposableEmpty = Rx.Disposable.empty,
     CompositeDisposable = Rx.CompositeDisposable,
+    BinaryDisposable = Rx.BinaryDisposable,
     currentThreadScheduler = Rx.Scheduler.currentThread,
     isFunction = Rx.helpers.isFunction,
     inherits = Rx.internals.inherits,

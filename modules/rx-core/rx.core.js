@@ -198,7 +198,7 @@ var
   // Rx Utils
   var addRef = Rx.internals.addRef = function (xs, r) {
     return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
+      return new BinaryDisposable(r.getDisposable(), xs.subscribe(observer));
     });
   };
 
@@ -223,9 +223,6 @@ var
       len = arguments.length;
       args = new Array(len);
       for(i = 0; i < len; i++) { args[i] = arguments[i]; }
-    }
-    for(i = 0; i < len; i++) {
-      if (!isDisposable(args[i])) { throw new TypeError('Not a disposable'); }
     }
     this.disposables = args;
     this.isDisposed = false;
@@ -348,8 +345,8 @@ var
       this.isDisposed = true;
       var old = this.current;
       this.current = null;
+      old && old.dispose();
     }
-    old && old.dispose();
   };
 
   // Multiple assignment disposable
@@ -376,6 +373,24 @@ var
       this.current = null;
     }
     old && old.dispose();
+  };
+
+  var BinaryDisposable = Rx.BinaryDisposable = function (first, second) {
+    this._first = first;
+    this._second = second;
+    this.isDisposed = false;
+  };
+
+  BinaryDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      var old1 = this._first;
+      this._first = null;
+      old1 && old1.dispose();
+      var old2 = this._second;
+      this._second = null;
+      old2 && old2.dispose();
+    }
   };
 
   var ScheduledItem = Rx.internals.ScheduledItem = function (scheduler, state, action, dueTime, comparer) {
@@ -808,9 +823,7 @@ var
       var id = scheduleMethod(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       });
-      return new CompositeDisposable(disposable, disposableCreate(function () {
-        clearMethod(id);
-      }));
+      return new BinaryDisposable(disposable, disposableCreate(function () { clearMethod(id); }));
     };
 
     DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
@@ -819,9 +832,7 @@ var
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       }, dt);
-      return new CompositeDisposable(disposable, disposableCreate(function () {
-        localClearTimeout(id);
-      }));
+      return new BinaryDisposable(disposable, disposableCreate(function () { localClearTimeout(id); }));
     };
 
     return DefaultScheduler;

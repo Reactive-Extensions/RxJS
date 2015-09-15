@@ -11,7 +11,7 @@
       this.underlyingObservable = !mergedDisposable ?
         underlyingObservable :
         new AnonymousObservable(function (observer) {
-          return new CompositeDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
+          return new BinaryDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
         });
     }
 

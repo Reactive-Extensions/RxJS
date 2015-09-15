@@ -9,7 +9,7 @@
       this.connect = function () {
         if (!hasSubscription) {
           hasSubscription = true;
-          subscription = new CompositeDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
+          subscription = new BinaryDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
             hasSubscription = false;
           }));
         }

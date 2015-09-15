@@ -18,7 +18,7 @@
         isDone && values[1] && o.onCompleted();
       }
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         source.subscribe(
           function (x) {
             next(x, 0);

@@ -17,8 +17,8 @@
       this.isDisposed = true;
       var old = this.current;
       this.current = null;
+      old && old.dispose();
     }
-    old && old.dispose();
   };
 
   // Multiple assignment disposable

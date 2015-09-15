@@ -558,7 +558,7 @@
   // Rx Utils
   var addRef = Rx.internals.addRef = function (xs, r) {
     return new AnonymousObservable(function (observer) {
-      return new CompositeDisposable(r.getDisposable(), xs.subscribe(observer));
+      return new BinaryDisposable(r.getDisposable(), xs.subscribe(observer));
     });
   };
 
@@ -669,9 +669,6 @@
       len = arguments.length;
       args = new Array(len);
       for(i = 0; i < len; i++) { args[i] = arguments[i]; }
-    }
-    for(i = 0; i < len; i++) {
-      if (!isDisposable(args[i])) { throw new TypeError('Not a disposable'); }
     }
     this.disposables = args;
     this.isDisposed = false;
@@ -794,8 +791,8 @@
       this.isDisposed = true;
       var old = this.current;
       this.current = null;
+      old && old.dispose();
     }
-    old && old.dispose();
   };
 
   // Multiple assignment disposable
@@ -822,6 +819,24 @@
       this.current = null;
     }
     old && old.dispose();
+  };
+
+  var BinaryDisposable = Rx.BinaryDisposable = function (first, second) {
+    this._first = first;
+    this._second = second;
+    this.isDisposed = false;
+  };
+
+  BinaryDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      var old1 = this._first;
+      this._first = null;
+      old1 && old1.dispose();
+      var old2 = this._second;
+      this._second = null;
+      old2 && old2.dispose();
+    }
   };
 
   /**
@@ -1340,9 +1355,7 @@
       var id = scheduleMethod(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       });
-      return new CompositeDisposable(disposable, disposableCreate(function () {
-        clearMethod(id);
-      }));
+      return new BinaryDisposable(disposable, disposableCreate(function () { clearMethod(id); }));
     };
 
     DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
@@ -1351,9 +1364,7 @@
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       }, dt);
-      return new CompositeDisposable(disposable, disposableCreate(function () {
-        localClearTimeout(id);
-      }));
+      return new BinaryDisposable(disposable, disposableCreate(function () { localClearTimeout(id); }));
     };
 
     return DefaultScheduler;
@@ -2179,7 +2190,7 @@ var FlatMapObservable = (function(__super__){
 
         var outer = new SingleAssignmentDisposable();
         var inner = new SingleAssignmentDisposable();
-        subscription.setDisposable(new CompositeDisposable(inner, outer));
+        subscription.setDisposable(new BinaryDisposable(inner, outer));
         outer.setDisposable(currentValue.subscribe(
           function(x) { o.onNext(x); },
           function (exn) {
@@ -3066,14 +3077,14 @@ var FlatMapObservable = (function(__super__){
       var disposable = disposableEmpty;
       var resource = tryCatch(resourceFactory)();
       if (resource === errorObj) {
-        return new CompositeDisposable(observableThrow(resource.e).subscribe(o), disposable);
+        return new BinaryDisposable(observableThrow(resource.e).subscribe(o), disposable);
       }
       resource && (disposable = resource);
       var source = tryCatch(observableFactory)(resource);
       if (source === errorObj) {
-        return new CompositeDisposable(observableThrow(source.e).subscribe(o), disposable);
+        return new BinaryDisposable(observableThrow(source.e).subscribe(o), disposable);
       }
-      return new CompositeDisposable(source.subscribe(o), disposable);
+      return new BinaryDisposable(source.subscribe(o), disposable);
     });
   };
 
@@ -3138,7 +3149,7 @@ var FlatMapObservable = (function(__super__){
       leftSubscription.setDisposable(leftSource.subscribe(leftSubscribe));
       rightSubscription.setDisposable(rightSource.subscribe(rightSubscribe));
 
-      return new CompositeDisposable(leftSubscription, rightSubscription);
+      return new BinaryDisposable(leftSubscription, rightSubscription);
     });
   };
 
@@ -3755,7 +3766,7 @@ var FlatMapObservable = (function(__super__){
           observer.onCompleted();
         }
       });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     });
   };
 
@@ -3768,24 +3779,28 @@ var FlatMapObservable = (function(__super__){
     var source = this;
     return new AnonymousObservable(function (o) {
       var isOpen = false;
-      var disposables = new CompositeDisposable(source.subscribe(function (left) {
-        isOpen && o.onNext(left);
-      }, function (e) { o.onError(e); }, function () {
-        isOpen && o.onCompleted();
-      }));
+      var leftSubscription = new SingleAssignmentDisposable();
+      leftSubscription.setDisposable(
+        source.subscribe(function (left) {
+          isOpen && o.onNext(left);
+        }, function (e) { o.onError(e); }, function () {
+          isOpen && o.onCompleted();
+        })
+      );
 
       isPromise(other) && (other = observableFromPromise(other));
 
       var rightSubscription = new SingleAssignmentDisposable();
-      disposables.add(rightSubscription);
-      rightSubscription.setDisposable(other.subscribe(function () {
-        isOpen = true;
-        rightSubscription.dispose();
-      }, function (e) { o.onError(e); }, function () {
-        rightSubscription.dispose();
-      }));
+      rightSubscription.setDisposable(
+        other.subscribe(function () {
+          isOpen = true;
+          rightSubscription.dispose();
+        }, function (e) { o.onError(e); }, function () {
+          rightSubscription.dispose();
+        })
+      );
 
-      return disposables;
+      return new BinaryDisposable(leftSubscription, rightSubscription);
     }, source);
   };
 
@@ -3798,80 +3813,55 @@ var FlatMapObservable = (function(__super__){
 
     SwitchObservable.prototype.subscribeCore = function (o) {
       var inner = new SerialDisposable(), s = this.source.subscribe(new SwitchObserver(o, inner));
-      return new CompositeDisposable(s, inner);
+      return new BinaryDisposable(s, inner);
     };
 
+    inherits(SwitchObserver, AbstractObserver);
     function SwitchObserver(o, inner) {
       this.o = o;
       this.inner = inner;
       this.stopped = false;
       this.latest = 0;
       this.hasLatest = false;
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
-    SwitchObserver.prototype.onNext = function (innerSource) {
-      if (this.isStopped) { return; }
+
+    SwitchObserver.prototype.next = function (innerSource) {
       var d = new SingleAssignmentDisposable(), id = ++this.latest;
       this.hasLatest = true;
       this.inner.setDisposable(d);
       isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
       d.setDisposable(innerSource.subscribe(new InnerObserver(this, id)));
     };
-    SwitchObserver.prototype.onError = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-      }
-    };
-    SwitchObserver.prototype.onCompleted = function () {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.stopped = true;
-        !this.hasLatest && this.o.onCompleted();
-      }
-    };
-    SwitchObserver.prototype.dispose = function () { this.isStopped = true; };
-    SwitchObserver.prototype.fail = function (e) {
-      if(!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
+
+    SwitchObserver.prototype.error = function (e) {
+      this.o.onError(e);
     };
 
+    SwitchObserver.prototype.completed = function () {
+      this.stopped = true;
+      !this.hasLatest && this.o.onCompleted();
+    };
+
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(parent, id) {
       this.parent = parent;
       this.id = id;
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) {
-      if (this.isStopped) { return; }
+    InnerObserver.prototype.next = function (x) {
       this.parent.latest === this.id && this.parent.o.onNext(x);
     };
-    InnerObserver.prototype.onError = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.parent.latest === this.id && this.parent.o.onError(e);
-      }
+
+    InnerObserver.prototype.error = function (e) {
+      this.parent.latest === this.id && this.parent.o.onError(e);
     };
-    InnerObserver.prototype.onCompleted = function () {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        if (this.parent.latest === this.id) {
-          this.parent.hasLatest = false;
-          this.parent.isStopped && this.parent.o.onCompleted();
-        }
+
+    InnerObserver.prototype.completed = function () {
+      if (this.parent.latest === this.id) {
+        this.parent.hasLatest = false;
+        this.parent.isStopped && this.parent.o.onCompleted();
       }
-    };
-    InnerObserver.prototype.dispose = function () { this.isStopped = true; }
-    InnerObserver.prototype.fail = function (e) {
-      if(!this.isStopped) {
-        this.isStopped = true;
-        this.parent.o.onError(e);
-        return true;
-      }
-      return false;
     };
 
     return SwitchObservable;
@@ -3895,38 +3885,24 @@ var FlatMapObservable = (function(__super__){
     }
 
     TakeUntilObservable.prototype.subscribeCore = function(o) {
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         this.source.subscribe(o),
         this.other.subscribe(new InnerObserver(o))
       );
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o) {
       this.o = o;
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) {
-      if (this.isStopped) { return; }
+    InnerObserver.prototype.next = function () {
       this.o.onCompleted();
     };
-    InnerObserver.prototype.onError = function (err) {
-      if (!this.isStopped) {
-        this.isStopped = true;
+    InnerObserver.prototype.error = function (err) {
         this.o.onError(err);
-      }
     };
-    InnerObserver.prototype.onCompleted = function () {
-      !this.isStopped && (this.isStopped = true);
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
-    };
+    InnerObserver.prototype.onCompleted = noop;
 
     return TakeUntilObservable;
   }(ObservableBase));
@@ -4969,35 +4945,27 @@ observableProto.zipIterable = function () {
       return this.source.subscribe(new InnerObserver(o, this.selector, this));
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o, selector, source) {
       this.o = o;
       this.selector = selector;
       this.source = source;
       this.i = 0;
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
 
-    InnerObserver.prototype.onNext = function(x) {
-      if (this.isStopped) { return; }
+    InnerObserver.prototype.next = function(x) {
       var result = tryCatch(this.selector)(x, this.i++, this.source);
       if (result === errorObj) { return this.o.onError(result.e); }
       this.o.onNext(result);
     };
-    InnerObserver.prototype.onError = function (e) {
-      if(!this.isStopped) { this.isStopped = true; this.o.onError(e); }
-    };
-    InnerObserver.prototype.onCompleted = function () {
-      if(!this.isStopped) { this.isStopped = true; this.o.onCompleted(); }
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
 
-      return false;
+    InnerObserver.prototype.error = function (e) {
+      this.o.onError(e);
+    };
+
+    InnerObserver.prototype.completed = function () {
+      this.o.onCompleted();
     };
 
     return MapObservable;
@@ -5803,15 +5771,10 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     return new AnonymousObservable(function (o) {
       var donel = false, doner = false, ql = [], qr = [];
       var subscription1 = first.subscribe(function (x) {
-        var equal, v;
         if (qr.length > 0) {
-          v = qr.shift();
-          try {
-            equal = comparer(v, x);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
+          var v = qr.shift();
+          var equal = tryCatch(comparer)(v, x);
+          if (equal === errorObj) { return o.onError(equal.e); }
           if (!equal) {
             o.onNext(false);
             o.onCompleted();
@@ -5838,15 +5801,10 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
       (isArrayLike(second) || isIterable(second)) && (second = observableFrom(second));
       isPromise(second) && (second = observableFromPromise(second));
       var subscription2 = second.subscribe(function (x) {
-        var equal;
         if (ql.length > 0) {
           var v = ql.shift();
-          try {
-            equal = comparer(v, x);
-          } catch (exception) {
-            o.onError(exception);
-            return;
-          }
+          var equal = tryCatch(comparer)(v, x);
+          if (equal === errorObj) { return o.onError(equal.e); }
           if (!equal) {
             o.onNext(false);
             o.onCompleted();
@@ -5869,7 +5827,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
           }
         }
       });
-      return new CompositeDisposable(subscription1, subscription2);
+      return new BinaryDisposable(subscription1, subscription2);
     }, first);
   };
 
@@ -6612,7 +6570,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
         isDone && values[1] && o.onCompleted();
       }
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         source.subscribe(
           function (x) {
             next(x, 0);
@@ -7069,7 +7027,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     return typeof subjectOrSubjectSelector === 'function' ?
       new AnonymousObservable(function (observer) {
         var connectable = source.multicast(subjectOrSubjectSelector());
-        return new CompositeDisposable(selector(connectable).subscribe(observer), connectable.connect());
+        return new BinaryDisposable(selector(connectable).subscribe(observer), connectable.connect());
       }, source) :
       new ConnectableObservable(source, subjectOrSubjectSelector);
   };
@@ -7460,7 +7418,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
       this.connect = function () {
         if (!hasSubscription) {
           hasSubscription = true;
-          subscription = new CompositeDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
+          subscription = new BinaryDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
             hasSubscription = false;
           }));
         }
@@ -8101,7 +8059,6 @@ observableProto.controlled = function (enableQueue, scheduler) {
 
    /**
    *  Runs two observable sequences in parallel and combines their last elemenets.
-   *
    * @param {Observable} second Second observable sequence.
    * @param {Function} resultSelector Result selector function to invoke with the last elements of both sequences.
    * @returns {Observable} An observable sequence with the result of calling the selector function with the last elements of both input sequences.
@@ -8131,13 +8088,8 @@ observableProto.controlled = function (enableQueue, scheduler) {
               } else if (!hasRight) {
                   observer.onCompleted();
               } else {
-                var result;
-                try {
-                  result = resultSelector(lastLeft, lastRight);
-                } catch (e) {
-                  observer.onError(e);
-                  return;
-                }
+                var result = tryCatch(resultSelector)(lastLeft, lastRight);
+                if (result === errorObj) { return observer.onError(e); }
                 observer.onNext(result);
                 observer.onCompleted();
               }
@@ -8160,13 +8112,8 @@ observableProto.controlled = function (enableQueue, scheduler) {
             } else if (!hasRight) {
               observer.onCompleted();
             } else {
-              var result;
-              try {
-                result = resultSelector(lastLeft, lastRight);
-              } catch (e) {
-                observer.onError(e);
-                return;
-              }
+              var result = tryCatch(resultSelector)(lastLeft, lastRight);
+              if (result === errorObj) { return observer.onError(result.e); }
               observer.onNext(result);
               observer.onCompleted();
             }
@@ -8174,7 +8121,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
         })
       );
 
-      return new CompositeDisposable(leftSubscription, rightSubscription);
+      return new BinaryDisposable(leftSubscription, rightSubscription);
     }, first);
   };
 
@@ -8656,7 +8603,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
           }
         }
       });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, source);
   }
 
@@ -8717,7 +8664,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
         subscription.setDisposable(subDelay.subscribe(start, function (e) { o.onError(e); }, start));
       }
 
-      return new CompositeDisposable(subscription, delays);
+      return new BinaryDisposable(subscription, delays);
     }, this);
   }
 
@@ -8773,7 +8720,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
           hasvalue = false;
           id++;
         });
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, this);
   }
 
@@ -8820,7 +8767,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
           id++;
         }
       );
-      return new CompositeDisposable(subscription, cancelable);
+      return new BinaryDisposable(subscription, cancelable);
     }, source);
   }
 
@@ -9066,7 +9013,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
         }
       ));
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         sourceSubscription,
         sampler.subscribe(sampleSubscribe, function (e) { o.onError(e); }, sampleSubscribe)
       );
@@ -9146,7 +9093,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
       }, function () {
         oWins() && o.onCompleted();
       }));
-      return new CompositeDisposable(subscription, timer);
+      return new BinaryDisposable(subscription, timer);
     }, source);
   }
 
@@ -9197,7 +9144,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
           o.onCompleted();
         }
       }));
-      return new CompositeDisposable(subscription, timer);
+      return new BinaryDisposable(subscription, timer);
     }, source);
   }
 
@@ -9456,7 +9403,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
-      return new CompositeDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
+      return new BinaryDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
     }, source);
   };
 
@@ -9481,7 +9428,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (o) {
       var open = false;
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(null, duration, function () { open = true; }),
         source.subscribe(function (x) { open && o.onNext(x); }, function (e) { o.onError(e); }, function () { o.onCompleted(); }));
     }, source);
@@ -9504,7 +9451,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     return new AnonymousObservable(function (o) {
       var open = false;
 
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(null, startTime, function () { open = true; }),
         source.subscribe(
           function (x) { open && o.onNext(x); },
@@ -9522,7 +9469,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     var source = this;
     return new AnonymousObservable(function (o) {
-      return new CompositeDisposable(
+      return new BinaryDisposable(
         scheduler.scheduleFuture(o, endTime, function (_, o) { o.onCompleted(); }),
         source.subscribe(o));
     }, source);
@@ -9975,7 +9922,7 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
       this.underlyingObservable = !mergedDisposable ?
         underlyingObservable :
         new AnonymousObservable(function (observer) {
-          return new CompositeDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
+          return new BinaryDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
         });
     }
 

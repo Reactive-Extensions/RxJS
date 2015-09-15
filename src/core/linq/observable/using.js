@@ -9,13 +9,13 @@
       var disposable = disposableEmpty;
       var resource = tryCatch(resourceFactory)();
       if (resource === errorObj) {
-        return new CompositeDisposable(observableThrow(resource.e).subscribe(o), disposable);
+        return new BinaryDisposable(observableThrow(resource.e).subscribe(o), disposable);
       }
       resource && (disposable = resource);
       var source = tryCatch(observableFactory)(resource);
       if (source === errorObj) {
-        return new CompositeDisposable(observableThrow(source.e).subscribe(o), disposable);
+        return new BinaryDisposable(observableThrow(source.e).subscribe(o), disposable);
       }
-      return new CompositeDisposable(source.subscribe(o), disposable);
+      return new BinaryDisposable(source.subscribe(o), disposable);
     });
   };
