@@ -1860,7 +1860,7 @@ declare module Rx {
         * @param {Mixed} [seed] The initial accumulator value.
         * @returns {Observable} An observable sequence containing the accumulated values.
         */
-        scan<TAcc>(accumulator: ((acc: T, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
+        scan<TAcc>(accumulator: ((acc: TAcc, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
         /**
         *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
         *  For aggregation behavior with no intermediate results, see Observable.aggregate.
@@ -2185,7 +2185,18 @@ declare module Rx {
         *
         * @example
         *  var res = observable.groupByUntil(function (x) { return x.id; }, null,  function () { return Rx.Observable.never(); });
-        *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); 
+        *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); });
+        *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; },  function () { return Rx.Observable.never(); }, function (x) { return x.toString(); });
+        * @param {Function} keySelector A function to extract the key for each element.
+        * @param {Function} durationSelector A function to signal the expiration of a group.
+        * @returns {Observable}
+        *  A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
+        *  If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
+        *
+        */
+        groupByUntil<TKey, TElement, TDuration>(keySelector: (value: T) => TKey, elementSelector: (value: T) => TElement, durationSelector: (group: GroupedObservable<TKey, TElement>) => Observable<TDuration>, keySerializer?: (key: TKey) => string): Observable<GroupedObservable<TKey, TElement>>;
+    }
+
     export interface Observable<T> {
         /**
          *  Groups the elements of an observable sequence according to a specified key selector function and comparer and selects the resulting elements by using a specified function.
@@ -2204,7 +2215,15 @@ declare module Rx {
          *
          * @example
          *  var res = observable.groupBy(function (x) { return x.id; });
-         *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; 
+         *  2 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; });
+         *  3 - observable.groupBy(function (x) { return x.id; }), function (x) { return x.name; }, function (x) { return x.toString(); });
+         * @param {Function} keySelector A function to extract the key for each element.
+         * @param {Function} [elementSelector]  A function to map each source element to an element in an observable group.
+         * @returns {Observable} A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
+         */
+        groupBy<TKey, TElement>(keySelector: (value: T) => TKey, elementSelector: (value: T) => TElement, keySerializer?: (key: TKey) => string): Observable<GroupedObservable<TKey, TElement>>;
+    }
+
     export interface Observable<T> {
         /**
         * Projects each element of an observable sequence into a new form by incorporating the element's index.
@@ -2506,7 +2525,15 @@ declare module Rx {
         *  Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
         *  The element's index is used in the logic of the predicate function.
         *
-        *  var res = source.skipWhile(function (value) { return value < 10; 
+        *  var res = source.skipWhile(function (value) { return value < 10; });
+        *  var res = source.skipWhile(function (value, index) { return value < 10 || index < 10; });
+        * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
+        */
+        skipWhile(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
+    }
+
     export interface Observable<T> {
         /**
         *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
@@ -2564,7 +2591,7 @@ declare module Rx {
          * @param {Any} [seed] The initial accumulator value.
          * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
          */
-        reduce<TAcc>(accumulator: ((acc: T, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
+        reduce<TAcc>(accumulator: ((acc: TAcc, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
         /**
          * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
          * For aggregation behavior with incremental intermediate results, see Observable.scan.
@@ -3089,15 +3116,7 @@ declare module Rx {
          * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
          * @returns {Observable} An observable sequence of events from the specified element and the specified event.
          */
-        fromEvent<T>(element: NodeList, eventName: string, selector?: (arguments: any[]) => T): Observable<T>;
-        /**
-         * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
-         * @param {Object} element The DOMElement or NodeList to attach a listener.
-         * @param {String} eventName The event name to attach the observable sequence.
-         * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
-         * @returns {Observable} An observable sequence of events from the specified element and the specified event.
-         */
-        fromEvent<T>(element: Node, eventName: string, selector?: (arguments: any[]) => T): Observable<T>;
+        fromEvent<T>(element: EventTarget, eventName: string, selector?: (arguments: any[]) => T): Observable<T>;
         /**
          * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
          * @param {Object} element The DOMElement or NodeList to attach a listener.

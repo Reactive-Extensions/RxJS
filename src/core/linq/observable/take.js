@@ -1,6 +1,7 @@
   /**
    *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
    *
+   * @example
    *  var res = source.take(5);
    *  var res = source.take(0, Rx.Scheduler.timeout);
    * @param {Number} count The number of elements to return.

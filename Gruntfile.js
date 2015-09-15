@@ -252,7 +252,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -534,7 +534,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -813,7 +813,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -961,7 +961,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -1084,7 +1084,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -1253,7 +1253,7 @@ module.exports = function (grunt) {
               'src/core/perf/operators/flatmaplatest.js',
               'src/core/perf/operators/skip.js',
               'src/core/linq/observable/skipwhile.js',
-              'src/core/linq/observable/take.js',
+              'src/core/perf/operators/take.js',
               'src/core/linq/observable/takewhile.js',
               'src/core/perf/operators/filter.js',
 
@@ -2545,7 +2545,7 @@ module.exports = function (grunt) {
       var source = grunt.file.read(tsFile);
 
       // source with tests
-      var s = source.match(/module Rx \{([\s\S]*)\}[\s\S]*\(function/);
+      var s = source.match(/module Rx \{([\s\S]*)\}[\s\S]*\(function\s*\(\)\s*\{[\s\S]*\}\)/);
       if (s && s[1]) {
         c = cache[tsFile] = s[1];
 	  }
@@ -2702,7 +2702,7 @@ module.exports = function (grunt) {
 			.replace(/_Selector<(\w*?), (\w*?)>/g, '((value: $1, index: number, observable: Observable<$1>) => $2)')
 			.replace(/_Comparer<(\w*?), (\w*?)>/g, '((value1: $1, value2: $1) => $2)')
 			.replace(/_Comparer<T \| TOther, boolean>/, '((value1: T | TOther, value2: T | TOther) => boolean)')
-			.replace(/_Accumulator<(\w*?), (\w*?)>/g, '((acc: $1, value: $1) => $2)')
+			.replace(/_Accumulator<(\w*?), (\w*?)>/g, '((acc: $2, value: $1) => $2)')
 			.replace(/special._FlatMapResultSelector<(\w*?), (\w*?), (\w*?)>/g, '((value: $1, selectorValue: $2, index: number, selectorOther: number) => $3)')
 			.replace(/ObservableOrPromise\<(\w*?)\>/g, '(IObservable<$1> | Observable<$1> \| Promise<$1>)')
 

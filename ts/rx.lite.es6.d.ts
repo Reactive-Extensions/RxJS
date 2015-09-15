@@ -1626,7 +1626,7 @@ declare module Rx {
         * @param {Mixed} [seed] The initial accumulator value.
         * @returns {Observable} An observable sequence containing the accumulated values.
         */
-        scan<TAcc>(accumulator: ((acc: T, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
+        scan<TAcc>(accumulator: ((acc: TAcc, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
         /**
         *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
         *  For aggregation behavior with no intermediate results, see Observable.aggregate.
@@ -2128,7 +2128,15 @@ declare module Rx {
         *  Bypasses elements in an observable sequence as long as a specified condition is true and then returns the remaining elements.
         *  The element's index is used in the logic of the predicate function.
         *
-        *  var res = source.skipWhile(function (value) { return value < 10; 
+        *  var res = source.skipWhile(function (value) { return value < 10; });
+        *  var res = source.skipWhile(function (value, index) { return value < 10 || index < 10; });
+        * @param {Function} predicate A function to test each element for a condition; the second parameter of the function represents the index of the source element.
+        * @param {Any} [thisArg] Object to use as this when executing callback.
+        * @returns {Observable} An observable sequence that contains the elements from the input sequence starting at the first element in the linear series that does not pass the test specified by predicate.
+        */
+        skipWhile(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
+    }
+
     export interface Observable<T> {
         /**
         *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
@@ -2362,15 +2370,7 @@ declare module Rx {
          * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
          * @returns {Observable} An observable sequence of events from the specified element and the specified event.
          */
-        fromEvent<T>(element: NodeList, eventName: string, selector?: (arguments: any[]) => T): Observable<T>;
-        /**
-         * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
-         * @param {Object} element The DOMElement or NodeList to attach a listener.
-         * @param {String} eventName The event name to attach the observable sequence.
-         * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
-         * @returns {Observable} An observable sequence of events from the specified element and the specified event.
-         */
-        fromEvent<T>(element: Node, eventName: string, selector?: (arguments: any[]) => T): Observable<T>;
+        fromEvent<T>(element: EventTarget, eventName: string, selector?: (arguments: any[]) => T): Observable<T>;
         /**
          * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
          * @param {Object} element The DOMElement or NodeList to attach a listener.

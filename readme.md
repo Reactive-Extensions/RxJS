@@ -129,7 +129,7 @@ To give you an idea about rich composition, we can create an autocompletion serv
 
 First, we'll reference the JavaScript files, including jQuery, although RxJS has no dependencies on jQuery...
 ```html
-<script src="http://code.jquery.com/jquery.js"></script>
+<script src="https://code.jquery.com/jquery.js"></script>
 <script src="rx.lite.js"></script>
 ```
 Next, we'll get the user input from an input, listening to the keyup event by using the `Rx.Observable.fromEvent` method.  This will either use the event binding from [jQuery](http://jquery.com), [Zepto](http://zeptojs.com/), [AngularJS](https://angularjs.org/), [Backbone.js](http://backbonejs.org/) and [Ember.js](http://emberjs.com/) if available, and if not, falls back to the native event binding.  This gives you consistent ways of thinking of events depending on your framework, so there are no surprises.
