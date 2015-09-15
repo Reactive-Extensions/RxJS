@@ -12,7 +12,7 @@
         observable = source.finally(function() { hasObservable = false; }).publish().refCount();
       }
       return observable;
-    };
+    }
 
     return new AnonymousObservable(function(o) {
       return getObservable().subscribe(o);

@@ -37,7 +37,6 @@
     ScheduledObserver = Rx.internals.ScheduledObserver,
     disposableCreate = Rx.Disposable.create,
     disposableEmpty = Rx.Disposable.empty,
-    CompositeDisposable = Rx.CompositeDisposable,
     BinaryDisposable = Rx.BinaryDisposable,
     currentThreadScheduler = Rx.Scheduler.currentThread,
     isFunction = Rx.helpers.isFunction,
@@ -234,10 +233,10 @@
      */
     function BehaviorSubject(value) {
       __super__.call(this, subscribe);
-      this.value = value,
-      this.observers = [],
-      this.isDisposed = false,
-      this.isStopped = false,
+      this.value = value;
+      this.observers = [];
+      this.isDisposed = false;
+      this.isStopped = false;
       this.hasError = false;
     }
 
@@ -505,7 +504,7 @@
         observable = source.finally(function() { hasObservable = false; }).publish().refCount();
       }
       return observable;
-    };
+    }
 
     return new AnonymousObservable(function(o) {
       return getObservable().subscribe(o);

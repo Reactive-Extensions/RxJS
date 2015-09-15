@@ -7,7 +7,7 @@
 
     Map.prototype['delete'] = function (key) {
       var i = this._keys.indexOf(key);
-      if (i === -1) { return false }
+      if (i === -1) { return false; }
       this._values.splice(i, 1);
       this._keys.splice(i, 1);
       this.size--;

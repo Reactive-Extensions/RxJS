@@ -7,6 +7,5 @@
     disposableEmpty = Disposable.empty,
     disposableCreate = Disposable.create,
     CompositeDisposable = Rx.CompositeDisposable,
-    SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
     inherits = Rx.internals.inherits,
     defaultComparer = Rx.internals.isEqual;

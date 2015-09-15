@@ -55,6 +55,7 @@
     }
 
   var errorObj = {e: {}};
+  
   function tryCatcherGen(tryCatchTarget) {
     return function tryCatcher() {
       try {
@@ -63,12 +64,14 @@
         errorObj.e = e;
         return errorObj;
       }
-    }
+    };
   }
+
   var tryCatch = Rx.internals.tryCatch = function tryCatch(fn) {
     if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
     return tryCatcherGen(fn);
-  }
+  };
+
   function thrower(e) {
     throw e;
   }
@@ -7418,10 +7421,10 @@ observableProto.controlled = function (enableQueue, scheduler) {
      */
     function BehaviorSubject(value) {
       __super__.call(this, subscribe);
-      this.value = value,
-      this.observers = [],
-      this.isDisposed = false,
-      this.isStopped = false,
+      this.value = value;
+      this.observers = [];
+      this.isDisposed = false;
+      this.isStopped = false;
       this.hasError = false;
     }
 
@@ -7689,7 +7692,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
         observable = source.finally(function() { hasObservable = false; }).publish().refCount();
       }
       return observable;
-    };
+    }
 
     return new AnonymousObservable(function(o) {
       return getObservable().subscribe(o);
@@ -8433,7 +8436,7 @@ observableProto.controlled = function (enableQueue, scheduler) {
 
     Map.prototype['delete'] = function (key) {
       var i = this._keys.indexOf(key);
-      if (i === -1) { return false }
+      if (i === -1) { return false; }
       this._values.splice(i, 1);
       this._keys.splice(i, 1);
       this.size--;

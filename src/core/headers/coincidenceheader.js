@@ -9,14 +9,9 @@
     observableEmpty = Observable.empty,
     observableNever = Observable.never,
     AnonymousObservable = Rx.AnonymousObservable,
-    observerCreate = Rx.Observer.create,
     addRef = Rx.internals.addRef,
-    defaultComparer = Rx.internals.isEqual,
     inherits = Rx.internals.inherits,
     noop = Rx.helpers.noop,
-    identity = Rx.helpers.identity,
     isPromise = Rx.helpers.isPromise,
     isFunction = Rx.helpers.isFunction,
-    bindCallback = Rx.internals.bindCallback,
-    observableFromPromise = Observable.fromPromise,
-    ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;
+    observableFromPromise = Observable.fromPromise;

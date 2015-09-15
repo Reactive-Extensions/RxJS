@@ -39,19 +39,15 @@
     observableEmpty = Observable.empty,
     observableNever = Observable.never,
     AnonymousObservable = Rx.AnonymousObservable,
-    observerCreate = Rx.Observer.create,
     addRef = Rx.internals.addRef,
-    defaultComparer = Rx.internals.isEqual,
     inherits = Rx.internals.inherits,
     noop = Rx.helpers.noop,
-    identity = Rx.helpers.identity,
     isPromise = Rx.helpers.isPromise,
     isFunction = Rx.helpers.isFunction,
-    bindCallback = Rx.internals.bindCallback,
-    observableFromPromise = Observable.fromPromise,
-    ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;
+    observableFromPromise = Observable.fromPromise;
 
   var errorObj = {e: {}};
+  
   function tryCatcherGen(tryCatchTarget) {
     return function tryCatcher() {
       try {
@@ -60,12 +56,14 @@
         errorObj.e = e;
         return errorObj;
       }
-    }
+    };
   }
+
   var tryCatch = Rx.internals.tryCatch = function tryCatch(fn) {
     if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
     return tryCatcherGen(fn);
-  }
+  };
+
   function thrower(e) {
     throw e;
   }
@@ -79,7 +77,7 @@
 
     Map.prototype['delete'] = function (key) {
       var i = this._keys.indexOf(key);
-      if (i === -1) { return false }
+      if (i === -1) { return false; }
       this._values.splice(i, 1);
       this._keys.splice(i, 1);
       this.size--;

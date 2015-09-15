@@ -12,7 +12,7 @@
     disposableCreate = Rx.Disposable.create,
     inherits = Rx.internals.inherits,
     addProperties = Rx.internals.addProperties,
-    timeoutScheduler = Rx.Scheduler.timeout,
+    defaultScheduler = Rx.Scheduler['default'],
     currentThreadScheduler = Rx.Scheduler.currentThread,
     identity = Rx.helpers.identity,
     isScheduler = Rx.Scheduler.isScheduler,

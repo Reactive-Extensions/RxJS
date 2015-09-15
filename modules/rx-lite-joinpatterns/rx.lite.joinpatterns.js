@@ -38,13 +38,7 @@
     CompositeDisposable = Rx.CompositeDisposable,
     AbstractObserver = Rx.internals.AbstractObserver,
     noop = Rx.helpers.noop,
-    defaultComparer = Rx.internals.isEqual,
-    inherits = Rx.internals.inherits,
-    Enumerable = Rx.internals.Enumerable,
-    Enumerator = Rx.internals.Enumerator,
-    $iterator$ = Rx.iterator,
-    doneEnumerator = Rx.doneEnumerator,
-    bindCallback = Rx.internals.bindCallback;
+    inherits = Rx.internals.inherits;
 
   var Map = root.Map || (function () {
     function Map() {
@@ -55,7 +49,7 @@
 
     Map.prototype['delete'] = function (key) {
       var i = this._keys.indexOf(key);
-      if (i === -1) { return false }
+      if (i === -1) { return false; }
       this._values.splice(i, 1);
       this._keys.splice(i, 1);
       this.size--;

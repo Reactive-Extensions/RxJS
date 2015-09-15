@@ -31,14 +31,11 @@
   // References
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
-    CompositeDisposable = Rx.CompositeDisposable,
     BinaryDisposable = Rx.BinaryDisposable,
     AnonymousObservable = Rx.AnonymousObservable,
     AbstractObserver = Rx.internals.AbstractObserver,
     disposableEmpty = Rx.Disposable.empty,
-    isEqual = Rx.internals.isEqual,
     helpers = Rx.helpers,
-    not = helpers.not,
     defaultComparer = helpers.defaultComparer,
     identity = helpers.identity,
     defaultSubComparer = helpers.defaultSubComparer,
@@ -55,6 +52,7 @@
     ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError;
 
   var errorObj = {e: {}};
+  
   function tryCatcherGen(tryCatchTarget) {
     return function tryCatcher() {
       try {
@@ -63,12 +61,14 @@
         errorObj.e = e;
         return errorObj;
       }
-    }
+    };
   }
+
   var tryCatch = Rx.internals.tryCatch = function tryCatch(fn) {
     if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
     return tryCatcherGen(fn);
-  }
+  };
+
   function thrower(e) {
     throw e;
   }

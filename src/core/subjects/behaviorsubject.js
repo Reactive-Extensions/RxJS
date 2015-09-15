@@ -26,10 +26,10 @@
      */
     function BehaviorSubject(value) {
       __super__.call(this, subscribe);
-      this.value = value,
-      this.observers = [],
-      this.isDisposed = false,
-      this.isStopped = false,
+      this.value = value;
+      this.observers = [];
+      this.isDisposed = false;
+      this.isStopped = false;
       this.hasError = false;
     }
 
