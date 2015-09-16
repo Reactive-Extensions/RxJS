@@ -1116,6 +1116,9 @@
       var dt = dueTime;
       dt instanceof Date && (dt = dt - this.now());
       dt = Scheduler.normalize(dt);
+
+      if (dt === 0) { return this.schedule(state, action); }
+
       return this._scheduleFuture(state, dt, action);
     };
 
@@ -2097,10 +2100,7 @@
     function setDisposable(s, state) {
       var ado = state[0], self = state[1];
       var sub = tryCatch(self.subscribeCore).call(self, ado);
-
-      if (sub === errorObj) {
-        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
-      }
+      if (sub === errorObj && !ado.fail(errorObj.e)) { thrower(errorObj.e); }
       ado.setDisposable(fixSubscriber(sub));
     }
 
@@ -5318,10 +5318,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     function setDisposable(s, state) {
       var ado = state[0], self = state[1];
       var sub = tryCatch(self.__subscribe).call(self, ado);
-
-      if (sub === errorObj) {
-        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
-      }
+      if (sub === errorObj && !ado.fail(errorObj.e)) { thrower(errorObj.e); }
       ado.setDisposable(fixSubscriber(sub));
     }
 

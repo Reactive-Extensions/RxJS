@@ -1202,6 +1202,9 @@
       var dt = dueTime;
       dt instanceof Date && (dt = dt - this.now());
       dt = Scheduler.normalize(dt);
+
+      if (dt === 0) { return this.schedule(state, action); }
+
       return this._scheduleFuture(state, dt, action);
     };
 
@@ -2183,10 +2186,7 @@
     function setDisposable(s, state) {
       var ado = state[0], self = state[1];
       var sub = tryCatch(self.subscribeCore).call(self, ado);
-
-      if (sub === errorObj) {
-        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
-      }
+      if (sub === errorObj && !ado.fail(errorObj.e)) { thrower(errorObj.e); }
       ado.setDisposable(fixSubscriber(sub));
     }
 
@@ -8904,14 +8904,15 @@ observableProto.controlled = function (enableQueue, scheduler) {
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delay = function () {
-    if (typeof arguments[0] === 'number' || arguments[0] instanceof Date) {
-      var dueTime = arguments[0], scheduler = arguments[1];
+    var firstArg = arguments[0];
+    if (typeof firstArg === 'number' || firstArg instanceof Date) {
+      var dueTime = firstArg, scheduler = arguments[1];
       isScheduler(scheduler) || (scheduler = defaultScheduler);
       return dueTime instanceof Date ?
         observableDelayAbsolute(this, dueTime, scheduler) :
         observableDelayRelative(this, dueTime, scheduler);
-    } else if (isFunction(arguments[0])) {
-      return delayWithSelector(this, arguments[0], arguments[1]);
+    } else if (Observable.isObservable(firstArg) || isFunction(firstArg)) {
+      return delayWithSelector(this, firstArg, arguments[1]);
     } else {
       throw new Error('Invalid arguments');
     }
@@ -10065,10 +10066,7 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
     function setDisposable(s, state) {
       var ado = state[0], self = state[1];
       var sub = tryCatch(self.__subscribe).call(self, ado);
-
-      if (sub === errorObj) {
-        if(!ado.fail(errorObj.e)) { return thrower(errorObj.e); }
-      }
+      if (sub === errorObj && !ado.fail(errorObj.e)) { thrower(errorObj.e); }
       ado.setDisposable(fixSubscriber(sub));
     }
 

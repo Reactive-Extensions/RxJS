@@ -31,6 +31,9 @@
       var dt = dueTime;
       dt instanceof Date && (dt = dt - this.now());
       dt = Scheduler.normalize(dt);
+
+      if (dt === 0) { return this.schedule(state, action); }
+
       return this._scheduleFuture(state, dt, action);
     };
 
