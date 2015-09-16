@@ -19,24 +19,24 @@ Wrapping an event from [jQuery](http://jquery.com)
 var input = $('#input');
 
 var source = Rx.Observable.fromEventPattern(
-    function add (h) {
-        input.bind('click', h);
-    },
-    function remove (h) {
-        input.unbind('click', h);
-    }
+  function add (h) {
+    input.bind('click', h);
+  },
+  function remove (h) {
+    input.unbind('click', h);
+  }
 );
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: Clicked!');
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: Clicked!');
+  },
+  function (err) {
+    console.log('Error: %s' err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 input.trigger('click');
 
@@ -48,30 +48,30 @@ Wrapping an event from the [Dojo Toolkit](http://dojotoolkit.org)
 ```js
 require(['dojo/on', 'dojo/dom', 'rx', 'rx.async', 'rx.binding'], function (on, dom, rx) {
 
-    var input = dom.byId('input');
+  var input = dom.byId('input');
 
-    var source = Rx.Observable.fromEventPattern(
-        function add (h) {
-            return on(input, 'click', h);
-        },
-        function remove (_, signal) {
-            signal.remove();
-        }
-    );
+  var source = Rx.Observable.fromEventPattern(
+    function add (h) {
+      return on(input, 'click', h);
+    },
+    function remove (_, signal) {
+      signal.remove();
+    }
+  );
 
-    var subscription = source.subscribe(
-        function (x) {
-            console.log('Next: Clicked!');
-        },
-        function (err) {
-            console.log('Error: ' + err);
-        },
-        function () {
-            console.log('Completed');
-        });
+  var subscription = source.subscribe(
+    function (x) {
+      console.log('Next: Clicked!');
+    },
+    function (err) {
+      console.log('Error: ' + err);
+    },
+    function () {
+      console.log('Completed');
+    });
 
-    on.emit(input, 'click');
-    // => Next: Clicked!
+  on.emit(input, 'click');
+  // => Next: Clicked!
 });
 ```
 
@@ -85,27 +85,27 @@ var e = new EventEmitter();
 
 // Wrap EventEmitter
 var source = Rx.Observable.fromEventPattern(
-    function add (h) {
-        e.addListener('data', h);
-    },
-    function remove (h) {
-        e.removeListener('data', h);
-    },
-    function (arr) {
-        return arr[0] + ',' + arr[1];
-    }
+  function add (h) {
+    e.addListener('data', h);
+  },
+  function remove (h) {
+    e.removeListener('data', h);
+  },
+  function (foo, bar) {
+    return foo + ',' + bar;
+  }
 );
 
 var subscription = source.subscribe(
-    function (result) {
-        console.log('Next: ' + result);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (result) {
+    console.log('Next: %s', result);
+  },
+  function (err) {
+    console.log('Error: ' + err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 e.emit('data', 'foo', 'bar');
 // => Next: foo,bar

@@ -8,7 +8,7 @@ Note that this uses the library approaches for jQuery, Zepto, Backbone.Marionett
 #### Arguments
 1. `element` *(`Any`)*: The DOMElement, NodeList, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter to attach a listener. For Backbone.Marionette this would be the application or an EventAggregator object.
 2. `eventName` *(`String`)*: The event name to attach the observable sequence.
-3. `[selector]` *(`Function`)*: A selector which takes the arguments from the event handler to produce a single item to yield on next.
+3. `[selector]` *(`Function`)*: A selector which takes the arguments from the event emitter so that you can return a single object.
 
 #### Returns
 *(`Observable`)*: An observable sequence of events from the specified element and the specified event.
@@ -23,15 +23,15 @@ var input = $('#input');
 var source = Rx.Observable.fromEvent(input, 'click');
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: Clicked!');
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: Clicked!');
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 input.trigger('click');
 
@@ -49,8 +49,8 @@ var eventEmitter = new EventEmitter();
 var source = Rx.Observable.fromEvent(
     eventEmitter,
     'data',
-    function (args) {
-        return { foo: args[0], bar: args[1] };
+    function (foo, bar) {
+        return { foo: bar, bar: bar };
     });
 
 var subscription = source.subscribe(
