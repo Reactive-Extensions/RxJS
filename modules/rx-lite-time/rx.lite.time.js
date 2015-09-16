@@ -29,7 +29,9 @@
 }.call(this, function (root, exp, Rx, undefined) {
 
   // Refernces
-  var Observable = Rx.Observable,
+  var inherits = Rx.internals.inherits, 
+    AbstractObserver = Rx.internals.AbstractObserver,
+    Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,
     observableDefer = Observable.defer,

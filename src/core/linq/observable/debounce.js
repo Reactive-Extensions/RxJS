@@ -1,34 +1,53 @@
+  var DebounceObserver = (function (__super__) {
+    inherits(DebounceObserver, __super__);
+    function DebounceObserver(observer, source, dueTime, scheduler, cancelable) {
+      this._o = observer;
+      this._s = source;
+      this._d = dueTime;
+      this._scheduler = scheduler;
+      this._c = cancelable;
+      this._v = null;
+      this._hv = false;
+      this._id = 0;
+      __super__.call(this);
+    }
+
+    DebounceObserver.prototype.next = function (x) {
+      this._hv = true;
+      this._v = x;
+      var currentId = ++this._id, d = new SingleAssignmentDisposable();
+      this._c.setDisposable(d);
+      d.setDisposable(this._scheduler.scheduleFuture(this, this._d, function (_, self) {
+        self._hv && self._id === currentId && self._o.onNext(x);
+        self._hv = false;
+      }));
+    };
+
+    DebounceObserver.prototype.error = function (e) {
+      this._c.dispose();
+      this._o.onError(e);
+      this._hv = false;
+      this._id++;
+    };
+
+    DebounceObserver.prototype.completed = function () {
+      this._c.dispose();
+      this._hv && this._o.onNext(this._v);
+      this._o.onCompleted();
+      this._hv = false;
+      this._id++;
+    };
+
+    return DebounceObserver;
+  }(AbstractObserver));
+
   function debounce(source, dueTime, scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return new AnonymousObservable(function (observer) {
-      var cancelable = new SerialDisposable(), hasvalue = false, value, id = 0;
-      var subscription = source.subscribe(
-        function (x) {
-          hasvalue = true;
-          value = x;
-          id++;
-          var currentId = id,
-            d = new SingleAssignmentDisposable();
-          cancelable.setDisposable(d);
-          d.setDisposable(scheduler.scheduleFuture(null, dueTime, function () {
-            hasvalue && id === currentId && observer.onNext(value);
-            hasvalue = false;
-          }));
-        },
-        function (e) {
-          cancelable.dispose();
-          observer.onError(e);
-          hasvalue = false;
-          id++;
-        },
-        function () {
-          cancelable.dispose();
-          hasvalue && observer.onNext(value);
-          observer.onCompleted();
-          hasvalue = false;
-          id++;
-        });
-      return new BinaryDisposable(subscription, cancelable);
+    return new AnonymousObservable(function (o) {
+      var cancelable = new SerialDisposable();
+      return new BinaryDisposable(
+        source.subscribe(new DebounceObserver(o, source, dueTime, scheduler, cancelable)),
+        cancelable);
     }, this);
   }
 
