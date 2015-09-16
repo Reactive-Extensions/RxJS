@@ -57,7 +57,6 @@
   }
 
   function timeout(source, dueTime, other, scheduler) {
-    if (other == null) { throw new Error('other or scheduler must be specified'); }
     if (isScheduler(other)) {
       scheduler = other;
       other = observableThrow(new TimeoutError());

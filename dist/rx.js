@@ -2251,12 +2251,11 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     var source = this;
     return new promiseCtor(function (resolve, reject) {
       // No cancellation can be done
-      var value, hasValue = false;
+      var value;
       source.subscribe(function (v) {
         value = v;
-        hasValue = true;
       }, reject, function () {
-        hasValue && resolve(value);
+        resolve(value);
       });
     });
   };

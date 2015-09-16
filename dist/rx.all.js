@@ -2337,12 +2337,11 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     var source = this;
     return new promiseCtor(function (resolve, reject) {
       // No cancellation can be done
-      var value, hasValue = false;
+      var value;
       source.subscribe(function (v) {
         value = v;
-        hasValue = true;
       }, reject, function () {
-        hasValue && resolve(value);
+        resolve(value);
       });
     });
   };
@@ -9095,7 +9094,6 @@ observableProto.controlled = function (enableQueue, scheduler) {
   }
 
   function timeout(source, dueTime, other, scheduler) {
-    if (other == null) { throw new Error('other or scheduler must be specified'); }
     if (isScheduler(other)) {
       scheduler = other;
       other = observableThrow(new TimeoutError());

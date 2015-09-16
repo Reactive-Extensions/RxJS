@@ -132,14 +132,15 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delay = function () {
-    if (typeof arguments[0] === 'number' || arguments[0] instanceof Date) {
-      var dueTime = arguments[0], scheduler = arguments[1];
+    var firstArg = arguments[0];
+    if (typeof firstArg === 'number' || firstArg instanceof Date) {
+      var dueTime = firstArg, scheduler = arguments[1];
       isScheduler(scheduler) || (scheduler = defaultScheduler);
       return dueTime instanceof Date ?
         observableDelayAbsolute(this, dueTime, scheduler) :
         observableDelayRelative(this, dueTime, scheduler);
-    } else if (isFunction(arguments[0])) {
-      return delayWithSelector(this, arguments[0], arguments[1]);
+    } else if (Observable.isObservable(firstArg) || isFunction(firstArg)) {
+      return delayWithSelector(this, firstArg, arguments[1]);
     } else {
       throw new Error('Invalid arguments');
     }

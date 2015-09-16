@@ -4511,12 +4511,11 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     var source = this;
     return new promiseCtor(function (resolve, reject) {
       // No cancellation can be done
-      var value, hasValue = false;
+      var value;
       source.subscribe(function (v) {
         value = v;
-        hasValue = true;
       }, reject, function () {
-        hasValue && resolve(value);
+        resolve(value);
       });
     });
   };
@@ -5151,7 +5150,6 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
   }
 
   function timeout(source, dueTime, other, scheduler) {
-    if (other == null) { throw new Error('other or scheduler must be specified'); }
     if (isScheduler(other)) {
       scheduler = other;
       other = observableThrow(new TimeoutError());
