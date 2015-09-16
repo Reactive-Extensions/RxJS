@@ -1,11 +1,11 @@
-### `Rx.Observable.prototype.withLatestFrom(...args, resultSelector)`
+### `Rx.Observable.prototype.withLatestFrom(...args, [resultSelector])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/withlatestfrom.js "View in source")
 
-Merges the specified observable sequences into one observable sequence by using the selector function only when the source observable sequence (the instance) produces an element. The other observables can be in the form of an argument list of observables or an array.
+Merges the specified observable sequences into one observable sequence by using the selector function only when the source observable sequence (the instance) produces an element. The other observables can be in the form of an argument list of observables or an array. If the result selector is omitted, a list with the elements will be yielded.
 
 #### Arguments
 1. `args` *(arguments | Array)*: An array or arguments of Observable sequences.
-1. `resultSelector` *(`Function`)*: Function to invoke when the instance source observable produces an element.
+1. `[resultSelector]` *(`Function`)*: Function to invoke when the instance source observable produces an element. If omitted, a list with the elements will be yielded.
 
 #### Returns
 *(`Observable`)*: An observable sequence containing the result of combining elements of the sources using the specified result selector function.
