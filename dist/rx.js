@@ -3773,16 +3773,25 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
   };
 
   function falseFactory() { return false; }
+  function argumentsToArray() {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return args;
+  }
 
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
    */
   observableProto.withLatestFrom = function () {
-    var len = arguments.length, args = new Array(len)
+    if (arguments.length === 0) { throw new Error('invalid arguments'); }
+
+    var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-    var resultSelector = args.pop(), source = this;
+    var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
     Array.isArray(args[0]) && (args = args[0]);
+
+    var source = this;
 
     return new AnonymousObservable(function (observer) {
       var n = args.length,

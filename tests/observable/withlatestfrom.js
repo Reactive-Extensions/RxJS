@@ -175,7 +175,7 @@
       onNext(220, 2),
       onCompleted(230)
     );
-    
+
     var e2 = scheduler.createHotObservable(
       onNext(150, 1),
       onNext(215, 3),
@@ -560,7 +560,34 @@
     );
   });
 
-  test('withLatestFrom consecutiveEndWithErrorLeft', function () {
+  test('withLatestFrom consecutive array', function () {
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onNext(235, 4),
+      onCompleted(240)
+    );
+
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(225, 6),
+      onNext(240, 7),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return e1.withLatestFrom(e2);
+    });
+
+    results.messages.assertEqual(
+      onNext(235, [4,6]),
+      onCompleted(240)
+    );
+  });
+
+  test('withLatestFrom consecutive end with error left', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -588,7 +615,7 @@
     );
   });
 
-  test('withLatestFrom consecutiveEndWithErrorRight', function () {
+  test('withLatestFrom consecutive end with error right', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -614,6 +641,36 @@
     results.messages.assertEqual(
       onNext(235, 4 + 6),
       onNext(240, 4 + 7),
+      onError(245, error)
+    );
+  });
+
+  test('withLatestFrom consecutive end with error right array', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var e1 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(215, 2),
+      onNext(225, 4),
+      onCompleted(230)
+    );
+
+    var e2 = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(235, 6),
+      onNext(240, 7),
+      onError(245, error)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return e2.withLatestFrom(e1);
+    });
+
+    results.messages.assertEqual(
+      onNext(235, [6,4]),
+      onNext(240, [7,4]),
       onError(245, error)
     );
   });
