@@ -26,7 +26,7 @@
     "index.js": "rx.lite.testing.js"
   },
   "dependencies": {
-    "rx-virtualtime": "*"
+    "rx-lite-virtualtime": "*"
   },
   "devDependencies": {},
   "keywords": [
