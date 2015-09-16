@@ -69,7 +69,7 @@ var subscription = source
   .map(function (quote) {
     return quote.price;
   })
-  .forEach(
+  .subscribe(
     function (price) {
       console.log('Prices higher than $30: $' + price);
     },
@@ -81,7 +81,7 @@ var subscription = source
 subscription.dispose();
 ```
 
-The only difference is that we can handle the errors inline with our subscription.  And when we're no longer interested in receiving the data as it comes streaming in, we call `dispose` on our subscription.
+The only difference is that we can handle the errors inline with our subscription.  And when we're no longer interested in receiving the data as it comes streaming in, we call `dispose` on our subscription.  Note the use of `subscribe` instead of `forEach`.  We could also use `forEach` which is an alias for `subscribe` but we highly suggest you use `subscribe`.
 
 ## Batteries Included ##
 
@@ -177,10 +177,10 @@ var suggestions = distinct
   .flatMapLatest(searchWikipedia);
 ```
 
-Finally, we call the `forEach` method on our observable sequence to start pulling data.
+Finally, we call the `subscribe` method on our observable sequence to start pulling data.
 
 ```js
-suggestions.forEach(
+suggestions.subscribe(
   function (data) {
     $results
       .empty()
