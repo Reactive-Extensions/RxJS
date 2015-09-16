@@ -8,7 +8,7 @@ declare module Rx {
          * @param {Any} [seed] The initial accumulator value.
          * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
          */
-        reduce<TAcc>(accumulator: ((acc: TAcc, value: T) => TAcc), seed?: TAcc): Observable<TAcc>;
+        reduce<TAcc>(accumulator: _Accumulator<T, TAcc>, seed?: TAcc): Observable<TAcc>;
         /**
          * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
          * For aggregation behavior with incremental intermediate results, see Observable.scan.
@@ -16,7 +16,7 @@ declare module Rx {
          * @param {Any} [seed] The initial accumulator value.
          * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
          */
-        reduce(accumulator: ((acc: T, value: T) => T), seed?: T): Observable<T>;
+        reduce(accumulator: _Accumulator<T, T>, seed?: T): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -25,7 +25,7 @@ declare module Rx {
         * @param {Function} [predicate] A function to test each element for a condition.
         * @returns {Observable} An observable sequence containing a single element determining whether any elements in the source sequence pass the test in the specified predicate if given, else if any items are in the sequence.
         */
-        some(predicate?: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<boolean>;	// alias for any
+        some(predicate?: _Predicate<T>, thisArg?: any): Observable<boolean>;	// alias for any
     }
 
     export interface Observable<T> {
@@ -43,7 +43,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
         */
-        every(predicate?: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<boolean>;	// alias for all
+        every(predicate?: _Predicate<T>, thisArg?: any): Observable<boolean>;	// alias for all
     }
 
     export interface Observable<T> {
@@ -53,7 +53,7 @@ declare module Rx {
         * @param {Number} [fromIndex] An equality comparer to compare elements.
         * @returns {Observable} An observable sequence containing a single element determining whether the source sequence includes an element that has the specified value from the given index.
         */
-        includes(value: T, comparer?: ((value1: T, value2: T) => boolean)): Observable<boolean>;
+        includes(value: T, comparer?: _Comparer<T, boolean>): Observable<boolean>;
     }
 
     export interface Observable<T> {
@@ -66,7 +66,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
         */
-        count(predicate?: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<number>;
+        count(predicate?: _Predicate<T>, thisArg?: any): Observable<number>;
     }
 
     export interface Observable<T> {
@@ -86,7 +86,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence containing a single element with the sum of the values in the source sequence.
         */
-        sum(keySelector?: ((value: T, index: number, observable: Observable<T>) => number), thisArg?: any): Observable<number>;
+        sum(keySelector?: _Selector<T, number>, thisArg?: any): Observable<number>;
     }
 
     export interface Observable<T> {
@@ -99,7 +99,7 @@ declare module Rx {
         * @param {Function} [comparer] Comparer used to compare key values.
         * @returns {Observable} An observable sequence containing a list of zero or more elements that have a minimum key value.
         */
-        minBy<TKey>(keySelector: (item: T) => TKey, comparer: ((value1: TKey, value2: TKey) => number)): Observable<T>;
+        minBy<TKey>(keySelector: (item: T) => TKey, comparer: _Comparer<TKey, number>): Observable<T>;
         /**
         * Returns the elements in an observable sequence with the minimum key value according to the specified comparer.
         * @example
@@ -121,7 +121,7 @@ declare module Rx {
         * @param {Function} [comparer] Comparer used to compare elements.
         * @returns {Observable} An observable sequence containing a single element with the minimum element in the source sequence.
         */
-        min(comparer?: ((value1: T, value2: T) => number)): Observable<number>;
+        min(comparer?: _Comparer<T, number>): Observable<number>;
     }
 
     export interface Observable<T> {
@@ -134,7 +134,7 @@ declare module Rx {
         * @param {Function} [comparer]  Comparer used to compare key values.
         * @returns {Observable} An observable sequence containing a list of zero or more elements that have a maximum key value.
         */
-        maxBy<TKey>(keySelector: (item: T) => TKey, comparer: ((value1: TKey, value2: TKey) => number)): Observable<T>;
+        maxBy<TKey>(keySelector: (item: T) => TKey, comparer: _Comparer<TKey, number>): Observable<T>;
         /**
         * Returns the elements in an observable sequence with the maximum  key value according to the specified comparer.
         * @example
@@ -156,7 +156,7 @@ declare module Rx {
         * @param {Function} [comparer] Comparer used to compare elements.
         * @returns {Observable} An observable sequence containing a single element with the maximum element in the source sequence.
         */
-        max(comparer?: ((value1: T, value2: T) => number)): Observable<number>;
+        max(comparer?: _Comparer<T, number>): Observable<number>;
     }
 
     export interface Observable<T> {
@@ -166,7 +166,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence containing a single element with the average of the sequence of values.
         */
-        average(keySelector?: ((value: T, index: number, observable: Observable<T>) => number), thisArg?: any): Observable<number>;
+        average(keySelector?: _Selector<T, number>, thisArg?: any): Observable<number>;
     }
 
     export interface Observable<T> {
@@ -182,7 +182,7 @@ declare module Rx {
         * @param {Function} [comparer] Comparer used to compare elements of both sequences.
         * @returns {Observable} An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.
         */
-        sequenceEqual(second: (IObservable<T> | Observable<T> | Promise<T>) | (Array<T> | { length: number;[index: number]: T; }), comparer?: ((value1: T, value2: T) => boolean)): Observable<boolean>;
+        sequenceEqual(second: ObservableOrPromise<T> | ArrayOrIterable<T>, comparer?: _Comparer<T, boolean>): Observable<boolean>;
         /**
         *  Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
         *
@@ -195,7 +195,7 @@ declare module Rx {
         * @param {Function} [comparer] Comparer used to compare elements of both sequences.
         * @returns {Observable} An observable sequence that contains a single element which indicates whether both sequences are of equal length and their corresponding elements are equal according to the specified equality comparer.
         */
-        sequenceEqual<TOther>(second: (IObservable<T> | Observable<T> | Promise<T>) | (Array<T> | { length: number;[index: number]: T; }), comparer: ((value1: T | TOther, value2: T | TOther) => boolean)): Observable<boolean>;
+        sequenceEqual<TOther>(second: ObservableOrPromise<T> | ArrayOrIterable<T>, comparer: _Comparer<T | TOther, boolean>): Observable<boolean>;
     }
 
     export interface Observable<T> {
@@ -215,7 +215,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
         * @returns {Observable} Sequence containing the single element in the observable sequence that satisfies the condition in the predicate.
         */
-        single(predicate?: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
+        single(predicate?: _Predicate<T>, thisArg?: any): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -223,7 +223,7 @@ declare module Rx {
         * Returns the first element of an observable sequence that satisfies the condition in the predicate if present else the first item in the sequence.
         * @returns {Observable} Sequence containing the first element in the observable sequence that satisfies the condition in the predicate if provided, else the first item in the sequence.
         */
-        first(predicate?: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
+        first(predicate?: _Predicate<T>, thisArg?: any): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -231,7 +231,7 @@ declare module Rx {
         * Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
         * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
         */
-        last(predicate?: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
+        last(predicate?: _Predicate<T>, thisArg?: any): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -241,7 +241,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
         * @returns {Observable} An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
         */
-        find(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<T>;
+        find(predicate: _Predicate<T>, thisArg?: any): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -252,7 +252,7 @@ declare module Rx {
           * @param {Any} [thisArg] Object to use as `this` when executing the predicate.
           * @returns {Observable} An Observable sequence with the zero-based index of the first occurrence of an element that matches the conditions defined by match, if found; otherwise, –1.
         */
-        findIndex(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): Observable<number>;
+        findIndex(predicate: _Predicate<T>, thisArg?: any): Observable<number>;
     }
 
 }

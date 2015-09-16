@@ -100,7 +100,7 @@ declare module Rx {
         * @param {Observable} rightSource Second observable sequence or Promise.
         * @returns {Observable} {Observable} An observable sequence that surfaces either of the given sequences, whichever reacted first.
         */
-        amb(observable: (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
+        amb(observable: ObservableOrPromise<T>): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -108,12 +108,12 @@ declare module Rx {
         * Propagates the observable sequence or Promise that reacts first.
         * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
         */
-        amb<T>(observables: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
+        amb<T>(observables: ObservableOrPromise<T>[]): Observable<T>;
         /**
         * Propagates the observable sequence or Promise that reacts first.
         * @returns {Observable} An observable sequence that surfaces any of the given sequences, whichever reacted first.
         */
-        amb<T>(...observables: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
+        amb<T>(...observables: ObservableOrPromise<T>[]): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -122,7 +122,7 @@ declare module Rx {
         * @param {Observable} second Second observable sequence used to produce results after the first sequence terminates.
         * @returns {Observable} An observable sequence that concatenates the first and second sequence, even if the first sequence terminates exceptionally.
         */
-        onErrorResumeNext(second: (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
+        onErrorResumeNext(second: ObservableOrPromise<T>): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -134,7 +134,7 @@ declare module Rx {
         * 1 - res = Rx.Observable.onErrorResumeNext([xs, ys, zs]);
         * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.
         */
-        onErrorResumeNext<T>(...sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
+        onErrorResumeNext<T>(...sources: ObservableOrPromise<T>[]): Observable<T>;
         /**
         * Continues an observable sequence that is terminated normally or by an exception with the next observable sequence.
         *
@@ -143,7 +143,7 @@ declare module Rx {
         * 1 - res = Rx.Observable.onErrorResumeNext([xs, ys, zs]);
         * @returns {Observable} An observable sequence that concatenates the source sequences, even if a sequence terminates exceptionally.
         */
-        onErrorResumeNext<T>(sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T>;
+        onErrorResumeNext<T>(sources: ObservableOrPromise<T>[]): Observable<T>;
     }
 
     export interface Observable<T> {
