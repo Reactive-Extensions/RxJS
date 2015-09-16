@@ -2571,6 +2571,10 @@ module.exports = function (grunt) {
 		  .substr(__dirname.length + 1)
 		  .replace(/\\/g, '/');
 
+        if (tsFile.indexOf('/testscheduler.ts') > -1 && dep.indexOf('virtualtimescheduler.ts') > -1) {
+            continue;
+        }
+
 		deps.push(dep);
 		loadFile(dep);
 	  }
