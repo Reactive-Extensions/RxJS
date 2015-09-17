@@ -137,7 +137,7 @@ declare module Rx {
          * @param {Mixed} value Value that was produced.
          * @param {Function} comparer An optional comparer.
          */
-        new (time: number, value: any, equalityComparer?: ((value1: any, value2: any) => boolean)): Recorded;
+        new (time: number, value: any, equalityComparer?: _Comparer<any, boolean>): Recorded;
     }
 
     export var Recorded: RecordedStatic;

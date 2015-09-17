@@ -2690,47 +2690,7 @@ module.exports = function (grunt) {
 		  outputString += 'declare module "'+dist+'" { export = Rx; }';
 		}
 
-		// TS 1.5.4 support
-		  outputString = outputString
-			.replace(/export type ObservableOrPromise<T> = IObservable<T> \| Observable<T> \| Promise<T>;/g, '')
-			.replace(/export type ArrayLike<T> = Array<T> \| \{ length: number;\[index: number\]: T; \};/g, '')
-			.replace(/export type ArrayOrIterable<T> = ArrayLike<T> \| Iterable<T>;/g, '')
-			.replace(/export type ArrayOrIterable<T> = ArrayLike<T>;/g, '')
-			.replace(/export type _Selector<T, TResult> = \(value: T, index: number, observable: Observable<T>\) => TResult;/g, '')
-			.replace(/export type _ValueOrSelector<T, TResult> = TResult \| _Selector<T, TResult>;/g, '')
-			.replace(/export type _Predicate<T> = _Selector<T, boolean>;/g, '')
-			.replace(/export type _Comparer<T, TResult> = \(value1: T, value2: T\) => TResult;/g, '')
-			.replace(/export type _Accumulator<T, TAcc> = \(acc: TAcc, value: T\) => TAcc;/g, '')
-			.replace(/export type _FlatMapResultSelector<T1, T2, TResult> = \(value: T1, selectorValue: T2, index: number, selectorOther: number\) => TResult;/g, '')
-			.replace(/_Predicate<(\w*?)>/g, '_Selector<$1, boolean>')
-			.replace(/_ValueOrSelector<(\w*?), ObservableOrPromise<(\w*?)>>/g, 'ObservableOrPromise<$2> | _Selector<$1, ObservableOrPromise<$2>>')
-			.replace(/_ValueOrSelector<(\w*?), ArrayOrIterable<(\w*?)>>/g, 'ArrayOrIterable<$2> | _Selector<$1, ArrayOrIterable<$2>>')
-			.replace(/_ValueOrSelector<(\w*?), (\w*?)>/g, '$2 | _Selector<$1, $2>')
-			.replace(/_Selector<Observable<(\w*?)>, (\w*?)>/g, '((value: Observable<$1>, index: number, observable: Observable<Observable<$1>>) => $2)')
-			.replace(/_Selector<(\w*?), Observable<(\w*?)>>/g, '((value: $1, index: number, observable: Observable<$1>) => Observable<$2>)')
-			.replace(/_Selector<(\w*?), ObservableOrPromise<(\w*?)>>/g, '((value: $1, index: number, observable: ObservableOrPromise<$1>) => ObservableOrPromise<$2>)')
-			.replace(/_Selector<(\w*?), ArrayOrIterable<(\w*?)>>/g, '((value: $1, index: number, observable: ArrayOrIterable<$1>) => ArrayOrIterable<$2>)')
-			.replace(/_Selector<(\w*?), (\w*?)>/g, '((value: $1, index: number, observable: Observable<$1>) => $2)')
-			.replace(/_Comparer<(\w*?), (\w*?)>/g, '((value1: $1, value2: $1) => $2)')
-			.replace(/_Comparer<T \| TOther, boolean>/, '((value1: T | TOther, value2: T | TOther) => boolean)')
-			.replace(/_Accumulator<(\w*?), (\w*?)>/g, '((acc: $2, value: $1) => $2)')
-			.replace(/special._FlatMapResultSelector<(\w*?), (\w*?), (\w*?)>/g, '((value: $1, selectorValue: $2, index: number, selectorOther: number) => $3)')
-			.replace(/ObservableOrPromise\<(\w*?)\>/g, '(IObservable<$1> | Observable<$1> \| Promise<$1>)')
-
-			/*special._FlatMapResultSelector<T, TOther, TResult>*/
-		if (es6) {
-		  outputString = outputString
-			  .replace(/ArrayOrIterable<(\w*?)>/g, '(ArrayLike<$1> | Iterable<$1>)');
-		} else {
-		  outputString = outputString
-			  .replace(/ArrayOrIterable<(\w*?)>/g, 'ArrayLike<$1>');
-		}
-
-		outputString = outputString
-			.replace(/ArrayLike<(\w*?)>/g, '(Array<$1> | { length: number;[index: number]: $1; })')
-
 		outputString = outputString + '\n';
-			//.replace(/\(IObservable<TResult> \| Observable<TResult> \| Promise<TResult>\) \| \(value: T, index: number, observable: \(IObservable<T> \| Observable<T> \| Promise<T>\)\) => \(IObservable<TResult> \| Observable<TResult> \| Promise<TResult>\)\): Observable<TResult>/, '(IObservable<TResult> | Observable<TResult> | Promise<TResult> | (value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>)): Observable<TResult>')
 
 		grunt.file.write(dest, outputString);
 	  };

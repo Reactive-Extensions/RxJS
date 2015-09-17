@@ -1,12 +1,12 @@
 declare module Rx {
 
     // Type alias for observables and promises
-    
+    export type ObservableOrPromise<T> = IObservable<T> | Observable<T> | Promise<T>;
 
-    
+    export type ArrayLike<T> = Array<T> | { length: number;[index: number]: T; };
 
     // Type alias for arrays and array like objects
-    
+    export type ArrayOrIterable<T> = ArrayLike<T>;
 
     /**
      * Promise A+
@@ -92,14 +92,14 @@ declare module Rx {
         export var isFunction: (value: any) =>  boolean;
     }
 
-    
-    
-    
-    
-    
+    export type _Selector<T, TResult> = (value: T, index: number, observable: Observable<T>) => TResult;
+    export type _ValueOrSelector<T, TResult> = TResult | _Selector<T, TResult>;
+    export type _Predicate<T> = _Selector<T, boolean>;
+    export type _Comparer<T, TResult> = (value1: T, value2: T) => TResult;
+    export type _Accumulator<T, TAcc> = (acc: TAcc, value: T) => TAcc;
 
     export module special {
-        
+        export type _FlatMapResultSelector<T1, T2, TResult> = (value: T1, selectorValue: T2, index: number, selectorOther: number) => TResult;
     }
 
     export interface IObservable<T> {
@@ -355,7 +355,7 @@ declare module Rx {
         }
 
         interface ScheduledItemStatic {
-            new <TTime>(scheduler: IScheduler, state: any, action: (scheduler: IScheduler, state: any) => IDisposable, dueTime: TTime, comparer?: ((value1: TTime, value2: TTime) => number)):ScheduledItem<TTime>;
+            new <TTime>(scheduler: IScheduler, state: any, action: (scheduler: IScheduler, state: any) => IDisposable, dueTime: TTime, comparer?: _Comparer<TTime, number>):ScheduledItem<TTime>;
         }
 
         export var ScheduledItem: ScheduledItemStatic

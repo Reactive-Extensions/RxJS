@@ -93,7 +93,7 @@ declare module Rx {
          * @param {Number} initialClock Initial value for the clock.
          * @param {Function} comparer Comparer to determine causality of events based on absolute time.
          */
-        new (initialClock: number, comparer: ((value1: number, value2: number) => number)): HistoricalScheduler;
+        new (initialClock: number, comparer: _Comparer<number, number>): HistoricalScheduler;
     };
 
 }
