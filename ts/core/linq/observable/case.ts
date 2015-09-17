@@ -43,9 +43,9 @@ module Rx {
 
     o = Rx.Observable.case(() => 'abc', so)
     o = Rx.Observable.case(() => 'abc', so, e)
-    o = Rx.Observable.case(() => 'abc', so, Rx.Scheduler.timeout);
+    o = Rx.Observable.case(() => 'abc', so, Rx.Scheduler.async);
 
     on = Rx.Observable.case(() => 1, no)
     on = Rx.Observable.case(() => 2, no, en);
-    on = Rx.Observable.case(() => 3, no, Rx.Scheduler.timeout);
+    on = Rx.Observable.case(() => 3, no, Rx.Scheduler.async);
 });

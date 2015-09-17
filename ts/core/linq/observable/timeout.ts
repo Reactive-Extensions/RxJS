@@ -70,8 +70,8 @@ module Rx {
     o.timeout(new Date(), Rx.Scheduler.default);
     o.timeout(100, o);
     o.timeout(new Date(), o);
-    o.timeout(100, o, Rx.Scheduler.timeout);
-    o.timeout(new Date(), o, Rx.Scheduler.timeout);
+    o.timeout(100, o, Rx.Scheduler.async);
+    o.timeout(new Date(), o, Rx.Scheduler.async);
 
     o.timeout(x => Rx.Observable.interval(1000));
     o.timeout(x => Rx.Observable.interval(1000), Rx.Observable.just('100'));

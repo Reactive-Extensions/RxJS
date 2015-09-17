@@ -16,5 +16,5 @@ module Rx {
 (function () {
     var o: Rx.Observable<string>;
     o.throttle(100);
-    o.throttle(100, Rx.Scheduler.timeout);
+    o.throttle(100, Rx.Scheduler.async);
 });

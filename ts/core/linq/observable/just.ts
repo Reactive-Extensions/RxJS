@@ -25,7 +25,7 @@ module Rx {
     var a : Rx.Observable<string>;
     var b : Rx.Observable<number>;
     b = Rx.Observable.return(1);
-    a = Rx.Observable.return('a', Rx.Scheduler.timeout);
+    a = Rx.Observable.return('a', Rx.Scheduler.async);
     b = Rx.Observable.just(1);
-    a = Rx.Observable.just('a', Rx.Scheduler.timeout);
+    a = Rx.Observable.just('a', Rx.Scheduler.async);
 });

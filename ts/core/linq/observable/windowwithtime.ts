@@ -26,6 +26,6 @@ module Rx {
 
     var so: Rx.Observable<Rx.Observable<string>> = o.windowWithTime(100);
     so = o.windowWithTime(100, 5);
-    var so: Rx.Observable<Rx.Observable<string>> = o.windowWithTime(100, Rx.Scheduler.timeout);
-    so = o.windowWithTime(100, 5, Rx.Scheduler.timeout);
+    var so: Rx.Observable<Rx.Observable<string>> = o.windowWithTime(100, Rx.Scheduler.async);
+    so = o.windowWithTime(100, 5, Rx.Scheduler.async);
 });

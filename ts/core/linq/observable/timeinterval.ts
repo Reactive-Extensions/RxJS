@@ -25,5 +25,5 @@ module Rx {
 	var o : Rx.Observable<string>;
 	var t : Rx.Observable<Rx.TimeInterval<string>>;
 
-	t = o.timeInterval(Rx.Scheduler.timeout);
+	t = o.timeInterval(Rx.Scheduler.async);
 });

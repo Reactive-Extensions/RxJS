@@ -18,5 +18,5 @@ module Rx {
 (function () {
     var o : Rx.Observable<string>;
     o = Rx.Observable.empty<string>();
-    o = Rx.Observable.empty<string>(Rx.Scheduler.timeout);
+    o = Rx.Observable.empty<string>(Rx.Scheduler.async);
 });

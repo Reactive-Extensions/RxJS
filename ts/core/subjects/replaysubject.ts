@@ -24,5 +24,5 @@ module Rx {
     var s : Rx.ReplaySubject<boolean> = new Rx.ReplaySubject<boolean>();
     var s : Rx.ReplaySubject<boolean> = new Rx.ReplaySubject<boolean>(10);
     var s : Rx.ReplaySubject<boolean> = new Rx.ReplaySubject<boolean>(10, 10);
-    var s : Rx.ReplaySubject<boolean> = new Rx.ReplaySubject<boolean>(10, 10, Rx.Scheduler.timeout);
+    var s : Rx.ReplaySubject<boolean> = new Rx.ReplaySubject<boolean>(10, 10, Rx.Scheduler.async);
 });

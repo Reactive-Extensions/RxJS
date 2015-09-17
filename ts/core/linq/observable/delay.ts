@@ -65,8 +65,8 @@ module Rx {
     var o: Rx.Observable<string>;
     o.delay(1000);
     o.delay(new Date());
-    o.delay(1000, Rx.Scheduler.timeout);
-    o.delay(new Date(), Rx.Scheduler.timeout);
+    o.delay(1000, Rx.Scheduler.async);
+    o.delay(new Date(), Rx.Scheduler.async);
 
     o.delay(x => Rx.Observable.timer(x.length));
     o.delay(Rx.Observable.timer(1000), x => Rx.Observable.timer(x.length));
