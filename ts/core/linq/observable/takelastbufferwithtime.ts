@@ -21,5 +21,5 @@ module Rx {
     var o: Rx.Observable<number>;
     var o2: Rx.Observable<number[]>;
     o2 = o.takeLastBufferWithTime(1);
-    o2 = o.takeLastBufferWithTime(1, Rx.Scheduler.timeout);
+    o2 = o.takeLastBufferWithTime(1, Rx.Scheduler.async);
 });

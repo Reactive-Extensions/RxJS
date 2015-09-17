@@ -46,5 +46,5 @@ module Rx {
     var s: Rx.Subject<number>;
     var a: Rx.Observable<string>;
 
-    o = o.replay(null, 1, 2, Rx.Scheduler.timeout);
+    o = o.replay(null, 1, 2, Rx.Scheduler.async);
 });

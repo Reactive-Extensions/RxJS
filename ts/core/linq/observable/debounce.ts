@@ -22,6 +22,6 @@ module Rx {
 (function () {
     var o: Rx.Observable<string>;
     o.debounce(100);
-    o.debounce(100, Rx.Scheduler.timeout);
+    o.debounce(100, Rx.Scheduler.async);
     o.debounce(x => Rx.Observable.just(x.length));
 });

@@ -22,7 +22,7 @@ module Rx {
 (function () {
     var o : Rx.Observable<any>;
     o = Rx.Observable.throw(new Error());
-    o = Rx.Observable.throw(new Error(), Rx.Scheduler.timeout);
+    o = Rx.Observable.throw(new Error(), Rx.Scheduler.async);
     o = Rx.Observable.throw('abc');
-    o = Rx.Observable.throw('abc', Rx.Scheduler.timeout);
+    o = Rx.Observable.throw('abc', Rx.Scheduler.async);
 });

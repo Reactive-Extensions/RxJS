@@ -26,5 +26,5 @@ module Rx {
     var o : Rx.Observable<number>;
     o = Rx.Observable.timer(100);
     o = Rx.Observable.timer(100, 100);
-    o = Rx.Observable.timer(100, 100, Rx.Scheduler.timeout);
+    o = Rx.Observable.timer(100, 100, Rx.Scheduler.async);
 });

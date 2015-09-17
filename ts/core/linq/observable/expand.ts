@@ -16,5 +16,5 @@ module Rx {
 (function () {
     var o : Rx.Observable<number>;
     o = o.expand(i => Rx.Observable.return(i + 1));
-    o = o.expand(i => Rx.Observable.return(i + 1), Rx.Scheduler.timeout);
+    o = o.expand(i => Rx.Observable.return(i + 1), Rx.Scheduler.async);
 });

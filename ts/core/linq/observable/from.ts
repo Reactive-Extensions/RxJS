@@ -27,5 +27,5 @@ module Rx {
     Rx.Observable.from([1,2,3]);
     Rx.Observable.from([1,2,3], x => x + 1);
     Rx.Observable.from([1,2,3], x => x + 1, {});
-    Rx.Observable.from([1,2,3], x => x + 1, {}, Rx.Scheduler.timeout);
+    Rx.Observable.from([1,2,3], x => x + 1, {}, Rx.Scheduler.async);
 });
