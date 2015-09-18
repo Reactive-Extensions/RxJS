@@ -25,7 +25,7 @@ while (initialDate <= 60000) {
 
   (function (i) {
 
-    scheduler.scheduleWithAbsolute(i, function () {
+    scheduler.scheduleFuture(new Date(i), function () {
       s.onNext({ value: getData(i), date: new Date(i) });
     });
 

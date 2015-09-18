@@ -4,14 +4,14 @@ Base class for providing scheduling in virtual time.  This inherits from the `Rx
 
 ## Usage ##
 
-The following shows an example of using the `Rx.VirtualTimeScheduler`. In order for this to work, you must implement the `add`, `toDateTimeOffset` and `toRelative` methods as described below.
+The following shows an example of using the `Rx.VirtualTimeScheduler`. In order for this to work, you must implement the `add`, `toAbsoluteTime` and `toRelativeTime` methods as described below.
 
 ```js
 /* Comparer required for scheduling priority */
 function comparer (x, y) {
-    if (x > y) { return 1; }
-    if (x < y) { return -1; }
-    return 0;
+  if (x > y) { return 1; }
+  if (x < y) { return -1; }
+  return 0;
 }
 
 var scheduler = new Rx.VirtualTimeScheduler(0, comparer);
@@ -23,7 +23,7 @@ var scheduler = new Rx.VirtualTimeScheduler(0, comparer);
  * @return {Any} Resulting absolute virtual time sum value.
  */
 scheduler.add = function (absolute, relative) {
-    return absolute + relative;
+  return absolute + relative;
 };
 
 /**
@@ -31,8 +31,8 @@ scheduler.add = function (absolute, relative) {
  * @param {Number} The absolute time in ms
  * @returns {Number} The absolute time in ms
  */
-scheduler.toDateTimeOffset = function (absolute) {
-    return new Date(absolute).getTime();
+scheduler.toAbsoluteTime = function (absolute) {
+  return new Date(absolute);
 };
 
 /**
@@ -40,14 +40,14 @@ scheduler.toDateTimeOffset = function (absolute) {
  * @param {Number} timeSpan TimeSpan value to convert.
  * @return {Number} Corresponding relative virtual time value.
  */
-scheduler.toRelative = function (timeSpan) {
-    return timeSpan;
+scheduler.toRelativeTime = function (timeSpan) {
+  return timeSpan;
 };
 
 // Schedule some time
-scheduler.scheduleAbsolute(1, function () { console.log('foo'); });
-scheduler.scheduleAbsolute(2, function () { console.log('bar'); });
-scheduler.scheduleAbsolute(3, function () { scheduler.stop(); });
+scheduler.scheduleAbsolute(null, new Date(1), function () { console.log('foo'); });
+scheduler.scheduleAbsolute(null, new Date(2), function () { console.log('bar'); });
+scheduler.scheduleAbsolute(null, new Date(3), function () { scheduler.stop(); });
 
 // Start the scheduler
 scheduler.start();
@@ -61,12 +61,18 @@ console.log(scheduler.now());
 
 console.log(scheduler.clock);
 // => 3
-
 ```
+
 
 ### Location
 
-- rx.virtualtime.js
+File:
+- [`virtualtimescheduler.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js)
+
+Dist:
+- [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
+- [`rx.virtualtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.virtualtime.js)
 
 ## `VirtualTimeScheduler Constructor` ##
 - [`constructor`](#rxvirtualtimeschedulerinitialclock-comparer)
@@ -74,10 +80,8 @@ console.log(scheduler.clock);
 ## `VirtualTimeScheduler Instance Methods` ##
 - [`advanceBy`](#rxvirtualtimeschedulerprototypeadvancebytime)
 - [`advanceTo`](#rxvirtualtimeschedulerprototypeadvancetotime)
-- [`scheduleAbsolute`](#rxvirtualtimeschedulerprototypescheduleabsoluteduetime-action)
-- [`scheduleAbsoluteWithState`](#rxvirtualtimeschedulerprototypescheduleabsolutewithstatestate-duetime-action)
-- [`scheduleRelative`](#rxvirtualtimeschedulerprototypeschedulerelativeduetime-action)
-- [`scheduleRelativeWithState`](#rxvirtualtimeschedulerprototypeschedulerelativewithstatestate-duetime-action)
+- [`scheduleAbsolute`](#rxvirtualtimeschedulerprototypescheduleabsolutestate-duetime-action)
+- [`scheduleRelative`](#rxvirtualtimeschedulerprototypeschedulerelativestate-duetime-action)
 - [`sleep`](#rxvirtualtimeschedulerprototypesleeptime)
 - [`start`](#rxvritualtimeschedulerprototypestart)
 - [`stop`](#rxvritualtimeschedulerprototypestop)
@@ -87,8 +91,8 @@ console.log(scheduler.clock);
 
 ## `VirtualTimeScheduler Protected Abstract Methods` ##
 - [`add`](#rxvirtualtimeschedulerprototypeaddabsolute-relative)
-- [`toDateTimeOffset`](#rxvirtualtimeschedulerprototypetodatetimeoffsetabsolute)
-- [`toRelative`](#rxvirtualtimeschedulerprototypetorelativetimespan)
+- [`toAbsoluteTime`](#rxvirtualtimeschedulerprototypetoabsolutetimeabsolute)
+- [`toRelativeTime`](#rxvirtualtimeschedulerprototypetorelativetimetimespan)
 
 ## `VirtualTimeScheduler Protected Methods` ##
 - [`getNext`](#rxvirtualtimeschedulerprototypegetnext)
@@ -110,22 +114,18 @@ Creates a new virtual time scheduler with the specified initial clock value and 
 #### Example
 ```js
 function comparer (x, y) {
-    if (x > y) { return 1; }
-    if (x < y) { return -1; }
-    return 0;
+  if (x > y) { return 1; }
+  if (x < y) { return -1; }
+  return 0;
 }
 
 var scheduler = new Rx.VirtualTimeScheduler(
-    0,          /* initial clock of 0 */
-    comparer    /* comparer for determining order */
+  0,          /* initial clock of 0 */
+  comparer    /* comparer for determining order */
 );
 ```
 
-### Location
-
-- rx.virtualtime.js
-
-* * *
+***
 
 ## _VirtualTimeScheduler Instance Methods_ ##
 
@@ -140,11 +140,11 @@ Advances the scheduler's clock by the specified relative time, running all work 
 #### Example
 ```js
 var scheduler = new MyVirtualScheduler(
-    200 /* initial time */
+  200 /* initial time */
 );
 
-scheduler.scheduleAbsolute(250, function () {
-    console.log('hello');
+scheduler.scheduleAbsolute(null, 250, function () {
+  console.log('hello');
 });
 
 scheduler.advanceBy(300);
@@ -154,14 +154,10 @@ console.log(scheduler.clock);
 // => 500
 ```
 
-### Location
-
-- rx.virtualtime.js
-
-* * *
+***
 
 ### <a id="rxvirtualtimeschedulerprototypeadvancetotime"></a>`Rx.VirtualTimeScheduler.prototype.advanceTo(time)`
-<a href="#rxvirtualtimeschedulerprototypeadvancetotime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L136-L160 "View in source")
+<a href="#rxvirtualtimeschedulerprototypeadvancetotime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js "View in source")
 
 Advances the scheduler's clock to the specified time, running all work till that point.
 
@@ -171,15 +167,15 @@ Advances the scheduler's clock to the specified time, running all work till that
 #### Example
 ```js
 var scheduler = new MyVirtualScheduler(
-    0 /* initial time */
+  0 /* initial time */
 );
 
-scheduler.scheduleAbsolute(100, function () {
-    console.log('hello');
+scheduler.scheduleAbsolute(null, 100, function () {
+  console.log('hello');
 });
 
-scheduler.scheduleAbsolute(200, function () {
-    console.log('world');
+scheduler.scheduleAbsolute(null, 200, function () {
+  console.log('world');
 });
 
 scheduler.advanceBy(300);
@@ -190,61 +186,19 @@ console.log(scheduler.clock);
 // => 300
 ```
 
-### Location
+***
 
-- rx.virtualtime.js
-
-* * *
-
-### <a id="rxvirtualtimeschedulerprototypescheduleabsoluteduetime-action"></a>`Rx.VirtualTimeScheduler.prototype.scheduleAbsolute(dueTime, action)`
-<a href="#rxvirtualtimeschedulerprototypescheduleabsoluteduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L216-L218 "View in source")
-
-Schedules an action to be executed at dueTime.
-
-#### Arguments
-1. `dueTime` *(Any)*: Absolute time at which to execute the action.
-2. `action` *(Function)*: Action to be executed.
-
-#### Returns
-*(Disposable)*: The disposable object used to cancel the scheduled action (best effort).
-
-#### Example
-```js
-var scheduler = new MyVirtualScheduler(
-    0 /* initial time */
-);
-
-scheduler.scheduleAbsolute(100, function () {
-    console.log('hello');
-});
-
-scheduler.scheduleAbsolute(200, function () {
-    console.log('world');
-});
-
-scheduler.advanceBy(300);
-// => hello
-// => world
-
-console.log(scheduler.clock);
-// => 300
-```
-
-### Location
-
-- rx.virtualtime.js
-
-* * *
-
-### <a id="rxvirtualtimeschedulerprototypescheduleabsolutewithstatestate-duetime-action"></a>`Rx.VirtualTimeScheduler.prototype.scheduleAbsoluteWithState(state, dueTime, action)`
-<a href="#rxvirtualtimeschedulerprototypescheduleabsolutewithstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L227-L236 "View in source")
+### <a id="rxvirtualtimeschedulerprototypescheduleabsolutestate-duetime-action"></a>`Rx.VirtualTimeScheduler.prototype.scheduleAbsolute(state, dueTime, action)`
+<a href="#rxvirtualtimeschedulerprototypescheduleabsolutestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js "View in source")
 
 Schedules an action to be executed at dueTime.
 
 #### Arguments
 1. `state`: *(Any)*: State passed to the action to be executed.
-1. `dueTime` *(Any)*: Absolute time at which to execute the action.
-2. `action` *(Function)*: Action to be executed.
+2. `dueTime` *(Any)*: Absolute time at which to execute the action.
+3. `action`: `Function`: Action to execute with the following arguments:
+  1. `scheduler`: `Scheduler` - The current Scheduler
+  2. `state`: `Any` - The current state
 
 #### Returns
 *(Disposable)*: The disposable object used to cancel the scheduled action (best effort).
@@ -252,15 +206,15 @@ Schedules an action to be executed at dueTime.
 #### Example
 ```js
 var scheduler = new MyVirtualScheduler(
-    0 /* initial time */
+  0 /* initial time */
 );
 
-scheduler.scheduleAbsoluteWithState('world', 100, function (scheduler, state) {
-    console.log('hello ' + state);
+scheduler.scheduleAbsolute('world', 100, function (scheduler, state) {
+  console.log('hello ' + state);
 });
 
-scheduler.scheduleAbsoluteWithState('moon', 200, function (scheduler, state) {
-    console.log('goodnight ' + state);
+scheduler.scheduleAbsolute('moon', 200, function (scheduler, state) {
+  console.log('goodnight ' + state);
 });
 
 scheduler.start();
@@ -271,61 +225,19 @@ console.log(scheduler.clock);
 // => 200
 ```
 
-### Location
+***
 
-- rx.virtualtime.js
-
-* * *
-
-### <a id="rxvirtualtimeschedulerprototypeschedulerelativeduetime-action"></a>`Rx.VirtualTimeScheduler.prototype.scheduleRelative(dueTime, action)`
-<a href="#rxvirtualtimeschedulerprototypeschedulerelativeduetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L100-L102 "View in source")
-
-Schedules an action to be executed at dueTime.
-
-#### Arguments
-1. `dueTime` *(Any)*: Relative time after which to execute the action.
-2. `action` *(Function)*: Action to be executed.
-
-#### Returns
-*(Disposable)*: The disposable object used to cancel the scheduled action (best effort).
-
-#### Example
-```js
-var scheduler = new MyVirtualScheduler(
-    100 /* initial time */
-);
-
-scheduler.scheduleRelative(100, function () {
-    console.log('hello');
-});
-
-scheduler.scheduleRelative(200, function () {
-    console.log('world');
-});
-
-scheduler.start();
-// => hello
-// => world
-
-console.log(scheduler.clock);
-// => 400
-```
-
-### Location
-
-- rx.virtualtime.js
-
-* * *
-
-### <a id="rxvirtualtimeschedulerprototypeschedulerelativewithstatestate-duetime-action"></a>`Rx.VirtualTimeScheduler.prototype.scheduleRelativeWithState(state, dueTime, action)`
-<a href="#rxvirtualtimeschedulerprototypeschedulerelativewithstatestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L89-L92 "View in source")
+### <a id="rxvirtualtimeschedulerprototypeschedulerelativestate-duetime-action"></a>`Rx.VirtualTimeScheduler.prototype.scheduleRelative(state, dueTime, action)`
+<a href="#rxvirtualtimeschedulerprototypeschedulerelativestate-duetime-action">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L89-L92 "View in source")
 
 Schedules an action to be executed at dueTime.
 
 #### Arguments
 1. `state`: *(Any)*: State passed to the action to be executed.
-1. `dueTime` *(Any)*: Relative time after which to execute the action.
-2. `action` *(Function)*: Action to be executed.
+2. `dueTime` *(Any)*: Relative time after which to execute the action.
+3. `action`: `Function`: Action to execute with the following arguments:
+  1. `scheduler`: `Scheduler` - The current Scheduler
+  2. `state`: `Any` - The current state
 
 #### Returns
 *(Disposable)*: The disposable object used to cancel the scheduled action (best effort).
@@ -333,15 +245,15 @@ Schedules an action to be executed at dueTime.
 #### Example
 ```js
 var scheduler = new MyVirtualScheduler(
-    0 /* initial time */
+  0 /* initial time */
 );
 
-scheduler.scheduleRelativeWithState('world', 100, function (scheduler, state) {
-    console.log('hello ' + state);
+scheduler.scheduleRelative('world', 100, function (scheduler, state) {
+  console.log('hello ' + state);
 });
 
-scheduler.scheduleRelativeWithState('moon', 200, function (scheduler, state) {
-    console.log('goodnight ' + state);
+scheduler.scheduleRelative('moon', 200, function (scheduler, state) {
+  console.log('goodnight ' + state);
 });
 
 scheduler.start();
@@ -352,11 +264,7 @@ console.log(scheduler.clock);
 // => 300
 ```
 
-### Location
-
-- rx.virtualtime.js
-
-* * *
+***
 
 ### <a id="rxvritualtimeschedulerprototypesleeptime"></a>`Rx.VirtualTimeScheduler.prototype.sleep(time)`
 <a href="#rxvritualtimeschedulerprototypesleeptime">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L182-L190 "View in source")
@@ -369,7 +277,7 @@ Advances the scheduler's clock by the specified relative time.
 #### Example
 ```js
 var scheduler = new MyVirtualScheduler(
-    0 /* initial time */
+  0 /* initial time */
 );
 
 scheduler.sleep(400);
@@ -378,11 +286,7 @@ console.log(scheduler.clock);
 // => 400
 ```
 
-### Location
-
-- rx.virtualtime.js
-
-* * *
+***
 
 ### <a id="rxvritualtimeschedulerprototypestart"></a>`Rx.VirtualTimeScheduler.prototype.start()`
 <a href="#rxvritualtimeschedulerprototypestart">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L107-L123 "View in source")
@@ -392,15 +296,15 @@ Starts the virtual time scheduler.
 #### Example
 ```js
 var scheduler = new MyVirtualScheduler(
-    0 /* initial time */
+  0 /* initial time */
 );
 
-scheduler.scheduleRelativeWithState('world', 100, function (scheduler, state) {
-    console.log('hello ' + state);
+scheduler.scheduleRelative('world', 100, function (scheduler, state) {
+  console.log('hello ' + state);
 });
 
-scheduler.scheduleRelativeWithState('moon', 200, function (scheduler, state) {
-    console.log('goodnight ' + state);
+scheduler.scheduleRelative('moon', 200, function (scheduler, state) {
+  console.log('goodnight ' + state);
 });
 
 scheduler.start();
@@ -411,11 +315,7 @@ console.log(scheduler.clock);
 // => 400
 ```
 
-### Location
-
-- rx.virtualtime.js
-
-* * *
+***
 
 ### <a id="rxvritualtimeschedulerprototypestop"></a>`Rx.VirtualTimeScheduler.prototype.stop()`
 <a href="#rxvritualtimeschedulerprototypestop">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/virtualtimescheduler.js#L128-L130 "View in source")
@@ -425,37 +325,33 @@ Stops the virtual time scheduler.
 #### Example
 ```js
 var scheduler = new MyVirtualScheduler(
-    0 /* initial time */
+  0 /* initial time */
 );
 
-scheduler.scheduleRelative(100, function () {
-    console.log('hello world');
+scheduler.scheduleRelative('world', 100, function (scheduler, state) {
+  console.log('hello ' + state);
 });
 
-scheduler.scheduleRelative(100, function () {
-    scheduler.stop();
+scheduler.scheduleRelative(null, 100, function (scheduler, state) {
+  scheduler.stop();
 });
 
-scheduler.scheduleRelative(100, function () {
-    console.log('hello world');
+scheduler.scheduleRelative(null, 100, function (scheduler, state) {
+  console.log('goodbye cruel ' + state);
 });
 
 scheduler.start();
 // => hello world
 ```
 
-### Location
-
-- rx.virtualtime.js
-
-* * *
+***
 
 ## _VirtualTimeScheduler Abstract Protected Methods_ ##
 
 ### <a id="rxvirtualtimeschedulerprototypeaddabsolute-relative"></a>`Rx.VirtualTimeScheduler.prototype.add(absolute, relative)`
 <a href="#rxvirtualtimeschedulerprototypeaddabsolute-relative">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L54 "View in source")
 
-Adds a relative time value to an absolute time value.  This method is used in several methods including `scheduleRelativeWithState`, `advanceBy` and `sleep`.
+Adds a relative time value to an absolute time value.  This method is used in several methods including `scheduleRelative`, `advanceBy` and `sleep`.
 
 ### Arguments
 1. `absolute` *(Any)*: Absolute virtual time value.
@@ -474,14 +370,10 @@ scheduler.add = function (absolute, relative) {
 };
 ```
 
-### Location
+***
 
-- rx.virtualtime.js
-
-* * *
-
-### <a id="rxvirtualtimeschedulerprototypetodatetimeoffsetabsolute"></a>`Rx.VirtualTimeScheduler.prototype.toDateTimeOffset(absolute)`
-<a href="#rxvirtualtimeschedulerprototypetodatetimeoffsetabsolute">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L61 "View in source")
+### <a id="rxvirtualtimeschedulerprototypetoabsolutetimeabsolute"></a>`Rx.VirtualTimeScheduler.prototype.toAbsoluteTime(absolute)`
+<a href="#rxvirtualtimeschedulerprototypetoabsolutetimeabsolute">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L61 "View in source")
 
 Converts an absolute time to a number.  This is used directly in the `now` method on the `Rx.Scheduler`
 
@@ -497,24 +389,20 @@ One possible implementation could be as simple as the following:
 
 ```js
 // String -> Number
-scheduler.toDateTimeOffset = function (absolute) {
-    return absolute.length;
+scheduler.toAbsoluteTime = function (absolute) {
+  return absolute.length;
 };
 ```
 
-### Location
+***
 
-- rx.virtualtime.js
-
-* * *
-
-### <a id="rxvirtualtimeschedulerprototypetorelativetimespan"></a>`Rx.VirtualTimeScheduler.prototype.toRelative(timeSpan)`
-<a href="#rxvirtualtimeschedulerprototypetorelativetimespan">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L61 "View in source")
+### <a id="rxvirtualtimeschedulerprototypetorelativetimetimespan"></a>`Rx.VirtualTimeScheduler.prototype.toRelativeTime(timeSpan)`
+<a href="#rxvirtualtimeschedulerprototypetorelativetimetimespan">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/subjects/asyncsubject.js#L61 "View in source")
 
 Converts the time span number/Date to a relative virtual time value.
 
 ### Arguments
-1. `timeSpan` *(Any)*: The time span number value to convert.  This is used directly in `scheduleWithRelativeAndState` and `scheduleWithAbsoluteAndState`.
+1. `timeSpan` *(Any)*: The time span number value to convert.  This is used directly in `scheduleFuture`.
 
 #### Returns
 *(Number)*: Corresponding relative virtual time value.
@@ -525,13 +413,9 @@ One possible implementation could be as simple as the following:
 
 ```js
 // Number -> Number
-scheduler.toRelative = function (timeSpan) {
-    return timeSpan;
+scheduler.toRelativeTime = function (timeSpan) {
+  return timeSpan;
 };
 ```
 
-### Location
-
-- rx.virtualtime.js
-
-* * *
+***
