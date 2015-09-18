@@ -24,7 +24,7 @@ declare module Rx {
         * @param {Observable} [elseSource] The observable sequence or Promise that will be run if the condition function returns false. If this is not provided, it defaults to Rx.Observabe.Empty with the specified scheduler.
         * @returns {Observable} An observable sequence which is either the thenSource or elseSource.
         */
-        if<T>(condition: () => boolean, thenSource: (IObservable<T> | Observable<T> | Promise<T>), elseSourceOrScheduler?: (IObservable<T> | Observable<T> | Promise<T>) | IScheduler): Observable<T>;
+        if<T>(condition: () => boolean, thenSource: ObservableOrPromise<T>, elseSourceOrScheduler?: ObservableOrPromise<T> | IScheduler): Observable<T>;
     }
 
     export interface ObservableStatic {
@@ -35,7 +35,7 @@ declare module Rx {
         * @param {Function} resultSelector A function to apply to each item in the sources array to turn it into an observable sequence.
         * @returns {Observable} An observable sequence from the concatenated observable sequences.
         */
-        for<T, TResult>(sources: T[], resultSelector: ((value: T, index: number, observable: Observable<T>) => TResult), thisArg?: any): Observable<TResult>;
+        for<T, TResult>(sources: T[], resultSelector: _Selector<T, TResult>, thisArg?: any): Observable<TResult>;
         /**
         *  Concatenates the observable sequences obtained by running the specified result selector for each element in source.
         * There is an alias for this method called 'forIn' for browsers <IE9
@@ -43,7 +43,7 @@ declare module Rx {
         * @param {Function} resultSelector A function to apply to each item in the sources array to turn it into an observable sequence.
         * @returns {Observable} An observable sequence from the concatenated observable sequences.
         */
-        forIn<T, TResult>(sources: T[], resultSelector: ((value: T, index: number, observable: Observable<T>) => TResult), thisArg?: any): Observable<TResult>;
+        forIn<T, TResult>(sources: T[], resultSelector: _Selector<T, TResult>, thisArg?: any): Observable<TResult>;
     }
 
     export interface ObservableStatic {
@@ -55,7 +55,7 @@ declare module Rx {
         * @param {Observable} source The observable sequence that will be run if the condition function returns true.
         * @returns {Observable} An observable sequence which is repeated as long as the condition holds.
         */
-        while<T>(condition: () => boolean, source: (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
+        while<T>(condition: () => boolean, source: ObservableOrPromise<T>): Observable<T>;
         /**
         *  Repeats source as long as condition holds emulating a while loop.
         * There is an alias for this method called 'whileDo' for browsers <IE9
@@ -64,7 +64,7 @@ declare module Rx {
         * @param {Observable} source The observable sequence that will be run if the condition function returns true.
         * @returns {Observable} An observable sequence which is repeated as long as the condition holds.
         */
-        whileDo<T>(condition: () => boolean, source: (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
+        whileDo<T>(condition: () => boolean, source: ObservableOrPromise<T>): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -87,7 +87,7 @@ declare module Rx {
         *
         * @returns {Observable} An observable sequence which is determined by a case statement.
         */
-        case<T>(selector: () => string, sources: { [key: string]: (IObservable<T> | Observable<T> | Promise<T>); }, schedulerOrElseSource?: IScheduler | (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
+        case<T>(selector: () => string, sources: { [key: string]: ObservableOrPromise<T>; }, schedulerOrElseSource?: IScheduler | ObservableOrPromise<T>): Observable<T>;
         /**
         *  Uses selector to determine which source in sources to use.
         * @param {Function} selector The function which extracts the value for to test in a case statement.
@@ -96,7 +96,7 @@ declare module Rx {
         *
         * @returns {Observable} An observable sequence which is determined by a case statement.
         */
-        case<T>(selector: () => number, sources: { [key: number]: (IObservable<T> | Observable<T> | Promise<T>); }, schedulerOrElseSource?: IScheduler | (IObservable<T> | Observable<T> | Promise<T>)): Observable<T>;
+        case<T>(selector: () => number, sources: { [key: number]: ObservableOrPromise<T>; }, schedulerOrElseSource?: IScheduler | ObservableOrPromise<T>): Observable<T>;
     }
 
     export interface Observable<T> {
@@ -119,7 +119,7 @@ declare module Rx {
         *  1 - res = Rx.Observable.forkJoin(obs1, obs2, ...);
         * @returns {Observable} An observable sequence with an array collecting the last elements of all the input sequences.
         */
-        forkJoin<T>(sources: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T[]>;
+        forkJoin<T>(sources: ObservableOrPromise<T>[]): Observable<T[]>;
 
         /**
         *  Runs all observable sequences in parallel and collect their last elements.
@@ -129,7 +129,7 @@ declare module Rx {
         *  1 - res = Rx.Observable.forkJoin(obs1, obs2, ...);
         * @returns {Observable} An observable sequence with an array collecting the last elements of all the input sequences.
         */
-        forkJoin<T>(...args: (IObservable<T> | Observable<T> | Promise<T>)[]): Observable<T[]>;
+        forkJoin<T>(...args: ObservableOrPromise<T>[]): Observable<T[]>;
     }
 
     export interface Observable<T> {
@@ -140,7 +140,7 @@ declare module Rx {
         * @param {Function} resultSelector Result selector function to invoke with the last elements of both sequences.
         * @returns {Observable} An observable sequence with the result of calling the selector function with the last elements of both input sequences.
         */
-        forkJoin<TSecond, TResult>(second: (IObservable<TSecond> | Observable<TSecond> | Promise<TSecond>), resultSelector: (left: T, right: TSecond) => TResult): Observable<TResult>;
+        forkJoin<TSecond, TResult>(second: ObservableOrPromise<TSecond>, resultSelector: (left: T, right: TSecond) => TResult): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -150,14 +150,14 @@ declare module Rx {
         * @param {Object} scheduler Scheduler used to execute the operation. If not specified, defaults to the ImmediateScheduler.
         * @returns {Observable} An observable sequence which results from the comonadic bind operation.
         */
-        manySelect<TResult>(selector: ((value: Observable<T>, index: number, observable: Observable<Observable<T>>) => TResult), scheduler?: IScheduler): Observable<TResult>;
+        manySelect<TResult>(selector: _Selector<Observable<T>, TResult>, scheduler?: IScheduler): Observable<TResult>;
         /**
         * Comonadic bind operator.
         * @param {Function} selector A transform function to apply to each element.
         * @param {Object} scheduler Scheduler used to execute the operation. If not specified, defaults to the ImmediateScheduler.
         * @returns {Observable} An observable sequence which results from the comonadic bind operation.
         */
-        extend<TResult>(selector: ((value: Observable<T>, index: number, observable: Observable<Observable<T>>) => TResult), scheduler?: IScheduler): Observable<TResult>;
+        extend<TResult>(selector: _Selector<Observable<T>, TResult>, scheduler?: IScheduler): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -178,7 +178,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        selectSwitchFirst<TResult>(selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
+        selectSwitchFirst<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
@@ -187,7 +187,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        selectSwitchFirst<TResult>(selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
+        selectSwitchFirst<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
@@ -196,7 +196,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        selectSwitchFirst<TOther, TResult>(selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
+        selectSwitchFirst<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
@@ -205,7 +205,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        selectSwitchFirst<TOther, TResult>(selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
+        selectSwitchFirst<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
 
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
@@ -215,7 +215,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        flatMapFirst<TResult>(selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
+        flatMapFirst<TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
 
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
@@ -225,7 +225,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        flatMapFirst<TResult>(selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
+        flatMapFirst<TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
@@ -234,7 +234,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        flatMapFirst<TOther, TResult>(selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
+        flatMapFirst<TOther, TResult>(selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
         /**
         *  Projects each element of an observable sequence into a new sequence of observable sequences by incorporating the element's index and then
         *  transforms an observable sequence of observable sequences into an observable sequence which performs a exclusive waiting for the first to finish before subscribing to another observable.
@@ -243,7 +243,7 @@ declare module Rx {
         * @returns {Observable} An observable sequence whose elements are the result of invoking the transform function on each element of source producing an Observable of Observable sequences
         *  and that at any point in time performs a exclusive waiting for the first to finish before subscribing to another observable.
         */
-        flatMapFirst<TOther, TResult>(selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
+        flatMapFirst<TOther, TResult>(selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
     }
 
     export interface Observable<T> {
@@ -267,7 +267,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectManyWithMaxConcurrent<TResult>(maxConcurrent: number, selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
+        selectManyWithMaxConcurrent<TResult>(maxConcurrent: number, selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -288,7 +288,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectManyWithMaxConcurrent<TResult>(maxConcurrent: number, selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
+        selectManyWithMaxConcurrent<TResult>(maxConcurrent: number, selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -309,7 +309,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectManyWithMaxConcurrent<TOther, TResult>(maxConcurrent: number, selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
+        selectManyWithMaxConcurrent<TOther, TResult>(maxConcurrent: number, selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -330,7 +330,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        selectManyWithMaxConcurrent<TOther, TResult>(maxConcurrent: number, selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
+        selectManyWithMaxConcurrent<TOther, TResult>(maxConcurrent: number, selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
 
         /**
         *  One of the Following:
@@ -352,7 +352,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMapWithMaxConcurrent<TResult>(maxConcurrent: number, selector: (IObservable<TResult> | Observable<TResult> | Promise<TResult>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TResult> | Observable<TResult> | Promise<TResult>))): Observable<TResult>;
+        flatMapWithMaxConcurrent<TResult>(maxConcurrent: number, selector: _ValueOrSelector<T, ObservableOrPromise<TResult>>): Observable<TResult>;
 
         /**
         *  One of the Following:
@@ -374,7 +374,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMapWithMaxConcurrent<TResult>(maxConcurrent: number, selector: ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TResult> | { length: number;[index: number]: TResult; }) | Iterable<TResult>))): Observable<TResult>;
+        flatMapWithMaxConcurrent<TResult>(maxConcurrent: number, selector: _ValueOrSelector<T, ArrayOrIterable<TResult>>): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -395,7 +395,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMapWithMaxConcurrent<TOther, TResult>(maxConcurrent: number, selector: (IObservable<TOther> | Observable<TOther> | Promise<TOther>) | ((value: T, index: number, observable: (IObservable<T> | Observable<T> | Promise<T>)) => (IObservable<TOther> | Observable<TOther> | Promise<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
+        flatMapWithMaxConcurrent<TOther, TResult>(maxConcurrent: number, selector: _ValueOrSelector<T, ObservableOrPromise<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
         /**
         *  One of the Following:
         *  Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.
@@ -416,7 +416,7 @@ declare module Rx {
         * @param {Any} [thisArg] Object to use as this when executing callback.
         * @returns {Observable} An observable sequence whose elements are the result of invoking the one-to-many transform function collectionSelector on each element of the input sequence and then mapping each of those sequence elements and their corresponding source element to a result element.
         */
-        flatMapWithMaxConcurrent<TOther, TResult>(maxConcurrent: number, selector: ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>) | ((value: T, index: number, observable: ((Array<T> | { length: number;[index: number]: T; }) | Iterable<T>)) => ((Array<TOther> | { length: number;[index: number]: TOther; }) | Iterable<TOther>)), resultSelector: ((value: T, selectorValue: TOther, index: number, selectorOther: number) => TResult), thisArg?: any): Observable<TResult>;
+        flatMapWithMaxConcurrent<TOther, TResult>(maxConcurrent: number, selector: _ValueOrSelector<T, ArrayOrIterable<TOther>>, resultSelector: special._FlatMapResultSelector<T, TOther, TResult>, thisArg?: any): Observable<TResult>;
     }
 
 }

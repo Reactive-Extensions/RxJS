@@ -147,7 +147,7 @@ declare module Rx {
          *    An array of observables. The first triggers when the predicate returns true,
          *    and the second triggers when the predicate returns false.
         */
-        partition(predicate: ((value: T, index: number, observable: Observable<T>) => boolean), thisArg?: any): [Observable<T>, Observable<T>];
+        partition(predicate: _Predicate<T>, thisArg?: any): [Observable<T>, Observable<T>];
     }
 
     export interface Observable<T> {

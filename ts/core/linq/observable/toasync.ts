@@ -54,6 +54,6 @@ module Rx {
     o2 = Rx.Observable.toAsync((a) => 'abc');
     o3 = Rx.Observable.toAsync((a, b) => 'abc');
     o4 = Rx.Observable.toAsync((a, b, c) => 'abc');
-    o = Rx.Observable.toAsync(() => 'abc', {}, Rx.Scheduler.timeout);
+    o = Rx.Observable.toAsync(() => 'abc', {}, Rx.Scheduler.async);
 
 });

@@ -16,14 +16,14 @@ module Rx {
          * @param {Any} The absolute time.
          * @returns {Number} The absolute time in ms
          */
-        toDateTimeOffset(duetime: TAbsolute): number;
+        toAbsoluteTime(duetime: TAbsolute): number;
 
         /**
          * Converts the TimeSpan value to a relative virtual time value.
          * @param {Number} timeSpan TimeSpan value to convert.
          * @return {Number} Corresponding relative virtual time value.
          */
-        toRelative(duetime: number): TRelative;
+        toRelativeTime(duetime: number): TRelative;
 
         /**
          * Starts the virtual time scheduler.
@@ -70,8 +70,8 @@ module Rx {
 
     var b: boolean = vts.isEnabled;
     var a: TA = vts.add(100, 500);
-    var n: number = vts.toDateTimeOffset(1000);
-    var r: TR = vts.toRelative(1000);
+    var n: number = vts.toAbsoluteTime(1000);
+    var r: TR = vts.toRelativeTime(1000);
     var d: Rx.IDisposable = vts.start();
     vts.stop();
     vts.advanceTo(<TA>null);

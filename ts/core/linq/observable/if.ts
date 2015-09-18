@@ -23,5 +23,5 @@ module Rx {
 
     Rx.Observable.if(() => false, o);
     Rx.Observable.if(() => false, o, o);
-    Rx.Observable.if(() => false, o, Rx.Scheduler.timeout);
+    Rx.Observable.if(() => false, o, Rx.Scheduler.async);
 })

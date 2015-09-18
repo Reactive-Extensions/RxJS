@@ -24,5 +24,5 @@ module Rx {
 (function() {
     var o: Rx.Observable<number>;
     o = o.skipLastWithTime(1);
-    o = o.skipLastWithTime(1, Rx.Scheduler.timeout);
+    o = o.skipLastWithTime(1, Rx.Scheduler.async);
 });

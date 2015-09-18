@@ -26,5 +26,5 @@ module Rx {
 (function() {
     var o: Rx.Observable<number>;
     o = o.startWith(1, 2, 3, 4, 5);
-    o = o.startWith(Rx.Scheduler.timeout, 1, 2, 3, 4, 5);
+    o = o.startWith(Rx.Scheduler.async, 1, 2, 3, 4, 5);
 });

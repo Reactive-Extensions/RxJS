@@ -20,5 +20,5 @@ module Rx {
 (function() {
     var o: Rx.Observable<number>;
     o = Rx.Observable.of(1, 2, 3, 4, 5);
-    o = Rx.Observable.ofWithScheduler(Rx.Scheduler.timeout, 1, 2, 3, 4, 5);
+    o = Rx.Observable.ofWithScheduler(Rx.Scheduler.async, 1, 2, 3, 4, 5);
 });

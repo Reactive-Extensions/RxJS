@@ -202,11 +202,11 @@ And there you have it!
 
 Please check out:
 
- - [Our Code of Conduct](https://github.com/Reactive-Extensions/RxJS/tree/code-of-conduct.md)
+ - [Our Code of Conduct](https://github.com/Reactive-Extensions/RxJS/tree/master/code-of-conduct.md)
  - [The full documentation](https://github.com/Reactive-Extensions/RxJS/tree/master/doc)
  - [Our many great examples](https://github.com/Reactive-Extensions/RxJS/tree/master/examples)
  - [Our design guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
- - [Our contribution guidelines](https://github.com/Reactive-Extensions/RxJS/tree/contributing.md)
+ - [Our contribution guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/contributing.md)
  - [Our complete Unit Tests](https://github.com/Reactive-Extensions/RxJS/tree/master/tests)
  - [Our recipes](https://github.com/Reactive-Extensions/RxJS/wiki/Recipes)
 
