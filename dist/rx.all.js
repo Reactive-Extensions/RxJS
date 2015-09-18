@@ -842,6 +842,21 @@
     }
   };
 
+  var NAryDisposable = Rx.NAryDisposable = function (disposables) {
+    this._disposables = disposables;
+    this.isDisposed = false;
+  };
+
+  NAryDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      for (var i = 0, len = this._disposables.length; i < len; i++) {
+        this._disposables[i].dispose();
+      }
+      this._disposables.length = 0;
+    }
+  };
+
   /**
    * Represents a disposable resource that only disposes its underlying disposable resource when all dependent disposable objects have been disposed.
    */
@@ -3297,64 +3312,82 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     return args;
   }
 
+  var CombineLatestObservable = (function(__super__) {
+    inherits(CombineLatestObservable, __super__);
+    function CombineLatestObservable(params, cb) {
+      var len = params.length;
+      this._params = params;
+      this._cb = cb;
+      this._hv = arrayInitialize(len, falseFactory);
+      this._hvAll = false;
+      this._done = arrayInitialize(len, falseFactory);
+      this._v = new Array(len);
+      __super__.call(this);
+    }
+
+    CombineLatestObservable.prototype.subscribeCore = function(observer) {
+      var len = this._params.length, subscriptions = new Array(len);
+
+      for (var i = 0; i < len; i++) {
+        var source = this._params[i], sad = new SingleAssignmentDisposable();
+        subscriptions[i] = sad;
+        isPromise(source) && (source = observableFromPromise(source));
+        sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, this)));
+      }
+
+      return new NAryDisposable(subscriptions);
+    };
+
+    return CombineLatestObservable;
+  }(ObservableBase));
+
+  var CombineLatestObserver = (function (__super__) {
+    inherits(CombineLatestObserver, __super__);
+    function CombineLatestObserver(o, i, p) {
+      this._o = o;
+      this._i = i;
+      this._p = p;
+      __super__.call(this);
+    }
+
+    CombineLatestObserver.prototype.next = function (x) {
+      this._p._v[this._i] = x;
+      this._p._hv[this._i] = true;
+      if (this._p._hvAll || (this._p._hvAll = this._p._hv.every(identity))) {
+        var res = tryCatch(this._p._cb).apply(null, this._p._v);
+        if (res === errorObj) { return this._o.onError(res.e); }
+        this._o.onNext(res);
+      } else if (this._p._done.filter(function (x, j) { return j !== this._i; }, this).every(identity)) {
+        this._o.onCompleted();
+      }
+    };
+
+    CombineLatestObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    CombineLatestObserver.prototype.completed = function () {
+      this._p._done[this._i] = true;
+      this._p._done.every(identity) && this._o.onCompleted();
+    };
+
+    return CombineLatestObserver;
+  }(AbstractObserver));
+
   /**
-   * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
-   *
-   * @example
-   * 1 - obs = Rx.Observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
-   * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
-   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
-   */
+  * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
+  *
+  * @example
+  * 1 - obs = Rx.Observable.combineLatest(obs1, obs2, obs3, function (o1, o2, o3) { return o1 + o2 + o3; });
+  * 2 - obs = Rx.Observable.combineLatest([obs1, obs2, obs3], function (o1, o2, o3) { return o1 + o2 + o3; });
+  * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
+  */
   var combineLatest = Observable.combineLatest = function () {
     var len = arguments.length, args = new Array(len);
     for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
     Array.isArray(args[0]) && (args = args[0]);
-
-    return new AnonymousObservable(function (o) {
-      var n = args.length,
-        hasValue = arrayInitialize(n, falseFactory),
-        hasValueAll = false,
-        isDone = arrayInitialize(n, falseFactory),
-        values = new Array(n);
-
-      function next(i) {
-        hasValue[i] = true;
-        if (hasValueAll || (hasValueAll = hasValue.every(identity))) {
-          try {
-            var res = resultSelector.apply(null, values);
-          } catch (e) {
-            return o.onError(e);
-          }
-          o.onNext(res);
-        } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-          o.onCompleted();
-        }
-      }
-
-      function done (i) {
-        isDone[i] = true;
-        isDone.every(identity) && o.onCompleted();
-      }
-
-      var subscriptions = new Array(n);
-      for (var idx = 0; idx < n; idx++) {
-        (function (i) {
-          var source = args[i], sad = new SingleAssignmentDisposable();
-          isPromise(source) && (source = observableFromPromise(source));
-          sad.setDisposable(source.subscribe(function (x) {
-              values[i] = x;
-              next(i);
-            },
-            function(e) { o.onError(e); },
-            function () { done(i); }
-          ));
-          subscriptions[i] = sad;
-        }(idx));
-      }
-
-      return new CompositeDisposable(subscriptions);
-    }, this);
+    return new CombineLatestObservable(args, resultSelector);
   };
 
   /**
@@ -3960,6 +3993,89 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     return args;
   }
 
+  var WithLatestFromObservable = (function(__super__) {
+    inherits(WithLatestFromObservable, __super__);
+    function WithLatestFromObservable(source, sources, resultSelector) {
+      var len = sources.length;
+      this._s = source;
+      this._ss = sources;
+      this._cb = resultSelector;
+      this._hv = arrayInitialize(len, falseFactory);
+      this._hvAll = false;
+      this._v = new Array(len);
+      __super__.call(this);
+    }
+
+    WithLatestFromObservable.prototype.subscribeCore = function (o) {
+      var n = this._ss.length, subscriptions = new Array(n + 1);
+      for (var i = 0; i < n; i++) {
+        var other = this._ss[i], sad = new SingleAssignmentDisposable();
+        isPromise(other) && (other = observableFromPromise(other));
+        sad.setDisposable(other.subscribe(new WithLatestFromOtherObserver(o, i, this)));
+        subscriptions[i] = sad;
+      }
+
+      var sad = new SingleAssignmentDisposable();
+      sad.setDisposable(this._s.subscribe(new WithLatestFromSourceObserver(o, this)));
+      subscriptions[n] = sad;
+
+      return new NAryDisposable(subscriptions);
+    };
+
+    return WithLatestFromObservable;
+  }(ObservableBase));
+
+  var WithLatestFromOtherObserver = (function (__super__) {
+    inherits(WithLatestFromOtherObserver, __super__);
+    function WithLatestFromOtherObserver(o, i, p) {
+      this._o = o;
+      this._i = i;
+      this._p = p;
+      __super__.call(this);
+    }
+
+    WithLatestFromOtherObserver.prototype.next = function (x) {
+      this._p._v[this._i] = x;
+      this._p._hv[this._i] = true;
+      this._p._hvAll = this._p._hv.every(identity);
+    };
+
+    WithLatestFromOtherObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    WithLatestFromOtherObserver.prototype.completed = noop;
+
+    return WithLatestFromOtherObserver;
+  }(AbstractObserver));
+
+  var WithLatestFromSourceObserver = (function (__super__) {
+    inherits(WithLatestFromSourceObserver, __super__);
+    function WithLatestFromSourceObserver(o, p) {
+      this._o = o;
+      this._p = p;
+      __super__.call(this);
+    }
+
+    WithLatestFromSourceObserver.prototype.next = function (x) {
+      var allValues = [x].concat(this._p._v);
+      if (!this._p._hvAll) { return; }
+      var res = tryCatch(this._p._cb).apply(null, allValues);
+      if (res === errorObj) { return this._o.onError(res.e); }
+      this._o.onNext(res);
+    };
+
+    WithLatestFromSourceObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    WithLatestFromSourceObserver.prototype.completed = function () {
+      this._o.onCompleted();
+    };
+
+    return WithLatestFromSourceObserver;
+  }(AbstractObserver));
+
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function only when the (first) source observable sequence produces an element.
    * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
@@ -3972,51 +4088,71 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
     Array.isArray(args[0]) && (args = args[0]);
 
-    var source = this;
-
-    return new AnonymousObservable(function (observer) {
-      var n = args.length,
-        hasValue = arrayInitialize(n, falseFactory),
-        hasValueAll = false,
-        values = new Array(n);
-
-      var subscriptions = new Array(n + 1);
-      for (var idx = 0; idx < n; idx++) {
-        (function (i) {
-          var other = args[i], sad = new SingleAssignmentDisposable();
-          isPromise(other) && (other = observableFromPromise(other));
-          sad.setDisposable(other.subscribe(function (x) {
-            values[i] = x;
-            hasValue[i] = true;
-            hasValueAll = hasValue.every(identity);
-          }, function (e) { observer.onError(e); }, noop));
-          subscriptions[i] = sad;
-        }(idx));
-      }
-
-      var sad = new SingleAssignmentDisposable();
-      sad.setDisposable(source.subscribe(function (x) {
-        var allValues = [x].concat(values);
-        if (!hasValueAll) { return; }
-        var res = tryCatch(resultSelector).apply(null, allValues);
-        if (res === errorObj) { return observer.onError(res.e); }
-        observer.onNext(res);
-      }, function (e) { observer.onError(e); }, function () {
-        observer.onCompleted();
-      }));
-      subscriptions[n] = sad;
-
-      return new CompositeDisposable(subscriptions);
-    }, this);
+    return new WithLatestFromObservable(this, args, resultSelector);
   };
 
   function falseFactory() { return false; }
   function emptyArrayFactory() { return []; }
-  function argumentsToArray() {
-    var len = arguments.length, args = new Array(len);
-    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
-    return args;
-  }
+
+  var ZipObservable = (function(__super__) {
+    inherits(ZipObservable, __super__);
+    function ZipObservable(sources, resultSelector) {
+      var len = sources.length;
+      this._s = sources;
+      this._cb = resultSelector;
+      this._done = arrayInitialize(len, falseFactory);
+      this._q = arrayInitialize(len, emptyArrayFactory);
+      __super__.call(this);
+    }
+
+    ZipObservable.prototype.subscribeCore = function(observer) {
+      var n = this._s.length, subscriptions = new Array(n);
+
+      for (var i = 0; i < n; i++) {
+        var source = this._s[i], sad = new SingleAssignmentDisposable();
+        subscriptions[i] = sad;
+        isPromise(source) && (source = observableFromPromise(source));
+        sad.setDisposable(source.subscribe(new ZipObserver(observer, i, this)));
+      }
+
+      return new NAryDisposable(subscriptions);
+    };
+
+    return ZipObservable;
+  }(ObservableBase));
+
+  var ZipObserver = (function (__super__) {
+    inherits(ZipObserver, __super__);
+    function ZipObserver(o, i, p) {
+      this._o = o;
+      this._i = i;
+      this._p = p;
+      __super__.call(this);
+    }
+
+    ZipObserver.prototype.next = function (x) {
+      this._p._q[this._i].push(x);
+      if (this._p._q.every(function (x) { return x.length > 0; })) {
+        var queuedValues = this._p._q.map(function (x) { return x.shift(); });
+        var res = tryCatch(this._p._cb).apply(null, queuedValues);
+        if (res === errorObj) { return this._o.onError(res.e); }
+        this._o.onNext(res);
+      } else if (this._p._done.filter(function (x, j) { return j !== this._i; }, this).every(identity)) {
+        this._o.onCompleted();
+      }
+    };
+
+    ZipObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    ZipObserver.prototype.completed = function () {
+      this._p._done[this._i] = true;
+      this._p._done.every(identity) && this._o.onCompleted();
+    };
+
+    return ZipObserver;
+  }(AbstractObserver));
 
   /**
    * Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
@@ -4033,38 +4169,8 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
     var parent = this;
     args.unshift(parent);
-    return new AnonymousObservable(function (o) {
-      var n = args.length,
-        queues = arrayInitialize(n, emptyArrayFactory),
-        isDone = arrayInitialize(n, falseFactory);
 
-      var subscriptions = new Array(n);
-      for (var idx = 0; idx < n; idx++) {
-        (function (i) {
-          var source = args[i], sad = new SingleAssignmentDisposable();
-
-          isPromise(source) && (source = observableFromPromise(source));
-
-          sad.setDisposable(source.subscribe(function (x) {
-            queues[i].push(x);
-            if (queues.every(function (x) { return x.length > 0; })) {
-              var queuedValues = queues.map(function (x) { return x.shift(); }),
-                  res = tryCatch(resultSelector).apply(parent, queuedValues);
-              if (res === errorObj) { return o.onError(res.e); }
-              o.onNext(res);
-            } else if (isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-              o.onCompleted();
-            }
-          }, function (e) { o.onError(e); }, function () {
-            isDone[i] = true;
-            isDone.every(identity) && o.onCompleted();
-          }));
-          subscriptions[i] = sad;
-        })(idx);
-      }
-
-      return new CompositeDisposable(subscriptions);
-    }, parent);
+    return new ZipObservable(args, resultSelector);
   };
 
   /**

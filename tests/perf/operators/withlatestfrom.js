@@ -22,12 +22,16 @@ RxNew.range = RxOld.range;
 
 // add tests
 suite.add('old', function() {
-  RxOld.Observable.range(0, 25)
-    .map(RxOld.Observable.range(0,25)).mergeAll().subscribe();
+  RxOld.Observable.range(0, 10).withLatestFrom(
+    RxOld.Observable.range(0, 10),
+    function (x, y) { return x + y; }
+  ).subscribe();
 })
 .add('new', function() {
-  RxNew.Observable.range(0, 25)
-    .map(RxNew.Observable.range(0,25)).mergeAll().subscribe();
+  RxNew.Observable.range(0, 10).withLatestFrom(
+    RxNew.Observable.range(0, 10),
+    function (x, y) { return x + y; }
+  ).subscribe();
 })
 // add listeners
 .on('cycle', function(event) {

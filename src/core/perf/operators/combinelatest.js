@@ -1,76 +1,71 @@
   function falseFactory() { return false; }
+  function argumentsToArray() {
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    return args;
+  }
 
   var CombineLatestObservable = (function(__super__) {
     inherits(CombineLatestObservable, __super__);
-    function CombineLatestObservable(parameters, resultSelector) {
-      this.parameters = parameters;
-      this.resultSelector = resultSelector;
-      this.length = parameters.length;
-      this.hasValue = arrayInitialize(this.length, falseFactory);
-      this.hasValueAll = false;
-      this.isDone = arrayInitialize(this.length, falseFactory);
-      this.values = new Array(this.length);
+    function CombineLatestObservable(params, cb) {
+      var len = params.length;
+      this._params = params;
+      this._cb = cb;
+      this._hv = arrayInitialize(len, falseFactory);
+      this._hvAll = false;
+      this._done = arrayInitialize(len, falseFactory);
+      this._v = new Array(len);
       __super__.call(this);
     }
 
     CombineLatestObservable.prototype.subscribeCore = function(observer) {
-      var self = this, parameters = self.parameters, n = this.length, subscriptions = new Array(n);
+      var len = this._params.length, subscriptions = new Array(len);
 
-      for (var idx = 0; idx < n; idx++) {
-        (function (i) {
-          var source = parameters[i], sad = new SingleAssignmentDisposable();
-          subscriptions[i] = sad;
-          isPromise(source) && (source = observableFromPromise(source));
-          sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, self)));
-        }(idx));
+      for (var i = 0; i < len; i++) {
+        var source = this._params[i], sad = new SingleAssignmentDisposable();
+        subscriptions[i] = sad;
+        isPromise(source) && (source = observableFromPromise(source));
+        sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, this)));
       }
 
-      return new CompositeDisposable(subscriptions);
+      return new NAryDisposable(subscriptions);
     };
 
     return CombineLatestObservable;
   }(ObservableBase));
 
-  function CombineLatestObserver(observer, i, parent) {
-    this.observer = observer;
-    this.i = i;
-    this.parent = parent;
-    this.isStopped = false;
-  }
-
-  CombineLatestObserver.prototype.onNext = function(x) {
-    if (this.isStopped) { return; }
-    var i = this.i;
-    this.parent.values[i] = x;
-    this.parent.hasValue[i] = true;
-    if (this.parent.hasValueAll || (this.parent.hasValueAll = this.parent.hasValue.every(identity))) {
-      var res = tryCatch(this.parent.resultSelector).apply(null, this.parent.values);
-      if (res === errorObj) { return this.observer.onError(res.e); }
-      this.observer.onNext(res);
-    } else if (this.parent.isDone.filter(function (x, j) { return j !== i; }).every(identity)) {
-      this.observer.onCompleted();
-    }
-  };
-  CombineLatestObserver.prototype.onError = function(e) {
-    if (!this.isStopped) { this.isStopped = true; this.observer.onError(e); }
-  };
-  CombineLatestObserver.prototype.onCompleted = function() {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.parent.isDone[this.i] = true;
-      this.parent.isDone.every(identity) && this.observer.onCompleted();
-    }
-  };
-  CombineLatestObserver.prototype.dispose = function() { this.isStopped = true; };
-  CombineLatestObserver.prototype.fail = function (e) {
-    if (!this.isStopped) {
-      this.isStopped = true;
-      this.observer.onError(e);
-      return true;
+  var CombineLatestObserver = (function (__super__) {
+    inherits(CombineLatestObserver, __super__);
+    function CombineLatestObserver(o, i, p) {
+      this._o = o;
+      this._i = i;
+      this._p = p;
+      __super__.call(this);
     }
 
-    return false;
-  };
+    CombineLatestObserver.prototype.next = function (x) {
+      this._p._v[this._i] = x;
+      this._p._hv[this._i] = true;
+      if (this._p._hvAll || (this._p._hvAll = this._p._hv.every(identity))) {
+        var res = tryCatch(this._p._cb).apply(null, this._p._v);
+        if (res === errorObj) { return this._o.onError(res.e); }
+        this._o.onNext(res);
+      } else if (this._p._done.filter(function (x, j) { return j !== this._i; }, this).every(identity)) {
+        this._o.onCompleted();
+      }
+    };
+
+    CombineLatestObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    CombineLatestObserver.prototype.completed = function () {
+      this._p._done[this._i] = true;
+      this._p._done.every(identity) && this._o.onCompleted();
+    };
+
+    return CombineLatestObserver;
+  }(AbstractObserver));
 
   /**
   * Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences or Promises produces an element.
@@ -81,9 +76,9 @@
   * @returns {Observable} An observable sequence containing the result of combining elements of the sources using the specified result selector function.
   */
   var combineLatest = Observable.combineLatest = function () {
-    var len = arguments.length, args = new Array(len)
-    for(i = 0; i < len; i++) { args[i] = arguments[i]; }
-    var resultSelector = args.pop();
+    var len = arguments.length, args = new Array(len);
+    for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
+    var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
     Array.isArray(args[0]) && (args = args[0]);
     return new CombineLatestObservable(args, resultSelector);
   };

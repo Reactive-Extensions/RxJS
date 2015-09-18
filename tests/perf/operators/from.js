@@ -15,7 +15,7 @@ suite.add('old array', function() {
 .add('new array', function() {
   RxNew.Observable.from(args).subscribe();
 })
-suite.add('old string', function() {
+.add('old string', function() {
   RxOld.Observable.from(argStr).subscribe();
 })
 .add('new string', function() {

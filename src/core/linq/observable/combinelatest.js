@@ -61,6 +61,6 @@
         }(idx));
       }
 
-      return new CompositeDisposable(subscriptions);
+      return new NAryDisposable(subscriptions);
     }, this);
   };

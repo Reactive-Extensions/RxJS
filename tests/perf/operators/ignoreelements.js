@@ -8,7 +8,7 @@ var suite = new Benchmark.Suite;
 RxOld.range = function (start, count) {
   var scheduler = RxNew.Scheduler.currentThread;
   return new RxNew.AnonymousObservable(function (observer) {
-    return scheduler.scheduleRecursiveWithState(0, function (i, self) {
+    return scheduler.scheduleRecursive(0, function (i, self) {
       if (i < count) {
         observer.onNext(start + i);
         self(i + 1);
@@ -38,4 +38,3 @@ suite.add('old', function() {
 })
 // run async
 .run({ 'async': true });
-
