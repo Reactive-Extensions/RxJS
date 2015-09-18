@@ -1,6 +1,5 @@
 ### `Rx.Observable.return(value, [scheduler])` ###
 ### `Rx.Observable.just(value, [scheduler])` ###
-### `Rx.Observable.returnValue(value, [scheduler])` **DEPRECATED** ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js "View in source")
 
 Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
