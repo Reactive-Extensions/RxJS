@@ -18,7 +18,7 @@
     }
 
     function keyDowns(keyCodes) {
-      return allKeyDowns.filter(keyCodeIsOneOf(toArray(keyCodes)))
+      return allKeyDowns.filter(keyCodeIsOneOf(toArray(keyCodes)));
     }
 
     function keyState(keyCode, value) {

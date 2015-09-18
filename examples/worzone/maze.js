@@ -54,7 +54,7 @@
           if (predicate(blockPos)) { return blockPos; }
         });
       }
-      return blockThat(function(blockPos) { return ascii.isChar(blockPos, character)})
+      return blockThat(function(blockPos) { return ascii.isChar(blockPos, character)});
     }
 
     function accessible(pos, objectRadiusX, objectRadiusY, predicate) {
@@ -65,7 +65,7 @@
 
       for (var x = ascii.toBlockX(pos.x - radiusX); x <= ascii.toBlockX(pos.x + radiusX); x++) {
         for (var y = ascii.toBlockY(pos.y - radiusY); y <= ascii.toBlockY(pos.y + radiusY); y++) {
-          if (!predicate(Point(x, y))) { return false; }
+          if (!predicate(new Point(x, y))) { return false; }
         }
       }
       return true;
