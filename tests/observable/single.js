@@ -24,7 +24,26 @@
     });
 
     results.messages.assertEqual(
-      onNext(250, undefined),
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+    );
+
+    xs.subscriptions.assertEqual(subscribe(200, 250));
+  });
+
+  test('single empty default value', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return xs.single({defaultValue: 42});
+    });
+
+    results.messages.assertEqual(
+      onNext(250, 42),
       onCompleted(250)
     );
 
@@ -138,7 +157,31 @@
     });
 
     results.messages.assertEqual(
-      onNext(250, undefined),
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 250)
+    );
+  });
+
+  test('single predicate empty default value', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return xs.single({
+        predicate: function (x) { return x % 2 === 1; },
+        defaultValue: 42
+      });
+    });
+
+    results.messages.assertEqual(
+      onNext(250, 42),
       onCompleted(250)
     );
 
@@ -190,7 +233,35 @@
     });
 
     results.messages.assertEqual(
-      onNext(250, undefined),
+      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+    );
+
+    xs.subscriptions.assertEqual(
+      subscribe(200, 250)
+    );
+  });
+
+  test('single predicate none default value', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(220, 3),
+      onNext(230, 4),
+      onNext(240, 5),
+      onCompleted(250)
+    );
+
+    var results = scheduler.startScheduler(function () {
+      return xs.single({
+        predicate: function (x) { return x > 10; },
+        defaultValue: 42
+      });
+    });
+
+    results.messages.assertEqual(
+      onNext(250, 42),
       onCompleted(250)
     );
 

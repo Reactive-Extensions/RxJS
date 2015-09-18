@@ -1,3 +1,46 @@
+  var LastObserver = (function(__super__) {
+    inherits(LastObserver, __super__);
+    function LastObserver(o, obj, s) {
+      this._o = o;
+      this._obj = obj;
+      this._s = s;
+      this._i = 0;
+      this._hv = false;
+      this._v = null;
+      __super__.call(this);
+    }
+
+    LastObserver.prototype.next = function (x) {
+      var shouldYield = false;
+      if (this._obj.predicate) {
+        var res = tryCatch(this._obj.predicate)(x, this._i++, this._s);
+        if (res === errorObj) { return this._o.onError(res.e); }
+        Boolean(res) && (shouldYield = true);
+      } else if (!this._obj.predicate) {
+        shouldYield = true;
+      }
+      if (shouldYield) {
+        this._hv = true;
+        this._v = x;
+      }
+    };
+    LastObserver.prototype.error = function (e) { this._o.onError(e); };
+    LastObserver.prototype.completed = function () {
+      if (this._hv) {
+        this._o.onNext(this._v);
+        this._o.onCompleted();
+      }
+      else if (this._obj.defaultValue === undefined) {
+        this._o.onError(new EmptyError());
+      } else {
+        this._o.onNext(this._obj.defaultValue);
+        this._o.onCompleted();
+      }
+    };
+
+    return LastObserver;
+  }(AbstractObserver));
+
   /**
    * Returns the last element of an observable sequence that satisfies the condition in the predicate if specified, else the last element.
    * @returns {Observable} Sequence containing the last element in the observable sequence that satisfies the condition in the predicate.
@@ -18,33 +61,6 @@
       obj.predicate = bindCallback(fn, obj.thisArg, 3);
     }
     return new AnonymousObservable(function (o) {
-      var value, seenValue = false, i = 0;
-      return source.subscribe(
-        function (x) {
-          if (obj.predicate) {
-            var res = tryCatch(obj.predicate)(x, i++, source);
-            if (res === errorObj) { return o.onError(res.e); }
-            if (res) {
-              seenValue = true;
-              value = x;
-            }
-          } else if (!obj.predicate) {
-            seenValue = true;
-            value = x;
-          }
-        },
-        function (e) { o.onError(e); },
-        function () {
-          if (seenValue) {
-            o.onNext(value);
-            o.onCompleted();
-          }
-          else if (obj.defaultValue === undefined) {
-            o.onError(new EmptyError());
-          } else {
-            o.onNext(obj.defaultValue);
-            o.onCompleted();
-          }
-        });
+      return source.subscribe(new LastObserver(o, obj, source));
     }, source);
   };

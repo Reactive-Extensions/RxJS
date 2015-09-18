@@ -37,14 +37,14 @@ declare module Rx {
          * @param {Any} The absolute time.
          * @returns {Number} The absolute time in ms
          */
-        toDateTimeOffset(duetime: TAbsolute): number;
+        toAbsoluteTime(duetime: TAbsolute): number;
 
         /**
          * Converts the TimeSpan value to a relative virtual time value.
          * @param {Number} timeSpan TimeSpan value to convert.
          * @return {Number} Corresponding relative virtual time value.
          */
-        toRelative(duetime: number): TRelative;
+        toRelativeTime(duetime: number): TRelative;
 
         /**
          * Starts the virtual time scheduler.

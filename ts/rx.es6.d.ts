@@ -324,28 +324,16 @@ declare module Rx {
     export var RefCountDisposable : RefCountDisposableStatic;
 
     export interface IScheduler {
-        /**
-        * Schedules an action to be executed.
-        * @param {Function} action Action to execute.
-        * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-        */
-        schedule(action: () => void): IDisposable;
+        /** Gets the current time according to the local machine's system clock. */
+        now(): number;
 
         /**
-         * Schedules an action to be executed.
-         * @param state State passed to the action to be executed.
-         * @param {Function} action Action to be executed.
-         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-         */
-        scheduleWithState<TState>(state: TState, action: (scheduler: IScheduler, state: TState) => IDisposable): IDisposable;
-
-        /**
-         * Schedules an action to be executed after the specified relative due time.
-         * @param {Function} action Action to execute.
-         * @param {Number} dueTime Relative time after which to execute the action.
-         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-         */
-        scheduleWithRelative(dueTime: number, action: () => void): IDisposable;
+          * Schedules an action to be executed.
+          * @param state State passed to the action to be executed.
+          * @param {Function} action Action to be executed.
+          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
+          */
+        schedule<TState>(state: TState, action: (scheduler: IScheduler, state: TState) => IDisposable): IDisposable;
 
         /**
          * Schedules an action to be executed after dueTime.
@@ -354,35 +342,12 @@ declare module Rx {
          * @param {Number} dueTime Relative time after which to execute the action.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
          */
-        scheduleWithRelativeAndState<TState>(state: TState, dueTime: number, action: (scheduler: IScheduler, state: TState) => IDisposable): IDisposable;
-
-        /**
-         * Schedules an action to be executed at the specified absolute due time.
-         * @param {Function} action Action to execute.
-         * @param {Number} dueTime Absolute time at which to execute the action.
-         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-          */
-        scheduleRecursiveWithAbsolute(dueTime: number, action: (action: (dueTime: number) => void) => void): IDisposable;
-
-        /**
-         * Schedules an action to be executed at dueTime.
-         * @param {Mixed} state State passed to the action to be executed.
-         * @param {Function} action Action to be executed.
-         * @param {Number}dueTime Absolute time at which to execute the action.
-         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-         */
-        scheduleRecursiveWithAbsoluteAndState<TState>(state: TState, dueTime: number, action: (state: TState, action: (state: TState, dueTime: number) => void) => void): IDisposable;
+        scheduleFuture<TState>(state: TState, dueTime: number | Date, action: (scheduler: IScheduler, state: TState) => IDisposable): IDisposable;
     }
 
     export interface SchedulerStatic {
-        new (
-        now: () => number,
-        schedule: (state: any, action: (scheduler: IScheduler, state: any) => IDisposable) => IDisposable,
-        scheduleRelative: (state: any, dueTime: number, action: (scheduler: IScheduler, state: any) => IDisposable) => IDisposable,
-        scheduleAbsolute: (state: any, dueTime: number, action: (scheduler: IScheduler, state: any) => IDisposable) => IDisposable): Rx.IScheduler;
-
         /** Gets the current time according to the local machine's system clock. */
-        now: number;
+        now(): number;
 
         /**
          * Normalizes the specified TimeSpan value to a positive value.
@@ -390,6 +355,9 @@ declare module Rx {
          * @returns {Number} The specified TimeSpan value if it is zero or positive; otherwise, 0
          */
         normalize(timeSpan: number): number;
+
+        /** Determines whether the given object is a scheduler */
+        isScheduler(s: any): boolean;
     }
 
     /** Provides a set of static properties to access commonly used schedulers. */
@@ -420,26 +388,11 @@ declare module Rx {
     export interface IScheduler {
         /**
          * Schedules an action to be executed recursively.
-         * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action.
-         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-         */
-        scheduleRecursive(action: (action: () => void) => void): IDisposable;
-
-        /**
-         * Schedules an action to be executed recursively.
          * @param {Mixed} state State passed to the action to be executed.
          * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in recursive invocation state.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
          */
-        scheduleRecursiveWithState<TState>(state: TState, action: (state: TState, action: (state: TState) => void) => void): IDisposable;
-
-        /**
-         * Schedules an action to be executed recursively after a specified relative due time.
-         * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action at the specified relative time.
-         * @param {Number}dueTime Relative time after which to execute the action for the first time.
-         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-         */
-        scheduleRecursiveWithRelative(dueTime: number, action: (action: (dueTime: number) => void) => void): IDisposable;
+        scheduleRecursive<TState>(state: TState, action: (state: TState, action: (state: TState) => void) => void): IDisposable;
 
         /**
          * Schedules an action to be executed recursively after a specified relative due time.
@@ -448,35 +401,10 @@ declare module Rx {
          * @param {Number}dueTime Relative time after which to execute the action for the first time.
          * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
          */
-        scheduleRecursiveWithRelativeAndState<TState>(state: TState, dueTime: number, action: (state: TState, action: (state: TState, dueTime: number) => void) => void): IDisposable;
-
-        /**
-         * Schedules an action to be executed recursively at a specified absolute due time.
-         * @param {Function} action Action to execute recursively. The parameter passed to the action is used to trigger recursive scheduling of the action at the specified absolute time.
-         * @param {Number}dueTime Absolute time at which to execute the action for the first time.
-         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-         */
-        scheduleRecursiveWithAbsolute(dueTime: number, action: (action: (dueTime: number) => void) => void): IDisposable;
-
-        /**
-         * Schedules an action to be executed recursively at a specified absolute due time.
-         * @param {Mixed} state State passed to the action to be executed.
-         * @param {Function} action Action to execute recursively. The last parameter passed to the action is used to trigger recursive scheduling of the action, passing in the recursive due time and invocation state.
-         * @param {Number}dueTime Absolute time at which to execute the action for the first time.
-         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
-         */
-        scheduleRecursiveWithAbsoluteAndState<TState>(state: TState, dueTime: number, action: (state: TState, action: (state: TState, dueTime: number) => void) => void): IDisposable;
+        scheduleRecursiveFuture<TState, TTime extends number | Date>(state: TState, dueTime: TTime, action: (state: TState, action: (state: TState, dueTime: TTime) => void) => void): IDisposable;
     }
 
     export interface IScheduler {
-        /**
-         * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.
-         * @param {Number} period Period for running the work periodically.
-         * @param {Function} action Action to be executed.
-         * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
-         */
-        schedulePeriodic(period: number, action: () => void): IDisposable;
-
         /**
          * Schedules a periodic piece of work by dynamically discovering the scheduler's capabilities. The periodic task will be scheduled using window.setInterval for the base implementation.
          * @param {Mixed} state Initial state passed to the action upon the first iteration.
@@ -484,17 +412,10 @@ declare module Rx {
          * @param {Function} action Action to be executed, potentially updating the state.
          * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
          */
-        schedulePeriodicWithState<TState>(state: TState, period: number, action: (state: TState) => TState): IDisposable;
+        schedulePeriodic<TState>(state: TState, period: number, action: (state: TState) => TState): IDisposable;
     }
 
     export interface IScheduler {
-        /**
-         * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.
-         * @param {Function} handler Handler that's run if an exception is caught. The exception will be rethrown if the handler returns false.
-         * @returns {Scheduler} Wrapper around the original scheduler, enforcing exception handling.
-         */
-        catchError(handler: Function): IScheduler;
-
         /**
          * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.
          * @param {Function} handler Handler that's run if an exception is caught. The exception will be rethrown if the handler returns false.
@@ -528,8 +449,8 @@ declare module Rx {
     }
 
     export interface SchedulerStatic {
-        timeout: IScheduler;
         default: IScheduler;
+        async: IScheduler;
     }
 
     /**

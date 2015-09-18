@@ -33,6 +33,6 @@
             isStopped = true;
             !hasLatest && observer.onCompleted();
           });
-      return new CompositeDisposable(subscription, innerSubscription);
+      return new BinaryDisposable(subscription, innerSubscription);
     }, sources);
   };
