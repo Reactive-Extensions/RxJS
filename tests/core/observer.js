@@ -16,7 +16,6 @@
       equal(i++, 0);
       equal(n.kind, 'N');
       equal(n.value, 42);
-      equal(n.exception, undefined);
     };
 
     Observer.fromNotifier(next).onNext(42);
@@ -30,7 +29,7 @@
     var next = function (n) {
       equal(i++, 0);
       equal(n.kind, 'E');
-      equal(n.exception, error);
+      equal(n.error, error);
     };
 
     Observer.fromNotifier(next).onError(error);
@@ -42,7 +41,6 @@
     var next = function (n) {
       equal(i++, 0);
       equal(n.kind, 'C');
-      ok(!n.hasValue);
     };
 
     Observer.fromNotifier(next).onCompleted();
@@ -90,10 +88,10 @@
     ok(next);
 
     try {
-        res.onError(error);
-        ok(false);
+      res.onError(error);
+      ok(false);
     } catch (e) {
-        e_ = e;
+      e_ = e;
     }
     equal(error, e_);
   });
@@ -104,10 +102,10 @@
     var completed = false;
 
     var res = Observer.create(function (x) {
-        equal(42, x);
-        next = true;
+      equal(42, x);
+      next = true;
     }, null, function () {
-        completed = true;
+      completed = true;
     });
 
     res.onNext(42);

@@ -47,14 +47,17 @@
    *  Represents a notification to an observer.
    */
   var Notification = Rx.Notification = (function () {
-    function Notification(kind, value, exception, accept, acceptObservable, toString) {
-      this.kind = kind;
-      this.value = value;
-      this.exception = exception;
-      this._accept = accept;
-      this._acceptObservable = acceptObservable;
-      this.toString = toString;
+    function Notification() {
+
     }
+
+    Notification.prototype._accept = function (onNext, onError, onCompleted) {
+      throw new NotImplementedError();
+    };
+
+    Notification.prototype._acceptObservable = function (onNext, onError, onCompleted) {
+      throw new NotImplementedError();
+    };
 
     /**
      * Invokes the delegate corresponding to the notification or the observer's method corresponding to the notification and returns the produced result.
@@ -81,10 +84,10 @@
     Notification.prototype.toObservable = function (scheduler) {
       var self = this;
       isScheduler(scheduler) || (scheduler = immediateScheduler);
-      return new AnonymousObservable(function (observer) {
+      return new AnonymousObservable(function (o) {
         return scheduler.schedule(self, function (_, notification) {
-          notification._acceptObservable(observer);
-          notification.kind === 'N' && observer.onCompleted();
+          notification._acceptObservable(o);
+          notification.kind === 'N' && o.onCompleted();
         });
       });
     };
@@ -92,49 +95,96 @@
     return Notification;
   })();
 
+  var OnNextNotification = (function (__super__) {
+    inherits(OnNextNotification, __super__);
+    function OnNextNotification(value) {
+      this.value = value;
+      this.kind = 'N';
+    }
+
+    OnNextNotification.prototype._accept = function (onNext) {
+      return onNext(this.value);
+    };
+
+    OnNextNotification.prototype._acceptObservable = function (o) {
+      return o.onNext(this.value);
+    };
+
+    OnNextNotification.prototype.toString = function () {
+      return 'OnNext(' + this.value + ')';
+    };
+
+    return OnNextNotification;
+  }(Notification));
+
+  var OnErrorNotification = (function (__super__) {
+    inherits(OnErrorNotification, __super__);
+    function OnErrorNotification(error) {
+      this.error = error;
+      this.kind = 'E';
+    }
+
+    OnErrorNotification.prototype._accept = function (onNext, onError) {
+      return onError(this.error);
+    };
+
+    OnErrorNotification.prototype._acceptObservable = function (o) {
+      return o.onError(this.error);
+    };
+
+    OnErrorNotification.prototype.toString = function () {
+      return 'OnError(' + this.error + ')';
+    };
+
+    return OnErrorNotification;
+  }(Notification));
+
+  var OnCompletedNotification = (function (__super__) {
+    inherits(OnCompletedNotification, __super__);
+    function OnCompletedNotification() {
+      this.kind = 'C';
+    }
+
+    OnCompletedNotification.prototype._accept = function (onNext, onError, onCompleted) {
+      return onCompleted();
+    };
+
+    OnCompletedNotification.prototype._acceptObservable = function (o) {
+      return o.onCompleted();
+    };
+
+    OnCompletedNotification.prototype.toString = function () {
+      return 'OnCompleted()';
+    };
+
+    return OnCompletedNotification;
+  }(Notification));
+
   /**
    * Creates an object that represents an OnNext notification to an observer.
    * @param {Any} value The value contained in the notification.
    * @returns {Notification} The OnNext notification containing the value.
    */
-  var notificationCreateOnNext = Notification.createOnNext = (function () {
-      function _accept(onNext) { return onNext(this.value); }
-      function _acceptObservable(observer) { return observer.onNext(this.value); }
-      function toString() { return 'OnNext(' + this.value + ')'; }
-
-      return function (value) {
-        return new Notification('N', value, null, _accept, _acceptObservable, toString);
-      };
-  }());
+  var notificationCreateOnNext = Notification.createOnNext = function (value) {
+    return new OnNextNotification(value);
+  };
 
   /**
    * Creates an object that represents an OnError notification to an observer.
    * @param {Any} error The exception contained in the notification.
    * @returns {Notification} The OnError notification containing the exception.
    */
-  var notificationCreateOnError = Notification.createOnError = (function () {
-    function _accept (onNext, onError) { return onError(this.exception); }
-    function _acceptObservable(observer) { return observer.onError(this.exception); }
-    function toString () { return 'OnError(' + this.exception + ')'; }
-
-    return function (e) {
-      return new Notification('E', null, e, _accept, _acceptObservable, toString);
-    };
-  }());
+  var notificationCreateOnError = Notification.createOnError = function (error) {
+    return new OnErrorNotification(error);
+  };
 
   /**
    * Creates an object that represents an OnCompleted notification to an observer.
    * @returns {Notification} The OnCompleted notification.
    */
-  var notificationCreateOnCompleted = Notification.createOnCompleted = (function () {
-    function _accept (onNext, onError, onCompleted) { return onCompleted(); }
-    function _acceptObservable(observer) { return observer.onCompleted(); }
-    function toString () { return 'OnCompleted()'; }
-
-    return function () {
-      return new Notification('C', null, null, _accept, _acceptObservable, toString);
-    };
-  }());
+  var notificationCreateOnCompleted = Notification.createOnCompleted = function () {
+    return new OnCompletedNotification();
+  };
 
   /** Used to determine if values are of the language type Object */
   var dontEnums = ['toString',
@@ -750,7 +800,7 @@ OnErrorPredicate.prototype.equals = function (other) {
   if (other === this) { return true; }
   if (other == null) { return false; }
   if (other.kind !== 'E') { return false; }
-  return this.predicate(other.exception);
+  return this.predicate(other.error);
 };
 
 var ReactiveTest = Rx.ReactiveTest = {
@@ -899,8 +949,8 @@ var ReactiveTest = Rx.ReactiveTest = {
       this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnNext(value)));
     };
 
-    MockObserverPrototype.onError = function (exception) {
-      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(exception)));
+    MockObserverPrototype.onError = function (e) {
+      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(e)));
     };
 
     MockObserverPrototype.onCompleted = function () {

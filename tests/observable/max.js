@@ -24,7 +24,7 @@
     });
 
     results.messages.assertEqual(
-      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+      onError(250, function (n) { return n.error instanceof Rx.EmptyError; })
     );
   });
 
@@ -106,7 +106,7 @@
     });
 
     results.messages.assertEqual(
-      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+      onError(250, function (n) { return n.error instanceof Rx.EmptyError; })
     );
   });
 

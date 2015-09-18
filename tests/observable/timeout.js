@@ -49,7 +49,7 @@
     });
 
     results.messages.assertEqual(
-      onError(400, function (e) { return e.exception instanceof Rx.TimeoutError; })
+      onError(400, function (e) { return e.error instanceof Rx.TimeoutError; })
     );
 
     xs.subscriptions.assertEqual(
@@ -91,7 +91,7 @@
     });
 
     results.messages.assertEqual(
-      onError(400, function (e) { return e.exception instanceof Rx.TimeoutError; })
+      onError(400, function (e) { return e.error instanceof Rx.TimeoutError; })
     );
 
     xs.subscriptions.assertEqual(
@@ -601,7 +601,7 @@
     });
 
     equal(1, results.messages.length);
-    ok(results.messages[0].time === 300 && results.messages[0].value.exception !== null);
+    ok(results.messages[0].time === 300 && results.messages[0].value.error !== null);
 
     xs.subscriptions.assertEqual(
       subscribe(200, 300));
@@ -632,7 +632,7 @@
     equal(3, results.messages.length);
     ok(onNext(310, 1).equals(results.messages[0]));
     ok(onNext(350, 2).equals(results.messages[1]));
-    ok(results.messages[2].time === 400 && results.messages[2].value.exception !== null);
+    ok(results.messages[2].time === 400 && results.messages[2].value.error !== null);
 
     xs.subscriptions.assertEqual(
       subscribe(200, 400));
@@ -667,7 +667,7 @@
 
     ok(onNext(310, 1).equals(results.messages[0]));
     ok(onNext(350, 2).equals(results.messages[1]));
-    ok(results.messages[2].time === 400 && results.messages[2].value.exception !== null);
+    ok(results.messages[2].time === 400 && results.messages[2].value.error !== null);
 
     xs.subscriptions.assertEqual(
       subscribe(200, 400));

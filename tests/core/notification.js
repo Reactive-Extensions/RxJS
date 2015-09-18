@@ -18,8 +18,6 @@
     equal('N', n.kind);
 
     equal(42, n.value);
-
-    ok(n.exception === null);
   });
 
   test('onNext toString', function () {
@@ -104,13 +102,13 @@
 
     n1.accept(
       function () {
-        return obs = true;
+        obs = true;
       },
       function () {
-        return ok(false);
+        ok(false);
       },
       function () {
-        return ok(false);
+        ok(false);
       }
     );
 
@@ -125,10 +123,10 @@
         return 'OK';
       },
       function () {
-        return ok(false);
+        ok(false);
       },
       function () {
-        return ok(false);
+        ok(false);
       }
     );
 
@@ -141,7 +139,7 @@
     var n = createOnError(error);
 
     equal('E', n.kind);
-    equal(error, n.exception);
+    equal(error, n.error);
   });
 
   test('onError ToString', function () {
@@ -159,11 +157,11 @@
 
     function CheckOnErrorObserver() {
       __super__.call(this);
-      this.exception = null;
+      this.error = null;
     }
 
     CheckOnErrorObserver.prototype.onError = function (exception) {
-      this.exception = exception;
+      this.error = exception;
     };
 
     return CheckOnErrorObserver;
@@ -179,7 +177,7 @@
 
     n1.accept(obs);
 
-    equal(error, obs.exception);
+    equal(error, obs.error);
   });
 
   test('onError accept observer with result', function () {
@@ -247,7 +245,7 @@
     var n = createOnCompleted();
 
     equal('C', n.kind);
-    equal(null, n.exception);
+    equal(null, n.error);
     equal(null, n.value);
   });
 

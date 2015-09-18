@@ -211,7 +211,7 @@
     JoinObserverPrototype.next = function (notification) {
       if (!this.isDisposed) {
         if (notification.kind === 'E') {
-          return this.onError(notification.exception);
+          return this.onError(notification.error);
         }
         this.queue.push(notification);
         var activePlans = this.activePlans.slice(0);

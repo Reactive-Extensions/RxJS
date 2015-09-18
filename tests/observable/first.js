@@ -25,7 +25,7 @@
     });
 
     res.messages.assertEqual(
-      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; }));
+      onError(250, function (n) { return n.error instanceof Rx.EmptyError; }));
 
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
@@ -224,7 +224,7 @@
     });
 
     res.messages.assertEqual(
-      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; }));
+      onError(250, function (n) { return n.error instanceof Rx.EmptyError; }));
 
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });
@@ -250,7 +250,7 @@
     });
 
     res.messages.assertEqual(
-      onError(250, function (n) { return n.exception instanceof Rx.EmptyError; }));
+      onError(250, function (n) { return n.error instanceof Rx.EmptyError; }));
 
     xs.subscriptions.assertEqual(subscribe(200, 250));
   });

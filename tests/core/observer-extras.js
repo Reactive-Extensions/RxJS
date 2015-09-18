@@ -1,4 +1,7 @@
 (function () {
+  'use strict';
+  /* jshint undef: true, unused: true */
+  /* globals QUnit, test, Rx, equal, ok  */
   QUnit.module('Observer');
 
   var Observer = Rx.Observer,
@@ -6,38 +9,41 @@
     createOnError = Rx.Notification.createOnError,
     createOnCompleted = Rx.Notification.createOnCompleted;
 
-  test('ToObserver_NotificationOnNext', function () {
+  test('toObserver notificiation onNext', function () {
     var i = 0;
     var next = function (n) {
       equal(i++, 0);
       equal(n.kind, 'N');
       equal(n.value, 42);
-      equal(n.exception, null);
     };
     Observer.fromNotifier(next).onNext(42);
   });
 
-  test('ToObserver_NotificationOnError', function () {
+  test('toObserver notificiation onError', function () {
     var error = new Error();
+
     var i = 0;
+
     var next = function (n) {
       equal(i++, 0);
       equal(n.kind, 'E');
-      equal(n.exception, error);
+      equal(n.error, error);
     };
     Observer.fromNotifier(next).onError(error);
   });
 
-  test('ToObserver_NotificationOnCompleted', function () {
+  test('toObserver notificiation onCompleted', function () {
     var i = 0;
+
     var next = function (n) {
       equal(i++, 0);
       equal(n.kind, 'C');
     };
+
     Observer.fromNotifier(next).onCompleted();
   });
 
-  test('ToNotifier_Forwards', function () {
+  test('toNotifier forwards', function () {
     var obsn = new MyObserver();
     obsn.toNotifier()(createOnNext(42));
     equal(obsn.hasOnNext, 42);
@@ -47,26 +53,26 @@
     obse.toNotifier()(createOnError(error));
     equal(error, obse.hasOnError);
 
-    obsc = new MyObserver();
+    var obsc = new MyObserver();
     obsc.toNotifier()(createOnCompleted());
     ok(obsc.hasOnCompleted);
   });
 
-  test('AsObserver_Hides', function () {
+  test('asObserver hides', function () {
     var obs = new MyObserver();
 
     var res = obs.asObserver();
 
-    notDeepEqual(obs, res);
+    ok(obs !== res);
   });
 
-  test('AsObserver_Forwards', function () {
+  test('asObserver forwards', function () {
     var obsn = new MyObserver();
     obsn.asObserver().onNext(42);
     equal(obsn.hasOnNext, 42);
 
     var error = new Error();
-    obse = new MyObserver();
+    var obse = new MyObserver();
     obse.asObserver().onError(error);
     equal(obse.hasOnError, error);
 
@@ -75,27 +81,25 @@
     ok(obsc.hasOnCompleted);
   });
 
-  var MyObserver = (function () {
-    function onNext (value) {
+  var MyObserver = (function (__super__) {
+    Rx.internals.inherits(MyObserver, __super__);
+    function MyObserver() {
+      __super__.call(this);
+    }
+
+    MyObserver.prototype.onNext = function (value) {
       this.hasOnNext = value;
-    }
-
-    function onError (err) {
-      this.hasOnError = err;
-    }
-
-    function onCompleted () {
-      this.hasOnCompleted = true;
-    }
-
-    return function () {
-      var obs = new Observer();
-      obs.onNext = onNext;
-      obs.onError = onError;
-      obs.onCompleted = onCompleted;
-
-      return obs;
     };
-  }());
+
+    MyObserver.prototype.onError = function (err) {
+      this.hasOnError = err;
+    };
+
+    MyObserver.prototype.onCompleted = function () {
+      this.hasOnCompleted = true;
+    };
+
+    return MyObserver;
+  }(Rx.internals.AbstractObserver));
 
 }());

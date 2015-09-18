@@ -73,7 +73,7 @@
     });
 
     results.messages.assertEqual(
-      onError(600, function (n) { return n.exception instanceof Rx.ArgumentOutOfRangeError; })
+      onError(600, function (n) { return n.error instanceof Rx.ArgumentOutOfRangeError; })
     );
 
     xs.subscriptions.assertEqual(

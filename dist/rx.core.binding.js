@@ -530,7 +530,7 @@
       dispose: function () {
         this.isDisposed = true;
         this.observers = null;
-        this.exception = null;
+        this.error = null;
         this.value = null;
       }
     });
@@ -642,7 +642,7 @@
         this.isDisposed = true;
         this.observers = null;
         this.value = null;
-        this.exception = null;
+        this.error = null;
       }
     });
 

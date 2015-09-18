@@ -165,7 +165,7 @@
         if (notification.value.kind === 'E') {
           q = [];
           q.push(notification);
-          exception = notification.value.exception;
+          exception = notification.value.error;
           shouldRun = !running;
         } else {
           q.push({ value: notification.value, timestamp: notification.timestamp + dueTime });

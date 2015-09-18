@@ -25,7 +25,7 @@
     });
 
     results.messages.assertEqual(
-      onNext(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+      onNext(250, function (n) { return n.error instanceof Rx.EmptyError; })
     );
   });
 
@@ -65,7 +65,7 @@
 
   test('min throw', function () {
     var error = new Error();
-    
+
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -105,7 +105,7 @@
     });
 
     results.messages.assertEqual(
-      onNext(250, function (n) { return n.exception instanceof Rx.EmptyError; })
+      onNext(250, function (n) { return n.error instanceof Rx.EmptyError; })
     );
   });
 

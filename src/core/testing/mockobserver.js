@@ -13,8 +13,8 @@
       this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnNext(value)));
     };
 
-    MockObserverPrototype.onError = function (exception) {
-      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(exception)));
+    MockObserverPrototype.onError = function (e) {
+      this.messages.push(new Recorded(this.scheduler.clock, Notification.createOnError(e)));
     };
 
     MockObserverPrototype.onCompleted = function () {
