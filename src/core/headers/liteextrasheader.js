@@ -4,6 +4,7 @@
     observableNever = Observable.never,
     observableThrow = Observable['throw'],
     AnonymousObservable = Rx.AnonymousObservable,
+    ObservableBase = Rx.ObservableBase,
     AnonymousObserver = Rx.AnonymousObserver,
     notificationCreateOnNext = Rx.Notification.createOnNext,
     notificationCreateOnError = Rx.Notification.createOnError,

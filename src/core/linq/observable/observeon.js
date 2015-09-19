@@ -1,3 +1,18 @@
+var ObserveOnObservable = (function (__super__) {
+  inherits(ObserveOnObservable, __super__);
+  function ObserveOnObservable(source, s) {
+    this.source = source;
+    this._s = s;
+    __super__.call(this);
+  }
+
+  ObserveOnObservable.prototype.subscribeCore = function (o) {
+    return this.source.subscribe(new ObserveOnObserver(this._s, o));
+  };
+
+  return ObserveOnObservable;
+}(ObservableBase));
+
    /**
    *  Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
    *
@@ -8,8 +23,5 @@
    *  @returns {Observable} The source sequence whose observations happen on the specified scheduler.
    */
   observableProto.observeOn = function (scheduler) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
-      return source.subscribe(new ObserveOnObserver(scheduler, observer));
-    }, source);
+    return new ObserveOnObservable(this, scheduler);
   };

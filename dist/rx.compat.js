@@ -2462,6 +2462,21 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     return new OfEnumerable(source, selector, thisArg);
   };
 
+var ObserveOnObservable = (function (__super__) {
+  inherits(ObserveOnObservable, __super__);
+  function ObserveOnObservable(source, s) {
+    this.source = source;
+    this._s = s;
+    __super__.call(this);
+  }
+
+  ObserveOnObservable.prototype.subscribeCore = function (o) {
+    return this.source.subscribe(new ObserveOnObserver(this._s, o));
+  };
+
+  return ObserveOnObservable;
+}(ObservableBase));
+
    /**
    *  Wraps the source sequence in order to run its observer callbacks on the specified scheduler.
    *
@@ -2472,11 +2487,31 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
    *  @returns {Observable} The source sequence whose observations happen on the specified scheduler.
    */
   observableProto.observeOn = function (scheduler) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
-      return source.subscribe(new ObserveOnObserver(scheduler, observer));
-    }, source);
+    return new ObserveOnObservable(this, scheduler);
   };
+
+  var SubscribeOnObservable = (function (__super__) {
+    inherits(SubscribeOnObservable, __super__);
+    function SubscribeOnObservable(source, s) {
+      this.source = source;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    function scheduleMethod(scheduler, state) {
+      var source = state[0], d = state[1], o = state[2];
+      d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(o)));
+    }
+
+    SubscribeOnObservable.prototype.subscribeCore = function (o) {
+      var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
+      d.setDisposable(m);
+      m.setDisposable(this._s.schedule([this.source, d, o], scheduleMethod));
+      return d;
+    };
+
+    return SubscribeOnObservable;
+  }(ObservableBase));
 
    /**
    *  Wraps the source sequence in order to run its subscription and unsubscription logic on the specified scheduler. This operation is not commonly used;
@@ -2489,15 +2524,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
    *  @returns {Observable} The source sequence whose subscriptions and unsubscriptions happen on the specified scheduler.
    */
   observableProto.subscribeOn = function (scheduler) {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
-      var m = new SingleAssignmentDisposable(), d = new SerialDisposable();
-      d.setDisposable(m);
-      m.setDisposable(scheduler.schedule(source, function (scheduler, source) {
-        d.setDisposable(new ScheduledDisposable(scheduler, source.subscribe(observer)));
-      }));
-      return d;
-    }, source);
+    return new SubscribeOnObservable(this, scheduler);
   };
 
   var FromPromiseObservable = (function(__super__) {

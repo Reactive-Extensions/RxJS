@@ -212,6 +212,21 @@
     return new ReduceObservable(this, accumulator, hasSeed, seed);
   };
 
+  var SomeObservable = (function (__super__) {
+    inherits(SomeObservable, __super__);
+    function SomeObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    SomeObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new SomeObserver(o, this._fn, this.source));
+    };
+
+    return SomeObservable;
+  }(ObservableBase));
+
   var SomeObserver = (function (__super__) {
     inherits(SomeObserver, __super__);
 
@@ -246,11 +261,23 @@
    * @returns {Observable} An observable sequence containing a single element determining whether any elements in the source sequence pass the test in the specified predicate if given, else if any items are in the sequence.
    */
   observableProto.some = function (predicate, thisArg) {
-    var source = this, fn = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new SomeObserver(o, fn, source));
-    });
+    var fn = bindCallback(predicate, thisArg, 3);
+    return new SomeObservable(this, fn);
   };
+
+  var IsEmptyObservable = (function (__super__) {
+    inherits(IsEmptyObservable, __super__);
+    function IsEmptyObservable(source) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    IsEmptyObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new IsEmptyObserver(o));
+    };
+
+    return IsEmptyObservable;
+  }(ObservableBase));
 
   var IsEmptyObserver = (function(__super__) {
     inherits(IsEmptyObserver, __super__);
@@ -277,10 +304,7 @@
    * @returns {Observable} An observable sequence containing a single element determining whether the source sequence is empty.
    */
   observableProto.isEmpty = function () {
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new IsEmptyObserver(o));
-    }, source);
+    return new IsEmptyObservable(this);
   };
 
   var EveryObserver = (function (__super__) {
