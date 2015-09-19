@@ -29,11 +29,12 @@
 }.call(this, function (root, exp, Rx, undefined) {
 
   // Refernces
-  var inherits = Rx.internals.inherits, 
+  var inherits = Rx.internals.inherits,
     AbstractObserver = Rx.internals.AbstractObserver,
     Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,
+    ObservableBase = Rx.ObservableBase,
     observableDefer = Observable.defer,
     observableEmpty = Observable.empty,
     observableNever = Observable.never,
@@ -76,13 +77,28 @@
     throw e;
   }
 
+  var TimerObservable = (function(__super__) {
+    inherits(TimerObservable, __super__);
+    function TimerObservable(dt, s) {
+      this._dt = dt;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    TimerObservable.prototype.subscribeCore = function (o) {
+      return this._s.scheduleFuture(o, this._dt, scheduleMethod);
+    };
+
+    function scheduleMethod(s, o) {
+      o.onNext(0);
+      o.onCompleted();
+    }
+
+    return TimerObservable;
+  }(ObservableBase));
+
   function _observableTimer(dueTime, scheduler) {
-    return new AnonymousObservable(function (observer) {
-      return scheduler.scheduleFuture(null, dueTime, function () {
-        observer.onNext(0);
-        observer.onCompleted();
-      });
-    });
+    return new TimerObservable(dueTime, scheduler);
   }
 
   function observableTimerDateAndPeriod(dueTime, period, scheduler) {
@@ -300,6 +316,26 @@
     }
   };
 
+  var DebounceObservable = (function (__super__) {
+    inherits(DebounceObservable, __super__);
+    function DebounceObservable(source, dt, s) {
+      isScheduler(s) || (s = defaultScheduler);
+      this.source = source;
+      this._dt = dt;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    DebounceObservable.prototype.subscribeCore = function (o) {
+      var cancelable = new SerialDisposable();
+      return new BinaryDisposable(
+        this.source.subscribe(new DebounceObserver(o, this.source, this._dt, this._s, cancelable)),
+        cancelable);
+    };
+
+    return DebounceObservable;
+  }(ObservableBase));
+
   var DebounceObserver = (function (__super__) {
     inherits(DebounceObserver, __super__);
     function DebounceObserver(observer, source, dueTime, scheduler, cancelable) {
@@ -342,16 +378,6 @@
 
     return DebounceObserver;
   }(AbstractObserver));
-
-  function debounce(source, dueTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return new AnonymousObservable(function (o) {
-      var cancelable = new SerialDisposable();
-      return new BinaryDisposable(
-        source.subscribe(new DebounceObserver(o, source, dueTime, scheduler, cancelable)),
-        cancelable);
-    }, this);
-  }
 
   function debounceWithSelector(source, durationSelector) {
     return new AnonymousObservable(function (o) {
@@ -404,7 +430,7 @@
     if (isFunction (arguments[0])) {
       return debounceWithSelector(this, arguments[0]);
     } else if (typeof arguments[0] === 'number') {
-      return debounce(this, arguments[0], arguments[1]);
+      return new DebounceObservable(this, arguments[0], arguments[1]);
     } else {
       throw new Error('Invalid arguments');
     }
@@ -600,6 +626,44 @@
     });
   };
 
+  var TimestampObservable = (function (__super__) {
+    inherits(TimestampObservable, __super__);
+    function TimestampObservable(source, s) {
+      this.source = source;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    TimestampObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new TimestampObserver(o, this._s));
+    };
+
+    return TimestampObservable;
+  }(ObservableBase));
+
+  var TimestampObserver = (function (__super__) {
+    inherits(TimestampObserver, __super__);
+    function TimestampObserver(o, s) {
+      this._o = o;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    TimestampObserver.prototype.next = function (x) {
+      this._o.onNext({ value: x, timestamp: this._s.now() });
+    };
+
+    TimestampObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    TimestampObserver.prototype.completed = function () {
+      this._o.onCompleted();
+    };
+
+    return TimestampObserver;
+  }(AbstractObserver));
+
   /**
    *  Records the timestamp for each value in an observable sequence.
    *
@@ -612,9 +676,7 @@
    */
   observableProto.timestamp = function (scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return this.map(function (x) {
-      return { value: x, timestamp: scheduler.now() };
-    });
+    return new TimestampObservable(this, scheduler);
   };
 
   function sampleObservable(source, sampler) {
@@ -889,6 +951,31 @@
     });
   };
 
+  var DelaySubscription = (function(__super__) {
+    inherits(DelaySubscription, __super__);
+    function DelaySubscription(source, dt, s) {
+      this.source = source;
+      this._dt = dt;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    DelaySubscription.prototype.subscribeCore = function (o) {
+      var d = new SerialDisposable();
+
+      d.setDisposable(this._s.scheduleFuture([this.source, o, d], this._dt, scheduleMethod));
+
+      return d;
+    };
+
+    function scheduleMethod(s, state) {
+      var source = state[0], o = state[1], d = state[2];
+      d.setDisposable(source.subscribe(o));
+    }
+
+    return DelaySubscription;
+  }(ObservableBase));
+
   /**
    *  Time shifts the observable sequence by delaying the subscription with the specified relative time duration, using the specified scheduler to run timers.
    *
@@ -901,17 +988,8 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delaySubscription = function (dueTime, scheduler) {
-    var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return new AnonymousObservable(function (o) {
-      var d = new SerialDisposable();
-
-      d.setDisposable(scheduler.scheduleFuture(null, dueTime, function() {
-        d.setDisposable(source.subscribe(o));
-      }));
-
-      return d;
-    }, this);
+    return new DelaySubscription(this, dueTime, scheduler);
   };
 
   /**

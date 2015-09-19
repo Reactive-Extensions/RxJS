@@ -1,3 +1,18 @@
+  var AverageObservable = (function (__super__) {
+    inherits(AverageObservable, __super__);
+    function AverageObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    AverageObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new AverageObserver(o, this._fn, this.source));
+    };
+
+    return AverageObservable;
+  }(ObservableBase));
+
   var AverageObserver = (function(__super__) {
     inherits(AverageObserver, __super__);
     function AverageObserver(o, fn, s) {
@@ -40,7 +55,5 @@
     if (isFunction(keySelector)) {
       fn = bindCallback(keySelector, thisArg, 3);
     }
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new AverageObserver(o, fn, source));
-    }, source);
+    return new AverageObservable(source, fn);
   };

@@ -1,3 +1,18 @@
+  var CountObservable = (function (__super__) {
+    inherits(CountObservable, __super__);
+    function CountObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    CountObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new CountObserver(o, this._fn, this.source));
+    };
+
+    return CountObservable;
+  }(ObservableBase));
+
   var CountObserver = (function (__super__) {
     inherits(CountObserver, __super__);
 
@@ -38,8 +53,6 @@
    * @returns {Observable} An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
    */
   observableProto.count = function (predicate, thisArg) {
-    var source = this, fn = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new CountObserver(o, fn, source));
-    }, source);
+    var fn = bindCallback(predicate, thisArg, 3);
+    return new CountObservable(this, fn);
   };

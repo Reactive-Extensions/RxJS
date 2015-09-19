@@ -1,9 +1,10 @@
   // Refernces
-  var inherits = Rx.internals.inherits, 
+  var inherits = Rx.internals.inherits,
     AbstractObserver = Rx.internals.AbstractObserver,
     Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,
+    ObservableBase = Rx.ObservableBase,
     observableDefer = Observable.defer,
     observableEmpty = Observable.empty,
     observableNever = Observable.never,

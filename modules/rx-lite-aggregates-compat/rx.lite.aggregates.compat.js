@@ -73,6 +73,22 @@
     throw e;
   }
 
+  var ExtremaByObservable = (function (__super__) {
+    inherits(ExtremaByObservable, __super__);
+    function ExtremaByObservable(source, k, c) {
+      this.source = source;
+      this._k = k;
+      this._c = c;
+      __super__.call(this);
+    }
+
+    ExtremaByObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new ExtremaByObserver(o, this._k, this._c));
+    };
+
+    return ExtremaByObservable;
+  }(ObservableBase));
+
   var ExtremaByObserver = (function (__super__) {
     inherits(ExtremaByObserver, __super__);
     function ExtremaByObserver(o, k, c) {
@@ -116,9 +132,7 @@
   }(AbstractObserver));
 
   function extremaBy(source, keySelector, comparer) {
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new ExtremaByObserver(o, keySelector, comparer));
-    }, source);
+    return new ExtremaByObservable(source, keySelector, comparer);
   }
 
   function firstOnly(x) {
@@ -356,6 +370,21 @@
     observableProto.includes(searchElement, fromIndex);
   };
 
+  var CountObservable = (function (__super__) {
+    inherits(CountObservable, __super__);
+    function CountObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    CountObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new CountObserver(o, this._fn, this.source));
+    };
+
+    return CountObservable;
+  }(ObservableBase));
+
   var CountObserver = (function (__super__) {
     inherits(CountObserver, __super__);
 
@@ -396,10 +425,8 @@
    * @returns {Observable} An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
    */
   observableProto.count = function (predicate, thisArg) {
-    var source = this, fn = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new CountObserver(o, fn, source));
-    }, source);
+    var fn = bindCallback(predicate, thisArg, 3);
+    return new CountObservable(this, fn);
   };
 
   /**
@@ -498,6 +525,21 @@
     return this.maxBy(identity, comparer).map(function (x) { return firstOnly(x); });
   };
 
+  var AverageObservable = (function (__super__) {
+    inherits(AverageObservable, __super__);
+    function AverageObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    AverageObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new AverageObserver(o, this._fn, this.source));
+    };
+
+    return AverageObservable;
+  }(ObservableBase));
+
   var AverageObserver = (function(__super__) {
     inherits(AverageObserver, __super__);
     function AverageObserver(o, fn, s) {
@@ -540,9 +582,7 @@
     if (isFunction(keySelector)) {
       fn = bindCallback(keySelector, thisArg, 3);
     }
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new AverageObserver(o, fn, source));
-    }, source);
+    return new AverageObservable(source, fn);
   };
 
   /**
@@ -913,24 +953,102 @@
     return findValue(this, predicate, thisArg, true);
   };
 
+  var ToSetObservable = (function (__super__) {
+    inherits(ToSetObservable, __super__);
+    function ToSetObservable(source) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    ToSetObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new ToSetObserver(o));
+    };
+
+    return ToSetObservable;
+  }(ObservableBase));
+
+  var ToSetObserver = (function (__super__) {
+    inherits(ToSetObserver, __super__);
+    function ToSetObserver(o) {
+      this._o = o;
+      this._s = new root.Set();
+      __super__.call(this);
+    }
+
+    ToSetObserver.prototype.next = function (x) {
+      this._s.add(x);
+    };
+
+    ToSetObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    ToSetObserver.prototype.completed = function () {
+      this._o.onNext(this._s);
+      this._o.onCompleted();
+    };
+
+    return ToSetObserver;
+  }(AbstractObserver));
+
   /**
    * Converts the observable sequence to a Set if it exists.
    * @returns {Observable} An observable sequence with a single value of a Set containing the values from the observable sequence.
    */
   observableProto.toSet = function () {
     if (typeof root.Set === 'undefined') { throw new TypeError(); }
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var s = new root.Set();
-      return source.subscribe(
-        function (x) { s.add(x); },
-        function (e) { o.onError(e); },
-        function () {
-          o.onNext(s);
-          o.onCompleted();
-        });
-    }, source);
+    return new ToSetObservable(this);
   };
+
+  var ToMapObservable = (function (__super__) {
+    inherits(ToMapObservable, __super__);
+    function ToMapObservable(source, k, e) {
+      this.source = source;
+      this._k = k;
+      this._e = e;
+      __super__.call(this);
+    }
+
+    ToMapObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new ToMapObserver(o, this._k, this._e));
+    };
+
+    return ToMapObservable;
+  }(ObservableBase));
+
+  var ToMapObserver = (function (__super__) {
+    inherits(ToMapObserver, __super__);
+    function ToMapObserver(o, k, e) {
+      this._o = o;
+      this._k = k;
+      this._e = e;
+      this._m = new root.Map();
+      __super__.call(this);
+    }
+
+    ToMapObserver.prototype.next = function (x) {
+      var key = tryCatch(this._k)(x);
+      if (key === errorObj) { return this._o.onError(key.e); }
+      var elem = x;
+      if (this._e) {
+        elem = tryCatch(this._e)(x);
+        if (elem === errorObj) { return this._o.onError(elem.e); }
+      }
+
+      this._m.set(key, elem);
+    };
+
+    ToMapObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    ToMapObserver.prototype.completed = function () {
+      this._o.onNext(this._m);
+      this._o.onCompleted();
+    };
+
+    return ToMapObserver;
+  }(AbstractObserver));
 
   /**
   * Converts the observable sequence to a Map if it exists.
@@ -940,37 +1058,7 @@
   */
   observableProto.toMap = function (keySelector, elementSelector) {
     if (typeof root.Map === 'undefined') { throw new TypeError(); }
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var m = new root.Map();
-      return source.subscribe(
-        function (x) {
-          var key;
-          try {
-            key = keySelector(x);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
-
-          var element = x;
-          if (elementSelector) {
-            try {
-              element = elementSelector(x);
-            } catch (e) {
-              o.onError(e);
-              return;
-            }
-          }
-
-          m.set(key, element);
-        },
-        function (e) { o.onError(e); },
-        function () {
-          o.onNext(m);
-          o.onCompleted();
-        });
-    }, source);
+    return new ToMapObservable(this, keySelector, elementSelector);
   };
 
   return Rx;

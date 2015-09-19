@@ -1,3 +1,41 @@
+  var TimestampObservable = (function (__super__) {
+    inherits(TimestampObservable, __super__);
+    function TimestampObservable(source, s) {
+      this.source = source;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    TimestampObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new TimestampObserver(o, this._s));
+    };
+
+    return TimestampObservable;
+  }(ObservableBase));
+
+  var TimestampObserver = (function (__super__) {
+    inherits(TimestampObserver, __super__);
+    function TimestampObserver(o, s) {
+      this._o = o;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    TimestampObserver.prototype.next = function (x) {
+      this._o.onNext({ value: x, timestamp: this._s.now() });
+    };
+
+    TimestampObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    TimestampObserver.prototype.completed = function () {
+      this._o.onCompleted();
+    };
+
+    return TimestampObserver;
+  }(AbstractObserver));
+
   /**
    *  Records the timestamp for each value in an observable sequence.
    *
@@ -10,7 +48,5 @@
    */
   observableProto.timestamp = function (scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return this.map(function (x) {
-      return { value: x, timestamp: scheduler.now() };
-    });
+    return new TimestampObservable(this, scheduler);
   };

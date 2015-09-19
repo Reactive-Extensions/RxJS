@@ -3083,6 +3083,24 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     return acc;
   };
 
+  var CatchObservable = (function (__super__) {
+    inherits(CatchObservable, __super__);
+    function CatchObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    CatchObservable.prototype.subscribeCore = function (o) {
+      var d1 = new SingleAssignmentDisposable(), subscription = new SerialDisposable();
+      subscription.setDisposable(d1);
+      d1.setDisposable(this.source.subscribe(new CatchObserver(o, subscription, this._fn)));
+      return subscription;
+    };
+
+    return CatchObservable;
+  }(ObservableBase));
+
   var CatchObserver = (function(__super__) {
     inherits(CatchObserver, __super__);
     function CatchObserver(o, s, fn) {
@@ -3107,22 +3125,13 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     return CatchObserver;
   }(AbstractObserver));
 
-  function observableCatchHandler(source, handler) {
-    return new AnonymousObservable(function (o) {
-      var d1 = new SingleAssignmentDisposable(), subscription = new SerialDisposable();
-      subscription.setDisposable(d1);
-      d1.setDisposable(source.subscribe(new CatchObserver(o, subscription, handler)));
-      return subscription;
-    }, source);
-  }
-
   /**
    * Continues an observable sequence that is terminated by an exception with the next observable sequence.
    * @param {Mixed} handlerOrSecond Exception handler function that returns an observable sequence given the error that occurred in the first sequence, or a second observable sequence used to produce results when an error occurred in the first sequence.
    * @returns {Observable} An observable sequence containing the first sequence's elements, followed by the elements of the handler sequence in case an exception occurred.
    */
   observableProto['catch'] = function (handlerOrSecond) {
-    return isFunction(handlerOrSecond) ? observableCatchHandler(this, handlerOrSecond) : observableCatch([this, handlerOrSecond]);
+    return isFunction(handlerOrSecond) ? new CatchObservable(this, handlerOrSecond) : observableCatch([this, handlerOrSecond]);
   };
 
   /**

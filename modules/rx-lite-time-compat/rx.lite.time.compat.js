@@ -29,11 +29,12 @@
 }.call(this, function (root, exp, Rx, undefined) {
 
   // Refernces
-  var inherits = Rx.internals.inherits, 
+  var inherits = Rx.internals.inherits,
     AbstractObserver = Rx.internals.AbstractObserver,
     Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,
+    ObservableBase = Rx.ObservableBase,
     observableDefer = Observable.defer,
     observableEmpty = Observable.empty,
     observableNever = Observable.never,
@@ -368,6 +369,31 @@
     });
   };
 
+  var DelaySubscription = (function(__super__) {
+    inherits(DelaySubscription, __super__);
+    function DelaySubscription(source, dt, s) {
+      this.source = source;
+      this._dt = dt;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    DelaySubscription.prototype.subscribeCore = function (o) {
+      var d = new SerialDisposable();
+
+      d.setDisposable(this._s.scheduleFuture([this.source, o, d], this._dt, scheduleMethod));
+
+      return d;
+    };
+
+    function scheduleMethod(s, state) {
+      var source = state[0], o = state[1], d = state[2];
+      d.setDisposable(source.subscribe(o));
+    }
+
+    return DelaySubscription;
+  }(ObservableBase));
+
   /**
    *  Time shifts the observable sequence by delaying the subscription with the specified relative time duration, using the specified scheduler to run timers.
    *
@@ -380,17 +406,8 @@
    * @returns {Observable} Time-shifted sequence.
    */
   observableProto.delaySubscription = function (dueTime, scheduler) {
-    var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return new AnonymousObservable(function (o) {
-      var d = new SerialDisposable();
-
-      d.setDisposable(scheduler.scheduleFuture(null, dueTime, function() {
-        d.setDisposable(source.subscribe(o));
-      }));
-
-      return d;
-    }, this);
+    return new DelaySubscription(this, dueTime, scheduler);
   };
 
   /**

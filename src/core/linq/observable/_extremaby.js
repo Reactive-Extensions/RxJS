@@ -1,3 +1,19 @@
+  var ExtremaByObservable = (function (__super__) {
+    inherits(ExtremaByObservable, __super__);
+    function ExtremaByObservable(source, k, c) {
+      this.source = source;
+      this._k = k;
+      this._c = c;
+      __super__.call(this);
+    }
+
+    ExtremaByObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new ExtremaByObserver(o, this._k, this._c));
+    };
+
+    return ExtremaByObservable;
+  }(ObservableBase));
+
   var ExtremaByObserver = (function (__super__) {
     inherits(ExtremaByObserver, __super__);
     function ExtremaByObserver(o, k, c) {
@@ -41,7 +57,5 @@
   }(AbstractObserver));
 
   function extremaBy(source, keySelector, comparer) {
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new ExtremaByObserver(o, keySelector, comparer));
-    }, source);
+    return new ExtremaByObservable(source, keySelector, comparer);
   }

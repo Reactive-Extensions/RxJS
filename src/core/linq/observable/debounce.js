@@ -1,3 +1,23 @@
+  var DebounceObservable = (function (__super__) {
+    inherits(DebounceObservable, __super__);
+    function DebounceObservable(source, dt, s) {
+      isScheduler(s) || (s = defaultScheduler);
+      this.source = source;
+      this._dt = dt;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    DebounceObservable.prototype.subscribeCore = function (o) {
+      var cancelable = new SerialDisposable();
+      return new BinaryDisposable(
+        this.source.subscribe(new DebounceObserver(o, this.source, this._dt, this._s, cancelable)),
+        cancelable);
+    };
+
+    return DebounceObservable;
+  }(ObservableBase));
+
   var DebounceObserver = (function (__super__) {
     inherits(DebounceObserver, __super__);
     function DebounceObserver(observer, source, dueTime, scheduler, cancelable) {
@@ -40,16 +60,6 @@
 
     return DebounceObserver;
   }(AbstractObserver));
-
-  function debounce(source, dueTime, scheduler) {
-    isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return new AnonymousObservable(function (o) {
-      var cancelable = new SerialDisposable();
-      return new BinaryDisposable(
-        source.subscribe(new DebounceObserver(o, source, dueTime, scheduler, cancelable)),
-        cancelable);
-    }, this);
-  }
 
   function debounceWithSelector(source, durationSelector) {
     return new AnonymousObservable(function (o) {
@@ -102,7 +112,7 @@
     if (isFunction (arguments[0])) {
       return debounceWithSelector(this, arguments[0]);
     } else if (typeof arguments[0] === 'number') {
-      return debounce(this, arguments[0], arguments[1]);
+      return new DebounceObservable(this, arguments[0], arguments[1]);
     } else {
       throw new Error('Invalid arguments');
     }

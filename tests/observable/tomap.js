@@ -33,7 +33,7 @@ if (!!window.Map) {
       );
 
       var res = scheduler.startScheduler(function () {
-        return xs.toMap(function (x){ return x * 2; }, function (x) { return x * 4; }).map(extractValues);
+        return xs.toMap(function (x) { return x * 2; }, function (x) { return x * 4; }).map(extractValues);
       });
 
       res.messages.assertEqual(
