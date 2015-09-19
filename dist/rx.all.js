@@ -4326,15 +4326,41 @@ observableProto.zipIterable = function () {
       .filter(notEmpty);
   };
 
+  var DematerializeObservable = (function (__super__) {
+    inherits(DematerializeObservable, __super__);
+    function DematerializeObservable(source, fn) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    DematerializeObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new DematerializeObserver(o));
+    };
+
+    return DematerializeObservable;
+  }(ObservableBase));
+
+  var DematerializeObserver = (function (__super__) {
+    inherits(DematerializeObserver, __super__);
+
+    function DematerializeObserver(o) {
+      this._o = o;
+      __super__.call(this);
+    }
+
+    DematerializeObserver.prototype.next = function (x) { x.accept(this._o); };
+    DematerializeObserver.prototype.error = function (e) { this._o.onError(e); };
+    DematerializeObserver.prototype.completed = function () { this._o.onCompleted(); };
+
+    return DematerializeObserver;
+  }(AbstractObserver));
+
   /**
    * Dematerializes the explicit notification values of an observable sequence as implicit notifications.
    * @returns {Observable} An observable sequence exhibiting the behavior corresponding to the source sequence's notification values.
    */
   observableProto.dematerialize = function () {
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(function (x) { return x.accept(o); }, function(e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, this);
+    return new DematerializeObservable(this);
   };
 
   var DistinctUntilChangedObservable = (function(__super__) {
@@ -4560,23 +4586,41 @@ observableProto.zipIterable = function () {
     return new IgnoreElementsObservable(this);
   };
 
+  var MaterializeObservable = (function (__super__) {
+    inherits(MaterializeObservable, __super__);
+    function MaterializeObservable(source, fn) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    MaterializeObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new MaterializeObserver(o));
+    };
+
+    return MaterializeObservable;
+  }(ObservableBase));
+
+  var MaterializeObserver = (function (__super__) {
+    inherits(MaterializeObserver, __super__);
+
+    function MaterializeObserver(o) {
+      this._o = o;
+      __super__.call(this);
+    }
+
+    MaterializeObserver.prototype.next = function (x) { this._o.onNext(notificationCreateOnNext(x)) };
+    MaterializeObserver.prototype.error = function (e) { this._o.onNext(notificationCreateOnError(e)); this._o.onCompleted(); };
+    MaterializeObserver.prototype.completed = function () { this._o.onNext(notificationCreateOnCompleted()); this._o.onCompleted(); };
+
+    return MaterializeObserver;
+  }(AbstractObserver));
+
   /**
    *  Materializes the implicit notifications of an observable sequence as explicit notification values.
    * @returns {Observable} An observable sequence containing the materialized notification values from the source sequence.
    */
   observableProto.materialize = function () {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
-      return source.subscribe(function (value) {
-        observer.onNext(notificationCreateOnNext(value));
-      }, function (e) {
-        observer.onNext(notificationCreateOnError(e));
-        observer.onCompleted();
-      }, function () {
-        observer.onNext(notificationCreateOnCompleted());
-        observer.onCompleted();
-      });
-    }, source);
+    return new MaterializeObservable(this);
   };
 
   /**
@@ -5645,10 +5689,6 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     return ExtremaByObserver;
   }(AbstractObserver));
 
-  function extremaBy(source, keySelector, comparer) {
-    return new ExtremaByObservable(source, keySelector, comparer);
-  }
-
   function firstOnly(x) {
     if (x.length === 0) { throw new EmptyError(); }
     return x[0];
@@ -5998,7 +6038,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    */
   observableProto.minBy = function (keySelector, comparer) {
     comparer || (comparer = defaultSubComparer);
-    return extremaBy(this, keySelector, function (x, y) { return comparer(x, y) * -1; });
+    return new ExtremaByObservable(this, keySelector, function (x, y) { return comparer(x, y) * -1; });
   };
 
   /**
@@ -6024,7 +6064,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    */
   observableProto.maxBy = function (keySelector, comparer) {
     comparer || (comparer = defaultSubComparer);
-    return extremaBy(this, keySelector, comparer);
+    return new ExtremaByObservable(this, keySelector, comparer);
   };
 
   /**
@@ -6278,6 +6318,21 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
       }, source);
     };
 
+  var FirstObservable = (function (__super__) {
+    inherits(FirstObservable, __super__);
+    function FirstObservable(source, obj) {
+      this.source = source;
+      this._obj = obj;
+      __super__.call(this);
+    }
+
+    FirstObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new FirstObserver(o, this._obj, this.source));
+    };
+
+    return FirstObservable;
+  }(ObservableBase));
+
   var FirstObserver = (function(__super__) {
     inherits(FirstObserver, __super__);
     function FirstObserver(o, obj, s) {
@@ -6333,10 +6388,23 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
       var fn = obj.predicate;
       obj.predicate = bindCallback(fn, obj.thisArg, 3);
     }
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new FirstObserver(o, obj, source));
-    }, source);
+    return new FirstObservable(this, obj);
   };
+
+  var LastObservable = (function (__super__) {
+    inherits(LastObservable, __super__);
+    function LastObservable(source, obj) {
+      this.source = source;
+      this._obj = obj;
+      __super__.call(this);
+    }
+
+    LastObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new LastObserver(o, this._obj, this.source));
+    };
+
+    return LastObservable;
+  }(ObservableBase));
 
   var LastObserver = (function(__super__) {
     inherits(LastObserver, __super__);
@@ -6400,9 +6468,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
       var fn = obj.predicate;
       obj.predicate = bindCallback(fn, obj.thisArg, 3);
     }
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new LastObserver(o, obj, source));
-    }, source);
+    return new LastObservable(this, obj);
   };
 
   var FindValueObserver = (function(__super__) {

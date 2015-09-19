@@ -55,7 +55,3 @@
 
     return ExtremaByObserver;
   }(AbstractObserver));
-
-  function extremaBy(source, keySelector, comparer) {
-    return new ExtremaByObservable(source, keySelector, comparer);
-  }

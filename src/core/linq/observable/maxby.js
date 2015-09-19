@@ -9,5 +9,5 @@
    */
   observableProto.maxBy = function (keySelector, comparer) {
     comparer || (comparer = defaultSubComparer);
-    return extremaBy(this, keySelector, comparer);
+    return new ExtremaByObservable(this, keySelector, comparer);
   };

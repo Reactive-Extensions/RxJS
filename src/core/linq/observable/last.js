@@ -1,3 +1,18 @@
+  var LastObservable = (function (__super__) {
+    inherits(LastObservable, __super__);
+    function LastObservable(source, obj) {
+      this.source = source;
+      this._obj = obj;
+      __super__.call(this);
+    }
+
+    LastObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new LastObserver(o, this._obj, this.source));
+    };
+
+    return LastObservable;
+  }(ObservableBase));
+
   var LastObserver = (function(__super__) {
     inherits(LastObserver, __super__);
     function LastObserver(o, obj, s) {
@@ -60,7 +75,5 @@
       var fn = obj.predicate;
       obj.predicate = bindCallback(fn, obj.thisArg, 3);
     }
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new LastObserver(o, obj, source));
-    }, source);
+    return new LastObservable(this, obj);
   };

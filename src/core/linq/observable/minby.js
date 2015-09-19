@@ -9,5 +9,5 @@
    */
   observableProto.minBy = function (keySelector, comparer) {
     comparer || (comparer = defaultSubComparer);
-    return extremaBy(this, keySelector, function (x, y) { return comparer(x, y) * -1; });
+    return new ExtremaByObservable(this, keySelector, function (x, y) { return comparer(x, y) * -1; });
   };

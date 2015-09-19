@@ -1,3 +1,18 @@
+  var FirstObservable = (function (__super__) {
+    inherits(FirstObservable, __super__);
+    function FirstObservable(source, obj) {
+      this.source = source;
+      this._obj = obj;
+      __super__.call(this);
+    }
+
+    FirstObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new FirstObserver(o, this._obj, this.source));
+    };
+
+    return FirstObservable;
+  }(ObservableBase));
+
   var FirstObserver = (function(__super__) {
     inherits(FirstObserver, __super__);
     function FirstObserver(o, obj, s) {
@@ -53,7 +68,5 @@
       var fn = obj.predicate;
       obj.predicate = bindCallback(fn, obj.thisArg, 3);
     }
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new FirstObserver(o, obj, source));
-    }, source);
+    return new FirstObservable(this, obj);
   };
