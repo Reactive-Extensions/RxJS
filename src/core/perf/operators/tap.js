@@ -12,43 +12,29 @@
       return this.source.subscribe(new InnerObserver(o, this));
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o, p) {
       this.o = o;
       this.t = !p._oN || isFunction(p._oN) ?
         observerCreate(p._oN || noop, p._oE || noop, p._oC || noop) :
         p._oN;
       this.isStopped = false;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function(x) {
-      if (this.isStopped) { return; }
+    InnerObserver.prototype.next = function(x) {
       var res = tryCatch(this.t.onNext).call(this.t, x);
       if (res === errorObj) { this.o.onError(res.e); }
       this.o.onNext(x);
     };
-    InnerObserver.prototype.onError = function(err) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        var res = tryCatch(this.t.onError).call(this.t, err);
-        if (res === errorObj) { return this.o.onError(res.e); }
-        this.o.onError(err);
-      }
+    InnerObserver.prototype.error = function(err) {
+      var res = tryCatch(this.t.onError).call(this.t, err);
+      if (res === errorObj) { return this.o.onError(res.e); }
+      this.o.onError(err);
     };
-    InnerObserver.prototype.onCompleted = function() {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        var res = tryCatch(this.t.onCompleted).call(this.t);
-        if (res === errorObj) { return this.o.onError(res.e); }
-        this.o.onCompleted();
-      }
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
+    InnerObserver.prototype.completed = function() {
+      var res = tryCatch(this.t.onCompleted).call(this.t);
+      if (res === errorObj) { return this.o.onError(res.e); }
+      this.o.onCompleted();
     };
 
     return TapObservable;

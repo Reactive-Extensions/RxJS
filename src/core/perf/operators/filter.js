@@ -10,7 +10,7 @@
     FilterObservable.prototype.subscribeCore = function (o) {
       return this.source.subscribe(new InnerObserver(o, this.predicate, this));
     };
-    
+
     function innerPredicate(predicate, self) {
       return function(x, i, o) { return self.predicate(x, i, o) && predicate.call(this, x, i, o); }
     }
@@ -18,37 +18,30 @@
     FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
       return new FilterObservable(this.source, innerPredicate(predicate, this), thisArg);
     };
-    
+
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o, predicate, source) {
       this.o = o;
       this.predicate = predicate;
       this.source = source;
       this.i = 0;
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
-  
-    InnerObserver.prototype.onNext = function(x) {
-      if (this.isStopped) { return; }
+
+    InnerObserver.prototype.next = function(x) {
       var shouldYield = tryCatch(this.predicate)(x, this.i++, this.source);
       if (shouldYield === errorObj) {
         return this.o.onError(shouldYield.e);
       }
       shouldYield && this.o.onNext(x);
     };
-    InnerObserver.prototype.onError = function (e) {
-      if(!this.isStopped) { this.isStopped = true; this.o.onError(e); }
+
+    InnerObserver.prototype.error = function (e) {
+      this.o.onError(e);
     };
-    InnerObserver.prototype.onCompleted = function () {
-      if(!this.isStopped) { this.isStopped = true; this.o.onCompleted(); }
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
+
+    InnerObserver.prototype.completed = function () {
+      this.o.onCompleted();
     };
 
     return FilterObservable;

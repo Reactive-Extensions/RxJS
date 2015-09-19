@@ -10,6 +10,7 @@
     notificationCreateOnCompleted = Rx.Notification.createOnCompleted,
     Observer = Rx.Observer,
     observerCreate = Observer.create,
+    AbstractObserver = Rx.internals.AbstractObserver,
     Subject = Rx.Subject,
     internals = Rx.internals,
     helpers = Rx.helpers,

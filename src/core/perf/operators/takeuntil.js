@@ -10,25 +10,32 @@
     TakeUntilObservable.prototype.subscribeCore = function(o) {
       return new BinaryDisposable(
         this.source.subscribe(o),
-        this.other.subscribe(new InnerObserver(o))
+        this.other.subscribe(new TakeUntilObserver(o))
       );
     };
 
-    inherits(InnerObserver, AbstractObserver);
-    function InnerObserver(o) {
-      this.o = o;
-      AbstractObserver.call(this);
-    }
-    InnerObserver.prototype.next = function () {
-      this.o.onCompleted();
-    };
-    InnerObserver.prototype.error = function (err) {
-        this.o.onError(err);
-    };
-    InnerObserver.prototype.onCompleted = noop;
-
     return TakeUntilObservable;
   }(ObservableBase));
+
+  var TakeUntilObserver = (function(__super__) {
+    inherits(TakeUntilObserver, __super__);
+    function TakeUntilObserver(o) {
+      this._o = o;
+      __super__.call(this);
+    }
+
+    TakeUntilObserver.prototype.next = function () {
+      this._o.onCompleted();
+    };
+
+    TakeUntilObserver.prototype.error = function (err) {
+      this._o.onError(err);
+    };
+
+    TakeUntilObserver.prototype.onCompleted = noop;
+
+    return TakeUntilObserver;
+  }(AbstractObserver));
 
   /**
    * Returns the values from the source observable sequence until the other observable sequence produces a value.

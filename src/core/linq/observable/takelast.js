@@ -1,3 +1,29 @@
+  var TakeLastObserver = (function (__super__) {
+    inherits(TakeLastObserver, __super__);
+    function TakeLastObserver(o, c) {
+      this._o = o;
+      this._c = c;
+      this._q = [];
+      __super__.call(this);
+    }
+
+    TakeLastObserver.prototype.next = function (x) {
+      this._q.push(x);
+      this._q.length > this._c && this._q.shift();
+    };
+
+    TakeLastObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    TakeLastObserver.prototype.completed = function () {
+      while (this._q.length > 0) { this._o.onNext(this._q.shift()); }
+      this._o.onCompleted();
+    };
+
+    return TakeLastObserver;
+  }(AbstractObserver));
+
   /**
    *  Returns a specified number of contiguous elements from the end of an observable sequence.
    * @description
@@ -10,13 +36,6 @@
     if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
-      var q = [];
-      return source.subscribe(function (x) {
-        q.push(x);
-        q.length > count && q.shift();
-      }, function (e) { o.onError(e); }, function () {
-        while (q.length > 0) { o.onNext(q.shift()); }
-        o.onCompleted();
-      });
+      return source.subscribe(new TakeLastObserver(o, count));
     }, source);
   };

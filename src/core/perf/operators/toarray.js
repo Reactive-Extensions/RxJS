@@ -9,35 +9,16 @@
       return this.source.subscribe(new InnerObserver(o));
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o) {
       this.o = o;
       this.a = [];
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.a.push(x); } };
-    InnerObserver.prototype.onError = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-      }
-    };
-    InnerObserver.prototype.onCompleted = function () {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onNext(this.a);
-        this.o.onCompleted();
-      }
-    };
-    InnerObserver.prototype.dispose = function () { this.isStopped = true; }
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
- 
-      return false;
-    };
+    
+    InnerObserver.prototype.next = function (x) { this.a.push(x); };
+    InnerObserver.prototype.error = function (e) { this.o.onError(e);  };
+    InnerObserver.prototype.completed = function () { this.o.onNext(this.a); this.o.onCompleted(); };
 
     return ToArrayObservable;
   }(ObservableBase));

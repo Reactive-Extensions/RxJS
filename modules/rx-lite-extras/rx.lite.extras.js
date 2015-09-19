@@ -40,6 +40,7 @@
     notificationCreateOnCompleted = Rx.Notification.createOnCompleted,
     Observer = Rx.Observer,
     observerCreate = Observer.create,
+    AbstractObserver = Rx.internals.AbstractObserver,
     Subject = Rx.Subject,
     internals = Rx.internals,
     helpers = Rx.helpers,
@@ -528,6 +529,32 @@
     }, source);
   };
 
+  var TakeLastBufferObserver = (function (__super__) {
+    inherits(TakeLastBufferObserver, __super__);
+    function TakeLastBufferObserver(o, c) {
+      this._o = o;
+      this._c = c;
+      this._q = [];
+      __super__.call(this);
+    }
+
+    TakeLastBufferObserver.prototype.next = function (x) {
+      this._q.push(x);
+      this._q.length > this._c && this._q.shift();
+    };
+
+    TakeLastBufferObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    TakeLastBufferObserver.prototype.completed = function () {
+      this._o.onNext(this._q);
+      this._o.onCompleted();
+    };
+
+    return TakeLastBufferObserver;
+  }(AbstractObserver));
+
   /**
    *  Returns an array with the specified number of contiguous elements from the end of an observable sequence.
    *
@@ -538,43 +565,54 @@
    * @returns {Observable} An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
    */
   observableProto.takeLastBuffer = function (count) {
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
-      var q = [];
-      return source.subscribe(function (x) {
-        q.push(x);
-        q.length > count && q.shift();
-      }, function (e) { o.onError(e); }, function () {
-        o.onNext(q);
-        o.onCompleted();
-      });
+      return source.subscribe(new TakeLastBufferObserver(o, count));
     }, source);
   };
 
-    /**
-     *  Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
-     *
-     *  var res = obs = xs.defaultIfEmpty();
-     *  2 - obs = xs.defaultIfEmpty(false);
-     *
-     * @memberOf Observable#
-     * @param defaultValue The value to return if the sequence is empty. If not provided, this defaults to null.
-     * @returns {Observable} An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself.
-     */
+  var DefaultIfEmptyObserver = (function (__super__) {
+    inherits(DefaultIfEmptyObserver, __super__);
+    function DefaultIfEmptyObserver(o, d) {
+      this._o = o;
+      this._d = d;
+      this._f = false;
+      __super__.call(this);
+    }
+
+    DefaultIfEmptyObserver.prototype.next = function (x) {
+      this._f = true;
+      this._o.onNext(x);
+    };
+
+    DefaultIfEmptyObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    DefaultIfEmptyObserver.prototype.completed = function () {
+      !this._f && this._o.onNext(defaultValue);
+      this._o.onCompleted();
+    };
+
+    return DefaultIfEmptyObserver;
+  }(AbstractObserver));
+
+  /**
+   *  Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
+   *
+   *  var res = obs = xs.defaultIfEmpty();
+   *  2 - obs = xs.defaultIfEmpty(false);
+   *
+   * @memberOf Observable#
+   * @param defaultValue The value to return if the sequence is empty. If not provided, this defaults to null.
+   * @returns {Observable} An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself.
+   */
     observableProto.defaultIfEmpty = function (defaultValue) {
       var source = this;
       defaultValue === undefined && (defaultValue = null);
-      return new AnonymousObservable(function (observer) {
-        var found = false;
-        return source.subscribe(function (x) {
-          found = true;
-          observer.onNext(x);
-        },
-        function (e) { observer.onError(e); }, 
-        function () {
-          !found && observer.onNext(defaultValue);
-          observer.onCompleted();
-        });
+      return new AnonymousObservable(function (o) {
+        return source.subscribe(new DefaultIfEmptyObserver(o, defaultValue));
       }, source);
     };
 

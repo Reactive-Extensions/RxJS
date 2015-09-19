@@ -2649,35 +2649,16 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
       return this.source.subscribe(new InnerObserver(o));
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o) {
       this.o = o;
       this.a = [];
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.a.push(x); } };
-    InnerObserver.prototype.onError = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-      }
-    };
-    InnerObserver.prototype.onCompleted = function () {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onNext(this.a);
-        this.o.onCompleted();
-      }
-    };
-    InnerObserver.prototype.dispose = function () { this.isStopped = true; }
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
- 
-      return false;
-    };
+    
+    InnerObserver.prototype.next = function (x) { this.a.push(x); };
+    InnerObserver.prototype.error = function (e) { this.o.onError(e);  };
+    InnerObserver.prototype.completed = function () { this.o.onNext(this.a); this.o.onCompleted(); };
 
     return ToArrayObservable;
   }(ObservableBase));
@@ -2703,6 +2684,23 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     return new AnonymousObservable(subscribe, parent);
   };
 
+  var Defer = (function(__super__) {
+    inherits(Defer, __super__);
+    function Defer(factory) {
+      this._f = factory;
+      __super__.call(this);
+    }
+
+    Defer.prototype.subscribeCore = function (o) {
+      var result = tryCatch(this._f)();
+      if (result === errorObj) { return observableThrow(result.e).subscribe(o);}
+      isPromise(result) && (result = observableFromPromise(result));
+      return result.subscribe(o);
+    };
+
+    return Defer;
+  }(ObservableBase));
+
   /**
    *  Returns an observable sequence that invokes the specified factory function whenever a new observer subscribes.
    *
@@ -2712,16 +2710,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
    * @returns {Observable} An observable sequence whose observers trigger an invocation of the given observable factory function.
    */
   var observableDefer = Observable.defer = function (observableFactory) {
-    return new AnonymousObservable(function (observer) {
-      var result;
-      try {
-        result = observableFactory();
-      } catch (e) {
-        return observableThrow(e).subscribe(observer);
-      }
-      isPromise(result) && (result = observableFromPromise(result));
-      return result.subscribe(observer);
-    });
+    return new Defer(observableFactory);
   };
 
   var EmptyObservable = (function(__super__) {
@@ -4021,38 +4010,86 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     });
   };
 
+  var SkipUntilObservable = (function(__super__) {
+    inherits(SkipUntilObservable, __super__);
+
+    function SkipUntilObservable(source, other) {
+      this._s = source;
+      this._o = isPromise(other) ? observableFromPromise(other) : other;
+      this._open = false;
+      __super__.call(this);
+    }
+
+    SkipUntilObservable.prototype.subscribeCore = function(o) {
+      var leftSubscription = new SingleAssignmentDisposable();
+      leftSubscription.setDisposable(this._s.subscribe(new SkipUntilSourceObserver(o, this)));
+
+      isPromise(this._o) && (this._o = observableFromPromise(this._o));
+
+      var rightSubscription = new SingleAssignmentDisposable();
+      rightSubscription.setDisposable(this._o.subscribe(new SkipUntilOtherObserver(o, this, rightSubscription)));
+
+      return new BinaryDisposable(leftSubscription, rightSubscription);
+    };
+
+    return SkipUntilObservable;
+  }(ObservableBase));
+
+  var SkipUntilSourceObserver = (function(__super__) {
+    inherits(SkipUntilSourceObserver, __super__);
+    function SkipUntilSourceObserver(o, p) {
+      this._o = o;
+      this._p = p;
+      __super__.call(this);
+    }
+
+    SkipUntilSourceObserver.prototype.next = function (x) {
+      this._p._open && this._o.onNext(x);
+    };
+
+    SkipUntilSourceObserver.prototype.error = function (err) {
+      this._o.onError(err);
+    };
+
+    SkipUntilSourceObserver.prototype.onCompleted = function () {
+      this._p._open && this._o.onCompleted();
+    };
+
+    return SkipUntilSourceObserver;
+  }(AbstractObserver));
+
+  var SkipUntilOtherObserver = (function(__super__) {
+    inherits(SkipUntilOtherObserver, __super__);
+    function SkipUntilOtherObserver(o, p, r) {
+      this._o = o;
+      this._p = p;
+      this._r = r;
+      __super__.call(this);
+    }
+
+    SkipUntilOtherObserver.prototype.next = function () {
+      this._p._open = true;
+      this._r.dispose();
+    };
+
+    SkipUntilOtherObserver.prototype.error = function (err) {
+      this._o.onError(err);
+    };
+
+    SkipUntilOtherObserver.prototype.onCompleted = function () {
+      this._r.dispose();
+    };
+
+    return SkipUntilOtherObserver;
+  }(AbstractObserver));
+
   /**
    * Returns the values from the source observable sequence only after the other observable sequence produces a value.
    * @param {Observable | Promise} other The observable sequence or Promise that triggers propagation of elements of the source sequence.
    * @returns {Observable} An observable sequence containing the elements of the source sequence starting from the point the other sequence triggered propagation.
    */
   observableProto.skipUntil = function (other) {
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var isOpen = false;
-      var leftSubscription = new SingleAssignmentDisposable();
-      leftSubscription.setDisposable(
-        source.subscribe(function (left) {
-          isOpen && o.onNext(left);
-        }, function (e) { o.onError(e); }, function () {
-          isOpen && o.onCompleted();
-        })
-      );
-
-      isPromise(other) && (other = observableFromPromise(other));
-
-      var rightSubscription = new SingleAssignmentDisposable();
-      rightSubscription.setDisposable(
-        other.subscribe(function () {
-          isOpen = true;
-          rightSubscription.dispose();
-        }, function (e) { o.onError(e); }, function () {
-          rightSubscription.dispose();
-        })
-      );
-
-      return new BinaryDisposable(leftSubscription, rightSubscription);
-    }, source);
+    return new SkipUntilObservable(this, other);
   };
 
   var SwitchObservable = (function(__super__) {
@@ -4138,25 +4175,32 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     TakeUntilObservable.prototype.subscribeCore = function(o) {
       return new BinaryDisposable(
         this.source.subscribe(o),
-        this.other.subscribe(new InnerObserver(o))
+        this.other.subscribe(new TakeUntilObserver(o))
       );
     };
 
-    inherits(InnerObserver, AbstractObserver);
-    function InnerObserver(o) {
-      this.o = o;
-      AbstractObserver.call(this);
-    }
-    InnerObserver.prototype.next = function () {
-      this.o.onCompleted();
-    };
-    InnerObserver.prototype.error = function (err) {
-        this.o.onError(err);
-    };
-    InnerObserver.prototype.onCompleted = noop;
-
     return TakeUntilObservable;
   }(ObservableBase));
+
+  var TakeUntilObserver = (function(__super__) {
+    inherits(TakeUntilObserver, __super__);
+    function TakeUntilObserver(o) {
+      this._o = o;
+      __super__.call(this);
+    }
+
+    TakeUntilObserver.prototype.next = function () {
+      this._o.onCompleted();
+    };
+
+    TakeUntilObserver.prototype.error = function (err) {
+      this._o.onError(err);
+    };
+
+    TakeUntilObserver.prototype.onCompleted = noop;
+
+    return TakeUntilObserver;
+  }(AbstractObserver));
 
   /**
    * Returns the values from the source observable sequence until the other observable sequence produces a value.
@@ -4543,43 +4587,29 @@ observableProto.zipIterable = function () {
       return this.source.subscribe(new InnerObserver(o, this));
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o, p) {
       this.o = o;
       this.t = !p._oN || isFunction(p._oN) ?
         observerCreate(p._oN || noop, p._oE || noop, p._oC || noop) :
         p._oN;
       this.isStopped = false;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function(x) {
-      if (this.isStopped) { return; }
+    InnerObserver.prototype.next = function(x) {
       var res = tryCatch(this.t.onNext).call(this.t, x);
       if (res === errorObj) { this.o.onError(res.e); }
       this.o.onNext(x);
     };
-    InnerObserver.prototype.onError = function(err) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        var res = tryCatch(this.t.onError).call(this.t, err);
-        if (res === errorObj) { return this.o.onError(res.e); }
-        this.o.onError(err);
-      }
+    InnerObserver.prototype.error = function(err) {
+      var res = tryCatch(this.t.onError).call(this.t, err);
+      if (res === errorObj) { return this.o.onError(res.e); }
+      this.o.onError(err);
     };
-    InnerObserver.prototype.onCompleted = function() {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        var res = tryCatch(this.t.onCompleted).call(this.t);
-        if (res === errorObj) { return this.o.onError(res.e); }
-        this.o.onCompleted();
-      }
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
+    InnerObserver.prototype.completed = function() {
+      var res = tryCatch(this.t.onCompleted).call(this.t);
+      if (res === errorObj) { return this.o.onError(res.e); }
+      this.o.onCompleted();
     };
 
     return TapObservable;
@@ -4837,6 +4867,31 @@ observableProto.zipIterable = function () {
     return new ScanObservable(this, accumulator, hasSeed, seed);
   };
 
+  var SkipLastObserver = (function (__super__) {
+    inherits(SkipLastObserver, __super__);
+    function SkipLastObserver(o, c) {
+      this._o = o;
+      this._c = c;
+      this._q = [];
+      __super__.call(this);
+    }
+
+    SkipLastObserver.prototype.next = function (x) {
+      this._q.push(x);
+      this._q.length > this._c && this._o.onNext(this._q.shift());
+    };
+
+    SkipLastObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    SkipLastObserver.prototype.completed = function () {
+      this._o.onCompleted();
+    };
+
+    return SkipLastObserver;
+  }(AbstractObserver));
+
   /**
    *  Bypasses a specified number of elements at the end of an observable sequence.
    * @description
@@ -4850,10 +4905,7 @@ observableProto.zipIterable = function () {
     var source = this;
     return new AnonymousObservable(function (o) {
       var q = [];
-      return source.subscribe(function (x) {
-        q.push(x);
-        q.length > count && o.onNext(q.shift());
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
+      return source.subscribe(new SkipLastObserver(o, count));
     }, source);
   };
 
@@ -4877,6 +4929,32 @@ observableProto.zipIterable = function () {
     return enumerableOf([observableFromArray(args, scheduler), this]).concat();
   };
 
+  var TakeLastObserver = (function (__super__) {
+    inherits(TakeLastObserver, __super__);
+    function TakeLastObserver(o, c) {
+      this._o = o;
+      this._c = c;
+      this._q = [];
+      __super__.call(this);
+    }
+
+    TakeLastObserver.prototype.next = function (x) {
+      this._q.push(x);
+      this._q.length > this._c && this._q.shift();
+    };
+
+    TakeLastObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    TakeLastObserver.prototype.completed = function () {
+      while (this._q.length > 0) { this._o.onNext(this._q.shift()); }
+      this._o.onCompleted();
+    };
+
+    return TakeLastObserver;
+  }(AbstractObserver));
+
   /**
    *  Returns a specified number of contiguous elements from the end of an observable sequence.
    * @description
@@ -4889,16 +4967,35 @@ observableProto.zipIterable = function () {
     if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
-      var q = [];
-      return source.subscribe(function (x) {
-        q.push(x);
-        q.length > count && q.shift();
-      }, function (e) { o.onError(e); }, function () {
-        while (q.length > 0) { o.onNext(q.shift()); }
-        o.onCompleted();
-      });
+      return source.subscribe(new TakeLastObserver(o, count));
     }, source);
   };
+
+  var TakeLastBufferObserver = (function (__super__) {
+    inherits(TakeLastBufferObserver, __super__);
+    function TakeLastBufferObserver(o, c) {
+      this._o = o;
+      this._c = c;
+      this._q = [];
+      __super__.call(this);
+    }
+
+    TakeLastBufferObserver.prototype.next = function (x) {
+      this._q.push(x);
+      this._q.length > this._c && this._q.shift();
+    };
+
+    TakeLastBufferObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    TakeLastBufferObserver.prototype.completed = function () {
+      this._o.onNext(this._q);
+      this._o.onCompleted();
+    };
+
+    return TakeLastBufferObserver;
+  }(AbstractObserver));
 
   /**
    *  Returns an array with the specified number of contiguous elements from the end of an observable sequence.
@@ -4910,16 +5007,10 @@ observableProto.zipIterable = function () {
    * @returns {Observable} An observable sequence containing a single array with the specified number of elements from the end of the source sequence.
    */
   observableProto.takeLastBuffer = function (count) {
+    if (count < 0) { throw new ArgumentOutOfRangeError(); }
     var source = this;
     return new AnonymousObservable(function (o) {
-      var q = [];
-      return source.subscribe(function (x) {
-        q.push(x);
-        q.length > count && q.shift();
-      }, function (e) { o.onError(e); }, function () {
-        o.onNext(q);
-        o.onCompleted();
-      });
+      return source.subscribe(new TakeLastBufferObserver(o, count));
     }, source);
   };
 
@@ -5033,30 +5124,47 @@ observableProto.flatMapConcat = observableProto.concatMap = function(selector, r
     }, this).concatAll();
   };
 
-    /**
-     *  Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
-     *
-     *  var res = obs = xs.defaultIfEmpty();
-     *  2 - obs = xs.defaultIfEmpty(false);
-     *
-     * @memberOf Observable#
-     * @param defaultValue The value to return if the sequence is empty. If not provided, this defaults to null.
-     * @returns {Observable} An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself.
-     */
+  var DefaultIfEmptyObserver = (function (__super__) {
+    inherits(DefaultIfEmptyObserver, __super__);
+    function DefaultIfEmptyObserver(o, d) {
+      this._o = o;
+      this._d = d;
+      this._f = false;
+      __super__.call(this);
+    }
+
+    DefaultIfEmptyObserver.prototype.next = function (x) {
+      this._f = true;
+      this._o.onNext(x);
+    };
+
+    DefaultIfEmptyObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    DefaultIfEmptyObserver.prototype.completed = function () {
+      !this._f && this._o.onNext(defaultValue);
+      this._o.onCompleted();
+    };
+
+    return DefaultIfEmptyObserver;
+  }(AbstractObserver));
+
+  /**
+   *  Returns the elements of the specified sequence or the specified value in a singleton sequence if the sequence is empty.
+   *
+   *  var res = obs = xs.defaultIfEmpty();
+   *  2 - obs = xs.defaultIfEmpty(false);
+   *
+   * @memberOf Observable#
+   * @param defaultValue The value to return if the sequence is empty. If not provided, this defaults to null.
+   * @returns {Observable} An observable sequence that contains the specified default value if the source is empty; otherwise, the elements of the source itself.
+   */
     observableProto.defaultIfEmpty = function (defaultValue) {
       var source = this;
       defaultValue === undefined && (defaultValue = null);
-      return new AnonymousObservable(function (observer) {
-        var found = false;
-        return source.subscribe(function (x) {
-          found = true;
-          observer.onNext(x);
-        },
-        function (e) { observer.onError(e); }, 
-        function () {
-          !found && observer.onNext(defaultValue);
-          observer.onCompleted();
-        });
+      return new AnonymousObservable(function (o) {
+        return source.subscribe(new DefaultIfEmptyObserver(o, defaultValue));
       }, source);
     };
 
@@ -5559,7 +5667,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     FilterObservable.prototype.subscribeCore = function (o) {
       return this.source.subscribe(new InnerObserver(o, this.predicate, this));
     };
-    
+
     function innerPredicate(predicate, self) {
       return function(x, i, o) { return self.predicate(x, i, o) && predicate.call(this, x, i, o); }
     }
@@ -5567,37 +5675,30 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     FilterObservable.prototype.internalFilter = function(predicate, thisArg) {
       return new FilterObservable(this.source, innerPredicate(predicate, this), thisArg);
     };
-    
+
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o, predicate, source) {
       this.o = o;
       this.predicate = predicate;
       this.source = source;
       this.i = 0;
-      this.isStopped = false;
+      AbstractObserver.call(this);
     }
-  
-    InnerObserver.prototype.onNext = function(x) {
-      if (this.isStopped) { return; }
+
+    InnerObserver.prototype.next = function(x) {
       var shouldYield = tryCatch(this.predicate)(x, this.i++, this.source);
       if (shouldYield === errorObj) {
         return this.o.onError(shouldYield.e);
       }
       shouldYield && this.o.onNext(x);
     };
-    InnerObserver.prototype.onError = function (e) {
-      if(!this.isStopped) { this.isStopped = true; this.o.onError(e); }
+
+    InnerObserver.prototype.error = function (e) {
+      this.o.onError(e);
     };
-    InnerObserver.prototype.onCompleted = function () {
-      if(!this.isStopped) { this.isStopped = true; this.o.onCompleted(); }
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
+
+    InnerObserver.prototype.completed = function () {
+      this.o.onCompleted();
     };
 
     return FilterObservable;
@@ -5898,6 +5999,36 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     observableProto.includes(searchElement, fromIndex);
   };
 
+  var CountObserver = (function (__super__) {
+    inherits(CountObserver, __super__);
+
+    function CountObserver(o, fn, s) {
+      this._o = o;
+      this._fn = fn;
+      this._s = s;
+      this._i = 0;
+      this._c = 0;
+      __super__.call(this);
+    }
+
+    CountObserver.prototype.next = function (x) {
+      if (this._fn) {
+        var result = tryCatch(this._fn)(x, this._i++, this._s);
+        if (result === errorObj) { return this._o.onError(result.e); }
+        Boolean(result) && (this._c++);
+      } else {
+        this._c++;
+      }
+    };
+    CountObserver.prototype.error = function (e) { this._o.onError(e); };
+    CountObserver.prototype.completed = function () {
+      this._o.onNext(this._c);
+      this._o.onCompleted();
+    };
+
+    return CountObserver;
+  }(AbstractObserver));
+
   /**
    * Returns an observable sequence containing a value that represents how many elements in the specified observable sequence satisfy a condition if provided, else the count of items.
    * @example
@@ -5908,9 +6039,10 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    * @returns {Observable} An observable sequence containing a single element with a number that represents how many elements in the input sequence satisfy the condition in the predicate function if provided, else the count of items in the sequence.
    */
   observableProto.count = function (predicate, thisArg) {
-    return predicate ?
-      this.filter(predicate, thisArg).count() :
-      this.reduce(function (count) { return count + 1; }, 0);
+    var source = this, fn = bindCallback(predicate, thisArg, 3);
+    return new AnonymousObservable(function (o) {
+      return source.subscribe(new CountObserver(o, fn, source));
+    }, source);
   };
 
   /**

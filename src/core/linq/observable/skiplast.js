@@ -1,3 +1,28 @@
+  var SkipLastObserver = (function (__super__) {
+    inherits(SkipLastObserver, __super__);
+    function SkipLastObserver(o, c) {
+      this._o = o;
+      this._c = c;
+      this._q = [];
+      __super__.call(this);
+    }
+
+    SkipLastObserver.prototype.next = function (x) {
+      this._q.push(x);
+      this._q.length > this._c && this._o.onNext(this._q.shift());
+    };
+
+    SkipLastObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    SkipLastObserver.prototype.completed = function () {
+      this._o.onCompleted();
+    };
+
+    return SkipLastObserver;
+  }(AbstractObserver));
+
   /**
    *  Bypasses a specified number of elements at the end of an observable sequence.
    * @description
@@ -11,9 +36,6 @@
     var source = this;
     return new AnonymousObservable(function (o) {
       var q = [];
-      return source.subscribe(function (x) {
-        q.push(x);
-        q.length > count && o.onNext(q.shift());
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
+      return source.subscribe(new SkipLastObserver(o, count));
     }, source);
   };
