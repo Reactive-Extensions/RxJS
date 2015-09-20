@@ -1,3 +1,18 @@
+  var EveryObservable = (function (__super__) {
+    inherits(EveryObservable, __super__);
+    function EveryObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    EveryObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new EveryObserver(o, this._fn, this.source));
+    };
+
+    return EveryObservable;
+  }(ObservableBase));
+
   var EveryObserver = (function (__super__) {
     inherits(EveryObserver, __super__);
 
@@ -33,8 +48,6 @@
    * @returns {Observable} An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
    */
   observableProto.every = function (predicate, thisArg) {
-    var source = this, fn = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new EveryObserver(o, fn, source));
-    }, this);
+    var fn = bindCallback(predicate, thisArg, 3);
+    return new EveryObservable(this, fn);
   };

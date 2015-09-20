@@ -5914,6 +5914,21 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     return new IsEmptyObservable(this);
   };
 
+  var EveryObservable = (function (__super__) {
+    inherits(EveryObservable, __super__);
+    function EveryObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    EveryObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new EveryObserver(o, this._fn, this.source));
+    };
+
+    return EveryObservable;
+  }(ObservableBase));
+
   var EveryObserver = (function (__super__) {
     inherits(EveryObserver, __super__);
 
@@ -5949,10 +5964,8 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    * @returns {Observable} An observable sequence containing a single element determining whether all elements in the source sequence pass the test in the specified predicate.
    */
   observableProto.every = function (predicate, thisArg) {
-    var source = this, fn = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      return source.subscribe(new EveryObserver(o, fn, source));
-    }, this);
+    var fn = bindCallback(predicate, thisArg, 3);
+    return new EveryObservable(this, fn);
   };
 
   /**
@@ -6290,6 +6303,51 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     }, first);
   };
 
+  var ElementAtObservable = (function (__super__) {
+    inherits(ElementAtObservable, __super__);
+    function ElementAtObservable(source, i, d) {
+      this.source = source;
+      this._i = i;
+      this._d = d;
+      __super__.call(this);
+    }
+
+    ElementAtObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new ElementAtObserver(o, this._i, this._d));
+    };
+
+    return ElementAtObservable;
+  }(ObservableBase));
+
+  var ElementAtObserver = (function (__super__) {
+    inherits(ElementAtObserver, __super__);
+
+    function ElementAtObserver(o, i, d) {
+      this._o = o;
+      this._i = i;
+      this._d = d;
+      __super__.call(this);
+    }
+
+    ElementAtObserver.prototype.next = function (x) {
+      if (this._i-- === 0) {
+        this._o.onNext(x);
+        this._o.onCompleted();
+      }
+    };
+    ElementAtObserver.prototype.error = function (e) { this._o.onError(e); };
+    ElementAtObserver.prototype.completed = function () {
+      if (this._d === undefined) {
+        this._o.onError(new ArgumentOutOfRangeError());
+      } else {
+        this._o.onNext(this._d);
+        this._o.onCompleted();
+      }
+    };
+
+    return ElementAtObserver;
+  }(AbstractObserver));
+
   /**
    * Returns the element at a specified index in a sequence or default value if not found.
    * @param {Number} index The zero-based index of the element to retrieve.
@@ -6298,26 +6356,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    */
   observableProto.elementAt =  function (index, defaultValue) {
     if (index < 0) { throw new ArgumentOutOfRangeError(); }
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var i = index;
-      return source.subscribe(
-        function (x) {
-          if (i-- === 0) {
-            o.onNext(x);
-            o.onCompleted();
-          }
-        },
-        function (e) { o.onError(e); },
-        function () {
-          if (defaultValue === undefined) {
-            o.onError(new ArgumentOutOfRangeError());
-          } else {
-            o.onNext(defaultValue);
-            o.onCompleted();
-          }
-      });
-    }, source);
+    return new ElementAtObservable(this, index, defaultValue);
   };
 
   var SingleObserver = (function(__super__) {
