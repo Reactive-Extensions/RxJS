@@ -3,27 +3,6 @@
    *  The last value before the OnCompleted notification, or the error received through OnError, is sent to all subscribed observers.
    */
   var AsyncSubject = Rx.AsyncSubject = (function (__super__) {
-
-    function subscribe(observer) {
-      checkDisposed(this);
-
-      if (!this.isStopped) {
-        this.observers.push(observer);
-        return new InnerSubscription(this, observer);
-      }
-
-      if (this.hasError) {
-        observer.onError(this.error);
-      } else if (this.hasValue) {
-        observer.onNext(this.value);
-        observer.onCompleted();
-      } else {
-        observer.onCompleted();
-      }
-
-      return disposableEmpty;
-    }
-
     inherits(AsyncSubject, __super__);
 
     /**
@@ -31,8 +10,7 @@
      * @constructor
      */
     function AsyncSubject() {
-      __super__.call(this, subscribe);
-
+      __super__.call(this);
       this.isDisposed = false;
       this.isStopped = false;
       this.hasValue = false;
@@ -41,6 +19,25 @@
     }
 
     addProperties(AsyncSubject.prototype, Observer, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+
+        if (!this.isStopped) {
+          this.observers.push(o);
+          return new InnerSubscription(this, o);
+        }
+
+        if (this.hasError) {
+          o.onError(this.error);
+        } else if (this.hasValue) {
+          o.onNext(this.value);
+          o.onCompleted();
+        } else {
+          o.onCompleted();
+        }
+
+        return disposableEmpty;
+      },
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.

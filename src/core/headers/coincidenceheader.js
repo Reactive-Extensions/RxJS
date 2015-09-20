@@ -1,4 +1,5 @@
   var Observable = Rx.Observable,
+    ObservableBase = Rx.ObservableBase,
     CompositeDisposable = Rx.CompositeDisposable,
     BinaryDisposable = Rx.BinaryDisposable,
     RefCountDisposable = Rx.RefCountDisposable,

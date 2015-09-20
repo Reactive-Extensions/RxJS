@@ -1,10 +1,21 @@
   var PausableObservable = (function (__super__) {
-
     inherits(PausableObservable, __super__);
+    function PausableObservable(source, pauser) {
+      this.source = source;
+      this.controller = new Subject();
 
-    function subscribe(observer) {
+      if (pauser && pauser.subscribe) {
+        this.pauser = this.controller.merge(pauser);
+      } else {
+        this.pauser = this.controller;
+      }
+
+      __super__.call(this);
+    }
+
+    PausableObservable.prototype._subscribe = function (o) {
       var conn = this.source.publish(),
-        subscription = conn.subscribe(observer),
+        subscription = conn.subscribe(o),
         connection = disposableEmpty;
 
       var pausable = this.pauser.distinctUntilChanged().subscribe(function (b) {
@@ -16,21 +27,8 @@
         }
       });
 
-      return new CompositeDisposable(subscription, connection, pausable);
-    }
-
-    function PausableObservable(source, pauser) {
-      this.source = source;
-      this.controller = new Subject();
-
-      if (pauser && pauser.subscribe) {
-        this.pauser = this.controller.merge(pauser);
-      } else {
-        this.pauser = this.controller;
-      }
-
-      __super__.call(this, subscribe, source);
-    }
+      return new NAryDisposable([subscription, connection, pausable]);
+    };
 
     PausableObservable.prototype.pause = function () {
       this.controller.onNext(false);

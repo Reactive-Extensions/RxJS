@@ -13,27 +13,6 @@
       });
     }
 
-    function subscribe(observer) {
-      var so = new ScheduledObserver(this.scheduler, observer),
-        subscription = createRemovableDisposable(this, so);
-      checkDisposed(this);
-      this._trim(this.scheduler.now());
-      this.observers.push(so);
-
-      for (var i = 0, len = this.q.length; i < len; i++) {
-        so.onNext(this.q[i].value);
-      }
-
-      if (this.hasError) {
-        so.onError(this.error);
-      } else if (this.isStopped) {
-        so.onCompleted();
-      }
-
-      so.ensureActive();
-      return subscription;
-    }
-
     inherits(ReplaySubject, __super__);
 
     /**
@@ -52,10 +31,30 @@
       this.isDisposed = false;
       this.hasError = false;
       this.error = null;
-      __super__.call(this, subscribe);
+      __super__.call(this);
     }
 
     addProperties(ReplaySubject.prototype, Observer.prototype, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+        var so = new ScheduledObserver(this.scheduler, o), subscription = createRemovableDisposable(this, so);
+
+        this._trim(this.scheduler.now());
+        this.observers.push(so);
+
+        for (var i = 0, len = this.q.length; i < len; i++) {
+          so.onNext(this.q[i].value);
+        }
+
+        if (this.hasError) {
+          so.onError(this.error);
+        } else if (this.isStopped) {
+          so.onCompleted();
+        }
+
+        so.ensureActive();
+        return subscription;
+      },
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.

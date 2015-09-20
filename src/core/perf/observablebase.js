@@ -13,8 +13,12 @@
       ado.setDisposable(fixSubscriber(sub));
     }
 
-    function subscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
+    function ObservableBase() {
+      __super__.call(this);
+    }
+
+    ObservableBase.prototype._subscribe = function (o) {
+      var ado = new AutoDetachObserver(o), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
         currentThreadScheduler.schedule(state, setDisposable);
@@ -22,11 +26,7 @@
         setDisposable(null, state);
       }
       return ado;
-    }
-
-    function ObservableBase() {
-      __super__.call(this, subscribe);
-    }
+    };
 
     ObservableBase.prototype.subscribeCore = notImplemented;
 

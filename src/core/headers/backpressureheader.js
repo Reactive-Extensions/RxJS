@@ -5,6 +5,7 @@
     AbstractObserver = Rx.internals.AbstractObserver,
     CompositeDisposable = Rx.CompositeDisposable,
     BinaryDisposable = Rx.BinaryDisposable,
+    NAryDisposable = Rx.NAryDisposable,
     Notification = Rx.Notification,
     Subject = Rx.Subject,
     Observer = Rx.Observer,

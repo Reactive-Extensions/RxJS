@@ -1,6 +1,7 @@
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,
+    ObservableBase = Rx.ObservableBase,
     Observer = Rx.Observer,
     AbstractObserver = Rx.internals.AbstractObserver,
     disposableCreate = Rx.Disposable.create,

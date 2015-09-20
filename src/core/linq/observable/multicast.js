@@ -1,3 +1,20 @@
+  var MulticastObservable = (function (__super__) {
+    inherits(MulticastObservable, __super__);
+    function MulticastObservable(source, fn1, fn2) {
+      this.source = source;
+      this._fn1 = fn1;
+      this._fn2 = fn2;
+      __super__.call(this);
+    }
+
+    MulticastObservable.prototype.subscribeCore = function (o) {
+      var connectable = this.source.multicast(this._fn1());
+      return new BinaryDisposable(this._fn2(connectable).subscribe(o), connectable.connect());
+    };
+
+    return MulticastObservable;
+  }(ObservableBase));
+
   /**
    * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
    * subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
@@ -16,11 +33,7 @@
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
    */
   observableProto.multicast = function (subjectOrSubjectSelector, selector) {
-    var source = this;
-    return typeof subjectOrSubjectSelector === 'function' ?
-      new AnonymousObservable(function (observer) {
-        var connectable = source.multicast(subjectOrSubjectSelector());
-        return new BinaryDisposable(selector(connectable).subscribe(observer), connectable.connect());
-      }, source) :
-      new ConnectableObservable(source, subjectOrSubjectSelector);
+    return isFunction(subjectOrSubjectSelector) ?
+      new MulticastObservable(this, subjectOrSubjectSelector, selector) :
+      new ConnectableObservable(this, subjectOrSubjectSelector);
   };

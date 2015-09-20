@@ -1946,13 +1946,12 @@
       };
     }
 
-    function Observable(subscribe) {
+    function Observable() {
       if (Rx.config.longStackSupport && hasStacks) {
+        var oldSubscribe = this._subscribe;
         var e = tryCatch(thrower)(new Error()).e;
         this.stack = e.stack.substring(e.stack.indexOf('\n') + 1);
-        this._subscribe = makeSubscribe(this, subscribe);
-      } else {
-        this._subscribe = subscribe;
+        this._subscribe = makeSubscribe(this, oldSubscribe);
       }
     }
 
@@ -1965,7 +1964,7 @@
     */
     Observable.isObservable = function (o) {
       return o && isFunction(o.subscribe);
-    }
+    };
 
     /**
      *  Subscribes an o to the observable sequence.
@@ -2028,8 +2027,12 @@
       ado.setDisposable(fixSubscriber(sub));
     }
 
-    function subscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
+    function ObservableBase() {
+      __super__.call(this);
+    }
+
+    ObservableBase.prototype._subscribe = function (o) {
+      var ado = new AutoDetachObserver(o), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
         currentThreadScheduler.schedule(state, setDisposable);
@@ -2037,11 +2040,7 @@
         setDisposable(null, state);
       }
       return ado;
-    }
-
-    function ObservableBase() {
-      __super__.call(this, subscribe);
-    }
+    };
 
     ObservableBase.prototype.subscribeCore = notImplemented;
 
@@ -4355,7 +4354,7 @@ observableProto.zipIterable = function () {
 
   var DematerializeObservable = (function (__super__) {
     inherits(DematerializeObservable, __super__);
-    function DematerializeObservable(source, fn) {
+    function DematerializeObservable(source) {
       this.source = source;
       __super__.call(this);
     }
@@ -7087,12 +7086,23 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
   };
 
   var PausableObservable = (function (__super__) {
-
     inherits(PausableObservable, __super__);
+    function PausableObservable(source, pauser) {
+      this.source = source;
+      this.controller = new Subject();
 
-    function subscribe(observer) {
+      if (pauser && pauser.subscribe) {
+        this.pauser = this.controller.merge(pauser);
+      } else {
+        this.pauser = this.controller;
+      }
+
+      __super__.call(this);
+    }
+
+    PausableObservable.prototype._subscribe = function (o) {
       var conn = this.source.publish(),
-        subscription = conn.subscribe(observer),
+        subscription = conn.subscribe(o),
         connection = disposableEmpty;
 
       var pausable = this.pauser.distinctUntilChanged().subscribe(function (b) {
@@ -7104,21 +7114,8 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
         }
       });
 
-      return new CompositeDisposable(subscription, connection, pausable);
-    }
-
-    function PausableObservable(source, pauser) {
-      this.source = source;
-      this.controller = new Subject();
-
-      if (pauser && pauser.subscribe) {
-        this.pauser = this.controller.merge(pauser);
-      } else {
-        this.pauser = this.controller;
-      }
-
-      __super__.call(this, subscribe, source);
-    }
+      return new NAryDisposable([subscription, connection, pausable]);
+    };
 
     PausableObservable.prototype.pause = function () {
       this.controller.onNext(false);
@@ -7194,10 +7191,21 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
   }
 
   var PausableBufferedObservable = (function (__super__) {
-
     inherits(PausableBufferedObservable, __super__);
+    function PausableBufferedObservable(source, pauser) {
+      this.source = source;
+      this.controller = new Subject();
 
-    function subscribe(o) {
+      if (pauser && pauser.subscribe) {
+        this.pauser = this.controller.merge(pauser);
+      } else {
+        this.pauser = this.controller;
+      }
+
+      __super__.call(this);
+    }
+
+    PausableBufferedObservable.prototype._subscribe = function (o) {
       var q = [], previousShouldFire;
 
       function drainQueue() { while (q.length > 0) { o.onNext(q.shift()); } }
@@ -7211,7 +7219,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
           })
           .subscribe(
             function (results) {
-              if (previousShouldFire !== undefined && results.shouldFire != previousShouldFire) {
+              if (previousShouldFire !== undefined && results.shouldFire !== previousShouldFire) {
                 previousShouldFire = results.shouldFire;
                 // change in shouldFire
                 if (results.shouldFire) { drainQueue(); }
@@ -7234,21 +7242,8 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
               o.onCompleted();
             }
           );
-      return subscription;
-    }
-
-    function PausableBufferedObservable(source, pauser) {
-      this.source = source;
-      this.controller = new Subject();
-
-      if (pauser && pauser.subscribe) {
-        this.pauser = this.controller.merge(pauser);
-      } else {
-        this.pauser = this.controller;
-      }
-
-      __super__.call(this, subscribe, source);
-    }
+      return subscription;      
+    };
 
     PausableBufferedObservable.prototype.pause = function () {
       this.controller.onNext(false);
@@ -7275,201 +7270,200 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     return new PausableBufferedObservable(this, subject);
   };
 
-var ControlledObservable = (function (__super__) {
+  var ControlledObservable = (function (__super__) {
+    inherits(ControlledObservable, __super__);
+    function ControlledObservable (source, enableQueue, scheduler) {
+      __super__.call(this);
+      this.subject = new ControlledSubject(enableQueue, scheduler);
+      this.source = source.multicast(this.subject).refCount();
+    }
 
-  inherits(ControlledObservable, __super__);
+    ControlledObservable.prototype._subscribe = function (o) {
+      return this.source.subscribe(o);
+    };
 
-  function subscribe (observer) {
-    return this.source.subscribe(observer);
-  }
+    ControlledObservable.prototype.request = function (numberOfItems) {
+      return this.subject.request(numberOfItems == null ? -1 : numberOfItems);
+    };
 
-  function ControlledObservable (source, enableQueue, scheduler) {
-    __super__.call(this, subscribe, source);
-    this.subject = new ControlledSubject(enableQueue, scheduler);
-    this.source = source.multicast(this.subject).refCount();
-  }
+    return ControlledObservable;
 
-  ControlledObservable.prototype.request = function (numberOfItems) {
-    return this.subject.request(numberOfItems == null ? -1 : numberOfItems);
-  };
+  }(Observable));
 
-  return ControlledObservable;
+  var ControlledSubject = (function (__super__) {
+    inherits(ControlledSubject, __super__);
+    function ControlledSubject(enableQueue, scheduler) {
+      enableQueue == null && (enableQueue = true);
 
-}(Observable));
+      __super__.call(this);
+      this.subject = new Subject();
+      this.enableQueue = enableQueue;
+      this.queue = enableQueue ? [] : null;
+      this.requestedCount = 0;
+      this.requestedDisposable = null;
+      this.error = null;
+      this.hasFailed = false;
+      this.hasCompleted = false;
+      this.scheduler = scheduler || currentThreadScheduler;
+    }
 
-var ControlledSubject = (function (__super__) {
-
-  function subscribe (observer) {
-    return this.subject.subscribe(observer);
-  }
-
-  inherits(ControlledSubject, __super__);
-
-  function ControlledSubject(enableQueue, scheduler) {
-    enableQueue == null && (enableQueue = true);
-
-    __super__.call(this, subscribe);
-    this.subject = new Subject();
-    this.enableQueue = enableQueue;
-    this.queue = enableQueue ? [] : null;
-    this.requestedCount = 0;
-    this.requestedDisposable = null;
-    this.error = null;
-    this.hasFailed = false;
-    this.hasCompleted = false;
-    this.scheduler = scheduler || currentThreadScheduler;
-  }
-
-  addProperties(ControlledSubject.prototype, Observer, {
-    onCompleted: function () {
-      this.hasCompleted = true;
-      if (!this.enableQueue || this.queue.length === 0) {
-        this.subject.onCompleted();
-        this.disposeCurrentRequest()
-      } else {
-        this.queue.push(Notification.createOnCompleted());
-      }
-    },
-    onError: function (error) {
-      this.hasFailed = true;
-      this.error = error;
-      if (!this.enableQueue || this.queue.length === 0) {
-        this.subject.onError(error);
-        this.disposeCurrentRequest()
-      } else {
-        this.queue.push(Notification.createOnError(error));
-      }
-    },
-    onNext: function (value) {
-      if (this.requestedCount <= 0) {
-        this.enableQueue && this.queue.push(Notification.createOnNext(value));
-      } else {
-        (this.requestedCount-- === 0) && this.disposeCurrentRequest();
-        this.subject.onNext(value);
-      }
-    },
-    _processRequest: function (numberOfItems) {
-      if (this.enableQueue) {
-        while (this.queue.length > 0 && (numberOfItems > 0 || this.queue[0].kind !== 'N')) {
-          var first = this.queue.shift();
-          first.accept(this.subject);
-          if (first.kind === 'N') {
-            numberOfItems--;
-          } else {
-            this.disposeCurrentRequest();
-            this.queue = [];
+    addProperties(ControlledSubject.prototype, Observer, {
+      _subscribe: function (o) {
+        return this.subject.subscribe(o);
+      },
+      onCompleted: function () {
+        this.hasCompleted = true;
+        if (!this.enableQueue || this.queue.length === 0) {
+          this.subject.onCompleted();
+          this.disposeCurrentRequest();
+        } else {
+          this.queue.push(Notification.createOnCompleted());
+        }
+      },
+      onError: function (error) {
+        this.hasFailed = true;
+        this.error = error;
+        if (!this.enableQueue || this.queue.length === 0) {
+          this.subject.onError(error);
+          this.disposeCurrentRequest();
+        } else {
+          this.queue.push(Notification.createOnError(error));
+        }
+      },
+      onNext: function (value) {
+        if (this.requestedCount <= 0) {
+          this.enableQueue && this.queue.push(Notification.createOnNext(value));
+        } else {
+          (this.requestedCount-- === 0) && this.disposeCurrentRequest();
+          this.subject.onNext(value);
+        }
+      },
+      _processRequest: function (numberOfItems) {
+        if (this.enableQueue) {
+          while (this.queue.length > 0 && (numberOfItems > 0 || this.queue[0].kind !== 'N')) {
+            var first = this.queue.shift();
+            first.accept(this.subject);
+            if (first.kind === 'N') {
+              numberOfItems--;
+            } else {
+              this.disposeCurrentRequest();
+              this.queue = [];
+            }
           }
         }
-      }
 
-      return numberOfItems;
-    },
-    request: function (number) {
-      this.disposeCurrentRequest();
-      var self = this;
+        return numberOfItems;
+      },
+      request: function (number) {
+        this.disposeCurrentRequest();
+        var self = this;
 
-      this.requestedDisposable = this.scheduler.schedule(number,
-      function(s, i) {
-        var remaining = self._processRequest(i);
-        var stopped = self.hasCompleted || self.hasFailed
-        if (!stopped && remaining > 0) {
-          self.requestedCount = remaining;
+        this.requestedDisposable = this.scheduler.schedule(number,
+        function(s, i) {
+          var remaining = self._processRequest(i);
+          var stopped = self.hasCompleted || self.hasFailed;
+          if (!stopped && remaining > 0) {
+            self.requestedCount = remaining;
 
-          return disposableCreate(function () {
-            self.requestedCount = 0;
-          });
-            // Scheduled item is still in progress. Return a new
-            // disposable to allow the request to be interrupted
-            // via dispose.
+            return disposableCreate(function () {
+              self.requestedCount = 0;
+            });
+              // Scheduled item is still in progress. Return a new
+              // disposable to allow the request to be interrupted
+              // via dispose.
+          }
+        });
+
+        return this.requestedDisposable;
+      },
+      disposeCurrentRequest: function () {
+        if (this.requestedDisposable) {
+          this.requestedDisposable.dispose();
+          this.requestedDisposable = null;
         }
-      });
-
-      return this.requestedDisposable;
-    },
-    disposeCurrentRequest: function () {
-      if (this.requestedDisposable) {
-        this.requestedDisposable.dispose();
-        this.requestedDisposable = null;
       }
-    }
-  });
+    });
 
-  return ControlledSubject;
-}(Observable));
+    return ControlledSubject;
+  }(Observable));
 
-/**
- * Attaches a controller to the observable sequence with the ability to queue.
- * @example
- * var source = Rx.Observable.interval(100).controlled();
- * source.request(3); // Reads 3 values
- * @param {bool} enableQueue truthy value to determine if values should be queued pending the next request
- * @param {Scheduler} scheduler determines how the requests will be scheduled
- * @returns {Observable} The observable sequence which only propagates values on request.
- */
-observableProto.controlled = function (enableQueue, scheduler) {
+  /**
+   * Attaches a controller to the observable sequence with the ability to queue.
+   * @example
+   * var source = Rx.Observable.interval(100).controlled();
+   * source.request(3); // Reads 3 values
+   * @param {bool} enableQueue truthy value to determine if values should be queued pending the next request
+   * @param {Scheduler} scheduler determines how the requests will be scheduled
+   * @returns {Observable} The observable sequence which only propagates values on request.
+   */
+  observableProto.controlled = function (enableQueue, scheduler) {
 
-  if (enableQueue && isScheduler(enableQueue)) {
+    if (enableQueue && isScheduler(enableQueue)) {
       scheduler = enableQueue;
       enableQueue = true;
-  }
-
-  if (enableQueue == null) {  enableQueue = true; }
-  return new ControlledObservable(this, enableQueue, scheduler);
-};
-
-  var StopAndWaitObservable = (function (__super__) {
-
-    function subscribe (observer) {
-      this.subscription = this.source.subscribe(new StopAndWaitObserver(observer, this, this.subscription));
-
-      defaultScheduler.schedule(this, function (_, self) { self.source.request(1); });
-
-      return this.subscription;
     }
 
-    inherits(StopAndWaitObservable, __super__);
+    if (enableQueue == null) {  enableQueue = true; }
+    return new ControlledObservable(this, enableQueue, scheduler);
+  };
 
+  var StopAndWaitObservable = (function (__super__) {
+    inherits(StopAndWaitObservable, __super__);
     function StopAndWaitObservable (source) {
-      __super__.call(this, subscribe, source);
+      __super__.call(this);
       this.source = source;
     }
 
+    function scheduleMethod(s, self) {
+      self.source.request(1);
+    }
+
+    StopAndWaitObservable.prototype._subscribe = function (o) {
+      this.subscription = this.source.subscribe(new StopAndWaitObserver(o, this, this.subscription));
+      return new BinaryDisposable(
+        this.subscription,
+        defaultScheduler.schedule(this, scheduleMethod)
+      );
+    };
+
     var StopAndWaitObserver = (function (__sub__) {
-
       inherits(StopAndWaitObserver, __sub__);
-
       function StopAndWaitObserver (observer, observable, cancel) {
         __sub__.call(this);
         this.observer = observer;
         this.observable = observable;
         this.cancel = cancel;
+        this.scheduleDisposable = null;
       }
 
-      var stopAndWaitObserverProto = StopAndWaitObserver.prototype;
-
-      stopAndWaitObserverProto.completed = function () {
+      StopAndWaitObserver.prototype.completed = function () {
         this.observer.onCompleted();
         this.dispose();
       };
 
-      stopAndWaitObserverProto.error = function (error) {
+      StopAndWaitObserver.prototype.error = function (error) {
         this.observer.onError(error);
         this.dispose();
-      }
-
-      stopAndWaitObserverProto.next = function (value) {
-        this.observer.onNext(value);
-
-        defaultScheduler.schedule(this, function (_, self) {
-          self.observable.source.request(1);
-        });
       };
 
-      stopAndWaitObserverProto.dispose = function () {
+      function innerScheduleMethod(s, self) {
+        self.observable.source.request(1);
+      }
+
+      StopAndWaitObserver.prototype.next = function (value) {
+        this.observer.onNext(value);
+        this.scheduleDisposable = defaultScheduler.schedule(this, innerScheduleMethod);
+      };
+
+      StopAndWaitObservable.dispose = function () {
         this.observer = null;
         if (this.cancel) {
           this.cancel.dispose();
           this.cancel = null;
+        }
+        if (this.scheduleDisposable) {
+          this.scheduleDisposable.dispose();
+          this.scheduleDisposable = null;
         }
         __sub__.prototype.dispose.call(this);
       };
@@ -7490,64 +7484,65 @@ observableProto.controlled = function (enableQueue, scheduler) {
   };
 
   var WindowedObservable = (function (__super__) {
-
-    function subscribe (observer) {
-      this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
-
-      defaultScheduler.schedule(this, function (self) {
-        self.source.request(self.windowSize);
-      });
-
-      return this.subscription;
-    }
-
     inherits(WindowedObservable, __super__);
-
     function WindowedObservable(source, windowSize) {
-      __super__.call(this, subscribe, source);
+      __super__.call(this);
       this.source = source;
       this.windowSize = windowSize;
     }
 
+    function scheduleMethod(s, self) {
+      self.source.request(self.windowSize);
+    }
+
+    WindowedObservable.prototype._subscribe = function (o) {
+      this.subscription = this.source.subscribe(new WindowedObserver(o, this, this.subscription));
+      return new BinaryDisposable(
+        this.subscription,
+        defaultScheduler.schedule(this, scheduleMethod)
+      );
+    };
+
     var WindowedObserver = (function (__sub__) {
-
       inherits(WindowedObserver, __sub__);
-
       function WindowedObserver(observer, observable, cancel) {
         this.observer = observer;
         this.observable = observable;
         this.cancel = cancel;
         this.received = 0;
+        this.scheduleDisposable = null;
+        __sub__.call(this);
       }
 
-      var windowedObserverPrototype = WindowedObserver.prototype;
-
-      windowedObserverPrototype.completed = function () {
+      WindowedObserver.prototype.completed = function () {
         this.observer.onCompleted();
         this.dispose();
       };
 
-      windowedObserverPrototype.error = function (error) {
+      WindowedObserver.prototype.error = function (error) {
         this.observer.onError(error);
         this.dispose();
       };
 
-      windowedObserverPrototype.next = function (value) {
-        this.observer.onNext(value);
+      function innerScheduleMethod(s, self) {
+        self.observable.source.request(self.observable.windowSize);
+      }
 
+      WindowedObserver.prototype.next = function (value) {
+        this.observer.onNext(value);
         this.received = ++this.received % this.observable.windowSize;
-        if (this.received === 0) {
-          defaultScheduler.schedule(this, function (_, self) {
-            self.observable.source.request(self.observable.windowSize);
-          });
-        }
+        this.received === 0 && (this.scheduleDisposable = defaultScheduler.schedule(this, innerScheduleMethod));
       };
 
-      windowedObserverPrototype.dispose = function () {
+      WindowedObserver.prototype.dispose = function () {
         this.observer = null;
         if (this.cancel) {
           this.cancel.dispose();
           this.cancel = null;
+        }
+        if (this.scheduleDisposable) {
+          this.scheduleDisposable.dispose();
+          this.scheduleDisposable = null;
         }
         __sub__.prototype.dispose.call(this);
       };
@@ -7599,6 +7594,23 @@ observableProto.controlled = function (enableQueue, scheduler) {
     return dest;
   };
 
+  var MulticastObservable = (function (__super__) {
+    inherits(MulticastObservable, __super__);
+    function MulticastObservable(source, fn1, fn2) {
+      this.source = source;
+      this._fn1 = fn1;
+      this._fn2 = fn2;
+      __super__.call(this);
+    }
+
+    MulticastObservable.prototype.subscribeCore = function (o) {
+      var connectable = this.source.multicast(this._fn1());
+      return new BinaryDisposable(this._fn2(connectable).subscribe(o), connectable.connect());
+    };
+
+    return MulticastObservable;
+  }(ObservableBase));
+
   /**
    * Multicasts the source sequence notifications through an instantiated subject into all uses of the sequence within a selector function. Each
    * subscription to the resulting sequence causes a separate multicast invocation, exposing the sequence resulting from the selector function's
@@ -7617,13 +7629,9 @@ observableProto.controlled = function (enableQueue, scheduler) {
    * @returns {Observable} An observable sequence that contains the elements of a sequence produced by multicasting the source sequence within a selector function.
    */
   observableProto.multicast = function (subjectOrSubjectSelector, selector) {
-    var source = this;
-    return typeof subjectOrSubjectSelector === 'function' ?
-      new AnonymousObservable(function (observer) {
-        var connectable = source.multicast(subjectOrSubjectSelector());
-        return new BinaryDisposable(selector(connectable).subscribe(observer), connectable.connect());
-      }, source) :
-      new ConnectableObservable(source, subjectOrSubjectSelector);
+    return isFunction(subjectOrSubjectSelector) ?
+      new MulticastObservable(this, subjectOrSubjectSelector, selector) :
+      new ConnectableObservable(this, subjectOrSubjectSelector);
   };
 
   /**
@@ -7740,16 +7748,16 @@ observableProto.controlled = function (enableQueue, scheduler) {
     return this.replay(null, bufferSize, windowSize, scheduler).refCount();
   };
 
-  var InnerSubscription = function (subject, observer) {
-    this.subject = subject;
-    this.observer = observer;
+  var InnerSubscription = function (s, o) {
+    this._s = s;
+    this._o = o;
   };
 
   InnerSubscription.prototype.dispose = function () {
-    if (!this.subject.isDisposed && this.observer !== null) {
-      var idx = this.subject.observers.indexOf(this.observer);
-      this.subject.observers.splice(idx, 1);
-      this.observer = null;
+    if (!this._s.isDisposed && this._o !== null) {
+      var idx = this._s.observers.indexOf(this._o);
+      this._s.observers.splice(idx, 1);
+      this._o = null;
     }
   };
 
@@ -7758,29 +7766,9 @@ observableProto.controlled = function (enableQueue, scheduler) {
    *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
    */
   var BehaviorSubject = Rx.BehaviorSubject = (function (__super__) {
-    function subscribe(observer) {
-      checkDisposed(this);
-      if (!this.isStopped) {
-        this.observers.push(observer);
-        observer.onNext(this.value);
-        return new InnerSubscription(this, observer);
-      }
-      if (this.hasError) {
-        observer.onError(this.error);
-      } else {
-        observer.onCompleted();
-      }
-      return disposableEmpty;
-    }
-
     inherits(BehaviorSubject, __super__);
-
-    /**
-     *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
-     *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
-     */
     function BehaviorSubject(value) {
-      __super__.call(this, subscribe);
+      __super__.call(this);
       this.value = value;
       this.observers = [];
       this.isDisposed = false;
@@ -7789,6 +7777,20 @@ observableProto.controlled = function (enableQueue, scheduler) {
     }
 
     addProperties(BehaviorSubject.prototype, Observer, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+        if (!this.isStopped) {
+          this.observers.push(o);
+          o.onNext(this.value);
+          return new InnerSubscription(this, o);
+        }
+        if (this.hasError) {
+          o.onError(this.error);
+        } else {
+          o.onCompleted();
+        }
+        return disposableEmpty;
+      },
       /**
        * Gets the current value or throws an exception.
        * Value is frozen after onCompleted is called.
@@ -7879,27 +7881,6 @@ observableProto.controlled = function (enableQueue, scheduler) {
       });
     }
 
-    function subscribe(observer) {
-      var so = new ScheduledObserver(this.scheduler, observer),
-        subscription = createRemovableDisposable(this, so);
-      checkDisposed(this);
-      this._trim(this.scheduler.now());
-      this.observers.push(so);
-
-      for (var i = 0, len = this.q.length; i < len; i++) {
-        so.onNext(this.q[i].value);
-      }
-
-      if (this.hasError) {
-        so.onError(this.error);
-      } else if (this.isStopped) {
-        so.onCompleted();
-      }
-
-      so.ensureActive();
-      return subscription;
-    }
-
     inherits(ReplaySubject, __super__);
 
     /**
@@ -7918,10 +7899,30 @@ observableProto.controlled = function (enableQueue, scheduler) {
       this.isDisposed = false;
       this.hasError = false;
       this.error = null;
-      __super__.call(this, subscribe);
+      __super__.call(this);
     }
 
     addProperties(ReplaySubject.prototype, Observer.prototype, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+        var so = new ScheduledObserver(this.scheduler, o), subscription = createRemovableDisposable(this, so);
+
+        this._trim(this.scheduler.now());
+        this.observers.push(so);
+
+        for (var i = 0, len = this.q.length; i < len; i++) {
+          so.onNext(this.q[i].value);
+        }
+
+        if (this.hasError) {
+          so.onError(this.error);
+        } else if (this.isStopped) {
+          so.onCompleted();
+        }
+
+        so.ensureActive();
+        return subscription;
+      },
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
@@ -8001,38 +8002,78 @@ observableProto.controlled = function (enableQueue, scheduler) {
     return ReplaySubject;
   }(Observable));
 
-  var ConnectableObservable = Rx.ConnectableObservable = (function (__super__) {
-    inherits(ConnectableObservable, __super__);
-
-    function ConnectableObservable(source, subject) {
-      var hasSubscription = false,
-        subscription,
-        sourceObservable = source.asObservable();
-
-      this.connect = function () {
-        if (!hasSubscription) {
-          hasSubscription = true;
-          subscription = new BinaryDisposable(sourceObservable.subscribe(subject), disposableCreate(function () {
-            hasSubscription = false;
-          }));
-        }
-        return subscription;
-      };
-
-      __super__.call(this, function (o) { return subject.subscribe(o); });
+  var RefCountObservable = (function (__super__) {
+    inherits(RefCountObservable, __super__);
+    function RefCountObservable(source) {
+      this.source = source;
+      this._count = 0;
+      this._connectableSubscription = null;
+      __super__.call(this);
     }
 
+    RefCountObservable.prototype.subscribeCore = function (o) {
+      var shouldConnect = ++this._count === 1, subscription = this.source.subscribe(o);
+      shouldConnect && (this._connectableSubscription = this.source.connect());
+      return new RefCountDisposable(this, subscription);
+    };
+
+    function RefCountDisposable(p, s) {
+      this._p = p;
+      this._s = s;
+      this.isDisposed = false;
+    }
+
+    RefCountDisposable.prototype.dispose = function () {
+      if (!this.isDisposed) {
+        this.isDisposed = true;
+        this._s.dispose();
+        --this._p._count === 0 && this._p._connectableSubscription.dispose();
+      }
+    };
+
+    return RefCountObservable;
+  }(ObservableBase));
+
+  var ConnectableObservable = Rx.ConnectableObservable = (function (__super__) {
+    inherits(ConnectableObservable, __super__);
+    function ConnectableObservable(source, subject) {
+      this.source = source;
+      this._hasSubscription  = false;
+      this._subscription = null;
+      this._sourceObservable = source.asObservable();
+      this._subject = subject;
+      __super__.call(this);
+    }
+
+    function ConnectDisposable(parent) {
+      this._p = parent;
+      this.isDisposed = false;
+    }
+
+    ConnectDisposable.prototype.dispose = function () {
+      if (!this.isDisposed) {
+        this.isDisposed = true;
+        this._p._hasSubscription = false;
+      }
+    };
+
+    ConnectableObservable.prototype.connect = function () {
+      if (!this._hasSubscription) {
+        this._hasSubscription = true;
+        this._subscription = new BinaryDisposable(
+          this._sourceObservable.subscribe(this._subject),
+          new ConnectDisposable(this)
+        );
+      }
+      return this._subscription;
+    };
+
+    ConnectableObservable.prototype._subscribe = function (o) {
+      return this._subject.subscribe(o);
+    };
+
     ConnectableObservable.prototype.refCount = function () {
-      var connectableSubscription, count = 0, source = this;
-      return new AnonymousObservable(function (observer) {
-          var shouldConnect = ++count === 1,
-            subscription = source.subscribe(observer);
-          shouldConnect && (connectableSubscription = source.connect());
-          return function () {
-            subscription.dispose();
-            --count === 0 && connectableSubscription.dispose();
-          };
-      });
+      return new RefCountObservable(this);
     };
 
     return ConnectableObservable;
@@ -8750,26 +8791,23 @@ observableProto.controlled = function (enableQueue, scheduler) {
   };
 
   var ChainObservable = (function (__super__) {
-
-    function subscribe (observer) {
-      var g = new CompositeDisposable();
-      g.add(currentThreadScheduler.schedule(this, function (_, self) {
-        observer.onNext(self.head);
-        g.add(self.tail.mergeAll().subscribe(observer));
-      }));
-
-      return g;
-    }
-
     inherits(ChainObservable, __super__);
-
     function ChainObservable(head) {
-      __super__.call(this, subscribe);
+      __super__.call(this);
       this.head = head;
       this.tail = new AsyncSubject();
     }
 
     addProperties(ChainObservable.prototype, Observer, {
+      _subscribe: function (o) {
+        var g = new CompositeDisposable();
+        g.add(currentThreadScheduler.schedule(this, function (_, self) {
+          o.onNext(self.head);
+          g.add(self.tail.mergeAll().subscribe(o));
+        }));
+
+        return g;
+      },
       onCompleted: function () {
         this.onNext(Observable.empty());
       },
@@ -10560,8 +10598,14 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
       ado.setDisposable(fixSubscriber(sub));
     }
 
-    function innerSubscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
+    function AnonymousObservable(subscribe, parent) {
+      this.source = parent;
+      this.__subscribe = subscribe;
+      __super__.call(this);
+    }
+
+    AnonymousObservable.prototype._subscribe = function (o) {
+      var ado = new AutoDetachObserver(o), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
         currentThreadScheduler.schedule(state, setDisposable);
@@ -10569,13 +10613,7 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
         setDisposable(null, state);
       }
       return ado;
-    }
-
-    function AnonymousObservable(subscribe, parent) {
-      this.source = parent;
-      this.__subscribe = subscribe;
-      __super__.call(this, innerSubscribe);
-    }
+    };
 
     return AnonymousObservable;
 
@@ -10623,22 +10661,34 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
     return AutoDetachObserver;
   }(AbstractObserver));
 
-  var GroupedObservable = (function (__super__) {
-    inherits(GroupedObservable, __super__);
-
-    function subscribe(observer) {
-      return this.underlyingObservable.subscribe(observer);
+  var UnderlyingObservable = (function (__super__) {
+    inherits(UnderlyingObservable, __super__);
+    function UnderlyingObservable(m, u) {
+      this._m = m;
+      this._u = u;
+      __super__.call(this);
     }
 
+    UnderlyingObservable.prototype.subscribeCore = function (o) {
+      return new BinaryDisposable(this._m.getDisposable(), this._u.subscribe(o));
+    };
+
+    return UnderlyingObservable;
+  }(ObservableBase));
+
+  var GroupedObservable = (function (__super__) {
+    inherits(GroupedObservable, __super__);
     function GroupedObservable(key, underlyingObservable, mergedDisposable) {
-      __super__.call(this, subscribe);
+      __super__.call(this);
       this.key = key;
       this.underlyingObservable = !mergedDisposable ?
         underlyingObservable :
-        new AnonymousObservable(function (observer) {
-          return new BinaryDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
-        });
+        new UnderlyingObservable(mergedDisposable, underlyingObservable);
     }
+
+    GroupedObservable.prototype._subscribe = function (o) {
+      return this.underlyingObservable.subscribe(o);
+    };
 
     return GroupedObservable;
   }(Observable));
@@ -10648,34 +10698,29 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
    *  Each notification is broadcasted to all subscribed observers.
    */
   var Subject = Rx.Subject = (function (__super__) {
-    function subscribe(observer) {
-      checkDisposed(this);
-      if (!this.isStopped) {
-        this.observers.push(observer);
-        return new InnerSubscription(this, observer);
-      }
-      if (this.hasError) {
-        observer.onError(this.error);
-        return disposableEmpty;
-      }
-      observer.onCompleted();
-      return disposableEmpty;
-    }
-
     inherits(Subject, __super__);
-
-    /**
-     * Creates a subject.
-     */
     function Subject() {
-      __super__.call(this, subscribe);
-      this.isDisposed = false,
-      this.isStopped = false,
+      __super__.call(this);
+      this.isDisposed = false;
+      this.isStopped = false;
       this.observers = [];
       this.hasError = false;
     }
 
     addProperties(Subject.prototype, Observer.prototype, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+        if (!this.isStopped) {
+          this.observers.push(o);
+          return new InnerSubscription(this, o);
+        }
+        if (this.hasError) {
+          o.onError(this.error);
+          return disposableEmpty;
+        }
+        o.onCompleted();
+        return disposableEmpty;
+      },
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
@@ -10751,27 +10796,6 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
    *  The last value before the OnCompleted notification, or the error received through OnError, is sent to all subscribed observers.
    */
   var AsyncSubject = Rx.AsyncSubject = (function (__super__) {
-
-    function subscribe(observer) {
-      checkDisposed(this);
-
-      if (!this.isStopped) {
-        this.observers.push(observer);
-        return new InnerSubscription(this, observer);
-      }
-
-      if (this.hasError) {
-        observer.onError(this.error);
-      } else if (this.hasValue) {
-        observer.onNext(this.value);
-        observer.onCompleted();
-      } else {
-        observer.onCompleted();
-      }
-
-      return disposableEmpty;
-    }
-
     inherits(AsyncSubject, __super__);
 
     /**
@@ -10779,8 +10803,7 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
      * @constructor
      */
     function AsyncSubject() {
-      __super__.call(this, subscribe);
-
+      __super__.call(this);
       this.isDisposed = false;
       this.isStopped = false;
       this.hasValue = false;
@@ -10789,6 +10812,25 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
     }
 
     addProperties(AsyncSubject.prototype, Observer, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+
+        if (!this.isStopped) {
+          this.observers.push(o);
+          return new InnerSubscription(this, o);
+        }
+
+        if (this.hasError) {
+          o.onError(this.error);
+        } else if (this.hasValue) {
+          o.onNext(this.value);
+          o.onCompleted();
+        } else {
+          o.onCompleted();
+        }
+
+        return disposableEmpty;
+      },
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
@@ -10866,18 +10908,16 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
 
   var AnonymousSubject = Rx.AnonymousSubject = (function (__super__) {
     inherits(AnonymousSubject, __super__);
-
-    function subscribe(observer) {
-      return this.observable.subscribe(observer);
-    }
-
     function AnonymousSubject(observer, observable) {
       this.observer = observer;
       this.observable = observable;
-      __super__.call(this, subscribe);
+      __super__.call(this);
     }
 
     addProperties(AnonymousSubject.prototype, Observer.prototype, {
+      _subscribe: function (o) {
+        return this.observable.subscribe(o);
+      },
       onCompleted: function () {
         this.observer.onCompleted();
       },
@@ -10897,7 +10937,6 @@ Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, res
   */
   Rx.Pauser = (function (__super__) {
     inherits(Pauser, __super__);
-
     function Pauser() {
       __super__.call(this);
     }

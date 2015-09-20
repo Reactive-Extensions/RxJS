@@ -1,62 +1,63 @@
   var WindowedObservable = (function (__super__) {
-
-    function subscribe (observer) {
-      this.subscription = this.source.subscribe(new WindowedObserver(observer, this, this.subscription));
-
-      defaultScheduler.schedule(this, function (self) {
-        self.source.request(self.windowSize);
-      });
-
-      return this.subscription;
-    }
-
     inherits(WindowedObservable, __super__);
-
     function WindowedObservable(source, windowSize) {
-      __super__.call(this, subscribe, source);
+      __super__.call(this);
       this.source = source;
       this.windowSize = windowSize;
     }
 
+    function scheduleMethod(s, self) {
+      self.source.request(self.windowSize);
+    }
+
+    WindowedObservable.prototype._subscribe = function (o) {
+      this.subscription = this.source.subscribe(new WindowedObserver(o, this, this.subscription));
+      return new BinaryDisposable(
+        this.subscription,
+        defaultScheduler.schedule(this, scheduleMethod)
+      );
+    };
+
     var WindowedObserver = (function (__sub__) {
-
       inherits(WindowedObserver, __sub__);
-
       function WindowedObserver(observer, observable, cancel) {
         this.observer = observer;
         this.observable = observable;
         this.cancel = cancel;
         this.received = 0;
+        this.scheduleDisposable = null;
+        __sub__.call(this);
       }
 
-      var windowedObserverPrototype = WindowedObserver.prototype;
-
-      windowedObserverPrototype.completed = function () {
+      WindowedObserver.prototype.completed = function () {
         this.observer.onCompleted();
         this.dispose();
       };
 
-      windowedObserverPrototype.error = function (error) {
+      WindowedObserver.prototype.error = function (error) {
         this.observer.onError(error);
         this.dispose();
       };
 
-      windowedObserverPrototype.next = function (value) {
-        this.observer.onNext(value);
+      function innerScheduleMethod(s, self) {
+        self.observable.source.request(self.observable.windowSize);
+      }
 
+      WindowedObserver.prototype.next = function (value) {
+        this.observer.onNext(value);
         this.received = ++this.received % this.observable.windowSize;
-        if (this.received === 0) {
-          defaultScheduler.schedule(this, function (_, self) {
-            self.observable.source.request(self.observable.windowSize);
-          });
-        }
+        this.received === 0 && (this.scheduleDisposable = defaultScheduler.schedule(this, innerScheduleMethod));
       };
 
-      windowedObserverPrototype.dispose = function () {
+      WindowedObserver.prototype.dispose = function () {
         this.observer = null;
         if (this.cancel) {
           this.cancel.dispose();
           this.cancel = null;
+        }
+        if (this.scheduleDisposable) {
+          this.scheduleDisposable.dispose();
+          this.scheduleDisposable = null;
         }
         __sub__.prototype.dispose.call(this);
       };

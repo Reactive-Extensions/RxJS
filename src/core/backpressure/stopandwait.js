@@ -1,56 +1,60 @@
   var StopAndWaitObservable = (function (__super__) {
-
-    function subscribe (observer) {
-      this.subscription = this.source.subscribe(new StopAndWaitObserver(observer, this, this.subscription));
-
-      defaultScheduler.schedule(this, function (_, self) { self.source.request(1); });
-
-      return this.subscription;
-    }
-
     inherits(StopAndWaitObservable, __super__);
-
     function StopAndWaitObservable (source) {
-      __super__.call(this, subscribe, source);
+      __super__.call(this);
       this.source = source;
     }
 
+    function scheduleMethod(s, self) {
+      self.source.request(1);
+    }
+
+    StopAndWaitObservable.prototype._subscribe = function (o) {
+      this.subscription = this.source.subscribe(new StopAndWaitObserver(o, this, this.subscription));
+      return new BinaryDisposable(
+        this.subscription,
+        defaultScheduler.schedule(this, scheduleMethod)
+      );
+    };
+
     var StopAndWaitObserver = (function (__sub__) {
-
       inherits(StopAndWaitObserver, __sub__);
-
       function StopAndWaitObserver (observer, observable, cancel) {
         __sub__.call(this);
         this.observer = observer;
         this.observable = observable;
         this.cancel = cancel;
+        this.scheduleDisposable = null;
       }
 
-      var stopAndWaitObserverProto = StopAndWaitObserver.prototype;
-
-      stopAndWaitObserverProto.completed = function () {
+      StopAndWaitObserver.prototype.completed = function () {
         this.observer.onCompleted();
         this.dispose();
       };
 
-      stopAndWaitObserverProto.error = function (error) {
+      StopAndWaitObserver.prototype.error = function (error) {
         this.observer.onError(error);
         this.dispose();
-      }
-
-      stopAndWaitObserverProto.next = function (value) {
-        this.observer.onNext(value);
-
-        defaultScheduler.schedule(this, function (_, self) {
-          self.observable.source.request(1);
-        });
       };
 
-      stopAndWaitObserverProto.dispose = function () {
+      function innerScheduleMethod(s, self) {
+        self.observable.source.request(1);
+      }
+
+      StopAndWaitObserver.prototype.next = function (value) {
+        this.observer.onNext(value);
+        this.scheduleDisposable = defaultScheduler.schedule(this, innerScheduleMethod);
+      };
+
+      StopAndWaitObservable.dispose = function () {
         this.observer = null;
         if (this.cancel) {
           this.cancel.dispose();
           this.cancel = null;
+        }
+        if (this.scheduleDisposable) {
+          this.scheduleDisposable.dispose();
+          this.scheduleDisposable = null;
         }
         __sub__.prototype.dispose.call(this);
       };

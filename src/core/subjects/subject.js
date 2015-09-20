@@ -3,34 +3,29 @@
    *  Each notification is broadcasted to all subscribed observers.
    */
   var Subject = Rx.Subject = (function (__super__) {
-    function subscribe(observer) {
-      checkDisposed(this);
-      if (!this.isStopped) {
-        this.observers.push(observer);
-        return new InnerSubscription(this, observer);
-      }
-      if (this.hasError) {
-        observer.onError(this.error);
-        return disposableEmpty;
-      }
-      observer.onCompleted();
-      return disposableEmpty;
-    }
-
     inherits(Subject, __super__);
-
-    /**
-     * Creates a subject.
-     */
     function Subject() {
-      __super__.call(this, subscribe);
-      this.isDisposed = false,
-      this.isStopped = false,
+      __super__.call(this);
+      this.isDisposed = false;
+      this.isStopped = false;
       this.observers = [];
       this.hasError = false;
     }
 
     addProperties(Subject.prototype, Observer.prototype, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+        if (!this.isStopped) {
+          this.observers.push(o);
+          return new InnerSubscription(this, o);
+        }
+        if (this.hasError) {
+          o.onError(this.error);
+          return disposableEmpty;
+        }
+        o.onCompleted();
+        return disposableEmpty;
+      },
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.

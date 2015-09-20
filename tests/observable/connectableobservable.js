@@ -13,66 +13,56 @@
       subscribe = Rx.ReactiveTest.subscribe;
 
   var ConnectableObservable = (function (__super__) {
-
-    function subscribe(observer) {
-      return this.o.subscribe(observer);
-    }
-
-    inherits(ConnectableObservable,  __super__);
-
+    inherits(ConnectableObservable, __super__);
     function ConnectableObservable(o, s) {
-      __super__.call(this, subscribe);
-      this.o = o.multicast(s);
+      __super__.call(this);
+      this._o = o.multicast(s);
     }
 
-    ConnectableObservable.prototype.connect = function () {
-      return this.o.connect();
-    };
-
-    ConnectableObservable.prototype.refCount = function () {
-      return this.o.refCount();
-    };
+    ConnectableObservable.prototype._subscribe = function (o) { return this._o.subscribe(o); };
+    ConnectableObservable.prototype.connect = function () { return this._o.connect(); };
+    ConnectableObservable.prototype.refCount = function () { return this._o.refCount(); };
 
     return ConnectableObservable;
   }(Observable));
 
   var MySubject = (function (__super__) {
     inherits(MySubject, __super__);
-
-    function subscribe(o) {
-      var self = this;
-      this.subscribeCount++;
-      this.o = o;
-      return Rx.Disposable.create(function () { self.disposed = true; });
-    }
-
     function MySubject() {
-      __super__.call(this, subscribe);
+      __super__.call(this);
       this.disposeOnMap = {};
       this.subscribeCount = 0;
       this.disposed = false;
     }
+
+    MySubject.prototype._subscribe = function (o) {
+      this.subscribeCount++;
+      this.observer = o;
+
+      var self = this;
+      return Rx.Disposable.create(function () { self.disposed = true; });
+    };
 
     MySubject.prototype.disposeOn = function (value, disposable) {
       this.disposeOnMap[value] = disposable;
     };
 
     MySubject.prototype.onNext = function (value) {
-      this.o.onNext(value);
+      this.observer.onNext(value);
       this.disposeOnMap[value] && this.disposeOnMap[value].dispose();
     };
 
-    MySubject.prototype.onError = function (e) {
-      this.o.onError(e);
+    MySubject.prototype.onError = function (exception) {
+        this.observer.onError(exception);
     };
 
     MySubject.prototype.onCompleted = function () {
-      this.o.onCompleted();
+        this.observer.onCompleted();
     };
 
     return MySubject;
   })(Observable);
-
+  
   test('ConnectableObservable creation', function () {
     var y = 0;
 

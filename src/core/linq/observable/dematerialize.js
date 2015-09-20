@@ -1,6 +1,6 @@
   var DematerializeObservable = (function (__super__) {
     inherits(DematerializeObservable, __super__);
-    function DematerializeObservable(source, fn) {
+    function DematerializeObservable(source) {
       this.source = source;
       __super__.call(this);
     }

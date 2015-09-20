@@ -1010,13 +1010,12 @@ var
       };
     }
 
-    function Observable(subscribe) {
+    function Observable() {
       if (Rx.config.longStackSupport && hasStacks) {
+        var oldSubscribe = this._subscribe;
         var e = tryCatch(thrower)(new Error()).e;
         this.stack = e.stack.substring(e.stack.indexOf('\n') + 1);
-        this._subscribe = makeSubscribe(this, subscribe);
-      } else {
-        this._subscribe = subscribe;
+        this._subscribe = makeSubscribe(this, oldSubscribe);
       }
     }
 
@@ -1029,7 +1028,7 @@ var
     */
     Observable.isObservable = function (o) {
       return o && isFunction(o.subscribe);
-    }
+    };
 
     /**
      *  Subscribes an o to the observable sequence.
@@ -1093,8 +1092,14 @@ var
       ado.setDisposable(fixSubscriber(sub));
     }
 
-    function innerSubscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
+    function AnonymousObservable(subscribe, parent) {
+      this.source = parent;
+      this.__subscribe = subscribe;
+      __super__.call(this);
+    }
+
+    AnonymousObservable.prototype._subscribe = function (o) {
+      var ado = new AutoDetachObserver(o), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
         currentThreadScheduler.schedule(state, setDisposable);
@@ -1102,13 +1107,7 @@ var
         setDisposable(null, state);
       }
       return ado;
-    }
-
-    function AnonymousObservable(subscribe, parent) {
-      this.source = parent;
-      this.__subscribe = subscribe;
-      __super__.call(this, innerSubscribe);
-    }
+    };
 
     return AnonymousObservable;
 
@@ -1129,8 +1128,12 @@ var
       ado.setDisposable(fixSubscriber(sub));
     }
 
-    function subscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
+    function ObservableBase() {
+      __super__.call(this);
+    }
+
+    ObservableBase.prototype._subscribe = function (o) {
+      var ado = new AutoDetachObserver(o), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
         currentThreadScheduler.schedule(state, setDisposable);
@@ -1138,11 +1141,7 @@ var
         setDisposable(null, state);
       }
       return ado;
-    }
-
-    function ObservableBase() {
-      __super__.call(this, subscribe);
-    }
+    };
 
     ObservableBase.prototype.subscribeCore = notImplemented;
 

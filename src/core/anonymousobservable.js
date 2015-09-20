@@ -14,8 +14,14 @@
       ado.setDisposable(fixSubscriber(sub));
     }
 
-    function innerSubscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
+    function AnonymousObservable(subscribe, parent) {
+      this.source = parent;
+      this.__subscribe = subscribe;
+      __super__.call(this);
+    }
+
+    AnonymousObservable.prototype._subscribe = function (o) {
+      var ado = new AutoDetachObserver(o), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
         currentThreadScheduler.schedule(state, setDisposable);
@@ -23,13 +29,7 @@
         setDisposable(null, state);
       }
       return ado;
-    }
-
-    function AnonymousObservable(subscribe, parent) {
-      this.source = parent;
-      this.__subscribe = subscribe;
-      __super__.call(this, innerSubscribe);
-    }
+    };
 
     return AnonymousObservable;
 

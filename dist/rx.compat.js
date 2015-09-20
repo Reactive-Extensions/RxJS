@@ -2087,13 +2087,12 @@
       };
     }
 
-    function Observable(subscribe) {
+    function Observable() {
       if (Rx.config.longStackSupport && hasStacks) {
+        var oldSubscribe = this._subscribe;
         var e = tryCatch(thrower)(new Error()).e;
         this.stack = e.stack.substring(e.stack.indexOf('\n') + 1);
-        this._subscribe = makeSubscribe(this, subscribe);
-      } else {
-        this._subscribe = subscribe;
+        this._subscribe = makeSubscribe(this, oldSubscribe);
       }
     }
 
@@ -2106,7 +2105,7 @@
     */
     Observable.isObservable = function (o) {
       return o && isFunction(o.subscribe);
-    }
+    };
 
     /**
      *  Subscribes an o to the observable sequence.
@@ -2169,8 +2168,12 @@
       ado.setDisposable(fixSubscriber(sub));
     }
 
-    function subscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
+    function ObservableBase() {
+      __super__.call(this);
+    }
+
+    ObservableBase.prototype._subscribe = function (o) {
+      var ado = new AutoDetachObserver(o), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
         currentThreadScheduler.schedule(state, setDisposable);
@@ -2178,11 +2181,7 @@
         setDisposable(null, state);
       }
       return ado;
-    }
-
-    function ObservableBase() {
-      __super__.call(this, subscribe);
-    }
+    };
 
     ObservableBase.prototype.subscribeCore = notImplemented;
 
@@ -4450,7 +4449,7 @@ observableProto.zipIterable = function () {
 
   var DematerializeObservable = (function (__super__) {
     inherits(DematerializeObservable, __super__);
-    function DematerializeObservable(source, fn) {
+    function DematerializeObservable(source) {
       this.source = source;
       __super__.call(this);
     }
@@ -5659,8 +5658,14 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
       ado.setDisposable(fixSubscriber(sub));
     }
 
-    function innerSubscribe(observer) {
-      var ado = new AutoDetachObserver(observer), state = [ado, this];
+    function AnonymousObservable(subscribe, parent) {
+      this.source = parent;
+      this.__subscribe = subscribe;
+      __super__.call(this);
+    }
+
+    AnonymousObservable.prototype._subscribe = function (o) {
+      var ado = new AutoDetachObserver(o), state = [ado, this];
 
       if (currentThreadScheduler.scheduleRequired()) {
         currentThreadScheduler.schedule(state, setDisposable);
@@ -5668,13 +5673,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
         setDisposable(null, state);
       }
       return ado;
-    }
-
-    function AnonymousObservable(subscribe, parent) {
-      this.source = parent;
-      this.__subscribe = subscribe;
-      __super__.call(this, innerSubscribe);
-    }
+    };
 
     return AnonymousObservable;
 
@@ -5722,16 +5721,16 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     return AutoDetachObserver;
   }(AbstractObserver));
 
-  var InnerSubscription = function (subject, observer) {
-    this.subject = subject;
-    this.observer = observer;
+  var InnerSubscription = function (s, o) {
+    this._s = s;
+    this._o = o;
   };
 
   InnerSubscription.prototype.dispose = function () {
-    if (!this.subject.isDisposed && this.observer !== null) {
-      var idx = this.subject.observers.indexOf(this.observer);
-      this.subject.observers.splice(idx, 1);
-      this.observer = null;
+    if (!this._s.isDisposed && this._o !== null) {
+      var idx = this._s.observers.indexOf(this._o);
+      this._s.observers.splice(idx, 1);
+      this._o = null;
     }
   };
 
@@ -5740,34 +5739,29 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    *  Each notification is broadcasted to all subscribed observers.
    */
   var Subject = Rx.Subject = (function (__super__) {
-    function subscribe(observer) {
-      checkDisposed(this);
-      if (!this.isStopped) {
-        this.observers.push(observer);
-        return new InnerSubscription(this, observer);
-      }
-      if (this.hasError) {
-        observer.onError(this.error);
-        return disposableEmpty;
-      }
-      observer.onCompleted();
-      return disposableEmpty;
-    }
-
     inherits(Subject, __super__);
-
-    /**
-     * Creates a subject.
-     */
     function Subject() {
-      __super__.call(this, subscribe);
-      this.isDisposed = false,
-      this.isStopped = false,
+      __super__.call(this);
+      this.isDisposed = false;
+      this.isStopped = false;
       this.observers = [];
       this.hasError = false;
     }
 
     addProperties(Subject.prototype, Observer.prototype, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+        if (!this.isStopped) {
+          this.observers.push(o);
+          return new InnerSubscription(this, o);
+        }
+        if (this.hasError) {
+          o.onError(this.error);
+          return disposableEmpty;
+        }
+        o.onCompleted();
+        return disposableEmpty;
+      },
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
@@ -5843,27 +5837,6 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    *  The last value before the OnCompleted notification, or the error received through OnError, is sent to all subscribed observers.
    */
   var AsyncSubject = Rx.AsyncSubject = (function (__super__) {
-
-    function subscribe(observer) {
-      checkDisposed(this);
-
-      if (!this.isStopped) {
-        this.observers.push(observer);
-        return new InnerSubscription(this, observer);
-      }
-
-      if (this.hasError) {
-        observer.onError(this.error);
-      } else if (this.hasValue) {
-        observer.onNext(this.value);
-        observer.onCompleted();
-      } else {
-        observer.onCompleted();
-      }
-
-      return disposableEmpty;
-    }
-
     inherits(AsyncSubject, __super__);
 
     /**
@@ -5871,8 +5844,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
      * @constructor
      */
     function AsyncSubject() {
-      __super__.call(this, subscribe);
-
+      __super__.call(this);
       this.isDisposed = false;
       this.isStopped = false;
       this.hasValue = false;
@@ -5881,6 +5853,25 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     }
 
     addProperties(AsyncSubject.prototype, Observer, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+
+        if (!this.isStopped) {
+          this.observers.push(o);
+          return new InnerSubscription(this, o);
+        }
+
+        if (this.hasError) {
+          o.onError(this.error);
+        } else if (this.hasValue) {
+          o.onNext(this.value);
+          o.onCompleted();
+        } else {
+          o.onCompleted();
+        }
+
+        return disposableEmpty;
+      },
       /**
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
@@ -5958,18 +5949,16 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
 
   var AnonymousSubject = Rx.AnonymousSubject = (function (__super__) {
     inherits(AnonymousSubject, __super__);
-
-    function subscribe(observer) {
-      return this.observable.subscribe(observer);
-    }
-
     function AnonymousSubject(observer, observable) {
       this.observer = observer;
       this.observable = observable;
-      __super__.call(this, subscribe);
+      __super__.call(this);
     }
 
     addProperties(AnonymousSubject.prototype, Observer.prototype, {
+      _subscribe: function (o) {
+        return this.observable.subscribe(o);
+      },
       onCompleted: function () {
         this.observer.onCompleted();
       },

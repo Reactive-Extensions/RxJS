@@ -1,6 +1,7 @@
   var Observable = Rx.Observable,
     observableProto = Observable.prototype,
     AnonymousObservable = Rx.AnonymousObservable,
+    ObservableBase = Rx.ObservableBase,
     Subject = Rx.Subject,
     AsyncSubject = Rx.AsyncSubject,
     Observer = Rx.Observer,

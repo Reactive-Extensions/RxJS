@@ -17,13 +17,12 @@
       };
     }
 
-    function Observable(subscribe) {
+    function Observable() {
       if (Rx.config.longStackSupport && hasStacks) {
+        var oldSubscribe = this._subscribe;
         var e = tryCatch(thrower)(new Error()).e;
         this.stack = e.stack.substring(e.stack.indexOf('\n') + 1);
-        this._subscribe = makeSubscribe(this, subscribe);
-      } else {
-        this._subscribe = subscribe;
+        this._subscribe = makeSubscribe(this, oldSubscribe);
       }
     }
 
@@ -36,7 +35,7 @@
     */
     Observable.isObservable = function (o) {
       return o && isFunction(o.subscribe);
-    }
+    };
 
     /**
      *  Subscribes an o to the observable sequence.

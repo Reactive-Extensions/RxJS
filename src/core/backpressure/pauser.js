@@ -3,7 +3,6 @@
   */
   Rx.Pauser = (function (__super__) {
     inherits(Pauser, __super__);
-
     function Pauser() {
       __super__.call(this);
     }

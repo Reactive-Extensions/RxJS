@@ -1,19 +1,31 @@
-  var GroupedObservable = (function (__super__) {
-    inherits(GroupedObservable, __super__);
-
-    function subscribe(observer) {
-      return this.underlyingObservable.subscribe(observer);
+  var UnderlyingObservable = (function (__super__) {
+    inherits(UnderlyingObservable, __super__);
+    function UnderlyingObservable(m, u) {
+      this._m = m;
+      this._u = u;
+      __super__.call(this);
     }
 
+    UnderlyingObservable.prototype.subscribeCore = function (o) {
+      return new BinaryDisposable(this._m.getDisposable(), this._u.subscribe(o));
+    };
+
+    return UnderlyingObservable;
+  }(ObservableBase));
+
+  var GroupedObservable = (function (__super__) {
+    inherits(GroupedObservable, __super__);
     function GroupedObservable(key, underlyingObservable, mergedDisposable) {
-      __super__.call(this, subscribe);
+      __super__.call(this);
       this.key = key;
       this.underlyingObservable = !mergedDisposable ?
         underlyingObservable :
-        new AnonymousObservable(function (observer) {
-          return new BinaryDisposable(mergedDisposable.getDisposable(), underlyingObservable.subscribe(observer));
-        });
+        new UnderlyingObservable(mergedDisposable, underlyingObservable);
     }
+
+    GroupedObservable.prototype._subscribe = function (o) {
+      return this.underlyingObservable.subscribe(o);
+    };
 
     return GroupedObservable;
   }(Observable));

@@ -3,29 +3,9 @@
    *  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
    */
   var BehaviorSubject = Rx.BehaviorSubject = (function (__super__) {
-    function subscribe(observer) {
-      checkDisposed(this);
-      if (!this.isStopped) {
-        this.observers.push(observer);
-        observer.onNext(this.value);
-        return new InnerSubscription(this, observer);
-      }
-      if (this.hasError) {
-        observer.onError(this.error);
-      } else {
-        observer.onCompleted();
-      }
-      return disposableEmpty;
-    }
-
     inherits(BehaviorSubject, __super__);
-
-    /**
-     *  Initializes a new instance of the BehaviorSubject class which creates a subject that caches its last value and starts with the specified value.
-     *  @param {Mixed} value Initial value sent to observers when no other value has been received by the subject yet.
-     */
     function BehaviorSubject(value) {
-      __super__.call(this, subscribe);
+      __super__.call(this);
       this.value = value;
       this.observers = [];
       this.isDisposed = false;
@@ -34,6 +14,20 @@
     }
 
     addProperties(BehaviorSubject.prototype, Observer, {
+      _subscribe: function (o) {
+        checkDisposed(this);
+        if (!this.isStopped) {
+          this.observers.push(o);
+          o.onNext(this.value);
+          return new InnerSubscription(this, o);
+        }
+        if (this.hasError) {
+          o.onError(this.error);
+        } else {
+          o.onCompleted();
+        }
+        return disposableEmpty;
+      },
       /**
        * Gets the current value or throws an exception.
        * Value is frozen after onCompleted is called.

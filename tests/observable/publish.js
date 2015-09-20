@@ -52,19 +52,21 @@
 
   var MySubject = (function (__super__) {
     inherits(MySubject, __super__);
-
     function MySubject() {
-      var self = this;
-      __super__.call(this, function (observer) {
-        this.subscribeCount++;
-        this.observer = observer;
-        return Rx.Disposable.create(function () { self.disposed = true; });
-      });
-
+      __super__.call(this);
       this.disposeOnMap = {};
       this.subscribeCount = 0;
       this.disposed = false;
     }
+
+    MySubject.prototype._subscribe = function (o) {
+      this.subscribeCount++;
+      this.observer = o;
+
+      var self = this;
+      return Rx.Disposable.create(function () { self.disposed = true; });
+    };
+
     MySubject.prototype.disposeOn = function (value, disposable) {
       this.disposeOnMap[value] = disposable;
     };
@@ -87,13 +89,12 @@
 
   var ConnectableObservable = (function (__super__) {
     inherits(ConnectableObservable, __super__);
-
     function ConnectableObservable(o, s) {
-      var self = this;
-      __super__.call(this, function (obs) { return self._o.subscribe(obs); });
+      __super__.call(this);
       this._o = o.multicast(s);
     }
 
+    ConnectableObservable.prototype._subscribe = function (o) { return this._o.subscribe(o); };
     ConnectableObservable.prototype.connect = function () { return this._o.connect(); };
     ConnectableObservable.prototype.refCount = function () { return this._o.refCount(); };
 

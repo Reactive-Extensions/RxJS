@@ -446,26 +446,23 @@
   };
 
   var ChainObservable = (function (__super__) {
-
-    function subscribe (observer) {
-      var g = new CompositeDisposable();
-      g.add(currentThreadScheduler.schedule(this, function (_, self) {
-        observer.onNext(self.head);
-        g.add(self.tail.mergeAll().subscribe(observer));
-      }));
-
-      return g;
-    }
-
     inherits(ChainObservable, __super__);
-
     function ChainObservable(head) {
-      __super__.call(this, subscribe);
+      __super__.call(this);
       this.head = head;
       this.tail = new AsyncSubject();
     }
 
     addProperties(ChainObservable.prototype, Observer, {
+      _subscribe: function (o) {
+        var g = new CompositeDisposable();
+        g.add(currentThreadScheduler.schedule(this, function (_, self) {
+          o.onNext(self.head);
+          g.add(self.tail.mergeAll().subscribe(o));
+        }));
+
+        return g;
+      },
       onCompleted: function () {
         this.onNext(Observable.empty());
       },

@@ -48,10 +48,21 @@
   }
 
   var PausableBufferedObservable = (function (__super__) {
-
     inherits(PausableBufferedObservable, __super__);
+    function PausableBufferedObservable(source, pauser) {
+      this.source = source;
+      this.controller = new Subject();
 
-    function subscribe(o) {
+      if (pauser && pauser.subscribe) {
+        this.pauser = this.controller.merge(pauser);
+      } else {
+        this.pauser = this.controller;
+      }
+
+      __super__.call(this);
+    }
+
+    PausableBufferedObservable.prototype._subscribe = function (o) {
       var q = [], previousShouldFire;
 
       function drainQueue() { while (q.length > 0) { o.onNext(q.shift()); } }
@@ -65,7 +76,7 @@
           })
           .subscribe(
             function (results) {
-              if (previousShouldFire !== undefined && results.shouldFire != previousShouldFire) {
+              if (previousShouldFire !== undefined && results.shouldFire !== previousShouldFire) {
                 previousShouldFire = results.shouldFire;
                 // change in shouldFire
                 if (results.shouldFire) { drainQueue(); }
@@ -88,21 +99,8 @@
               o.onCompleted();
             }
           );
-      return subscription;
-    }
-
-    function PausableBufferedObservable(source, pauser) {
-      this.source = source;
-      this.controller = new Subject();
-
-      if (pauser && pauser.subscribe) {
-        this.pauser = this.controller.merge(pauser);
-      } else {
-        this.pauser = this.controller;
-      }
-
-      __super__.call(this, subscribe, source);
-    }
+      return subscription;      
+    };
 
     PausableBufferedObservable.prototype.pause = function () {
       this.controller.onNext(false);
