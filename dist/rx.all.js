@@ -5127,6 +5127,46 @@ observableProto.zipIterable = function () {
     return retValue;
   };
 
+  var DistinctObservable = (function (__super__) {
+    inherits(DistinctObservable, __super__);
+    function DistinctObservable(source, keyFn, cmpFn) {
+      this.source = source;
+      this._keyFn = keyFn;
+      this._cmpFn = cmpFn;
+      __super__.call(this);
+    }
+
+    DistinctObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new DistinctObserver(o, this._keyFn, this._cmpFn));
+    };
+
+    return DistinctObservable;
+  }(ObservableBase));
+
+  var DistinctObserver = (function (__super__) {
+    inherits(DistinctObserver, __super__);
+    function DistinctObserver(o, keyFn, cmpFn) {
+      this._o = o;
+      this._keyFn = keyFn;
+      this._h = new HashSet(cmpFn);
+      __super__.call(this);
+    }
+
+    DistinctObserver.prototype.next = function (x) {
+      var key = x;
+      if (isFunction(this._keyFn)) {
+        key = tryCatch(this._keyFn)(x);
+        if (key === errorObj) { return this._o.onError(key.e); }
+      }
+      this._h.push(key) && this._o.onNext(x);
+    };
+
+    DistinctObserver.prototype.error = function (e) { this._o.onError(e); };
+    DistinctObserver.prototype.completed = function () { this._o.onCompleted(); };
+
+    return DistinctObserver;
+  }(AbstractObserver));
+
   /**
    *  Returns an observable sequence that contains only distinct elements according to the keySelector and the comparer.
    *  Usage of this operator should be considered carefully due to the maintenance of an internal lookup structure which can grow large.
@@ -5140,25 +5180,8 @@ observableProto.zipIterable = function () {
    * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
    */
   observableProto.distinct = function (keySelector, comparer) {
-    var source = this;
     comparer || (comparer = defaultComparer);
-    return new AnonymousObservable(function (o) {
-      var hashSet = new HashSet(comparer);
-      return source.subscribe(function (x) {
-        var key = x;
-
-        if (keySelector) {
-          try {
-            key = keySelector(x);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
-        }
-        hashSet.push(key) && o.onNext(x);
-      },
-      function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, this);
+    return new DistinctObservable(this, keySelector, comparer);
   };
 
   /**
