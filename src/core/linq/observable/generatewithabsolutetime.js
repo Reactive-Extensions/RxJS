@@ -1,5 +1,49 @@
+  var GenerateAbsoluteObservable = (function (__super__) {
+    inherits(GenerateAbsoluteObservable, __super__);
+    function GenerateAbsoluteObservable(state, cndFn, itrFn, resFn, timeFn, s) {
+      this._state = state;
+      this._cndFn = cndFn;
+      this._itrFn = itrFn;
+      this._resFn = resFn;
+      this._timeFn = timeFn;
+      this._s = s;
+      this._first = true;
+      this._hasResult = false;
+      __super__.call(this);
+    }
+
+    function scheduleRecursive(self, recurse) {
+      self._hasResult && self._o.onNext(self._state);
+
+      if (self._first) {
+        self._first = false;
+      } else {
+        self._state = tryCatch(self._itrFn)(self._state);
+        if (self._state === errorObj) { return self._o.onError(self._state.e); }
+      }
+      self._hasResult = tryCatch(self._cndFn)(self._state);
+      if (self._hasResult === errorObj) { return self._o.onError(self._hasResult.e); }
+      if (self._hasResult) {
+        var result = tryCatch(self._resFn)(self._state);
+        if (result === errorObj) { return self._o.onError(result.e); }
+        var time = tryCatch(self._timeFn)(self._state);
+        if (time === errorObj) { return self._o.onError(time.e); }
+        recurse(self, time);
+      } else {
+        self._o.onCompleted();
+      }
+    }
+
+    GenerateAbsoluteObservable.prototype.subscribeCore = function (o) {
+      this._o = o;
+      return this._s.scheduleRecursiveFuture(this, new Date(this._s.now()), scheduleRecursive);
+    };
+
+    return GenerateAbsoluteObservable;
+  }(ObservableBase));
+
   /**
-   *  Generates an observable sequence by iterating a state from an initial state until the condition fails.
+   *  GenerateAbsolutes an observable sequence by iterating a state from an initial state until the condition fails.
    *
    * @example
    *  res = source.generateWithAbsoluteTime(0,
@@ -19,32 +63,5 @@
    */
   Observable.generateWithAbsoluteTime = function (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return new AnonymousObservable(function (observer) {
-      var first = true,
-        hasResult = false;
-      return scheduler.scheduleRecursiveFuture(initialState, new Date(scheduler.now()), function (state, self) {
-        hasResult && observer.onNext(state);
-
-        try {
-          if (first) {
-            first = false;
-          } else {
-            state = iterate(state);
-          }
-          hasResult = condition(state);
-          if (hasResult) {
-            var result = resultSelector(state);
-            var time = timeSelector(state);
-          }
-        } catch (e) {
-          observer.onError(e);
-          return;
-        }
-        if (hasResult) {
-          self(result, time);
-        } else {
-          observer.onCompleted();
-        }
-      });
-    });
+    return new GenerateAbsoluteObservable(initialState, condition, iterate, resultSelector, timeSelector, scheduler);
   };
