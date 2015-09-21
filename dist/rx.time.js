@@ -1198,6 +1198,47 @@
     }, source);
   };
 
+  var SkipUntilWithTimeObservable = (function (__super__) {
+    inherits(SkipUntilWithTimeObservable, __super__);
+    function SkipUntilWithTimeObservable(source, startTime, scheduler) {
+      this.source = source;
+      this._st = startTime;
+      this._s = scheduler;
+      __super__.call(this);
+    }
+
+    function scheduleMethod(s, state) {
+      state._open = true;
+    }
+
+    SkipUntilWithTimeObservable.prototype.subscribeCore = function (o) {
+      this._open = false;
+      return new BinaryDisposable(
+        this._s.scheduleFuture(this, this._st, scheduleMethod),
+        this.source.subscribe(new SkipUntilWithTimeObserver(o, this))
+      );
+    };
+
+    return SkipUntilWithTimeObservable;
+  }(ObservableBase));
+
+  var SkipUntilWithTimeObserver = (function (__super__) {
+    inherits(SkipUntilWithTimeObserver, __super__);
+
+    function SkipUntilWithTimeObserver(o, p) {
+      this._o = o;
+      this._p = p;
+      __super__.call(this);
+    }
+
+    SkipUntilWithTimeObserver.prototype.next = function (x) { this._p._open && this._o.onNext(x); };
+    SkipUntilWithTimeObserver.prototype.error = function (e) { this._o.onError(e); };
+    SkipUntilWithTimeObserver.prototype.completed = function () { this._o.onCompleted(); };
+
+    return SkipUntilWithTimeObserver;
+  }(AbstractObserver));
+
+
   /**
    *  Skips elements from the observable source sequence until the specified start time, using the specified scheduler to run timers.
    *  Errors produced by the source sequence are always forwarded to the result sequence, even if the error occurs before the start time.
@@ -1211,16 +1252,7 @@
    */
   observableProto.skipUntilWithTime = function (startTime, scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var open = false;
-
-      return new BinaryDisposable(
-        scheduler.scheduleFuture(null, startTime, function () { open = true; }),
-        source.subscribe(
-          function (x) { open && o.onNext(x); },
-          function (e) { o.onError(e); }, function () { o.onCompleted(); }));
-    }, source);
+    return new SkipUntilWithTimeObservable(this, startTime, scheduler);
   };
 
   /**
