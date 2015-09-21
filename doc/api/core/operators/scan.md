@@ -1,5 +1,4 @@
-### `Rx.Observable.prototype.scan(accumulator, [seed])` **New as of v3.0**
-### `Rx.Observable.prototype.scan([seed], accumulator)` **Removed as of v3.0**
+### `Rx.Observable.prototype.scan(accumulator, [seed])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/scan.js "View in source")
 
 Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
@@ -9,7 +8,11 @@ For aggregation behavior with no intermediate results, see `Rx.Observable#reduce
 Note the `Rx.Observable.prototype.scan([seed], accumulator)` has been removed as per v3.0 and replaced with `Rx.Observable.prototype.scan(accumulator, [seed])`.
 
 #### Arguments
-1. `accumulator` *(`Function`)*: An accumulator function to be invoked on each element.
+1. `accumulator` *(`Function`)*: An accumulator function to be invoked on each element with the following arguments:
+    1. `acc`: `Any` - the accumulated value.
+    2. `currentValue`: `Any` - the current value
+    3. `index`: `Number` - the current index
+    4. `source`: `Observable` - the current observable instance
 2. `[seed]` *(`Any`)*: The initial accumulator value.
 
 #### Returns
@@ -19,7 +22,7 @@ Note the `Rx.Observable.prototype.scan([seed], accumulator)` has been removed as
 ```js
 /* Without a seed */
 var source = Rx.Observable.range(1, 3)
-  .scan(function (acc, x) { return acc + x; });
+  .scan(function (acc, x, i, source) { return acc + x; });
 
 var subscription = source.subscribe(
   function (x) {
@@ -39,7 +42,7 @@ var subscription = source.subscribe(
 
 /* With a seed */
 var source = Rx.Observable.range(1, 3)
-    .scan(function (acc, x) { return acc * x; }, 1);
+    .scan(function (acc, x, i, source) { return acc * x; }, 1);
 
 var subscription = source.subscribe(
   function (x) {

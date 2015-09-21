@@ -285,6 +285,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
               'src/core/linq/observable/slice.js',
+              'src/core/linq/observable/lastindexof.js',
 
               // Async operators
               'src/core/linq/observable/spawn.js',
@@ -569,6 +570,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
               'src/core/linq/observable/slice.js',
+              'src/core/linq/observable/lastindexof.js',
 
               // Async compat operators
               'src/core/linq/observable/spawn.js',
@@ -1494,6 +1496,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
               'src/core/linq/observable/slice.js',
+              'src/core/linq/observable/lastindexof.js',
               'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.aggregates.js'
@@ -1530,6 +1533,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
               'src/core/linq/observable/slice.js',
+              'src/core/linq/observable/lastindexof.js',
               'src/core/headers/suboutro.js'
             ],
             dest: 'modules/rx-lite-aggregates/rx.lite.aggregates.js'
@@ -1566,6 +1570,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
               'src/core/linq/observable/slice.js',
+              'src/core/linq/observable/lastindexof.js',
               'src/core/headers/suboutro.js'
             ],
             dest: 'modules/rx-lite-aggregates-compat/rx.lite.aggregates.compat.js'

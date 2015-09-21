@@ -3,10 +3,14 @@
 
 Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
 
-For aggregation behavior with incremental intermediate results, see the `scan` method.
+For aggregation behavior with incremental intermediate results, see the [`scan`](scan.md) method.
 
 #### Arguments
-1. `accumulator` *(`Function`)*:  An accumulator function to be invoked on each element.
+1. `accumulator` *(`Function`)*:  An accumulator function to be invoked on each element with the following arguments:
+    1. `acc`: `Any` - the accumulated value.
+    2. `currentValue`: `Any` - the current value
+    3. `index`: `Number` - the current index
+    4. `source`: `Observable` - the current observable instance
 2. `[seed]` *(`Any`)*: The initial accumulator value.
 
 #### Returns
@@ -14,21 +18,42 @@ For aggregation behavior with incremental intermediate results, see the `scan` m
 
 #### Example
 ```js
+/* With a seed */
 var source = Rx.Observable.range(1, 3)
-    .reduce(function (acc, x) {
-        return acc * x;
-    }, 1)
+  .reduce(function (acc, x, idx, source) {
+    return acc * x;
+  }, 1)
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
+
+// => Next: 6
+// => Completed
+
+/* Without a seed */
+var source = Rx.Observable.range(1, 3)
+  .reduce(function (acc, x, idx, source) {
+    return acc * x;
+  })
+
+var subscription = source.subscribe(
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
 // => Next: 6
 // => Completed
