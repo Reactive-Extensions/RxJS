@@ -4747,6 +4747,21 @@ observableProto.zipIterable = function () {
     return new ScanObservable(this, accumulator, hasSeed, seed);
   };
 
+  var SkipLastObservable = (function (__super__) {
+    inherits(SkipLastObservable, __super__);
+    function SkipLastObservable(source, c) {
+      this.source = source;
+      this._c = c;
+      __super__.call(this);
+    }
+
+    SkipLastObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new SkipLastObserver(o, this._c));
+    };
+
+    return SkipLastObservable;
+  }(ObservableBase));
+
   var SkipLastObserver = (function (__super__) {
     inherits(SkipLastObserver, __super__);
     function SkipLastObserver(o, c) {
@@ -4782,11 +4797,7 @@ observableProto.zipIterable = function () {
    */
   observableProto.skipLast = function (count) {
     if (count < 0) { throw new ArgumentOutOfRangeError(); }
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var q = [];
-      return source.subscribe(new SkipLastObserver(o, count));
-    }, source);
+    return new SkipLastObservable(this, count);
   };
 
   /**

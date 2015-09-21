@@ -1,9 +1,5 @@
   /**
    *  Skips elements for the specified duration from the start of the observable source sequence, using the specified scheduler to run timers.
-   *
-   * @example
-   *  1 - res = source.skipWithTime(5000, [optional scheduler]);
-   *
    * @description
    *  Specifying a zero value for duration doesn't guarantee no elements will be dropped from the start of the source sequence.
    *  This is a side-effect of the asynchrony introduced by the scheduler, where the action that causes callbacks from the source sequence to be forwarded
@@ -15,8 +11,8 @@
    * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the start of the source sequence.
    */
   observableProto.skipWithTime = function (duration, scheduler) {
-    var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
+    var source = this;
     return new AnonymousObservable(function (o) {
       var open = false;
       return new BinaryDisposable(

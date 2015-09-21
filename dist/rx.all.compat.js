@@ -4974,6 +4974,21 @@ observableProto.zipIterable = function () {
     return new ScanObservable(this, accumulator, hasSeed, seed);
   };
 
+  var SkipLastObservable = (function (__super__) {
+    inherits(SkipLastObservable, __super__);
+    function SkipLastObservable(source, c) {
+      this.source = source;
+      this._c = c;
+      __super__.call(this);
+    }
+
+    SkipLastObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new SkipLastObserver(o, this._c));
+    };
+
+    return SkipLastObservable;
+  }(ObservableBase));
+
   var SkipLastObserver = (function (__super__) {
     inherits(SkipLastObserver, __super__);
     function SkipLastObserver(o, c) {
@@ -5009,11 +5024,7 @@ observableProto.zipIterable = function () {
    */
   observableProto.skipLast = function (count) {
     if (count < 0) { throw new ArgumentOutOfRangeError(); }
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var q = [];
-      return source.subscribe(new SkipLastObserver(o, count));
-    }, source);
+    return new SkipLastObservable(this, count);
   };
 
   /**
@@ -10590,6 +10601,52 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     return new DelaySubscription(this, dueTime, scheduler);
   };
 
+  var SkipLastWithTimeObservable = (function (__super__) {
+    inherits(SkipLastWithTimeObservable, __super__);
+    function SkipLastWithTimeObservable(source, d, s) {
+      this.source = source;
+      this._d = d;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    SkipLastWithTimeObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new SkipLastWithTimeObserver(o, this));
+    };
+
+    return SkipLastWithTimeObservable;
+  }(ObservableBase));
+
+  var SkipLastWithTimeObserver = (function (__super__) {
+    inherits(SkipLastWithTimeObserver, __super__);
+
+    function SkipLastWithTimeObserver(o, p) {
+      this._o = o;
+      this._s = p._s;
+      this._d = p._d;
+      this._q = [];
+      __super__.call(this);
+    }
+
+    SkipLastWithTimeObserver.prototype.next = function (x) {
+      var now = this._s.now();
+      this._q.push({ interval: now, value: x });
+      while (this._q.length > 0 && now - this._q[0].interval >= this._d) {
+        this._o.onNext(this._q.shift().value);
+      }
+    };
+    SkipLastWithTimeObserver.prototype.error = function (e) { this._o.onError(e); };
+    SkipLastWithTimeObserver.prototype.completed = function () {
+      var now = this._s.now();
+      while (this._q.length > 0 && now - this._q[0].interval >= this._d) {
+        this._o.onNext(this._q.shift().value);
+      }
+      this._o.onCompleted();
+    };
+
+    return SkipLastWithTimeObserver;
+  }(AbstractObserver));
+
   /**
    *  Skips elements for the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
    * @description
@@ -10602,23 +10659,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    */
   observableProto.skipLastWithTime = function (duration, scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var q = [];
-      return source.subscribe(function (x) {
-        var now = scheduler.now();
-        q.push({ interval: now, value: x });
-        while (q.length > 0 && now - q[0].interval >= duration) {
-          o.onNext(q.shift().value);
-        }
-      }, function (e) { o.onError(e); }, function () {
-        var now = scheduler.now();
-        while (q.length > 0 && now - q[0].interval >= duration) {
-          o.onNext(q.shift().value);
-        }
-        o.onCompleted();
-      });
-    }, source);
+    return new SkipLastWithTimeObservable(this, duration, scheduler);
   };
 
   /**
@@ -10709,10 +10750,6 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
 
   /**
    *  Skips elements for the specified duration from the start of the observable source sequence, using the specified scheduler to run timers.
-   *
-   * @example
-   *  1 - res = source.skipWithTime(5000, [optional scheduler]);
-   *
    * @description
    *  Specifying a zero value for duration doesn't guarantee no elements will be dropped from the start of the source sequence.
    *  This is a side-effect of the asynchrony introduced by the scheduler, where the action that causes callbacks from the source sequence to be forwarded
@@ -10724,8 +10761,8 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @returns {Observable} An observable sequence with the elements skipped during the specified duration from the start of the source sequence.
    */
   observableProto.skipWithTime = function (duration, scheduler) {
-    var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
+    var source = this;
     return new AnonymousObservable(function (o) {
       var open = false;
       return new BinaryDisposable(
