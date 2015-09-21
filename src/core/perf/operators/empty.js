@@ -21,7 +21,10 @@
     }
 
     EmptySink.prototype.run = function () {
-      return this.scheduler.schedule(this.observer, scheduleItem);
+      var state = this.observer;
+      return this.scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this.scheduler.schedule(state, scheduleItem);
     };
 
     return EmptyObservable;

@@ -1,4 +1,3 @@
-  // Collections
   function IndexedItem(id, value) {
     this.id = id;
     this.value = value;
@@ -10,7 +9,6 @@
     return c;
   };
 
-  // Priority Queue for Scheduling
   var PriorityQueue = Rx.internals.PriorityQueue = function (capacity) {
     this.items = new Array(capacity);
     this.length = 0;

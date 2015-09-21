@@ -1,28 +1,5 @@
 declare module Rx {
 
-    export module internals {
-        // Priority Queue for Scheduling
-        export interface PriorityQueue<TTime> {
-            length: number;
-
-            isHigherPriority(left: number, right: number): boolean;
-            percolate(index: number): void;
-            heapify(index: number): void;
-            peek(): ScheduledItem<TTime>;
-            removeAt(index: number): void;
-            dequeue(): ScheduledItem<TTime>;
-            enqueue(item: ScheduledItem<TTime>): void;
-            remove(item: ScheduledItem<TTime>): boolean;
-        }
-
-        interface PriorityQueueStatic {
-                new <T>(capacity: number) : PriorityQueue<T>;
-                count: number;
-        }
-
-        export var PriorityQueue : PriorityQueueStatic;
-    }
-
     export interface VirtualTimeScheduler<TAbsolute, TRelative> extends IScheduler {
         /**
          * Adds a relative time value to an absolute time value.

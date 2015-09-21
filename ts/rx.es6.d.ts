@@ -453,6 +453,29 @@ declare module Rx {
         async: IScheduler;
     }
 
+    export module internals {
+        // Priority Queue for Scheduling
+        export interface PriorityQueue<TTime> {
+            length: number;
+
+            isHigherPriority(left: number, right: number): boolean;
+            percolate(index: number): void;
+            heapify(index: number): void;
+            peek(): ScheduledItem<TTime>;
+            removeAt(index: number): void;
+            dequeue(): ScheduledItem<TTime>;
+            enqueue(item: ScheduledItem<TTime>): void;
+            remove(item: ScheduledItem<TTime>): boolean;
+        }
+
+        interface PriorityQueueStatic {
+                new <T>(capacity: number) : PriorityQueue<T>;
+                count: number;
+        }
+
+        export var PriorityQueue : PriorityQueueStatic;
+    }
+
     /**
     * Supports push-style iteration over an observable sequence.
     */

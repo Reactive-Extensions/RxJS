@@ -40,7 +40,7 @@
           var result = tryCatch(task)();
           clearMethod(handle);
           currentlyRunning = false;
-          if (result === errorObj) { return thrower(result.e); }
+          if (result === errorObj) { thrower(result.e); }
         }
       }
     }
@@ -157,12 +157,24 @@
        __super__.call(this);
      }
 
+     function DefaultSchedulerDisposable(id) {
+       this._id = id;
+       this.isDisposed = false;
+     }
+
+     DefaultSchedulerDisposable.prototype.dispose = function () {
+       if (!this.isDisposed) {
+         this.isDisposed = true;
+         localClearTimeout(this._id);
+       }
+     };
+
     DefaultScheduler.prototype.schedule = function (state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();
       var id = scheduleMethod(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       });
-      return new BinaryDisposable(disposable, disposableCreate(function () { clearMethod(id); }));
+      return new BinaryDisposable(disposable, new DefaultSchedulerDisposable(id));
     };
 
     DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
@@ -171,7 +183,7 @@
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       }, dt);
-      return new BinaryDisposable(disposable, disposableCreate(function () { localClearTimeout(id); }));
+      return new BinaryDisposable(disposable, new DefaultSchedulerDisposable(id));
     };
 
     return DefaultScheduler;

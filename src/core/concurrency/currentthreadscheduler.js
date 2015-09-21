@@ -6,7 +6,7 @@
 
     function runTrampoline () {
       while (queue.length > 0) {
-        var item = queue.shift();
+        var item = queue.dequeue();
         !item.isCancelled() && item.invoke();
       }
     }
@@ -20,13 +20,14 @@
       var si = new ScheduledItem(this, state, action, this.now());
 
       if (!queue) {
-        queue = [si];
+        queue = new PriorityQueue(4);
+        queue.enqueue(si);
 
         var result = tryCatch(runTrampoline)();
         queue = null;
         if (result === errorObj) { thrower(result.e); }
       } else {
-        queue.push(si);
+        queue.enqueue(si);
       }
       return si.disposable;
     };

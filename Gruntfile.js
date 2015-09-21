@@ -47,6 +47,7 @@ module.exports = function (grunt) {
               'src/core/concurrency/immediatescheduler.js',
               'src/core/concurrency/currentthreadscheduler.js',
               'src/core/concurrency/defaultscheduler.js',
+              'src/core/internal/priorityqueue.js',
 
               // Observer
               'src/core/observer-lite.js',
@@ -106,7 +107,6 @@ module.exports = function (grunt) {
               'src/core/internal/isequal.js',
 
               'src/core/concurrency/scheduleperiodicrecursive.js',
-              'src/core/internal/priorityqueue.js',
               'src/core/concurrency/virtualtimescheduler.js',
 
               'src/core/testing/reactivetest.js',
@@ -729,6 +729,7 @@ module.exports = function (grunt) {
               'src/core/concurrency/currentthreadscheduler.js',
               'src/core/concurrency/defaultscheduler.js',
               'src/core/concurrency/catchscheduler.js',
+              'src/core/internal/priorityqueue.js',
               'src/core/notification.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
@@ -879,6 +880,7 @@ module.exports = function (grunt) {
               'src/core/concurrency/currentthreadscheduler.js',
               'src/core/concurrency/defaultscheduler.js',
               'src/core/concurrency/catchscheduler.js',
+              'src/core/internal/priorityqueue.js',
               'src/core/notification.js',
               'src/core/observer.js',
               'src/core/abstractobserver.js',
@@ -1024,6 +1026,7 @@ module.exports = function (grunt) {
               'src/core/concurrency/currentthreadscheduler.js',
               'src/core/concurrency/scheduleperiodicrecursive.js',
               'src/core/concurrency/defaultscheduler.js',
+              'src/core/internal/priorityqueue.js',
 
               'src/core/notification.js',
               'src/core/observer-lite.js',
@@ -1194,6 +1197,7 @@ module.exports = function (grunt) {
               'src/core/concurrency/currentthreadscheduler.js',
               'src/core/concurrency/scheduleperiodicrecursive.js',
               'src/core/concurrency/defaultscheduler.js',
+              'src/core/internal/priorityqueue.js',
 
               'src/core/notification.js',
               'src/core/observer-lite.js',
@@ -1998,7 +2002,6 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/subintro.js',
               'src/core/headers/virtualtimeheader.js',
-              'src/core/internal/priorityqueue.js',
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',
               'src/core/headers/suboutro.js'
@@ -2010,7 +2013,6 @@ module.exports = function (grunt) {
               'src/core/headers/license.js',
               'src/core/headers/liteintro.js',
               'src/core/headers/virtualtimeheader.js',
-              'src/core/internal/priorityqueue.js',
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',
               'src/core/headers/suboutro.js'
@@ -2021,7 +2023,6 @@ module.exports = function (grunt) {
             src: [
               'src/core/headers/license.js',
               'src/core/headers/liteintro-compat.js',
-              'src/core/internal/priorityqueue.js',
               'src/core/headers/virtualtimeheader.js',
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',

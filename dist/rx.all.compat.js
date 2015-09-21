@@ -800,7 +800,6 @@
   })();
 }
 
-  // Collections
   function IndexedItem(id, value) {
     this.id = id;
     this.value = value;
@@ -812,7 +811,6 @@
     return c;
   };
 
-  // Priority Queue for Scheduling
   var PriorityQueue = Rx.internals.PriorityQueue = function (capacity) {
     this.items = new Array(capacity);
     this.length = 0;
@@ -1407,7 +1405,7 @@
 
     function runTrampoline () {
       while (queue.length > 0) {
-        var item = queue.shift();
+        var item = queue.dequeue();
         !item.isCancelled() && item.invoke();
       }
     }
@@ -1421,13 +1419,14 @@
       var si = new ScheduledItem(this, state, action, this.now());
 
       if (!queue) {
-        queue = [si];
+        queue = new PriorityQueue(4);
+        queue.enqueue(si);
 
         var result = tryCatch(runTrampoline)();
         queue = null;
         if (result === errorObj) { thrower(result.e); }
       } else {
-        queue.push(si);
+        queue.enqueue(si);
       }
       return si.disposable;
     };
@@ -1481,7 +1480,7 @@
           var result = tryCatch(task)();
           clearMethod(handle);
           currentlyRunning = false;
-          if (result === errorObj) { return thrower(result.e); }
+          if (result === errorObj) { thrower(result.e); }
         }
       }
     }
@@ -1598,12 +1597,24 @@
        __super__.call(this);
      }
 
+     function DefaultSchedulerDisposable(id) {
+       this._id = id;
+       this.isDisposed = false;
+     }
+
+     DefaultSchedulerDisposable.prototype.dispose = function () {
+       if (!this.isDisposed) {
+         this.isDisposed = true;
+         localClearTimeout(this._id);
+       }
+     };
+
     DefaultScheduler.prototype.schedule = function (state, action) {
       var scheduler = this, disposable = new SingleAssignmentDisposable();
       var id = scheduleMethod(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       });
-      return new BinaryDisposable(disposable, disposableCreate(function () { clearMethod(id); }));
+      return new BinaryDisposable(disposable, new DefaultSchedulerDisposable(id));
     };
 
     DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
@@ -1612,7 +1623,7 @@
       var id = localSetTimeout(function () {
         !disposable.isDisposed && disposable.setDisposable(disposableFixup(action(scheduler, state)));
       }, dt);
-      return new BinaryDisposable(disposable, disposableCreate(function () { localClearTimeout(id); }));
+      return new BinaryDisposable(disposable, new DefaultSchedulerDisposable(id));
     };
 
     return DefaultScheduler;
@@ -2766,7 +2777,10 @@ var ObserveOnObservable = (function (__super__) {
     }
 
     EmptySink.prototype.run = function () {
-      return this.scheduler.schedule(this.observer, scheduleItem);
+      var state = this.observer;
+      return this.scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this.scheduler.schedule(state, scheduleItem);
     };
 
     return EmptyObservable;
@@ -10552,10 +10566,6 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
 
   /**
    *  Skips elements for the specified duration from the end of the observable source sequence, using the specified scheduler to run timers.
-   *
-   *  1 - res = source.skipLastWithTime(5000);
-   *  2 - res = source.skipLastWithTime(5000, scheduler);
-   *
    * @description
    *  This operator accumulates a queue with a length enough to store elements received during the initial duration window.
    *  As more elements are received, elements older than the specified duration are taken from the queue and produced on the

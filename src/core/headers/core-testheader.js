@@ -9,6 +9,7 @@
     Scheduler = Rx.Scheduler,
     ScheduledItem = Rx.internals.ScheduledItem,
     SchedulePeriodicRecursive  = Rx.internals.SchedulePeriodicRecursive,
+    PriorityQueue = Rx.internals.PriorityQueue,
     inherits = Rx.internals.inherits,
     notImplemented = Rx.helpers.notImplemented,
     defaultComparer = Rx.helpers.defaultComparer = function (a, b) { return isEqual(a, b); };
