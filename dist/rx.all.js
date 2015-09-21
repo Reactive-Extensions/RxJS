@@ -10496,6 +10496,29 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     }, source);
   };
 
+  var TakeWithTimeObservable = (function (__super__) {
+    inherits(TakeWithTimeObservable, __super__);
+    function TakeWithTimeObservable(source, d, s) {
+      this.source = source;
+      this._d = d;
+      this._s = s;
+      __super__.call(this);
+    }
+
+    function scheduleMethod(s, o) {
+      o.onCompleted();
+    }
+
+    TakeWithTimeObservable.prototype.subscribeCore = function (o) {
+      return new BinaryDisposable(
+        this._s.scheduleFuture(o, this._d, scheduleMethod),
+        this.source.subscribe(o)
+      );
+    };
+
+    return TakeWithTimeObservable;
+  }(ObservableBase));
+
   /**
    *  Takes elements for the specified duration from the start of the observable source sequence, using the specified scheduler to run timers.
    *
@@ -10510,11 +10533,8 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @returns {Observable} An observable sequence with the elements taken during the specified duration from the start of the source sequence.
    */
   observableProto.takeWithTime = function (duration, scheduler) {
-    var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    return new AnonymousObservable(function (o) {
-      return new BinaryDisposable(scheduler.scheduleFuture(o, duration, function (_, o) { o.onCompleted(); }), source.subscribe(o));
-    }, source);
+    return new TakeWithTimeObservable(this, duration, scheduler);
   };
 
   /**
