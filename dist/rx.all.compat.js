@@ -10798,6 +10798,46 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     return new TakeWithTimeObservable(this, duration, scheduler);
   };
 
+  var SkipWithTimeObservable = (function (__super__) {
+    inherits(SkipWithTimeObservable, __super__);
+    function SkipWithTimeObservable(source, d, s) {
+      this.source = source;
+      this._d = d;
+      this._s = s;
+      this._open = false;
+      __super__.call(this);
+    }
+
+    function scheduleMethod(s, self) {
+      self._open = true;
+    }
+
+    SkipWithTimeObservable.prototype.subscribeCore = function (o) {
+      return new BinaryDisposable(
+        this._s.scheduleFuture(this, this._d, scheduleMethod),
+        this.source.subscribe(new SkipWithTimeObserver(o, this))
+      );
+    };
+
+    return SkipWithTimeObservable;
+  }(ObservableBase));
+
+  var SkipWithTimeObserver = (function (__super__) {
+    inherits(SkipWithTimeObserver, __super__);
+
+    function SkipWithTimeObserver(o, p) {
+      this._o = o;
+      this._p = p;
+      __super__.call(this);
+    }
+
+    SkipWithTimeObserver.prototype.next = function (x) { this._p._open && this._o.onNext(x); };
+    SkipWithTimeObserver.prototype.error = function (e) { this._o.onError(e); };
+    SkipWithTimeObserver.prototype.completed = function () { this._o.onCompleted(); };
+
+    return SkipWithTimeObserver;
+  }(AbstractObserver));
+
   /**
    *  Skips elements for the specified duration from the start of the observable source sequence, using the specified scheduler to run timers.
    * @description
@@ -10812,13 +10852,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    */
   observableProto.skipWithTime = function (duration, scheduler) {
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var open = false;
-      return new BinaryDisposable(
-        scheduler.scheduleFuture(null, duration, function () { open = true; }),
-        source.subscribe(function (x) { open && o.onNext(x); }, function (e) { o.onError(e); }, function () { o.onCompleted(); }));
-    }, source);
+    return new SkipWithTimeObservable(this, duration, scheduler);
   };
 
   var SkipUntilWithTimeObservable = (function (__super__) {
