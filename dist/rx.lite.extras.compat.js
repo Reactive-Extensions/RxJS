@@ -354,6 +354,31 @@ var ObserveOnObservable = (function (__super__) {
     return new GenerateObservable(initialState, condition, iterate, resultSelector, scheduler);
   };
 
+  var UsingObservable = (function (__super__) {
+    inherits(UsingObservable, __super__);
+    function UsingObservable(resFn, obsFn) {
+      this._resFn = resFn;
+      this._obsFn = obsFn;
+      __super__.call(this);
+    }
+
+    UsingObservable.prototype.subscribeCore = function (o) {
+      var disposable = disposableEmpty;
+      var resource = tryCatch(this._resFn)();
+      if (resource === errorObj) {
+        return new BinaryDisposable(observableThrow(resource.e).subscribe(o), disposable);
+      }
+      resource && (disposable = resource);
+      var source = tryCatch(this._obsFn)(resource);
+      if (source === errorObj) {
+        return new BinaryDisposable(observableThrow(source.e).subscribe(o), disposable);
+      }
+      return new BinaryDisposable(source.subscribe(o), disposable);
+    };
+
+    return UsingObservable;
+  }(ObservableBase));
+
   /**
    * Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
    * @param {Function} resourceFactory Factory function to obtain a resource object.
@@ -361,19 +386,7 @@ var ObserveOnObservable = (function (__super__) {
    * @returns {Observable} An observable sequence whose lifetime controls the lifetime of the dependent resource object.
    */
   Observable.using = function (resourceFactory, observableFactory) {
-    return new AnonymousObservable(function (o) {
-      var disposable = disposableEmpty;
-      var resource = tryCatch(resourceFactory)();
-      if (resource === errorObj) {
-        return new BinaryDisposable(observableThrow(resource.e).subscribe(o), disposable);
-      }
-      resource && (disposable = resource);
-      var source = tryCatch(observableFactory)(resource);
-      if (source === errorObj) {
-        return new BinaryDisposable(observableThrow(source.e).subscribe(o), disposable);
-      }
-      return new BinaryDisposable(source.subscribe(o), disposable);
-    });
+    return new UsingObservable(resourceFactory, observableFactory);
   };
 
   /**
@@ -523,9 +536,6 @@ var ObserveOnObservable = (function (__super__) {
 
   /**
    *  Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
-   *
-   *  var res = xs.windowWithCount(10);
-   *  var res = xs.windowWithCount(10, 1);
    * @param {Number} count Length of each window.
    * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
    * @returns {Observable} An observable sequence of windows.

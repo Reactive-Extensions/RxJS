@@ -3122,6 +3122,31 @@ var ObserveOnObservable = (function (__super__) {
     return new ThrowObservable(error, scheduler);
   };
 
+  var UsingObservable = (function (__super__) {
+    inherits(UsingObservable, __super__);
+    function UsingObservable(resFn, obsFn) {
+      this._resFn = resFn;
+      this._obsFn = obsFn;
+      __super__.call(this);
+    }
+
+    UsingObservable.prototype.subscribeCore = function (o) {
+      var disposable = disposableEmpty;
+      var resource = tryCatch(this._resFn)();
+      if (resource === errorObj) {
+        return new BinaryDisposable(observableThrow(resource.e).subscribe(o), disposable);
+      }
+      resource && (disposable = resource);
+      var source = tryCatch(this._obsFn)(resource);
+      if (source === errorObj) {
+        return new BinaryDisposable(observableThrow(source.e).subscribe(o), disposable);
+      }
+      return new BinaryDisposable(source.subscribe(o), disposable);
+    };
+
+    return UsingObservable;
+  }(ObservableBase));
+
   /**
    * Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
    * @param {Function} resourceFactory Factory function to obtain a resource object.
@@ -3129,19 +3154,7 @@ var ObserveOnObservable = (function (__super__) {
    * @returns {Observable} An observable sequence whose lifetime controls the lifetime of the dependent resource object.
    */
   Observable.using = function (resourceFactory, observableFactory) {
-    return new AnonymousObservable(function (o) {
-      var disposable = disposableEmpty;
-      var resource = tryCatch(resourceFactory)();
-      if (resource === errorObj) {
-        return new BinaryDisposable(observableThrow(resource.e).subscribe(o), disposable);
-      }
-      resource && (disposable = resource);
-      var source = tryCatch(observableFactory)(resource);
-      if (source === errorObj) {
-        return new BinaryDisposable(observableThrow(source.e).subscribe(o), disposable);
-      }
-      return new BinaryDisposable(source.subscribe(o), disposable);
-    });
+    return new UsingObservable(resourceFactory, observableFactory);
   };
 
   /**
@@ -4907,9 +4920,6 @@ observableProto.zipIterable = function () {
 
   /**
    *  Projects each element of an observable sequence into zero or more windows which are produced based on element count information.
-   *
-   *  var res = xs.windowWithCount(10);
-   *  var res = xs.windowWithCount(10, 1);
    * @param {Number} count Length of each window.
    * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
    * @returns {Observable} An observable sequence of windows.
@@ -5463,6 +5473,49 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     return new TakeObservable(this, count);
   };
 
+  var TakeWhileObservable = (function (__super__) {
+    inherits(TakeWhileObservable, __super__);
+    function TakeWhileObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    TakeWhileObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new TakeWhileObserver(o, this));
+    };
+
+    return TakeWhileObservable;
+  }(ObservableBase));
+
+  var TakeWhileObserver = (function (__super__) {
+    inherits(TakeWhileObserver, __super__);
+
+    function TakeWhileObserver(o, p) {
+      this._o = o;
+      this._p = p;
+      this._i = 0;
+      this._r = true;
+      __super__.call(this);
+    }
+
+    TakeWhileObserver.prototype.next = function (x) {
+      if (this._r) {
+        this._r = tryCatch(this._p._fn)(x, this._i++, this._p);
+        if (this._r === errorObj) { return this._o.onError(this._r.e); }
+      }
+      if (this._r) {
+        this._o.onNext(x);
+      } else {
+        this._o.onCompleted();
+      }
+    };
+    TakeWhileObserver.prototype.error = function (e) { this._o.onError(e); };
+    TakeWhileObserver.prototype.completed = function () { this._o.onCompleted(); };
+
+    return TakeWhileObserver;
+  }(AbstractObserver));
+
   /**
    *  Returns elements from an observable sequence as long as a specified condition is true.
    *  The element's index is used in the logic of the predicate function.
@@ -5471,26 +5524,8 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
    */
   observableProto.takeWhile = function (predicate, thisArg) {
-    var source = this,
-        callback = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      var i = 0, running = true;
-      return source.subscribe(function (x) {
-        if (running) {
-          try {
-            running = callback(x, i++, source);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
-          if (running) {
-            o.onNext(x);
-          } else {
-            o.onCompleted();
-          }
-        }
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, source);
+    var fn = bindCallback(predicate, thisArg, 3);
+    return new TakeWhileObservable(this, fn);
   };
 
   var FilterObservable = (function (__super__) {
@@ -5554,6 +5589,42 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
       new FilterObservable(this, predicate, thisArg);
   };
 
+  var TransduceObserver = (function (__super__) {
+    inherits(TransduceObserver, __super__);
+    function TransduceObserver(o, xform) {
+      this._o = o;
+      this._xform = xform;
+      __super__.call(this);
+    }
+
+    TransduceObserver.prototype.next = function (x) {
+      var res = tryCatch(this._xform['@@transducer/step']).call(this._xform, this._o, x);
+      if (res === errorObj) { this._o.onError(res.e); }
+    };
+
+    TransduceObserver.prototype.error = function (e) { this._o.onError(e); };
+
+    TransduceObserver.prototype.completed = function () {
+      this._xform['@@transducer/result'](this._o);
+    };
+
+    return TransduceObserver;
+  }(AbstractObserver));
+
+  function transformForObserver(o) {
+    return {
+      '@@transducer/init': function() {
+        return o;
+      },
+      '@@transducer/step': function(obs, input) {
+        return obs.onNext(input);
+      },
+      '@@transducer/result': function(obs) {
+        return obs.onCompleted();
+      }
+    };
+  }
+
   /**
    * Executes a transducer to transform the observable sequence
    * @param {Transducer} transducer A transducer to execute
@@ -5561,31 +5632,9 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    */
   observableProto.transduce = function(transducer) {
     var source = this;
-
-    function transformForObserver(o) {
-      return {
-        '@@transducer/init': function() {
-          return o;
-        },
-        '@@transducer/step': function(obs, input) {
-          return obs.onNext(input);
-        },
-        '@@transducer/result': function(obs) {
-          return obs.onCompleted();
-        }
-      };
-    }
-
     return new AnonymousObservable(function(o) {
       var xform = transducer(transformForObserver(o));
-      return source.subscribe(
-        function(v) {
-          var res = tryCatch(xform['@@transducer/step']).call(xform, o, v);
-          if (res === errorObj) { o.onError(res.e); }
-        },
-        function (e) { o.onError(e); },
-        function() { xform['@@transducer/result'](o); }
-      );
+      return source.subscribe(new TransduceObserver(o, xform));
     }, source);
   };
 

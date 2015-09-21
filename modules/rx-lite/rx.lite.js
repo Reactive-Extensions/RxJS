@@ -4574,6 +4574,49 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     return new TakeObservable(this, count);
   };
 
+  var TakeWhileObservable = (function (__super__) {
+    inherits(TakeWhileObservable, __super__);
+    function TakeWhileObservable(source, fn) {
+      this.source = source;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    TakeWhileObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new TakeWhileObserver(o, this));
+    };
+
+    return TakeWhileObservable;
+  }(ObservableBase));
+
+  var TakeWhileObserver = (function (__super__) {
+    inherits(TakeWhileObserver, __super__);
+
+    function TakeWhileObserver(o, p) {
+      this._o = o;
+      this._p = p;
+      this._i = 0;
+      this._r = true;
+      __super__.call(this);
+    }
+
+    TakeWhileObserver.prototype.next = function (x) {
+      if (this._r) {
+        this._r = tryCatch(this._p._fn)(x, this._i++, this._p);
+        if (this._r === errorObj) { return this._o.onError(this._r.e); }
+      }
+      if (this._r) {
+        this._o.onNext(x);
+      } else {
+        this._o.onCompleted();
+      }
+    };
+    TakeWhileObserver.prototype.error = function (e) { this._o.onError(e); };
+    TakeWhileObserver.prototype.completed = function () { this._o.onCompleted(); };
+
+    return TakeWhileObserver;
+  }(AbstractObserver));
+
   /**
    *  Returns elements from an observable sequence as long as a specified condition is true.
    *  The element's index is used in the logic of the predicate function.
@@ -4582,26 +4625,8 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
    * @returns {Observable} An observable sequence that contains the elements from the input sequence that occur before the element at which the test no longer passes.
    */
   observableProto.takeWhile = function (predicate, thisArg) {
-    var source = this,
-        callback = bindCallback(predicate, thisArg, 3);
-    return new AnonymousObservable(function (o) {
-      var i = 0, running = true;
-      return source.subscribe(function (x) {
-        if (running) {
-          try {
-            running = callback(x, i++, source);
-          } catch (e) {
-            o.onError(e);
-            return;
-          }
-          if (running) {
-            o.onNext(x);
-          } else {
-            o.onCompleted();
-          }
-        }
-      }, function (e) { o.onError(e); }, function () { o.onCompleted(); });
-    }, source);
+    var fn = bindCallback(predicate, thisArg, 3);
+    return new TakeWhileObservable(this, fn);
   };
 
   var FilterObservable = (function (__super__) {
@@ -6129,6 +6154,42 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     return dest;
   };
 
+  var TransduceObserver = (function (__super__) {
+    inherits(TransduceObserver, __super__);
+    function TransduceObserver(o, xform) {
+      this._o = o;
+      this._xform = xform;
+      __super__.call(this);
+    }
+
+    TransduceObserver.prototype.next = function (x) {
+      var res = tryCatch(this._xform['@@transducer/step']).call(this._xform, this._o, x);
+      if (res === errorObj) { this._o.onError(res.e); }
+    };
+
+    TransduceObserver.prototype.error = function (e) { this._o.onError(e); };
+
+    TransduceObserver.prototype.completed = function () {
+      this._xform['@@transducer/result'](this._o);
+    };
+
+    return TransduceObserver;
+  }(AbstractObserver));
+
+  function transformForObserver(o) {
+    return {
+      '@@transducer/init': function() {
+        return o;
+      },
+      '@@transducer/step': function(obs, input) {
+        return obs.onNext(input);
+      },
+      '@@transducer/result': function(obs) {
+        return obs.onCompleted();
+      }
+    };
+  }
+
   /**
    * Executes a transducer to transform the observable sequence
    * @param {Transducer} transducer A transducer to execute
@@ -6136,31 +6197,9 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    */
   observableProto.transduce = function(transducer) {
     var source = this;
-
-    function transformForObserver(o) {
-      return {
-        '@@transducer/init': function() {
-          return o;
-        },
-        '@@transducer/step': function(obs, input) {
-          return obs.onNext(input);
-        },
-        '@@transducer/result': function(obs) {
-          return obs.onCompleted();
-        }
-      };
-    }
-
     return new AnonymousObservable(function(o) {
       var xform = transducer(transformForObserver(o));
-      return source.subscribe(
-        function(v) {
-          var res = tryCatch(xform['@@transducer/step']).call(xform, o, v);
-          if (res === errorObj) { o.onError(res.e); }
-        },
-        function (e) { o.onError(e); },
-        function() { xform['@@transducer/result'](o); }
-      );
+      return source.subscribe(new TransduceObserver(o, xform));
     }, source);
   };
 
