@@ -284,6 +284,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/findindex.js', // _findvalue, where
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
+              'src/core/linq/observable/slice.js',
 
               // Async operators
               'src/core/linq/observable/spawn.js',
@@ -567,6 +568,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/findindex.js', // _findvalue, where
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
+              'src/core/linq/observable/slice.js',
 
               // Async compat operators
               'src/core/linq/observable/spawn.js',
@@ -1491,6 +1493,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/findindex.js', // _findvalue, where
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
+              'src/core/linq/observable/slice.js',
               'src/core/headers/suboutro.js'
             ],
             dest: 'dist/rx.aggregates.js'
@@ -1526,6 +1529,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/findindex.js', // _findvalue, where
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
+              'src/core/linq/observable/slice.js',
               'src/core/headers/suboutro.js'
             ],
             dest: 'modules/rx-lite-aggregates/rx.lite.aggregates.js'
@@ -1561,6 +1565,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/findindex.js', // _findvalue, where
               'src/core/linq/observable/toset.js',
               'src/core/linq/observable/tomap.js',
+              'src/core/linq/observable/slice.js',
               'src/core/headers/suboutro.js'
             ],
             dest: 'modules/rx-lite-aggregates-compat/rx.lite.aggregates.compat.js'

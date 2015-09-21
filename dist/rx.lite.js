@@ -4017,58 +4017,51 @@ observableProto.zipIterable = function () {
     }
 
     ScanObservable.prototype.subscribeCore = function(o) {
-      return this.source.subscribe(new InnerObserver(o,this));
+      return this.source.subscribe(new ScanObserver(o,this));
     };
 
     return ScanObservable;
   }(ObservableBase));
 
-  function InnerObserver(o, parent) {
-    this.o = o;
-    this.accumulator = parent.accumulator;
-    this.hasSeed = parent.hasSeed;
-    this.seed = parent.seed;
-    this.hasAccumulation = false;
-    this.accumulation = null;
-    this.hasValue = false;
-    this.isStopped = false;
-  }
-  InnerObserver.prototype = {
-    onNext: function (x) {
-      if (this.isStopped) { return; }
-      !this.hasValue && (this.hasValue = true);
-      if (this.hasAccumulation) {
-        this.accumulation = tryCatch(this.accumulator)(this.accumulation, x);
-      } else {
-        this.accumulation = this.hasSeed ? tryCatch(this.accumulator)(this.seed, x) : x;
-        this.hasAccumulation = true;
-      }
-      if (this.accumulation === errorObj) { return this.o.onError(this.accumulation.e); }
-      this.o.onNext(this.accumulation);
-    },
-    onError: function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-      }
-    },
-    onCompleted: function () {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        !this.hasValue && this.hasSeed && this.o.onNext(this.seed);
-        this.o.onCompleted();
-      }
-    },
-    dispose: function() { this.isStopped = true; },
-    fail: function (e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
+  var ScanObserver = (function (__super__) {
+    inherits(ScanObserver, __super__);
+    function ScanObserver(o, parent) {
+      this._o = o;
+      this._p = parent;
+      this._fn = parent.accumulator;
+      this._hs = parent.hasSeed;
+      this._s = parent.seed;
+      this._ha = false;
+      this._a = null;
+      this._hv = false;
+      this._i = 0;
+      __super__.call(this);
     }
-  };
+
+    ScanObserver.prototype.next = function (x) {
+      !this._hv && (this._hv = true);
+      if (this._ha) {
+        this._a = tryCatch(this._fn)(this._a, x, this._i, this._p);
+      } else {
+        this._a = this._hs ? tryCatch(this._fn)(this._s, x, this._i, this._p) : x;
+        this._ha = true;
+      }
+      if (this._a === errorObj) { return this._o.onError(this._a.e); }
+      this._o.onNext(this._a);
+      this._i++;
+    };
+
+    ScanObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    ScanObserver.prototype.completed = function () {
+      !this._hv && this._hs && this._o.onNext(this._s);
+      this._o.onCompleted();
+    };
+
+    return ScanObserver;
+  }(AbstractObserver));
 
   /**
   *  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
@@ -4748,10 +4741,13 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     }
 
     FromPromiseObservable.prototype.subscribeCore = function(o) {
-      this.p.then(function (data) {
-        o.onNext(data);
-        o.onCompleted();
-      }, function (err) { o.onError(err); });
+      this.p
+        .then(function (data) {
+          o.onNext(data);
+          o.onCompleted();
+        }, function (err) {
+          o.onError(err);
+        });
       return disposableEmpty;
     };
 
@@ -4766,6 +4762,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
   var observableFromPromise = Observable.fromPromise = function (promise) {
     return new FromPromiseObservable(promise);
   };
+
   /*
    * Converts an existing observable sequence to an ES6 Compatible Promise
    * @example

@@ -138,63 +138,61 @@
 
   var ReduceObservable = (function(__super__) {
     inherits(ReduceObservable, __super__);
-    function ReduceObservable(source, acc, hasSeed, seed) {
+    function ReduceObservable(source, accumulator, hasSeed, seed) {
       this.source = source;
-      this.acc = acc;
+      this.accumulator = accumulator;
       this.hasSeed = hasSeed;
       this.seed = seed;
       __super__.call(this);
     }
 
     ReduceObservable.prototype.subscribeCore = function(observer) {
-      return this.source.subscribe(new InnerObserver(observer,this));
-    };
-
-    function InnerObserver(o, parent) {
-      this.o = o;
-      this.acc = parent.acc;
-      this.hasSeed = parent.hasSeed;
-      this.seed = parent.seed;
-      this.hasAccumulation = false;
-      this.result = null;
-      this.hasValue = false;
-      this.isStopped = false;
-    }
-    InnerObserver.prototype.onNext = function (x) {
-      if (this.isStopped) { return; }
-      !this.hasValue && (this.hasValue = true);
-      if (this.hasAccumulation) {
-        this.result = tryCatch(this.acc)(this.result, x);
-      } else {
-        this.result = this.hasSeed ? tryCatch(this.acc)(this.seed, x) : x;
-        this.hasAccumulation = true;
-      }
-      if (this.result === errorObj) { this.o.onError(this.result.e); }
-    };
-    InnerObserver.prototype.onError = function (e) { 
-      if (!this.isStopped) { this.isStopped = true; this.o.onError(e); } 
-    };
-    InnerObserver.prototype.onCompleted = function () {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.hasValue && this.o.onNext(this.result);
-        !this.hasValue && this.hasSeed && this.o.onNext(this.seed);
-        !this.hasValue && !this.hasSeed && this.o.onError(new EmptyError());
-        this.o.onCompleted();
-      }
-    };
-    InnerObserver.prototype.dispose = function () { this.isStopped = true; };
-    InnerObserver.prototype.fail = function(e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
+      return this.source.subscribe(new ReduceObserver(observer,this));
     };
 
     return ReduceObservable;
   }(ObservableBase));
+
+  var ReduceObserver = (function (__super__) {
+    inherits(ReduceObserver, __super__);
+    function ReduceObserver(o, parent) {
+      this._o = o;
+      this._p = parent;
+      this._fn = parent.accumulator;
+      this._hs = parent.hasSeed;
+      this._s = parent.seed;
+      this._ha = false;
+      this._a = null;
+      this._hv = false;
+      this._i = 0;
+      __super__.call(this);
+    }
+
+    ReduceObserver.prototype.next = function (x) {
+      !this._hv && (this._hv = true);
+      if (this._ha) {
+        this._a = tryCatch(this._fn)(this._a, x, this._i, this._p);
+      } else {
+        this._a = this._hs ? tryCatch(this._fn)(this._s, x, this._i, this._p) : x;
+        this._ha = true;
+      }
+      if (this._a === errorObj) { return this._o.onError(this._a.e); }
+      this._i++;
+    };
+
+    ReduceObserver.prototype.error = function (e) {
+      this._o.onError(e);
+    };
+
+    ReduceObserver.prototype.completed = function () {
+      this._hv && this._o.onNext(this._a);
+      !this._hv && this._hs && this._o.onNext(this._s);
+      !this._hv && !this._hs && this._o.onError(new EmptyError());
+      this._o.onCompleted();
+    };
+
+    return ReduceObserver;
+  }(AbstractObserver));
 
   /**
   * Applies an accumulator function over an observable sequence, returning the result of the aggregation as a single element in the result sequence. The specified seed value is used as the initial accumulator value.
@@ -203,11 +201,11 @@
   * @param {Any} [seed] The initial accumulator value.
   * @returns {Observable} An observable sequence containing a single element with the final accumulator value.
   */
-  observableProto.reduce = function (accumulator) {
-    var hasSeed = false;
+  observableProto.reduce = function () {
+    var hasSeed = false, seed, accumulator = arguments[0];
     if (arguments.length === 2) {
       hasSeed = true;
-      var seed = arguments[1];
+      seed = arguments[1];
     }
     return new ReduceObservable(this, accumulator, hasSeed, seed);
   };
@@ -481,6 +479,51 @@
     return new CountObservable(this, fn);
   };
 
+  var IndexOfObservable = (function (__super__) {
+    inherits(IndexOfObservable, __super__);
+    function IndexOfObservable(source, e, n) {
+      this.source = source;
+      this._e = e;
+      this._n = n;
+      __super__.call(this);
+    }
+
+    IndexOfObservable.prototype.subscribeCore = function (o) {
+      if (this._n < 0) {
+        o.onNext(-1);
+        o.onCompleted();
+        return disposableEmpty;
+      }
+
+      return this.source.subscribe(new IndexOfObserver(o, this._e, this._n));
+    };
+
+    return IndexOfObservable;
+  }(ObservableBase));
+
+  var IndexOfObserver = (function (__super__) {
+    inherits(IndexOfObserver, __super__);
+    function IndexOfObserver(o, e, n) {
+      this._o = o;
+      this._e = e;
+      this._n = n;
+      this._i = 0;
+      __super__.call(this);
+    }
+
+    IndexOfObserver.prototype.next = function (x) {
+      if (this._i >= this._n && x === this._e) {
+        this._o.onNext(this._i);
+        this._o.onCompleted();
+      }
+      this._i++;
+    };
+    IndexOfObserver.prototype.error = function (e) { this._o.onError(e); };
+    IndexOfObserver.prototype.completed = function () { this._o.onNext(-1); this._o.onCompleted(); };
+
+    return IndexOfObserver;
+  }(AbstractObserver));
+
   /**
    * Returns the first index at which a given element can be found in the observable sequence, or -1 if it is not present.
    * @param {Any} searchElement Element to locate in the array.
@@ -488,29 +531,9 @@
    * @returns {Observable} And observable sequence containing the first index at which a given element can be found in the observable sequence, or -1 if it is not present.
    */
   observableProto.indexOf = function(searchElement, fromIndex) {
-    var source = this;
-    return new AnonymousObservable(function (o) {
-      var i = 0, n = +fromIndex || 0;
-      Math.abs(n) === Infinity && (n = 0);
-      if (n < 0) {
-        o.onNext(-1);
-        o.onCompleted();
-        return disposableEmpty;
-      }
-      return source.subscribe(
-        function (x) {
-          if (i >= n && x === searchElement) {
-            o.onNext(i);
-            o.onCompleted();
-          }
-          i++;
-        },
-        function (e) { o.onError(e); },
-        function () {
-          o.onNext(-1);
-          o.onCompleted();
-        });
-    }, source);
+    var n = +fromIndex || 0;
+    Math.abs(n) === Infinity && (n = 0);
+    return new IndexOfObservable(this, searchElement, n);
   };
 
   /**
@@ -1163,6 +1186,66 @@
   observableProto.toMap = function (keySelector, elementSelector) {
     if (typeof root.Map === 'undefined') { throw new TypeError(); }
     return new ToMapObservable(this, keySelector, elementSelector);
+  };
+
+  var SliceObservable = (function (__super__) {
+    inherits(SliceObservable, __super__);
+    function SliceObservable(source, b, e) {
+      this.source = source;
+      this._b = b;
+      this._e = e;
+      __super__.call(this);
+    }
+
+    SliceObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new SliceObserver(o, this._b, this._e));
+    };
+
+    return SliceObservable;
+  }(ObservableBase));
+
+  var SliceObserver = (function (__super__) {
+    inherits(SliceObserver, __super__);
+
+    function SliceObserver(o, b, e) {
+      this._o = o;
+      this._b = b;
+      this._e = e;
+      this._i = 0;
+      __super__.call(this);
+    }
+
+    SliceObserver.prototype.next = function (x) {
+      if (this._i >= this._b) {
+        if (this._e === this._i) {
+          this._o.onCompleted();
+        } else {
+          this._o.onNext(x);
+        }
+      }
+      this._i++;
+    };
+    SliceObserver.prototype.error = function (e) { this._o.onError(e); };
+    SliceObserver.prototype.completed = function () { this._o.onCompleted(); };
+
+    return SliceObserver;
+  }(AbstractObserver));
+
+  /*
+  * The slice() method returns a shallow copy of a portion of an Observable into a new Observable object.
+  * Unlike the array version, this does not support negative numbers for being or end.
+  * @param {Number} [begin] Zero-based index at which to begin extraction. If omitted, this will default to zero.
+  * @param {Number} [end] Zero-based index at which to end extraction. slice extracts up to but not including end.
+  * If omitted, this will emit the rest of the Observable object.
+  * @returns {Observable} A shallow copy of a portion of an Observable into a new Observable object.
+  */
+  observableProto.slice = function (begin, end) {
+    var start = begin || 0;
+    if (start < 0) { throw new Rx.ArgumentOutOfRangeError(); }
+    if (typeof end === 'number' && end < start) {
+      throw new Rx.ArgumentOutOfRangeError();
+    }
+    return new SliceObservable(this, start, end);
   };
 
   return Rx;

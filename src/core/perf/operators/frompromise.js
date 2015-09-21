@@ -6,10 +6,13 @@
     }
 
     FromPromiseObservable.prototype.subscribeCore = function(o) {
-      this.p.then(function (data) {
-        o.onNext(data);
-        o.onCompleted();
-      }, function (err) { o.onError(err); });
+      this.p
+        .then(function (data) {
+          o.onNext(data);
+          o.onCompleted();
+        }, function (err) {
+          o.onError(err);
+        });
       return disposableEmpty;
     };
 
