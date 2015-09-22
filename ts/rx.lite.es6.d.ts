@@ -2156,7 +2156,7 @@ declare module Rx {
          * @param {Function} [selector] A selector which takes the arguments from the callback minus the error to produce a single item to yield on next.
          * @returns {Function} An async function which when applied, returns an observable sequence with the callback arguments as an array.
          */
-        fromNodeCallback<TResult>(func: Function, context: any, selector: Function): (...args: any[]) => Observable<TResult>;
+        fromNodeCallback<TResult>(func: Function, context?: any, selector?: Function): (...args: any[]) => Observable<TResult>;
         /**
          * Converts a Node.js callback style function to an observable sequence.  This must be in function (err, ...) format.
          * @param {Function} func The function to call

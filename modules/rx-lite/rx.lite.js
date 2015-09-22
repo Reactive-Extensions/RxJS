@@ -1886,6 +1886,18 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
   var Enumerable = Rx.internals.Enumerable = function () { };
 
+  function IsDisposedDisposable(state) {
+    this._s = state;
+    this.isDisposed = false;
+  }
+
+  IsDisposedDisposable.prototype.dispose = function () {
+    if (!this.isDisposed) {
+      this.isDisposed = true;
+      this._s.isDisposed = true;
+    }
+  };
+
   var ConcatEnumerableObservable = (function(__super__) {
     inherits(ConcatEnumerableObservable, __super__);
     function ConcatEnumerableObservable(sources) {
@@ -1894,9 +1906,9 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     }
 
     ConcatEnumerableObservable.prototype.subscribeCore = function (o) {
-      var isDisposed, subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursive(this.sources[$iterator$](), function (e, self) {
-        if (isDisposed) { return; }
+      var state = { isDisposed: false }, subscription = new SerialDisposable();
+      var cancelable = currentThreadScheduler.scheduleRecursive(this.sources[$iterator$](), function (e, self) {
+        if (state.isDisposed) { return; }
         var currentItem = tryCatch(e.next).call(e);
         if (currentItem === errorObj) { return o.onError(currentItem.e); }
 
@@ -1913,39 +1925,19 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
         d.setDisposable(currentValue.subscribe(new InnerObserver(o, self, e)));
       });
 
-      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
-        isDisposed = true;
-      }));
+      return new NAryDisposable([subscription, cancelable, new IsDisposedDisposable(state)]);
     };
 
+    inherits(InnerObserver, AbstractObserver);
     function InnerObserver(o, s, e) {
-      this.o = o;
-      this.s = s;
-      this.e = e;
-      this.isStopped = false;
+      this._o = o;
+      this._s = s;
+      this._e = e;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) { if(!this.isStopped) { this.o.onNext(x); } };
-    InnerObserver.prototype.onError = function (err) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(err);
-      }
-    };
-    InnerObserver.prototype.onCompleted = function () {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.s(this.e);
-      }
-    };
-    InnerObserver.prototype.dispose = function () { this.isStopped = true; };
-    InnerObserver.prototype.fail = function (err) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(err);
-        return true;
-      }
-      return false;
-    };
+    InnerObserver.prototype.onNext = function (x) { this._o.onNext(x); };
+    InnerObserver.prototype.onError = function (e) { this._o.onError(e); };
+    InnerObserver.prototype.onCompleted = function () { this._s(this._e); };
 
     return ConcatEnumerableObservable;
   }(ObservableBase));
@@ -1964,9 +1956,9 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     CatchErrorObservable.prototype.subscribeCore = function (o) {
       var e = this.sources[$iterator$]();
 
-      var isDisposed, subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursive(null, function (lastException, self) {
-        if (isDisposed) { return; }
+      var state = { isDisposed: false }, subscription = new SerialDisposable();
+      var cancelable = currentThreadScheduler.scheduleRecursive(null, function (lastException, self) {
+        if (state.isDisposed) { return; }
         var currentItem = tryCatch(e.next).call(e);
         if (currentItem === errorObj) { return o.onError(currentItem.e); }
 
@@ -1980,15 +1972,21 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
         var d = new SingleAssignmentDisposable();
         subscription.setDisposable(d);
-        d.setDisposable(currentValue.subscribe(
-          function(x) { o.onNext(x); },
-          self,
-          function() { o.onCompleted(); }));
+        d.setDisposable(currentValue.subscribe(new InnerObserver(o, self)));
       });
-      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
-        isDisposed = true;
-      }));
+      return new NAryDisposable([subscription, cancelable, new IsDisposedDisposable(state)]);
     };
+
+    inherits(InnerObserver, AbstractObserver);
+    function InnerObserver(o, recurse) {
+      this._o = o;
+      this._recurse = recurse;
+      AbstractObserver.call(this);
+    }
+
+    InnerObserver.prototype.next = function (x) { this._o.onNext(x); };
+    InnerObserver.prototype.error = function (e) { this._recurse(e); };
+    InnerObserver.prototype.completed = function () { this._o.onCompleted(); };
 
     return CatchErrorObservable;
   }(ObservableBase));
@@ -2007,11 +2005,11 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
       var e = sources[$iterator$]();
 
-      var isDisposed,
+      var state = { isDisposed: false },
         lastException,
         subscription = new SerialDisposable();
-      var cancelable = immediateScheduler.scheduleRecursive(null, function (_, self) {
-        if (isDisposed) { return; }
+      var cancelable = currentThreadScheduler.scheduleRecursive(null, function (_, self) {
+        if (state.isDisposed) { return; }
         var currentItem = tryCatch(e.next).call(e);
         if (currentItem === errorObj) { return o.onError(currentItem.e); }
 
@@ -2045,9 +2043,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
           function() { o.onCompleted(); }));
       });
 
-      return new CompositeDisposable(notificationDisposable, subscription, cancelable, disposableCreate(function () {
-        isDisposed = true;
-      }));
+      return new NAryDisposable([notificationDisposable, subscription, cancelable, new IsDisposedDisposable(state)]);
     });
   };
 
