@@ -392,6 +392,16 @@ module.exports = function (grunt) {
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',
 
+              'src/core/testing/reactivetest.js',
+              'src/core/testing/recorded.js',
+              'src/core/testing/subscription.js',
+              'src/core/testing/mockdisposable.js',
+              'src/core/testing/mockobserver.js',
+              'src/core/testing/mockpromise.js',
+              'src/core/testing/hotobservable.js',
+              'src/core/testing/coldobservable.js',
+              'src/core/testing/testscheduler.js',
+
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
               'src/core/linq/groupedobservable.js',
@@ -676,6 +686,16 @@ module.exports = function (grunt) {
               // Virtual time
               'src/core/concurrency/virtualtimescheduler.js',
               'src/core/concurrency/historicalscheduler.js',
+
+              'src/core/testing/reactivetest.js',
+              'src/core/testing/recorded.js',
+              'src/core/testing/subscription.js',
+              'src/core/testing/mockdisposable.js',
+              'src/core/testing/mockobserver.js',
+              'src/core/testing/mockpromise.js',
+              'src/core/testing/hotobservable.js',
+              'src/core/testing/coldobservable.js',
+              'src/core/testing/testscheduler.js',
 
               'src/core/anonymousobservable.js',
               'src/core/autodetachobserver.js',
