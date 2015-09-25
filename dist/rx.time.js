@@ -773,7 +773,9 @@
     }
     other || (other = observableThrow(new TimeoutError()));
     return new AnonymousObservable(function (o) {
-      var subscription = new SerialDisposable(), timer = new SerialDisposable(), original = new SingleAssignmentDisposable();
+      var subscription = new SerialDisposable(),
+        timer = new SerialDisposable(),
+        original = new SingleAssignmentDisposable();
 
       subscription.setDisposable(original);
 
@@ -781,14 +783,20 @@
 
       function setTimer(timeout) {
         var myId = id, d = new SingleAssignmentDisposable();
+
+        function timerWins() {
+          switched = (myId === id);
+          return switched;
+        }
+
         timer.setDisposable(d);
         d.setDisposable(timeout.subscribe(function () {
-          id === myId && subscription.setDisposable(other.subscribe(o));
+          timerWins() && subscription.setDisposable(other.subscribe(o));
           d.dispose();
         }, function (e) {
-          id === myId && o.onError(e);
+          timerWins() && o.onError(e);
         }, function () {
-          id === myId && subscription.setDisposable(other.subscribe(o));
+          timerWins() && subscription.setDisposable(other.subscribe(o));
         }));
       };
 
@@ -836,7 +844,8 @@
       function createTimer() {
         var myId = id;
         timer.setDisposable(scheduler.scheduleFuture(null, dueTime, function () {
-          if (id === myId) {
+          switched = id === myId;
+          if (switched) {
             isPromise(other) && (other = observableFromPromise(other));
             subscription.setDisposable(other.subscribe(o));
           }

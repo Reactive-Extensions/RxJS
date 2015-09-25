@@ -227,7 +227,7 @@
     );
   });
 
-  test('timeout timeout occurs Never', function () {
+  test('timeout timeout occurs never', function () {
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
