@@ -13,18 +13,19 @@ var disposable = Rx.Disposable.create(function () {
 
 var refCountDisposable = new Rx.RefCountDisposable(disposable);
 
-// Try disposing before the underlying is disposed
-refCountDisposable.dispose();
+var disposable1 = refCountDisposable.getDisposable();
+var disposable2 = refCountDisposable.getDisposable();
 
-console.log(refCountDisposable.isDisposed);
+disposable1.dispose();
+console.log(disposable.isDisposed);
 // => false
 
-// Dispose the underlying disposable
-disposable.dispose();
-// => disposed
+disposable2.dispose();
+console.log(disposable.isDisposed);
+// => false
 
-// Now dispose the primary
 refCountDisposable.dispose();
+// => disposed
 
 console.log(refCountDisposable.isDisposed);
 // => true
@@ -88,18 +89,19 @@ var disposable = Rx.Disposable.create(function () {
 
 var refCountDisposable = new Rx.RefCountDisposable(disposable);
 
-// Try disposing before the underlying is disposed
-refCountDisposable.dispose();
+var disposable1 = refCountDisposable.getDisposable();
+var disposable2 = refCountDisposable.getDisposable();
 
-console.log(refCountDisposable.isDisposed);
+disposable1.dispose();
+console.log(disposable.isDisposed);
 // => false
 
-// Dispose the underlying disposable
-disposable.dispose();
-// => disposed
+disposable2.dispose();
+console.log(disposable.isDisposed);
+// => false
 
-// Now dispose the primary
 refCountDisposable.dispose();
+// => disposed
 
 console.log(refCountDisposable.isDisposed);
 // => true
