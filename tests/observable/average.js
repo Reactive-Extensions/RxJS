@@ -21,9 +21,9 @@
       return xs.average();
     });
 
-    equal(1, results.messages.length);
-    ok(results.messages[0].value.kind === 'E' && results.messages[0].value.exception !== null);
-    ok(results.messages[0].time === 250);
+    results.messages.assertEqual(
+      onError(250, function (n) { return n.error instanceof Rx.EmptyError; })
+    );
   });
 
   test('average Number Return', function () {
@@ -104,9 +104,9 @@
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-      onNext(210, "b"),
-      onNext(220, "fo"),
-      onNext(230, "qux"),
+      onNext(210, 'b'),
+      onNext(220, 'fo'),
+      onNext(230, 'qux'),
       onCompleted(240)
     );
 
@@ -122,15 +122,15 @@
     xs.subscriptions.assertEqual(subscribe(200, 240));
   });
 
-  test('average Selector Throws', function () {
+  test('average Selector throws', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
-      onNext(210, "b"),
-      onNext(220, "fo"),
-      onNext(230, "qux"),
+      onNext(210, 'b'),
+      onNext(220, 'fo'),
+      onNext(230, 'qux'),
       onCompleted(240)
     );
 

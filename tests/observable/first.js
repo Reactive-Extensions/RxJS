@@ -27,11 +27,12 @@
     res.messages.assertEqual(
       onError(250, function (n) { return n.error instanceof Rx.EmptyError; }));
 
-    xs.subscriptions.assertEqual(subscribe(200, 250));
+    xs.subscriptions.assertEqual(
+      subscribe(200, 250)
+    );
   });
 
   test('first default', function () {
-
     var scheduler = new TestScheduler();
 
     var xs = scheduler.createHotObservable(
@@ -39,13 +40,19 @@
       onCompleted(250)
     );
 
-    var res = scheduler.startScheduler(function () {
-      return xs.first({defaultValue: 42});
-    });
+    var res = scheduler.startScheduler(
+      function () {
+        return xs.first({defaultValue: 42});
+      });
 
-    res.messages.assertEqual(onNext(250, 42), onCompleted(250));
+    res.messages.assertEqual(
+      onNext(250, 42),
+      onCompleted(250)
+    );
 
-    xs.subscriptions.assertEqual(subscribe(200, 250));
+    xs.subscriptions.assertEqual(
+      subscribe(200, 250)
+    );
   });
 
   test('first one', function () {

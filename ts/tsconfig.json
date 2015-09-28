@@ -217,7 +217,7 @@
         "./core/linq/observable/windowwithtimeorcount.ts",
         "./core/linq/observable/withlatestfrom.ts",
         "./core/linq/observable/zip.ts",
-        "./core/linq/observable/ziparray.ts",
+        "./core/linq/observable/zipiterable.ts",
         "./core/linq/observable/zipproto.ts",
         "./core/notification.ts",
         "./core/observable.ts",
