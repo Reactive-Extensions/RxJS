@@ -70,4 +70,19 @@
     raises(function () { scheduler2.start(); });
   });
 
+  test('timer relative start and periodically repeat', function() {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function() {
+      return Rx.Observable.timer(300, 100, scheduler);
+    });
+
+    results.messages.assertEqual(
+      onNext(500, 0),
+      onNext(600, 1),
+      onNext(700, 2),
+      onNext(800, 3),
+      onNext(900, 4)
+    );
+  });
 }());
