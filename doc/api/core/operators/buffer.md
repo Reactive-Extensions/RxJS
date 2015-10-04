@@ -1,8 +1,6 @@
 ### `Rx.Observable.prototype.buffer()`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.coincidence.js#L572-L585 "View in source")
 
-The `buffer` periodically gather items emitted by an Observable into buffers and emit these buffers rather than emitting the items one at a time.
-
 The `buffer` method periodically gathers items emitted by a source Observable into buffers, and emits these buffers as its own emissions.
 
 Note that if the source Observable issues an `onError` notification, `buffer` will pass on this notification immediately without first emitting the buffer it is in the process of assembling, even if that buffer contains items that were emitted by the source Observable before it issued the error notification.
