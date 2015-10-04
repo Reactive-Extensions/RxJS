@@ -159,7 +159,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`skipUntilWithTime`](operators/skipuntilwithtime.md)
 - [`skipWhile`](operators/skipwhile.md)
 - [`slice`](operators/slice.md)
-- [`some`](operators/any.md)
+- [`some`](operators/some.md)
 - [`startWith`](operators/startwith.md)
 - [`subscribe | forEach`](operators/subscribe.md)
 - [`subscribeOnNext`](operators/subscribeonnext.md)
