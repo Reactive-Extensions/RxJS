@@ -27,6 +27,8 @@
     </dependencies>
   </metadata>
   <files>
+    <file src="..\..\dist\rx.all.js" target="content\Scripts\rx.all.js" />
+    <file src="..\..\dist\rx.all.compat.js" target="content\Scripts\rx.all.compat.js" />
     <file src="..\..\ts\rx.all.d.ts" target="content\Scripts\rx.all.d.ts" />
     <file src="..\..\ts\rx.all.es6.d.ts" target="content\Scripts\rx.all.es6.d.ts" />
   </files>
