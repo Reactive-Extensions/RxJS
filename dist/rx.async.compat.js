@@ -34,11 +34,13 @@
     observableFromPromise = Observable.fromPromise,
     observableThrow = Observable.throwError,
     AnonymousObservable = Rx.AnonymousObservable,
+    ObservableBase = Rx.ObservableBase,
     AsyncSubject = Rx.AsyncSubject,
     disposableCreate = Rx.Disposable.create,
     CompositeDisposable = Rx.CompositeDisposable,
     immediateScheduler = Rx.Scheduler.immediate,
     defaultScheduler = Rx.Scheduler['default'],
+    inherits = Rx.internals.inherits,
     isScheduler = Rx.Scheduler.isScheduler,
     isPromise = Rx.helpers.isPromise,
     isFunction = Rx.helpers.isFunction,
@@ -343,66 +345,13 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
 };
 
   function isNodeList(el) {
-    if (window.StaticNodeList) {
+    if (root.StaticNodeList) {
       // IE8 Specific
       // instanceof is slower than Object#toString, but Object#toString will not work as intended in IE8
-      return (el instanceof window.StaticNodeList || el instanceof window.NodeList);
+      return el instanceof root.StaticNodeList || el instanceof root.NodeList;
     } else {
-      return (Object.prototype.toString.call(el) == '[object NodeList]')
+      return Object.prototype.toString.call(el) === '[object NodeList]';
     }
-  }
-
-  function fixEvent(event) {
-    var stopPropagation = function () {
-      this.cancelBubble = true;
-    };
-
-    var preventDefault = function () {
-      this.bubbledKeyCode = this.keyCode;
-      if (this.ctrlKey) {
-        try {
-          this.keyCode = 0;
-        } catch (e) { }
-      }
-      this.defaultPrevented = true;
-      this.returnValue = false;
-      this.modified = true;
-    };
-
-    event || (event = root.event);
-    if (!event.target) {
-      event.target = event.target || event.srcElement;
-
-      if (event.type == 'mouseover') {
-        event.relatedTarget = event.fromElement;
-      }
-      if (event.type == 'mouseout') {
-        event.relatedTarget = event.toElement;
-      }
-      // Adding stopPropogation and preventDefault to IE
-      if (!event.stopPropagation) {
-        event.stopPropagation = stopPropagation;
-        event.preventDefault = preventDefault;
-      }
-      // Normalize key events
-      switch (event.type) {
-        case 'keypress':
-          var c = ('charCode' in event ? event.charCode : event.keyCode);
-          if (c == 10) {
-            c = 0;
-            event.keyCode = 13;
-          } else if (c == 13 || c == 27) {
-            c = 0;
-          } else if (c == 3) {
-            c = 99;
-          }
-          event.charCode = c;
-          event.keyChar = event.charCode ? String.fromCharCode(event.charCode) : '';
-          break;
-      }
-    }
-
-    return event;
   }
 
   function ListenDisposable(e, n, fn) {
@@ -419,52 +368,17 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     }
   };
 
-  function AttachEventDisposable(e, n, fn) {
-    this._e = e;
-    this._n = 'on' + n;
-    this._fn = function (e) { fn(fixEvent(e)); };
-    this._e.attachEvent(this._n, this._fn);
-    this.isDisposed = false;
-  }
-  AttachEventDisposable.prototype.dispose = function () {
-    if (!this.isDisposed) {
-      this._e.detachEvent(this._n, this._fn);
-      this.isDisposed = true;
-    }
-  };
-  function LevelOneDisposable(e, n, fn) {
-    this._e = e;
-    this._n = 'on' + n;
-    this._e[this._n] = fn;
-    this.isDisposed = false;
-  }
-  LevelOneDisposable.prototype.dispose = function () {
-    if (!this.isDisposed) {
-      this._e[this._n] = null;
-      this.isDisposed = true;
-    }
-  };
-
-  function createListener (el, eventName, handler) {
-    if (el.addEventListener) {
-      return new ListenDisposable(el, eventName, handler)
-    }
-    if (el.attachEvent) {
-      return new AttachEventDisposable(el, eventName, handler);
-    }
-    return LevelOneDisposable(el, eventName, handler);
-  }
-
   function createEventListener (el, eventName, handler) {
     var disposables = new CompositeDisposable();
 
-    // Asume NodeList
-    if (isNodeList(el) || Object.prototype.toString.call(el) === '[object HTMLCollection]') {
+    // Asume NodeList or HTMLCollection
+    var elemToString = Object.prototype.toString.call(el);
+    if (isNodeList(el) || elemToString === '[object HTMLCollection]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
     } else if (el) {
-      disposables.add(createListener(el, eventName, handler));
+      disposables.add(new ListenDisposable(el, eventName, handler));
     }
 
     return disposables;
@@ -474,6 +388,36 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * Configuration option to determine whether to use native events only
    */
   Rx.config.useNativeEvents = false;
+
+  var EventObservable = (function(__super__) {
+    inherits(EventObservable, __super__);
+    function EventObservable(el, name, fn) {
+      this._el = el;
+      this._name = name;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    function createHandler(o, fn) {
+      return function handler () {
+        var results = arguments[0];
+        if (isFunction(fn)) {
+          results = tryCatch(fn).apply(null, arguments);
+          if (results === errorObj) { return o.onError(results.e); }
+        }
+        o.onNext(results);
+      };
+    }
+
+    EventObservable.prototype.subscribeCore = function (o) {
+      return createEventListener(
+        this._el,
+        this._n,
+        createHandler(o, this._fn));
+    };
+
+    return EventObservable;
+  }(ObservableBase));
 
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
@@ -501,46 +445,61 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
           selector);
       }
     }
-    return new AnonymousObservable(function (o) {
-      return createEventListener(
-        element,
-        eventName,
-        function handler () {
-          var results = arguments[0];
-          if (isFunction(selector)) {
-            results = tryCatch(selector).apply(null, arguments);
-            if (results === errorObj) { return o.onError(results.e); }
-          }
-          o.onNext(results);
-        });
-    }).publish().refCount();
+
+    return new EventObservable(element, eventName, selector).publish().refCount();
   };
+
+  var EventPatternObservable = (function(__super__) {
+    inherits(EventPatternObservable, __super__);
+    function EventPatternObservable(add, del, fn) {
+      this._add = add;
+      this._del = del;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    function createHandler(o, fn) {
+      return function handler () {
+        var results = arguments[0];
+        if (isFunction(fn)) {
+          results = tryCatch(fn).apply(null, arguments);
+          if (results === errorObj) { return o.onError(results.e); }
+        }
+        o.onNext(results);
+      };
+    }
+
+    EventPatternObservable.prototype.subscribeCore = function (o) {
+      var fn = createHandler(o, this._fn);
+      var returnValue = this._add(fn);
+      return new EventPatternDisposable(this._del, fn, returnValue);
+    };
+
+    function EventPatternDisposable(del, fn, ret) {
+      this._del = del;
+      this._fn = fn;
+      this._ret = ret;
+      this.isDisposed = false;
+    }
+
+    EventPatternDisposable.prototype.dispose = function () {
+      if(!this.isDisposed) {
+        isFunction(this._del) && this._del(this._fn, this._ret);
+      }
+    };
+
+    return EventPatternObservable;
+  }(ObservableBase));
 
   /**
    * Creates an observable sequence from an event emitter via an addHandler/removeHandler pair.
    * @param {Function} addHandler The function to add a handler to the emitter.
    * @param {Function} [removeHandler] The optional function to remove a handler from an emitter.
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
-   * @param {Scheduler} [scheduler] A scheduler used to schedule the remove handler.
    * @returns {Observable} An observable sequence which wraps an event from an event emitter
    */
-  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector, scheduler) {
-    isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new AnonymousObservable(function (o) {
-      function innerHandler () {
-        var result = arguments[0];
-        if (isFunction(selector)) {
-          result = tryCatch(selector).apply(null, arguments);
-          if (result === errorObj) { return o.onError(result.e); }
-        }
-        o.onNext(result);
-      }
-
-      var returnValue = addHandler(innerHandler);
-      return disposableCreate(function () {
-        isFunction(removeHandler) && removeHandler(innerHandler, returnValue);
-      });
-    }).publish().refCount();
+  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
+    return new EventPatternObservable(addHandler, removeHandler, selector).publish().refCount();
   };
 
   /**

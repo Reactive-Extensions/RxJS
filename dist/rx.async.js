@@ -34,11 +34,13 @@
     observableFromPromise = Observable.fromPromise,
     observableThrow = Observable.throwError,
     AnonymousObservable = Rx.AnonymousObservable,
+    ObservableBase = Rx.ObservableBase,
     AsyncSubject = Rx.AsyncSubject,
     disposableCreate = Rx.Disposable.create,
     CompositeDisposable = Rx.CompositeDisposable,
     immediateScheduler = Rx.Scheduler.immediate,
     defaultScheduler = Rx.Scheduler['default'],
+    inherits = Rx.internals.inherits,
     isScheduler = Rx.Scheduler.isScheduler,
     isPromise = Rx.helpers.isPromise,
     isFunction = Rx.helpers.isFunction,
@@ -342,6 +344,16 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
   };
 };
 
+  function isNodeList(el) {
+    if (root.StaticNodeList) {
+      // IE8 Specific
+      // instanceof is slower than Object#toString, but Object#toString will not work as intended in IE8
+      return el instanceof root.StaticNodeList || el instanceof root.NodeList;
+    } else {
+      return Object.prototype.toString.call(el) === '[object NodeList]';
+    }
+  }
+
   function ListenDisposable(e, n, fn) {
     this._e = e;
     this._n = n;
@@ -361,7 +373,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
 
     // Asume NodeList or HTMLCollection
     var elemToString = Object.prototype.toString.call(el);
-    if (elemToString === '[object NodeList]' || elemToString === '[object HTMLCollection]') {
+    if (isNodeList(el) || elemToString === '[object HTMLCollection]') {
       for (var i = 0, len = el.length; i < len; i++) {
         disposables.add(createEventListener(el.item(i), eventName, handler));
       }
@@ -377,16 +389,35 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    */
   Rx.config.useNativeEvents = false;
 
-  function eventHandler(o, selector) {
-    return function handler () {
-      var results = arguments[0];
-      if (isFunction(selector)) {
-        results = tryCatch(selector).apply(null, arguments);
-        if (results === errorObj) { return o.onError(results.e); }
-      }
-      o.onNext(results);
+  var EventObservable = (function(__super__) {
+    inherits(EventObservable, __super__);
+    function EventObservable(el, name, fn) {
+      this._el = el;
+      this._name = name;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    function createHandler(o, fn) {
+      return function handler () {
+        var results = arguments[0];
+        if (isFunction(fn)) {
+          results = tryCatch(fn).apply(null, arguments);
+          if (results === errorObj) { return o.onError(results.e); }
+        }
+        o.onNext(results);
+      };
+    }
+
+    EventObservable.prototype.subscribeCore = function (o) {
+      return createEventListener(
+        this._el,
+        this._n,
+        createHandler(o, this._fn));
     };
-  }
+
+    return EventObservable;
+  }(ObservableBase));
 
   /**
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
@@ -415,39 +446,60 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       }
     }
 
-    return new AnonymousObservable(function (o) {
-      return createEventListener(
-        element,
-        eventName,
-        eventHandler(o, selector));
-    }).publish().refCount();
+    return new EventObservable(element, eventName, selector).publish().refCount();
   };
+
+  var EventPatternObservable = (function(__super__) {
+    inherits(EventPatternObservable, __super__);
+    function EventPatternObservable(add, del, fn) {
+      this._add = add;
+      this._del = del;
+      this._fn = fn;
+      __super__.call(this);
+    }
+
+    function createHandler(o, fn) {
+      return function handler () {
+        var results = arguments[0];
+        if (isFunction(fn)) {
+          results = tryCatch(fn).apply(null, arguments);
+          if (results === errorObj) { return o.onError(results.e); }
+        }
+        o.onNext(results);
+      };
+    }
+
+    EventPatternObservable.prototype.subscribeCore = function (o) {
+      var fn = createHandler(o, this._fn);
+      var returnValue = this._add(fn);
+      return new EventPatternDisposable(this._del, fn, returnValue);
+    };
+
+    function EventPatternDisposable(del, fn, ret) {
+      this._del = del;
+      this._fn = fn;
+      this._ret = ret;
+      this.isDisposed = false;
+    }
+
+    EventPatternDisposable.prototype.dispose = function () {
+      if(!this.isDisposed) {
+        isFunction(this._del) && this._del(this._fn, this._ret);
+      }
+    };
+
+    return EventPatternObservable;
+  }(ObservableBase));
 
   /**
    * Creates an observable sequence from an event emitter via an addHandler/removeHandler pair.
    * @param {Function} addHandler The function to add a handler to the emitter.
    * @param {Function} [removeHandler] The optional function to remove a handler from an emitter.
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
-   * @param {Scheduler} [scheduler] A scheduler used to schedule the remove handler.
    * @returns {Observable} An observable sequence which wraps an event from an event emitter
    */
-  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector, scheduler) {
-    isScheduler(scheduler) || (scheduler = immediateScheduler);
-    return new AnonymousObservable(function (o) {
-      function innerHandler () {
-        var result = arguments[0];
-        if (isFunction(selector)) {
-          result = tryCatch(selector).apply(null, arguments);
-          if (result === errorObj) { return o.onError(result.e); }
-        }
-        o.onNext(result);
-      }
-
-      var returnValue = addHandler(innerHandler);
-      return disposableCreate(function () {
-        isFunction(removeHandler) && removeHandler(innerHandler, returnValue);
-      });
-    }).publish().refCount();
+  var fromEventPattern = Observable.fromEventPattern = function (addHandler, removeHandler, selector) {
+    return new EventPatternObservable(addHandler, removeHandler, selector).publish().refCount();
   };
 
   /**

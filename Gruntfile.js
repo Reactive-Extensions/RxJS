@@ -588,7 +588,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
               'src/core/perf/operators/fromcallback.js',
               'src/core/perf/operators/fromnodecallback.js',
-              'src/core/linq/observable/fromevent.compat.js', // publish
+              'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
 
@@ -1295,7 +1295,7 @@ module.exports = function (grunt) {
               // Async Operators
               'src/core/perf/operators/fromcallback.js',
               'src/core/perf/operators/fromnodecallback.js',
-              'src/core/linq/observable/fromevent.compat.js', // publish
+              'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/perf/operators/frompromise.js', // AsyncSubject, asObservable
               'src/core/linq/observable/topromise.js',
@@ -1628,7 +1628,7 @@ module.exports = function (grunt) {
               'src/core/linq/observable/toasync.js', // asyncsubject, asObservable
               'src/core/perf/operators/fromcallback.js',
               'src/core/perf/operators/fromnodecallback.js',
-              'src/core/linq/observable/fromevent.compat.js', // publish
+              'src/core/linq/observable/fromevent.js', // publish
               'src/core/linq/observable/fromeventpattern.js', // publish
               'src/core/linq/observable/startasync.js',
               'src/core/headers/suboutro.js'

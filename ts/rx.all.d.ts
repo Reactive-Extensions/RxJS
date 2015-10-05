@@ -1491,6 +1491,21 @@ declare module Rx {
         zip<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(source1: ObservableOrPromise<T1>, source2: ObservableOrPromise<T2>, source3: ObservableOrPromise<T3>, source4: ObservableOrPromise<T4>, source5: ObservableOrPromise<T5>, source6: ObservableOrPromise<T6>, source7: ObservableOrPromise<T7>, source8: ObservableOrPromise<T8>, source9: ObservableOrPromise<T9>, resultSelector?: (item1: T1, item2: T2, item3: T3, item4: T4, item5: T5, item6: T6, item7: T7, item8: T8, item9: T9) => TResult): Observable<TResult>;
     }
 
+    export interface ObservableStatic {
+        /**
+        * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
+        * @param arguments Observable sources.
+        * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
+        */
+        zipIterable<T>(...sources: Observable<T>[]): Observable<T[]>;
+        /**
+        * Merges the specified observable sequences into one observable sequence by emitting a list with the elements of the observable sequences at corresponding indexes.
+        * @param arguments Observable sources.
+        * @returns {Observable} An observable sequence containing lists of elements at corresponding indexes.
+        */
+        zipIterable<T>(sources: Observable<T>[]): Observable<T[]>;
+    }
+
     export interface Observable<T> {
         /**
        *  Hides the identity of an observable sequence.

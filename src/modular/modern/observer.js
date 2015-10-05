@@ -1,7 +1,7 @@
 'use strict';
 
 var noop = require('./helpers/noop');
-var defaultError = require('./helpers/defaulterror');
+var throwError = require('./helpers/throwerror');
 var AnonymousObserver = require('./observer/anonymousobserver');
 
 /**
@@ -18,9 +18,25 @@ function Observer () { }
  */
 Observer.create = function (onNext, onError, onCompleted) {
   onNext || (onNext = noop);
-  onError || (onError = defaultError);
+  onError || (onError = throwError);
   onCompleted || (onCompleted = noop);
   return new AnonymousObserver(onNext, onError, onCompleted);
+};
+
+Observer.addToObject = function (operators) {
+  operators.forEach(function (operator) {
+    Observer[operator] = operator[operator];
+  });
+};
+
+Observer.addToPrototype = function (operators) {
+  operators.forEach(function (operator) {
+    Observer.prototype[operator] = function () {
+      var args = [this];
+      args.push.apply(args, arguments);
+      return operators[operator].apply(null, args);
+    };
+  });
 };
 
 module.exports = Observer;
