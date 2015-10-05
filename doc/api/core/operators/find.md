@@ -10,7 +10,7 @@ Searches for an element that matches the conditions defined by the specified pre
 2. `[thisArg]` *(`Any`)*: Object to use as `this` when executing the predicate.
 
 #### Returns
-*(`Observable`)*: An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, undefined.
+*(`Observable`)*: An Observable sequence with the first element that matches the conditions defined by the specified predicate, if found; otherwise, an empty sequence.
 
 #### Example
 ```js
@@ -51,7 +51,6 @@ var subscription = source.subscribe(
     console.log('Completed');
   });
 
-// => Next: undefined
 // => Completed
 ```
 
