@@ -5862,7 +5862,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
       this.hasError = false;
     }
 
-    addProperties(AsyncSubject.prototype, Observer, {
+    addProperties(AsyncSubject.prototype, Observer.prototype, {
       _subscribe: function (o) {
         checkDisposed(this);
 

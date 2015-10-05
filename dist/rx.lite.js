@@ -6486,7 +6486,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       this.hasError = false;
     }
 
-    addProperties(AsyncSubject.prototype, Observer, {
+    addProperties(AsyncSubject.prototype, Observer.prototype, {
       _subscribe: function (o) {
         checkDisposed(this);
 
@@ -6622,7 +6622,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       this.hasError = false;
     }
 
-    addProperties(BehaviorSubject.prototype, Observer, {
+    addProperties(BehaviorSubject.prototype, Observer.prototype, {
       _subscribe: function (o) {
         checkDisposed(this);
         if (!this.isStopped) {

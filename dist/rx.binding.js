@@ -234,7 +234,7 @@
       this.hasError = false;
     }
 
-    addProperties(BehaviorSubject.prototype, Observer, {
+    addProperties(BehaviorSubject.prototype, Observer.prototype, {
       _subscribe: function (o) {
         checkDisposed(this);
         if (!this.isStopped) {

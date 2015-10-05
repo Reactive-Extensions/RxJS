@@ -315,8 +315,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/replay.js', // multicast, ReplaySubject
               'src/core/linq/observable/sharereplay.js',
               'src/core/subjects/innersubscription.js',
-              'src/core/subjects/behaviorsubject.js',
-              'src/core/subjects/replaysubject.js',
               'src/core/linq/connectableobservable.js',
               'src/core/linq/observable/singleinstance.js',
 
@@ -408,6 +406,8 @@ module.exports = function (grunt) {
               'src/core/subjects/innersubscription.js',
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
+              'src/core/subjects/behaviorsubject.js',
+              'src/core/subjects/replaysubject.js',
               'src/core/subjects/anonymoussubject.js',
               'src/core/backpressure/pauser.js',
               'src/core/headers/exports.js',
@@ -610,8 +610,6 @@ module.exports = function (grunt) {
               'src/core/linq/observable/replay.js', // multicast, ReplaySubject
               'src/core/linq/observable/sharereplay.js',
               'src/core/subjects/innersubscription.js',
-              'src/core/subjects/behaviorsubject.js',
-              'src/core/subjects/replaysubject.js',
               'src/core/linq/connectableobservable.js',
               'src/core/linq/observable/singleinstance.js',
 
@@ -704,6 +702,8 @@ module.exports = function (grunt) {
               'src/core/subjects/subject.js',
               'src/core/subjects/asyncsubject.js',
               'src/core/subjects/anonymoussubject.js',
+              'src/core/subjects/behaviorsubject.js',
+              'src/core/subjects/replaysubject.js',
               'src/core/backpressure/pauser.js',
               'src/core/headers/exports.js',
 
