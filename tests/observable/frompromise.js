@@ -16,12 +16,12 @@
     var xs = scheduler.createResolvedPromise(201, 1);
 
     var results = scheduler.startScheduler(function () {
-      return Observable.fromPromise(xs);
+      return Observable.fromPromise(xs, scheduler);
     });
 
     results.messages.assertEqual(
-      onNext(201, 1),
-      onCompleted(201)
+      onNext(202, 1),
+      onCompleted(202)
     );
   });
 
@@ -33,11 +33,11 @@
     var xs = scheduler.createRejectedPromise(201, error);
 
     var results = scheduler.startScheduler(function () {
-      return Observable.fromPromise(xs);
+      return Observable.fromPromise(xs, scheduler);
     });
 
     results.messages.assertEqual(
-      onError(201, error)
+      onError(202, error)
     );
   });
 

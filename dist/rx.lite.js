@@ -4946,20 +4946,34 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
 
   var FromPromiseObservable = (function(__super__) {
     inherits(FromPromiseObservable, __super__);
-    function FromPromiseObservable(p) {
-      this.p = p;
+    function FromPromiseObservable(p, s) {
+      this._p = p;
+      this._s = s;
       __super__.call(this);
     }
 
+    function scheduleNext(s, state) {
+      var o = state[0], data = state[1];
+      o.onNext(data);
+      o.onCompleted();
+    }
+
+    function scheduleError(s, state) {
+      var o = state[0], err = state[1];
+      o.onError(err);
+    }
+
     FromPromiseObservable.prototype.subscribeCore = function(o) {
-      this.p
+      var sad = new SingleAssignmentDisposable(), self = this;
+
+      this._p
         .then(function (data) {
-          o.onNext(data);
-          o.onCompleted();
+          sad.setDisposable(self._s.schedule([o, data], scheduleNext));
         }, function (err) {
-          o.onError(err);
+          sad.setDisposable(self._s.schedule([o, err], scheduleError));
         });
-      return disposableEmpty;
+
+      return sad;
     };
 
     return FromPromiseObservable;
@@ -4970,8 +4984,9 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
   * @param {Promise} An ES6 Compliant promise.
   * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
   */
-  var observableFromPromise = Observable.fromPromise = function (promise) {
-    return new FromPromiseObservable(promise);
+  var observableFromPromise = Observable.fromPromise = function (promise, scheduler) {
+    scheduler || (scheduler = defaultScheduler);
+    return new FromPromiseObservable(promise, scheduler);
   };
 
   /*
