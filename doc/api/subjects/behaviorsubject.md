@@ -1,6 +1,6 @@
 # `Rx.BehaviorSubject` class #
 
-Represents a value that changes over time.  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications.
+Represents a value that changes over time.  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications. If you are looking for BehaviorSubject without initial value see [`Rx.ReplaySubject`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/replaysubject.md).
 
 This class inherits both from the `Rx.Observable` and `Rx.Observer` classes.
 
