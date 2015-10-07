@@ -5,7 +5,7 @@ module.exports = function (grunt) {
       meta: {
           banner:
             '/*'+
-            'Copyright (c) Microsoft Open Technologies, Inc.  All rights reserved.\r\n' +
+            'Copyright (c) Microsoft.  All rights reserved.\r\n' +
             'Microsoft Open Technologies. Licensed under the Apache License, Version 2.0 (the "License"); you.\r\n' +
             'may not use this file except in compliance with the License. You may.\r\n' +
             'obtain a copy of the License at.\r\n\r\n' +
