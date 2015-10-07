@@ -40,9 +40,16 @@
           o.onCompleted();
           return;
         }
-        var value = toObservable.call(self, ret.value);
+        var obs = toObservable.call(self, ret.value);
+        var value = null;
+        var hasValue = false;
         if (Observable.isObservable(value)) {
-          g.add(value.subscribe(processGenerator, onError));
+          g.add(value.subscribe(function(val) {
+            hasValue = true;
+            value = val;
+          }, onError, function() {
+            hasValue && processGenerator(value);
+          }));
         } else {
           onError(new TypeError('type not supported'));
         }
@@ -64,9 +71,13 @@
   }
 
   function arrayToObservable (obj) {
-    return Observable.from(obj)
-        .flatMap(toObservable)
-        .toArray();
+    return Observable.from(obj).concatMap(function(o) {
+      if(Observable.isObservable(o) || isObject(o)) {
+        return toObservable.call(null, o);
+      } else {
+        return Rx.Observable.just(o);
+      }
+    }).toArray();
   }
 
   function objectToObservable (obj) {
