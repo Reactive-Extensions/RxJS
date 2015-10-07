@@ -43,8 +43,8 @@
         var obs = toObservable.call(self, ret.value);
         var value = null;
         var hasValue = false;
-        if (Observable.isObservable(value)) {
-          g.add(value.subscribe(function(val) {
+        if (Observable.isObservable(obs)) {
+          g.add(obs.subscribe(function(val) {
             hasValue = true;
             value = val;
           }, onError, function() {
