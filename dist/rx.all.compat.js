@@ -7407,7 +7407,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
         var value = null;
         var hasValue = false;
         if (Observable.isObservable(obs)) {
-          g.add(value.subscribe(function(val) {
+          g.add(obs.subscribe(function(val) {
             hasValue = true;
             value = val;
           }, onError, function() {
