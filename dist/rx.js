@@ -170,38 +170,38 @@
 
   var EmptyError = Rx.EmptyError = function() {
     this.message = 'Sequence contains no elements.';
-    this.name = 'EmptyError';
     Error.call(this);
   };
   EmptyError.prototype = Object.create(Error.prototype);
+  EmptyError.prototype.name = 'EmptyError';
 
   var ObjectDisposedError = Rx.ObjectDisposedError = function() {
     this.message = 'Object has been disposed';
-    this.name = 'ObjectDisposedError';
     Error.call(this);
   };
   ObjectDisposedError.prototype = Object.create(Error.prototype);
+  ObjectDisposedError.prototype.name = 'ObjectDisposedError';
 
   var ArgumentOutOfRangeError = Rx.ArgumentOutOfRangeError = function () {
     this.message = 'Argument out of range';
-    this.name = 'ArgumentOutOfRangeError';
     Error.call(this);
   };
   ArgumentOutOfRangeError.prototype = Object.create(Error.prototype);
+  ArgumentOutOfRangeError.prototype.name = 'ArgumentOutOfRangeError';
 
   var NotSupportedError = Rx.NotSupportedError = function (message) {
     this.message = message || 'This operation is not supported';
-    this.name = 'NotSupportedError';
     Error.call(this);
   };
   NotSupportedError.prototype = Object.create(Error.prototype);
+  NotSupportedError.prototype.name = 'NotSupportedError';
 
   var NotImplementedError = Rx.NotImplementedError = function (message) {
     this.message = message || 'This operation is not implemented';
-    this.name = 'NotImplementedError';
     Error.call(this);
   };
   NotImplementedError.prototype = Object.create(Error.prototype);
+  NotImplementedError.prototype.name = 'NotImplementedError';
 
   var notImplemented = Rx.helpers.notImplemented = function () {
     throw new NotImplementedError();
@@ -3658,12 +3658,12 @@ var ObserveOnObservable = (function (__super__) {
   };
 
   var CompositeError = Rx.CompositeError = function(errors) {
-    this.name = "NotImplementedError";
     this.innerErrors = errors;
     this.message = 'This contains multiple errors. Check the innerErrors';
     Error.call(this);
-  }
+  };
   CompositeError.prototype = Error.prototype;
+  CompositeError.prototype.name = 'NotImplementedError';
 
   /**
   * Flattens an Observable that emits Observables into one Observable, in a way that allows an Observer to

@@ -1,10 +1,10 @@
   var CompositeError = Rx.CompositeError = function(errors) {
-    this.name = "NotImplementedError";
     this.innerErrors = errors;
     this.message = 'This contains multiple errors. Check the innerErrors';
     Error.call(this);
-  }
+  };
   CompositeError.prototype = Error.prototype;
+  CompositeError.prototype.name = 'NotImplementedError';
 
   /**
   * Flattens an Observable that emits Observables into one Observable, in a way that allows an Observer to
