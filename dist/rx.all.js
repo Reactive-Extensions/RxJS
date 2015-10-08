@@ -1302,20 +1302,14 @@
     } else if (postMessageSupported()) {
       var MSG_PREFIX = 'ms.rx.schedule' + Math.random();
 
-      function onGlobalPostMessage(event) {
+      var onGlobalPostMessage = function (event) {
         // Only if we're a match to avoid any other global events
         if (typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
           runTask(event.data.substring(MSG_PREFIX.length));
         }
-      }
+      };
 
-      if (root.addEventListener) {
-        root.addEventListener('message', onGlobalPostMessage, false);
-      } else if (root.attachEvent) {
-        root.attachEvent('onmessage', onGlobalPostMessage);
-      } else {
-        root.onmessage = onGlobalPostMessage;
-      }
+      root.addEventListener('message', onGlobalPostMessage, false);
 
       scheduleMethod = function (action) {
         var id = nextHandle++;
@@ -7124,9 +7118,16 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
           o.onCompleted();
           return;
         }
-        var value = toObservable.call(self, ret.value);
-        if (Observable.isObservable(value)) {
-          g.add(value.subscribe(processGenerator, onError));
+        var obs = toObservable.call(self, ret.value);
+        var value = null;
+        var hasValue = false;
+        if (Observable.isObservable(obs)) {
+          g.add(value.subscribe(function(val) {
+            hasValue = true;
+            value = val;
+          }, onError, function() {
+            hasValue && processGenerator(value);
+          }));
         } else {
           onError(new TypeError('type not supported'));
         }
@@ -7148,9 +7149,13 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
   }
 
   function arrayToObservable (obj) {
-    return Observable.from(obj)
-        .flatMap(toObservable)
-        .toArray();
+    return Observable.from(obj).concatMap(function(o) {
+      if(Observable.isObservable(o) || isObject(o)) {
+        return toObservable.call(null, o);
+      } else {
+        return Rx.Observable.just(o);
+      }
+    }).toArray();
   }
 
   function objectToObservable (obj) {

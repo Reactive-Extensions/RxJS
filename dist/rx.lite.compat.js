@@ -1560,20 +1560,14 @@
     } else if (postMessageSupported()) {
       var MSG_PREFIX = 'ms.rx.schedule' + Math.random();
 
-      function onGlobalPostMessage(event) {
+      var onGlobalPostMessage = function (event) {
         // Only if we're a match to avoid any other global events
         if (typeof event.data === 'string' && event.data.substring(0, MSG_PREFIX.length) === MSG_PREFIX) {
           runTask(event.data.substring(MSG_PREFIX.length));
         }
-      }
+      };
 
-      if (root.addEventListener) {
-        root.addEventListener('message', onGlobalPostMessage, false);
-      } else if (root.attachEvent) {
-        root.attachEvent('onmessage', onGlobalPostMessage);
-      } else {
-        root.onmessage = onGlobalPostMessage;
-      }
+      root.addEventListener('message', onGlobalPostMessage, false);
 
       scheduleMethod = function (action) {
         var id = nextHandle++;
