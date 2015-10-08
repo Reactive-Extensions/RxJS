@@ -8885,6 +8885,42 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     }, source);
   }
 
+  var PairwiseObservable = (function (__super__) {
+    inherits(PairwiseObservable, __super__);
+    function PairwiseObservable(source) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    PairwiseObservable.prototype.subscribeCore = function (o) {
+      return this.source.subscribe(new PairwiseObserver(o));
+    };
+
+    return PairwiseObservable;
+  }(ObservableBase));
+
+  var PairwiseObserver = (function(__super__) {
+    inherits(PairwiseObserver, __super__);
+    function PairwiseObserver(o) {
+      this._o = o;
+      this._p = null;
+      this._hp = false;
+    }
+
+    PairwiseObserver.prototype.next = function (x) {
+      if (this._hp) {
+        this._o.onNext([this._p, x]);
+      } else {
+        this._hp = true;
+      }
+      this._p = x;
+    };
+    PairwiseObserver.prototype.error = function (err) { this._o.onError(err); };
+    PairwiseObserver.prototype.completed = function () { this._o.onCompleted(); };
+
+    return PairwiseObserver;
+  }(AbstractObserver));
+
   /**
    * Returns a new observable that triggers on the second and subsequent triggerings of the input observable.
    * The Nth triggering of the input observable passes the arguments from the N-1th and Nth triggering as a pair.
@@ -8892,21 +8928,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @returns {Observable} An observable that triggers on successive pairs of observations from the input observable as an array.
    */
   observableProto.pairwise = function () {
-    var source = this;
-    return new AnonymousObservable(function (observer) {
-      var previous, hasPrevious = false;
-      return source.subscribe(
-        function (x) {
-          if (hasPrevious) {
-            observer.onNext([previous, x]);
-          } else {
-            hasPrevious = true;
-          }
-          previous = x;
-        },
-        observer.onError.bind(observer),
-        observer.onCompleted.bind(observer));
-    }, source);
+    return new PairwiseObservable(this);
   };
 
   /**
@@ -8923,9 +8945,10 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    *    and the second triggers when the predicate returns false.
   */
   observableProto.partition = function(predicate, thisArg) {
+    var fn = bindCallback(predicate, thisArg, 3);
     return [
       this.filter(predicate, thisArg),
-      this.filter(function (x, i, o) { return !predicate.call(thisArg, x, i, o); })
+      this.filter(function (x, i, o) { return !fn(x, i, o); })
     ];
   };
 

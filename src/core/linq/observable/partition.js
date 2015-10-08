@@ -12,8 +12,9 @@
    *    and the second triggers when the predicate returns false.
   */
   observableProto.partition = function(predicate, thisArg) {
+    var fn = bindCallback(predicate, thisArg, 3);
     return [
       this.filter(predicate, thisArg),
-      this.filter(function (x, i, o) { return !predicate.call(thisArg, x, i, o); })
+      this.filter(function (x, i, o) { return !fn(x, i, o); })
     ];
   };
