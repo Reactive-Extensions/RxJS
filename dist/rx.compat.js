@@ -3132,18 +3132,20 @@ var ObserveOnObservable = (function (__super__) {
     this.parent = parent;
   }
 
-  FromArraySink.prototype.run = function () {
-    var observer = this.observer, args = this.parent.args, len = args.length;
-    function loopRecursive(i, recurse) {
+  function loopRecursive(args, observer) {
+    var len = args.length;
+    return function loop (i, recurse) {
       if (i < len) {
         observer.onNext(args[i]);
         recurse(i + 1);
       } else {
         observer.onCompleted();
       }
-    }
+    };
+  }
 
-    return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
+  FromArraySink.prototype.run = function () {
+    return this.parent.scheduler.scheduleRecursive(0, loopRecursive(this.parent.args, this.observer));
   };
 
   /**
@@ -3334,18 +3336,22 @@ var ObserveOnObservable = (function (__super__) {
       this.parent = parent;
     }
 
-    RangeSink.prototype.run = function () {
-      var start = this.parent.start, count = this.parent.rangeCount, observer = this.observer;
-      function loopRecursive(i, recurse) {
+    function loopRecursive(start, count, observer) {
+      return function loop (i, recurse) {
         if (i < count) {
           observer.onNext(start + i);
           recurse(i + 1);
         } else {
           observer.onCompleted();
         }
-      }
+      };
+    }
 
-      return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
+    RangeSink.prototype.run = function () {
+      return this.parent.scheduler.scheduleRecursive(
+        0,
+        loopRecursive(this.parent.start, this.parent.rangeCount, this.observer)
+      );
     };
 
     return RangeSink;

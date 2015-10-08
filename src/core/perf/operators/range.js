@@ -21,18 +21,22 @@
       this.parent = parent;
     }
 
-    RangeSink.prototype.run = function () {
-      var start = this.parent.start, count = this.parent.rangeCount, observer = this.observer;
-      function loopRecursive(i, recurse) {
+    function loopRecursive(start, count, observer) {
+      return function loop (i, recurse) {
         if (i < count) {
           observer.onNext(start + i);
           recurse(i + 1);
         } else {
           observer.onCompleted();
         }
-      }
+      };
+    }
 
-      return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
+    RangeSink.prototype.run = function () {
+      return this.parent.scheduler.scheduleRecursive(
+        0,
+        loopRecursive(this.parent.start, this.parent.rangeCount, this.observer)
+      );
     };
 
     return RangeSink;

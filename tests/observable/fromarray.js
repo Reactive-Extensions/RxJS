@@ -42,4 +42,19 @@
     );
   });
 
+  test('fromArray one', function () {
+    var array = [1];
+
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.fromArray(array, scheduler);
+    });
+
+    results.messages.assertEqual(
+      onNext(201, 1),
+      onCompleted(202)
+    );
+  });
+
 }());
