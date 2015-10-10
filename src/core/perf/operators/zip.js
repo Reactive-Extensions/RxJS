@@ -44,7 +44,11 @@
         var res = tryCatch(this._p._cb).apply(null, queuedValues);
         if (res === errorObj) { return this._o.onError(res.e); }
         this._o.onNext(res);
-      } else if (this._p._done.filter(function (x, j) { return j !== this._i; }, this).every(identity)) {
+      } else if (this._p._done.reduce(
+          function(arr, x, j) {
+            j !== arr[0]._i && x && arr[1]++;
+            return arr;
+          }, [this, 0])[1] == this._p._done.length - 1) {
         this._o.onCompleted();
       }
     };
