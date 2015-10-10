@@ -37,18 +37,27 @@
       __super__.call(this);
     }
 
+    function countDone(arr, x, j) {
+      j !== arr[1]._i && x && arr[0]++;
+      return arr;
+    }
+
+    function getNextValues(arr, x, i) {
+      arr[0][i] = x.shift();
+      //If it is complete and the queue is empty then flag for completion
+      arr[2][i] && x.length === 0 && (arr[1] = true);
+      return arr;
+    }
+
     ZipObserver.prototype.next = function (x) {
       this._p._q[this._i].push(x);
       if (this._p._q.every(function (x) { return x.length > 0; })) {
-        var queuedValues = this._p._q.map(function (x) { return x.shift(); });
-        var res = tryCatch(this._p._cb).apply(null, queuedValues);
+        var queuedValues = this._p._q.reduce(getNextValues, [new Array(this._p._q.length), false, this._p._done]);
+        var res = tryCatch(this._p._cb).apply(null, queuedValues[0]);
         if (res === errorObj) { return this._o.onError(res.e); }
         this._o.onNext(res);
-      } else if (this._p._done.reduce(
-          function(arr, x, j) {
-            j !== arr[0]._i && x && arr[1]++;
-            return arr;
-          }, [this, 0])[1] == this._p._done.length - 1) {
+        queuedValues[1] && this._o.onCompleted();
+      } else if (this._p._done.reduce(countDone, [0, this])[0] == this._p._done.length - 1) {
         this._o.onCompleted();
       }
     };
