@@ -2419,4 +2419,4 @@ declare module Rx {
 }
 
 declare module "rx" { export = Rx; }
-declare module "rx" { export = Rx; }
+
