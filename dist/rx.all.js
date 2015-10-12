@@ -4254,9 +4254,9 @@ var ObserveOnObservable = (function (__super__) {
 
       for (var i = 0; i < n; i++) {
         var source = this._s[i], sad = new SingleAssignmentDisposable();
+        subscriptions[i] = sad;
         isPromise(source) && (source = observableFromPromise(source));
         sad.setDisposable(source.subscribe(new ZipObserver(observer, i, this, q, done)));
-        subscriptions[i] = sad;
       }
 
       return new NAryDisposable(subscriptions);
@@ -4283,7 +4283,7 @@ var ObserveOnObservable = (function (__super__) {
         return j !== i;
       };
     }
-    
+
     ZipObserver.prototype.next = function (x) {
       this._q[this._i].push(x);
       if (this._q.every(notEmpty)) {
