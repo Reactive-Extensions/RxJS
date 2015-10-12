@@ -1,11 +1,17 @@
 (function () {
   /* jshint undef: true, unused: true */
   /* globals QUnit, test, Rx, equal */
-
-  QUnit.module('FromEvent');
-
   var Observable = Rx.Observable,
-    slice = Array.prototype.slice;
+    slice = Array.prototype.slice,
+    onNext = Rx.ReactiveTest.onNext;
+
+  QUnit.module('FromEvent', {
+    setup : function() {
+      this.scheduler = new Rx.TestScheduler();
+    }
+  });
+
+
 
   /** Fake DOM Element */
   function FakeDOMStandardElement(nodeName) {
@@ -35,16 +41,20 @@
   test('Event_1', function () {
     var element = new FakeDOMStandardElement('foo');
 
-    var d = Observable.fromEvent(element, 'someEvent')
-    .subscribe(function (x) {
-      equal(x, 42);
+    this.scheduler.scheduleFuture(null, 210, function() {
+      equal(element.addEventListenerCalled, true);
+      equal(element.removeEventListenerCalled, false);
     });
 
-    element.trigger('someEvent', 42);
-    equal(element.addEventListenerCalled, true);
-    equal(element.removeEventListenerCalled, false);
+    this.scheduler.scheduleFuture(null, 220, function() {
+      element.trigger('someEvent', 42);
+    });
 
-    d.dispose();
+    var result = this.scheduler.startScheduler(function() {
+      return Observable.fromEvent(element, 'someEvent');
+    });
+
+    result.messages.assertEqual(onNext(220, 42));
 
     equal(element.removeEventListenerCalled, true);
   });
@@ -73,42 +83,56 @@
   };
 
   test('Event_3', function () {
+
     var element = new FakeEventEmitter();
 
-    var d = Observable.fromEvent(element, 'someEvent')
-    .subscribe(function (x) {
-      equal(x, 42);
+    this.scheduler.scheduleFuture(null, 210, function() {
+      equal(element.addListenerCalled, true);
+      equal(element.removeListenerCalled, false);
     });
 
-    element.emit('someEvent', 42);
-    equal(element.addListenerCalled, true);
-    equal(element.removeListenerCalled, false);
+    this.scheduler.scheduleFuture(null, 220, function() {
+      element.emit('someEvent', 42);
+    });
 
-    d.dispose();
+    var result = this.scheduler.startScheduler(function() {
+      return Observable.fromEvent(element, 'someEvent');
+    });
 
+    result.messages.assertEqual(onNext(220, 42));
     equal(element.removeListenerCalled, true);
   });
 
   test('Event_4', function () {
+    var scheduler = new Rx.TestScheduler();
     var element = new FakeDOMStandardElement('foo');
 
-    var d = Observable.fromEvent(
-      element,
-      'someEvent',
-      function (baz, quux) {
-        return { foo: baz, bar: quux };
-      }
-    )
-    .subscribe(function (x) {
-      equal(x.foo, 'baz');
-      equal(x.bar, 'quux');
+    scheduler.scheduleFuture(null, 210, function() {
+      equal(element.addEventListenerCalled, true);
+      equal(element.removeEventListenerCalled, false);
     });
 
-    element.trigger('someEvent', 'baz', 'quux');
-    equal(element.addEventListenerCalled, true);
-    equal(element.removeEventListenerCalled, false);
+    scheduler.scheduleFuture(null, 220, function() {
+      element.trigger('someEvent', 'baz', 'quux');
+    });
 
-    d.dispose();
+    var result = scheduler.startScheduler(function() {
+      return Observable.fromEvent(
+        element,
+        'someEvent',
+        function (baz, quux) {
+          return { foo: baz, bar: quux };
+        }
+      );
+    });
+
+    result.messages.assertEqual(
+      onNext(220, function(x) {
+        equal(x.value.foo, 'baz');
+        equal(x.value.bar, 'quux');
+        return true;
+      })
+    );
 
     equal(element.removeEventListenerCalled, true);
   });
@@ -141,16 +165,22 @@
   test('Event_5', function () {
     var element = new FakeJQueryElement('foo');
 
-    var d = Observable.fromEvent(element, 'someEvent')
-    .subscribe(function (x) {
-      equal(x, 42);
+    this.scheduler.scheduleFuture(null, 210, function() {
+      equal(element.onCalled, true);
+      equal(element.offCalled, false);
     });
 
-    element.trigger('someEvent', 42);
-    equal(element.onCalled, true);
-    equal(element.offCalled, false);
+    this.scheduler.scheduleFuture(null, 220, function() {
+      element.trigger('someEvent', 42);
+    });
 
-    d.dispose();
+    var result = this.scheduler.startScheduler(function() {
+      return Observable.fromEvent(element, 'someEvent');
+    });
+
+    result.messages.assertEqual(
+      onNext(220, 42)
+    );
 
     equal(element.offCalled, true);
   });
@@ -158,23 +188,32 @@
   test('Event_6', function () {
     var element = new FakeJQueryElement('foo');
 
-    var d = Observable.fromEvent(
-      element,
-      'someEvent',
-      function (baz, quux) {
-        return { foo: baz, bar: quux };
-      }
-    )
-    .subscribe(function (x) {
-      equal(x.foo, 'baz');
-      equal(x.bar, 'quux');
+    this.scheduler.scheduleFuture(null, 210, function() {
+      element.trigger('someEvent', 'baz', 'quux');
     });
 
-    element.trigger('someEvent', 'baz', 'quux');
-    equal(element.onCalled, true);
-    equal(element.offCalled, false);
+    this.scheduler.scheduleFuture(null, 220, function(){
+      equal(element.onCalled, true);
+      equal(element.offCalled, false);
+    });
 
-    d.dispose();
+    var result = this.scheduler.startScheduler(function(){
+      return Observable.fromEvent(
+        element,
+        'someEvent',
+        function (baz, quux) {
+          return { foo: baz, bar: quux };
+        }
+      );
+    });
+
+    result.messages.assertEqual(
+      onNext(210, function(x) {
+        equal(x.value.foo, 'baz');
+        equal(x.value.bar, 'quux');
+        return true;
+      })
+    );
 
     equal(element.offCalled, true);
   });

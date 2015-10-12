@@ -47,7 +47,7 @@
     inherits(EventObservable, __super__);
     function EventObservable(el, name, fn) {
       this._el = el;
-      this._name = name;
+      this._n = name;
       this._fn = fn;
       __super__.call(this);
     }
