@@ -910,4 +910,32 @@
     );
   });
 
+  test('zip n-ary asymmetrical completion', function() {
+
+    var scheduler = new TestScheduler();
+    var observer = scheduler.createObserver();
+
+    var result = scheduler.startScheduler(function() {
+      return Rx.Observable.zip(
+        Observable.interval(100, scheduler).take(3),
+        Observable.interval(100, scheduler).take(4),
+        Observable.interval(100, scheduler).tap(observer),
+        Observable.interval(100, scheduler))
+    });
+
+
+    result.messages.assertEqual(
+      onNext(300, [0,0,0,0]),
+      onNext(400, [1,1,1,1]),
+      onNext(500, [2,2,2,2]),
+      onCompleted(500));
+
+    observer.messages.assertEqual(
+      onNext(300, 0),
+      onNext(400, 1),
+      onNext(500, 2))
+
+  });
+
+
 }());
