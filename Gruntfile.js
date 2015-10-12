@@ -2619,7 +2619,9 @@ module.exports = function (grunt) {
       }
 
 	  if (!(concatKey === 'all' || concatKey === 'main' || concatKey === 'lite' || concatKey === 'core')) {
-		if (allLoadedFiles['lite'][tsFile] || allLoadedFiles['core'][tsFile]) {
+		if ((concatKey.indexOf('lite') === 0 && allLoadedFiles['lite'][tsFile])
+		    || (concatKey.indexOf('lite') !== 0 && allLoadedFiles['main'][tsFile])
+		    || allLoadedFiles['core'][tsFile]) {
 		  loadedFiles[tsFile] = true;
 		  return;
 		}
@@ -2655,7 +2657,7 @@ module.exports = function (grunt) {
 	    continue;
 	  }
 
-	  if (key === 'lite' || key === 'core') {
+	  if (key === 'lite' || key === 'main' || key === 'core') {
 		items.unshift(key);
 	  } else {
 		items.push(key);
@@ -2717,7 +2719,7 @@ module.exports = function (grunt) {
 		if (concatKey === 'all' || concatKey === 'main' || concatKey === 'lite' || concatKey === 'core') {
 		  outputString += '\ndeclare module "rx" { export = Rx; }\n';
 		}
-		if (dist && concatKey !== 'core') {
+		if (dist && concatKey !== 'core' && concatKey !== 'main') {
 		  outputString += 'declare module "'+dist+'" { export = Rx; }';
 		}
 
