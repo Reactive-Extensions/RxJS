@@ -4241,22 +4241,22 @@ var ObserveOnObservable = (function (__super__) {
   var ZipObservable = (function(__super__) {
     inherits(ZipObservable, __super__);
     function ZipObservable(sources, resultSelector) {
-      var len = sources.length;
       this._s = sources;
       this._cb = resultSelector;
-      this._done = arrayInitialize(len, falseFactory);
-      this._q = arrayInitialize(len, emptyArrayFactory);
       __super__.call(this);
     }
 
     ZipObservable.prototype.subscribeCore = function(observer) {
-      var n = this._s.length, subscriptions = new Array(n);
+      var n = this._s.length,
+          subscriptions = new Array(n);
+          done = arrayInitialize(n, falseFactory),
+          q = arrayInitialize(n, emptyArrayFactory);
 
       for (var i = 0; i < n; i++) {
         var source = this._s[i], sad = new SingleAssignmentDisposable();
-        subscriptions[i] = sad;
         isPromise(source) && (source = observableFromPromise(source));
-        sad.setDisposable(source.subscribe(new ZipObserver(observer, i, this)));
+        sad.setDisposable(source.subscribe(new ZipObserver(observer, i, this, q, done)));
+        subscriptions[i] = sad;
       }
 
       return new NAryDisposable(subscriptions);
@@ -4267,21 +4267,31 @@ var ObserveOnObservable = (function (__super__) {
 
   var ZipObserver = (function (__super__) {
     inherits(ZipObserver, __super__);
-    function ZipObserver(o, i, p) {
+    function ZipObserver(o, i, p, q, d) {
       this._o = o;
       this._i = i;
       this._p = p;
+      this._q = q;
+      this._d = d;
       __super__.call(this);
     }
 
+    function notEmpty(x) { return x.length > 0; }
+    function shiftEach(x) { return x.shift(); }
+    function notTheSame(i) {
+      return function (x, j) {
+        return j !== i;
+      };
+    }
+    
     ZipObserver.prototype.next = function (x) {
-      this._p._q[this._i].push(x);
-      if (this._p._q.every(function (x) { return x.length > 0; })) {
-        var queuedValues = this._p._q.map(function (x) { return x.shift(); });
+      this._q[this._i].push(x);
+      if (this._q.every(notEmpty)) {
+        var queuedValues = this._q.map(shiftEach);
         var res = tryCatch(this._p._cb).apply(null, queuedValues);
         if (res === errorObj) { return this._o.onError(res.e); }
         this._o.onNext(res);
-      } else if (this._p._done.filter(function (x, j) { return j !== this._i; }, this).every(identity)) {
+      } else if (this._d.filter(notTheSame(this._i)).every(identity)) {
         this._o.onCompleted();
       }
     };
@@ -4291,8 +4301,8 @@ var ObserveOnObservable = (function (__super__) {
     };
 
     ZipObserver.prototype.completed = function () {
-      this._p._done[this._i] = true;
-      this._p._done.every(identity) && this._o.onCompleted();
+      this._d[this._i] = true;
+      this._d.every(identity) && this._o.onCompleted();
     };
 
     return ZipObserver;
@@ -7083,12 +7093,12 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
   };
 
   Observable.wrap = function (fn) {
-    createObservable.__generatorFunction__ = fn;
-    return createObservable;
-
     function createObservable() {
       return Observable.spawn.call(this, fn.apply(this, arguments));
     }
+
+    createObservable.__generatorFunction__ = fn;
+    return createObservable;
   };
 
   var spawn = Observable.spawn = function () {
@@ -7104,13 +7114,13 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
         return o.onCompleted();
       }
 
-      processGenerator();
-
       function processGenerator(res) {
         var ret = tryCatch(gen.next).call(gen, res);
         if (ret === errorObj) { return o.onError(ret.e); }
         next(ret);
       }
+
+      processGenerator();
 
       function onError(err) {
         var ret = tryCatch(gen.next).call(gen, err);
@@ -7417,7 +7427,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     inherits(EventObservable, __super__);
     function EventObservable(el, name, fn) {
       this._el = el;
-      this._name = name;
+      this._n = name;
       this._fn = fn;
       __super__.call(this);
     }
