@@ -2821,24 +2821,27 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
   var CombineLatestObservable = (function(__super__) {
     inherits(CombineLatestObservable, __super__);
     function CombineLatestObservable(params, cb) {
-      var len = params.length;
       this._params = params;
       this._cb = cb;
-      this._hv = arrayInitialize(len, falseFactory);
-      this._hvAll = false;
-      this._done = arrayInitialize(len, falseFactory);
-      this._v = new Array(len);
       __super__.call(this);
     }
 
     CombineLatestObservable.prototype.subscribeCore = function(observer) {
-      var len = this._params.length, subscriptions = new Array(len);
+      var len = this._params.length,
+          subscriptions = new Array(len);
+
+      var state = {
+        hasValue: arrayInitialize(len, falseFactory),
+        hasValueAll: false,
+        isDone: arrayInitialize(len, falseFactory),
+        values: new Array(len)
+      };
 
       for (var i = 0; i < len; i++) {
         var source = this._params[i], sad = new SingleAssignmentDisposable();
         subscriptions[i] = sad;
         isPromise(source) && (source = observableFromPromise(source));
-        sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, this)));
+        sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, this._cb, state)));
       }
 
       return new NAryDisposable(subscriptions);
@@ -2849,21 +2852,28 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
   var CombineLatestObserver = (function (__super__) {
     inherits(CombineLatestObserver, __super__);
-    function CombineLatestObserver(o, i, p) {
+    function CombineLatestObserver(o, i, cb, state) {
       this._o = o;
       this._i = i;
-      this._p = p;
+      this._cb = cb;
+      this._state = state;
       __super__.call(this);
     }
 
+    function notTheSame(i) {
+      return function (x, j) {
+        return j !== i;
+      };
+    }
+
     CombineLatestObserver.prototype.next = function (x) {
-      this._p._v[this._i] = x;
-      this._p._hv[this._i] = true;
-      if (this._p._hvAll || (this._p._hvAll = this._p._hv.every(identity))) {
-        var res = tryCatch(this._p._cb).apply(null, this._p._v);
+      this._state.values[this._i] = x;
+      this._state.hasValue[this._i] = true;
+      if (this._state.hasValueAll || (this._state.hasValueAll = this._state.hasValue.every(identity))) {
+        var res = tryCatch(this._cb).apply(null, this._state.values);
         if (res === errorObj) { return this._o.onError(res.e); }
         this._o.onNext(res);
-      } else if (this._p._done.filter(function (x, j) { return j !== this._i; }, this).every(identity)) {
+      } else if (this._state.isDone.filter(notTheSame(this._i)).every(identity)) {
         this._o.onCompleted();
       }
     };
@@ -2873,8 +2883,8 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     };
 
     CombineLatestObserver.prototype.completed = function () {
-      this._p._done[this._i] = true;
-      this._p._done.every(identity) && this._o.onCompleted();
+      this._state.isDone[this._i] = true;
+      this._state.isDone.every(identity) && this._o.onCompleted();
     };
 
     return CombineLatestObserver;
