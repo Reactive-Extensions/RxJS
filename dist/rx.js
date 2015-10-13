@@ -4104,27 +4104,30 @@ var ObserveOnObservable = (function (__super__) {
   var WithLatestFromObservable = (function(__super__) {
     inherits(WithLatestFromObservable, __super__);
     function WithLatestFromObservable(source, sources, resultSelector) {
-      var len = sources.length;
       this._s = source;
       this._ss = sources;
       this._cb = resultSelector;
-      this._hv = arrayInitialize(len, falseFactory);
-      this._hvAll = false;
-      this._v = new Array(len);
       __super__.call(this);
     }
 
     WithLatestFromObservable.prototype.subscribeCore = function (o) {
+      var len = this._ss.length;
+      var state = {
+        hasValue: arrayInitialize(len, falseFactory),
+        hasValueAll: false,
+        values: new Array(len)
+      };
+
       var n = this._ss.length, subscriptions = new Array(n + 1);
       for (var i = 0; i < n; i++) {
         var other = this._ss[i], sad = new SingleAssignmentDisposable();
         isPromise(other) && (other = observableFromPromise(other));
-        sad.setDisposable(other.subscribe(new WithLatestFromOtherObserver(o, i, this)));
+        sad.setDisposable(other.subscribe(new WithLatestFromOtherObserver(o, i, state)));
         subscriptions[i] = sad;
       }
 
       var sad = new SingleAssignmentDisposable();
-      sad.setDisposable(this._s.subscribe(new WithLatestFromSourceObserver(o, this)));
+      sad.setDisposable(this._s.subscribe(new WithLatestFromSourceObserver(o, this._cb, state)));
       subscriptions[n] = sad;
 
       return new NAryDisposable(subscriptions);
@@ -4135,17 +4138,17 @@ var ObserveOnObservable = (function (__super__) {
 
   var WithLatestFromOtherObserver = (function (__super__) {
     inherits(WithLatestFromOtherObserver, __super__);
-    function WithLatestFromOtherObserver(o, i, p) {
+    function WithLatestFromOtherObserver(o, i, state) {
       this._o = o;
       this._i = i;
-      this._p = p;
+      this._state = state;
       __super__.call(this);
     }
 
     WithLatestFromOtherObserver.prototype.next = function (x) {
-      this._p._v[this._i] = x;
-      this._p._hv[this._i] = true;
-      this._p._hvAll = this._p._hv.every(identity);
+      this._state.values[this._i] = x;
+      this._state.hasValue[this._i] = true;
+      this._state.hasValueAll = this._state.hasValue.every(identity);
     };
 
     WithLatestFromOtherObserver.prototype.error = function (e) {
@@ -4159,16 +4162,17 @@ var ObserveOnObservable = (function (__super__) {
 
   var WithLatestFromSourceObserver = (function (__super__) {
     inherits(WithLatestFromSourceObserver, __super__);
-    function WithLatestFromSourceObserver(o, p) {
+    function WithLatestFromSourceObserver(o, cb, state) {
       this._o = o;
-      this._p = p;
+      this._cb = cb;
+      this._state = state;
       __super__.call(this);
     }
 
     WithLatestFromSourceObserver.prototype.next = function (x) {
-      var allValues = [x].concat(this._p._v);
-      if (!this._p._hvAll) { return; }
-      var res = tryCatch(this._p._cb).apply(null, allValues);
+      var allValues = [x].concat(this._state.values);
+      if (!this._state.hasValueAll) { return; }
+      var res = tryCatch(this._cb).apply(null, allValues);
       if (res === errorObj) { return this._o.onError(res.e); }
       this._o.onNext(res);
     };
