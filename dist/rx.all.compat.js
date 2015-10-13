@@ -1497,14 +1497,16 @@
   }(Scheduler.prototype));
 
   var SchedulePeriodicRecursive = Rx.internals.SchedulePeriodicRecursive = (function () {
-    function tick(command, recurse) {
-      recurse(0, this._period);
-      try {
-        this._state = this._action(this._state);
-      } catch (e) {
-        this._cancel.dispose();
-        throw e;
-      }
+    function createTick(self) {
+      return function tick(command, recurse) {
+        recurse(0, self._period);
+        var state = tryCatch(self._action)(self._state);
+        if (state === errorObj) {
+          self._cancel.dispose();
+          thrower(state.e);
+        }
+        self._state = state;
+      };
     }
 
     function SchedulePeriodicRecursive(scheduler, state, period, action) {
@@ -1517,7 +1519,7 @@
     SchedulePeriodicRecursive.prototype.start = function () {
       var d = new SingleAssignmentDisposable();
       this._cancel = d;
-      d.setDisposable(this._scheduler.scheduleRecursiveFuture(0, this._period, tick.bind(this)));
+      d.setDisposable(this._scheduler.scheduleRecursiveFuture(0, this._period, createTick(this)));
 
       return d;
     };
@@ -4142,8 +4144,89 @@ var ObserveOnObservable = (function (__super__) {
     this.message = 'This contains multiple errors. Check the innerErrors';
     Error.call(this);
   };
-  CompositeError.prototype = Error.prototype;
-  CompositeError.prototype.name = 'NotImplementedError';
+  CompositeError.prototype = Object.create(Error.prototype);
+  CompositeError.prototype.name = 'CompositeError';
+
+  var MergeDelayErrorObservable = (function(__super__) {
+    inherits(MergeDelayErrorObservable, __super__);
+    function MergeDelayErrorObservable(source) {
+      this.source = source;
+      __super__.call(this);
+    }
+
+    MergeDelayErrorObservable.prototype.subscribeCore = function (o) {
+      var group = new CompositeDisposable(),
+        m = new SingleAssignmentDisposable(),
+        state = { isStopped: false, errors: [], o: o };
+
+      group.add(m);
+      m.setDisposable(this.source.subscribe(new MergeDelayErrorObserver(group, state)));
+
+      return group;
+    };
+
+    return MergeDelayErrorObservable;
+  }(ObservableBase));
+
+  var MergeDelayErrorObserver = (function(__super__) {
+    inherits(MergeDelayErrorObserver, __super__);
+    function MergeDelayErrorObserver(group, state) {
+      this._group = group;
+      this._state = state;
+      __super__.call(this);
+    }
+
+    function setCompletion(o, errors) {
+      if (errors.length === 0) {
+        o.onCompleted();
+      } else if (errors.length === 1) {
+        o.onError(errors[0]);
+      } else {
+        o.onError(new CompositeError(errors));
+      }
+    }
+
+    MergeDelayErrorObserver.prototype.next = function (x) {
+      var inner = new SingleAssignmentDisposable();
+      this._group.add(inner);
+
+      // Check for promises support
+      isPromise(x) && (x = observableFromPromise(x));
+      inner.setDisposable(x.subscribe(new InnerObserver(inner, this._group, this._state)));
+    };
+
+    MergeDelayErrorObserver.prototype.error = function (e) {
+      this._state.errors.push(e);
+      this._state.isStopped = true;
+      this._group.length === 1 && setCompletion(this._state.o, this._state.errors);
+    };
+
+    MergeDelayErrorObserver.prototype.completed = function () {
+      this._state.isStopped = true;
+      this._group.length === 1 && setCompletion(this._state.o, this._state.errors);
+    };
+
+    inherits(InnerObserver, __super__);
+    function InnerObserver(inner, group, state) {
+      this._inner = inner;
+      this._group = group;
+      this._state = state;
+      __super__.call(this);
+    }
+
+    InnerObserver.prototype.next = function (x) { this._state.o.onNext(x); };
+    InnerObserver.prototype.error = function (e) {
+      this._state.errors.push(e);
+      this._group.remove(this._inner);
+      this._state.isStopped && this._group.length === 1 && setCompletion(this._state.o, this._state.errors);
+    };
+    InnerObserver.prototype.completed = function () {
+      this._group.remove(this._inner);
+      this._state.isStopped && this._group.length === 1 && setCompletion(this._state.o, this._state.errors);
+    };
+
+    return MergeDelayErrorObserver;
+  }(AbstractObserver));
 
   /**
   * Flattens an Observable that emits Observables into one Observable, in a way that allows an Observer to
@@ -4166,56 +4249,7 @@ var ObserveOnObservable = (function (__super__) {
       for(var i = 0; i < len; i++) { args[i] = arguments[i]; }
     }
     var source = observableOf(null, args);
-
-    return new AnonymousObservable(function (o) {
-      var group = new CompositeDisposable(),
-        m = new SingleAssignmentDisposable(),
-        isStopped = false,
-        errors = [];
-
-      function setCompletion() {
-        if (errors.length === 0) {
-          o.onCompleted();
-        } else if (errors.length === 1) {
-          o.onError(errors[0]);
-        } else {
-          o.onError(new CompositeError(errors));
-        }
-      }
-
-      group.add(m);
-
-      m.setDisposable(source.subscribe(
-        function (innerSource) {
-          var innerSubscription = new SingleAssignmentDisposable();
-          group.add(innerSubscription);
-
-          // Check for promises support
-          isPromise(innerSource) && (innerSource = observableFromPromise(innerSource));
-
-          innerSubscription.setDisposable(innerSource.subscribe(
-            function (x) { o.onNext(x); },
-            function (e) {
-              errors.push(e);
-              group.remove(innerSubscription);
-              isStopped && group.length === 1 && setCompletion();
-            },
-            function () {
-              group.remove(innerSubscription);
-              isStopped && group.length === 1 && setCompletion();
-          }));
-        },
-        function (e) {
-          errors.push(e);
-          isStopped = true;
-          group.length === 1 && setCompletion();
-        },
-        function () {
-          isStopped = true;
-          group.length === 1 && setCompletion();
-        }));
-      return group;
-    });
+    return new MergeDelayErrorObservable(source);
   };
 
   /**

@@ -599,14 +599,16 @@ var
   }(Scheduler.prototype));
 
   var SchedulePeriodicRecursive = Rx.internals.SchedulePeriodicRecursive = (function () {
-    function tick(command, recurse) {
-      recurse(0, this._period);
-      try {
-        this._state = this._action(this._state);
-      } catch (e) {
-        this._cancel.dispose();
-        throw e;
-      }
+    function createTick(self) {
+      return function tick(command, recurse) {
+        recurse(0, self._period);
+        var state = tryCatch(self._action)(self._state);
+        if (state === errorObj) {
+          self._cancel.dispose();
+          thrower(state.e);
+        }
+        self._state = state;
+      };
     }
 
     function SchedulePeriodicRecursive(scheduler, state, period, action) {
@@ -619,7 +621,7 @@ var
     SchedulePeriodicRecursive.prototype.start = function () {
       var d = new SingleAssignmentDisposable();
       this._cancel = d;
-      d.setDisposable(this._scheduler.scheduleRecursiveFuture(0, this._period, tick.bind(this)));
+      d.setDisposable(this._scheduler.scheduleRecursiveFuture(0, this._period, createTick(this)));
 
       return d;
     };
