@@ -1,4 +1,5 @@
 (function () {
+  'use strict';
   /* jshint undef: true, unused: true */
   /* globals QUnit, test, Rx */
 
@@ -25,13 +26,15 @@
       onNext(150, 1),
       onNext(235, 6),
       onNext(240, 7),
-      onCompleted(250));
+      onCompleted(250)
+    );
 
     var o3 = scheduler.createHotObservable(
       onNext(150, 1),
       onNext(230, 3),
       onNext(245, 5),
-      onCompleted(270));
+      onCompleted(270)
+    );
 
     var results = scheduler.startScheduler(function () {
       return Observable.forkJoin(o1, o2, o3);
@@ -59,7 +62,8 @@
       onCompleted(250));
 
     var o3 = scheduler.createHotObservable(
-      onCompleted(270));
+      onCompleted(270)
+    );
 
     var results = scheduler.startScheduler(function () {
       return Observable.forkJoin(o1, o2, o3);
@@ -80,7 +84,8 @@
       onCompleted(230));
 
     var o2 = scheduler.createHotObservable(
-      onCompleted(235));
+      onCompleted(235)
+    );
 
     var o3 = scheduler.createHotObservable(
       onNext(150, 1),
@@ -102,18 +107,21 @@
 
     var o = scheduler.createHotObservable(
       onNext(150, 1),
-      onCompleted(230));
+      onCompleted(230)
+    );
 
     var e = scheduler.createHotObservable(
       onNext(150, 1),
-      onCompleted(250));
+      onCompleted(250)
+    );
 
     var results = scheduler.startScheduler(function () {
       return e.forkJoin(o, add);
     });
 
     results.messages.assertEqual(
-      onCompleted(250));
+      onCompleted(230)
+    );
   });
 
   test('forkJoin none', function () {
@@ -124,7 +132,8 @@
     });
 
     results.messages.assertEqual(
-      onCompleted(200));
+      onCompleted(200)
+    );
   });
 
   test('forkJoin empty return', function () {
@@ -144,7 +153,8 @@
     });
 
     results.messages.assertEqual(
-      onCompleted(250));
+      onCompleted(230)
+    );
   });
 
   test('forkJoin return empty', function () {
@@ -164,7 +174,8 @@
     });
 
     results.messages.assertEqual(
-      onCompleted(250));
+      onCompleted(250)
+    );
   });
 
   test('forkJoin return return', function () {
@@ -186,7 +197,8 @@
 
     results.messages.assertEqual(
       onNext(250, 2 + 3),
-      onCompleted(250));
+      onCompleted(250)
+    );
   });
 
   test('forkJoin empty throw', function () {
@@ -201,14 +213,16 @@
     var e = scheduler.createHotObservable(
       onNext(150, 1),
       onError(210, error),
-      onCompleted(250));
+      onCompleted(250)
+    );
 
     var results = scheduler.startScheduler(function () {
       return e.forkJoin(o, add);
     });
 
     results.messages.assertEqual(
-      onError(210, error));
+      onError(210, error)
+    );
   });
 
   test('forkJoin throw empty', function () {
@@ -219,21 +233,24 @@
     var o = scheduler.createHotObservable(
       onNext(150, 1),
       onError(210, error),
-      onCompleted(230));
+      onCompleted(230)
+    );
 
     var e = scheduler.createHotObservable(
       onNext(150, 1),
-      onCompleted(250));
+      onCompleted(250)
+    );
 
     var results = scheduler.startScheduler(function () {
       return e.forkJoin(o, add);
     });
 
     results.messages.assertEqual(
-      onError(210, error));
+      onError(210, error)
+    );
   });
 
-  test('forkJoin ReturnThrow', function () {
+  test('forkJoin return throw', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -241,22 +258,25 @@
     var o = scheduler.createHotObservable(
       onNext(150, 1),
       onNext(210, 2),
-      onCompleted(230));
+      onCompleted(230)
+    );
 
     var e = scheduler.createHotObservable(
       onNext(150, 1),
       onError(220, error),
-      onCompleted(250));
+      onCompleted(250)
+    );
 
     var results = scheduler.startScheduler(function () {
       return e.forkJoin(o, add);
     });
 
     results.messages.assertEqual(
-      onError(220, error));
+      onError(220, error)
+    );
   });
 
-  test('forkJoin ThrowReturn', function () {
+  test('forkJoin throw return', function () {
     var error = new Error();
 
     var scheduler = new TestScheduler();
@@ -264,19 +284,22 @@
     var o = scheduler.createHotObservable(
       onNext(150, 1),
       onError(220, error),
-      onCompleted(230));
+      onCompleted(230)
+    );
 
     var e = scheduler.createHotObservable(
       onNext(150, 1),
       onNext(210, 2),
-      onCompleted(250));
+      onCompleted(250)
+    );
 
     var results = scheduler.startScheduler(function () {
       return e.forkJoin(o, add);
     });
 
     results.messages.assertEqual(
-      onError(220, error));
+      onError(220, error)
+    );
   });
 
   test('forkJoin binary', function () {
@@ -286,13 +309,15 @@
       onNext(150, 1),
       onNext(215, 2),
       onNext(225, 4),
-      onCompleted(230));
+      onCompleted(230)
+    );
 
     var e = scheduler.createHotObservable(
       onNext(150, 1),
       onNext(235, 6),
       onNext(240, 7),
-      onCompleted(250));
+      onCompleted(250)
+    );
 
     var results = scheduler.startScheduler(function () {
       return e.forkJoin(o, add);

@@ -1,36 +1,52 @@
-### `Rx.Observable.prototype.forkJoin(second, resultSelector)`
+### `Rx.Observable.prototype.forkJoin(...args, [resultSelector])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/forkjoinproto.js "View in source")
 
-Runs two observable sequences in parallel and combines their last elements.
+Runs all observable sequences in parallel and collect their last elements.
 
 #### Arguments
-1. `second` *(`Observable`)*: Second observable sequence.
-2. `resultSelector` *(`Any`)*: The default value if no such element exists.  If not specified, defaults to null.
+1. `args`: `Arguments` | `Array` - An array or arguments of Observable sequences or Promises to collect the last elements for.
+2. `resultSelector`: `Function` - The result selector from all the values produced. If not specified, `forkJoin` will return the results as an array.
 
 #### Returns
-*(`Observable`)*: An observable sequence that contains elements from the input sequence that satisfy the condition.
+*(`Observable`)*: An observable sequence with an array collecting the last elements of all the input sequences or the result of the result selector if specified.
 
 #### Example
 ```js
-var source1 = Rx.Observable.return(42);
-var source2 = Rx.Observable.range(0, 3);
-
-var source = source1.forkJoin(source2, function (s1, s2) {
-    return s1 + s2;
-});
+// With a selector
+var source = Rx.Observable.just(42).forkJoin(
+  Rx.Observable.range(0, 3),
+  function (s1, s2) { return s1 + s2; });
 
 var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
 
-// => Next: 45
+// => Next: 44
+// => Completed
+
+// Without a selector
+var source = Rx.Observable.just(42).forkJoin(
+  Rx.Observable.range(0, 3));
+
+var subscription = source.subscribe(
+  function (x) {
+    console.log('Next: %s', x);
+  },
+  function (err) {
+    console.log('Error: %s', err);
+  },
+  function () {
+    console.log('Completed');
+  });
+
+// => Next: [42, 2]
 // => Completed
 ```
 
@@ -55,4 +71,4 @@ NuGet Packages:
 - [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental)
 
 Unit Tests:
-- [`/tests/observable/forkjoinproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/forkjoinproto.js)
+- [`/tests/observable/forkjoin.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/forkjoin.js)

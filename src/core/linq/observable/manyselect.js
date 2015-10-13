@@ -5,7 +5,7 @@
    * @returns {Observable} An observable sequence which results from the comonadic bind operation.
    */
   observableProto.manySelect = observableProto.extend = function (selector, scheduler) {
-    isScheduler(scheduler) || (scheduler = immediateScheduler);
+    isScheduler(scheduler) || (scheduler = Rx.Scheduler.immediate);
     var source = this;
     return observableDefer(function () {
       var chain;
