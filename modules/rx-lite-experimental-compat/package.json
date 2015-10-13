@@ -2,7 +2,7 @@
   "name": "rx-lite-experimental-compat",
   "title": "Reactive Extensions for JavaScript (RxJS) Async",
   "description": "Lightweight older browser compatible library with experimental functions for composing asynchronous and event-based operations in JavaScript",
-  "version": "4.0.5",
+  "version": "4.0.6",
   "homepage": "https://github.com/Reactive-Extensions/RxJS",
   "author": {
     "name": "Cloud Programmability Team",

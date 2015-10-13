@@ -774,7 +774,7 @@
       timeoutDurationSelector = firstTimeout;
       firstTimeout = observableNever();
     }
-    other || (other = observableThrow(new TimeoutError()));
+    Observable.isObservable(other) || (other = observableThrow(new TimeoutError()));
     return new AnonymousObservable(function (o) {
       var subscription = new SerialDisposable(),
         timer = new SerialDisposable(),
@@ -834,7 +834,7 @@
     }
     if (other instanceof Error) { other = observableThrow(other); }
     isScheduler(scheduler) || (scheduler = defaultScheduler);
-
+    Observable.isObservable(other) || (other = observableThrow(new TimeoutError()));
     return new AnonymousObservable(function (o) {
       var id = 0,
         original = new SingleAssignmentDisposable(),
