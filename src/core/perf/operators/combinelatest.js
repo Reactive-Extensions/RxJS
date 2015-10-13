@@ -11,21 +11,24 @@
       var len = params.length;
       this._params = params;
       this._cb = cb;
-      this._hv = arrayInitialize(len, falseFactory);
-      this._hvAll = false;
-      this._done = arrayInitialize(len, falseFactory);
-      this._v = new Array(len);
       __super__.call(this);
     }
 
     CombineLatestObservable.prototype.subscribeCore = function(observer) {
       var len = this._params.length, subscriptions = new Array(len);
+      var state = {
+        _cb: this._cb,
+        _v: new Array(len),
+        _hv: arrayInitialize(len, falseFactory),
+        _done: arrayInitialize(len, falseFactory),
+        _hvAll: false
+      };
 
       for (var i = 0; i < len; i++) {
         var source = this._params[i], sad = new SingleAssignmentDisposable();
         subscriptions[i] = sad;
         isPromise(source) && (source = observableFromPromise(source));
-        sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, this)));
+        sad.setDisposable(source.subscribe(new CombineLatestObserver(observer, i, state)));
       }
 
       return new NAryDisposable(subscriptions);
@@ -36,21 +39,21 @@
 
   var CombineLatestObserver = (function (__super__) {
     inherits(CombineLatestObserver, __super__);
-    function CombineLatestObserver(o, i, p) {
+    function CombineLatestObserver(o, i, s) {
       this._o = o;
       this._i = i;
-      this._p = p;
+      this._s = s;
       __super__.call(this);
     }
 
     CombineLatestObserver.prototype.next = function (x) {
-      this._p._v[this._i] = x;
-      this._p._hv[this._i] = true;
-      if (this._p._hvAll || (this._p._hvAll = this._p._hv.every(identity))) {
-        var res = tryCatch(this._p._cb).apply(null, this._p._v);
+      this._s._v[this._i] = x;
+      this._s._hv[this._i] = true;
+      if (this._s._hvAll || (this._s._hvAll = this._s._hv.every(identity))) {
+        var res = tryCatch(this._s._cb).apply(null, this._s._v);
         if (res === errorObj) { return this._o.onError(res.e); }
         this._o.onNext(res);
-      } else if (this._p._done.filter(function (x, j) { return j !== this._i; }, this).every(identity)) {
+      } else if (this._s._done.filter(function (x, j) { return j !== this._i; }, this).every(identity)) {
         this._o.onCompleted();
       }
     };
@@ -60,8 +63,8 @@
     };
 
     CombineLatestObserver.prototype.completed = function () {
-      this._p._done[this._i] = true;
-      this._p._done.every(identity) && this._o.onCompleted();
+      this._s._done[this._i] = true;
+      this._s._done.every(identity) && this._o.onCompleted();
     };
 
     return CombineLatestObserver;
