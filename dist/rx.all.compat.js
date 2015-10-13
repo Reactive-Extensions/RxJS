@@ -579,31 +579,7 @@
   }
 
   // Utilities
-  var slice = Array.prototype.slice,
-      toString = Object.prototype.toString;
-
-  if (!Function.prototype.bind) {
-    Function.prototype.bind = function (that) {
-      var target = this,
-        args = slice.call(arguments, 1);
-      var bound = function () {
-        if (this instanceof bound) {
-          function F() { }
-          F.prototype = target.prototype;
-          var self = new F();
-          var result = target.apply(self, args.concat(slice.call(arguments)));
-          if (Object(result) === result) {
-            return result;
-          }
-          return self;
-        } else {
-          return target.apply(that, args.concat(slice.call(arguments)));
-        }
-      };
-
-      return bound;
-    };
-  }
+  var toString = Object.prototype.toString;
 
   if (!Array.prototype.forEach) {
     Array.prototype.forEach = function (callback, thisArg) {
@@ -9511,26 +9487,25 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
   };
 
   function Plan(expression, selector) {
-      this.expression = expression;
-      this.selector = selector;
+    this.expression = expression;
+    this.selector = selector;
+  }
+
+  function handleOnError(o) { return function (e) { o.onError(e); }; }
+  function handleOnNext(self, observer) {
+    return function onNext () {
+      var result = tryCatch(self.selector).apply(self, arguments);
+      if (result === errorObj) { return observer.onError(result.e); }
+      observer.onNext(result);
+    };
   }
 
   Plan.prototype.activate = function (externalSubscriptions, observer, deactivate) {
-    var self = this;
-    var joinObservers = [];
+    var joinObservers = [], errHandler = handleOnError(observer);
     for (var i = 0, len = this.expression.patterns.length; i < len; i++) {
-      joinObservers.push(planCreateObserver(externalSubscriptions, this.expression.patterns[i], observer.onError.bind(observer)));
+      joinObservers.push(planCreateObserver(externalSubscriptions, this.expression.patterns[i], errHandler));
     }
-    var activePlan = new ActivePlan(joinObservers, function () {
-      var result;
-      try {
-        result = self.selector.apply(self, arguments);
-      } catch (e) {
-        observer.onError(e);
-        return;
-      }
-      observer.onNext(result);
-    }, function () {
+    var activePlan = new ActivePlan(joinObservers, handleOnNext(this, observer), function () {
       for (var j = 0, jlen = joinObservers.length; j < jlen; j++) {
         joinObservers[j].removeActivePlan(activePlan);
       }

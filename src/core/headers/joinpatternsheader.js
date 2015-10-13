@@ -8,4 +8,5 @@
     CompositeDisposable = Rx.CompositeDisposable,
     AbstractObserver = Rx.internals.AbstractObserver,
     noop = Rx.helpers.noop,
-    inherits = Rx.internals.inherits;
+    inherits = Rx.internals.inherits,
+    isFunction = Rx.helpers.isFunction;

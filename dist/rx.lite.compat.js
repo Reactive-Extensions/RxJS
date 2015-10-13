@@ -581,31 +581,7 @@
   }
 
   // Utilities
-  var slice = Array.prototype.slice,
-      toString = Object.prototype.toString;
-
-  if (!Function.prototype.bind) {
-    Function.prototype.bind = function (that) {
-      var target = this,
-        args = slice.call(arguments, 1);
-      var bound = function () {
-        if (this instanceof bound) {
-          function F() { }
-          F.prototype = target.prototype;
-          var self = new F();
-          var result = target.apply(self, args.concat(slice.call(arguments)));
-          if (Object(result) === result) {
-            return result;
-          }
-          return self;
-        } else {
-          return target.apply(that, args.concat(slice.call(arguments)));
-        }
-      };
-
-      return bound;
-    };
-  }
+  var toString = Object.prototype.toString;
 
   if (!Array.prototype.forEach) {
     Array.prototype.forEach = function (callback, thisArg) {

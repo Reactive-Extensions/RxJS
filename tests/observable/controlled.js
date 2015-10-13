@@ -245,8 +245,8 @@
           }
           results.onNext(x);
         },
-        results.onError.bind(results),
-        results.onCompleted.bind(results)
+        function (e) { results.onError(e); },
+        function () { results.onCompleted(); }
       );
     });
 
