@@ -543,7 +543,7 @@ declare module Rx {
          * @param {Function} onCompleted Delegate to invoke for an OnCompleted notification.
          * @returns {Any} Result produced by the observation.
          */
-        accept<TResult>(onNext: (value: T) => TResult, onError?: (exception: any) => TResult, onCompleted?: () => TResult): TResult;
+        accept<TResult>(onNext: (value: T) => TResult, onError: (exception: any) => TResult, onCompleted: () => TResult): TResult;
 
         /**
          * Returns an observable sequence with a single notification.
@@ -558,7 +558,7 @@ declare module Rx {
         equals(other: Notification<T>): boolean;
         kind: string;
         value: T;
-        exception: any;
+        error: any;
     }
 
     interface NotificationStatic {

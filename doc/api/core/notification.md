@@ -155,16 +155,19 @@ var subscription = source.subscribe(
 
 ## _Notification Instance Methods_ ##
 
-### <a id="rxnotificationprototypeacceptobserver--onnext-onerror-oncompleted"></a>`Rx.Notification.prototype.accept([observer] | [onNext], [onError], [onCompleted])`
+### <a id="rxnotificationprototypeacceptobserver--onnext-onerror-oncompleted"></a>`Rx.Notification.prototype.accept(observer | onNext, onError, onCompleted)`
 <a href="#rxnotificationprototypeacceptobserver--onnext-onerror-oncompleted">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js "View in source")
 
-Invokes the delegate corresponding to the notification or the observer's method corresponding to the notification and returns the produced result.
+Invokes the delegate corresponding to the notification or the observer's method corresponding to the notification and returns the produced result or the individual functions given.
 
 ### Arguments
 1. `[observer]`: `Observer` Observer to invoke the notification on.
-1. `[onNext]`: `Function` -  Function to invoke for an OnNext notification.
-2. `[onError]`: `Function` - Function to invoke for an OnError notification.
-3. `[OnCompleted]`: `Function` - Function to invoke for an OnCompleted notification.
+
+OR
+
+1. `onNext`: `Function` -  Function to invoke for an `onNext` notification.
+2. `onError`: `Function` - Function to invoke for an `onError` notification.
+3. `onCompleted`: `Function` - Function to invoke for an `onCompleted` notification.
 
 #### Returns
 `Any`: Result produced by the observation.
@@ -242,13 +245,13 @@ var subscription = source.subscribe(
 
 ## _Notification Properties_ ##
 
-### <a id="exception"></a>`exception`
-<a href="#exception">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js "View in source")
+### <a id="error"></a>`error`
+<a href="#error">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js "View in source")
 
 Gets the exception from the OnError notification.
 
 #### Returns
-`Any`: The Exception from the OnError notification.
+`Any`: The Error from the `onError` notification.
 
 #### Example
 ```js
@@ -279,9 +282,9 @@ console.log(notification.kind);
 ***
 
 ### <a id="value"></a>`value`
-<a href="#kind">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js "View in source")
+<a href="#value">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/notification.js "View in source")
 
-Gets the value from the OnNext notification.
+Gets the value from the `onNext` notification.
 
 #### Returns
 `Any`: The value from the OnNext notification.

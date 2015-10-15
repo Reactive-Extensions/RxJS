@@ -59,22 +59,20 @@
       throw new NotImplementedError();
     };
 
-    Notification.prototype._acceptObservable = function (onNext, onError, onCompleted) {
+    Notification.prototype._acceptObserver = function (onNext, onError, onCompleted) {
       throw new NotImplementedError();
     };
 
     /**
      * Invokes the delegate corresponding to the notification or the observer's method corresponding to the notification and returns the produced result.
-     *
-     * @memberOf Notification
-     * @param {Any} observerOrOnNext Delegate to invoke for an OnNext notification or Observer to invoke the notification on..
-     * @param {Function} onError Delegate to invoke for an OnError notification.
-     * @param {Function} onCompleted Delegate to invoke for an OnCompleted notification.
+     * @param {Function | Observer} observerOrOnNext Function to invoke for an OnNext notification or Observer to invoke the notification on..
+     * @param {Function} onError Function to invoke for an OnError notification.
+     * @param {Function} onCompleted Function to invoke for an OnCompleted notification.
      * @returns {Any} Result produced by the observation.
      */
     Notification.prototype.accept = function (observerOrOnNext, onError, onCompleted) {
       return observerOrOnNext && typeof observerOrOnNext === 'object' ?
-        this._acceptObservable(observerOrOnNext) :
+        this._acceptObserver(observerOrOnNext) :
         this._accept(observerOrOnNext, onError, onCompleted);
     };
 
@@ -90,7 +88,7 @@
       isScheduler(scheduler) || (scheduler = immediateScheduler);
       return new AnonymousObservable(function (o) {
         return scheduler.schedule(self, function (_, notification) {
-          notification._acceptObservable(o);
+          notification._acceptObserver(o);
           notification.kind === 'N' && o.onCompleted();
         });
       });
@@ -110,7 +108,7 @@
       return onNext(this.value);
     };
 
-    OnNextNotification.prototype._acceptObservable = function (o) {
+    OnNextNotification.prototype._acceptObserver = function (o) {
       return o.onNext(this.value);
     };
 
@@ -132,7 +130,7 @@
       return onError(this.error);
     };
 
-    OnErrorNotification.prototype._acceptObservable = function (o) {
+    OnErrorNotification.prototype._acceptObserver = function (o) {
       return o.onError(this.error);
     };
 
@@ -153,7 +151,7 @@
       return onCompleted();
     };
 
-    OnCompletedNotification.prototype._acceptObservable = function (o) {
+    OnCompletedNotification.prototype._acceptObserver = function (o) {
       return o.onCompleted();
     };
 
