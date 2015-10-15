@@ -287,7 +287,7 @@ console.log(notification.kind);
 Gets the value from the `onNext` notification.
 
 #### Returns
-`Any`: The value from the OnNext notification.
+`Any`: The value from the `onNext` notification.
 
 #### Example
 ```js
