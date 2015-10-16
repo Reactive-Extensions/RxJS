@@ -78,7 +78,7 @@ And now we can consume the geolocation such as:
 var source = watchPosition();
 
 var subscription = source.subscribe(
-    function (pos) {
+    function (position) {
         console.log('Next:' + position.coords.latitude + ',' + position.coords.longitude);
     },
     function (err) {
