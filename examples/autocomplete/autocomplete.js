@@ -1,4 +1,4 @@
-(function (global, $, undefined) {
+(function (global, $, Rx) {
 
   // Search Wikipedia for a given term
   function searchWikipedia (term) {
@@ -8,7 +8,7 @@
       data: {
         action: 'opensearch',
         format: 'json',
-        search: global.encodeURI(term)
+        search: term
       }
     }).promise();
   }
@@ -30,25 +30,20 @@
 
     var searcher = keyup.flatMapLatest(searchWikipedia);
 
-    var subscription = searcher.subscribe(
+    searcher.subscribe(
       function (data) {
-        var res = data[1];
-
-        // Append the results
-        $results.empty();
-
-        $.each(res, function (_, value) {
-          $('<li>' + value + '</li>').appendTo(results);
-        });
+        $results
+          .empty()
+          .append ($.map(data[1], function (v) { return $('<li>').text(v); }));
       },
       function (error) {
-        // Handle any errors
-        $results.empty();
-
-        $('<li>Error: ' + error + '</li>').appendTo(results);
+        $results
+          .empty()
+          .append($('<li>'))
+          .text('Error:' + error);
       });
   }
 
-  main();
+  $(main);
 
-}(window, jQuery));
+}(window, jQuery, Rx));

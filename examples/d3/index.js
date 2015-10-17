@@ -1,5 +1,5 @@
 // Originally from https://github.com/DanGorst/frp-with-bacon
-(function () {
+(function (window, d3, Rx) {
   "use strict";
 
   var fromEvent = Rx.Observable.fromEvent;
@@ -154,16 +154,16 @@
 
   var textUpdateTransitionDuration = 550;
   var updateNewUser = function(newUser)   {
-      var text = svg.selectAll("text.new-user-text").data(newUser);
+    var text = svg.selectAll("text.new-user-text").data(newUser);
 
-      text.transition()
-          .duration(textUpdateTransitionDuration)
-          .style("fill-opacity", 1e-6)
-          .transition()
-          .duration(textUpdateTransitionDuration)
-          .style("fill-opacity", 1)
-          .text(function (d) { return d; });
-  }
+    text.transition()
+      .duration(textUpdateTransitionDuration)
+      .style("fill-opacity", 1e-6)
+      .transition()
+      .duration(textUpdateTransitionDuration)
+      .style("fill-opacity", 1)
+      .text(function (d) { return d; });
+  };
 
   var updateEditText = function(latestEdit)   {
       var text = svg.selectAll("text.edit-text").data(latestEdit);
@@ -175,10 +175,10 @@
           .duration(textUpdateTransitionDuration)
           .style("fill-opacity", 1)
           .text(function (d) { return d; });
-  }
+  };
 
   // Create our websocket to get wiki updates
-  var ws = new WebSocket("ws://wiki-update-sockets.herokuapp.com/");
+  var ws = new window.WebSocket("ws://wiki-update-sockets.herokuapp.com/");
 
   var openStream = fromEvent(ws, 'open');
   var closeStream = fromEvent(ws,'close');
@@ -202,9 +202,9 @@
   var newUserStream = updateStream.filter(function(update) {
       return update.type === "newuser";
   });
-  newUserStream.subscribe(function(results) {
-      var format = d3.time.format("%X");
-      updateNewUser(["New user at: " + format(new Date())]);
+  newUserStream.subscribe(function() {
+    var format = d3.time.format("%X");
+    updateNewUser(["New user at: " + format(new Date())]);
   });
 
   // Filter the update stream for unspecified events, which we're taking to mean
@@ -235,4 +235,4 @@
       totalUpdatesBeforeLastSample = value;
       update(updatesOverTime);
   });
-}());
+}(window, d3, Rx));

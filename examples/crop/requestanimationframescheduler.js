@@ -23,9 +23,9 @@
 
   var Scheduler = Rx.Scheduler,
     SingleAssignmentDisposable = Rx.SingleAssignmentDisposable,
-    CompositeDisposable = Rx.CompositeDisposable,
-    disposableCreate = Rx.Disposable.create,
-    defaultNow = (function () { return !!Date.now ? Date.now : function () { return +new Date; }; }());;
+    BinaryDisposable = Rx.BinaryDisposable,
+    Disposable = Rx.Disposable,
+    inherits = Rx.internals.inherits;
 
   // Get the right animation frame method
   var requestAnimFrame, cancelAnimFrame;
@@ -53,53 +53,48 @@
    * Gets a scheduler that schedules schedules work on the requestAnimationFrame for immediate actions.
    */
   Scheduler.requestAnimationFrame = (function () {
-
-    function scheduleNow(state, action) {
-      var scheduler = this,
-        disposable = new SingleAssignmentDisposable();
-      var id = requestAnimFrame(function () {
-        if (!disposable.isDisposed) {
-          disposable.setDisposable(action(scheduler, state));
-        }
-      });
-      return new CompositeDisposable(disposable, disposableCreate(function () {
-        cancelAnimFrame(id);
-      }));
-    }
-
-    function scheduleRelative(state, dueTime, action) {
-      var scheduler = this,
-        dt = Scheduler.normalize(dueTime);
-      if (dt === 0) {
-        return scheduler.scheduleWithState(state, action);
+    var RequestAnimationFrameScheduler = (function (__super__) {
+      inherits(RequestAnimationFrameScheduler, __super__);
+      function RequestAnimationFrameScheduler() {
+        __super__.call(this);
       }
 
-      var disposable = new SingleAssignmentDisposable(),
-        id;
-      var scheduleFunc = function () {
-        if (id) { cancelAnimFrame(id); }
-        if (dt - scheduler.now() <= 0) {
-          if (!disposable.isDisposed) {
-            disposable.setDisposable(action(scheduler, state));
-          }
-        } else {
-          id = requestAnimFrame(scheduleFunc);
+      function scheduleAction(disposable, action, scheduler, state) {
+        return function schedule() {
+          disposable.setDisposable(Disposable._fixup(action(scheduler, state)));
+        };
+      }
+
+      function ClearDisposable(method, id) {
+        this._id = id;
+        this._method = method;
+        this.isDisposed = false;
+      }
+
+      ClearDisposable.prototype.dispose = function () {
+        if (!this.isDisposed) {
+          this.isDisposed = true;
+          this._method.call(null, this._id);
         }
       };
 
-      id = requestAnimFrame(scheduleFunc);
+      RequestAnimationFrameScheduler.prototype.schedule = function (state, action) {
+        var disposable = new SingleAssignmentDisposable(),
+            id = requestAnimFrame(scheduleAction(disposable, action, this, state));
+        return new BinaryDisposable(disposable, new ClearDisposable(cancelAnimFrame, id));
+      };
 
-      return new CompositeDisposable(disposable, disposableCreate(function () {
-        cancelAnimFrame(id);
-      }));
-    }
+      RequestAnimationFrameScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
+        if (dueTime === 0) { return this.schedule(state, action); }
+        var disposable = new SingleAssignmentDisposable(),
+            id = root.setTimeout(scheduleAction(disposable, action, this, state), dueTime);
+        return new BinaryDisposable(disposable, new ClearDisposable(root.clearTimeout, id));
+      };
 
-    function scheduleAbsolute(state, dueTime, action) {
-      return this.scheduleWithRelativeAndState(state, dueTime - this.now(), action);
-    }
+      return RequestAnimationFrameScheduler;
+    }(Scheduler));
 
-    return new Scheduler(defaultNow, scheduleNow, scheduleRelative, scheduleAbsolute);
-
+    return new RequestAnimationFrameScheduler();
   }());
 
   return Rx;

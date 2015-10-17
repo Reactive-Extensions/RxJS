@@ -45,7 +45,7 @@
   }
 
   function createHandles () {
-    var container = document.getElementById('container');
+    var container = document.querySelector('#container');
 
     function createHandle (id, render, updateModel) {
       var handle = document.createElement('div');
@@ -175,7 +175,7 @@
         // Update model and redraw via an async operation
         data.element.updateModel(data.offsetX, data.offsetY);
 
-        Rx.Scheduler.requestAnimationFrame.schedule(drawOverlay);
+        Rx.Scheduler.requestAnimationFrame.schedule(null, drawOverlay);
       });
   }
 

@@ -2,32 +2,24 @@
 
     // Non-standard custom operator
     Rx.Observable.random = function (low, high, intervalLow, intervalHigh, howMany, scheduler) {
-        scheduler || (scheduler = Rx.Scheduler.timeout);
-        if (howMany == null) {
-            howMany = -1;
-        }
-        if (intervalLow == null) {
-            intervalLow = 1;
-        }
-        if (intervalHigh == null) {
-            intervalHigh = 1;
-        }
-        return Rx.Observable.create(function (observer) {
-            var delta = high - low
-			    intervalDelta = intervalHigh - intervalLow,
-			    ticks = 0,
-			    iFunc = (intervalDelta === 0)
-					? function () { return intervalLow; }
-					: function () { return Math.floor((Math.random() * intervalDelta) + intervalLow); };
-            return scheduler.scheduleRecursiveWithRelative(iFunc(), function (self) {
-                if (++ticks <= howMany) {
-                    observer.onNext(Math.floor((Math.random() * delta) + low));
-                    self(iFunc());
-                } else {
-                    observer.onCompleted();
-                }
-            });
+      scheduler || (scheduler = Rx.Scheduler['default']);
+      if (howMany == null) { howMany = -1; }
+      if (intervalLow == null) { intervalLow = 1; }
+      if (intervalHigh == null) { intervalHigh = 1; }
+      return Rx.Observable.create(function (observer) {
+        var delta = high - low, intervalDelta = intervalHigh - intervalLow;
+		    var iFunc = (intervalDelta === 0) ?
+          function () { return intervalLow; } :
+		      function () { return Math.floor((Math.random() * intervalDelta) + intervalLow); };
+        return scheduler.scheduleRecursiveFuture(0, iFunc(), function (ticks, recurse) {
+          if (++ticks <= howMany) {
+            observer.onNext(Math.floor((Math.random() * delta) + low));
+            recurse(ticks, iFunc());
+          } else {
+            observer.onCompleted();
+          }
         });
+      });
     };
 
     var GameState = {
