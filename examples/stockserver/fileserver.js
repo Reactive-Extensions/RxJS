@@ -20,19 +20,19 @@ function getFiles() {
 		'YHOO'
 	];
 	var files = symbols.map(function (s) {
-		return path.join(dir, s + '.csv')
+		return path.join(dir, s + '.csv');
 	});
 
 	return files;
-};
+}
 
 function processFile(symbol, data) {
 	var lines = data.split('\n');
-	var data = [];
+	var results = [];
 	for (var i = 1, len = lines.length; i < len; i++) {
 		var columns = lines[i].split(',');
 		if (columns.length === 6) {
-			data.push( {
+			results.push( {
 				symbol: symbol,
 				date: new Date(Date.parse(columns[0])).toJSON(),
 				open: columns[1],
@@ -44,7 +44,7 @@ function processFile(symbol, data) {
 		}
 	}
 
-	return data;
+	return results;
 }
 
 function processFiles(fileNames) {
@@ -56,11 +56,11 @@ function processFiles(fileNames) {
 	});
 
 	return records;
-};
+}
 
 function loadData() {
 	var files = getFiles();
 	return processFiles(files);
-};
+}
 
 exports.loadData = loadData;
