@@ -29,7 +29,7 @@ describe("Map", function() {
             onError(430, 'ex')
         );
 
-        results = scheduler.startWithCreate(function () {
+        results = scheduler.startScheduler(function () {
             return xs.map(function (x) {
                 invoked++;
                 return x + 1;

@@ -21,7 +21,7 @@ describe('Observable', function () {
             var scheduler = new TestScheduler();
 
             // Returns 42 at one tick after subscribe (200)
-            var results = scheduler.startWithCreate(function () {
+            var results = scheduler.startScheduler(function () {
                 return Observable.return(42, scheduler);
             });
 
@@ -48,7 +48,7 @@ describe('Observable', function () {
             );
 
             // Project the hot observable via select without index
-            var results = scheduler.startWithCreate(function () {
+            var results = scheduler.startScheduler(function () {
                 return xs.map(function (x) { return x + x; });
             });
 
@@ -80,7 +80,7 @@ describe('Observable', function () {
             );
 
             // Project the hot observable via select without index
-            var results = scheduler.startWithCreate(function () {
+            var results = scheduler.startScheduler(function () {
                 return xs.map(function (x) { return x + x; });
             });
 
@@ -111,7 +111,7 @@ describe('Observable', function () {
             );
 
             // Project the hot observable via select without index
-            var results = scheduler.startWithCreate(function () {
+            var results = scheduler.startScheduler(function () {
                 return xs.map(function (x) { return x + x; });
             });
 
@@ -138,7 +138,7 @@ describe('Observable', function () {
             );
 
             // Project the hot observable via select without index
-            var results = scheduler.startWithCreate(function () {
+            var results = scheduler.startScheduler(function () {
                 return xs.map(function (x) { return x + x; });
             });
 
@@ -166,7 +166,7 @@ describe('Observable', function () {
                 onError(210, error)
             );
 
-            var results = scheduler.startWithCreate(function () {
+            var results = scheduler.startScheduler(function () {
                 return xs.map(function (x) { return x + x; });
             });
 
@@ -195,7 +195,7 @@ describe('Observable', function () {
                 onNext(210, 2)
             );
 
-            var results = scheduler.startWithCreate(function () {
+            var results = scheduler.startScheduler(function () {
                 return xs.map(function (x) { throw error; });
             });
 
@@ -224,7 +224,7 @@ describe('Observable', function () {
                 onCompleted(220)
             );
 
-            var results = scheduler.startWithCreate(function () {
+            var results = scheduler.startScheduler(function () {
                 return xs.map(function (x, i) { return (x + x) * i; });
             });
 
