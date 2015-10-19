@@ -1,7 +1,7 @@
 {
-  "name": "rx.compat",
-  "version": "3.0.0",
-  "description": "RxJS modular compat version",
+  "name": "rx.modular",
+  "version": "4.0.0",
+  "description": "RxJS in modular form",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"

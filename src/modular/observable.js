@@ -1,20 +1,9 @@
 'use strict';
 
-var Observer = require('./observer');
+var create = require('./observer/create');
 var isFunction = require('./helpers/isFunction');
-var AnonymousObservable = require('./observable/anonymousobservable');
 
 function Observable() { }
-
-/**
- *  Creates an observable sequence from a specified subscribe method implementation.
- * @param {Function} subscribe Implementation of the resulting observable sequence's subscribe method, returning a function that will be wrapped in a Disposable.
- * @returns {Observable} The observable sequence with the specified implementation for the Subscribe method.
- */
-Observable.create = function (subscribe, parent) {
-  return new AnonymousObservable(subscribe, parent);
-};
-
 
 /**
 * Determines whether the given object is an Observable
@@ -35,7 +24,7 @@ Observable.isObservable = function (o) {
 Observable.prototype.subscribe = function (oOrOnNext, onError, onCompleted) {
   return this._subscribe(typeof oOrOnNext === 'object' ?
     oOrOnNext :
-    Observer.create(oOrOnNext, onError, onCompleted));
+    create(oOrOnNext, onError, onCompleted));
 };
 
 /**
@@ -45,7 +34,7 @@ Observable.prototype.subscribe = function (oOrOnNext, onError, onCompleted) {
  * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
  */
 Observable.prototype.subscribeOnNext = function (onNext, thisArg) {
-  return this._subscribe(Observer.create(typeof thisArg !== 'undefined' ? function(x) { onNext.call(thisArg, x); } : onNext));
+  return this._subscribe(create(typeof thisArg !== 'undefined' ? function(x) { onNext.call(thisArg, x); } : onNext));
 };
 
 /**
@@ -55,7 +44,7 @@ Observable.prototype.subscribeOnNext = function (onNext, thisArg) {
  * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
  */
 Observable.prototype.subscribeOnError = function (onError, thisArg) {
-  return this._subscribe(Observer.create(null, typeof thisArg !== 'undefined' ? function(e) { onError.call(thisArg, e); } : onError));
+  return this._subscribe(create(null, typeof thisArg !== 'undefined' ? function(e) { onError.call(thisArg, e); } : onError));
 };
 
 /**
@@ -65,7 +54,23 @@ Observable.prototype.subscribeOnError = function (onError, thisArg) {
  * @returns {Disposable} A disposable handling the subscriptions and unsubscriptions.
  */
 Observable.prototype.subscribeOnCompleted = function (onCompleted, thisArg) {
-  return this._subscribe(Observer.create(null, null, typeof thisArg !== 'undefined' ? function() { onCompleted.call(thisArg); } : onCompleted));
+  return this._subscribe(create(null, null, typeof thisArg !== 'undefined' ? function() { onCompleted.call(thisArg); } : onCompleted));
+};
+
+Observable.addToObject = function (operators) {
+  operators.forEach(function (operator) {
+    Observable[operator] = operator[operator];
+  });
+};
+
+Observable.addToPrototype = function (operators) {
+  operators.forEach(function (operator) {
+    Observable.prototype[operator] = function () {
+      var args = [this];
+      args.push.apply(args, arguments);
+      return operators[operator].apply(null, args);
+    };
+  });
 };
 
 module.exports = Observable;
