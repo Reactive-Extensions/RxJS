@@ -8,6 +8,7 @@ examples/
 tests/
 logos/
 modules/
+src/
 .git*
 .jshint*
 .npmignore

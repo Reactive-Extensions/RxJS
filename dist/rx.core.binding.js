@@ -583,11 +583,9 @@
        * @returns {Mixed} The initial value passed to the constructor until onNext is called; after which, the last value passed to onNext.
        */
       getValue: function () {
-          checkDisposed(this);
-          if (this.hasError) {
-              throw this.error;
-          }
-          return this.value;
+        checkDisposed(this);
+        if (this.hasError) { thrower(this.error); }
+        return this.value;
       },
       /**
        * Indicates whether the subject has observers subscribed to it.

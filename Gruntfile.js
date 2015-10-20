@@ -430,6 +430,7 @@ module.exports = function (grunt) {
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
+              'src/core/internal/polyfills.js',
               'src/core/internal/errors.js',
 
               'src/core/headers/enumeratorheader.js',
@@ -438,7 +439,6 @@ module.exports = function (grunt) {
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
-              'src/core/internal/polyfills.js',
               'src/core/internal/priorityqueue.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
@@ -875,6 +875,7 @@ module.exports = function (grunt) {
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
+              'src/core/internal/polyfills.js',
               'src/core/internal/errors.js',
 
               'src/core/headers/enumeratorheader.js',
@@ -883,7 +884,6 @@ module.exports = function (grunt) {
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
-              'src/core/internal/polyfills.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',
@@ -1194,6 +1194,7 @@ module.exports = function (grunt) {
               'src/core/longstacktraces/longstackbegin.js',
               'src/core/longstacktraces/longstacktraces.js',
 
+              'src/core/internal/polyfills.js',
               'src/core/internal/errors.js',
 
               'src/core/headers/enumeratorheader.js',
@@ -1202,7 +1203,6 @@ module.exports = function (grunt) {
               'src/core/internal/dontenums.js',
               'src/core/internal/isequal.js',
               'src/core/internal/util.js',
-              'src/core/internal/polyfills.js',
               'src/core/disposables/compositedisposable.js',
               'src/core/disposables/disposable.js',
               'src/core/disposables/booleandisposable.js',

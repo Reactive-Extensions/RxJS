@@ -325,8 +325,12 @@
       params = params || { bubbles: false, cancelable: false, detail: undefined };
 
       try {
-        event = document.createEvent('CustomEvent');
-        event.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+        if (document.createEvent) {
+          event = document.createEvent('CustomEvent');
+          event.initCustomEvent(type, params.bubbles, params.cancelable, params.detail);
+        } else if (document.createEventObject) {
+          event = document.createEventObject();
+        }
       } catch (error) {
         event = document.createEvent('Event');
         event.initEvent(type, params.bubbles, params.cancelable);
