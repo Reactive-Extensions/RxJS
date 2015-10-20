@@ -365,7 +365,8 @@ var xs = scheduler.createRejectedPromise(201, error);
 
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
 var res = scheduler.startScheduler(function () {
-  return Rx.Observable.fromPromise(xs);
+  // Need to pass test scheduler due to issue #976
+  return Rx.Observable.fromPromise(xs, scheduler);
 });
 
 // Implement collection assertion
@@ -416,12 +417,13 @@ var onNext = Rx.ReactiveTest.onNext,
 
 var scheduler = new Rx.TestScheduler();
 
-// Create rejected promise
+// Create resolved promise
 var xs = scheduler.createResolvedPromise(201, 1);
 
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
 var res = scheduler.startScheduler(function () {
-  return Rx.Observable.fromPromise(xs);
+  // Need to pass test scheduler due to issue #976
+  return Rx.Observable.fromPromise(xs, scheduler);
 });
 
 // Implement collection assertion
