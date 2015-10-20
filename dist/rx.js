@@ -1287,7 +1287,7 @@
 
      function scheduleAction(disposable, action, scheduler, state) {
        return function schedule() {
-         !disposable.isDisposed && disposable.setDisposable(Disposable._fixup(action(scheduler, state)));
+         disposable.setDisposable(Disposable._fixup(action(scheduler, state)));
        };
      }
 
@@ -2746,39 +2746,29 @@ var ObserveOnObservable = (function (__super__) {
   var FromArrayObservable = (function(__super__) {
     inherits(FromArrayObservable, __super__);
     function FromArrayObservable(args, scheduler) {
-      this.args = args;
-      this.scheduler = scheduler;
+      this._args = args;
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
-    FromArrayObservable.prototype.subscribeCore = function (observer) {
-      var sink = new FromArraySink(observer, this);
-      return sink.run();
+    function scheduleMethod(o, args) {
+      var len = args.length;
+      return function loopRecursive (i, recurse) {
+        if (i < len) {
+          o.onNext(args[i]);
+          recurse(i + 1);
+        } else {
+          o.onCompleted();
+        }
+      };
+    }
+
+    FromArrayObservable.prototype.subscribeCore = function (o) {
+      return this._scheduler.scheduleRecursive(0, scheduleMethod(o, this._args));
     };
 
     return FromArrayObservable;
   }(ObservableBase));
-
-  function FromArraySink(observer, parent) {
-    this.observer = observer;
-    this.parent = parent;
-  }
-
-  function loopRecursive(args, observer) {
-    var len = args.length;
-    return function loop (i, recurse) {
-      if (i < len) {
-        observer.onNext(args[i]);
-        recurse(i + 1);
-      } else {
-        observer.onCompleted();
-      }
-    };
-  }
-
-  FromArraySink.prototype.run = function () {
-    return this.parent.scheduler.scheduleRecursive(0, loopRecursive(this.parent.args, this.observer));
-  };
 
   /**
   *  Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
@@ -2899,40 +2889,31 @@ var ObserveOnObservable = (function (__super__) {
 
   var PairsObservable = (function(__super__) {
     inherits(PairsObservable, __super__);
-    function PairsObservable(obj, scheduler) {
-      this.obj = obj;
-      this.keys = Object.keys(obj);
-      this.scheduler = scheduler;
+    function PairsObservable(o, scheduler) {
+      this._o = o;
+      this._keys = Object.keys(o);
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
-    PairsObservable.prototype.subscribeCore = function (observer) {
-      var sink = new PairsSink(observer, this);
-      return sink.run();
+    function scheduleMethod(o, obj, keys) {
+      return function loopRecursive(i, recurse) {
+        if (i < keys.length) {
+          var key = keys[i];
+          o.onNext([key, obj[key]]);
+          recurse(i + 1);
+        } else {
+          o.onCompleted();
+        }
+      };
+    }
+
+    PairsObservable.prototype.subscribeCore = function (o) {
+      return this._scheduler.scheduleRecursive(0, scheduleMethod(o, this._o, this._keys));
     };
 
     return PairsObservable;
   }(ObservableBase));
-
-  function PairsSink(observer, parent) {
-    this.observer = observer;
-    this.parent = parent;
-  }
-
-  PairsSink.prototype.run = function () {
-    var observer = this.observer, obj = this.parent.obj, keys = this.parent.keys, len = keys.length;
-    function loopRecursive(i, recurse) {
-      if (i < len) {
-        var key = keys[i];
-        observer.onNext([key, obj[key]]);
-        recurse(i + 1);
-      } else {
-        observer.onCompleted();
-      }
-    }
-
-    return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
-  };
 
   /**
    * Convert an object into an observable sequence of [key, value] pairs.
@@ -3052,21 +3033,17 @@ var ObserveOnObservable = (function (__super__) {
   var JustObservable = (function(__super__) {
     inherits(JustObservable, __super__);
     function JustObservable(value, scheduler) {
-      this.value = value;
-      this.scheduler = scheduler;
+      this._value = value;
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
-    JustObservable.prototype.subscribeCore = function (observer) {
-      var sink = new JustSink(observer, this.value, this.scheduler);
-      return sink.run();
+    JustObservable.prototype.subscribeCore = function (o) {
+      var state = [this._value, o];
+      return this._scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this._scheduler.schedule(state, scheduleItem);
     };
-
-    function JustSink(observer, value, scheduler) {
-      this.observer = observer;
-      this.value = value;
-      this.scheduler = scheduler;
-    }
 
     function scheduleItem(s, state) {
       var value = state[0], observer = state[1];
@@ -3074,13 +3051,6 @@ var ObserveOnObservable = (function (__super__) {
       observer.onCompleted();
       return disposableEmpty;
     }
-
-    JustSink.prototype.run = function () {
-      var state = [this.value, this.observer];
-      return this.scheduler === immediateScheduler ?
-        scheduleItem(null, state) :
-        this.scheduler.schedule(state, scheduleItem);
-    };
 
     return JustObservable;
   }(ObservableBase));
@@ -3100,29 +3070,23 @@ var ObserveOnObservable = (function (__super__) {
   var ThrowObservable = (function(__super__) {
     inherits(ThrowObservable, __super__);
     function ThrowObservable(error, scheduler) {
-      this.error = error;
-      this.scheduler = scheduler;
+      this._error = error;
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
     ThrowObservable.prototype.subscribeCore = function (o) {
-      var sink = new ThrowSink(o, this);
-      return sink.run();
+      var state = [this._error, o];
+      return this._scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this._scheduler.schedule(state, scheduleItem);
     };
-
-    function ThrowSink(o, p) {
-      this.o = o;
-      this.p = p;
-    }
 
     function scheduleItem(s, state) {
       var e = state[0], o = state[1];
       o.onError(e);
+      return disposableEmpty;
     }
-
-    ThrowSink.prototype.run = function () {
-      return this.p.scheduler.schedule([this.p.error, this.o], scheduleItem);
-    };
 
     return ThrowObservable;
   }(ObservableBase));

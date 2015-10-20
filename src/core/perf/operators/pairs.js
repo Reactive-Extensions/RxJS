@@ -1,39 +1,30 @@
   var PairsObservable = (function(__super__) {
     inherits(PairsObservable, __super__);
-    function PairsObservable(obj, scheduler) {
-      this.obj = obj;
-      this.keys = Object.keys(obj);
-      this.scheduler = scheduler;
+    function PairsObservable(o, scheduler) {
+      this._o = o;
+      this._keys = Object.keys(o);
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
-    PairsObservable.prototype.subscribeCore = function (observer) {
-      var sink = new PairsSink(observer, this);
-      return sink.run();
+    function scheduleMethod(o, obj, keys) {
+      return function loopRecursive(i, recurse) {
+        if (i < keys.length) {
+          var key = keys[i];
+          o.onNext([key, obj[key]]);
+          recurse(i + 1);
+        } else {
+          o.onCompleted();
+        }
+      };
+    }
+
+    PairsObservable.prototype.subscribeCore = function (o) {
+      return this._scheduler.scheduleRecursive(0, scheduleMethod(o, this._o, this._keys));
     };
 
     return PairsObservable;
   }(ObservableBase));
-
-  function PairsSink(observer, parent) {
-    this.observer = observer;
-    this.parent = parent;
-  }
-
-  PairsSink.prototype.run = function () {
-    var observer = this.observer, obj = this.parent.obj, keys = this.parent.keys, len = keys.length;
-    function loopRecursive(i, recurse) {
-      if (i < len) {
-        var key = keys[i];
-        observer.onNext([key, obj[key]]);
-        recurse(i + 1);
-      } else {
-        observer.onCompleted();
-      }
-    }
-
-    return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
-  };
 
   /**
    * Convert an object into an observable sequence of [key, value] pairs.

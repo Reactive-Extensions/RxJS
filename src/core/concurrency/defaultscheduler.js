@@ -153,7 +153,7 @@
 
      function scheduleAction(disposable, action, scheduler, state) {
        return function schedule() {
-         !disposable.isDisposed && disposable.setDisposable(Disposable._fixup(action(scheduler, state)));
+         disposable.setDisposable(Disposable._fixup(action(scheduler, state)));
        };
      }
 

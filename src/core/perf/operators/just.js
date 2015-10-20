@@ -1,21 +1,17 @@
   var JustObservable = (function(__super__) {
     inherits(JustObservable, __super__);
     function JustObservable(value, scheduler) {
-      this.value = value;
-      this.scheduler = scheduler;
+      this._value = value;
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
-    JustObservable.prototype.subscribeCore = function (observer) {
-      var sink = new JustSink(observer, this.value, this.scheduler);
-      return sink.run();
+    JustObservable.prototype.subscribeCore = function (o) {
+      var state = [this._value, o];
+      return this._scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this._scheduler.schedule(state, scheduleItem);
     };
-
-    function JustSink(observer, value, scheduler) {
-      this.observer = observer;
-      this.value = value;
-      this.scheduler = scheduler;
-    }
 
     function scheduleItem(s, state) {
       var value = state[0], observer = state[1];
@@ -23,13 +19,6 @@
       observer.onCompleted();
       return disposableEmpty;
     }
-
-    JustSink.prototype.run = function () {
-      var state = [this.value, this.observer];
-      return this.scheduler === immediateScheduler ?
-        scheduleItem(null, state) :
-        this.scheduler.schedule(state, scheduleItem);
-    };
 
     return JustObservable;
   }(ObservableBase));

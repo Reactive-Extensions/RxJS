@@ -1,29 +1,23 @@
   var ThrowObservable = (function(__super__) {
     inherits(ThrowObservable, __super__);
     function ThrowObservable(error, scheduler) {
-      this.error = error;
-      this.scheduler = scheduler;
+      this._error = error;
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
     ThrowObservable.prototype.subscribeCore = function (o) {
-      var sink = new ThrowSink(o, this);
-      return sink.run();
+      var state = [this._error, o];
+      return this._scheduler === immediateScheduler ?
+        scheduleItem(null, state) :
+        this._scheduler.schedule(state, scheduleItem);
     };
-
-    function ThrowSink(o, p) {
-      this.o = o;
-      this.p = p;
-    }
 
     function scheduleItem(s, state) {
       var e = state[0], o = state[1];
       o.onError(e);
+      return disposableEmpty;
     }
-
-    ThrowSink.prototype.run = function () {
-      return this.p.scheduler.schedule([this.p.error, this.o], scheduleItem);
-    };
 
     return ThrowObservable;
   }(ObservableBase));
