@@ -157,30 +157,41 @@
        };
      }
 
-     function ClearDisposable(method, id) {
+     function ClearDisposable(id) {
        this._id = id;
-       this._method = method;
        this.isDisposed = false;
      }
 
      ClearDisposable.prototype.dispose = function () {
        if (!this.isDisposed) {
          this.isDisposed = true;
-         this._method.call(null, this._id);
+         clearMethod(this._id);
+       }
+     };
+
+     function LocalClearDisposable(id) {
+       this._id = id;
+       this.isDisposed = false;
+     }
+
+     LocalClearDisposable.prototype.dispose = function () {
+       if (!this.isDisposed) {
+         this.isDisposed = true;
+         localClearTimeout(this._id);
        }
      };
 
     DefaultScheduler.prototype.schedule = function (state, action) {
       var disposable = new SingleAssignmentDisposable(),
           id = scheduleMethod(scheduleAction(disposable, action, this, state));
-      return new BinaryDisposable(disposable, new ClearDisposable(clearMethod, id));
+      return new BinaryDisposable(disposable, new ClearDisposable(id));
     };
 
     DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
       if (dueTime === 0) { return this.schedule(state, action); }
       var disposable = new SingleAssignmentDisposable(),
           id = localSetTimeout(scheduleAction(disposable, action, this, state), dueTime);
-      return new BinaryDisposable(disposable, new ClearDisposable(localClearTimeout, id));
+      return new BinaryDisposable(disposable, new LocalClearDisposable(id));
     };
 
     return DefaultScheduler;
