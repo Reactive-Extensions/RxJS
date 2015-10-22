@@ -66,11 +66,11 @@ NuGet Packages:
 - [`zip`](../../api/core/operators/zip.md)
 
 ### `Observable Instance Methods`
-- [`aggregate`](../../api/core/operators/aggregate.md)
-- [`all`](../../api/core/operators/all.md)
+- [`aggregate`](../../api/core/operators/reduce.md)
+- [`all`](../../api/core/operators/every.md)
 - [`amb`](../../api/core/operators/ambproto.md)
 - [`and`](../../api/core/operators/and.md)
-- [`any`](../../api/core/operators/any.md)
+- [`any`](../../api/core/operators/some.md)
 - [`asObservable`](../../api/core/operators/asobservable.md)
 - [`average`](../../api/core/operators/average.md)
 - [`buffer`](../../api/core/operators/buffer.md)

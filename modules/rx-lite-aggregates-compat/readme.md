@@ -30,7 +30,7 @@ var Rx = require('rx-lite-aggregates-compat');
 ## Included Observable Operators ##
 
 ### `Observable Instance Methods`
-- [`aggregate`](../../doc/api/core/operators/aggregate.md)
+- [`aggregate`](../../doc/api/core/operators/reduce.md)
 - [`all`](../../doc/api/core/operators/every.md)
 - [`any`](../../doc/api/core/operators/some.md)
 - [`average`](../../doc/api/core/operators/average.md)
