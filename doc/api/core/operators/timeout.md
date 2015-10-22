@@ -174,7 +174,7 @@ var array = [
 var source = Rx.Observable
   .for(array, function (x) { return Rx.Observable.timer(x); })
   .map(function (x, i) { return i; })
-  .timemout(
+  .timeout(
     Rx.Observable.timer(250),
     function (x) { return Rx.Observable.timer(400); },
     Rx.Observable.just(42)
