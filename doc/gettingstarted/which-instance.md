@@ -161,7 +161,7 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
     <tr>
         <td rowspan="2">I want to know if a condition is satisfied</td>
         <td colspan="2">by any of its values</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/any.md">any/some</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/some.md">any/some</a></td>
     </tr>
     <tr>
         <td colspan="2">by all of its values</td>

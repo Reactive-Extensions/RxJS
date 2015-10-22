@@ -18,7 +18,7 @@ File Dependencies:
 ## Included Observable Operators ##
 
 ### `Observable Instance Methods`
-- [`aggregate`](../../api/core/operators/aggregate.md)
+- [`aggregate`](../../api/core/operators/reduce.md)
 - [`all`](../../api/core/operators/every.md)
 - [`any`](../../api/core/operators/some.md)
 - [`average`](../../api/core/operators/average.md)
