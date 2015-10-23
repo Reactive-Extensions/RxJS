@@ -4,7 +4,7 @@
   "description": "RxJS in modular form",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "tape test/**/*.js | tap-spec"
   },
   "repository": {
     "type": "git",
@@ -27,9 +27,7 @@
   },
   "homepage": "https://github.com/Reactive-Extensions/RxJS",
   "devDependencies": {
+    "tap-spec": "^4.1.0",
     "tape": "^4.2.2"
-  },
-  "scripts": {
-    "test": "tape test/**/*.js"
   }
 }
