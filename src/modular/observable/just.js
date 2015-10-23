@@ -18,15 +18,15 @@ function scheduleItem(s, state) {
 }
 
 function JustObservable(value, scheduler) {
-  this.value = value;
-  this.scheduler = scheduler;
+  this._value = value;
+  this._scheduler = scheduler;
   ObservableBase.call(this);
 }
 
 inherits(JustObservable, ObservableBase);
 
 JustObservable.prototype.subscribeCore = function (o) {
-  var state = [this.value, o];
+  var state = [this._value, o];
   return this._scheduler === global.Rx.immediateScheduler ?
     scheduleItem(null, state) :
     this._scheduler.schedule(state, scheduleItem);

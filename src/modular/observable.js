@@ -58,13 +58,13 @@ Observable.prototype.subscribeOnCompleted = function (onCompleted, thisArg) {
 };
 
 Observable.addToObject = function (operators) {
-  operators.forEach(function (operator) {
-    Observable[operator] = operator[operator];
+  Object.keys(operators).forEach(function (operator) {
+    Observable[operator] = operators[operator];
   });
 };
 
 Observable.addToPrototype = function (operators) {
-  operators.forEach(function (operator) {
+  Object.keys(operators).forEach(function (operator) {
     Observable.prototype[operator] = function () {
       var args = [this];
       args.push.apply(args, arguments);
