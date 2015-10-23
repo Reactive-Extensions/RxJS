@@ -1,6 +1,6 @@
 'use strict';
 
-var isEqual = require('../helpers/isequal');
+var isEqual = require('../internal/isequal');
 
 /**
  * Creates a new object recording the production of the specified value at the given virtual time.
