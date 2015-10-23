@@ -19,7 +19,7 @@ test('isEqual_number_inequal', function () {
 });
 
 test('isEqual_number +0 not equal to -0', function () {
-  ok(!isEqual(+0, -0));
+  ok(isEqual(+0, -0));
 });
 
 test('isEqual_number NaN is equal to NaN', function () {
