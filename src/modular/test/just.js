@@ -1,4 +1,5 @@
 'use strict';
+/* jshint undef: true, unused: true */
 
 var test = require('tape');
 var Observable = require('../observable');
