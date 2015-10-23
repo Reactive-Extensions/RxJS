@@ -141,6 +141,16 @@ Scheduler.prototype.scheduleRecursiveFuture = function (state, dueTime, action) 
   return this.scheduleFuture([state, action], dueTime, invokeRecDate);
 };
 
+/**
+ * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.
+ * @param {Function} handler Handler that's run if an exception is caught. The exception will be rethrown if the handler returns false.
+ * @returns {Scheduler} Wrapper around the original scheduler, enforcing exception handling.
+ */
+Scheduler.prototype.catchError = Scheduler.prototype['catch'] = function (handler) {
+  var CatchScheduler = require('./scheduler/catchscheduler');
+  return new CatchScheduler(this, handler);
+};
+
 var defaultNow = (function () { return !!Date.now ? Date.now : function () { return +new Date(); }; }());
 
 /** Gets the current time according to the local machine's system clock. */

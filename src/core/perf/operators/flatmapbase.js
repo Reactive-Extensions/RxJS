@@ -41,7 +41,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
     InnerObserver.prototype.error = function(e) { this.o.onError(e); };
 
-    InnerObserver.prototype.onCompleted = function() { this.o.onCompleted(); };
+    InnerObserver.prototype.completed = function() { this.o.onCompleted(); };
 
     return FlatMapObservable;
 

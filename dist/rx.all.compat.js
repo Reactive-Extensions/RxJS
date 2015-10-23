@@ -1798,7 +1798,7 @@
           if (!parent._handler(res.e)) { thrower(res.e); }
           return disposableEmpty;
         }
-        return disposableFixup(ret);
+        return disposableFixup(res);
       };
     };
 
@@ -1825,7 +1825,7 @@
           d.dispose();
           return null;
         }
-        return ret;
+        return res;
       }));
 
       return d;
@@ -2460,7 +2460,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
     InnerObserver.prototype.error = function(e) { this.o.onError(e); };
 
-    InnerObserver.prototype.onCompleted = function() { this.o.onCompleted(); };
+    InnerObserver.prototype.completed = function() { this.o.onCompleted(); };
 
     return FlatMapObservable;
 
@@ -2487,39 +2487,45 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
       __super__.call(this);
     }
 
+    function scheduleMethod(state, recurse) {
+      if (state.isDisposed) { return; }
+      var currentItem = tryCatch(state.e.next).call(state.e);
+      if (currentItem === errorObj) { return state.o.onError(currentItem.e); }
+      if (currentItem.done) { return state.o.onCompleted(); }
+
+      // Check if promise
+      var currentValue = currentItem.value;
+      isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
+      var d = new SingleAssignmentDisposable();
+      state.subscription.setDisposable(d);
+      d.setDisposable(currentValue.subscribe(new InnerObserver(state, recurse)));
+    }
+
     ConcatEnumerableObservable.prototype.subscribeCore = function (o) {
-      var state = { isDisposed: false }, subscription = new SerialDisposable();
-      var cancelable = currentThreadScheduler.scheduleRecursive(this.sources[$iterator$](), function (e, self) {
-        if (state.isDisposed) { return; }
-        var currentItem = tryCatch(e.next).call(e);
-        if (currentItem === errorObj) { return o.onError(currentItem.e); }
+      var subscription = new SerialDisposable();
+      var state = {
+        isDisposed: false,
+        o: o,
+        subscription: subscription,
+        e: this.sources[$iterator$]()
+      };
 
-        if (currentItem.done) {
-          return o.onCompleted();
-        }
-
-        // Check if promise
-        var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
-
-        var d = new SingleAssignmentDisposable();
-        subscription.setDisposable(d);
-        d.setDisposable(currentValue.subscribe(new InnerObserver(o, self, e)));
-      });
-
+      var cancelable = currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
       return new NAryDisposable([subscription, cancelable, new IsDisposedDisposable(state)]);
     };
 
-    inherits(InnerObserver, AbstractObserver);
-    function InnerObserver(o, s, e) {
-      this._o = o;
-      this._s = s;
-      this._e = e;
+    function InnerObserver(state, recurse) {
+      this._state = state;
+      this._recurse = recurse;
       AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) { this._o.onNext(x); };
-    InnerObserver.prototype.onError = function (e) { this._o.onError(e); };
-    InnerObserver.prototype.onCompleted = function () { this._s(this._e); };
+
+    inherits(InnerObserver, AbstractObserver);
+
+    InnerObserver.prototype.next = function (x) { this._state.o.onNext(x); };
+    InnerObserver.prototype.error = function (e) { this._state.o.onError(e); };
+    InnerObserver.prototype.completed = function () { this._recurse(this._state); };
 
     return ConcatEnumerableObservable;
   }(ObservableBase));
@@ -2529,46 +2535,52 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
   };
 
   var CatchErrorObservable = (function(__super__) {
-    inherits(CatchErrorObservable, __super__);
     function CatchErrorObservable(sources) {
       this.sources = sources;
       __super__.call(this);
     }
 
+    inherits(CatchErrorObservable, __super__);
+
+    function scheduleMethod(state, recurse) {
+      if (state.isDisposed) { return; }
+      var currentItem = tryCatch(state.e.next).call(state.e);
+      if (currentItem === errorObj) { return state.o.onError(currentItem.e); }
+      if (currentItem.done) { return state.lastError !== null ? state.o.onError(state.lastError) : state.o.onCompleted(); }
+
+      var currentValue = currentItem.value;
+      isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
+      var d = new SingleAssignmentDisposable();
+      state.subscription.setDisposable(d);
+      d.setDisposable(currentValue.subscribe(new InnerObserver(state, recurse)));
+    }
+
     CatchErrorObservable.prototype.subscribeCore = function (o) {
-      var e = this.sources[$iterator$]();
+      var subscription = new SerialDisposable();
+      var state = {
+        isDisposed: false,
+        e: this.sources[$iterator$](),
+        subscription: subscription,
+        lastError: null,
+        o: o
+      };
 
-      var state = { isDisposed: false }, subscription = new SerialDisposable();
-      var cancelable = currentThreadScheduler.scheduleRecursive(null, function (lastException, self) {
-        if (state.isDisposed) { return; }
-        var currentItem = tryCatch(e.next).call(e);
-        if (currentItem === errorObj) { return o.onError(currentItem.e); }
-
-        if (currentItem.done) {
-          return lastException !== null ? o.onError(lastException) : o.onCompleted();
-        }
-
-        // Check if promise
-        var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
-
-        var d = new SingleAssignmentDisposable();
-        subscription.setDisposable(d);
-        d.setDisposable(currentValue.subscribe(new InnerObserver(o, self)));
-      });
+      var cancelable = currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
       return new NAryDisposable([subscription, cancelable, new IsDisposedDisposable(state)]);
     };
 
-    inherits(InnerObserver, AbstractObserver);
-    function InnerObserver(o, recurse) {
-      this._o = o;
+    function InnerObserver(state, recurse) {
+      this._state = state;
       this._recurse = recurse;
       AbstractObserver.call(this);
     }
 
-    InnerObserver.prototype.next = function (x) { this._o.onNext(x); };
-    InnerObserver.prototype.error = function (e) { this._recurse(e); };
-    InnerObserver.prototype.completed = function () { this._o.onCompleted(); };
+    inherits(InnerObserver, AbstractObserver);
+
+    InnerObserver.prototype.next = function (x) { this._state.o.onNext(x); };
+    InnerObserver.prototype.error = function (e) { this._state.lastError = e; this._recurse(this._state); };
+    InnerObserver.prototype.completed = function () { this._state.o.onCompleted(); };
 
     return CatchErrorObservable;
   }(ObservableBase));
@@ -2588,7 +2600,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
       var e = sources[$iterator$]();
 
       var state = { isDisposed: false },
-        lastException,
+        lastError,
         subscription = new SerialDisposable();
       var cancelable = currentThreadScheduler.scheduleRecursive(null, function (_, self) {
         if (state.isDisposed) { return; }
@@ -2596,8 +2608,8 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
         if (currentItem === errorObj) { return o.onError(currentItem.e); }
 
         if (currentItem.done) {
-          if (lastException) {
-            o.onError(lastException);
+          if (lastError) {
+            o.onError(lastError);
           } else {
             o.onCompleted();
           }
@@ -2631,11 +2643,11 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
   var RepeatEnumerable = (function (__super__) {
     inherits(RepeatEnumerable, __super__);
-
     function RepeatEnumerable(v, c) {
       this.v = v;
       this.c = c == null ? -1 : c;
     }
+
     RepeatEnumerable.prototype[$iterator$] = function () {
       return new RepeatEnumerator(this);
     };
@@ -2644,6 +2656,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
       this.v = p.v;
       this.l = p.c;
     }
+
     RepeatEnumerator.prototype.next = function () {
       if (this.l === 0) { return doneEnumerator; }
       if (this.l > 0) { this.l--; }
@@ -2673,6 +2686,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
       this.l = this.s.length;
       this.fn = p.fn;
     }
+
     OfEnumerator.prototype.next = function () {
      return ++this.i < this.l ?
        { done: false, value: !this.fn ? this.s[this.i] : this.fn(this.s[this.i], this.i, this.s) } :
@@ -5740,13 +5754,6 @@ observableProto.flatMapConcat = observableProto.concatMap = function(selector, r
 observableProto.flatMap = observableProto.selectMany = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).mergeAll();
 };
-
-
-//
-//Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, resultSelector, thisArg) {
-//    return new FlatMapObservable(this, selector, resultSelector, thisArg).merge(limit);
-//};
-//
 
   /**
    * Projects each notification of an observable sequence to an observable sequence and merges the resulting observable sequences into one observable sequence.

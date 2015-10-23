@@ -31,7 +31,7 @@
           if (!parent._handler(res.e)) { thrower(res.e); }
           return disposableEmpty;
         }
-        return disposableFixup(ret);
+        return disposableFixup(res);
       };
     };
 
@@ -58,7 +58,7 @@
           d.dispose();
           return null;
         }
-        return ret;
+        return res;
       }));
 
       return d;

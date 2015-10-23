@@ -25,5 +25,11 @@
   "bugs": {
     "url": "https://github.com/Reactive-Extensions/RxJS/issues"
   },
-  "homepage": "https://github.com/Reactive-Extensions/RxJS"
+  "homepage": "https://github.com/Reactive-Extensions/RxJS",
+  "devDependencies": {
+    "tape": "^4.2.2"
+  },
+  "scripts": {
+    "test": "tape test/**/*.js"
+  }
 }

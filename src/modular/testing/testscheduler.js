@@ -1,0 +1,157 @@
+'use strict';
+
+var ColdObservable = require('./coldobservable');
+var Disposable = require('../disposable');
+var HotObservable = require('./hotobservable');
+var MockObserver = require('./mockobserver');
+var MockPromise = require('./mockpromise');
+var ReactiveTest = require('./reactivetest');
+var VirtualTimeScheduler = require('../scheduler/virtualtimescheduler');
+var inherits = require('util').inherits;
+
+function baseComparer(x, y) { return x > y ? 1 : (x < y ? -1 : 0); }
+
+function TestScheduler() {
+  VirtualTimeScheduler.call(this, 0, baseComparer);
+}
+
+inherits(TestScheduler, VirtualTimeScheduler);
+
+/**
+ * Schedules an action to be executed at the specified virtual time.
+ *
+ * @param state State passed to the action to be executed.
+ * @param dueTime Absolute virtual time at which to execute the action.
+ * @param action Action to be executed.
+ * @return Disposable object used to cancel the scheduled action (best effort).
+ */
+TestScheduler.prototype.scheduleAbsolute = function (state, dueTime, action) {
+  dueTime <= this.clock && (dueTime = this.clock + 1);
+  return VirtualTimeScheduler.prototype.scheduleAbsolute.call(this, state, dueTime, action);
+};
+/**
+ * Adds a relative virtual time to an absolute virtual time value.
+ *
+ * @param absolute Absolute virtual time value.
+ * @param relative Relative virtual time value to add.
+ * @return Resulting absolute virtual time sum value.
+ */
+TestScheduler.prototype.add = function (absolute, relative) {
+  return absolute + relative;
+};
+/**
+ * Converts the absolute virtual time value to a DateTimeOffset value.
+ *
+ * @param absolute Absolute virtual time value to convert.
+ * @return Corresponding DateTimeOffset value.
+ */
+TestScheduler.prototype.toAbsoluteTime = function (absolute) {
+  return new Date(absolute).getTime();
+};
+/**
+ * Converts the TimeSpan value to a relative virtual time value.
+ *
+ * @param timeSpan TimeSpan value to convert.
+ * @return Corresponding relative virtual time value.
+ */
+TestScheduler.prototype.toRelativeTime = function (timeSpan) {
+  return timeSpan;
+};
+/**
+ * Starts the test scheduler and uses the specified virtual times to invoke the factory function, subscribe to the resulting sequence, and dispose the subscription.
+ *
+ * @param create Factory method to create an observable sequence.
+ * @param created Virtual time at which to invoke the factory to create an observable sequence.
+ * @param subscribed Virtual time at which to subscribe to the created observable sequence.
+ * @param disposed Virtual time at which to dispose the subscription.
+ * @return Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.
+ */
+TestScheduler.prototype.startScheduler = function (createFn, settings) {
+  settings || (settings = {});
+  settings.created == null && (settings.created = ReactiveTest.created);
+  settings.subscribed == null && (settings.subscribed = ReactiveTest.subscribed);
+  settings.disposed == null && (settings.disposed = ReactiveTest.disposed);
+
+  var observer = this.createObserver(), source, subscription;
+
+  this.scheduleAbsolute(null, settings.created, function () {
+    source = createFn();
+    return Disposable.empty;
+  });
+
+  this.scheduleAbsolute(null, settings.subscribed, function () {
+    subscription = source.subscribe(observer);
+    return Disposable.empty;
+  });
+
+  this.scheduleAbsolute(null, settings.disposed, function () {
+    subscription.dispose();
+    return Disposable.empty;
+  });
+
+  this.start();
+
+  return observer;
+};
+
+/**
+ * Creates a hot observable using the specified timestamped notification messages either as an array or arguments.
+ * @param messages Notifications to surface through the created sequence at their specified absolute virtual times.
+ * @return Hot observable sequence that can be used to assert the timing of subscriptions and notifications.
+ */
+TestScheduler.prototype.createHotObservable = function () {
+  var len = arguments.length, args;
+  if (Array.isArray(arguments[0])) {
+    args = arguments[0];
+  } else {
+    args = new Array(len);
+    for (var i = 0; i < len; i++) { args[i] = arguments[i]; }
+  }
+  return new HotObservable(this, args);
+};
+
+/**
+ * Creates a cold observable using the specified timestamped notification messages either as an array or arguments.
+ * @param messages Notifications to surface through the created sequence at their specified virtual time offsets from the sequence subscription time.
+ * @return Cold observable sequence that can be used to assert the timing of subscriptions and notifications.
+ */
+TestScheduler.prototype.createColdObservable = function () {
+  var len = arguments.length, args;
+  if (Array.isArray(arguments[0])) {
+    args = arguments[0];
+  } else {
+    args = new Array(len);
+    for (var i = 0; i < len; i++) { args[i] = arguments[i]; }
+  }
+  return new ColdObservable(this, args);
+};
+
+/**
+ * Creates a resolved promise with the given value and ticks
+ * @param {Number} ticks The absolute time of the resolution.
+ * @param {Any} value The value to yield at the given tick.
+ * @returns {MockPromise} A mock Promise which fulfills with the given value.
+ */
+TestScheduler.prototype.createResolvedPromise = function (ticks, value) {
+  return new MockPromise(this, [ReactiveTest.onNext(ticks, value), ReactiveTest.onCompleted(ticks)]);
+};
+
+/**
+ * Creates a rejected promise with the given reason and ticks
+ * @param {Number} ticks The absolute time of the resolution.
+ * @param {Any} reason The reason for rejection to yield at the given tick.
+ * @returns {MockPromise} A mock Promise which rejects with the given reason.
+ */
+TestScheduler.prototype.createRejectedPromise = function (ticks, reason) {
+  return new MockPromise(this, [ReactiveTest.onError(ticks, reason)]);
+};
+
+/**
+ * Creates an observer that records received notification messages and timestamps those.
+ * @return Observer that can be used to assert the timing of received notifications.
+ */
+TestScheduler.prototype.createObserver = function () {
+  return new MockObserver(this);
+};
+
+module.exports = TestScheduler;
