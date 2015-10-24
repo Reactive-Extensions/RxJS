@@ -137,6 +137,7 @@ test('create throws errors', function (t) {
   t.throws(function () {
     Observable.create(function () { throw new Error(); }).subscribe();
   });
+  t.end();
 });
 
 test('create dispose', function (t) {
@@ -193,6 +194,6 @@ test('create observer does not catch', function (t) {
     Observable.create(function (o) { o.onCompleted(); })
       .subscribe(noop, noop, function () { throw new Error(); });
   });
-  
+
   t.end();
 });
