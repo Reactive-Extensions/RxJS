@@ -3,7 +3,7 @@
 var isEqual = require('../internal/isequal');
 
 function createMessage(actual, expected) {
-  return 'Expected: [' + expected.toString() + ']\r\nActual: [' + actual.toString() + ']';
+  return 'Expected: [' + expected.toString() + '] Actual: [' + actual.toString() + ']';
 }
 
 module.exports = function assertEqual (t, expected, actual) {
