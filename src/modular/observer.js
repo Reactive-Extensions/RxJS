@@ -6,13 +6,13 @@
 function Observer () { }
 
 Observer.addToObject = function (operators) {
-  operators.forEach(function (operator) {
-    Observer[operator] = operator[operator];
+  Object.keys(operators).forEach(function (operator) {
+    Observer[operator] = operators[operator];
   });
 };
 
 Observer.addToPrototype = function (operators) {
-  operators.forEach(function (operator) {
+  Object.keys(operators).forEach(function (operator) {
     Observer.prototype[operator] = function () {
       var args = [this];
       args.push.apply(args, arguments);
@@ -20,5 +20,6 @@ Observer.addToPrototype = function (operators) {
     };
   });
 };
+
 
 module.exports = Observer;
