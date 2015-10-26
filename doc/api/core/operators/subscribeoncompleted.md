@@ -28,7 +28,7 @@ var source = Rx.Observable.range(0, 3);
 var subscription = source.subscribeOnCompleted(
   function (err) {
     this.log('Completed');
-  }}, console);
+  }, console);
 
 // => Completed
 ```

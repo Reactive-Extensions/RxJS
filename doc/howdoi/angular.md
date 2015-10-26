@@ -89,11 +89,11 @@ Using the Reactive Extensions for JavaScript, we can also integrate using the `R
 ```js
 // Query data
 var observable = Rx.Observable.fromPromise(
-	$http(
+	$http({
 		method: 'GET',
 		url: 'someurl',
 		params: { searchString: $scope.searchString }
-	)
+	})
 );
 
 // Subscribe to data and update UI

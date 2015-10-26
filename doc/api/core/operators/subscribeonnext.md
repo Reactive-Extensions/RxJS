@@ -30,7 +30,7 @@ var source = Rx.Observable.range(0, 3)
 var subscription = source.subscribeOnNext(
   function (x) {
     this.log('Next: %s', x);
-  }}, console);
+  }, console);
 
 // => Next: 0
 // => Next: 1

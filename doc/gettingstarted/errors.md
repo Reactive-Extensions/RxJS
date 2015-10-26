@@ -154,7 +154,7 @@ var source = get('url').retryWhen(
   function (attempts) {
     return attempts
       .zip(Rx.Observable.range(1, 3), function (_, i) { return i })
-      .flatMap(function (i)) {
+      .flatMap(function (i) {
         console.log('delay retry by ' + i + ' second(s)');
         return Rx.Observable.timer(i * 1000);
       });
