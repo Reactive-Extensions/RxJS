@@ -2,7 +2,7 @@
 
 var AnonymousObserver = require('./anonymousobserver');
 var Notification = require('../notification');
-var bindCallback = require('../helpers/bindcallback');
+var bindCallback = require('../internal/bindcallback');
 
 /**
  *  Creates an observer from a notification callback.
@@ -14,7 +14,7 @@ module.exports = function (handler, thisArg) {
   return new AnonymousObserver(function (x) {
     return cb(Notification.createOnNext(x));
   }, function (e) {
-    return cb(Notification.createOnNext(e));
+    return cb(Notification.createOnError(e));
   }, function () {
     return cb(Notification.createOnCompleted());
   });
