@@ -8,7 +8,7 @@
     }
 
     function innerMap(selector, self) {
-      return function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); }
+      return function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); };
     }
 
     MapObservable.prototype.internalMap = function (selector, thisArg) {

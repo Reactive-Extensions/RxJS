@@ -10,7 +10,7 @@ var onNext = ReactiveTest.onNext,
     onError = ReactiveTest.onError,
     onCompleted = ReactiveTest.onCompleted;
 
-test('Infinite', function (t) {
+test('AsyncSubject Infinite', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -36,11 +36,13 @@ test('Infinite', function (t) {
   var subscription, subscription1, subscription2, subscription3;
 
   scheduler.scheduleAbsolute(null, 100, function () {
-      subject = new AsyncSubject();
+    subject = new AsyncSubject();
   });
+
   scheduler.scheduleAbsolute(null, 200, function () {
     subscription = xs.subscribe(subject);
   });
+
   scheduler.scheduleAbsolute(null, 1000, function () {
     subscription.dispose();
   });
@@ -84,7 +86,7 @@ test('Infinite', function (t) {
   t.end();
 });
 
-test('Finite', function (t) {
+test('AsyncSubject Finite', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -157,7 +159,7 @@ test('Finite', function (t) {
   t.end();
 });
 
-test('Error', function (t) {
+test('AsyncSubject Error', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -231,7 +233,7 @@ test('Error', function (t) {
   t.end();
 });
 
-test('cancelled', function (t) {
+test('AsyncSubject cancelled', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -295,7 +297,7 @@ test('cancelled', function (t) {
   t.end();
 });
 
-test('disposed', function (t) {
+test('AsyncSubject disposed', function (t) {
   var scheduler = new TestScheduler();
 
   var results1 = scheduler.createObserver();

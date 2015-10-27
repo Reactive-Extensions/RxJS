@@ -14,7 +14,7 @@ Observable.addToObject({
   just: require('../observable/just')
 });
 
-test('just basic', function (t) {
+test('Observable.just basic', function (t) {
   var scheduler = new TestScheduler();
 
   var res = scheduler.startScheduler(function () {
@@ -28,7 +28,7 @@ test('just basic', function (t) {
    t.end();
 });
 
-test('just disposed', function (t) {
+test('Observable.just disposed', function (t) {
   var scheduler = new TestScheduler();
 
   var res = scheduler.startScheduler(function () {
@@ -39,7 +39,7 @@ test('just disposed', function (t) {
   t.end();
 });
 
-test('just disposed after next', function (t) {
+test('Observable.just disposed after next', function (t) {
   var scheduler = new TestScheduler();
 
   var d = new SerialDisposable();
@@ -69,7 +69,7 @@ test('just disposed after next', function (t) {
 
 function noop () { }
 
-test('just Observer throws', function (t) {
+test('Observable.just Observer throws', function (t) {
   var scheduler1 = new TestScheduler();
 
   var xs = Observable.just(1, scheduler1);

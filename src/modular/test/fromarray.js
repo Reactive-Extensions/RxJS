@@ -13,7 +13,7 @@ Observable.addToObject({
   fromArray: require('../observable/fromarray')
 });
 
-test('fromArray normal', function (t) {
+test('Observable.fromArray normal', function (t) {
   var array = [1, 2, 3, 4, 5];
 
   var scheduler = new TestScheduler();
@@ -33,7 +33,7 @@ test('fromArray normal', function (t) {
   t.end();
 });
 
-test('fromArray empty', function (t) {
+test('Observable.fromArray empty', function (t) {
   var array = [];
 
   var scheduler = new TestScheduler();
@@ -48,7 +48,7 @@ test('fromArray empty', function (t) {
   t.end();
 });
 
-test('fromArray one', function (t) {
+test('Observable.fromArray one', function (t) {
   var array = [1];
 
   var scheduler = new TestScheduler();
@@ -64,7 +64,7 @@ test('fromArray one', function (t) {
   t.end();
 });
 
-test('fromArray dispose', function (t) {
+test('Observable.fromArray dispose', function (t) {
   var array = [1, 2, 3, 4, 5];
 
   var scheduler = new TestScheduler();

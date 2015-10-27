@@ -13,7 +13,7 @@ Observable.addToObject({
 });
 
 
-test('empty basic', function (t) {
+test('Observable.empty basic', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -26,7 +26,7 @@ test('empty basic', function (t) {
   t.end();
 });
 
-test('empty disposed', function (t) {
+test('Observable.empty disposed', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -39,7 +39,7 @@ test('empty disposed', function (t) {
 
 function noop () { }
 
-test('empty observer throws', function (t) {
+test('Observable.empty observer throws', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = Observable.empty(scheduler);

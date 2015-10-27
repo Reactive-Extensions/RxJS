@@ -17,7 +17,7 @@ Observable.addToObject({
 
 function noop () { }
 
-test('create next', function (t) {
+test('Observable.create next', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -35,7 +35,7 @@ test('create next', function (t) {
   t.end();
 });
 
-test('create completed', function (t) {
+test('Observable.create completed', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -54,7 +54,7 @@ test('create completed', function (t) {
   t.end();
 });
 
-test('create Error', function (t) {
+test('Observable.create Error', function (t) {
   var scheduler = new TestScheduler();
 
   var error = new Error();
@@ -75,7 +75,7 @@ test('create Error', function (t) {
   t.end();
 });
 
-test('create noop next', function (t) {
+test('Observable.create noop next', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -93,7 +93,7 @@ test('create noop next', function (t) {
   t.end();
 });
 
-test('create no op completed', function (t) {
+test('Observable.create no op completed', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -112,7 +112,7 @@ test('create no op completed', function (t) {
   t.end();
 });
 
-test('create no op Error', function (t) {
+test('Observable.create no op Error', function (t) {
   var scheduler = new TestScheduler();
 
   var error = new Error();
@@ -133,14 +133,14 @@ test('create no op Error', function (t) {
   t.end();
 });
 
-test('create throws errors', function (t) {
+test('Observable.create throws errors', function (t) {
   t.throws(function () {
     Observable.create(function () { throw new Error(); }).subscribe();
   });
   t.end();
 });
 
-test('create dispose', function (t) {
+test('Observable.create dispose', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -179,7 +179,7 @@ test('create dispose', function (t) {
   t.end();
 });
 
-test('create observer does not catch', function (t) {
+test('Observable.create observer does not catch', function (t) {
   t.throws(function () {
     Observable.create(function (o) { o.onNext(1); })
       .subscribe(function () { throw new Error(); });

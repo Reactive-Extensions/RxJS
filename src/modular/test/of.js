@@ -14,7 +14,7 @@ Observable.addToObject({
   ofScheduled: require('../observable/ofscheduled')
 });
 
-test('of', function (t) {
+test('Observable.of', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -32,7 +32,7 @@ test('of', function (t) {
   t.end();
 });
 
-test('of empty', function (t) {
+test('Observable.of empty', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -45,7 +45,7 @@ test('of empty', function (t) {
   t.end();
 });
 
-test('ofScheduled', function (t) {
+test('Observable.ofScheduled', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -63,7 +63,7 @@ test('ofScheduled', function (t) {
   t.end();
 });
 
-test('ofScheduled empty', function (t) {
+test('Observable.ofScheduled empty', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {

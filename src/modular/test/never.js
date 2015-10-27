@@ -10,7 +10,7 @@ Observable.addToObject({
   never: require('../observable/never')
 });
 
-test('never basic', function (t) {
+test('Observable.never basic', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = Observable.never();

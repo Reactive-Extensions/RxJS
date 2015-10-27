@@ -14,7 +14,7 @@ Observable.addToObject({
 
 function noop () { }
 
-test('throw basic', function (t) {
+test('Observable.throw basic', function (t) {
   var scheduler = new TestScheduler();
 
   var error = new Error();
@@ -29,7 +29,7 @@ test('throw basic', function (t) {
   t.end();
 });
 
-test('throw disposed', function (t) {
+test('Observable.throw disposed', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -40,7 +40,7 @@ test('throw disposed', function (t) {
   t.end();
 });
 
-test('throw observer throws', function (t) {
+test('Observable.throw observer throws', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = Observable['throw'](new Error(), scheduler);

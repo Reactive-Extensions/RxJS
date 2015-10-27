@@ -45,7 +45,7 @@ function innerMap(fn, self) {
 }
 
 MapObservable.prototype.internalMap = function (fn, thisArg) {
-  return new MapObservable(this._fn, innerMap(fn, this), thisArg);
+  return new MapObservable(this.source, innerMap(fn, this), thisArg);
 };
 
 MapObservable.prototype.subscribeCore = function (o) {

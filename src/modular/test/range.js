@@ -13,7 +13,7 @@ Observable.addToObject({
   range: require('../observable/range')
 });
 
-test('range zero', function (t) {
+test('Observable.range zero', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -26,7 +26,7 @@ test('range zero', function (t) {
   t.end();
 });
 
-test('range one', function (t) {
+test('Observable.range one', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -40,7 +40,7 @@ test('range one', function (t) {
   t.end();
 });
 
-test('range five', function (t) {
+test('Observable.range five', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -55,10 +55,11 @@ test('range five', function (t) {
     onNext(205, 14),
     onCompleted(206)
   ]);
+
   t.end();
 });
 
-test('range dispose', function (t) {
+test('Observable.range dispose', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -70,5 +71,6 @@ test('range dispose', function (t) {
     onNext(202, -9),
     onNext(203, -8)
   ]);
+  
   t.end();
 });
