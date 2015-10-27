@@ -16,7 +16,7 @@ This method can be used for debugging, logging, etc. of query behavior by interc
 #### Example
 ```js
 /* Using a function */
-var source = Rx.Observable.throw(new Error());
+var source = Rx.Observable.throw(new Error())
   .doOnError(
     function (err) { console.log('Do Error: %s', err); }
   );
@@ -37,7 +37,7 @@ var subscription = source.subscribe(
 
 /* Using a thisArg */
 
-var source = Rx.Observable.throw(new Error());
+var source = Rx.Observable.throw(new Error())
   .doOnError(
     function (err) { this.log('Do Error: %s', err); },
     console

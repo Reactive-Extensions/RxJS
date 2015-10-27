@@ -18,7 +18,7 @@ var source = Rx.Observable.of(42, 24, 42, 24)
 
 var subscription = source.subscribe(
   function (x) {
-    console.log('Next: %s', x;
+    console.log('Next: %s', x);
   },
   function (err) {
     console.log('Error: %s', err);
@@ -37,7 +37,7 @@ var source = Rx.Observable.of({value: 42}, {value: 24}, {value: 42}, {value: 24}
 
 var subscription = source.subscribe(
   function (x) {
-    console.log('Next: %s', x;
+    console.log('Next: %s', x);
   },
   function (err) {
     console.log('Error: %s', err);

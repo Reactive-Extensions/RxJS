@@ -239,12 +239,12 @@ var results = scheduler.startWithCreate(function () {
 // Some custom collection assertion for values
 collectionAssert.assertEqual(results.messages, [
   Rx.ReactiveTest.onNext(201, 2),
-  Rx.ReactiveTest.onCompleted(202);
+  Rx.ReactiveTest.onCompleted(202)
 ]);
 
 // Some custom collection assertion for subscriptions
 collectionAssert.assertEqual(xs.subscriptions, [
-  Rx.ReactiveTest.subscribe(200, 202);
+  Rx.ReactiveTest.subscribe(200, 202)
 ])
 ```
 
@@ -264,7 +264,7 @@ getStockData().forEach(function (stock) {
 });
 
 // Calculate with the data
-source.groupBy(function (stock) { return stock.symbol };)
+source.groupBy(function (stock) { return stock.symbol; })
   /* Do something with the data */
   .subscribe(function (info) {
     // Process the data
@@ -279,7 +279,7 @@ In our applications, we consume a lot of data from external sources.  But, what 
 
 RxJS has a rather large surface area, so we give you the ability to build RxJS with only the things you want and none of the things you don't via the [`rx-cli`](https://www.npmjs.org/package/rx-cli) project.  For example, we can build a `compat` version of RxJS with only the `map`, `flatMap`, `takeUntil`, and `fromEvent` methods, which keeps your RxJS version lean and mean.
 
-```js
+```bash
 rx --lite --compat --methods map,flatmap,takeuntil,fromevent
 ```
 

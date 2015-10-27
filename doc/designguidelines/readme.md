@@ -894,7 +894,7 @@ Rx.Observable.prototype.map = function (selector, thisArg) {
       observer.onError.bind(observer),
       observer.onCompleted.bind(observer)
     );
-  };
+  });
 };
 ```
 

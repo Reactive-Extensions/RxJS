@@ -71,7 +71,7 @@ var range = Rx.Observable.range(0, 5);
 var source = Observable.zip(
   Promise.resolve(0),
   Promise.resolve(1),
-  Rx.Observable.return(2)
+  Rx.Observable.return(2),
   function (s1, s2, s3) {
     return s1 + ':' + s2 + ':' + s3;
   }
