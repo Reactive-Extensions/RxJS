@@ -2,47 +2,35 @@
     inherits(SkipObservable, __super__);
     function SkipObservable(source, count) {
       this.source = source;
-      this.skipCount = count;
+      this._count = count;
       __super__.call(this);
     }
-    
+
     SkipObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.skipCount));
+      return this.source.subscribe(new SkipObserver(o, this._count));
     };
-    
-    function InnerObserver(o, c) {
-      this.c = c;
-      this.r = c;
-      this.o = o;
-      this.isStopped = false;
+
+    function SkipObserver(o, c) {
+      this._o = o;
+      this._r = c;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) {
-      if (this.isStopped) { return; }
-      if (this.r <= 0) { 
-        this.o.onNext(x);
+
+    inherits(SkipObserver, AbstractObserver);
+
+    SkipObserver.prototype.next = function (x) {
+      if (this._r <= 0) {
+        this._o.onNext(x);
       } else {
-        this.r--;
+        this._r--;
       }
     };
-    InnerObserver.prototype.onError = function(e) {
-      if (!this.isStopped) { this.isStopped = true; this.o.onError(e); }
-    };
-    InnerObserver.prototype.onCompleted = function() {
-      if (!this.isStopped) { this.isStopped = true; this.o.onCompleted(); }
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function(e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
-    };
-    
+    SkipObserver.prototype.error = function(e) { this._o.onError(e); };
+    SkipObserver.prototype.completed = function() { this._o.onCompleted(); };
+
     return SkipObservable;
-  }(ObservableBase));  
-  
+  }(ObservableBase));
+
   /**
    * Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
    * @param {Number} count The number of elements to skip before returning the remaining elements.

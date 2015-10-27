@@ -1,4 +1,3 @@
-
 'use strict';
 /* jshint undef: true, unused: true */
 

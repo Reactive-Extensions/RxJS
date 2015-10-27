@@ -1,53 +1,39 @@
   var FromObservable = (function(__super__) {
     inherits(FromObservable, __super__);
-    function FromObservable(iterable, mapper, scheduler) {
-      this.iterable = iterable;
-      this.mapper = mapper;
-      this.scheduler = scheduler;
+    function FromObservable(iterable, fn, scheduler) {
+      this._iterable = iterable;
+      this._fn = fn;
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
-    FromObservable.prototype.subscribeCore = function (o) {
-      var sink = new FromSink(o, this);
-      return sink.run();
-    };
-
-    return FromObservable;
-  }(ObservableBase));
-
-  var FromSink = (function () {
-    function FromSink(o, parent) {
-      this.o = o;
-      this.parent = parent;
-    }
-
-    FromSink.prototype.run = function () {
-      var list = Object(this.parent.iterable),
-          it = getIterable(list),
-          o = this.o,
-          mapper = this.parent.mapper;
-
-      function loopRecursive(i, recurse) {
+    function createScheduleMethod(o, it, fn) {
+      return function loopRecursive(i, recurse) {
         var next = tryCatch(it.next).call(it);
         if (next === errorObj) { return o.onError(next.e); }
         if (next.done) { return o.onCompleted(); }
 
         var result = next.value;
 
-        if (isFunction(mapper)) {
-          result = tryCatch(mapper)(result, i);
+        if (isFunction(fn)) {
+          result = tryCatch(fn)(result, i);
           if (result === errorObj) { return o.onError(result.e); }
         }
 
         o.onNext(result);
         recurse(i + 1);
-      }
+      };
+    }
 
-      return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
+    FromObservable.prototype.subscribeCore = function (o) {
+      var list = Object(this._iterable),
+          it = getIterable(list);
+
+      return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
     };
 
-    return FromSink;
-  }());
+    return FromObservable;
+  }(ObservableBase));
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
 

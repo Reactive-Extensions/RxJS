@@ -1787,20 +1787,39 @@ var isEqual = Rx.internals.isEqual = function (value, other) {
       this.disposable = new SerialDisposable();
     }
 
-    ScheduledObserver.prototype.next = function (value) {
-      var self = this;
-      this.queue.push(function () { self.observer.onNext(value); });
+    function enqueueNext(observer, x) { return function () { observer.onNext(x); }; }
+    function enqueueError(observer, e) { return function () { observer.onError(e); }; }
+    function enqueueCompleted(observer) { return function () { observer.onCompleted(); }; }
+
+    ScheduledObserver.prototype.next = function (x) {
+      this.queue.push(enqueueNext(this.observer, x));
     };
 
     ScheduledObserver.prototype.error = function (e) {
-      var self = this;
-      this.queue.push(function () { self.observer.onError(e); });
+      this.queue.push(enqueueError(this.observer, e));
     };
 
     ScheduledObserver.prototype.completed = function () {
-      var self = this;
-      this.queue.push(function () { self.observer.onCompleted(); });
+      this.queue.push(enqueueCompleted(this.observer));
     };
+
+
+    function scheduleMethod(state, recurse) {
+      var work;
+      if (state.queue.length > 0) {
+        work = state.queue.shift();
+      } else {
+        state.isAcquired = false;
+        return;
+      }
+      var res = tryCatch(work)();
+      if (res === errorObj) {
+        state.queue = [];
+        state.hasFaulted = true;
+        return thrower(res.e);
+      }
+      recurse(state);
+    }
 
     ScheduledObserver.prototype.ensureActive = function () {
       var isOwner = false;
@@ -1808,24 +1827,8 @@ var isEqual = Rx.internals.isEqual = function (value, other) {
         isOwner = !this.isAcquired;
         this.isAcquired = true;
       }
-      if (isOwner) {
-        this.disposable.setDisposable(this.scheduler.scheduleRecursive(this, function (parent, self) {
-          var work;
-          if (parent.queue.length > 0) {
-            work = parent.queue.shift();
-          } else {
-            parent.isAcquired = false;
-            return;
-          }
-          var res = tryCatch(work)();
-          if (res === errorObj) {
-            parent.queue = [];
-            parent.hasFaulted = true;
-            return thrower(res.e);
-          }
-          self(parent);
-        }));
-      }
+      isOwner &&
+        this.disposable.setDisposable(this.scheduler.scheduleRecursive(this, scheduleMethod));
     };
 
     ScheduledObserver.prototype.dispose = function () {
@@ -2279,54 +2282,40 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
 
   var FromObservable = (function(__super__) {
     inherits(FromObservable, __super__);
-    function FromObservable(iterable, mapper, scheduler) {
-      this.iterable = iterable;
-      this.mapper = mapper;
-      this.scheduler = scheduler;
+    function FromObservable(iterable, fn, scheduler) {
+      this._iterable = iterable;
+      this._fn = fn;
+      this._scheduler = scheduler;
       __super__.call(this);
     }
 
-    FromObservable.prototype.subscribeCore = function (o) {
-      var sink = new FromSink(o, this);
-      return sink.run();
-    };
-
-    return FromObservable;
-  }(ObservableBase));
-
-  var FromSink = (function () {
-    function FromSink(o, parent) {
-      this.o = o;
-      this.parent = parent;
-    }
-
-    FromSink.prototype.run = function () {
-      var list = Object(this.parent.iterable),
-          it = getIterable(list),
-          o = this.o,
-          mapper = this.parent.mapper;
-
-      function loopRecursive(i, recurse) {
+    function createScheduleMethod(o, it, fn) {
+      return function loopRecursive(i, recurse) {
         var next = tryCatch(it.next).call(it);
         if (next === errorObj) { return o.onError(next.e); }
         if (next.done) { return o.onCompleted(); }
 
         var result = next.value;
 
-        if (isFunction(mapper)) {
-          result = tryCatch(mapper)(result, i);
+        if (isFunction(fn)) {
+          result = tryCatch(fn)(result, i);
           if (result === errorObj) { return o.onError(result.e); }
         }
 
         o.onNext(result);
         recurse(i + 1);
-      }
+      };
+    }
 
-      return this.parent.scheduler.scheduleRecursive(0, loopRecursive);
+    FromObservable.prototype.subscribeCore = function (o) {
+      var list = Object(this._iterable),
+          it = getIterable(list);
+
+      return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
     };
 
-    return FromSink;
-  }());
+    return FromObservable;
+  }(ObservableBase));
 
   var maxSafeInteger = Math.pow(2, 53) - 1;
 
@@ -2569,40 +2558,26 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
       __super__.call(this);
     }
 
-    RangeObservable.prototype.subscribeCore = function (observer) {
-      var sink = new RangeSink(observer, this);
-      return sink.run();
-    };
-
-    return RangeObservable;
-  }(ObservableBase));
-
-  var RangeSink = (function () {
-    function RangeSink(observer, parent) {
-      this.observer = observer;
-      this.parent = parent;
-    }
-
-    function loopRecursive(start, count, observer) {
+    function loopRecursive(start, count, o) {
       return function loop (i, recurse) {
         if (i < count) {
-          observer.onNext(start + i);
+          o.onNext(start + i);
           recurse(i + 1);
         } else {
-          observer.onCompleted();
+          o.onCompleted();
         }
       };
     }
 
-    RangeSink.prototype.run = function () {
-      return this.parent.scheduler.scheduleRecursive(
+    RangeObservable.prototype.subscribeCore = function (o) {
+      return this.scheduler.scheduleRecursive(
         0,
-        loopRecursive(this.parent.start, this.parent.rangeCount, this.observer)
+        loopRecursive(this.start, this.rangeCount, o)
       );
     };
 
-    return RangeSink;
-  }());
+    return RangeObservable;
+  }(ObservableBase));
 
   /**
   *  Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
@@ -4357,7 +4332,7 @@ observableProto.flatMapConcat = observableProto.concatMap = function(selector, r
     }
 
     function innerMap(selector, self) {
-      return function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); }
+      return function (x, i, o) { return selector.call(this, self.selector(x, i, o), i, o); };
     }
 
     MapObservable.prototype.internalMap = function (selector, thisArg) {
@@ -4447,47 +4422,35 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     inherits(SkipObservable, __super__);
     function SkipObservable(source, count) {
       this.source = source;
-      this.skipCount = count;
+      this._count = count;
       __super__.call(this);
     }
-    
+
     SkipObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.skipCount));
+      return this.source.subscribe(new SkipObserver(o, this._count));
     };
-    
-    function InnerObserver(o, c) {
-      this.c = c;
-      this.r = c;
-      this.o = o;
-      this.isStopped = false;
+
+    function SkipObserver(o, c) {
+      this._o = o;
+      this._r = c;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype.onNext = function (x) {
-      if (this.isStopped) { return; }
-      if (this.r <= 0) { 
-        this.o.onNext(x);
+
+    inherits(SkipObserver, AbstractObserver);
+
+    SkipObserver.prototype.next = function (x) {
+      if (this._r <= 0) {
+        this._o.onNext(x);
       } else {
-        this.r--;
+        this._r--;
       }
     };
-    InnerObserver.prototype.onError = function(e) {
-      if (!this.isStopped) { this.isStopped = true; this.o.onError(e); }
-    };
-    InnerObserver.prototype.onCompleted = function() {
-      if (!this.isStopped) { this.isStopped = true; this.o.onCompleted(); }
-    };
-    InnerObserver.prototype.dispose = function() { this.isStopped = true; };
-    InnerObserver.prototype.fail = function(e) {
-      if (!this.isStopped) {
-        this.isStopped = true;
-        this.o.onError(e);
-        return true;
-      }
-      return false;
-    };
-    
+    SkipObserver.prototype.error = function(e) { this._o.onError(e); };
+    SkipObserver.prototype.completed = function() { this._o.onCompleted(); };
+
     return SkipObservable;
-  }(ObservableBase));  
-  
+  }(ObservableBase));
+
   /**
    * Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
    * @param {Number} count The number of elements to skip before returning the remaining elements.
@@ -4497,6 +4460,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
     if (count < 0) { throw new ArgumentOutOfRangeError(); }
     return new SkipObservable(this, count);
   };
+
   var SkipWhileObservable = (function (__super__) {
     inherits(SkipWhileObservable, __super__);
     function SkipWhileObservable(source, fn) {
@@ -4554,57 +4518,38 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
 
   var TakeObservable = (function(__super__) {
     inherits(TakeObservable, __super__);
-    
     function TakeObservable(source, count) {
       this.source = source;
-      this.takeCount = count;
+      this._count = count;
       __super__.call(this);
     }
-    
+
     TakeObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.takeCount));
+      return this.source.subscribe(new TakeObserver(o, this._count));
     };
-    
-    function InnerObserver(o, c) {
-      this.o = o;
-      this.c = c;
-      this.r = c;
-      this.isStopped = false;
+
+    function TakeObserver(o, c) {
+      this._o = o;
+      this._c = c;
+      this._r = c;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype = {
-      onNext: function (x) {
-        if (this.isStopped) { return; }
-        if (this.r-- > 0) {
-          this.o.onNext(x);
-          this.r <= 0 && this.o.onCompleted();
-        }
-      },
-      onError: function (err) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onError(err);
-        }
-      },
-      onCompleted: function () {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onCompleted();
-        }
-      },
-      dispose: function () { this.isStopped = true; },
-      fail: function (e) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onError(e);
-          return true;
-        }
-        return false;
+
+    inherits(TakeObserver, AbstractObserver);
+
+    TakeObserver.prototype.next = function (x) {
+      if (this._r-- > 0) {
+        this._o.onNext(x);
+        this._r <= 0 && this._o.onCompleted();
       }
     };
-    
+
+    TakeObserver.prototype.error = function (e) { this._o.onError(e); };
+    TakeObserver.prototype.completed = function () { this._o.onCompleted(); };
+
     return TakeObservable;
-  }(ObservableBase));  
-  
+  }(ObservableBase));
+
   /**
    *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
    * @param {Number} count The number of elements to return.

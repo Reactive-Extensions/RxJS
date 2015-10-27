@@ -244,20 +244,39 @@
       this.disposable = new SerialDisposable();
     }
 
-    ScheduledObserver.prototype.next = function (value) {
-      var self = this;
-      this.queue.push(function () { self.observer.onNext(value); });
+    function enqueueNext(observer, x) { return function () { observer.onNext(x); }; }
+    function enqueueError(observer, e) { return function () { observer.onError(e); }; }
+    function enqueueCompleted(observer) { return function () { observer.onCompleted(); }; }
+
+    ScheduledObserver.prototype.next = function (x) {
+      this.queue.push(enqueueNext(this.observer, x));
     };
 
     ScheduledObserver.prototype.error = function (e) {
-      var self = this;
-      this.queue.push(function () { self.observer.onError(e); });
+      this.queue.push(enqueueError(this.observer, e));
     };
 
     ScheduledObserver.prototype.completed = function () {
-      var self = this;
-      this.queue.push(function () { self.observer.onCompleted(); });
+      this.queue.push(enqueueCompleted(this.observer));
     };
+
+
+    function scheduleMethod(state, recurse) {
+      var work;
+      if (state.queue.length > 0) {
+        work = state.queue.shift();
+      } else {
+        state.isAcquired = false;
+        return;
+      }
+      var res = tryCatch(work)();
+      if (res === errorObj) {
+        state.queue = [];
+        state.hasFaulted = true;
+        return thrower(res.e);
+      }
+      recurse(state);
+    }
 
     ScheduledObserver.prototype.ensureActive = function () {
       var isOwner = false;
@@ -265,24 +284,8 @@
         isOwner = !this.isAcquired;
         this.isAcquired = true;
       }
-      if (isOwner) {
-        this.disposable.setDisposable(this.scheduler.scheduleRecursive(this, function (parent, self) {
-          var work;
-          if (parent.queue.length > 0) {
-            work = parent.queue.shift();
-          } else {
-            parent.isAcquired = false;
-            return;
-          }
-          var res = tryCatch(work)();
-          if (res === errorObj) {
-            parent.queue = [];
-            parent.hasFaulted = true;
-            return thrower(res.e);
-          }
-          self(parent);
-        }));
-      }
+      isOwner &&
+        this.disposable.setDisposable(this.scheduler.scheduleRecursive(this, scheduleMethod));
     };
 
     ScheduledObserver.prototype.dispose = function () {

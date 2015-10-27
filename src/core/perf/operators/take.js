@@ -1,56 +1,37 @@
   var TakeObservable = (function(__super__) {
     inherits(TakeObservable, __super__);
-    
     function TakeObservable(source, count) {
       this.source = source;
-      this.takeCount = count;
+      this._count = count;
       __super__.call(this);
     }
-    
+
     TakeObservable.prototype.subscribeCore = function (o) {
-      return this.source.subscribe(new InnerObserver(o, this.takeCount));
+      return this.source.subscribe(new TakeObserver(o, this._count));
     };
-    
-    function InnerObserver(o, c) {
-      this.o = o;
-      this.c = c;
-      this.r = c;
-      this.isStopped = false;
+
+    function TakeObserver(o, c) {
+      this._o = o;
+      this._c = c;
+      this._r = c;
+      AbstractObserver.call(this);
     }
-    InnerObserver.prototype = {
-      onNext: function (x) {
-        if (this.isStopped) { return; }
-        if (this.r-- > 0) {
-          this.o.onNext(x);
-          this.r <= 0 && this.o.onCompleted();
-        }
-      },
-      onError: function (err) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onError(err);
-        }
-      },
-      onCompleted: function () {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onCompleted();
-        }
-      },
-      dispose: function () { this.isStopped = true; },
-      fail: function (e) {
-        if (!this.isStopped) {
-          this.isStopped = true;
-          this.o.onError(e);
-          return true;
-        }
-        return false;
+
+    inherits(TakeObserver, AbstractObserver);
+
+    TakeObserver.prototype.next = function (x) {
+      if (this._r-- > 0) {
+        this._o.onNext(x);
+        this._r <= 0 && this._o.onCompleted();
       }
     };
-    
+
+    TakeObserver.prototype.error = function (e) { this._o.onError(e); };
+    TakeObserver.prototype.completed = function () { this._o.onCompleted(); };
+
     return TakeObservable;
-  }(ObservableBase));  
-  
+  }(ObservableBase));
+
   /**
    *  Returns a specified number of contiguous elements from the start of an observable sequence, using the specified scheduler for the edge case of take(0).
    * @param {Number} count The number of elements to return.
