@@ -162,7 +162,7 @@ Use this page to find the creation operator implemented by the [`Observable`](ht
     <tr>
         <td rowspan="2">in order</td>
         <td colspan="2">reusing the latest value when unchanged</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/operators/combinelatest.md">Observable.combineLatest</a></td>
+        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/combinelatest.md">Observable.combineLatest</a></td>
     </tr>
     <tr>
         <td colspan="2">using each value only once</td>
