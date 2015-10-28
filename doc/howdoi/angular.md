@@ -20,8 +20,6 @@ scope.$watch('name', function(newValue, oldValue) {
   scope.newValue = newValue;
 });
 
-scope.name = 'RxJS';
-
 // Process All the Watchers
 scope.$digest();
 
