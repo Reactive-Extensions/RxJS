@@ -43,10 +43,10 @@ function createScheduleMethod(o, it, fn) {
 }
 
 FromObservable.prototype.subscribeCore = function (o) {
-  var list = Object(this.iterable),
+  var list = Object(this._iterable),
       it = getIterable(list);
 
-  return this.scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
+  return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
 };
 
 var maxSafeInteger = Math.pow(2, 53) - 1;
