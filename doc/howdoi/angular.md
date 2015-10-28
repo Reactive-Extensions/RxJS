@@ -20,8 +20,6 @@ scope.$watch('name', function(newValue, oldValue) {
   scope.newValue = newValue;
 });
 
-scope.name = 'RxJS';
-
 // Process All the Watchers
 scope.$digest();
 
@@ -89,11 +87,11 @@ Using the Reactive Extensions for JavaScript, we can also integrate using the `R
 ```js
 // Query data
 var observable = Rx.Observable.fromPromise(
-	$http(
+	$http({
 		method: 'GET',
 		url: 'someurl',
 		params: { searchString: $scope.searchString }
-	)
+	})
 );
 
 // Subscribe to data and update UI

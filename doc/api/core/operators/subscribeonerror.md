@@ -28,7 +28,7 @@ var source = Rx.Observable.throw(new Error());
 var subscription = source.subscribeOnError(
   function (err) {
     this.log('Error: %s', err);
-  }}, console);
+  }, console);
 
 // => Error: Error
 ```

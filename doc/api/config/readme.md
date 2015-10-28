@@ -45,8 +45,8 @@ We can do this by setting the `Rx.config.useNativeEvents` flag to `true`.
 Rx.config.useNativeEvents = true;
 
 Rx.Observable.fromEvent(document, 'mousemove')
-  .subscribe(e) {
+  .subscribe(function (e) {
     console.log('ClientX: %d, ClientY: %d', e.clientX, e.clientY);
-  }
+  });
 ```
 * * *

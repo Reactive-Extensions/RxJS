@@ -307,7 +307,7 @@ scheduler.scheduleAbsolute(100, function () {
     },
     res.onError.bind(res),
     res.onCompleted.bind(res)
-  );
+  ));
 });
 
 scheduler.start();

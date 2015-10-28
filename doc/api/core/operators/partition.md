@@ -16,7 +16,7 @@ Returns two observables which partition the observations of the source by the gi
 #### Example
 
 An example using ES6 syntax:
-```js
+```es6
 let [odds, evens] = Rx.Observable.range(0, 10)
   .partition(x => x % 2 === 0);
 

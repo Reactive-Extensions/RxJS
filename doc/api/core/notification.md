@@ -18,7 +18,7 @@ var subscription = source.subscribe(
     console.log('Next: %s', x);
   },
   function (err) {
-    console.log('Error: %s', err;
+    console.log('Error: %s', err);
   },
   function () {
     console.log('Completed');
@@ -68,7 +68,7 @@ var subscription = source.subscribe(
     console.log('Next: %s', x);
   },
   function (err) {
-    console.log('Error: %s', err;
+    console.log('Error: %s', err);
   },
   function () {
     console.log('Completed');
@@ -101,7 +101,7 @@ var subscription = source.subscribe(
     console.log('Next: %s', x);
   },
   function (err) {
-    console.log('Error: %s', err;
+    console.log('Error: %s', err);
   },
   function () {
     console.log('Completed');
@@ -141,7 +141,7 @@ var subscription = source.subscribe(
     console.log('Next: %s', x);
   },
   function (err) {
-    console.log('Error: %s', err;
+    console.log('Error: %s', err);
   },
   function () {
     console.log('Completed');
@@ -214,7 +214,7 @@ var subscription = source.subscribe(
     console.log('Next: %s', x);
   },
   function (err) {
-    console.log('Error: %s', err;
+    console.log('Error: %s', err);
   },
   function () {
     console.log('Completed');
@@ -232,7 +232,7 @@ var subscription = source.subscribe(
     console.log('Next: %s', x);
   },
   function (err) {
-    console.log('Error: %s', err;
+    console.log('Error: %s', err);
   },
   function () {
     console.log('Completed');

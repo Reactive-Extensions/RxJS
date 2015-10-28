@@ -39,7 +39,7 @@ var subscription = source.subscribe(
   ```
 
 ES6 makes for an even nicer experience such as:
-```js
+```es6
 let obj = {
   foo: 42,
   bar: 56,

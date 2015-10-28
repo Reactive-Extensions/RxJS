@@ -32,7 +32,7 @@ var subscription = source.subscribe(
     console.log('Next: Clicked!');
   },
   function (err) {
-    console.log('Error: %s' err);
+    console.log('Error: %s', err);
   },
   function () {
     console.log('Completed');
