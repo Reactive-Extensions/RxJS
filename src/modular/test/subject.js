@@ -24,7 +24,7 @@ Subject.addToObject({
   create: require('../subject/create')
 });
 
-test('Infinite', function (t) {
+test('Subject infinite', function (t) {
   var s, subscription, subscription1, subscription2, subscription3;
 
   var scheduler = new TestScheduler();
@@ -109,7 +109,7 @@ test('Infinite', function (t) {
   t.end();
 });
 
-test('Finite', function (t) {
+test('Subject finite', function (t) {
   var s, subscription, subscription1, subscription2, subscription3;
 
   var scheduler = new TestScheduler();
@@ -193,7 +193,7 @@ test('Finite', function (t) {
   t.end();
 });
 
-test('Error', function (t) {
+test('Subject error', function (t) {
   var s, subscription, subscription1, subscription2, subscription3;
 
   var error = new Error();
@@ -279,7 +279,7 @@ test('Error', function (t) {
   t.end();
 });
 
-test('Canceled', function (t) {
+test('Subject canceled', function (t) {
   var s, subscription, subscription1, subscription2, subscription3;
 
   var scheduler = new TestScheduler();
@@ -343,7 +343,7 @@ test('Canceled', function (t) {
   t.end();
 });
 
-test('Subject create', function (t) {
+test('Subject.create', function (t) {
   var _x, _ex, done = false;
 
   var v = Observer.create(

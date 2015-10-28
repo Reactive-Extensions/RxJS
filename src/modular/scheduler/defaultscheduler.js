@@ -8,13 +8,17 @@ var isFunction = require('../helpers/isfunction');
 var noop = require('../helpers/noop');
 var inherits = require('util').inherits;
 
+// TODO: Add more speed here
 var scheduleMethod, clearMethod;
 if (isFunction(global.setImmediate)) {
   scheduleMethod = global.setImmediate;
-  clearMethod = global.clearMethod;
+  clearMethod = global.clearImmediate;
 } else if (isFunction(global.process.nextTick)) {
   scheduleMethod = global.nextTick;
   clearMethod = noop;
+} else {
+  scheduleMethod = function (fn) { return global.setTimeout(fn, 0); };
+  clearMethod = global.clearTimeout;
 }
 
 /**

@@ -47,6 +47,6 @@ FromPromiseObservable.prototype.subscribeCore = function(o) {
 * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
 */
 module.exports = function fromPromise(promise, scheduler) {
-  scheduler || (scheduler = global.Rx.defaultScheduler));
+  scheduler || (scheduler = global.Rx.defaultScheduler);
   return new FromPromiseObservable(promise, scheduler);
 };

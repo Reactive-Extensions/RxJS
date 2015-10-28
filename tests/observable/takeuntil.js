@@ -8,8 +8,7 @@
       TestScheduler = Rx.TestScheduler,
       onNext = Rx.ReactiveTest.onNext,
       onError = Rx.ReactiveTest.onError,
-      onCompleted = Rx.ReactiveTest.onCompleted,
-      subscribe = Rx.ReactiveTest.subscribe;
+      onCompleted = Rx.ReactiveTest.onCompleted;
 
   test('takeUntil preempt some data next', function () {
     var scheduler = new TestScheduler();
@@ -224,33 +223,31 @@
   });
 
   test('takeUntil preempt before first produced remain silent and proper disposed', function () {
-      var scheduler = new TestScheduler();
+    var scheduler = new TestScheduler();
 
-      var sourceNotDisposed = false;
+    var sourceNotDisposed = false;
 
-      var l = scheduler.createHotObservable(
-        onNext(150, 1),
-        onError(215, new Error()),
-        onCompleted(240)
-      ).tap(function () {
-        sourceNotDisposed = true;
-      });
+    var l = scheduler.createHotObservable(
+      onNext(150, 1),
+      onError(215, new Error()),
+      onCompleted(240)
+    ).tap(function () { sourceNotDisposed = true; });
 
-      var r = scheduler.createHotObservable(
-        onNext(150, 1),
-        onNext(210, 2),
-        onCompleted(220)
-      );
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onCompleted(220)
+    );
 
-      var results = scheduler.startScheduler(function () {
-        return l.takeUntil(r);
-      });
+    var results = scheduler.startScheduler(function () {
+      return l.takeUntil(r);
+    });
 
-      results.messages.assertEqual(
-        onCompleted(210)
-      );
+    results.messages.assertEqual(
+      onCompleted(210)
+    );
 
-      ok(!sourceNotDisposed);
+    ok(!sourceNotDisposed);
   });
 
   test('takeUntil no preempt after last produced proper disposed signal', function () {
@@ -264,15 +261,20 @@
       onCompleted(240)
     );
 
-    var r = scheduler.createHotObservable(onNext(150, 1), onNext(250, 2), onCompleted(260)).tap(function () {
-      signalNotDisposed = true;
-    });
+    var r = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(250, 2),
+      onCompleted(260)
+    ).tap(function () { signalNotDisposed = true; });
 
     var results = scheduler.startScheduler(function () {
-        return l.takeUntil(r);
+      return l.takeUntil(r);
     });
 
-    results.messages.assertEqual(onNext(230, 2), onCompleted(240));
+    results.messages.assertEqual(
+      onNext(230, 2),
+      onCompleted(240)
+    );
 
     ok(!signalNotDisposed);
   });
