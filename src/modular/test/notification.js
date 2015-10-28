@@ -12,7 +12,7 @@ var onNext = ReactiveTest.onNext,
     onError = ReactiveTest.onError,
     onCompleted = ReactiveTest.onCompleted;
 
-test('onNext constructor and properties', function (t) {
+test('Notification.createOnNextc.constructor', function (t) {
   var n = Notification.createOnNext(42);
 
   t.equal('N', n.kind);
@@ -20,7 +20,7 @@ test('onNext constructor and properties', function (t) {
   t.end();
 });
 
-test('onNext toString', function (t) {
+test('Notification.createOnNext#toString', function (t) {
   var n1 = Notification.createOnNext(42);
 
   t.ok(n1.toString().indexOf('OnNext') !== -1);
@@ -39,7 +39,7 @@ CheckOnNextObserver.prototype.onNext = function (value) {
   return this.value = value;
 };
 
-test('onNext accept Observer', function (t) {
+test('Notification.createOnNext#accept Observer', function (t) {
   var con = new CheckOnNextObserver();
 
   var n1 = Notification.createOnNext(42);
@@ -70,7 +70,7 @@ AcceptObserver.prototype.onCompleted = function () {
   return this._onCompleted();
 };
 
-test('onNext accept Observer with result', function (t) {
+test('Notification.createOnNext#accept Observer with result', function (t) {
   var n1 = Notification.createOnNext(42);
 
   var results = n1.accept(new AcceptObserver(
@@ -90,7 +90,7 @@ test('onNext accept Observer with result', function (t) {
   t.end();
 });
 
-test('onNext accept action', function (t) {
+test('Notification.createOnNext#accept action', function (t) {
   var obs = false;
 
   var n1 = Notification.createOnNext(42);
@@ -111,7 +111,7 @@ test('onNext accept action', function (t) {
   t.end();
 });
 
-test('onNext accept action with result', function (t) {
+test('Notification.createOnNext#accept action with result', function (t) {
   var n1 = Notification.createOnNext(42);
 
   var results = n1.accept(
@@ -130,7 +130,7 @@ test('onNext accept action with result', function (t) {
   t.end();
 });
 
-test('onError constructor and properties', function (t) {
+test('Notification.createOnError.constructor', function (t) {
   var error = new Error();
 
   var n = Notification.createOnError(error);
@@ -140,7 +140,7 @@ test('onError constructor and properties', function (t) {
   t.end();
 });
 
-test('onError ToString', function (t) {
+test('Notification.createOnError#toString', function (t) {
   var error = new Error('woops');
 
   var n1 = Notification.createOnError(error);
@@ -162,7 +162,7 @@ CheckOnErrorObserver.prototype.onError = function (err) {
   this.error = err;
 };
 
-test('onError accept observer', function (t) {
+test('Notification.createOnError#accept(observer)', function (t) {
   var error = new Error();
 
   var obs = new CheckOnErrorObserver();
@@ -175,7 +175,7 @@ test('onError accept observer', function (t) {
   t.end();
 });
 
-test('onError accept observer with result', function (t) {
+test('Notification.createOnError#accept(observer) with result', function (t) {
   var error = new Error();
 
   var n1 = Notification.createOnError(error);
@@ -196,7 +196,7 @@ test('onError accept observer with result', function (t) {
   t.end();
 });
 
-test('onError accept action', function (t) {
+test('Notification.createOnError#accept(action)', function (t) {
   var error = new Error();
 
   var obs = false;
@@ -219,7 +219,7 @@ test('onError accept action', function (t) {
   t.end();
 });
 
-test('onError accept action with result', function (t) {
+test('Notification.createOnError#accept(action) with result', function (t) {
   var error = new Error();
 
   var n1 = Notification.createOnError(error);
@@ -240,14 +240,14 @@ test('onError accept action with result', function (t) {
   t.end();
 });
 
-test('onCompleted constructor and properties', function (t) {
+test('Notification.createOnCompleted.constructor', function (t) {
   var n = Notification.createOnCompleted();
 
   t.equal('C', n.kind);
   t.end();
 });
 
-test('onCompleted toString', function (t) {
+test('Notification.createOnCompleted toString', function (t) {
   var n1 = Notification.createOnCompleted();
 
   t.ok(n1.toString().indexOf('OnCompleted') !== -1);
@@ -265,7 +265,7 @@ CheckOnCompletedObserver.prototype.onCompleted = function () {
   this.completed = true;
 };
 
-test('onCompleted accept observer', function (t) {
+test('Notification.createOnCompleted#accept(observer)', function (t) {
   var obs = new CheckOnCompletedObserver();
 
   var n1 = Notification.createOnCompleted();
@@ -276,7 +276,7 @@ test('onCompleted accept observer', function (t) {
   t.end();
 });
 
-test('onCompleted accept observer with result', function (t) {
+test('Notification.createOnCompleted#accept(observer) with result', function (t) {
   var n1 = Notification.createOnCompleted();
 
   var results = n1.accept(new AcceptObserver(
@@ -295,7 +295,7 @@ test('onCompleted accept observer with result', function (t) {
   t.end();
 });
 
-test('onCompleted accept action', function (t) {
+test('Notification.createOnCompleted#accept(action)', function (t) {
   var obs = false;
 
   var n1 = Notification.createOnCompleted();
@@ -316,7 +316,7 @@ test('onCompleted accept action', function (t) {
   t.end();
 });
 
-test('onCompleted accept action with result', function (t) {
+test('Notification.createOnCompleted#accept(action) with result', function (t) {
   var n1 = Notification.createOnCompleted();
 
   var results = n1.accept(
@@ -349,7 +349,7 @@ test('toObservable empty', function (t) {
   t.end();
 });
 
-test('toObservable just', function (t) {
+test('Notification#toObservable just', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -364,7 +364,7 @@ test('toObservable just', function (t) {
   t.end();
 });
 
-test('toObservable throwError', function (t) {
+test('Notification#toObservable throwError', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();

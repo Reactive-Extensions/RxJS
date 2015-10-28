@@ -20,7 +20,7 @@ InnerObserver.prototype.next = function (x) { this._parent._o.onNext(x); };
 InnerObserver.prototype.error = function (e) { this._parent._o.onError(e); };
 InnerObserver.prototype.completed = function () {
   this._parent._g.remove(this._sad);
-  this._parent.done && this._parent._g.length === 1 && this._parent._o.onCompleted();
+  this._parent._done && this._parent._g.length === 1 && this._parent._o.onCompleted();
 };
 
 function MergeAllObserver(o, g) {

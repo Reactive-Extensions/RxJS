@@ -13,7 +13,7 @@ Observable.addToObject({
   pairs: require('../observable/pairs')
 });
 
-test('pairs empty', function (t) {
+test('Observable.pairs empty', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = {};
@@ -28,7 +28,7 @@ test('pairs empty', function (t) {
   t.end();
 });
 
-test('pairs normal', function (t) {
+test('Observable.pairs normal', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = {foo: 42, bar: 56, baz: 78};
@@ -46,7 +46,7 @@ test('pairs normal', function (t) {
   t.end();
 });
 
-test('pairs dispose', function (t) {
+test('Observable.pairs dispose', function (t) {
   var xs = {foo: 42, bar: 56, baz: 78, quux: 104};
 
   var scheduler = new TestScheduler();
