@@ -37,16 +37,16 @@ var onCompleted = Rx.ReactiveTest.onCompleted;
 var scheduler = new Rx.TestScheduler();
 
 var xs = scheduler.createHotObservable(
-    onCompleted(260)
+  onCompleted(260)
 );
 
 var res = scheduler.startScheduler(function () {
-    return xs.map(function (x) { return x; });
+  return xs.map(function (x) { return x; });
 });
 
 // Write custom assertion
 collectionAssert.assertEqual(res.messages, [
-    onCompleted(260)
+  onCompleted(260)
 ]);
 ```
 
@@ -88,8 +88,8 @@ var res = scheduler.startScheduler(function () {
 // Write custom assertion
 collectionAssert.assertEqual(res.messages, [
 
-    // Using a predicate
-    onError(201, function (e) { return e.message === 'woops'; })
+  // Using a predicate
+  onError(201, function (e) { return e.message === 'woops'; })
 ]);
 ```
 
@@ -129,8 +129,8 @@ var res = scheduler.startScheduler(function () {
 // Write custom assertion
 collectionAssert.assertEqual(res.messages, [
 
-    // Using a predicate
-    onNext(201, function (x) { return x === 42; })
+  // Using a predicate
+  onNext(201, function (x) { return x === 42; })
 ]);
 ```
 
@@ -183,9 +183,9 @@ Default virtual time used to dispose subscriptions in unit tests.  This has a va
 var scheduler = new Rx.TestScheduler();
 
 var xs = scheduler.createHotObservable(
-    Rx.ReactiveTest.onNext(201, 42),
-    Rx.ReactiveTest.onNext(202, 56),
-    Rx.ReactiveTest.onCompleted(203)
+  Rx.ReactiveTest.onNext(201, 42),
+  Rx.ReactiveTest.onNext(202, 56),
+  Rx.ReactiveTest.onCompleted(203)
 );
 
 var res = scheduler.startScheduler(
@@ -215,9 +215,9 @@ Default virtual time used to subscribe to observable sequences in unit tests.  T
 var scheduler = new Rx.TestScheduler();
 
 var xs = scheduler.createHotObservable(
-    Rx.ReactiveTest.onNext(201, 42),
-    Rx.ReactiveTest.onNext(202, 56),
-    Rx.ReactiveTest.onCompleted(203)
+  Rx.ReactiveTest.onNext(201, 42),
+  Rx.ReactiveTest.onNext(202, 56),
+  Rx.ReactiveTest.onCompleted(203)
 );
 
 var res = scheduler.startScheduler(

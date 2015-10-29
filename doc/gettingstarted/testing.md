@@ -14,75 +14,73 @@ In the same way, you can use that same defined method such as our `collectionAss
 
 ```js
 function createMessage(expected, actual) {
-    return 'Expected: [' + expected.toString() + ']\r\nActual: [' + actual.toString() + ']';
+  return 'Expected: [' + expected.toString() + ']\r\nActual: [' + actual.toString() + ']';
 }
 
 // Using QUnit testing for assertions
 var collectionAssert = {
-    assertEqual: function (expected, actual) {
-        var comparer = Rx.internals.isEqual,
-            isOk = true;
+  assertEqual: function (actual, expected) {
+    var comparer = Rx.internals.isEqual, isOk = true;
 
-        if (expected.length !== actual.length) {
-            ok(false, 'Not equal length. Expected: ' + expected.length + ' Actual: ' + actual.length);
-            return;
-        }
-
-        for(var i = 0, len = expected.length; i < len; i++) {
-            isOk = comparer(expected[i], actual[i]);
-            if (!isOk) {
-                break;
-            }
-        }
-
-        ok(isOk, createMessage(expected, actual));
+    if (expected.length !== actual.length) {
+      ok(false, 'Not equal length. Expected: ' + expected.length + ' Actual: ' + actual.length);
+      return;
     }
+
+    for(var i = 0, len = expected.length; i < len; i++) {
+      isOk = comparer(expected[i], actual[i]);
+      if (!isOk) {
+        break;
+      }
+    }
+
+    ok(isOk, createMessage(expected, actual));
+  }
 };
 
 var onNext = Rx.ReactiveTest.onNext,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  onCompleted = Rx.ReactiveTest.onCompleted,
+  subscribe = Rx.ReactiveTest.subscribe;
 
 test('buffer should join strings', function () {
+  var scheduler = new Rx.TestScheduler();
 
-    var scheduler = new Rx.TestScheduler();
+  var input = scheduler.createHotObservable(
+    onNext(100, 'abc'),
+    onNext(200, 'def'),
+    onNext(250, 'ghi'),
+    onNext(300, 'pqr'),
+    onNext(450, 'xyz'),
+    onCompleted(500)
+  );
 
-    var input = scheduler.createHotObservable(
-        onNext(100, 'abc'),
-        onNext(200, 'def'),
-        onNext(250, 'ghi'),
-        onNext(300, 'pqr'),
-        onNext(450, 'xyz'),
-        onCompleted(500)
-    );
+  var results = scheduler.startScheduler(
+    function () {
+      return input.buffer(function () {
+        return input.debounce(100, scheduler);
+      })
+      .map(function (b) {
+        return b.join(',');
+      });
+    },
+    {
+      created: 50,
+      subscribed: 150,
+      disposed: 600
+    }
+  );
 
-    var results = scheduler.startScheduler(
-        function () {
-            return input.buffer(function () {
-                return input.debounce(100, scheduler);
-            })
-            .map(function (b) {
-                return b.join(',');
-            });
-        },
-        {
-          created: 50,
-          subscribed: 150,
-          disposed: 600
-        }
-    );
+  collectionAssert.assertEqual(results.messages, [
+    onNext(400, 'def,ghi,pqr'),
+    onNext(500, 'xyz'),
+    onCompleted(500)
+  ]);
 
-    collectionAssert.assertEqual(results.messages, [
-        onNext(400, 'def,ghi,pqr'),
-        onNext(500, 'xyz'),
-        onCompleted(500)
-    ]);
-
-    collectionAssert.assertEqual(input.subscriptions, [
-        subscribe(150, 500),
-        subscribe(150, 400),
-        subscribe(400, 500)
-    ]);
+  collectionAssert.assertEqual(input.subscriptions, [
+    subscribe(150, 500),
+    subscribe(150, 400),
+    subscribe(400, 500)
+  ]);
 });
 ```
 
@@ -94,10 +92,10 @@ In the following example, we are going to reuse the Buffer example which generat
 
 ```js
 var seq1 = Rx.Observable.interval(1000)
-   .do(function (x) { console.log(x); })
-   .bufferWithCount(5)
-   .do(function (x) { console.log('buffer is full'); })
-   .subscribe(function (x) { console.log('Sum of the buffer is ' + x.reduce(function (acc, x) { return acc + x; }, 0)); });
+  .do(function (x) { console.log(x); })
+  .bufferWithCount(5)
+  .do(function (x) { console.log('buffer is full'); })
+  .subscribe(function (x) { console.log('Sum of the buffer is ' + x.reduce(function (acc, x) { return acc + x; }, 0)); });
 
 // => 0
 // => 1
@@ -117,10 +115,10 @@ You can also use the [`timestamp`](https://github.com/Reactive-Extensions/RxJS/b
 console.log('Current time: ' + Date.now());
 
 var source = Rx.Observable.timer(5000, 1000)
-    .timestamp();
+  .timestamp();
 
 var subscription = source.subscribe(function (x) {
-    console.log(x.value + ': ' + x.timestamp);
+  console.log(x.value + ': ' + x.timestamp);
 });
 
 /* Output will look similar to this */
