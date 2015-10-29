@@ -40,7 +40,7 @@ var xs = scheduler.createHotObservable(
     onCompleted(260)
 );
 
-var res = scheduler.startWithCreate(function () {
+var res = scheduler.startScheduler(function () {
     return xs.map(function (x) { return x; });
 });
 
@@ -81,8 +81,8 @@ var xs = scheduler.createHotObservable(
     onError(201, ex)
 );
 
-var res = scheduler.startWithCreate(function () {
-    return xs.map(function (x) { return x; });
+var res = scheduler.startScheduler(function () {
+  return xs.map(function (x) { return x; });
 });
 
 // Write custom assertion
@@ -122,8 +122,8 @@ var xs = scheduler.createHotObservable(
     onNext(201, 42)
 );
 
-var res = scheduler.startWithCreate(function () {
-    return xs.map(function (x) { return x; });
+var res = scheduler.startScheduler(function () {
+  return xs.map(function (x) { return x; });
 });
 
 // Write custom assertion
@@ -153,16 +153,16 @@ Default virtual time used for creation of observable sequences in unit tests.  T
 var scheduler = new Rx.TestScheduler();
 
 var xs = scheduler.createHotObservable(
-    Rx.ReactiveTest.onNext(201, 42),
-    Rx.ReactiveTest.onNext(202, 56),
-    Rx.ReactiveTest.onCompleted(203)
+  Rx.ReactiveTest.onNext(201, 42),
+  Rx.ReactiveTest.onNext(202, 56),
+  Rx.ReactiveTest.onCompleted(203)
 );
 
-var res = scheduler.startWithTiming(
-    function () { return xs.map(function (x) { return x; })},
-    Rx.ReactiveTest.created,
-    Rx.ReactiveTest.subscribed,
-    Rx.ReactiveTest.disposed
+var res = scheduler.startScheduler(
+  function () { return xs.map(function (x) { return x; })},
+  Rx.ReactiveTest.created,
+  Rx.ReactiveTest.subscribed,
+  Rx.ReactiveTest.disposed
 );
 ```
 
@@ -188,11 +188,13 @@ var xs = scheduler.createHotObservable(
     Rx.ReactiveTest.onCompleted(203)
 );
 
-var res = scheduler.startWithTiming(
-    function () { return xs.map(function (x) { return x; })},
-    Rx.ReactiveTest.created,
-    Rx.ReactiveTest.subscribed,
-    Rx.ReactiveTest.disposed
+var res = scheduler.startScheduler(
+  function () { return xs.map(function (x) { return x; })},
+  {
+    created: Rx.ReactiveTest.created,
+    subscribed: Rx.ReactiveTest.subscribed,
+    disposed: Rx.ReactiveTest.disposed
+  }
 );
 ```
 
@@ -218,11 +220,8 @@ var xs = scheduler.createHotObservable(
     Rx.ReactiveTest.onCompleted(203)
 );
 
-var res = scheduler.startWithTiming(
-    function () { return xs.map(function (x) { return x; })},
-    Rx.ReactiveTest.created,
-    Rx.ReactiveTest.subscribed,
-    Rx.ReactiveTest.disposed
+var res = scheduler.startScheduler(
+  function () { return xs.map(function (x) { return x; })}
 );
 ```
 

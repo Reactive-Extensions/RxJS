@@ -162,7 +162,8 @@ Creates a cold observable using the specified timestamped notification messages.
 #### Example
 ```js
 var onNext = Rx.ReactiveTest.onNext,
-    onCompleted = Rx.ReactiveTest.onCompleted;
+    onCompleted = Rx.ReactiveTest.onCompleted
+    subscribe = Rx.ReactiveTest.subscribe;
 
 var scheduler = new Rx.TestScheduler();
 
@@ -299,8 +300,8 @@ var xs = Rx.Observable.return(42, scheduler);
 
 var res = scheduler.createObserver();
 
-scheduler.scheduleAbsolute(100, function () {
-  d.setDisposable(xs.subscribe(
+scheduler.scheduleAbsolute(null, 100, function () {
+  return d.setDisposable(xs.subscribe(
     function (x) {
       d.dispose();
       res.onNext(x);

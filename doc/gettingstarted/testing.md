@@ -13,7 +13,7 @@ After the sequence has completed, we use can define method such as `collectionAs
 In the same way, you can use that same defined method such as our `collectionAssert.assertEqual` below to confirm that subscriptions indeed happened at expected times.  It is easy to wrap this for your favorite unit testing framework whether it is QUnit, Mocha, Jasmine, etc.  In this example, we'll write a quick wrapper for QUnit.
 
 ```js
-function createMessage(actual, expected) {
+function createMessage(expected, actual) {
     return 'Expected: [' + expected.toString() + ']\r\nActual: [' + actual.toString() + ']';
 }
 
@@ -56,7 +56,7 @@ test('buffer should join strings', function () {
         onCompleted(500)
     );
 
-    var results = scheduler.startWithTiming(
+    var results = scheduler.startScheduler(
         function () {
             return input.buffer(function () {
                 return input.debounce(100, scheduler);
@@ -65,9 +65,11 @@ test('buffer should join strings', function () {
                 return b.join(',');
             });
         },
-        50,  // created
-        150, // subscribed
-        600  // disposed
+        {
+          created: 50,
+          subscribed: 150,
+          disposed: 600
+        }
     );
 
     collectionAssert.assertEqual(results.messages, [
