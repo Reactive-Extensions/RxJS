@@ -45,7 +45,7 @@ var res = scheduler.startScheduler(function () {
 });
 
 // Write custom assertion
-collectionAssert(res, [
+collectionAssert.assertEqual(res.messages, [
     onCompleted(260)
 ]);
 ```
@@ -86,7 +86,7 @@ var res = scheduler.startScheduler(function () {
 });
 
 // Write custom assertion
-collectionAssert(res, [
+collectionAssert.assertEqual(res.messages, [
 
     // Using a predicate
     onError(201, function (e) { return e.message === 'woops'; })
@@ -127,7 +127,7 @@ var res = scheduler.startScheduler(function () {
 });
 
 // Write custom assertion
-collectionAssert(res, [
+collectionAssert.assertEqual(res.messages, [
 
     // Using a predicate
     onNext(201, function (x) { return x === 42; })
