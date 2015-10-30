@@ -13,7 +13,7 @@ function createMessage(expected, actual) {
 
 // Using QUnit testing for assertions
 var collectionAssert = {
-  assertEqual: function (expected, actual) {
+  assertEqual: function (actual, expected) {
     var comparer = Rx.internals.isEqual, isOk = true;
 
     if (expected.length !== actual.length) {
@@ -93,17 +93,17 @@ Creates a new virtual time test scheduler.
 #### Example
 ```js
 var onNext = Rx.ReactiveTest.onNext,
-    onCompleted = Rx.ReactiveTest.onCompleted,
-    subscribe = Rx.ReactiveTest.subscribe;
+  onCompleted = Rx.ReactiveTest.onCompleted,
+  subscribe = Rx.ReactiveTest.subscribe;
 
 var scheduler = new Rx.TestScheduler();
 
 // Create hot observable which will start firing
 var xs = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(210, 2),
-    onNext(220, 3),
-    onCompleted(230)
+  onNext(150, 1),
+  onNext(210, 2),
+  onNext(220, 3),
+  onCompleted(230)
 );
 
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
@@ -162,32 +162,33 @@ Creates a cold observable using the specified timestamped notification messages.
 #### Example
 ```js
 var onNext = Rx.ReactiveTest.onNext,
-    onCompleted = Rx.ReactiveTest.onCompleted;
+  onCompleted = Rx.ReactiveTest.onCompleted
+  subscribe = Rx.ReactiveTest.subscribe;
 
 var scheduler = new Rx.TestScheduler();
 
 // Create cold observable with offset from subscribe time
 var xs = scheduler.createColdObservable(
-    onNext(150, 1),
-    onNext(200, 2),
-    onNext(250, 3),
-    onCompleted(300)
+  onNext(150, 1),
+  onNext(200, 2),
+  onNext(250, 3),
+  onCompleted(300)
 );
 
 // Note we'll start at 200 for subscribe
 var res = scheduler.startScheduler(function () {
-    return xs.filter(function (x) { return x % 2 === 0; });
+  return xs.filter(function (x) { return x % 2 === 0; });
 });
 
 // Implement collection assertion
 collectionAssert.assertEqual(res.messages, [
-    onNext(400, 2),
-    onCompleted(500)
+  onNext(400, 2),
+  onCompleted(500)
 ]);
 
 // Check for subscribe/unsubscribe
 collectionAssert.assertEqual(xs.subscriptions, [
-    subscribe(200, 500)
+  subscribe(200, 500)
 ]);
 ```
 
@@ -227,33 +228,33 @@ Creates a hot observable using the specified timestamped notification messages.
 #### Example
 ```js
 var onNext = Rx.ReactiveTest.onNext,
-    onCompleted = Rx.ReactiveTest.onCompleted;
+  onCompleted = Rx.ReactiveTest.onCompleted;
 
 var scheduler = new Rx.TestScheduler();
 
 // Create hot observable which will start firing
 var xs = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(210, 2),
-    onNext(220, 3),
-    onCompleted(230)
+  onNext(150, 1),
+  onNext(210, 2),
+  onNext(220, 3),
+  onCompleted(230)
 );
 
 // Note we'll start at 200 for subscribe, hence missing the 150 mark
 var res = scheduler.startScheduler(function () {
-    return xs.map(function (x) { return x * x });
+  return xs.map(function (x) { return x * x });
 });
 
 // Implement collection assertion
 collectionAssert.assertEqual(res.messages, [
-    onNext(210, 4),
-    onNext(220, 9),
-    onCompleted(230)
+  onNext(210, 4),
+  onNext(220, 9),
+  onCompleted(230)
 ]);
 
 // Check for subscribe/unsubscribe
 collectionAssert.assertEqual(xs.subscriptions, [
-    subscribe(200, 230)
+  subscribe(200, 230)
 ]);
 ```
 
@@ -299,8 +300,8 @@ var xs = Rx.Observable.return(42, scheduler);
 
 var res = scheduler.createObserver();
 
-scheduler.scheduleAbsolute(100, function () {
-  d.setDisposable(xs.subscribe(
+scheduler.scheduleAbsolute(null, 100, function () {
+  return d.setDisposable(xs.subscribe(
     function (x) {
       d.dispose();
       res.onNext(x);
@@ -354,8 +355,8 @@ Creates a rejected promise with the given reason and ticks.
 #### Example
 ```js
 var onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted;
+  onError = Rx.ReactiveTest.onError,
+  onCompleted = Rx.ReactiveTest.onCompleted;
 
 var scheduler = new Rx.TestScheduler();
 
@@ -412,8 +413,8 @@ Creates a resolved promise with the given value and ticks.
 #### Example
 ```js
 var onNext = Rx.ReactiveTest.onNext,
-    onError = Rx.ReactiveTest.onError,
-    onCompleted = Rx.ReactiveTest.onCompleted;
+  onError = Rx.ReactiveTest.onError,
+  onCompleted = Rx.ReactiveTest.onCompleted;
 
 var scheduler = new Rx.TestScheduler();
 

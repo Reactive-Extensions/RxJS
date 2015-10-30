@@ -11,11 +11,13 @@ Returns the source observable sequence, switching to the other observable sequen
 #### Arguments
 
 If using a relative or absolute time:
+
 1. `dueTime` *(Date | Number)*: Absolute (specified as a Date object) or relative time (specified as an integer denoting milliseconds) when a timeout occurs.
 2. `[other]` *(`Observable` | `Promise` | `Error`)*: Observable sequence or Promise to return in case of a timeout. If a string is specified, then an error will be thrown with the given error message.  If not specified, a timeout error throwing sequence will be used.
 3. `[scheduler]` *(`Scheduler`)*: Scheduler to run the timeout timers on. If not specified, the default scheduler is used.
 
 If using a timeout duration selector:
+
 1. `[firstTimeout]` *(`Observable`)*: Observable sequence that represents the timeout for the first element. If not provided, this defaults to `Rx.Observable.never()`.
 2. `timeoutDurationSelector` *(`Function`)*: Selector to retrieve an observable sequence that represents the timeout between the current element and the next element.
 3. `[other]` *(`Scheduler`)*:Sequence to return in case of a timeout. If not provided, this is set to `Observable.throw`
