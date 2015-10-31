@@ -10,7 +10,7 @@ RxJS has no dependencies which complements and interoperates smoothly with both 
 
 <center>
 <table>
-   <th></th><th>Single return value</th><th>Mutiple return values</th>
+   <th></th><th>Single return value</th><th>Multiple return values</th>
    <tr>
       <td>Pull/Synchronous/Interactive</td>
       <td>Object</td>
