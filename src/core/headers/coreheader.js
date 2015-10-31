@@ -8,7 +8,7 @@ var
   isFunction = Rx.helpers.isFunction = (function () {
     var isFn = function (value) {
       return typeof value == 'function' || false;
-    }
+    };
 
     // fallback for older versions of Chrome and Safari
     if (isFn(/x/)) {
