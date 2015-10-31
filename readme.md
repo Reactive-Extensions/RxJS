@@ -18,7 +18,7 @@
 **[Contributing](#contributing)** |
 **[License](#license)**
 
-# The Reactive Extensions for JavaScript (RxJS) <sup>3.0</sup>... #
+# The Reactive Extensions for JavaScript (RxJS) <sup>4.0</sup>... #
 
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
