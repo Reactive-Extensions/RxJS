@@ -152,7 +152,7 @@
         var currentValue = currentItem.value;
         isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
 
-        var outer = new SingleAssignmentDisposable();
+        var outer = new SerialDisposable();
         var inner = new SingleAssignmentDisposable();
         subscription.setDisposable(new BinaryDisposable(inner, outer));
         outer.setDisposable(currentValue.subscribe(
@@ -165,6 +165,7 @@
             }));
 
             exceptions.onNext(exn);
+            outer.setDisposable(null);
           },
           function() { o.onCompleted(); }));
       });
