@@ -123,6 +123,6 @@
    * @param {Observable} pauser The observable sequence used to pause the underlying sequence.
    * @returns {Observable} The observable sequence which is paused based upon the pauser.
    */
-  observableProto.pausableBuffered = function (subject) {
-    return new PausableBufferedObservable(this, subject);
+  observableProto.pausableBuffered = function (pauser) {
+    return new PausableBufferedObservable(this, pauser);
   };

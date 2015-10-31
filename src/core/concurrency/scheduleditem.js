@@ -5,7 +5,7 @@
     this.dueTime = dueTime;
     this.comparer = comparer || defaultSubComparer;
     this.disposable = new SingleAssignmentDisposable();
-  }
+  };
 
   ScheduledItem.prototype.invoke = function () {
     this.disposable.setDisposable(this.invokeCore());

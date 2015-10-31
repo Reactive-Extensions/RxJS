@@ -6,7 +6,6 @@
     var args = [], i, len;
     if (Array.isArray(arguments[0])) {
       args = arguments[0];
-      len = args.length;
     } else {
       len = arguments.length;
       args = new Array(len);

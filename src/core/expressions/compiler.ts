@@ -441,7 +441,7 @@ class LambdaExpression<TFunction extends Function> extends Expression {
 
         var code = comp.code;
 
-        code = code.replace(/\"/g, "\\\""); // TODO: more escape sequences
+        code = code.replace(/"/g, "\\\""); // TODO: more escape sequences
         code = "new Function(\"return " + code + ";\")";
         code = code.replace(/\r?\n|\r/g, "");
 
@@ -644,7 +644,7 @@ class LambdaCompiler extends ExpressionVisitor {
 
     constructor() {
         super();
-        this._stack = new Array<string>();
+        this._stack = [];
     }
 
     get code(): string {
@@ -923,8 +923,8 @@ class FreeVariableScanner extends ExpressionVisitor {
 
     constructor() {
         super();
-        this._stack = new Array<Expression[]>();
-        this._result = new Array<Expression>();
+        this._stack = [];
+        this._result = [];
     }
 
     get result(): Expression[] {
@@ -999,7 +999,7 @@ class Binder extends ExpressionVisitor {
 
     constructor(resources: any) {
         super();
-        this._stack = new Array<Expression[]>();
+        this._stack = [];
         this._resources = resources;
     }
 

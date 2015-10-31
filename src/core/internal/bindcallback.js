@@ -8,7 +8,7 @@
       case 1:
         return function(arg) {
           return func.call(thisArg, arg);
-        }
+        };
       case 2:
         return function(value, index) {
           return func.call(thisArg, value, index);
