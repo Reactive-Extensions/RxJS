@@ -149,7 +149,7 @@ subscribing
 ### Location
 
 File:
-- [`/src/core/linq/observable/retrywhen.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/retry.js)
+- [`/src/core/linq/observable/retrywhen.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/retrywhen.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -171,4 +171,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/retry.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/retry.js)
+- [`/tests/observable/retrywhen.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/retrywhen.js)
