@@ -38,7 +38,7 @@ var
   isFunction = Rx.helpers.isFunction = (function () {
     var isFn = function (value) {
       return typeof value == 'function' || false;
-    }
+    };
 
     // fallback for older versions of Chrome and Safari
     if (isFn(/x/)) {
@@ -224,7 +224,6 @@ var
     var args = [], i, len;
     if (Array.isArray(arguments[0])) {
       args = arguments[0];
-      len = args.length;
     } else {
       len = arguments.length;
       args = new Array(len);
@@ -421,7 +420,7 @@ var
     this.dueTime = dueTime;
     this.comparer = comparer || defaultSubComparer;
     this.disposable = new SingleAssignmentDisposable();
-  }
+  };
 
   ScheduledItem.prototype.invoke = function () {
     this.disposable.setDisposable(this.invokeCore());
@@ -589,7 +588,7 @@ var
      * @param {Function} action Action to be executed, potentially updating the state.
      * @returns {Disposable} The disposable object used to cancel the scheduled recurring action (best effort).
      */
-    Scheduler.prototype.schedulePeriodic = function(state, period, action) {
+    schedulerProto.schedulePeriodic = function(state, period, action) {
       if (typeof root.setInterval === 'undefined') { throw new NotSupportedError(); }
       period = normalizeTime(period);
       var s = state, id = root.setInterval(function () { s = action(s); }, period);

@@ -11,7 +11,7 @@
 
     ZipObservable.prototype.subscribeCore = function(observer) {
       var n = this._s.length,
-          subscriptions = new Array(n);
+          subscriptions = new Array(n),
           done = arrayInitialize(n, falseFactory),
           q = arrayInitialize(n, emptyArrayFactory);
 

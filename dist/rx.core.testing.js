@@ -439,8 +439,6 @@ function baseIsEqualDeep(object, other, equalFunc, isLoose, stackA, stackB) {
     othTag = objToString.call(other);
     if (othTag === argsTag) {
       othTag = objectTag;
-    } else if (othTag !== objectTag) {
-      othIsArr = isTypedArray(other);
     }
   }
   var objIsObj = objTag === objectTag && !isHostObject(object),

@@ -9,7 +9,7 @@ function createMessage(actual, expected) {
 module.exports = function assertEqual (t, expected, actual) {
   var i, isOk = true;
   if (expected.length !== actual.length) {
-    return t.ok(false, 'Not equal length. Expected: ' + expected.length + ' Actual: ' + actual.length);
+    return t.ok(false, 'Not equal length.'  + createMessage(actual, expected));
   }
   for (i = 0; i < expected.length; i++) {
     var e = expected[i], a = actual[i];
