@@ -30,9 +30,9 @@
         subscriptions[i] = sad;
       }
 
-      var sad = new SingleAssignmentDisposable();
-      sad.setDisposable(this._s.subscribe(new WithLatestFromSourceObserver(o, this._cb, state)));
-      subscriptions[n] = sad;
+      var outerSad = new SingleAssignmentDisposable();
+      outerSad.setDisposable(this._s.subscribe(new WithLatestFromSourceObserver(o, this._cb, state)));
+      subscriptions[n] = outerSad;
 
       return new NAryDisposable(subscriptions);
     };

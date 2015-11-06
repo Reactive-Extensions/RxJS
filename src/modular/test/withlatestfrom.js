@@ -12,22 +12,18 @@ var onNext = ReactiveTest.onNext,
   onError = ReactiveTest.onError,
   onCompleted = ReactiveTest.onCompleted;
 
-Observable.addToObject({
-  combineLatest: require('../observable/combinelatest')
-});
-
 Observable.addToPrototype({
-  combineLatest: require('../observable/combinelatest')
+  withLatestFrom: require('../observable/withlatestfrom')
 });
 
-test('combineLatest never never', function (t) {
+test('withLatestFrom never never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = Observable.never();
   var e2 = Observable.never();
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, []);
@@ -35,7 +31,7 @@ test('combineLatest never never', function (t) {
   t.end();
 });
 
-test('combineLatest never empty', function (t) {
+test('withLatestFrom never empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = Observable.never();
@@ -46,7 +42,7 @@ test('combineLatest never empty', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, []);
@@ -54,7 +50,7 @@ test('combineLatest never empty', function (t) {
   t.end();
 });
 
-test('combineLatest empty never', function (t) {
+test('withLatestFrom empty never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = Observable.never();
@@ -65,15 +61,17 @@ test('combineLatest empty never', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
-  reactiveAssert(t, results.messages, []);
+  reactiveAssert(t, results.messages, [
+    onCompleted(210)
+  ]);
 
   t.end();
 });
 
-test('combineLatest empty empty', function (t) {
+test('withLatestFrom emptyempty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -87,7 +85,7 @@ test('combineLatest empty empty', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -97,7 +95,7 @@ test('combineLatest empty empty', function (t) {
   t.end();
 });
 
-test('combineLatest empty return', function (t) {
+test('withLatestFrom empty return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -112,17 +110,17 @@ test('combineLatest empty return', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
-    onCompleted(215)
+    onCompleted(210)
   ]);
 
   t.end();
 });
 
-test('combineLatest return empty', function (t) {
+test('withLatestFrom return empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -137,17 +135,17 @@ test('combineLatest return empty', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
-    onCompleted(215)
+    onCompleted(220)
   ]);
 
   t.end();
 });
 
-test('combineLatest never return', function (t) {
+test('withLatestFrom never return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -159,15 +157,17 @@ test('combineLatest never return', function (t) {
   var e2 = Observable.never();
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
-  reactiveAssert(t, results.messages, []);
+  reactiveAssert(t, results.messages, [
+    onCompleted(220)
+  ]);
 
   t.end();
 });
 
-test('combineLatest return never', function (t) {
+test('withLatestFrom return never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -179,7 +179,7 @@ test('combineLatest return never', function (t) {
   var e2 = Observable.never();
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, []);
@@ -187,61 +187,34 @@ test('combineLatest return never', function (t) {
   t.end();
 });
 
-test('combineLatest return return', function (t) {
+test('withLatestFrom return return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
     onNext(150, 1),
-    onNext(215, 2),
+    onNext(220, 2),
     onCompleted(230)
   );
 
   var e2 = scheduler.createHotObservable(
     onNext(150, 1),
-    onNext(220, 3),
+    onNext(215, 3),
     onCompleted(240)
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
     onNext(220, 2 + 3),
-    onCompleted(240)
-  ]);
-
-  t.end();
-});
-
-test('combineLatest return return no selector', function (t) {
-  var scheduler = new TestScheduler();
-
-  var e1 = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(215, 2),
     onCompleted(230)
-  );
-
-  var e2 = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(220, 3),
-    onCompleted(240)
-  );
-
-  var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2);
-  });
-
-  reactiveAssert(t, results.messages, [
-    onNext(220, [2, 3]),
-    onCompleted(240)
   ]);
 
   t.end();
 });
 
-test('combineLatest empty error', function (t) {
+test('withLatestFrom empty error', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -257,7 +230,7 @@ test('combineLatest empty error', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -267,7 +240,7 @@ test('combineLatest empty error', function (t) {
   t.end();
 });
 
-test('combineLatest error empty', function (t) {
+test('withLatestFrom error empty', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -283,7 +256,7 @@ test('combineLatest error empty', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -293,7 +266,7 @@ test('combineLatest error empty', function (t) {
   t.end();
 });
 
-test('combineLatest return throw', function (t) {
+test('withLatestFrom return throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -310,7 +283,7 @@ test('combineLatest return throw', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -320,7 +293,7 @@ test('combineLatest return throw', function (t) {
   t.end();
 });
 
-test('combineLatest throw return', function (t) {
+test('withLatestFrom throw return', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -337,7 +310,7 @@ test('combineLatest throw return', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -347,9 +320,9 @@ test('combineLatest throw return', function (t) {
   t.end();
 });
 
-test('combineLatest throw throw', function (t) {
-  var error1 = new Error();
-  var error2 = new Error();
+test('withLatestFrom throw throw', function (t) {
+  var error1 = new Error('error1');
+  var error2 = new Error('error2');
 
   var scheduler = new TestScheduler();
 
@@ -364,7 +337,7 @@ test('combineLatest throw throw', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -374,9 +347,9 @@ test('combineLatest throw throw', function (t) {
   t.end();
 });
 
-test('combineLatest ErrorThrow', function (t) {
-  var error1 = new Error();
-  var error2 = new Error();
+test('withLatestFrom error throw', function (t) {
+  var error1 = new Error('error1');
+  var error2 = new Error('error2');
 
   var scheduler = new TestScheduler();
 
@@ -392,7 +365,7 @@ test('combineLatest ErrorThrow', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -402,9 +375,9 @@ test('combineLatest ErrorThrow', function (t) {
   t.end();
 });
 
-test('combineLatest throw error', function (t) {
-  var error1 = new Error();
-  var error2 = new Error();
+test('withLatestFrom throw error', function (t) {
+  var error1 = new Error('error1');
+  var error2 = new Error('error2');
 
   var scheduler = new TestScheduler();
 
@@ -420,7 +393,7 @@ test('combineLatest throw error', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -430,7 +403,7 @@ test('combineLatest throw error', function (t) {
   t.end();
 });
 
-test('combineLatest never throw', function (t) {
+test('withLatestFrom never throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -443,7 +416,7 @@ test('combineLatest never throw', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -453,7 +426,7 @@ test('combineLatest never throw', function (t) {
   t.end();
 });
 
-test('combineLatest throw never', function (t) {
+test('withLatestFrom throw never', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -462,10 +435,11 @@ test('combineLatest throw never', function (t) {
 
   var e2 = scheduler.createHotObservable(
     onNext(150, 1),
-    onError(220, error));
+    onError(220, error)
+  );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -475,7 +449,7 @@ test('combineLatest throw never', function (t) {
   t.end();
 });
 
-test('combineLatest some throw', function (t) {
+test('withLatestFrom some throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -492,7 +466,7 @@ test('combineLatest some throw', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -502,7 +476,7 @@ test('combineLatest some throw', function (t) {
   t.end();
 });
 
-test('combineLatest throw some', function (t) {
+test('withLatestFrom throw some', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -510,13 +484,16 @@ test('combineLatest throw some', function (t) {
   var e1 = scheduler.createHotObservable(
     onNext(150, 1),
     onNext(215, 2),
-    onCompleted(230));
+    onCompleted(230)
+  );
+
   var e2 = scheduler.createHotObservable(
     onNext(150, 1),
-    onError(220, error));
+    onError(220, error)
+  );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -526,7 +503,7 @@ test('combineLatest throw some', function (t) {
   t.end();
 });
 
-test('combineLatest throw after complete left', function (t) {
+test('withLatestFrom throw after complete left', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -543,17 +520,17 @@ test('combineLatest throw after complete left', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
-    onError(230, error)
+    onCompleted(220)
   ]);
 
   t.end();
 });
 
-test('combineLatest throw after complete right', function (t) {
+test('withLatestFrom throw after complete right', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -570,7 +547,7 @@ test('combineLatest throw after complete right', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -580,17 +557,10 @@ test('combineLatest throw after complete right', function (t) {
   t.end();
 });
 
-test('combineLatest interleaved with tail', function (t) {
+test('withLatestFrom interleaved with tail', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(215, 2),
-    onNext(225, 4),
-    onCompleted(230)
-  );
-
-  var e2 = scheduler.createHotObservable(
     onNext(150, 1),
     onNext(220, 3),
     onNext(230, 5),
@@ -599,53 +569,87 @@ test('combineLatest interleaved with tail', function (t) {
     onCompleted(250)
   );
 
-  var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
-  });
-
-  reactiveAssert(t, results.messages, [
-    onNext(220, 2 + 3),
-    onNext(225, 3 + 4),
-    onNext(230, 4 + 5),
-    onNext(235, 4 + 6),
-    onNext(240, 4 + 7),
-    onCompleted(250)
-  ]);
-
-  t.end();
-});
-
-test('combineLatest consecutive', function (t) {
-  var scheduler = new TestScheduler();
-
-  var e1 = scheduler.createHotObservable(
+  var e2 = scheduler.createHotObservable(
     onNext(150, 1),
     onNext(215, 2),
     onNext(225, 4),
     onCompleted(230)
   );
 
-  var e2 = scheduler.createHotObservable(
-    onNext(150, 1),
-    onNext(235, 6),
-    onNext(240, 7),
-    onCompleted(250)
-  );
-
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
-    onNext(235, 4 + 6),
-    onNext(240, 4 + 7),
+    onNext(220, 3 + 2),
+    onNext(230, 5 + 4),
+    onNext(235, 6 + 4),
+    onNext(240, 7 + 4),
     onCompleted(250)
   ]);
 
   t.end();
 });
 
-test('combineLatest consecutive end with error left', function (t) {
+test('withLatestFrom consecutive', function (t) {
+  var scheduler = new TestScheduler();
+
+  var e1 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(215, 2),
+    onNext(235, 4),
+    onCompleted(240)
+  );
+
+  var e2 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(225, 6),
+    onNext(240, 7),
+    onCompleted(250)
+  );
+
+  var results = scheduler.startScheduler(function () {
+    return e1.withLatestFrom(e2, add);
+  });
+
+  reactiveAssert(t, results.messages, [
+    onNext(235, 4 + 6),
+    onCompleted(240)
+  ]);
+
+  t.end();
+});
+
+test('withLatestFrom consecutive array', function (t) {
+  var scheduler = new TestScheduler();
+
+  var e1 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(215, 2),
+    onNext(235, 4),
+    onCompleted(240)
+  );
+
+  var e2 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(225, 6),
+    onNext(240, 7),
+    onCompleted(250)
+  );
+
+  var results = scheduler.startScheduler(function () {
+    return e1.withLatestFrom(e2);
+  });
+
+  reactiveAssert(t, results.messages, [
+    onNext(235, [4,6]),
+    onCompleted(240)
+  ]);
+
+  t.end();
+});
+
+test('withLatestFrom consecutive end with error left', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -665,7 +669,7 @@ test('combineLatest consecutive end with error left', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, add);
+    return e1.withLatestFrom(e2, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -675,7 +679,7 @@ test('combineLatest consecutive end with error left', function (t) {
   t.end();
 });
 
-test('combineLatest consecutive end with error right', function (t) {
+test('withLatestFrom consecutive end with error right', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -695,7 +699,7 @@ test('combineLatest consecutive end with error right', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return e2.combineLatest(e1, add);
+    return e2.withLatestFrom(e1, add);
   });
 
   reactiveAssert(t, results.messages, [
@@ -707,7 +711,7 @@ test('combineLatest consecutive end with error right', function (t) {
   t.end();
 });
 
-test('combineLatest selector throws', function (t) {
+test('withLatestFrom consecutive end with error right array', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -715,17 +719,51 @@ test('combineLatest selector throws', function (t) {
   var e1 = scheduler.createHotObservable(
     onNext(150, 1),
     onNext(215, 2),
+    onNext(225, 4),
     onCompleted(230)
   );
 
   var e2 = scheduler.createHotObservable(
     onNext(150, 1),
-    onNext(220, 3),
+    onNext(235, 6),
+    onNext(240, 7),
+    onError(245, error)
+  );
+
+  var results = scheduler.startScheduler(function () {
+    return e2.withLatestFrom(e1);
+  });
+
+  reactiveAssert(t, results.messages, [
+    onNext(235, [6,4]),
+    onNext(240, [7,4]),
+    onError(245, error)
+  ]);
+
+  t.end();
+});
+
+test('withLatestFrom selector throws', function (t) {
+  var error = new Error();
+
+  var scheduler = new TestScheduler();
+
+  var e1 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(220, 2),
+    onCompleted(230)
+  );
+
+  var e2 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(215, 3),
     onCompleted(240)
   );
 
   var results = scheduler.startScheduler(function () {
-    return e1.combineLatest(e2, function () { throw error; });
+    return e1.withLatestFrom(e2, function () {
+      throw error;
+    });
   });
 
   reactiveAssert(t, results.messages, [
