@@ -1,9 +1,9 @@
 [![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
-[![GitHub version](http://img.shields.io/github/tag/reactive-extensions/rxjs.svg)](https://github.com/Reactive-Extensions/RxJS)
-[![NPM version](http://img.shields.io/npm/v/rx.svg)](https://npmjs.org/package/rx)
-[![Downloads](http://img.shields.io/npm/dm/rx.svg)](https://npmjs.org/package/rx)
+[![GitHub version](https://img.shields.io/github/tag/reactive-extensions/rxjs.svg)](https://github.com/Reactive-Extensions/RxJS)
+[![NPM version](https://img.shields.io/npm/v/rx.svg)](https://www.npmjs.com/package/rx)
+[![Downloads](https://img.shields.io/npm/dm/rx.svg)](https://www.npmjs.com/package/rx)
 [![Bower](https://img.shields.io/bower/v/rxjs.svg)](http://bower.io/search/?q=rxjs)
-[![NuGet](http://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
+[![NuGet](https://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
 [![Join the chat at https://gitter.im/Reactive-Extensions/RxJS](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Reactive-Extensions/RxJS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 **[The Need to go Reactive](#the-need-to-go-reactive)** |
@@ -22,7 +22,7 @@
 
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
-The project is actively developed by [Microsoft Open Technologies, Inc.](http://msopentech.com/), in collaboration with a community of open source developers.
+The project is actively developed by [Microsoft Open Technologies, Inc.](https://msopentech.com/), in collaboration with a community of open source developers.
 
 ## The Need to go Reactive ##
 
@@ -159,7 +159,7 @@ Now, let's query Wikipedia!  In RxJS, we can instantly bind to any [Promises A+]
 ```js
 function searchWikipedia (term) {
   return $.ajax({
-    url: 'http://en.wikipedia.org/w/api.php',
+    url: 'https://en.wikipedia.org/w/api.php',
     dataType: 'jsonp',
     data: {
       action: 'opensearch',
@@ -213,11 +213,11 @@ Please check out:
 ## Resources
 
 - Contact us
-    - [Tech Blog](http://blogs.msdn.com/b/rxteam)
+    - [Tech Blog](http://blogs.msdn.com/b/rxteam/)
     - [Twitter @ReactiveX](https://twitter.com/ReactiveX)
-    - [Twitter @OpenAtMicrosoft](http://twitter.com/OpenAtMicrosoft)
+    - [Twitter @OpenAtMicrosoft](https://twitter.com/OpenAtMicrosoft)
     - [StackOverflow rxjs](http://stackoverflow.com/questions/tagged/rxjs)
-    - [Slack](http://reactivex.slack.com)
+    - [Slack](https://reactivex.slack.com/)
 
 - Tutorials
     - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
@@ -232,11 +232,11 @@ Please check out:
 
 - Reference Material
     - [Rx Marbles](http://rxmarbles.com/)
-    - [RxJS GitBook](http://xgrommx.github.io/rx-book/)
+    - [RxJS GitBook](http://xgrommx.github.io/rx-book//)
     - [Intro to Rx](http://introtorx.com/)
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
     - [RxJS Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
-    - [Visualizing Reactive Streams](http://jaredly.github.io/2015/03/06/visualizing-reactive-streams-hot-and-cold/)
+    - [Visualizing Reactive Streams](http://jaredforsyth.com/2015/03/06/visualizing-reactive-streams-hot-and-cold/)
     - [Your Mouse is a Database](http://queue.acm.org/detail.cfm?id=2169076)
 
 - Essential tools
@@ -244,7 +244,7 @@ Please check out:
     - [Percussion](https://github.com/grisendo/Percussion)
 
 - Books
-    - [RxJS](http://xgrommx.github.io/rx-book)
+    - [RxJS](http://xgrommx.github.io/rx-book/)
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
 
@@ -258,7 +258,7 @@ There are a number of ways to get started with RxJS. The files are available on 
 
 ### Custom Builds
 
-You can use the [`rx-cli`](https://www.npmjs.org/package/rx-cli) to perform custom builds to create the RxJS you want:
+You can use the [`rx-cli`](https://www.npmjs.com/package/rx-cli) to perform custom builds to create the RxJS you want:
 
 ```bash
 $ rx --lite --compat --methods select,selectmany,takeuntil,fromevent
@@ -271,7 +271,7 @@ git clone https://github.com/Reactive-Extensions/rxjs.git
 cd ./rxjs
 ```
 
-### Installing with [NPM](https://npmjs.org/)
+### Installing with [NPM](https://www.npmjs.com/)
 
 ```bash`
 $ npm install rx
@@ -294,11 +294,11 @@ $ bower install rxjs
 ```bash
 $ jam install rx
 ```
-### Installing All of RxJS via [NuGet](http://nuget.org/)
+### Installing All of RxJS via [NuGet](http://www.nuget.org/)
 ```bash
 $ Install-Package RxJS-All
 ```
-### Install individual packages via [NuGet](http://nuget.org/):
+### Install individual packages via [NuGet](http://www.nuget.org/):
 
     Install-Package RxJS-All
     Install-Package RxJS-Lite
@@ -366,8 +366,8 @@ The Reactive Extensions for JavaScript have no external dependencies any library
 - [Flux](http://facebook.github.io/flux/)
     - [Rx-Flux](https://github.com/fdecampredon/rx-flux)
     - [ReactiveFlux](https://github.com/codesuki/reactive-flux)
-    - [Thundercats.js](https://github.com/r3dm/thundercats)
-    - [Flurx](https://github.com/cell303/flurx)
+    - [Thundercats.js](https://github.com/ThunderCatsJS/thundercats)
+    - [Flurx](https://github.com/qwtel/flurx)
     - [RR](https://github.com/winsonwq/RR)
 - [Ember](http://emberjs.com/)
     - [RxEmber](https://github.com/blesh/RxEmber)
