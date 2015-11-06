@@ -13,7 +13,8 @@ var onNext = ReactiveTest.onNext,
   onCompleted = ReactiveTest.onCompleted;
 
 Observable.addToObject({
-  combineLatest: require('../observable/combinelatest')
+  combineLatest: require('../observable/combinelatest'),
+  never: require('../observable/never')
 });
 
 Observable.addToPrototype({

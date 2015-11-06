@@ -12,6 +12,10 @@ var onNext = ReactiveTest.onNext,
   onError = ReactiveTest.onError,
   onCompleted = ReactiveTest.onCompleted;
 
+Observable.addToObject({
+  never: require('../observable/never')
+});
+
 Observable.addToPrototype({
   withLatestFrom: require('../observable/withlatestfrom')
 });

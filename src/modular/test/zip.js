@@ -14,6 +14,7 @@ var onNext = ReactiveTest.onNext,
   subscribe = ReactiveTest.subscribe;
 
 Observable.addToObject({
+  never: require('../observable/never'),
   zip: require('../observable/zip')
 });
 
