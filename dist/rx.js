@@ -3439,48 +3439,55 @@ var ObserveOnObservable = (function (__super__) {
     return observableConcat.apply(null, args);
   };
 
-  var ConcatObservable = (function(__super__) {
-    inherits(ConcatObservable, __super__);
-    function ConcatObservable(sources) {
-      this.sources = sources;
+  var ConcatObserver = (function(__super__) {
+    inherits(ConcatObserver, __super__);
+    function ConcatObserver(s, fn) {
+      this._s = s;
+      this._fn = fn;
       __super__.call(this);
     }
 
-    ConcatObservable.prototype.subscribeCore = function(o) {
-      var sink = new ConcatSink(this.sources, o);
-      return sink.run();
-    };
+    ConcatObserver.prototype.next = function (x) { this._s.o.onNext(x); };
+    ConcatObserver.prototype.error = function (e) { this._s.o.onError(e); };
+    ConcatObserver.prototype.completed = function () { this._s.i++; this._fn(this._s); };
 
-    function ConcatSink(sources, o) {
-      this.sources = sources;
-      this.o = o;
+    return ConcatObserver;
+  }(AbstractObserver));
+
+  var ConcatObservable = (function(__super__) {
+    inherits(ConcatObservable, __super__);
+    function ConcatObservable(sources) {
+      this._sources = sources;
+      __super__.call(this);
     }
-    ConcatSink.prototype.run = function () {
-      var isDisposed, subscription = new SerialDisposable(), sources = this.sources, length = sources.length, o = this.o;
-      var cancelable = immediateScheduler.scheduleRecursive(0, function (i, self) {
-        if (isDisposed) { return; }
-        if (i === length) {
-          return o.onCompleted();
-        }
 
-        // Check if promise
-        var currentValue = sources[i];
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+    function scheduleRecursive (state, recurse) {
+      if (state.disposable.isDisposed) { return; }
+      if (state.i === state.sources.length) { return state.o.onCompleted(); }
 
-        var d = new SingleAssignmentDisposable();
-        subscription.setDisposable(d);
-        d.setDisposable(currentValue.subscribe(
-          function (x) { o.onNext(x); },
-          function (e) { o.onError(e); },
-          function () { self(i + 1); }
-        ));
-      });
+      // Check if promise
+      var currentValue = state.sources[state.i];
+      isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
 
-      return new CompositeDisposable(subscription, cancelable, disposableCreate(function () {
-        isDisposed = true;
-      }));
+      var d = new SingleAssignmentDisposable();
+      state.subscription.setDisposable(d);
+      d.setDisposable(currentValue.subscribe(new ConcatObserver(state, recurse)));
+    }
+
+    ConcatObservable.prototype.subscribeCore = function(o) {
+      var subscription = new SerialDisposable();
+      var disposable = disposableCreate(noop);
+      var state = {
+        o: o,
+        i: 0,
+        subscription: subscription,
+        disposable: disposable,
+        sources: this._sources
+      };
+
+      var cancelable = immediateScheduler.scheduleRecursive(state, scheduleRecursive);
+      return new NAryDisposable([subscription, disposable, cancelable]);
     };
-
 
     return ConcatObservable;
   }(ObservableBase));
@@ -4150,9 +4157,9 @@ var ObserveOnObservable = (function (__super__) {
         subscriptions[i] = sad;
       }
 
-      var sad = new SingleAssignmentDisposable();
-      sad.setDisposable(this._s.subscribe(new WithLatestFromSourceObserver(o, this._cb, state)));
-      subscriptions[n] = sad;
+      var outerSad = new SingleAssignmentDisposable();
+      outerSad.setDisposable(this._s.subscribe(new WithLatestFromSourceObserver(o, this._cb, state)));
+      subscriptions[n] = outerSad;
 
       return new NAryDisposable(subscriptions);
     };
