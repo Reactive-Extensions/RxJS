@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.png)](https://travis-ci.org/Reactive-Extensions/RxJS)
+[![Build Status](https://travis-ci.org/Reactive-Extensions/RxJS.svg)](https://travis-ci.org/Reactive-Extensions/RxJS)
 [![GitHub version](https://img.shields.io/github/tag/reactive-extensions/rxjs.svg)](https://github.com/Reactive-Extensions/RxJS)
 [![NPM version](https://img.shields.io/npm/v/rx.svg)](https://www.npmjs.com/package/rx)
 [![Downloads](https://img.shields.io/npm/dm/rx.svg)](https://www.npmjs.com/package/rx)
