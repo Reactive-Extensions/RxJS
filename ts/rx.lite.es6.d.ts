@@ -2747,7 +2747,7 @@ declare module Rx {
         * @param {Function} durationSelector Selector function to retrieve a sequence indicating the throttle duration for each given element.
         * @returns {Observable} The debounced sequence.
         */
-        debounce(debounceDurationSelector: (item: T) => ObservableOrPromise<number>): Observable<T>;
+        debounce(debounceDurationSelector: (item: T) => ObservableOrPromise<any>): Observable<T>;
     }
 
     export interface Timestamp<T> {
