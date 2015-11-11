@@ -21,7 +21,7 @@
 
     var i, isOk = true;
     if (expected.length !== actual.length) {
-      ok(false, 'Not equal length. Expected: ' + expected.length + ' Actual: ' + actual.length);
+      ok(false, 'Not equal length. ' + createMessage(actual, expected));
       return;
     }
     for (i = 0; i < expected.length; i++) {

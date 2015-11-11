@@ -1,26 +1,31 @@
   var FinallyObservable = (function (__super__) {
     inherits(FinallyObservable, __super__);
-    function FinallyObservable(source, action, thisArg) {
+    function FinallyObservable(source, fn, thisArg) {
       this.source = source;
-      this.action = bindCallback(action, thisArg, 0);
+      this._fn = bindCallback(fn, thisArg, 0);
       __super__.call(this);
     }
 
     FinallyObservable.prototype.subscribeCore = function (o) {
-      var subscription = this.source.subscribe(o);
-      return new FinallyDisposable(subscription, parent);
+      var d = tryCatch(this.source.subscribe).call(this.source, o);
+      if (d === errorObj) {
+        this._fn();
+        thrower(d.e);
+      }
+
+      return new FinallyDisposable(d, this._fn);
     };
 
-    function FinallyDisposable(subscription, parent) {
+    function FinallyDisposable(s, fn) {
       this.isDisposed = false;
-      this.subscription = subscription;
-      this.parent = parent;
+      this._s = s;
+      this._fn = fn;
     }
     FinallyDisposable.prototype.dispose = function () {
       if (!this.isDisposed) {
-        var res = tryCatch(this.subscription.dispose).call(this.subscription);
-        this.parent.action();
-        if (res === errorObj) { thrower(res.e); }
+        var res = tryCatch(this._s.dispose).call(this._s);
+        this._fn();
+        res === errorObj && thrower(res.e);
       }
     };
 
