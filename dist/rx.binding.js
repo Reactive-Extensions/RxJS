@@ -471,8 +471,8 @@
     }
 
     RefCountObservable.prototype.subscribeCore = function (o) {
-      var shouldConnect = ++this._count === 1, subscription = this.source.subscribe(o);
-      shouldConnect && (this._connectableSubscription = this.source.connect());
+      var subscription = this.source.subscribe(o);
+      ++this._count === 1 && (this._connectableSubscription = this.source.connect());
       return new RefCountDisposable(this, subscription);
     };
 
@@ -497,34 +497,31 @@
     inherits(ConnectableObservable, __super__);
     function ConnectableObservable(source, subject) {
       this.source = source;
-      this._hasSubscription  = false;
-      this._subscription = null;
-      this._sourceObservable = source.asObservable();
+      this._connection = null;
+      this._source = source.asObservable();
       this._subject = subject;
       __super__.call(this);
     }
 
-    function ConnectDisposable(parent) {
+    function ConnectDisposable(parent, subscription) {
       this._p = parent;
-      this.isDisposed = false;
+      this._s = subscription;
     }
 
     ConnectDisposable.prototype.dispose = function () {
-      if (!this.isDisposed) {
-        this.isDisposed = true;
-        this._p._hasSubscription = false;
+      if (this._s) {
+        this._s.dispose();
+        this._s = null;
+        this._p._connection = null;
       }
     };
 
     ConnectableObservable.prototype.connect = function () {
-      if (!this._hasSubscription) {
-        this._hasSubscription = true;
-        this._subscription = new BinaryDisposable(
-          this._sourceObservable.subscribe(this._subject),
-          new ConnectDisposable(this)
-        );
+      if (!this._connection) {
+        var subscription = this._source.subscribe(this._subject);
+        this._connection = new ConnectDisposable(this, subscription);
       }
-      return this._subscription;
+      return this._connection;
     };
 
     ConnectableObservable.prototype._subscribe = function (o) {
