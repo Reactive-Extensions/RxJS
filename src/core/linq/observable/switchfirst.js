@@ -6,13 +6,14 @@
     }
 
     SwitchFirstObservable.prototype.subscribeCore = function (o) {
-      var m = new SingleAssignmentDisposable(), g = new CompositeDisposable(),
-          state = {
-            hasCurrent: false,
-            isStopped: false,
-            o: o,
-            g: g
-          };
+      var m = new SingleAssignmentDisposable(),
+        g = new CompositeDisposable(),
+        state = {
+          hasCurrent: false,
+          isStopped: false,
+          o: o,
+          g: g
+        };
 
       g.add(m);
       m.setDisposable(this.source.subscribe(new SwitchFirstObserver(state)));

@@ -54,7 +54,7 @@
     InnerObserver.prototype.completed = function () {
       if (this.parent.latest === this.id) {
         this.parent.hasLatest = false;
-        this.parent.isStopped && this.parent.o.onCompleted();
+        this.parent.stopped && this.parent.o.onCompleted();
       }
     };
 

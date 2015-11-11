@@ -11,5 +11,6 @@
   "boss": true,
   "eqnull": true,
   "node": true,
-  "-W030": true
+  "-W030": true,
+  "predef": [ "Promise" ]
 }

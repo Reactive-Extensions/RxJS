@@ -1,7 +1,7 @@
 'use strict';
 
-var AbstractObserver = require('../observer/abstractobserver');
 var ObservableBase = require('./observablebase');
+var AbstractObserver = require('../observer/abstractobserver');
 var BinaryDisposable = require('../binarydisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var fromPromise = require('./frompromise');
