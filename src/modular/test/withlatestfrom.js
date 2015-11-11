@@ -20,7 +20,7 @@ Observable.addToPrototype({
   withLatestFrom: require('../observable/withlatestfrom')
 });
 
-test('withLatestFrom never never', function (t) {
+test('Observable#withLatestFrom never never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = Observable.never();
@@ -35,7 +35,7 @@ test('withLatestFrom never never', function (t) {
   t.end();
 });
 
-test('withLatestFrom never empty', function (t) {
+test('Observable#withLatestFrom never empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = Observable.never();
@@ -54,7 +54,7 @@ test('withLatestFrom never empty', function (t) {
   t.end();
 });
 
-test('withLatestFrom empty never', function (t) {
+test('Observable#withLatestFrom empty never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = Observable.never();
@@ -75,7 +75,7 @@ test('withLatestFrom empty never', function (t) {
   t.end();
 });
 
-test('withLatestFrom emptyempty', function (t) {
+test('Observable#withLatestFrom emptyempty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -99,7 +99,7 @@ test('withLatestFrom emptyempty', function (t) {
   t.end();
 });
 
-test('withLatestFrom empty return', function (t) {
+test('Observable#withLatestFrom empty return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -124,7 +124,7 @@ test('withLatestFrom empty return', function (t) {
   t.end();
 });
 
-test('withLatestFrom return empty', function (t) {
+test('Observable#withLatestFrom return empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -149,7 +149,7 @@ test('withLatestFrom return empty', function (t) {
   t.end();
 });
 
-test('withLatestFrom never return', function (t) {
+test('Observable#withLatestFrom never return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -171,7 +171,7 @@ test('withLatestFrom never return', function (t) {
   t.end();
 });
 
-test('withLatestFrom return never', function (t) {
+test('Observable#withLatestFrom return never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -191,7 +191,7 @@ test('withLatestFrom return never', function (t) {
   t.end();
 });
 
-test('withLatestFrom return return', function (t) {
+test('Observable#withLatestFrom return return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -218,7 +218,7 @@ test('withLatestFrom return return', function (t) {
   t.end();
 });
 
-test('withLatestFrom empty error', function (t) {
+test('Observable#withLatestFrom empty error', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -244,7 +244,7 @@ test('withLatestFrom empty error', function (t) {
   t.end();
 });
 
-test('withLatestFrom error empty', function (t) {
+test('Observable#withLatestFrom error empty', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -270,7 +270,7 @@ test('withLatestFrom error empty', function (t) {
   t.end();
 });
 
-test('withLatestFrom return throw', function (t) {
+test('Observable#withLatestFrom return throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -297,7 +297,7 @@ test('withLatestFrom return throw', function (t) {
   t.end();
 });
 
-test('withLatestFrom throw return', function (t) {
+test('Observable#withLatestFrom throw return', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -324,7 +324,7 @@ test('withLatestFrom throw return', function (t) {
   t.end();
 });
 
-test('withLatestFrom throw throw', function (t) {
+test('Observable#withLatestFrom throw throw', function (t) {
   var error1 = new Error('error1');
   var error2 = new Error('error2');
 
@@ -351,7 +351,7 @@ test('withLatestFrom throw throw', function (t) {
   t.end();
 });
 
-test('withLatestFrom error throw', function (t) {
+test('Observable#withLatestFrom error throw', function (t) {
   var error1 = new Error('error1');
   var error2 = new Error('error2');
 
@@ -379,7 +379,7 @@ test('withLatestFrom error throw', function (t) {
   t.end();
 });
 
-test('withLatestFrom throw error', function (t) {
+test('Observable#withLatestFrom throw error', function (t) {
   var error1 = new Error('error1');
   var error2 = new Error('error2');
 
@@ -407,7 +407,7 @@ test('withLatestFrom throw error', function (t) {
   t.end();
 });
 
-test('withLatestFrom never throw', function (t) {
+test('Observable#withLatestFrom never throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -430,7 +430,7 @@ test('withLatestFrom never throw', function (t) {
   t.end();
 });
 
-test('withLatestFrom throw never', function (t) {
+test('Observable#withLatestFrom throw never', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -453,7 +453,7 @@ test('withLatestFrom throw never', function (t) {
   t.end();
 });
 
-test('withLatestFrom some throw', function (t) {
+test('Observable#withLatestFrom some throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -480,7 +480,7 @@ test('withLatestFrom some throw', function (t) {
   t.end();
 });
 
-test('withLatestFrom throw some', function (t) {
+test('Observable#withLatestFrom throw some', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -507,7 +507,7 @@ test('withLatestFrom throw some', function (t) {
   t.end();
 });
 
-test('withLatestFrom throw after complete left', function (t) {
+test('Observable#withLatestFrom throw after complete left', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -534,7 +534,7 @@ test('withLatestFrom throw after complete left', function (t) {
   t.end();
 });
 
-test('withLatestFrom throw after complete right', function (t) {
+test('Observable#withLatestFrom throw after complete right', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -561,7 +561,7 @@ test('withLatestFrom throw after complete right', function (t) {
   t.end();
 });
 
-test('withLatestFrom interleaved with tail', function (t) {
+test('Observable#withLatestFrom interleaved with tail', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -595,7 +595,7 @@ test('withLatestFrom interleaved with tail', function (t) {
   t.end();
 });
 
-test('withLatestFrom consecutive', function (t) {
+test('Observable#withLatestFrom consecutive', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -624,7 +624,7 @@ test('withLatestFrom consecutive', function (t) {
   t.end();
 });
 
-test('withLatestFrom consecutive array', function (t) {
+test('Observable#withLatestFrom consecutive array', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -653,7 +653,7 @@ test('withLatestFrom consecutive array', function (t) {
   t.end();
 });
 
-test('withLatestFrom consecutive end with error left', function (t) {
+test('Observable#withLatestFrom consecutive end with error left', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -683,7 +683,7 @@ test('withLatestFrom consecutive end with error left', function (t) {
   t.end();
 });
 
-test('withLatestFrom consecutive end with error right', function (t) {
+test('Observable#withLatestFrom consecutive end with error right', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -715,7 +715,7 @@ test('withLatestFrom consecutive end with error right', function (t) {
   t.end();
 });
 
-test('withLatestFrom consecutive end with error right array', function (t) {
+test('Observable#withLatestFrom consecutive end with error right array', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -747,7 +747,7 @@ test('withLatestFrom consecutive end with error right array', function (t) {
   t.end();
 });
 
-test('withLatestFrom selector throws', function (t) {
+test('Observable#withLatestFrom selector throws', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();

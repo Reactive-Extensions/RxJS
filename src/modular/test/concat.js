@@ -1,5 +1,4 @@
 'use strict';
-/* jshint undef: true, unused: true */
 
 var test = require('tape');
 var Observable = require('../observable');
@@ -20,7 +19,7 @@ Observable.addToPrototype({
   concat: require('../observable/concat')
 });
 
-test('concat empty empty', function (t) {
+test('Observable.concat empty empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -44,7 +43,7 @@ test('concat empty empty', function (t) {
   t.end();
 });
 
-test('concat empty never', function (t) {
+test('Observable.concat empty never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -63,7 +62,7 @@ test('concat empty never', function (t) {
   t.end();
 });
 
-test('concat never empty', function (t) {
+test('Observable.concat never empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -82,7 +81,7 @@ test('concat never empty', function (t) {
   t.end();
 });
 
-test('concat never never', function (t) {
+test('Observable.concat never never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = Observable.never();
@@ -97,7 +96,7 @@ test('concat never never', function (t) {
   t.end();
 });
 
-test('concat empty throw', function (t) {
+test('Observable.concat empty throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -123,7 +122,7 @@ test('concat empty throw', function (t) {
   t.end();
 });
 
-test('concat throw empty', function (t) {
+test('Observable.concat throw empty', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -149,7 +148,7 @@ test('concat throw empty', function (t) {
   t.end();
 });
 
-test('concat throw throw', function (t) {
+test('Observable.concat throw throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -175,7 +174,7 @@ test('concat throw throw', function (t) {
   t.end();
 });
 
-test('concat return empty', function (t) {
+test('Observable.concat return empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -201,7 +200,7 @@ test('concat return empty', function (t) {
   t.end();
 });
 
-test('concat empty return', function (t) {
+test('Observable.concat empty return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -227,7 +226,7 @@ test('concat empty return', function (t) {
   t.end();
 });
 
-test('concat return never', function (t) {
+test('Observable.concat return never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -249,7 +248,7 @@ test('concat return never', function (t) {
   t.end();
 });
 
-test('concat never return', function (t) {
+test('Observable.concat never return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -269,7 +268,7 @@ test('concat never return', function (t) {
   t.end();
 });
 
-test('concat return return', function (t) {
+test('Observable.concat return return', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -297,7 +296,7 @@ test('concat return return', function (t) {
   t.end();
 });
 
-test('concat throw return', function (t) {
+test('Observable.concat throw return', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -324,7 +323,7 @@ test('concat throw return', function (t) {
   t.end();
 });
 
-test('concat return throw', function (t) {
+test('Observable.concat return throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -352,7 +351,7 @@ test('concat return throw', function (t) {
   t.end();
 });
 
-test('concat some data on both sides', function (t) {
+test('Observable.concat some data on both sides', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -384,7 +383,7 @@ test('concat some data on both sides', function (t) {
   t.end();
 });
 
-test('concat as arguments', function (t) {
+test('Observable.concat as arguments', function (t) {
   var scheduler = new TestScheduler();
 
   var xs1 = scheduler.createColdObservable(

@@ -23,7 +23,7 @@ Observable.addToPrototype({
   zipIterable: require('../observable/zipiterable')
 });
 
-test('zip n-ary symmetric', function (t) {
+test('Observable.zip n-ary symmetric', function (t) {
   var scheduler = new TestScheduler();
 
   var e0 = scheduler.createHotObservable(
@@ -72,7 +72,7 @@ test('zip n-ary symmetric', function (t) {
   t.end();
 });
 
-test('zip n-ary symmetric selector', function (t) {
+test('Observable.zip n-ary symmetric selector', function (t) {
   var scheduler = new TestScheduler();
 
   var e0 = scheduler.createHotObservable(
@@ -121,7 +121,7 @@ test('zip n-ary symmetric selector', function (t) {
   t.end();
 });
 
-test('zip n-ary array symmetric', function (t) {
+test('Observable.zip n-ary array symmetric', function (t) {
   var scheduler = new TestScheduler();
 
   var e0 = scheduler.createHotObservable(
@@ -170,7 +170,7 @@ test('zip n-ary array symmetric', function (t) {
   t.end();
 });
 
-test('zip n-ary symmetric array selector', function (t) {
+test('Observable.zip n-ary symmetric array selector', function (t) {
   var scheduler = new TestScheduler();
 
   var e0 = scheduler.createHotObservable(
@@ -219,7 +219,7 @@ test('zip n-ary symmetric array selector', function (t) {
   t.end();
 });
 
-test('zip never never', function (t) {
+test('Observable.zip never never', function (t) {
   var scheduler = new TestScheduler();
 
   var o1 = Observable.never();
@@ -234,7 +234,7 @@ test('zip never never', function (t) {
   t.end();
 });
 
-test('zip never empty', function (t) {
+test('Observable.zip never empty', function (t) {
   var scheduler = new TestScheduler();
 
   var o1 = Observable.never();
@@ -252,7 +252,7 @@ test('zip never empty', function (t) {
   t.end();
 });
 
-test('zip empty empty', function (t) {
+test('Observable.zip empty empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -276,7 +276,7 @@ test('zip empty empty', function (t) {
   t.end();
 });
 
-test('zip empty non-empty', function (t) {
+test('Observable.zip empty non-empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -301,7 +301,7 @@ test('zip empty non-empty', function (t) {
   t.end();
 });
 
-test('zip non-empty empty', function (t) {
+test('Observable.zip non-empty empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -326,7 +326,7 @@ test('zip non-empty empty', function (t) {
   t.end();
 });
 
-test('zip never non-empty', function (t) {
+test('Observable.zip never non-empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -346,7 +346,7 @@ test('zip never non-empty', function (t) {
   t.end();
 });
 
-test('zip non-empty never', function (t) {
+test('Observable.zip non-empty never', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -366,7 +366,7 @@ test('zip non-empty never', function (t) {
   t.end();
 });
 
-test('zip non-empty non-empty', function (t) {
+test('Observable.zip non-empty non-empty', function (t) {
   var scheduler = new TestScheduler();
 
   var e1 = scheduler.createHotObservable(
@@ -393,7 +393,7 @@ test('zip non-empty non-empty', function (t) {
   t.end();
 });
 
-test('zip empty error', function (t) {
+test('Observable.zip empty error', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -418,7 +418,7 @@ test('zip empty error', function (t) {
   t.end();
 });
 
-test('zip error empty', function (t) {
+test('Observable.zip error empty', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -444,7 +444,7 @@ test('zip error empty', function (t) {
   t.end();
 });
 
-test('zip never error', function (t) {
+test('Observable.zip never error', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -464,7 +464,7 @@ test('zip never error', function (t) {
   t.end();
 });
 
-test('zip error never', function (t) {
+test('Observable.zip error never', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -486,7 +486,7 @@ test('zip error never', function (t) {
   t.end();
 });
 
-test('zip error error', function (t) {
+test('Observable.zip error error', function (t) {
   var error1 = new Error();
   var error2 = new Error();
 
@@ -513,7 +513,7 @@ test('zip error error', function (t) {
   t.end();
 });
 
-test('zip some error', function (t) {
+test('Observable.zip some error', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -540,7 +540,7 @@ test('zip some error', function (t) {
   t.end();
 });
 
-test('zip error some', function (t) {
+test('Observable.zip error some', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -567,7 +567,7 @@ test('zip error some', function (t) {
   t.end();
 });
 
-test('zip some data asymmetric 1', function (t) {
+test('Observable.zip some data asymmetric 1', function (t) {
   var i;
   var scheduler = new TestScheduler();
 
@@ -607,7 +607,7 @@ test('zip some data asymmetric 1', function (t) {
   t.end();
 });
 
-test('zip some data asymmetric 2', function (t) {
+test('Observable.zip some data asymmetric 2', function (t) {
   var i;
   var scheduler = new TestScheduler();
 
@@ -647,7 +647,7 @@ test('zip some data asymmetric 2', function (t) {
   t.end();
 });
 
-test('zip some data symmetric', function (t) {
+test('Observable.zip some data symmetric', function (t) {
   var i;
 
   var scheduler = new TestScheduler();
@@ -688,7 +688,7 @@ test('zip some data symmetric', function (t) {
   t.end();
 });
 
-test('zip selector throws', function (t) {
+test('Observable.zip selector throws', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -725,7 +725,7 @@ test('zip selector throws', function (t) {
   t.end();
 });
 
-test('zip right completes first', function (t) {
+test('Observable.zip right completes first', function (t) {
   var scheduler = new TestScheduler();
 
   var o = scheduler.createHotObservable(
@@ -760,7 +760,7 @@ test('zip right completes first', function (t) {
   t.end();
 });
 
-test('zip with iterable never empty', function (t) {
+test('Observable.zipIterable never empty', function (t) {
   var scheduler = new TestScheduler();
 
   var n1 = scheduler.createHotObservable(
@@ -782,7 +782,7 @@ test('zip with iterable never empty', function (t) {
   t.end();
 });
 
-test('zip with iterable empty empty', function (t) {
+test('Observable.zipIterable empty empty', function (t) {
   var scheduler = new TestScheduler();
 
   var n1 = scheduler.createHotObservable(
@@ -806,7 +806,7 @@ test('zip with iterable empty empty', function (t) {
   t.end();
 });
 
-test('zip with iterable empty non-empty', function (t) {
+test('Observable.zipIterable empty non-empty', function (t) {
   var scheduler = new TestScheduler();
 
   var n1 = scheduler.createHotObservable(
@@ -831,7 +831,7 @@ test('zip with iterable empty non-empty', function (t) {
   t.end();
 });
 
-test('zip with iterable non-empty empty', function (t) {
+test('Observable.zipIterable non-empty empty', function (t) {
   var scheduler = new TestScheduler();
 
   var n1 = scheduler.createHotObservable(
@@ -856,7 +856,7 @@ test('zip with iterable non-empty empty', function (t) {
   t.end();
 });
 
-test('zip with iterable never non-empty', function (t) {
+test('Observable.zipIterable never non-empty', function (t) {
   var scheduler = new TestScheduler();
 
   var n1 = scheduler.createHotObservable(
@@ -877,7 +877,7 @@ test('zip with iterable never non-empty', function (t) {
   t.end();
 });
 
-test('zip with iterable non-empty non-empty', function (t) {
+test('Observable.zipIterable non-empty non-empty', function (t) {
   var scheduler = new TestScheduler();
 
   var n1 = scheduler.createHotObservable(
@@ -904,7 +904,7 @@ test('zip with iterable non-empty non-empty', function (t) {
   t.end();
 });
 
-test('zip with iterable error empty', function (t) {
+test('Observable.zipIterable error empty', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -930,7 +930,7 @@ test('zip with iterable error empty', function (t) {
   t.end();
 });
 
-test('zip with iterable error some', function (t) {
+test('Observable.zipIterable error some', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -957,7 +957,7 @@ test('zip with iterable error some', function (t) {
   t.end();
 });
 
-test('zip with iterable some data both sides', function (t) {
+test('Observable.zipIterable some data both sides', function (t) {
   var scheduler = new TestScheduler();
 
   var n1 = scheduler.createHotObservable(
@@ -988,7 +988,7 @@ test('zip with iterable some data both sides', function (t) {
   t.end();
 });
 
-test('zip with iterable selector throws', function (t) {
+test('Observable.zipIterable selector throws', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
