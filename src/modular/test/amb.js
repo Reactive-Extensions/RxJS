@@ -94,16 +94,26 @@ test('Observable.amb regular should dispose loser', function (t) {
 
   var sourceNotDisposed = false;
 
-  var o1 = scheduler.createHotObservable(onNext(150, 1), onNext(210, 2), onCompleted(240));
-  var o2 = scheduler.createHotObservable(onNext(150, 1), onNext(220, 3), onCompleted(250)).tap(function () {
-    return sourceNotDisposed = true;
-  });
+  var o1 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(210, 2),
+    onCompleted(240)
+  );
+
+  var o2 = scheduler.createHotObservable(
+    onNext(150, 1),
+    onNext(220, 3),
+    onCompleted(250)).tap(function () { return sourceNotDisposed = true; });
 
   var results = scheduler.startScheduler(function () {
     return o1.amb(o2);
   });
 
-  reactiveAssert(t, results.messages, [onNext(210, 2), onCompleted(240)]);
+  reactiveAssert(t, results.messages, [
+    onNext(210, 2),
+    onCompleted(240)
+  ]);
+
   t.ok(!sourceNotDisposed);
 
   t.end();
