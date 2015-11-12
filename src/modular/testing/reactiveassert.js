@@ -6,7 +6,7 @@ function createMessage(actual, expected) {
   return 'Expected: [' + expected.toString() + '] Actual: [' + actual.toString() + ']';
 }
 
-module.exports = function assertEqual (t, expected, actual) {
+module.exports = function assertEqual (t, actual, expected) {
   var i, isOk = true;
   if (expected.length !== actual.length) {
     return t.ok(false, 'Not equal length.'  + createMessage(actual, expected));
