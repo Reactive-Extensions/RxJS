@@ -2,6 +2,7 @@
 
 var Observable = require('../observable');
 var ObservableBase = require('./observablebase');
+var asObservable = require('./asobservable');
 var inherits = require('util').inherits;
 
 function RefCountDisposable(p, s) {
@@ -36,7 +37,7 @@ RefCountObservable.prototype.subscribeCore = function (o) {
 function ConnectableObservable(source, subject) {
   this.source = source;
   this._connection = null;
-  this._source = source;
+  this._source = asObservable(source);
   this._subject = subject;
   Observable.call(this);
 }
