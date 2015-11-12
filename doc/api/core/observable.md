@@ -181,7 +181,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`tapOnNext`](operators/doonnext.md)
 - [`tapOnError`](operators/doonerror.md)
 - [`tapOnCompleted`](operators/dooncompleted.md)
-- [`throttleFirst`](operators/throttlefirst.md)
+- [`throttle`](operators/throttle.md)
 - [`timeInterval`](operators/timeinterval.md)
 - [`timeout`](operators/timeout.md)
 - [`timeoutWithSelector`](operators/timeoutwithselector.md)
