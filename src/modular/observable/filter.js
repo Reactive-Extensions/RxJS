@@ -4,8 +4,7 @@ var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var bindCallback = require('../internal/bindcallback');
 var inherits = require('util').inherits;
-var tryCatchUtils = require('../internal/trycatchutils');
-var tryCatch = tryCatchUtils.tryCatch;
+var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function FilterObserver(o, predicate, source) {
   this._o = o;
