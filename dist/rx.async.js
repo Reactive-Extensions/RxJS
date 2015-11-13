@@ -198,7 +198,7 @@
   }
 
   function isGenerator(obj) {
-    return isFunction (obj.next) && isFunction (obj.throw);
+    return isFunction (obj.next) && isFunction (obj['throw']);
   }
 
   function isGeneratorFunction(obj) {

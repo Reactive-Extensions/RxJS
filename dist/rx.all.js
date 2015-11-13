@@ -7248,7 +7248,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
   }
 
   function isGenerator(obj) {
-    return isFunction (obj.next) && isFunction (obj.throw);
+    return isFunction (obj.next) && isFunction (obj['throw']);
   }
 
   function isGeneratorFunction(obj) {
@@ -8338,7 +8338,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     function getObservable() {
       if (!hasObservable) {
         hasObservable = true;
-        observable = source.finally(function() { hasObservable = false; }).publish().refCount();
+        observable = source['finally'](function() { hasObservable = false; }).publish().refCount();
       }
       return observable;
     }

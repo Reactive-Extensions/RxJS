@@ -788,7 +788,7 @@ var ObserveOnObservable = (function (__super__) {
     function getObservable() {
       if (!hasObservable) {
         hasObservable = true;
-        observable = source.finally(function() { hasObservable = false; }).publish().refCount();
+        observable = source['finally'](function() { hasObservable = false; }).publish().refCount();
       }
       return observable;
     }
