@@ -11,7 +11,7 @@
     DebounceObservable.prototype.subscribeCore = function (o) {
       var cancelable = new SerialDisposable();
       return new BinaryDisposable(
-        this.source.subscribe(new DebounceObserver(o, this.source, this._dt, this._s, cancelable)),
+        this.source.subscribe(new DebounceObserver(o, this._dt, this._s, cancelable)),
         cancelable);
     };
 
@@ -20,9 +20,8 @@
 
   var DebounceObserver = (function (__super__) {
     inherits(DebounceObserver, __super__);
-    function DebounceObserver(observer, source, dueTime, scheduler, cancelable) {
+    function DebounceObserver(observer, dueTime, scheduler, cancelable) {
       this._o = observer;
-      this._s = source;
       this._d = dueTime;
       this._scheduler = scheduler;
       this._c = cancelable;
@@ -32,15 +31,21 @@
       __super__.call(this);
     }
 
+    function scheduleFuture(s, state) {
+      state.self._hv && state.self._id === state.currentId && state.self._o.onNext(state.x);
+      state.self._hv = false;
+    }
+
     DebounceObserver.prototype.next = function (x) {
       this._hv = true;
       this._v = x;
       var currentId = ++this._id, d = new SingleAssignmentDisposable();
       this._c.setDisposable(d);
-      d.setDisposable(this._scheduler.scheduleFuture(this, this._d, function (_, self) {
-        self._hv && self._id === currentId && self._o.onNext(x);
-        self._hv = false;
-      }));
+      d.setDisposable(this._scheduler.scheduleFuture({
+        self: this,
+        currentId: currentId,
+        x: x
+      }, scheduleFuture));
     };
 
     DebounceObserver.prototype.error = function (e) {
