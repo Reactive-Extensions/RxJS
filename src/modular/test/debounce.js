@@ -1,4 +1,4 @@
-/*
+
 'use strict';
 
 var test = require('tape');
@@ -540,4 +540,3 @@ test('Observable#debounce duration inner done debounce behavior', function (t) {
 
   t.end();
 });
-*/

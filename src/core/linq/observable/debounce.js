@@ -41,11 +41,10 @@
       this._v = x;
       var currentId = ++this._id, d = new SingleAssignmentDisposable();
       this._c.setDisposable(d);
-      d.setDisposable(this._scheduler.scheduleFuture({
-        self: this,
-        currentId: currentId,
-        x: x
-      }, scheduleFuture));
+      d.setDisposable(this._scheduler.scheduleFuture(this, this._d, function (_, self) {
+        self._hv && self._id === currentId && self._o.onNext(x);
+        self._hv = false;
+      }));
     };
 
     DebounceObserver.prototype.error = function (e) {
