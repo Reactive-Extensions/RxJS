@@ -73,29 +73,6 @@ DebounceObservable.prototype.subscribeCore = function (o) {
     cancelable);
 };
 
-function DebounceInnerObserver(s, d, currentId) {
-  this._s = s;
-  this._d = d;
-  this._currentId = currentId;
-  AbstractObserver.call(this);
-}
-
-inherits(DebounceInnerObserver, AbstractObserver);
-
-DebounceInnerObserver.prototype.next = function () {
-  this._s.hasValue && this._s.id === this._currentid && this._s.o.onNext(this._s.value);
-  this._s.hasValue = false;
-  this._d.dispose();
-};
-
-DebounceInnerObserver.prototype.error = function (e) { this._s.o.onError(e); };
-
-DebounceInnerObserver.prototype.completed = function () {
-  this._s.hasValue && this._s.id === this._currentid && this._s.o.onNext(this._s.value);
-  this._s.hasValue = false;
-  this._d.dispose();
-};
-
 function DebounceSelectorObserver(s) {
   this._s = s;
   AbstractObserver.call(this);
@@ -114,7 +91,21 @@ DebounceSelectorObserver.prototype.next = function (x) {
   this._s.id++;
   var currentId = this._s.id, d = new SingleAssignmentDisposable();
   this._s.cancelable.setDisposable(d);
-  d.setDisposable(throttle.subscribe(new DebounceInnerObserver(this._s, d, currentId)));
+
+  var self = this;
+  d.setDisposable(throttle.subscribe(
+    function () {
+      self._s.hasValue && self._s.id === currentId && self._s.o.onNext(self._s.value);
+      self._s.hasValue = false;
+      d.dispose();
+    },
+    function (e) { self._s.o.onError(e); },
+    function () {
+      self._s.hasValue && self._s.id === currentId && self._s.o.onNext(self._s.value);
+      self._s.hasValue = false;
+      d.dispose();
+    }
+  ));
 };
 
 DebounceSelectorObserver.prototype.error = function (e) {
