@@ -15,7 +15,8 @@
 
     var xs = scheduler.createHotObservable(
       onNext(210, 1),
-      onNext(220, 2), onCompleted(230));
+      onNext(220, 2),
+      onCompleted(230));
 
     var results = scheduler.startScheduler(function () {
       return xs.skipWithTime(0, scheduler);
