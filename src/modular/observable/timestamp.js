@@ -37,5 +37,5 @@ TimestampObservable.prototype.subscribeCore = function (o) {
 
 module.exports = function timestamp (source, scheduler) {
   isScheduler(scheduler) || (scheduler = global.Rx.defaultScheduler);
-  return new TimestampObservable(this, scheduler);
+  return new TimestampObservable(source, scheduler);
 };

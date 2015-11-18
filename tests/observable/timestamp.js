@@ -4,22 +4,6 @@
   /* globals QUnit, test, Rx */
   QUnit.module('timestamp');
 
-  if (!Rx.Observable.prototype.timeInterval) {
-    // Add timeInterval for tests
-    Rx.Observable.prototype.timeInterval = function (scheduler) {
-      var source = this;
-      Rx.Scheduler.isScheduler(scheduler) || (scheduler = Rx.Scheduler['default']);
-      return Rx.Observable.defer(function () {
-        var last = scheduler.now();
-        return source.map(function (x) {
-          var now = scheduler.now(), span = now - last;
-          last = now;
-          return { value: x, interval: span };
-        });
-      });
-    };
-  }
-
   var TestScheduler = Rx.TestScheduler,
     onNext = Rx.ReactiveTest.onNext,
     onError = Rx.ReactiveTest.onError,
@@ -63,7 +47,7 @@
     var scheduler = new TestScheduler();
 
     var results = scheduler.startScheduler(function () {
-      return Rx.Observable.empty(scheduler).timeInterval(scheduler);
+      return Rx.Observable.empty(scheduler).timestamp(scheduler);
     });
 
     results.messages.assertEqual(
@@ -77,7 +61,7 @@
     var scheduler = new TestScheduler();
 
     var results = scheduler.startScheduler(function () {
-      return Rx.Observable['throw'](error, scheduler).timeInterval(scheduler);
+      return Rx.Observable['throw'](error, scheduler).timestamp(scheduler);
     });
 
     results.messages.assertEqual(
@@ -89,7 +73,7 @@
     var scheduler = new TestScheduler();
 
     var results = scheduler.startScheduler(function () {
-      return Rx.Observable.never().timeInterval(scheduler);
+      return Rx.Observable.never().timestamp(scheduler);
     });
 
     results.messages.assertEqual();
