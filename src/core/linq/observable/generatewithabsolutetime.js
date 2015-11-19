@@ -7,36 +7,40 @@
       this._resFn = resFn;
       this._timeFn = timeFn;
       this._s = s;
-      this._first = true;
-      this._hasResult = false;
       __super__.call(this);
     }
 
-    function scheduleRecursive(self, recurse) {
-      self._hasResult && self._o.onNext(self._state);
+    function scheduleRecursive(state, recurse) {
+      state.hasResult && state.o.onNext(state.newState);
 
-      if (self._first) {
-        self._first = false;
+      if (state.first) {
+        state.first = false;
       } else {
-        self._state = tryCatch(self._itrFn)(self._state);
-        if (self._state === errorObj) { return self._o.onError(self._state.e); }
+        state.newState = tryCatch(state.self._itrFn)(state.newState);
+        if (state.newState === errorObj) { return state.o.onError(state.newState.e); }
       }
-      self._hasResult = tryCatch(self._cndFn)(self._state);
-      if (self._hasResult === errorObj) { return self._o.onError(self._hasResult.e); }
-      if (self._hasResult) {
-        var result = tryCatch(self._resFn)(self._state);
-        if (result === errorObj) { return self._o.onError(result.e); }
-        var time = tryCatch(self._timeFn)(self._state);
-        if (time === errorObj) { return self._o.onError(time.e); }
-        recurse(self, time);
+      state.hasResult = tryCatch(state.self._cndFn)(state.newState);
+      if (state.hasResult === errorObj) { return state.o.onError(state.hasResult.e); }
+      if (state.hasResult) {
+        var result = tryCatch(state.self._resFn)(state.newState);
+        if (result === errorObj) { return state.o.onError(result.e); }
+        var time = tryCatch(state.self._timeFn)(state.newState);
+        if (time === errorObj) { return state.o.onError(time.e); }
+        recurse(state, time);
       } else {
-        self._o.onCompleted();
+        state.o.onCompleted();
       }
     }
 
     GenerateAbsoluteObservable.prototype.subscribeCore = function (o) {
-      this._o = o;
-      return this._s.scheduleRecursiveFuture(this, new Date(this._s.now()), scheduleRecursive);
+      var state = {
+        o: o,
+        self: this,
+        newState: this._state,
+        first: true,
+        hasValue: false
+      };
+      return this._s.scheduleRecursiveFuture(state, new Date(this._s.now()), scheduleRecursive);
     };
 
     return GenerateAbsoluteObservable;

@@ -4767,7 +4767,7 @@ observableProto.flatMapConcat = observableProto.concatMap = function(selector, r
         }
       }
       return currentProp;
-    }
+    };
   }
 
   /**
