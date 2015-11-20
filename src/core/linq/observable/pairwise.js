@@ -18,6 +18,7 @@
       this._o = o;
       this._p = null;
       this._hp = false;
+      __super__.call(this);
     }
 
     PairwiseObserver.prototype.next = function (x) {
