@@ -7,5 +7,5 @@
    * @returns {Observable} An observable sequence containing a single element with the maximum element in the source sequence.
    */
   observableProto.max = function (comparer) {
-    return this.maxBy(identity, comparer).map(function (x) { return firstOnly(x); });
+    return this.maxBy(identity, comparer).map(firstOnly);
   };

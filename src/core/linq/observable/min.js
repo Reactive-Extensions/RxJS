@@ -7,5 +7,5 @@
    * @returns {Observable} An observable sequence containing a single element with the minimum element in the source sequence.
    */
   observableProto.min = function (comparer) {
-    return this.minBy(identity, comparer).map(function (x) { return firstOnly(x); });
+    return this.minBy(identity, comparer).map(firstOnly);
   };
