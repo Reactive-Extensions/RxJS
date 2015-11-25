@@ -92,7 +92,7 @@
    */
   var observableFrom = Observable.from = function (iterable, mapFn, thisArg, scheduler) {
     if (iterable == null) {
-      throw new Error('iterable cannot be null.')
+      throw new Error('iterable cannot be null.');
     }
     if (mapFn && !isFunction(mapFn)) {
       throw new Error('mapFn when provided must be a function');
