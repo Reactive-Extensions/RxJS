@@ -17,7 +17,7 @@
       return _observableTimer(dueTime, scheduler);
     }
     if (dueTime instanceof Date && period !== undefined) {
-      return observableTimerDateAndPeriod(dueTime.getTime(), periodOrScheduler, scheduler);
+      return observableTimerDateAndPeriod(dueTime, periodOrScheduler, scheduler);
     }
     return observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
   };
