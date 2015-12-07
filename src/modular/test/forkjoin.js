@@ -19,7 +19,7 @@ Observable.addToPrototype({
 
 function add(x, y) { return x + y; }
 
-test('forkJoin n-ary parameters', function (t) {
+test('Observable.forkJoin n-ary parameters', function (t) {
   var scheduler = new TestScheduler();
 
   var o1 = scheduler.createHotObservable(
@@ -54,7 +54,7 @@ test('forkJoin n-ary parameters', function (t) {
   t.end();
 });
 
-test('forkJoin n-ary parameters empty', function (t) {
+test('Observable.forkJoin n-ary parameters empty', function (t) {
   var scheduler = new TestScheduler();
 
   var o1 = scheduler.createHotObservable(
@@ -86,7 +86,7 @@ test('forkJoin n-ary parameters empty', function (t) {
   t.end();
 });
 
-test('forkJoin n-ary parameters empty before end', function (t) {
+test('Observable.forkJoin n-ary parameters empty before end', function (t) {
   var scheduler = new TestScheduler();
 
   var o1 = scheduler.createHotObservable(
@@ -117,7 +117,7 @@ test('forkJoin n-ary parameters empty before end', function (t) {
   t.end();
 });
 
-test('forkJoin empty empty', function (t) {
+test('Observable.forkJoin empty empty', function (t) {
   var scheduler = new TestScheduler();
 
   var o = scheduler.createHotObservable(
@@ -141,7 +141,7 @@ test('forkJoin empty empty', function (t) {
   t.end();
 });
 
-test('forkJoin none', function (t) {
+test('Observable.forkJoin none', function (t) {
   var scheduler = new TestScheduler();
 
   var results = scheduler.startScheduler(function () {
@@ -155,7 +155,7 @@ test('forkJoin none', function (t) {
   t.end();
 });
 
-test('forkJoin empty return', function (t) {
+test('Observable.forkJoin empty return', function (t) {
   var scheduler = new TestScheduler();
 
   var o = scheduler.createHotObservable(
@@ -180,7 +180,7 @@ test('forkJoin empty return', function (t) {
   t.end();
 });
 
-test('forkJoin return empty', function (t) {
+test('Observable.forkJoin return empty', function (t) {
   var scheduler = new TestScheduler();
 
   var o = scheduler.createHotObservable(
@@ -203,7 +203,7 @@ test('forkJoin return empty', function (t) {
   t.end();
 });
 
-test('forkJoin return return', function (t) {
+test('Observable.forkJoin return return', function (t) {
   var scheduler = new TestScheduler();
 
   var o = scheduler.createHotObservable(
@@ -230,7 +230,7 @@ test('forkJoin return return', function (t) {
   t.end();
 });
 
-test('forkJoin empty throw', function (t) {
+test('Observable.forkJoin empty throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -257,7 +257,7 @@ test('forkJoin empty throw', function (t) {
   t.end();
 });
 
-test('forkJoin throw empty', function (t) {
+test('Observable.forkJoin throw empty', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -284,7 +284,7 @@ test('forkJoin throw empty', function (t) {
   t.end();
 });
 
-test('forkJoin return throw', function (t) {
+test('Observable.forkJoin return throw', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -312,7 +312,7 @@ test('forkJoin return throw', function (t) {
   t.end();
 });
 
-test('forkJoin throw return', function (t) {
+test('Observable.forkJoin throw return', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -340,7 +340,7 @@ test('forkJoin throw return', function (t) {
   t.end();
 });
 
-test('forkJoin binary', function (t) {
+test('Observable.forkJoin binary', function (t) {
   var scheduler = new TestScheduler();
 
   var o = scheduler.createHotObservable(
