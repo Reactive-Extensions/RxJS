@@ -64,7 +64,7 @@ Creates a subject.
 ```js
 var subject = new Rx.Subject();
 
-var subscription = source.subscribe(
+var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
