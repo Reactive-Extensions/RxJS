@@ -12,7 +12,7 @@ Groups the elements of an observable sequence according to a specified key selec
 #### Returns
 *(`Observable`)*: A sequence of observable groups, each of which corresponds to a unique key value, containing all elements that share that same key value.
 
-If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encoutered.
+If a group's lifetime expires, a new group with the same key value can be created once an element with such a key value is encountered.
 
 #### Example
 ```js
