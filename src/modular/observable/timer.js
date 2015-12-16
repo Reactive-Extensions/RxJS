@@ -84,7 +84,7 @@ module.exports = function timer (dueTime, periodOrScheduler, scheduler) {
     return new TimerObservable(dueTime, scheduler);
   }
   if (dueTime instanceof Date && period !== undefined) {
-    return new TimerPeriodObservable(dueTime.getTime(), periodOrScheduler, scheduler);
+    return new TimerPeriodObservable(dueTime, periodOrScheduler, scheduler);
   }
   return timerRelativeAndPeriod(dueTime, period, scheduler);
 };
