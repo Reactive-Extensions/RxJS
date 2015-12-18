@@ -1,5 +1,8 @@
   // Utilities
   var toString = Object.prototype.toString;
+  var arrayClass = '[object Array]',
+      funcClass = '[object Function]',
+      stringClass = '[object String]';
 
   if (!Array.prototype.forEach) {
     Array.prototype.forEach = function (callback, thisArg) {
