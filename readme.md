@@ -247,6 +247,7 @@ Please check out:
     - [RxJS](http://xgrommx.github.io/rx-book/)
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
+    - [Reactive Programming with RxJS](https://pragprog.com/book/smreactjs/reactive-programming-with-rxjs)
 
 - [Community Examples](examples/community.md)
 - [Presentations](doc/presentations.md)
