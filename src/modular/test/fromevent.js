@@ -9,9 +9,9 @@ var ReactiveTest = require('../testing/reactivetest');
 var onNext = ReactiveTest.onNext,
   onError = ReactiveTest.onError;
 
-  Observable.addToObject({
-    fromEvent: require('../observable/fromevent')
-  });
+Observable.addToObject({
+  fromEvent: require('../observable/fromevent')
+});
 
 /** Fake DOM Element */
 function FakeDOMStandardElement(nodeName) {
@@ -38,7 +38,7 @@ FakeDOMStandardElement.prototype.trigger = function (eventName) {
   }
 };
 
-test('Event DOM Element', function (t) {
+test('Observable.fromEvent DOM Element', function (t) {
   var scheduler = new TestScheduler();
 
   var element = new FakeDOMStandardElement('foo');
@@ -65,7 +65,7 @@ test('Event DOM Element', function (t) {
   t.end();
 });
 
-test('Event DOM Element selector', function (t) {
+test('Observable.fromEvent DOM Element selector', function (t) {
   var scheduler = new TestScheduler();
 
   var element = new FakeDOMStandardElement('foo');
@@ -98,7 +98,7 @@ test('Event DOM Element selector', function (t) {
   t.end();
 });
 
-test('Event DOM Element selector throws', function (t) {
+test('Observable.fromEvent DOM Element selector throws', function (t) {
   var scheduler = new TestScheduler();
 
   var error = new Error();
@@ -157,7 +157,7 @@ FakeEventEmitter.prototype.emit = function (eventName, eventData) {
   }
 };
 
-test('Event EventEmitter', function (t) {
+test('Observable.fromEvent EventEmitter', function (t) {
   var scheduler = new TestScheduler();
 
   var element = new FakeEventEmitter();
@@ -184,7 +184,7 @@ test('Event EventEmitter', function (t) {
   t.end();
 });
 
-test('Event EventEmitter selector', function (t) {
+test('Observable.fromEvent EventEmitter selector', function (t) {
   var scheduler = new TestScheduler();
 
   var element = new FakeEventEmitter();
@@ -217,7 +217,7 @@ test('Event EventEmitter selector', function (t) {
   t.end();
 });
 
-test('Event EventEmitter selector throws', function (t) {
+test('Observable.fromEvent EventEmitter selector throws', function (t) {
   var scheduler = new TestScheduler();
 
   var error = new Error();
@@ -277,7 +277,7 @@ FakeJQueryElement.prototype.trigger = function (eventName) {
   }
 };
 
-test('Event jQuery/Angular/Ember Element', function (t) {
+test('Observable.fromEvent jQuery/Angular/Ember Element', function (t) {
   var scheduler = new TestScheduler();
 
   var element = new FakeJQueryElement('foo');
@@ -304,7 +304,7 @@ test('Event jQuery/Angular/Ember Element', function (t) {
   t.end();
 });
 
-test('Event jQuery/Angular/Ember Element selector', function (t) {
+test('Observable.fromEvent jQuery/Angular/Ember Element selector', function (t) {
   var scheduler = new TestScheduler();
 
   var element = new FakeJQueryElement('foo');
@@ -337,7 +337,7 @@ test('Event jQuery/Angular/Ember Element selector', function (t) {
   t.end();
 });
 
-test('Event jQuery/Angular/Ember Element selector throws', function (t) {
+test('Observable.fromEvent jQuery/Angular/Ember Element selector throws', function (t) {
   var scheduler = new TestScheduler();
 
   var error = new Error();
