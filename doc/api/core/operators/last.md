@@ -15,6 +15,7 @@ Returns the last element of an observable sequence that satisfies the condition 
 3. `[defaultValue]` *(`Any`)*: Default value if no such element exists.
 
 `Rx.Observable.prototype.last([settings])`
+
 1. `[settings]` *(`Object`)*: An object with the following fields
     - `[predicate]` *(`Function`)*: A predicate function to evaluate for elements in the source sequence. The callback is called with the following information:
         1. the value of the element
