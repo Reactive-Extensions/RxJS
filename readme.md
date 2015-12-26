@@ -32,13 +32,13 @@ Applications, especially on the web have changed over the years from being a sim
 
 The Reactive Extensions for JavaScript (RxJS) is a set of libraries for composing asynchronous and event-based programs using observable sequences and fluent query operators that many of you already know by [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) in JavaScript. Using RxJS, developers represent asynchronous data streams with Observables, query asynchronous data streams using our many operators, and parameterize the concurrency in the asynchronous data streams using Schedulers. Simply put, RxJS = Observables + Operators + Schedulers.
 
-Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming as a matter of course. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
+Whether you are authoring a web-based application in JavaScript or a server-side application in Node.js, you have to deal with asynchronous and event-based programming. Although some patterns are emerging such as the Promise pattern, handling exceptions, cancellation, and synchronization is difficult and error-prone.
 
 Using RxJS, you can represent multiple asynchronous data streams (that come from diverse sources, e.g., stock quote, tweets, computer events, web service requests, etc.), and subscribe to the event stream using the Observer object. The Observable notifies the subscribed Observer instance whenever an event occurs.
 
 Because observable sequences are data streams, you can query them using standard query operators implemented by the Observable type. Thus you can filter, project, aggregate, compose and perform time-based operations on multiple events easily by using these operators. In addition, there are a number of other reactive stream specific operators that allow powerful queries to be written. Cancellation, exceptions, and synchronization are also handled gracefully by using the methods on the Observable object.
 
-But the best news of all is that you already know how to program like this.  Take for example the following JavaScript code, where we get some stock data and then manipulate and then iterate the results.
+But the best news of all is that you already know how to program like this.  Take for example the following JavaScript code, where we get some stock data and then manipulate and iterate the results.
 
 ```js
 /* Get stock data somehow */
@@ -56,7 +56,7 @@ source
   });
 ```
 
-Now what if this data were to come as some sort of event, for example a stream, such as a WebSocket, then we could pretty much write the same query to iterate our data, with very little change.
+Now what if this data were to come as some sort of event, for example a stream, such as a WebSocket? Then we could pretty much write the same query to iterate our data, with very little change.
 
 ```js
 /* Get stock data somehow */
@@ -123,9 +123,9 @@ This set of libraries include:
 
 ## Why RxJS? ##
 
-One question you may ask yourself, is why RxJS?  What about Promises?  Promises are good for solving asynchronous operations such as querying a service with an XMLHttpRequest, where the expected behavior is one value and then completion.  The Reactive Extensions for JavaScript unifies both the world of Promises, callbacks as well as evented data such as DOM Input, Web Workers, Web Sockets.  Once we have unified these concepts, this enables rich composition.
+One question you may ask yourself is why RxJS?  What about Promises?  Promises are good for solving asynchronous operations such as querying a service with an XMLHttpRequest, where the expected behavior is one value and then completion.  Reactive Extensions for JavaScript unify both the world of Promises, callbacks as well as evented data such as DOM Input, Web Workers, and Web Sockets. Unifying these concepts enables rich composition.
 
-To give you an idea about rich composition, we can create an autocompletion service which takes the user input from a text input and then query a service, making sure not to flood the service with calls for every key stroke, but instead allow to go at a more natural pace.
+To give you an idea about rich composition, we can create an autocompletion service which takes user input from a text input and then throttles queries a service (to avoid flooding the service with calls for every key stroke).
 
 First, we'll reference the JavaScript files, including jQuery, although RxJS has no dependencies on jQuery...
 ```html
@@ -154,7 +154,7 @@ var distinct = debounced
   .distinctUntilChanged();
 ```
 
-Now, let's query Wikipedia!  In RxJS, we can instantly bind to any [Promises A+](https://github.com/promises-aplus/promises-spec) implementation through the `Rx.Observable.fromPromise` method or by just directly returning it, and we wrap it for you.
+Now, let's query Wikipedia!  In RxJS, we can instantly bind to any [Promises A+](https://github.com/promises-aplus/promises-spec) implementation through the `Rx.Observable.fromPromise` method. Or, directly return it and RxJS will wrap it for you.
 
 ```js
 function searchWikipedia (term) {
@@ -170,7 +170,7 @@ function searchWikipedia (term) {
 }
 ```
 
-Once that is created, now we can tie together the distinct throttled input and then query the service.  In this case, we'll call `flatMapLatest` to get the value and ensure that we're not introducing any out of order sequence calls.
+Once that is created, we can tie together the distinct throttled input and query the service.  In this case, we'll call `flatMapLatest` to get the value and ensure we're not introducing any out of order sequence calls.
 
 ```js
 var suggestions = distinct
@@ -358,7 +358,7 @@ require({
 
 ## What about my libraries? ##
 
-The Reactive Extensions for JavaScript have no external dependencies any library, so they'll work well with just about any library.  We provide bridges and support for various libraries including:
+The Reactive Extensions for JavaScript have no external dependencies on any library, so they'll work well with just about any library.  We provide bridges and support for various libraries including:
 - [Node.js](https://www.npmjs.com/package/rx-node)
 - [React](http://facebook.github.io/react/)
     - [Rx-React](https://github.com/fdecampredon/rx-react)
@@ -389,7 +389,7 @@ There are lots of ways to contribute to the project, and we appreciate our [cont
 
 You can contribute by reviewing and sending feedback on code checkins, suggesting and trying out new features as they are implemented, submit bugs and help us verify fixes as they are checked in, as well as submit code fixes or code contributions of your own. Note that all code submissions will be rigorously reviewed and tested by the Rx Team, and only those that meet an extremely high bar for both quality and design/roadmap appropriateness will be merged into the source.
 
-First time contributors must sign a [Contribution License Agreement](https://cla.microsoft.com/).  If your Pull Request has the label [cla-required](https://github.com/Reactive-Extensions/RxJS/labels/cla-required), this is an indication that you haven't yet signed such an agreement.
+First-time contributors must sign a [Contribution License Agreement](https://cla.microsoft.com/).  If your Pull Request has the label [cla-required](https://github.com/Reactive-Extensions/RxJS/labels/cla-required), this is an indication that you haven't yet signed such an agreement.
 
 ## License ##
 
