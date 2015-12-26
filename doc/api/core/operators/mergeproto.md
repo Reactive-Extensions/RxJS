@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.merge(maxConcurrent | other)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeproto.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/mergeconcat.js "View in source")
 
 Merges an observable sequence of observable sequences into an observable sequence, limiting the number of concurrent subscriptions to inner sequences.
 Or merges two observable sequences into a single observable sequence.
@@ -73,7 +73,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/mergeproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeproto.js)
+- [`/src/core/perf/operators/mergeconcat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/mergeconcat.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
