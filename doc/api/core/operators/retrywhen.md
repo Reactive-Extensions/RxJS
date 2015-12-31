@@ -45,7 +45,7 @@ var subscription = source.subscribe(
 // 200 ms pass
 // => Next: 0
 // => Next: 1
-// => Error: 'ex'
+// => Completed
 ```
 
 #### Example: Erroring an observable after 2 failures
