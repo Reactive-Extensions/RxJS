@@ -12,8 +12,6 @@ and observable that either continues, completes or errors. This behavior is then
 
 #### Example: delayed retry
 ```js
-var count = 0;
-
 var source = Rx.Observable.interval(1000)
     .map(function(n) {
         if(n === 2) {
@@ -50,8 +48,6 @@ var subscription = source.subscribe(
 
 #### Example: Erroring an observable after 2 failures
 ```js
-var count = 0;
-
 var source = Rx.Observable.interval(1000)
     .map(function(n) {
         if(n === 2) {
@@ -88,8 +84,6 @@ var subscription = source.subscribe(
 
 #### Example: Completing an observable after 2 failures
 ```js
-var count = 0;
-
 var source = Rx.Observable.interval(1000)
     .map(function(n) {
         if(n === 2) {
