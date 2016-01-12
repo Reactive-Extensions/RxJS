@@ -1,4 +1,4 @@
-### `Rx.Observable.prototype.indexof(searchElement, [fromIndex])`
+### `Rx.Observable.prototype.indexOf(searchElement, [fromIndex])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/indexof.js "View in source")
 
 Returns the first index at which a given element can be found in the observable sequence, or -1 if it is not present.
