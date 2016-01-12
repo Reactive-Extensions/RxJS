@@ -148,7 +148,6 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`selectConcatObserver`](operators/concatmapobserver.md)
 - [`selectMany`](operators/selectmany.md)
 - [`selectManyObserver`](operators/flatmapobserver.md)
-- [`selectMany`](operators/selectmany.md)
 - [`sequenceEqual`](operators/sequenceequal.md)
 - [`single`](operators/single.md)
 - [`singleInstance`](operators/singleinstance.md)
