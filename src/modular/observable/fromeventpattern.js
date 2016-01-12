@@ -4,7 +4,7 @@ var ObservableBase = require('./observablebase');
 var publish = require('./publish');
 var isFunction = require('../helpers/isfunction');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function EventPatternDisposable(del, fn, ret) {
   this._del = del;

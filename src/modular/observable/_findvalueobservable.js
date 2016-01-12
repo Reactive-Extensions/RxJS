@@ -4,7 +4,7 @@ var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var bindCallback = require('../internal/bindcallback');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function FindValueObserver(observer, source, callback, yieldIndex) {
   this._o = observer;

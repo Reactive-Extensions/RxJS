@@ -6,7 +6,7 @@ var EmptyError = require('../internal/errors').EmptyError;
 var bindCallback = require('../internal/bindcallback');
 var isFunction = require('../helpers/isfunction');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function LastObserver(o, obj, s) {
   this._o = o;

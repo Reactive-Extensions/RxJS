@@ -3,7 +3,7 @@
 var ObservableBase = require('./observablebase');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 var isScheduler = require('../scheduler').isScheduler;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 global.Rx || (global.Rx = {});
 if (!global.Rx.defaultScheduler) {

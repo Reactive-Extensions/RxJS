@@ -3,7 +3,7 @@
 var Observable = require('../observable');
 var Observer = require('../observer');
 var addProperties = require('../internal/addproperties');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function AnonymousSubject(observer, observable) {
   this.observer = observer;

@@ -2,7 +2,7 @@
 
 var ObservableBase = require('./observablebase');
 var ObserveOnObserver = require('../observer/observeonobserver');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function ObserveOnObservable(source, s) {
   this.source = source;

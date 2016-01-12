@@ -3,7 +3,7 @@
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var Notification = require('../notification');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function MaterializeObserver(o) {
   this._o = o;

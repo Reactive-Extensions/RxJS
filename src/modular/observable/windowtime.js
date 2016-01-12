@@ -9,7 +9,7 @@ var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var addRef = require('../internal/addref');
 var isScheduler = require('../scheduler').isScheduler;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 global.Rx || (global.Rx = {});
 if (!global.Rx.defaultScheduler) {

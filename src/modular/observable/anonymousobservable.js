@@ -1,6 +1,6 @@
 'use strict';
 
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var isFunction = require('../helpers/isfunction');
 var Observable  = require('../observable');
 var Disposable = require('../disposable');

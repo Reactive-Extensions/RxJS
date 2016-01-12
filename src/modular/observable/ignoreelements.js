@@ -3,7 +3,7 @@
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var noop = require('../helpers/noop');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function IgnoreElementsObserver(o) {
   this._o = o;

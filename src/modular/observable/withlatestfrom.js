@@ -9,7 +9,7 @@ var isPromise = require('../helpers/ispromise');
 var identity = require('../helpers/identity');
 var noop = require('../helpers/noop');
 var isFunction = require('../helpers/isfunction');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function falseFactory() { return false; }

@@ -2,7 +2,7 @@
 
 var Scheduler = require('../scheduler');
 var Disposable = require('../disposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function ImmediateScheduler() {
   Scheduler.call(this);

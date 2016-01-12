@@ -2,7 +2,7 @@
 
 var ObservableBase = require('./observablebase');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 global.Rx || (global.Rx = {});
 if (!global.Rx.defaultScheduler) {

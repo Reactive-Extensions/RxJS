@@ -6,7 +6,7 @@ var Observer = require('./observer');
 var ScheduledObserver = require('./observer/scheduledobserver');
 var addProperties = require('./internal/addproperties');
 var cloneArray = require('./internal/clonearray');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 global.Rx || (global.Rx = {});
 if (!global.Rx.currentThreadScheduler) {

@@ -2,7 +2,7 @@
 
 var AbstractObserver = require('./abstractobserver');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatchUtils = require('../internal/trycatchutils');
 var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
 

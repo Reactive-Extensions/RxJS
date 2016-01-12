@@ -3,7 +3,7 @@
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var Disposable = require('../disposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function IncludesObserver(o, elem, n) {
   this._o = o;

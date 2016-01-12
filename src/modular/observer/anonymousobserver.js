@@ -1,7 +1,7 @@
 'use strict';
 
 var AbstractObserver = require('./abstractobserver');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 /**
  * Creates an observer from the specified OnNext, OnError, and OnCompleted actions.

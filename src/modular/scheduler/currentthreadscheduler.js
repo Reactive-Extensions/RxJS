@@ -5,7 +5,7 @@ var ScheduledItem = require('./scheduleditem');
 var PriorityQueue = require('../internal/priorityqueue');
 var tryCatchUtils = require('../internal/trycatchutils');
 var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function CurrentThreadScheduler() {
   Scheduler.call(this);

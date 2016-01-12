@@ -2,7 +2,7 @@
 
 var ObservableBase = require('../observable/observablebase');
 var BinaryDisposable = require('../binarydisposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function AddRefObservable(xs, r) {
   this._xs = xs;

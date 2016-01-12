@@ -3,7 +3,7 @@
 var AnonymousObservable = require('./observable/anonymousobservable');
 var Scheduler = require('./scheduler');
 var errors = require('./internal/errors');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 global.Rx || (global.Rx = {});
 if (!global.Rx.immediateScheduler) {

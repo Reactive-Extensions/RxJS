@@ -3,7 +3,7 @@
 var Disposable = require('../disposable');
 var Observable = require('../observable');
 var Subscription = require('./subscription');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function HotObservable(scheduler, messages) {
   Observable.call(this);

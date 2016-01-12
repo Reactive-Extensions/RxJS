@@ -4,7 +4,7 @@ var CompositeDisposable = require('../compositedisposable');
 var Disposable = require('../disposable');
 var Observable = require('../observable');
 var Subscription = require('./subscription');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function ColdObservable(scheduler, messages) {
   Observable.call(this);

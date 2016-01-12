@@ -2,7 +2,7 @@
 
 var AbstractObserver = require('../observer/abstractobserver');
 var ObservableBase = require('./observablebase');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function ToArrayObserver(o) {
   this.o = o;

@@ -2,7 +2,7 @@
 
 var ObservableBase = require('./observablebase');
 var Disposable = require('../disposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function NeverObservable() {
   ObservableBase.call(this);

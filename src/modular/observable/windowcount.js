@@ -7,7 +7,7 @@ var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var RefCountDisposable = require('../refcountdisposable');
 var ArgumentOutOfRangeError = require('../internal/errors').ArgumentOutOfRangeError;
 var addRef = require('../internal/addref');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function createWindow(state) {
   var s = new Subject();

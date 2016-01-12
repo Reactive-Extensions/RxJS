@@ -1,7 +1,7 @@
 'use strict';
 
 var ScheduledObserver = require('./scheduledobserver');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function ObserveOnObserver(scheduler, observer, cancel) {
   ScheduledObserver.call(this, scheduler, observer);

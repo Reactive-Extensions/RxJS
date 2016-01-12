@@ -6,7 +6,7 @@ var BinaryDisposable = require('../binarydisposable');
 var isPromise = require('../helpers/ispromise');
 var fromPromise = require('./frompromise');
 var noop = require('../helpers/noop');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function TakeUntilObserver(o) {
   this._o = o;

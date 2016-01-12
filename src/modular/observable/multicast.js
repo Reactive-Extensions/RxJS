@@ -4,7 +4,7 @@ var ObservableBase = require('./observablebase');
 var ConnectableObservable = require('./connectableobservable');
 var BinaryDisposable = require('../binarydisposable');
 var isFunction = require('../helpers/isfunction');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function MulticastObservable(source, fn1, fn2) {
   this.source = source;

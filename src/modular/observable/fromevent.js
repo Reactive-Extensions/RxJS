@@ -6,7 +6,7 @@ var publish = require('./publish');
 var CompositeDisposable = require('../compositedisposable');
 var isFunction = require('../helpers/isfunction');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function isNodeList(el) {
   if (global.StaticNodeList) {

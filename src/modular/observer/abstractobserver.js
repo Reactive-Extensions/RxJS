@@ -1,7 +1,7 @@
 'use strict';
 
 var Observer = require('../observer');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var NotImplementedError = require('../internal/errors').NotImplementedError;
 
 function notImplemented() {

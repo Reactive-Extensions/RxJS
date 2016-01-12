@@ -9,7 +9,7 @@ var isArrayLike = require('../helpers/isarraylike');
 var isIterable = require('../helpers/isiterable');
 var bindCallback = require('../internal/bindcallback');
 var isFunction = require('../helpers/isfunction');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatchUtils = require('../internal/trycatchutils');
 var tryCatch = tryCatchUtils.tryCatch;
 

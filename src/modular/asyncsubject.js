@@ -6,7 +6,7 @@ var Observer = require('./observer');
 var InnerSubscription = require('./internal/innersubscription');
 var addProperties = require('./internal/addproperties');
 var cloneArray = require('./internal/clonearray');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 /**
 *  Represents the result of an asynchronous operation.

@@ -7,7 +7,7 @@ var MockObserver = require('./mockobserver');
 var MockPromise = require('./mockpromise');
 var ReactiveTest = require('./reactivetest');
 var VirtualTimeScheduler = require('../scheduler/virtualtimescheduler');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function baseComparer(x, y) { return x > y ? 1 : (x < y ? -1 : 0); }
 

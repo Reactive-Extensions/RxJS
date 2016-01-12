@@ -6,7 +6,7 @@ var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var CompositeDisposable = require('../compositedisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function InnerObserver(parent, sad) {
   this._parent = parent;

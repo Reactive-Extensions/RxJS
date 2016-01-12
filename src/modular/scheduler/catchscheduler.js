@@ -3,7 +3,7 @@
 var Scheduler = require('../scheduler');
 var Disposable = require('../disposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatchUtils = require('../internal/trycatchutils');
 var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
 
@@ -28,7 +28,7 @@ CatchScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
 CatchScheduler.prototype.now = function () { return this._scheduler.now(); };
 
 CatchScheduler.prototype._clone = function (scheduler) {
-    return new CatchScheduler(scheduler, this._handler);
+  return new CatchScheduler(scheduler, this._handler);
 };
 
 CatchScheduler.prototype._wrap = function (action) {

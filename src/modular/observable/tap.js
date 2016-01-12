@@ -5,7 +5,7 @@ var AbstractObserver = require('../observer/abstractobserver');
 var create = require('../observer/create');
 var isFunction = require('../helpers/isfunction');
 var noop = require('../helpers/noop');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function TapObserver(o, p) {

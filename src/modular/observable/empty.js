@@ -3,7 +3,7 @@
 var ObservableBase = require('./observablebase');
 var Disposable = require('../disposable');
 var Scheduler = require('../scheduler');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 global.Rx || (global.Rx = {});
 if (!global.Rx.immediateScheduler) {

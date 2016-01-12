@@ -8,7 +8,7 @@ var bindCallback = require('../internal/bindcallback');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function CatchObserver(o, s, fn) {
   this._o = o;

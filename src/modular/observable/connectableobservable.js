@@ -3,7 +3,7 @@
 var Observable = require('../observable');
 var ObservableBase = require('./observablebase');
 var asObservable = require('./asobservable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function RefCountDisposable(p, s) {
   this._p = p;

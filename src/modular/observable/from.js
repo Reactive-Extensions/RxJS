@@ -5,7 +5,7 @@ var Scheduler = require('../scheduler');
 var isFunction = require('../helpers/isfunction');
 var $iterator$ = require('../helpers/iterator');
 var bindCallback = require('../internal/bindcallback');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 global.Rx || (global.Rx = {});

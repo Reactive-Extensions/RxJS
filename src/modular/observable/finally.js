@@ -1,7 +1,7 @@
 'use strict';
 
 var ObservableBase = require('./observablebase');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var bindCallback = require('../internal/bindcallback');
 var tryCatchUtils = require('../internal/trycatchutils');
 var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;

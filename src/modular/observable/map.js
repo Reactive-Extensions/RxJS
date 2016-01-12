@@ -4,7 +4,7 @@ var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var bindCallback = require('../internal/bindcallback');
 var isFunction = require('../helpers/isfunction');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function MapObserver(o, selector, source) {

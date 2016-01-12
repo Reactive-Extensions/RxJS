@@ -4,7 +4,7 @@ var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var BinaryDisposable = require('../binarydisposable');
 var isScheduler = require('../scheduler').isScheduler;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 global.Rx || (global.Rx = {});
 if (!global.Rx.defaultScheduler) {

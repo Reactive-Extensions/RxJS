@@ -5,7 +5,7 @@ var AbstractObserver = require('../observer/abstractobserver');
 var isFunction = require('../helpers/isfunction');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 var isEqual = require('../internal/isequal');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function arrayIndexOfComparer(array, item, comparer) {
   for (var i = 0, len = array.length; i < len; i++) {

@@ -3,7 +3,7 @@
 var Notification = require('../notification');
 var Observer = require('../observer');
 var Recorded = require('./recorded');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function MockObserver(scheduler) {
   Observer.call(this);

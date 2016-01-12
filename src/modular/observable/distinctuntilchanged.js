@@ -4,7 +4,7 @@ var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var isFunction = require('../helpers/isfunction');
 var isEqual = require('../internal/isequal');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function DistinctUntilChangedObserver(o, fn, cmp) {

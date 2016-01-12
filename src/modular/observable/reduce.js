@@ -2,7 +2,7 @@
 
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractObserver');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 var EmptyError = require('../internal/errors').EmptyError;
 

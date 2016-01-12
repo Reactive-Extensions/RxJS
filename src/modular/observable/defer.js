@@ -5,7 +5,7 @@ var fromPromise = require('./frompromise');
 var throwError = require('./throw');
 var isPromise = require('../helpers/ispromise');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function Defer(factory) {
   this._f = factory;

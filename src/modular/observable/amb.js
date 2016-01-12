@@ -7,7 +7,7 @@ var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var never = require('./never');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 var LEFT_CHOICE = 'L';
 var RIGHT_CHOICE = 'R';

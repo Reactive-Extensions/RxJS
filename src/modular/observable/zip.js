@@ -8,7 +8,7 @@ var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var identity = require('../helpers/identity');
 var isFunction = require('../helpers/isfunction');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function falseFactory() { return false; }

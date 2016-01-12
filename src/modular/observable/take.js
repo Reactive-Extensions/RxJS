@@ -4,7 +4,7 @@ var AbstractObserver = require('../observer/abstractobserver');
 var ObservableBase = require('./observablebase');
 var empty = require('./empty');
 var errors = require('../internal/errors');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function TakeObserver(o, c) {
   this._o = o;

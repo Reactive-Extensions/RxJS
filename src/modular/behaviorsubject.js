@@ -7,7 +7,7 @@ var InnerSubscription = require('./internal/innersubscription');
 var addProperties = require('./internal/addproperties');
 var cloneArray = require('./internal/clonearray');
 var thrower = require('./internal/trycatchutils').thrower;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 /**
 *  Represents a value that changes over time.

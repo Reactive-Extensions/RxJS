@@ -5,7 +5,7 @@ var PriorityQueue = require('../internal/priorityqueue');
 var ScheduledItem = require('./scheduleditem');
 var SchedulePeriodicRecursive = require('./scheduleperiodicrecursive');
 var errors = require('../internal/errors');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function notImplemented() {
   throw new errors.NotImplementedError();

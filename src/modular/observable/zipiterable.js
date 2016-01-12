@@ -9,7 +9,7 @@ var identity = require('../helpers/identity');
 var isFunction = require('../helpers/isfunction');
 var isArrayLike = require('../helpers/isarraylike');
 var isIterable = require('../helpers/isiterable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function falseFactory() { return false; }

@@ -4,7 +4,7 @@ var ObservableBase = require('./observablebase');
 var ScheduledDisposable = require('../scheduleddisposable');
 var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function SubscribeOnObservable(source, s) {
   this.source = source;

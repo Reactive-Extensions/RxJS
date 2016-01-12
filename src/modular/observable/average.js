@@ -6,7 +6,7 @@ var EmptyError = require('../internal/errors').EmptyError;
 var isFunction = require('../helpers/isfunction');
 var bindCallback = require('../internal/bindcallback');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 
 function AverageObserver(o, fn, s) {

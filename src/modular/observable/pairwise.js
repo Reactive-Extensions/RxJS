@@ -2,7 +2,7 @@
 
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function PairwiseObserver(o) {
   this._o = o;

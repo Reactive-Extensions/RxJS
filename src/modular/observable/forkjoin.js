@@ -8,7 +8,7 @@ var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var isFunction = require('../helpers/isfunction');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
-var inherits = require('util').inherits;
+var inherits = require('inherits');
 
 function argumentsToArray() {
   var len = arguments.length, args = new Array(len);
