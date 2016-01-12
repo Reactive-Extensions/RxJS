@@ -49,7 +49,27 @@ var subscription = source.subscribe(
 // => Next: { value: 42 }
 // => Next: { value: 24 }
 // => Completed
+
+/* With comparer */
+var source = Rx.Observable.of({value: 42}, {value: 42}, {value: 24}, {value: 24})
+  .distinctUntilChanged(function (x) { return x.value; }, function (a,b) { return a !== b; });
+
+var subscription = source.subscribe(
+    function (x) {
+        console.dir('Next: ' + x.toString());
+    },
+    function (err) {
+        console.log('Error: ' + err);
+    },
+    function () {
+        console.log('Completed');
+    });
+
+// => Next: { value: 42 }
+// => Next: { value: 42 }
+// => Completed
 ```
+
 ### Location
 
 File:
