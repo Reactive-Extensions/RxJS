@@ -9,6 +9,8 @@ var addRef = require('../internal/addref');
 var noop = require('../helpers/noop');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
+require('es6-map/implement');
+
 module.exports = function groupJoin(left, right, leftDurationSelector, rightDurationSelector, resultSelector) {
   return new AnonymousObservable(function (o) {
     var group = new CompositeDisposable();
