@@ -1338,7 +1338,7 @@ var isEqual = Rx.internals.isEqual = function (value, other) {
       scheduleMethod = function (action) {
         var id = nextHandle++;
         tasksByHandle[id] = action;
-        root.postMessage(MSG_PREFIX + currentId, '*');
+        root.postMessage(MSG_PREFIX + id, '*');
         return id;
       };
     } else if (!!root.MessageChannel) {
@@ -7553,6 +7553,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     EventPatternDisposable.prototype.dispose = function () {
       if(!this.isDisposed) {
         isFunction(this._del) && this._del(this._fn, this._ret);
+        this.isDisposed = true;
       }
     };
 
@@ -9478,7 +9479,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       return _observableTimer(dueTime, scheduler);
     }
     if (dueTime instanceof Date && period !== undefined) {
-      return observableTimerDateAndPeriod(dueTime.getTime(), periodOrScheduler, scheduler);
+      return observableTimerDateAndPeriod(dueTime, periodOrScheduler, scheduler);
     }
     return observableTimerTimeSpanAndPeriod(dueTime, period, scheduler);
   };
