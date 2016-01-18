@@ -14,7 +14,7 @@ module.exports = function join (left, right, leftDurationSelector, rightDuration
     var group = new CompositeDisposable();
     var leftDone = false, rightDone = false;
     var leftId = 0, rightId = 0;
-    var leftMap = new global.Map(), rightMap = global.Map();
+    var leftMap = new global.Map(), rightMap = new global.Map();
     var handleError = function (e) { o.onError(e); };
 
     group.add(left.subscribe(
