@@ -42,7 +42,7 @@ test('Observable#window closings basic', function (t) {
 
   var results = scheduler.startScheduler(function () {
     return xs.window(function () {
-      return Observable.timer(window++ * 100, null, scheduler);
+      return Observable.timer(window++ * 100, scheduler);
     }).map(function (w, i) {
       return w.map(function (x) { return i + ' ' + x; });
     }).mergeAll();
@@ -88,7 +88,7 @@ test('Observable#window closings Dispose', function (t) {
 
   var results = scheduler.startScheduler(function () {
     return xs.window(function () {
-      return Observable.timer(window++ * 100, null, scheduler);
+      return Observable.timer(window++ * 100, scheduler);
     }).map(function (w, i) {
       return w.map(function (x) { return i + ' ' + x; });
     }).mergeAll();
@@ -131,7 +131,7 @@ test('Observable#window closings Error', function (t) {
 
   var results = scheduler.startScheduler(function () {
     return xs.window(function () {
-      return Observable.timer(window++ * 100, null, scheduler);
+      return Observable.timer(window++ * 100, scheduler);
     }).map(function (w, i) {
       return w.map(function (x) { return i + ' ' + x; });
     }).mergeAll();
@@ -228,7 +228,7 @@ test('Observable#window closings window close error', function (t) {
   t.end();
 });
 
-test('Observable#window closings Default', function (t) {
+test('Observable#window closings default', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -249,7 +249,7 @@ test('Observable#window closings Default', function (t) {
 
   var results = scheduler.startScheduler(function () {
     return xs.window(function () {
-      return Observable.timer(window++ * 100, null, scheduler);
+      return Observable.timer(window++ * 100, scheduler);
     }).map(function (w, i) {
       return w.map(function (x) { return i + ' ' + x; });
     }).mergeAll();
@@ -301,7 +301,7 @@ test('Observable#window opening closings basic', function (t) {
 
   var results = scheduler.startScheduler(function () {
     return xs.window(ys, function (x) {
-      return Observable.timer(x, null, scheduler);
+      return Observable.timer(x, scheduler);
     }).map(function (w, i) {
       return w.map(function (x) { return i + ' ' + x; });
     }).mergeAll();
@@ -402,7 +402,7 @@ test('Observable#window opening closings dispose', function (t) {
 
   var results = scheduler.startScheduler(function () {
     return xs.window(ys, function (x) {
-      return Observable.timer(x, null, scheduler);
+      return Observable.timer(x, scheduler);
     }).map(function (w, i) {
       return w.map(function (x) { return i + ' ' + x; });
     }).mergeAll();
@@ -452,7 +452,7 @@ test('Observable#window opening closings data error', function (t) {
 
   var results = scheduler.startScheduler(function () {
     return xs.window(ys, function (x) {
-      return Observable.timer(x, null, scheduler);
+      return Observable.timer(x, scheduler);
     }).map(function (w, i) {
         return w.map(function (x) { return i + ' ' + x; });
     }).mergeAll();
@@ -506,7 +506,7 @@ test('Observable#window opening closings window error', function (t) {
 
   var results = scheduler.startScheduler(function () {
     return xs.window(ys, function (x) {
-      return Observable.timer(x, null, scheduler);
+      return Observable.timer(x, scheduler);
     }).map(function (w, i) {
       return w.map(function (x) { return i + ' ' + x; });
     }).mergeAll();

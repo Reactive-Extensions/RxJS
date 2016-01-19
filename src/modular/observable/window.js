@@ -12,30 +12,32 @@ var groupJoin = require('./groupjoin');
 var take = require('./take');
 var addRef = require('../internal/addref');
 var isPromise = require('../helpers/ispromise');
+var isFunction = require('../helpers/isfunction');
 var noop = require('../helpers/noop');
+var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function returnWindow(x, win) { return win; }
 
 function observableWindowWithOpenings(source, windowOpenings, windowClosingSelector) {
-  return groupJoin(source, windowOpenings, windowClosingSelector, empty, returnWindow);
+  return groupJoin(windowOpenings, source, windowClosingSelector, empty, returnWindow);
 }
 
 function observableWindowWithBoundaries(source, windowBoundaries) {
-  return new AnonymousObservable(function (observer) {
+  return new AnonymousObservable(function (o) {
     var win = new Subject(),
       d = new CompositeDisposable(),
       r = new RefCountDisposable(d);
 
-    observer.onNext(addRef(win, r));
+    o.onNext(addRef(win, r));
 
     d.add(source.subscribe(function (x) {
       win.onNext(x);
     }, function (err) {
       win.onError(err);
-      observer.onError(err);
+      o.onError(err);
     }, function () {
       win.onCompleted();
-      observer.onCompleted();
+      o.onCompleted();
     }));
 
     isPromise(windowBoundaries) && (windowBoundaries = fromPromise(windowBoundaries));
@@ -43,13 +45,13 @@ function observableWindowWithBoundaries(source, windowBoundaries) {
     d.add(windowBoundaries.subscribe(function () {
       win.onCompleted();
       win = new Subject();
-      observer.onNext(addRef(win, r));
+      o.onNext(addRef(win, r));
     }, function (err) {
       win.onError(err);
-      observer.onError(err);
+      o.onError(err);
     }, function () {
       win.onCompleted();
-      observer.onCompleted();
+      o.onCompleted();
     }));
 
     return r;
@@ -57,42 +59,38 @@ function observableWindowWithBoundaries(source, windowBoundaries) {
 }
 
 function observableWindowWithClosingSelector(source, windowClosingSelector) {
-  return new AnonymousObservable(function (observer) {
+  return new AnonymousObservable(function (o) {
     var m = new SerialDisposable(),
       d = new CompositeDisposable(m),
       r = new RefCountDisposable(d),
       win = new Subject();
-    observer.onNext(addRef(win, r));
+    o.onNext(addRef(win, r));
     d.add(source.subscribe(function (x) {
-      win.onNext(x);
+        win.onNext(x);
     }, function (err) {
-      win.onError(err);
-      observer.onError(err);
+        win.onError(err);
+        o.onError(err);
     }, function () {
-      win.onCompleted();
-      observer.onCompleted();
+        win.onCompleted();
+        o.onCompleted();
     }));
 
     function createWindowClose () {
-      var windowClose;
-      try {
-        windowClose = windowClosingSelector();
-      } catch (e) {
-        observer.onError(e);
-        return;
+      var windowClose = tryCatch(windowClosingSelector)();
+      if (windowClose === global.Rx.errorObj) {
+        return o.onError(windowClose.e);
       }
-
       isPromise(windowClose) && (windowClose = fromPromise(windowClose));
 
       var m1 = new SingleAssignmentDisposable();
       m.setDisposable(m1);
       m1.setDisposable(take(windowClose, 1).subscribe(noop, function (err) {
         win.onError(err);
-        observer.onError(err);
+        o.onError(err);
       }, function () {
         win.onCompleted();
         win = new Subject();
-        observer.onNext(addRef(win, r));
+        o.onNext(addRef(win, r));
         createWindowClose();
       }));
     }
@@ -110,10 +108,10 @@ function observableWindowWithClosingSelector(source, windowClosingSelector) {
  *  @returns {Observable} An observable sequence of windows.
  */
 module.exports = function window (source, windowOpeningsOrClosingSelector, windowClosingSelector) {
-  if (arguments.length === 2 && typeof arguments[1] !== 'function') {
+  if (!windowClosingSelector && !isFunction(windowOpeningsOrClosingSelector)) {
     return observableWindowWithBoundaries(source, windowOpeningsOrClosingSelector);
   }
-  return typeof windowOpeningsOrClosingSelector === 'function' ?
+  return isFunction(windowOpeningsOrClosingSelector) ?
     observableWindowWithClosingSelector(source, windowOpeningsOrClosingSelector) :
     observableWindowWithOpenings(source, windowOpeningsOrClosingSelector, windowClosingSelector);
 };
