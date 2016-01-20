@@ -11,8 +11,8 @@ var addRef = require('../internal/addref');
 var isScheduler = require('../scheduler').isScheduler;
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.defaultScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.defaultScheduler) {
 	require('../scheduler/defaultscheduler');
 }
 
@@ -101,7 +101,7 @@ WindowTimeObservable.prototype.subscribeCore = function (o) {
 module.exports = function (source, timeSpan, timeShiftOrScheduler, scheduler) {
 	var timeShift;
 	timeShiftOrScheduler == null && (timeShift = timeSpan);
-	isScheduler(scheduler) || (scheduler = global.Rx.defaultScheduler);
+	isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
 	if (typeof timeShiftOrScheduler === 'number') {
 		timeShift = timeShiftOrScheduler;
 	} else if (isScheduler(timeShiftOrScheduler)) {

@@ -19,7 +19,7 @@ inherits(FindValueObserver, AbstractObserver);
 
 FindValueObserver.prototype.next = function (x) {
   var shouldRun = tryCatch(this._cb)(x, this._i, this._s);
-  if (shouldRun === global.Rx.errorObj) { return this._o.onError(shouldRun.e); }
+  if (shouldRun === global._Rx.errorObj) { return this._o.onError(shouldRun.e); }
   if (shouldRun) {
     this._o.onNext(this._y ? this._i : x);
     this._o.onCompleted();

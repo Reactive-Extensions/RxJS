@@ -19,7 +19,7 @@ inherits(TakeWhileObserver, AbstractObserver);
 TakeWhileObserver.prototype.next = function (x) {
   if (this._r) {
     this._r = tryCatch(this._p._fn)(x, this._i++, this._p);
-    if (this._r === global.Rx.errorObj) { return this._o.onError(this._r.e); }
+    if (this._r === global._Rx.errorObj) { return this._o.onError(this._r.e); }
   }
   if (this._r) {
     this._o.onNext(x);

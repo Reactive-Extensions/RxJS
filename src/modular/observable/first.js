@@ -21,7 +21,7 @@ inherits(FirstObserver, AbstractObserver);
 FirstObserver.prototype.next = function (x) {
   if (this._obj.predicate) {
     var res = tryCatch(this._obj.predicate)(x, this._i++, this._s);
-    if (res === global.Rx.errorObj) { return this._o.onError(res.e); }
+    if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
     if (Boolean(res)) {
       this._o.onNext(x);
       this._o.onCompleted();

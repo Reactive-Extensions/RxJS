@@ -43,7 +43,7 @@ function scheduleMethod(state, recurse) {
     return;
   }
   var res = tryCatch(work)();
-  if (res === global.Rx.errorObj) {
+  if (res === global._Rx.errorObj) {
     state.queue = [];
     state.hasFaulted = true;
     return thrower(res.e);

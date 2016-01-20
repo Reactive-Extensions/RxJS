@@ -5,8 +5,8 @@ var tryCatch = require('../internal/trycatchutils').tryCatch;
 var isScheduler = require('../scheduler').isScheduler;
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.defaultScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.defaultScheduler) {
   require('../scheduler/defaultscheduler');
 }
 
@@ -29,15 +29,15 @@ function scheduleRecursive(state, recurse) {
     state.first = false;
   } else {
     state.newState = tryCatch(state.self._itrFn)(state.newState);
-    if (state.newState === global.Rx.errorObj) { return state.o.onError(state.newState.e); }
+    if (state.newState === global._Rx.errorObj) { return state.o.onError(state.newState.e); }
   }
   state.hasResult = tryCatch(state.self._cndFn)(state.newState);
-  if (state.hasResult === global.Rx.errorObj) { return state.o.onError(state.hasResult.e); }
+  if (state.hasResult === global._Rx.errorObj) { return state.o.onError(state.hasResult.e); }
   if (state.hasResult) {
     var result = tryCatch(state.self._resFn)(state.newState);
-    if (result === global.Rx.errorObj) { return state.o.onError(result.e); }
+    if (result === global._Rx.errorObj) { return state.o.onError(result.e); }
     var time = tryCatch(state.self._timeFn)(state.newState);
-    if (time === global.Rx.errorObj) { return state.o.onError(time.e); }
+    if (time === global._Rx.errorObj) { return state.o.onError(time.e); }
     recurse(state, time);
   } else {
     state.o.onCompleted();
@@ -57,6 +57,6 @@ GenerateAbsoluteObservable.prototype.subscribeCore = function (o) {
 
 
 module.exports = function generateAbsolute (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-  isScheduler(scheduler) || (scheduler = global.Rx.defaultScheduler);
+  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
   return new GenerateAbsoluteObservable(initialState, condition, iterate, resultSelector, timeSelector, scheduler);
 };

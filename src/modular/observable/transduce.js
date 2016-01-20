@@ -15,7 +15,7 @@ inherits(TransduceObserver, AbstractObserver);
 
 TransduceObserver.prototype.next = function (x) {
   var res = tryCatch(this._xform['@@transducer/step']).call(this._xform, this._o, x);
-  if (res === global.Rx.errorObj) { this._o.onError(res.e); }
+  if (res === global._Rx.errorObj) { this._o.onError(res.e); }
 };
 
 TransduceObserver.prototype.error = function (e) { this._o.onError(e); };

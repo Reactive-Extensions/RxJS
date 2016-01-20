@@ -33,7 +33,7 @@ FlatMapObserver.prototype._wrapResult = function(result, x, i) {
 FlatMapObserver.prototype.next = function(x) {
   var i = this.i++;
   var result = tryCatch(this._fn)(x, i, this.source);
-  if (result === global.Rx.errorObj) { return this._o.onError(result.e); }
+  if (result === global._Rx.errorObj) { return this._o.onError(result.e); }
 
   isPromise(result) && (result = fromPromise(result));
   (isArrayLike(result) || isIterable(result)) && (result = observableFrom(result));

@@ -18,7 +18,7 @@ inherits(SomeObserver, AbstractObserver);
 
 SomeObserver.prototype.next = function (x) {
   var result = tryCatch(this._fn)(x, this._i++, this._s);
-  if (result === global.Rx.errorObj) { return this._o.onError(result.e); }
+  if (result === global._Rx.errorObj) { return this._o.onError(result.e); }
   if (Boolean(result)) {
     this._o.onNext(true);
     this._o.onCompleted();

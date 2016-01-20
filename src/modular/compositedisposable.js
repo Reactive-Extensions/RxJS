@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /**
  * Represents a group of disposable resources that are disposed together.

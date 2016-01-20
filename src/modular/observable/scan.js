@@ -28,7 +28,7 @@ ScanObserver.prototype.next = function (x) {
     this._a = this._hs ? tryCatch(this._fn)(this._s, x, this._i, this._p) : x;
     this._ha = true;
   }
-  if (this._a === global.Rx.errorObj) { return this._o.onError(this._a.e); }
+  if (this._a === global._Rx.errorObj) { return this._o.onError(this._a.e); }
   this._o.onNext(this._a);
   this._i++;
 };

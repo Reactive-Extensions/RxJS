@@ -4,8 +4,8 @@ var ObservableBase = require('./observablebase');
 var Scheduler = require('../scheduler');
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.currentThreadScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.currentThreadScheduler) {
   require('../scheduler/currentthreadscheduler');
 }
 
@@ -33,6 +33,6 @@ FromArrayObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function fromArray(array, scheduler) {
-  Scheduler.isScheduler(scheduler) || (scheduler = global.Rx.currentThreadScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
   return new FromArrayObservable(array, scheduler);
 };

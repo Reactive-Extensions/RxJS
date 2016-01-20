@@ -38,7 +38,7 @@ DistinctObserver.prototype.next = function (x) {
   var key = x;
   if (isFunction(this._keyFn)) {
     key = tryCatch(this._keyFn)(x);
-    if (key === global.Rx.errorObj) { return this._o.onError(key.e); }
+    if (key === global._Rx.errorObj) { return this._o.onError(key.e); }
   }
   this._h.push(key) && this._o.onNext(x);
 };

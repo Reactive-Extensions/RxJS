@@ -12,8 +12,8 @@ var isScheduler = require('../scheduler').isScheduler;
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.defaultScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.defaultScheduler) {
   require('../scheduler/defaultscheduler');
 }
 
@@ -57,7 +57,7 @@ DebounceObserver.prototype.completed = function () {
 };
 
 function DebounceObservable(source, dt, s) {
-  isScheduler(s) || (s = global.Rx.defaultScheduler);
+  isScheduler(s) || (s = global._Rx.defaultScheduler);
   this.source = source;
   this._dt = dt;
   this._s = s;
@@ -82,7 +82,7 @@ inherits(DebounceSelectorObserver, AbstractObserver);
 
 DebounceSelectorObserver.prototype.next = function (x) {
   var throttle = tryCatch(this._s.fn)(x);
-  if (throttle === global.Rx.errorObj) { return this._s.o.onError(throttle.e); }
+  if (throttle === global._Rx.errorObj) { return this._s.o.onError(throttle.e); }
 
   isPromise(throttle) && (throttle = fromPromise(throttle));
 

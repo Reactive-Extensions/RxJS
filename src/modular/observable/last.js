@@ -24,7 +24,7 @@ LastObserver.prototype.next = function (x) {
   var shouldYield = false;
   if (this._obj.predicate) {
     var res = tryCatch(this._obj.predicate)(x, this._i++, this._s);
-    if (res === global.Rx.errorObj) { return this._o.onError(res.e); }
+    if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
     Boolean(res) && (shouldYield = true);
   } else if (!this._obj.predicate) {
     shouldYield = true;

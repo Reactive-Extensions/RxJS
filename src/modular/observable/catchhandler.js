@@ -23,7 +23,7 @@ CatchObserver.prototype.next = function (x) { this._o.onNext(x); };
 CatchObserver.prototype.completed = function () { return this._o.onCompleted(); };
 CatchObserver.prototype.error = function (e) {
   var result = tryCatch(this._fn)(e);
-  if (result === global.Rx.errorObj) { return this._o.onError(result.e); }
+  if (result === global._Rx.errorObj) { return this._o.onError(result.e); }
   isPromise(result) && (result = fromPromise(result));
 
   var d = new SingleAssignmentDisposable();

@@ -34,7 +34,7 @@ function createHandler(o, fn) {
     var results = arguments[0];
     if (isFunction(fn)) {
       results = tryCatch(fn).apply(null, arguments);
-      if (results === global.Rx.errorObj) { return o.onError(results.e); }
+      if (results === global._Rx.errorObj) { return o.onError(results.e); }
     }
     o.onNext(results);
   };

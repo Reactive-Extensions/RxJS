@@ -4,8 +4,8 @@ var ObservableBase = require('./observablebase');
 var Scheduler = require('../scheduler');
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.currentThreadScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.currentThreadScheduler) {
   require('../scheduler/currentthreadscheduler');
 }
 
@@ -44,6 +44,6 @@ RangeObservable.prototype.subscribeCore = function (o) {
 * @returns {Observable} An observable sequence that contains a range of sequential integral numbers.
 */
 module.exports = function range(start, count, scheduler) {
-  Scheduler.isScheduler(scheduler) || (scheduler = global.Rx.currentThreadScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
   return new RangeObservable(start, count, scheduler);
 };

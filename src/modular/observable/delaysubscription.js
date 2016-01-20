@@ -5,8 +5,8 @@ var SerialDisposable = require('../serialdisposable');
 var isScheduler = require('../scheduler').isScheduler;
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.defaultScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.defaultScheduler) {
   require('../scheduler/defaultscheduler');
 }
 
@@ -37,6 +37,6 @@ DelaySubscription.prototype.subscribeCore = function (o) {
  * @returns {Observable} Time-shifted sequence.
  */
 module.exports = function delaySubscription (source, dueTime, scheduler) {
-  isScheduler(scheduler) || (scheduler = global.Rx.defaultScheduler);
+  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
   return new DelaySubscription(source, dueTime, scheduler);
 };

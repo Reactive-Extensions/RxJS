@@ -9,8 +9,8 @@ var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.currentThreadScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.currentThreadScheduler) {
   require('../scheduler/currentthreadscheduler');
 }
 
@@ -70,7 +70,7 @@ CatchObservable.prototype.subscribeCore = function (o) {
     o: o
   };
 
-  var cancelable = global.Rx.currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
+  var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
   return new NAryDisposable([subscription, cancelable, new IsDisposedDisposable(state)]);
 };
 

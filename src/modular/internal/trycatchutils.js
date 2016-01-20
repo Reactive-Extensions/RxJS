@@ -2,8 +2,8 @@
 
 var isFunction = require('../helpers/isfunction');
 
-global.Rx || (global.Rx = {});
-var errorObj = global.Rx.errorObj = {e: {}};
+global._Rx || (global._Rx = {});
+var errorObj = global._Rx.errorObj = {e: {}};
 
 function tryCatcherGen(tryCatchTarget) {
   return function tryCatcher() {

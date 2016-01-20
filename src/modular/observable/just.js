@@ -5,8 +5,8 @@ var Disposable = require('../disposable');
 var Scheduler = require('../scheduler');
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.immediateScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.immediateScheduler) {
   require('../scheduler/immediatescheduler');
 }
 
@@ -27,12 +27,12 @@ inherits(JustObservable, ObservableBase);
 
 JustObservable.prototype.subscribeCore = function (o) {
   var state = [this._value, o];
-  return this._scheduler === global.Rx.immediateScheduler ?
+  return this._scheduler === global._Rx.immediateScheduler ?
     scheduleItem(null, state) :
     this._scheduler.schedule(state, scheduleItem);
 };
 
 module.exports = function just(value, scheduler) {
-  Scheduler.isScheduler(scheduler) || (scheduler = global.Rx.immediateScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.immediateScheduler);
   return new JustObservable(value, scheduler);
 };

@@ -8,8 +8,8 @@ var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var isScheduler = require('../scheduler').isScheduler;
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.defaultScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.defaultScheduler) {
   require('../scheduler/defaultscheduler');
 }
 
@@ -74,7 +74,7 @@ SampleObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function sample(source, intervalOrSampler, scheduler) {
-  isScheduler(scheduler) || (scheduler = global.Rx.defaultScheduler);
+  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
   return typeof intervalOrSampler === 'number' ?
     new SampleObservable(source, interval(intervalOrSampler, scheduler)) :
     new SampleObservable(source, intervalOrSampler);

@@ -16,7 +16,7 @@ FinallyDisposable.prototype.dispose = function () {
   if (!this.isDisposed) {
     var res = tryCatch(this._s.dispose).call(this._s);
     this._fn();
-    res === global.Rx.errorObj && thrower(res.e);
+    res === global._Rx.errorObj && thrower(res.e);
   }
 };
 
@@ -30,7 +30,7 @@ inherits(FinallyObservable, ObservableBase);
 
 FinallyObservable.prototype.subscribeCore = function (o) {
   var d = tryCatch(this.source.subscribe).call(this.source, o);
-  if (d === global.Rx.errorObj) {
+  if (d === global._Rx.errorObj) {
     this._fn();
     thrower(d.e);
   }

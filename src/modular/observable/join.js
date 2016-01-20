@@ -25,7 +25,7 @@ module.exports = function join (left, right, leftDurationSelector, rightDuration
         group.add(md);
 
         var duration = tryCatch(leftDurationSelector)(value);
-        if (duration === global.Rx.errorObj) { return o.onError(duration.e); }
+        if (duration === global._Rx.errorObj) { return o.onError(duration.e); }
 
         md.setDisposable(take(duration, 1).subscribe(
           noop,
@@ -37,7 +37,7 @@ module.exports = function join (left, right, leftDurationSelector, rightDuration
 
         rightMap.forEach(function (v) {
           var result = tryCatch(resultSelector)(value, v);
-          if (result === global.Rx.errorObj) { return o.onError(result.e); }
+          if (result === global._Rx.errorObj) { return o.onError(result.e); }
           o.onNext(result);
         });
       },
@@ -56,7 +56,7 @@ module.exports = function join (left, right, leftDurationSelector, rightDuration
         group.add(md);
 
         var duration = tryCatch(rightDurationSelector)(value);
-        if (duration === global.Rx.errorObj) { return o.onError(duration.e); }
+        if (duration === global._Rx.errorObj) { return o.onError(duration.e); }
 
         md.setDisposable(take(duration, 1).subscribe(
           noop,
@@ -68,7 +68,7 @@ module.exports = function join (left, right, leftDurationSelector, rightDuration
 
         leftMap.forEach(function (v) {
           var result = tryCatch(resultSelector)(v, value);
-          if (result === global.Rx.errorObj) { return o.onError(result.e); }
+          if (result === global._Rx.errorObj) { return o.onError(result.e); }
           o.onNext(result);
         });
       },

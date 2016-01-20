@@ -8,8 +8,8 @@ var AutoDetachObserver = require('../observer/autodetachobserver');
 var tryCatchUtils = require('../internal/trycatchutils');
 var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.currentThreadScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.currentThreadScheduler) {
   require('../scheduler/currentthreadscheduler');
 }
 
@@ -22,7 +22,7 @@ function fixSubscriber(subscriber) {
 function setDisposable(s, state) {
   var ado = state[0], self = state[1];
   var sub = tryCatch(self.__subscribe).call(self, ado);
-  if (sub === global.Rx.errorObj && !ado.fail(sub.e)) { thrower(sub.e); }
+  if (sub === global._Rx.errorObj && !ado.fail(sub.e)) { thrower(sub.e); }
   ado.setDisposable(fixSubscriber(sub));
 }
 
@@ -37,8 +37,8 @@ inherits(AnonymousObservable, Observable);
 AnonymousObservable.prototype._subscribe = function (o) {
   var ado = new AutoDetachObserver(o), state = [ado, this];
 
-  if (global.Rx.currentThreadScheduler.scheduleRequired()) {
-    global.Rx.currentThreadScheduler.schedule(state, setDisposable);
+  if (global._Rx.currentThreadScheduler.scheduleRequired()) {
+    global._Rx.currentThreadScheduler.schedule(state, setDisposable);
   } else {
     setDisposable(null, state);
   }

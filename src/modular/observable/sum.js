@@ -20,7 +20,7 @@ inherits(SumObserver, AbstractObserver);
 SumObserver.prototype.next = function (x) {
   if (this._fn) {
     var result = tryCatch(this._fn)(x, this._i++, this._s);
-    if (result === global.Rx.errorObj) { return this._o.onError(result.e); }
+    if (result === global._Rx.errorObj) { return this._o.onError(result.e); }
     this._c += result;
   } else {
     this._c += x;

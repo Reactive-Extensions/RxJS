@@ -52,9 +52,9 @@ function createEventListener (el, eventName, handler) {
 /**
  * Configuration option to determine whether to use native events only
  */
-
-global.Rx.config || (global.Rx.config = {});
-global.Rx.config.useNativeEvents = false;
+global._Rx || (global._Rx = {});
+global._Rx.config || (global._Rx.config = {});
+global._Rx.config.useNativeEvents = false;
 
 function EventObservable(el, name, fn) {
   this._el = el;
@@ -70,7 +70,7 @@ function createHandler(o, fn) {
     var results = arguments[0];
     if (isFunction(fn)) {
       results = tryCatch(fn).apply(null, arguments);
-      if (results === global.Rx.errorObj) { return o.onError(results.e); }
+      if (results === global._Rx.errorObj) { return o.onError(results.e); }
     }
     o.onNext(results);
   };
@@ -100,7 +100,7 @@ module.exports = function fromEvent(element, eventName, selector) {
   }
 
   // Use only if non-native events are allowed
-  if (!global.Rx.config.useNativeEvents) {
+  if (!global._Rx.config.useNativeEvents) {
     // Handles jq, Angular.js, Zepto, Marionette, Ember.js
     if (typeof element.on === 'function' && typeof element.off === 'function') {
       return fromEventPattern(

@@ -8,8 +8,8 @@ var addProperties = require('./internal/addproperties');
 var cloneArray = require('./internal/clonearray');
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.currentThreadScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.currentThreadScheduler) {
   require('../scheduler/currentthreadscheduler');
 }
 
@@ -36,7 +36,7 @@ function createRemovableDisposable(subject, observer) {
 function ReplaySubject(bufferSize, windowSize, scheduler) {
   this.bufferSize = bufferSize == null ? MAX_SAFE_INTEGER : bufferSize;
   this.windowSize = windowSize == null ? MAX_SAFE_INTEGER : windowSize;
-  this.scheduler = scheduler || global.Rx.currentThreadScheduler;
+  this.scheduler = scheduler || global._Rx.currentThreadScheduler;
   this.q = [];
   this.observers = [];
   this.isStopped = false;

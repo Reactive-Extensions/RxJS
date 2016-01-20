@@ -9,8 +9,8 @@ var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.immediateScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.immediateScheduler) {
   require('../scheduler/immediatescheduler');
 }
 
@@ -53,7 +53,7 @@ OnErrorResumeNextObservable.prototype.subscribeCore = function (o) {
       o: o,
       sources: this.sources
     },
-    cancellable = global.Rx.immediateScheduler.scheduleRecursive(state, scheduleMethod);
+    cancellable = global._Rx.immediateScheduler.scheduleRecursive(state, scheduleMethod);
   return new BinaryDisposable(subscription, cancellable);
 };
 

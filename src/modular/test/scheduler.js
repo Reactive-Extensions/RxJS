@@ -6,8 +6,8 @@ var Disposable = require('../disposable');
 var inherits = require('inherits');
 var test = require('tape');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.immediateScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.immediateScheduler) {
   require('../scheduler/immediatescheduler');
 }
 
@@ -123,7 +123,7 @@ test('scheduler schedule with time recursive', function (t) {
 });
 
 test('catch builtin swallow shallow', function (t) {
-  var swallow = global.Rx.immediateScheduler.catchError(function () { return true; });
+  var swallow = global._Rx.immediateScheduler.catchError(function () { return true; });
 
   swallow.schedule(null, function () { throw new Error('Should be swallowed'); });
 
@@ -132,7 +132,7 @@ test('catch builtin swallow shallow', function (t) {
 });
 
 test('catch builtin swallow recursive', function (t) {
-  var swallow = global.Rx.immediateScheduler.catchError(function () { return true; });
+  var swallow = global._Rx.immediateScheduler.catchError(function () { return true; });
 
   swallow.schedule(42, function (self) {
     return self.schedule(null, function () { new Error('Should be swallowed'); });
@@ -159,7 +159,7 @@ MyErrorScheduler.prototype.schedule = function (state, action) {
 };
 
 MyErrorScheduler.prototype.schedulePeriodic = function (state, period, action) {
-  global.Rx.immediateScheduler.schedule(this, function (_, self) {
+  global._Rx.immediateScheduler.schedule(this, function (_, self) {
     try {
       var s = state;
       for(var i = 0; true; i++) {

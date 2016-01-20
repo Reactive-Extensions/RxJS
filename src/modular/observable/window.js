@@ -77,7 +77,7 @@ function observableWindowWithClosingSelector(source, windowClosingSelector) {
 
     function createWindowClose () {
       var windowClose = tryCatch(windowClosingSelector)();
-      if (windowClose === global.Rx.errorObj) {
+      if (windowClose === global._Rx.errorObj) {
         return o.onError(windowClose.e);
       }
       isPromise(windowClose) && (windowClose = fromPromise(windowClose));

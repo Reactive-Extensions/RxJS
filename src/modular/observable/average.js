@@ -23,7 +23,7 @@ inherits(AverageObserver, AbstractObserver);
 AverageObserver.prototype.next = function (x) {
   if(this._fn) {
     var r = tryCatch(this._fn)(x, this._c++, this._s);
-    if (r === global.Rx.errorObj) { return this._o.onError(r.e); }
+    if (r === global._Rx.errorObj) { return this._o.onError(r.e); }
     this._t += r;
   } else {
     this._c++;

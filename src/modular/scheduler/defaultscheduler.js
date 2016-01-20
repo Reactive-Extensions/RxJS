@@ -29,7 +29,7 @@ var scheduleMethod, clearMethod;
         var result = tryCatch(task)();
         clearMethod(handle);
         currentlyRunning = false;
-        if (result === global.Rx.errorObj) { thrower(result.e); }
+        if (result === global._Rx.errorObj) { thrower(result.e); }
       }
     }
   }
@@ -168,5 +168,7 @@ DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
   return new BinaryDisposable(disposable, new ClearDisposable(global.clearTimeout, id));
 };
 
-global.Rx || (global.Rx = {});
-global.Rx.defaultScheduler = new DefaultScheduler();
+global._Rx || (global._Rx = {});
+global._Rx.defaultScheduler = new DefaultScheduler();
+
+Scheduler.default = global._Rx.defaultScheduler;

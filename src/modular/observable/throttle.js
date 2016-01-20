@@ -5,8 +5,8 @@ var AbstractObserver = require('../observer/abstractobserver');
 var isScheduler = require('../scheduler').isScheduler;
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.defaultScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.defaultScheduler) {
   require('../scheduler/defaultscheduler');
 }
 
@@ -46,7 +46,7 @@ ThrottleObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function throttle(source, windowDuration, scheduler) {
-  isScheduler(scheduler) || (scheduler = global.Rx.defaultScheduler);
+  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
   var duration = +windowDuration || 0;
   if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
   return new ThrottleObservable(source, duration, scheduler);

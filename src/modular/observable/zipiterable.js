@@ -44,7 +44,7 @@ ZipIterableObserver.prototype.next = function (x) {
   if (this._s.q.every(notEmpty)) {
     var queuedValues = this._s.q.map(shiftEach),
         res = tryCatch(this._s.cb).apply(null, queuedValues);
-    if (res === global.Rx.errorObj) { return this._s.o.onError(res.e); }
+    if (res === global._Rx.errorObj) { return this._s.o.onError(res.e); }
     this._s.o.onNext(res);
   } else if (this._s.done.filter(notTheSame(this._i)).every(identity)) {
     this._s.o.onCompleted();

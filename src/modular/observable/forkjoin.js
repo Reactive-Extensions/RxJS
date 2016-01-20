@@ -52,7 +52,7 @@ ForkJoinObserver.prototype.completed = function () {
     this._s.finished = true;
 
     var res = tryCatch(this._cb).apply(null, this._s.results);
-    if (res === global.Rx.errorObj) { return this._o.onError(res.e); }
+    if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
 
     this._o.onNext(res);
     this._o.onCompleted();

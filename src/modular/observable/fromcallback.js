@@ -12,7 +12,7 @@ function createCbHandler(o, ctx, selector) {
 
     if (isFunction(selector)) {
       results = tryCatch(selector).apply(ctx, results);
-      if (results === global.Rx.errorObj) { return o.onError(results.e); }
+      if (results === global._Rx.errorObj) { return o.onError(results.e); }
       o.onNext(results);
     } else {
       if (results.length <= 1) {

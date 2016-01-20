@@ -17,11 +17,11 @@ inherits(ToMapObserver, AbstractObserver);
 
 ToMapObserver.prototype.next = function (x) {
   var key = tryCatch(this._k)(x);
-  if (key === global.Rx.errorObj) { return this._o.onError(key.e); }
+  if (key === global._Rx.errorObj) { return this._o.onError(key.e); }
   var elem = x;
   if (this._e) {
     elem = tryCatch(this._e)(x);
-    if (elem === global.Rx.errorObj) { return this._o.onError(elem.e); }
+    if (elem === global._Rx.errorObj) { return this._o.onError(elem.e); }
   }
 
   this._m.set(key, elem);

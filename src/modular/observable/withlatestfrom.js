@@ -57,7 +57,7 @@ WithLatestFromSourceObserver.prototype.next = function (x) {
   var allValues = [x].concat(this._state.values);
   if (!this._state.hasValueAll) { return; }
   var res = tryCatch(this._cb).apply(null, allValues);
-  if (res === global.Rx.errorObj) { return this._o.onError(res.e); }
+  if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
   this._o.onNext(res);
 };
 

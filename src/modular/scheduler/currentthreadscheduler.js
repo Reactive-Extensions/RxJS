@@ -31,7 +31,7 @@ CurrentThreadScheduler.prototype.schedule = function (state, action) {
 
     var result = tryCatch(runTrampoline)();
     CurrentThreadScheduler.queue = null;
-    if (result === global.Rx.errorObj) { thrower(result.e); }
+    if (result === global._Rx.errorObj) { thrower(result.e); }
   } else {
     CurrentThreadScheduler.queue.enqueue(si);
   }
@@ -40,5 +40,7 @@ CurrentThreadScheduler.prototype.schedule = function (state, action) {
 
 CurrentThreadScheduler.prototype.scheduleRequired = function () { return !CurrentThreadScheduler.queue; };
 
-global.Rx || (global.Rx = {});
-global.Rx.currentThreadScheduler = new CurrentThreadScheduler();
+global._Rx || (global._Rx = {});
+global._Rx.currentThreadScheduler = new CurrentThreadScheduler();
+
+Scheduler.currentThread = global._Rx.currentThreadScheduler;

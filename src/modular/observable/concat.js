@@ -10,8 +10,8 @@ var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.immediateScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.immediateScheduler) {
   require('../scheduler/immediatescheduler');
 }
 
@@ -58,7 +58,7 @@ ConcatObservable.prototype.subscribeCore = function(o) {
     sources: this._sources
   };
 
-  var cancelable = global.Rx.immediateScheduler.scheduleRecursive(state, scheduleRecursive);
+  var cancelable = global._Rx.immediateScheduler.scheduleRecursive(state, scheduleRecursive);
   return new NAryDisposable([subscription, disposable, cancelable]);
 };
 

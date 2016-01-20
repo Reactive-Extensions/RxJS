@@ -16,7 +16,7 @@ inherits(Defer, ObservableBase);
 
 Defer.prototype.subscribeCore = function (o) {
   var result = tryCatch(this._f)();
-  if (result === global.Rx.errorObj) { return throwError(result.e).subscribe(o);}
+  if (result === global._Rx.errorObj) { return throwError(result.e).subscribe(o);}
   isPromise(result) && (result = fromPromise(result));
   return result.subscribe(o);
 };

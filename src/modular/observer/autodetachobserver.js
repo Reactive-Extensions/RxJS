@@ -14,32 +14,30 @@ function AutoDetachObserver(observer) {
 
 inherits(AutoDetachObserver, AbstractObserver);
 
-var AutoDetachObserverPrototype = AutoDetachObserver.prototype;
-
-AutoDetachObserverPrototype.next = function (value) {
+AutoDetachObserver.prototype.next = function (value) {
   var result = tryCatch(this.observer.onNext).call(this.observer, value);
-  if (result === global.Rx.errorObj) {
+  if (result === global._Rx.errorObj) {
     this.dispose();
     thrower(result.e);
   }
 };
 
-AutoDetachObserverPrototype.error = function (err) {
+AutoDetachObserver.prototype.error = function (err) {
   var result = tryCatch(this.observer.onError).call(this.observer, err);
   this.dispose();
-  result === global.Rx.errorObj && thrower(result.e);
+  result === global._Rx.errorObj && thrower(result.e);
 };
 
-AutoDetachObserverPrototype.completed = function () {
+AutoDetachObserver.prototype.completed = function () {
   var result = tryCatch(this.observer.onCompleted).call(this.observer);
   this.dispose();
-  result === global.Rx.errorObj && thrower(result.e);
+  result === global._Rx.errorObj && thrower(result.e);
 };
 
-AutoDetachObserverPrototype.setDisposable = function (value) { this.m.setDisposable(value); };
-AutoDetachObserverPrototype.getDisposable = function () { return this.m.getDisposable(); };
+AutoDetachObserver.prototype.setDisposable = function (value) { this.m.setDisposable(value); };
+AutoDetachObserver.prototype.getDisposable = function () { return this.m.getDisposable(); };
 
-AutoDetachObserverPrototype.dispose = function () {
+AutoDetachObserver.prototype.dispose = function () {
   AbstractObserver.prototype.dispose.call(this);
   this.m.dispose();
 };

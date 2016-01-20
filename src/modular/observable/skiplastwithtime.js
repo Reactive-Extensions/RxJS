@@ -5,8 +5,8 @@ var AbstractObserver = require('../observer/abstractobserver');
 var isScheduler = require('../scheduler').isScheduler;
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.defaultScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.defaultScheduler) {
   require('../scheduler/defaultscheduler');
 }
 
@@ -50,6 +50,6 @@ SkipLastWithTimeObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function skipLastWithTime (source, duration, scheduler) {
-  isScheduler(scheduler) || (scheduler = global.Rx.defaultScheduler);
+  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
   return new SkipLastWithTimeObservable(source, duration, scheduler);
 };

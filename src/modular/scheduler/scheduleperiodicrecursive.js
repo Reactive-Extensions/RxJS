@@ -8,7 +8,7 @@ function createTick(self) {
   return function tick(command, recurse) {
     recurse(0, self._period);
     var state = tryCatch(self._action)(self._state);
-    if (state === global.Rx.errorObj) {
+    if (state === global._Rx.errorObj) {
       self._cancel.dispose();
       thrower(state.e);
     }

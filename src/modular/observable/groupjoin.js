@@ -26,7 +26,7 @@ module.exports = function groupJoin(left, right, leftDurationSelector, rightDura
         leftMap.set(id, s);
 
         var result = tryCatch(resultSelector)(value, addRef(s, r));
-        if (result === global.Rx.errorObj) {
+        if (result === global._Rx.errorObj) {
           leftMap.forEach(handleError(result.e));
           return o.onError(result.e);
         }
@@ -38,7 +38,7 @@ module.exports = function groupJoin(left, right, leftDurationSelector, rightDura
         group.add(md);
 
         var duration = tryCatch(leftDurationSelector)(value);
-        if (duration === global.Rx.errorObj) {
+        if (duration === global._Rx.errorObj) {
           leftMap.forEach(handleError(duration.e));
           return o.onError(duration.e);
         }
@@ -70,7 +70,7 @@ module.exports = function groupJoin(left, right, leftDurationSelector, rightDura
         group.add(md);
 
         var duration = tryCatch(rightDurationSelector)(value);
-        if (duration === global.Rx.errorObj) {
+        if (duration === global._Rx.errorObj) {
           leftMap.forEach(handleError(duration.e));
           return o.onError(duration.e);
         }

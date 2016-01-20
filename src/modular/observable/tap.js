@@ -21,19 +21,19 @@ inherits(TapObserver, AbstractObserver);
 
 TapObserver.prototype.next = function(x) {
   var res = tryCatch(this._t.onNext).call(this._t, x);
-  if (res === global.Rx.errorObj) { this._o.onError(res.e); }
+  if (res === global._Rx.errorObj) { this._o.onError(res.e); }
   this._o.onNext(x);
 };
 
 TapObserver.prototype.error = function(e) {
   var res = tryCatch(this._t.onError).call(this._t, e);
-  if (res === global.Rx.errorObj) { return this._o.onError(res.e); }
+  if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
   this._o.onError(e);
 };
 
 TapObserver.prototype.completed = function() {
   var res = tryCatch(this._t.onCompleted).call(this._t);
-  if (res === global.Rx.errorObj) { return this._o.onError(res.e); }
+  if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
   this._o.onCompleted();
 };
 

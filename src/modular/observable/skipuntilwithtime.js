@@ -6,8 +6,8 @@ var BinaryDisposable = require('../binarydisposable');
 var isScheduler = require('../scheduler').isScheduler;
 var inherits = require('inherits');
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.defaultScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.defaultScheduler) {
   require('../scheduler/defaultscheduler');
 }
 
@@ -45,6 +45,6 @@ SkipUntilWithTimeObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function skipUntilWithTime (source, startTime, scheduler) {
-  isScheduler(scheduler) || (scheduler = global.Rx.defaultScheduler);
+  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
   return new SkipUntilWithTimeObservable(source, startTime, scheduler);
 };

@@ -13,21 +13,21 @@ CheckedObserver.prototype.onNext = function (value) {
   this.checkAccess();
   var res = tryCatch(this._observer.onNext).call(this._observer, value);
   this._state = 0;
-  res === global.Rx.errorObj && thrower(res.e);
+  res === global._Rx.errorObj && thrower(res.e);
 };
 
 CheckedObserver.prototype.onError = function (err) {
   this.checkAccess();
   var res = tryCatch(this._observer.onError).call(this._observer, err);
   this._state = 2;
-  res === global.Rx.errorObj && thrower(res.e);
+  res === global._Rx.errorObj && thrower(res.e);
 };
 
 CheckedObserver.prototype.onCompleted = function () {
   this.checkAccess();
   var res = tryCatch(this._observer.onCompleted).call(this._observer);
   this._state = 2;
-  res === global.Rx.errorObj && thrower(res.e);
+  res === global._Rx.errorObj && thrower(res.e);
 };
 
 CheckedObserver.prototype.checkAccess = function () {

@@ -19,7 +19,7 @@ inherits(SkipWhileObserver, AbstractObserver);
 SkipWhileObserver.prototype.next = function (x) {
   if (!this._r) {
     var res = tryCatch(this._p._fn)(x, this._i++, this._p);
-    if (res === global.Rx.errorObj) { return this._o.onError(res.e); }
+    if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
     this._r = !res;
   }
   this._r && this._o.onNext(x);

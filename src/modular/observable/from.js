@@ -8,8 +8,8 @@ var bindCallback = require('../internal/bindcallback');
 var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
-global.Rx || (global.Rx = {});
-if (!global.Rx.currentThreadScheduler) {
+global._Rx || (global._Rx = {});
+if (!global._Rx.currentThreadScheduler) {
   require('../scheduler/currentthreadscheduler');
 }
 
@@ -27,14 +27,14 @@ inherits(FromObservable, ObservableBase);
 function createScheduleMethod(o, it, fn) {
   return function loopRecursive(i, recurse) {
     var next = tryCatch(it.next).call(it);
-    if (next === global.Rx.errorObj) { return o.onError(next.e); }
+    if (next === global._Rx.errorObj) { return o.onError(next.e); }
     if (next.done) { return o.onCompleted(); }
 
     var result = next.value;
 
     if (isFunction(fn)) {
       result = tryCatch(fn)(result, i);
-      if (result === global.Rx.errorObj) { return o.onError(result.e); }
+      if (result === global._Rx.errorObj) { return o.onError(result.e); }
     }
 
     o.onNext(result);
@@ -143,6 +143,6 @@ module.exports = function (iterable, mapFn, thisArg, scheduler) {
 
   var mapper;
   if (mapFn) { mapper = bindCallback(mapFn, thisArg, 2); }
-  Scheduler.isScheduler(scheduler) || (scheduler = global.Rx.currentThreadScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
   return new FromObservable(iterable, mapper, scheduler);
 };

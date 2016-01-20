@@ -35,7 +35,7 @@ CatchScheduler.prototype._wrap = function (action) {
   var parent = this;
   return function (self, state) {
     var res = tryCatch(action)(parent._getRecursiveWrapper(self), state);
-    if (res === global.Rx.errorObj) {
+    if (res === global._Rx.errorObj) {
       if (!parent._handler(res.e)) { thrower(res.e); }
       return Disposable.empty;
     }
@@ -60,7 +60,7 @@ CatchScheduler.prototype.schedulePeriodic = function (state, period, action) {
   d.setDisposable(this._scheduler.schedulePeriodic(state, period, function (state1) {
     if (failed) { return null; }
     var res = tryCatch(action)(state1);
-    if (res === global.Rx.errorObj) {
+    if (res === global._Rx.errorObj) {
       failed = true;
       if (!self._handler(res.e)) { thrower(res.e); }
       d.dispose();
