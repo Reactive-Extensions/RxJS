@@ -19,7 +19,7 @@ var source1 = Rx.Observable.interval(100)
 var source2 = Rx.Observable.interval(150)
   .map(function (i) { return 'Second: ' + i; });
 
-// Combine latest of source1 and source2 whenever either gives a value with a selector
+// Combine latest of source1 and source2 whenever either gives a value
 var source = Rx.Observable.combineLatest(
     source1,
     source2
@@ -27,7 +27,7 @@ var source = Rx.Observable.combineLatest(
 
 var subscription = source.subscribe(
   function (x) {
-    console.log('Next: %s', x);
+    console.log('Next: %s', JSON.stringify(x));
   },
   function (err) {
     console.log('Error: %s', err);
@@ -36,10 +36,10 @@ var subscription = source.subscribe(
     console.log('Completed');
   });
 
-// => Next: First: 0,Second: 0
-// => Next: First: 1,Second: 0
-// => Next: First: 1,Second: 1
-// => Next: First: 2,Second: 1
+// => Next: ["First: 0","Second: 0"]
+// => Next: ["First: 1","Second: 0"]
+// => Next: ["First: 1","Second: 1"]
+// => Next: ["First: 2","Second: 1"]
 // => Completed
 
 /* Have staggering intervals */
@@ -49,7 +49,7 @@ var source1 = Rx.Observable.interval(100)
 var source2 = Rx.Observable.interval(150)
   .map(function (i) { return 'Second: ' + i; });
 
-// Combine latest of source1 and source2 whenever either gives a value
+// Combine latest of source1 and source2 whenever either gives a value with a selector
 var source = Rx.Observable.combineLatest(
     source1,
     source2,
