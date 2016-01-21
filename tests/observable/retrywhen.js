@@ -62,7 +62,7 @@
     );
 
     xs.subscriptions.assertEqual(
-      subscribe(200, 1000)
+      subscribe(200, 250)
     );
   });
 
@@ -251,7 +251,7 @@
     );
 
     xs.subscriptions.assertEqual(
-      subscribe(200, 1000)
+      subscribe(200, 230)
     );
   });
 
