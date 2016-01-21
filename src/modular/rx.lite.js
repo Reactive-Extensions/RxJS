@@ -41,6 +41,7 @@ Observable.addToPrototype({
   merge: require('./observable/merge'),
   mergeAll: require('./observable/mergeall'),
   scan: require('./observable/scan'),
+  skipUntil: require('./observable/skipuntil'),
   switch: require('./observable/switch'),
   takeUntil: require('./observable/takeuntil'),
   tap: require('./observable/tap'),

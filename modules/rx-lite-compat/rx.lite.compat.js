@@ -2371,6 +2371,7 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
             }));
 
             exceptions.onNext(exn);
+            outer.dispose();
           },
           function() { o.onCompleted(); }));
       });
