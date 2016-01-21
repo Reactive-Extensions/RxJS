@@ -250,8 +250,8 @@ Please check out:
     - [Reactive Programming with RxJS](https://pragprog.com/book/smreactjs/reactive-programming-with-rxjs)
 
 - [Community Examples](examples/community.md)
-- [Presentations](doc/presentations.md)
-- [Videos and Podcasts](doc/videos.md)
+- [Presentations](examples/presentations.md)
+- [Videos and Podcasts](examples/videos.md)
 
 ## Getting Started
 
