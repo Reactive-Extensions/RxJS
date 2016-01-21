@@ -61,4 +61,4 @@ var Rx = {
   Observable: Observable
 };
 
-global.Rx = Rx;
+module.exports = Rx;

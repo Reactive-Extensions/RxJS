@@ -4,6 +4,8 @@
   "description": "RxJS in modular form",
   "main": "index.js",
   "scripts": {
+    "build:lite:umd": "webpack rx.lite.js dist/rx.lite.js --config webpack.config.js",
+    "build:lite:umd:min": "webpack rx.lite.js dist/rx.lite.min.js  --config webpack.config.production.js",
     "test": "tape test/**/*.js | tap-spec"
   },
   "repository": {
@@ -27,9 +29,12 @@
   },
   "homepage": "https://github.com/Reactive-Extensions/RxJS",
   "devDependencies": {
+    "babel-core": "^6.4.5",
+    "babel-loader": "^6.2.1",
     "lie": "^3.0.1",
     "tap-spec": "^4.1.0",
-    "tape": "^4.2.2"
+    "tape": "^4.2.2",
+    "webpack": "^1.12.11"
   },
   "dependencies": {
     "es6-map": "^0.1.3",

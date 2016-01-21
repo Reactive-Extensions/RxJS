@@ -1,7 +1,7 @@
 'use strict';
 
 var create = require('./observer/create');
-var isFunction = require('./helpers/isFunction');
+var isFunction = require('./helpers/isfunction');
 
 function Observable() { }
 
