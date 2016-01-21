@@ -42,7 +42,7 @@ var Rx = require('rx-lite-time-compat');
 - [`skipLastWithTime`](../../doc/api/core/operators/skiplastwithtime.md)
 - [`takeLastBufferWithTime`](../../doc/api/core/operators/takelastbufferwithtime.md)
 - [`takeLastWithTime`](../../doc/api/core/operators/takelastwithtime.md)
-- [`throttleFirst`](../../doc/api/core/operators/throttlefirst.md)
+- [`throttle`](../../doc/api/core/operators/throttle.md)
 - [`throttleWithTimeout`](../../doc/api/core/operators/debounce.md)
 - [`timeInterval`](../../doc/api/core/operators/timeinterval.md)
 - [`timeoutWithSelector`](../../doc/api/core/operators/timeoutwithselector.md)

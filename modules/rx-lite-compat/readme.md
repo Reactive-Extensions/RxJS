@@ -115,7 +115,7 @@ var Rx = require('rx-lite-compat');
 - [`tapOnError`](../../doc/api/core/operators/doonerror.md)
 - [`tapOnCompleted`](../../doc/api/core/operators/dooncompleted.md)
 - [`throttle`](../../doc/api/core/operators/throttle.md)
-- [`throttleFirst`](../../doc/api/core/operators/throttlefirst.md)
+- [`throttle`](../../doc/api/core/operators/throttle.md)
 - [`timeout`](../../doc/api/core/operators/timeout.md)
 - [`timestamp`](../../doc/api/core/operators/timestamp.md)
 - [`toArray`](../../doc/api/core/operators/toarray.md)

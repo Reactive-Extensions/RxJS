@@ -34,11 +34,11 @@ debounced.subscribeOnNext(function (value) {
 
 ### Throttling ###
 
-Another technique to deal with an observable sequence which is producing too much for the consumer is through throttling with the use of the [`throttleFirst`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/throttlefirst.md) method which emits the first items emitted by an Observable within periodic time intervals.  Throttling can be especially useful for rate limiting execution of handlers on events like resize and scroll.
+Another technique to deal with an observable sequence which is producing too much for the consumer is through throttling with the use of the [`throttle`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/throttle.md) method which emits the first items emitted by an Observable within periodic time intervals.  Throttling can be especially useful for rate limiting execution of handlers on events like resize and scroll.
 
 ```js
 var throttled = Rx.Observable.fromEvent(window, 'resize')
-  .throttleFirst(250 /* ms */);
+  .throttle(250 /* ms */);
 
 throttled.subscribeOnNext(function (e) {
   console.log('Window inner height: %d', window.innerHeight);
