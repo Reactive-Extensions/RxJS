@@ -42,40 +42,27 @@ But the best news of all is that you already know how to program like this.  Tak
 
 ```js
 /* Get stock data somehow */
-var source = getStockData();
+const source = getAsyncStockData();
 
-source
-  .filter(function (quote) {
-      return quote.price > 30;
-  })
-  .map(function (quote) {
-      return quote.price;
-  })
-  .forEach(function (price) {
-    console.log('Prices higher than $30: $' + price);
-  });
+const subscription = source
+  .filter(quote => quote.price > 30)
+  .map(quote => quote.price)
+  .forEach(price => console.log(`Prices higher than $30: ${price}`);
 ```
 
 Now what if this data were to come as some sort of event, for example a stream, such as a WebSocket? Then we could pretty much write the same query to iterate our data, with very little change.
 
 ```js
 /* Get stock data somehow */
-var source = getAsyncStockData();
+const source = getAsyncStockData();
 
-var subscription = source
-  .filter(function (quote) {
-    return quote.price > 30;
-  })
-  .map(function (quote) {
-    return quote.price;
-  })
+const subscription = source
+  .filter(quote => quote.price > 30)
+  .map(quote => quote.price)
   .subscribe(
-    function (price) {
-      console.log('Prices higher than $30: $' + price);
-    },
-    function (err) {
-      console.log('Something went wrong: ' + err.message);
-    });
+    price => console.log(`Prices higher than $30: ${price}`),
+    err => console.log(`Something went wrong: ${err.message}`);
+  );
 
 /* When we're done */
 subscription.dispose();
@@ -135,15 +122,13 @@ First, we'll reference the JavaScript files, including jQuery, although RxJS has
 Next, we'll get the user input from an input, listening to the keyup event by using the `Rx.Observable.fromEvent` method.  This will either use the event binding from [jQuery](http://jquery.com), [Zepto](http://zeptojs.com/), [AngularJS](https://angularjs.org/), [Backbone.js](http://backbonejs.org/) and [Ember.js](http://emberjs.com/) if available, and if not, falls back to the native event binding.  This gives you consistent ways of thinking of events depending on your framework, so there are no surprises.
 
 ```js
-var $input = $('#input'),
-    $results = $('#results');
+const $input = $('#input');
+const $results = $('#results');
 
 /* Only get the value from each key up */
 var keyups = Rx.Observable.fromEvent($input, 'keyup')
   .pluck('target', 'value')
-  .filter(function (text) {
-    return text.length > 2;
-  });
+  .filter(text => text.length > 2 );
 
 /* Now debounce the input for 500ms */
 var debounced = keyups
@@ -181,14 +166,12 @@ Finally, we call the `subscribe` method on our observable sequence to start pull
 
 ```js
 suggestions.subscribe(
-  function (data) {
+  data => {
     $results
       .empty()
-      .append ($.map(data[1], function (value) {
-        return $('<li>').text(value);
-      }));
+      .append($.map(data[1], value =>  $('<li>').text(value)))
   },
-  function (error) {
+  error=> {
     $results
       .empty()
       .append($('<li>'))
@@ -350,9 +333,9 @@ require({
     'rx': 'path/to/rx-lite.js'
   }
 },
-['rx'], function(Rx) {
-  var obs = Rx.Observable.of(42);
-  obs.forEach(function (x) { console.log(x); });
+['rx'], (Rx) => {
+  const obs = Rx.Observable.of(42);
+  obs.forEach(x => console.log(x));
 });
 ```
 
