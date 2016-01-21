@@ -6175,7 +6175,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
        */
-      hasObservers: function () { return this.observers.length > 0; },
+      hasObservers: function () { checkDisposed(this); return this.observers.length > 0; },
       /**
        * Notifies all subscribed observers about the end of the sequence.
        */
@@ -6285,10 +6285,7 @@ Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisA
        * Indicates whether the subject has observers subscribed to it.
        * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
        */
-      hasObservers: function () {
-        checkDisposed(this);
-        return this.observers.length > 0;
-      },
+      hasObservers: function () { checkDisposed(this); return this.observers.length > 0; },
       /**
        * Notifies all subscribed observers about the end of the sequence, also causing the last received value to be sent out (if any).
        */
