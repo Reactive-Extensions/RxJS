@@ -101,7 +101,7 @@ Rx.Observable.prototype.toNodeCallback = function (cb) {
 
 We could then take this and for example if we had an observable sequence which gets a value from a REST call and then convert it to Node.js style.
 
-```
+```js
 getData().toNodeCallback(function (err, data) {
 	if (err) { throw err; }
 	// Do something with the data
