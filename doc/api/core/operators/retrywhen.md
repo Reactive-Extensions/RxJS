@@ -56,12 +56,12 @@ var source = Rx.Observable.interval(1000)
         return n;
     })
     .retryWhen(function(errors) {
-        return errors.scan(0, function(errorCount, err) {
+        return errors.scan(function(errorCount, err) {
             if(errorCount >= 2) {
                 throw err;
             }
             return errorCount + 1;
-        });
+        }, 0);
     });
 
 var subscription = source.subscribe(
@@ -92,9 +92,9 @@ var source = Rx.Observable.interval(1000)
         return n;
     })
     .retryWhen(function(errors) {
-        return errors.scan(0, function(errorCount, err) {
+        return errors.scan(function(errorCount, err) {
             return errorCount + 1;
-        }).takeWhile(function(errorCount) {
+        }, 0).takeWhile(function(errorCount) {
             return errorCount < 2;
         });
     });
