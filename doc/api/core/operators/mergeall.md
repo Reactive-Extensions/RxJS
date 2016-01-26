@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.mergeAll()` ###
 ### `Rx.Observable.prototype.mergeObservable()` **DEPRECATED** ###
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeobservable.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/mergeall.js "View in source")
 
 Merges an observable sequence of observable sequences into an observable sequence.
 
@@ -61,4 +61,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/mergeobservable.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/mergeobservable.js)
+- [`/tests/observable/mergeall.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/mergeall.js)
