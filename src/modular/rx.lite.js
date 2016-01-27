@@ -59,7 +59,12 @@ var Rx = {
   Scheduler: require('./scheduler'),
 
   Observer: Observer,
-  Observable: Observable
+  Observable: Observable,
+
+  AsyncSubject: require('./asyncsubject'),
+  BehaviorSubject: require('./behaviorsubject'),
+  ReplaySubject: require('./replaysubject'),
+  Subject: require('./subject')
 };
 
 module.exports = Rx;

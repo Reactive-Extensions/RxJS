@@ -74,6 +74,7 @@ addProperties(ReplaySubject.prototype, Observer.prototype, {
    * @returns {Boolean} Indicates whether the subject has observers subscribed to it.
    */
   hasObservers: function () {
+    Disposable.checkDisposed(this);
     return this.observers.length > 0;
   },
   _trim: function (now) {
