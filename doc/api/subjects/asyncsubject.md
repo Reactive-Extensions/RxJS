@@ -13,7 +13,7 @@ var subject = new Rx.AsyncSubject();
 
 var i = 0;
 var handle = setInterval(function () {
-	subject.onNext(i)
+	subject.onNext(i);
 	if (++i > 3) {
 		subject.onCompleted();
 		clearInterval(handle);
