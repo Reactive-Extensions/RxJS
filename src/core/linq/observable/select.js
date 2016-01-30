@@ -13,7 +13,7 @@
         try {
           var result = selector(x, i++, source);
         } catch (e) {
-          return observer.onError(e);
+          return o.onError(e);
         }
 
         o.onNext(result);
