@@ -72,7 +72,7 @@
     });
 
     results.messages.assertEqual(
-      onError(201, error));
+      onError(202, error));
   });
 
   test('generateWithAbsoluteTime absolute time throw iterate', function () {
@@ -137,6 +137,31 @@
       onNext(202, 0),
       onNext(204, 1),
       onNext(207, 2));
+  });
+
+  test('generateWithAbsoluteTime resultSelection', function() {
+
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function() {
+      return Observable.generateWithAbsoluteTime(0, function(x) {
+        return x < 3;
+      }, function(x) {
+        return x + 1;
+      }, function(x) {
+        return 2 * x + 1;
+      }, function(x) {
+        return 10 * x;
+      }, scheduler);
+    });
+
+    results.messages.assertEqual(
+      onNext(202, 1),
+      onNext(212, 3),
+      onNext(232, 5),
+      onCompleted(232)
+    );
+
   });
 
 }());

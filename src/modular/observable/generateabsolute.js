@@ -23,7 +23,12 @@ function GenerateAbsoluteObservable(state, cndFn, itrFn, resFn, timeFn, s) {
 inherits(GenerateAbsoluteObservable, ObservableBase);
 
 function scheduleRecursive(state, recurse) {
-  state.hasResult && state.o.onNext(state.newState);
+  if (state.hasResult) {
+    var result = tryCatch(state.self._resFn)(state.newState);
+    if (result === errorObj) { return state.o.onError(result.e); }
+    state.o.onNext(result);
+  }
+
 
   if (state.first) {
     state.first = false;
@@ -34,8 +39,6 @@ function scheduleRecursive(state, recurse) {
   state.hasResult = tryCatch(state.self._cndFn)(state.newState);
   if (state.hasResult === global._Rx.errorObj) { return state.o.onError(state.hasResult.e); }
   if (state.hasResult) {
-    var result = tryCatch(state.self._resFn)(state.newState);
-    if (result === global._Rx.errorObj) { return state.o.onError(result.e); }
     var time = tryCatch(state.self._timeFn)(state.newState);
     if (time === global._Rx.errorObj) { return state.o.onError(time.e); }
     recurse(state, time);
