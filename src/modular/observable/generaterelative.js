@@ -23,12 +23,7 @@ function GenerateRelativeObservable(state, cndFn, itrFn, resFn, timeFn, s) {
 inherits(GenerateRelativeObservable, ObservableBase);
 
 function scheduleRecursive(state, recurse) {
-  if (state.hasResult) {
-    var result = tryCatch(state.self._resFn)(state.newState);
-    if (result === global._Rx.errorObj) { return state.o.onError(result.e); }
-    state.o.onNext(result);
-  }
-
+  state.hasResult && state.o.onNext(state.result);
 
   if (state.first) {
     state.first = false;
@@ -39,6 +34,8 @@ function scheduleRecursive(state, recurse) {
   state.hasResult = tryCatch(state.self._cndFn)(state.newState);
   if (state.hasResult === global._Rx.errorObj) { return state.o.onError(state.hasResult.e); }
   if (state.hasResult) {
+    state.result = tryCatch(state.self._resFn)(state.newState);
+    if (state.result === global._Rx.errorObj) { return state.o.onError(state.result.e); }
     var time = tryCatch(state.self._timeFn)(state.newState);
     if (time === global._Rx.errorObj) { return state.o.onError(time.e); }
     recurse(state, time);

@@ -45,7 +45,7 @@ GenerateObservable.prototype.subscribeCore = function (o) {
     o: o,
     self: this,
     first: true,
-    newState: this._initialState
+    newState: this._initialState,
   };
   return this._s.scheduleRecursive(state, scheduleRecursive);
 };

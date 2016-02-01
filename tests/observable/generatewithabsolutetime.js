@@ -72,7 +72,7 @@
     });
 
     results.messages.assertEqual(
-      onError(202, error));
+      onError(201, error));
   });
 
   test('generateWithAbsoluteTime absolute time throw iterate', function () {

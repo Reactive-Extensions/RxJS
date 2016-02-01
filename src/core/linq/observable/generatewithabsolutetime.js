@@ -11,11 +11,7 @@
     }
 
     function scheduleRecursive(state, recurse) {
-      if (state.hasResult) {
-        var result = tryCatch(state.self._resFn)(state.newState);
-        if (result === errorObj) { return state.o.onError(result.e); }
-        state.o.onNext(result);
-      }
+      state.hasResult && state.o.onNext(state.result);
 
       if (state.first) {
         state.first = false;
@@ -26,6 +22,8 @@
       state.hasResult = tryCatch(state.self._cndFn)(state.newState);
       if (state.hasResult === errorObj) { return state.o.onError(state.hasResult.e); }
       if (state.hasResult) {
+        state.result = tryCatch(state.self._resFn)(state.newState);
+        if (state.result === errorObj) { return state.o.onError(state.result.e); }
         var time = tryCatch(state.self._timeFn)(state.newState);
         if (time === errorObj) { return state.o.onError(time.e); }
         recurse(state, time);
@@ -40,7 +38,7 @@
         self: this,
         newState: this._state,
         first: true,
-        hasValue: false
+        hasResult: false
       };
       return this._s.scheduleRecursiveFuture(state, new Date(this._s.now()), scheduleRecursive);
     };

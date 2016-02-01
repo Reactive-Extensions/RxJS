@@ -2,6 +2,7 @@ node_modules/
 modules/
 .npm-debug.log
 .nuget/
+.vscode/
 nuget/
 doc/
 examples/

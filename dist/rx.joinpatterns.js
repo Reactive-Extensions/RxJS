@@ -327,7 +327,7 @@
           }));
         }
       } catch (e) {
-        observableThrow(e).subscribe(o);
+        return observableThrow(e).subscribe(o);
       }
       var group = new CompositeDisposable();
       externalSubscriptions.forEach(function (joinObserver) {

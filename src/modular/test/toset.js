@@ -11,6 +11,7 @@ var onNext = ReactiveTest.onNext,
   subscribe = ReactiveTest.subscribe;
 
 Observable.addToPrototype({
+  map: require('../observable/map'),
   toSet: require('../observable/toset')
 });
 

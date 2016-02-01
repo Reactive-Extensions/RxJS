@@ -9382,7 +9382,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
           }));
         }
       } catch (e) {
-        observableThrow(e).subscribe(o);
+        return observableThrow(e).subscribe(o);
       }
       var group = new CompositeDisposable();
       externalSubscriptions.forEach(function (joinObserver) {
@@ -10257,7 +10257,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     }
 
     function scheduleRecursive(state, recurse) {
-      state.hasResult && state.o.onNext(state.newState);
+      state.hasResult && state.o.onNext(state.result);
 
       if (state.first) {
         state.first = false;
@@ -10268,8 +10268,8 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       state.hasResult = tryCatch(state.self._cndFn)(state.newState);
       if (state.hasResult === errorObj) { return state.o.onError(state.hasResult.e); }
       if (state.hasResult) {
-        var result = tryCatch(state.self._resFn)(state.newState);
-        if (result === errorObj) { return state.o.onError(result.e); }
+        state.result = tryCatch(state.self._resFn)(state.newState);
+        if (state.result === errorObj) { return state.o.onError(state.result.e); }
         var time = tryCatch(state.self._timeFn)(state.newState);
         if (time === errorObj) { return state.o.onError(time.e); }
         recurse(state, time);
@@ -10284,7 +10284,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
         self: this,
         newState: this._state,
         first: true,
-        hasValue: false
+        hasResult: false
       };
       return this._s.scheduleRecursiveFuture(state, new Date(this._s.now()), scheduleRecursive);
     };
@@ -10329,7 +10329,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     }
 
     function scheduleRecursive(state, recurse) {
-      state.hasResult && state.o.onNext(state.newState);
+      state.hasResult && state.o.onNext(state.result);
 
       if (state.first) {
         state.first = false;
@@ -10337,11 +10337,12 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
         state.newState = tryCatch(state.self._itrFn)(state.newState);
         if (state.newState === errorObj) { return state.o.onError(state.newState.e); }
       }
+
       state.hasResult = tryCatch(state.self._cndFn)(state.newState);
       if (state.hasResult === errorObj) { return state.o.onError(state.hasResult.e); }
       if (state.hasResult) {
-        var result = tryCatch(state.self._resFn)(state.newState);
-        if (result === errorObj) { return state.o.onError(result.e); }
+        state.result = tryCatch(state.self._resFn)(state.newState);
+        if (state.result === errorObj) { return state.o.onError(state.result.e); }
         var time = tryCatch(state.self._timeFn)(state.newState);
         if (time === errorObj) { return state.o.onError(time.e); }
         recurse(state, time);
@@ -10356,7 +10357,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
         self: this,
         newState: this._state,
         first: true,
-        hasValue: false
+        hasResult: false
       };
       return this._s.scheduleRecursiveFuture(state, 0, scheduleRecursive);
     };
