@@ -14,6 +14,8 @@ function WhenObserver(map, o) {
   AbstractObserver.call(this);
 }
 
+inherits(WhenObserver, AbstractObserver);
+
 WhenObserver.prototype.next = function (x) { this._o.onNext(x); };
 WhenObserver.prototype.completed = function () { this._o.onCompleted(); };
 WhenObserver.prototype.error = function (e) {

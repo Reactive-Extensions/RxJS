@@ -14,13 +14,13 @@ function ActivePlan(joinObserverArray, onNext, onCompleted) {
 }
 
 ActivePlan.prototype.dequeue = function () {
-  this._joinObservers.forEach(function (v) { v.queue.shift(); });
+  this._joinObservers.forEach(function (v) { v._queue.shift(); });
 };
 
 ActivePlan.prototype.match = function () {
   var i, len, hasValues = true;
   for (i = 0, len = this._joinObserverArray.length; i < len; i++) {
-    if (this._joinObserverArray[i].queue.length === 0) {
+    if (this._joinObserverArray[i]._queue.length === 0) {
       hasValues = false;
       break;
     }
@@ -29,8 +29,8 @@ ActivePlan.prototype.match = function () {
     var firstValues = [],
         isCompleted = false;
     for (i = 0, len = this._joinObserverArray.length; i < len; i++) {
-      firstValues.push(this._joinObserverArray[i].queue[0]);
-      this._joinObserverArray[i].queue[0].kind === 'C' && (isCompleted = true);
+      firstValues.push(this._joinObserverArray[i]._queue[0]);
+      this._joinObserverArray[i]._queue[0].kind === 'C' && (isCompleted = true);
     }
     if (isCompleted) {
       this._onCompleted();

@@ -21,6 +21,5 @@ module.exports = function merge() {
     scheduler = global._Rx.immediateScheduler;
     for(i = 0; i < len; i++) { sources.push(arguments[i]); }
   }
-  sources.forEach(function (x) { console.log(x); });
   return mergeAll(fromArray(sources, scheduler));
 };

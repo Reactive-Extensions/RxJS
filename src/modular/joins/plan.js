@@ -15,14 +15,14 @@ function planCreateObserver(externalSubscriptions, observable, onError) {
 }
 
 function Plan(expression, selector) {
-  this.expression = expression;
-  this.selector = selector;
+  this._expression = expression;
+  this._selector = selector;
 }
 
 function handleOnError(o) { return function (e) { o.onError(e); }; }
 function handleOnNext(self, observer) {
   return function onNext () {
-    var result = tryCatch(self.selector).apply(self, arguments);
+    var result = tryCatch(self._selector).apply(self, arguments);
     if (result === global._Rx.errorObj) { return observer.onError(result.e); }
     observer.onNext(result);
   };
@@ -30,8 +30,8 @@ function handleOnNext(self, observer) {
 
 Plan.prototype.activate = function (externalSubscriptions, observer, deactivate) {
   var joinObservers = [], errHandler = handleOnError(observer);
-  for (var i = 0, len = this.expression.patterns.length; i < len; i++) {
-    joinObservers.push(planCreateObserver(externalSubscriptions, this.expression.patterns[i], errHandler));
+  for (var i = 0, len = this._expression._patterns.length; i < len; i++) {
+    joinObservers.push(planCreateObserver(externalSubscriptions, this._expression._patterns[i], errHandler));
   }
   var activePlan = new ActivePlan(joinObservers, handleOnNext(this, observer), function () {
     for (var j = 0, jlen = joinObservers.length; j < jlen; j++) {

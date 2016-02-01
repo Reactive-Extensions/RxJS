@@ -30,7 +30,7 @@ function add () {
   return sum;
 }
 
-test('then 1', function (t) {
+test('Observable#when then 1', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -52,7 +52,7 @@ test('then 1', function (t) {
   t.end();
 });
 
-test('then 1 error', function (t) {
+test('Observable#when then 1 error', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -74,7 +74,7 @@ test('then 1 error', function (t) {
   t.end();
 });
 
-test('then 1 throws', function (t) {
+test('Observable#when then 1 throws', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -95,7 +95,7 @@ test('then 1 throws', function (t) {
   t.end();
 });
 
-test('and 2', function (t) {
+test('Observable#when and 2', function (t) {
   var N = 2;
 
   var scheduler = new TestScheduler();
@@ -117,7 +117,7 @@ test('and 2', function (t) {
   t.end();
 });
 
-test('and 2 error', function (t) {
+test('Observable#when and 2 error', function (t) {
   var error = new Error();
 
   var N = 2;
@@ -146,7 +146,7 @@ test('and 2 error', function (t) {
   t.end();
 });
 
-test('then 2 throws', function (t) {
+test('Observable#when then 2 throws', function (t) {
   var error = new Error();
 
   var N = 2;
@@ -169,7 +169,7 @@ test('then 2 throws', function (t) {
   t.end();
 });
 
-test('and 3', function (t) {
+test('Observable#when and 3', function (t) {
   var N = 3;
 
   var scheduler = new TestScheduler();
@@ -191,7 +191,7 @@ test('and 3', function (t) {
   t.end();
 });
 
-test('and 3 error', function (t) {
+test('Observable#when and 3 error', function (t) {
   var error = new Error();
 
   var N = 3;
@@ -220,7 +220,7 @@ test('and 3 error', function (t) {
   t.end();
 });
 
-test('then 3 throws', function (t) {
+test('Observable#when then 3 throws', function (t) {
   var error = new Error();
 
   var N = 3;
@@ -243,7 +243,7 @@ test('then 3 throws', function (t) {
   t.end();
 });
 
-test('and 4', function (t) {
+test('Observable#when and 4', function (t) {
   var N = 4;
   var scheduler = new TestScheduler();
   var obs = [];
@@ -263,7 +263,7 @@ test('and 4', function (t) {
   t.end();
 });
 
-test('and 4 error', function (t) {
+test('Observable#when and 4 error', function (t) {
   var error = new Error();
 
   var N = 4;
@@ -292,7 +292,7 @@ test('and 4 error', function (t) {
   t.end();
 });
 
-test('then 4 throws', function (t) {
+test('Observable#when then 4 throws', function (t) {
   var error = new Error();
 
   var N = 4;
@@ -315,7 +315,7 @@ test('then 4 throws', function (t) {
   t.end();
 });
 
-test('and 5', function (t) {
+test('Observable#when and 5', function (t) {
   var N = 5;
 
   var scheduler = new TestScheduler();
@@ -337,7 +337,7 @@ test('and 5', function (t) {
   t.end();
 });
 
-test('and 5 error', function (t) {
+test('Observable#when and 5 error', function (t) {
   var error = new Error();
   var N = 5;
   for (var i = 0; i < N; i++) {
@@ -363,7 +363,7 @@ test('and 5 error', function (t) {
   t.end();
 });
 
-test('then 5 throws', function (t) {
+test('Observable#when then 5 throws', function (t) {
   var error = new Error();
 
   var N = 5;
@@ -386,7 +386,7 @@ test('then 5 throws', function (t) {
   t.end();
 });
 
-test('and 6', function (t) {
+test('Observable#when and 6', function (t) {
   var N = 6;
 
   var scheduler = new TestScheduler();
@@ -408,7 +408,7 @@ test('and 6', function (t) {
   t.end();
 });
 
-test('and 6 error', function (t) {
+test('Observable#when and 6 error', function (t) {
   var error = new Error();
 
   var N = 6;
@@ -437,7 +437,7 @@ test('and 6 error', function (t) {
   t.end();
 });
 
-test('then 6 throws', function (t) {
+test('Observable#when then 6 throws', function (t) {
   var error = new Error();
 
   var N = 6;
@@ -460,7 +460,7 @@ test('then 6 throws', function (t) {
   t.end();
 });
 
-test('and 7', function (t) {
+test('Observable#when and 7', function (t) {
   var N = 7;
 
   var scheduler = new TestScheduler();
@@ -482,7 +482,7 @@ test('and 7', function (t) {
   t.end();
 });
 
-test('and 7 error', function (t) {
+test('Observable#when and 7 error', function (t) {
   var error = new Error();
 
   var N = 7;
@@ -511,7 +511,7 @@ test('and 7 error', function (t) {
   t.end();
 });
 
-test('then 7 throws', function (t) {
+test('Observable#when then 7 throws', function (t) {
   var error = new Error();
 
   var N = 7;
@@ -534,7 +534,7 @@ test('then 7 throws', function (t) {
   t.end();
 });
 
-test('and 8', function (t) {
+test('Observable#when and 8', function (t) {
   var N = 8;
 
   var scheduler = new TestScheduler();
@@ -556,7 +556,7 @@ test('and 8', function (t) {
   t.end();
 });
 
-test('and 8 error', function (t) {
+test('Observable#when and 8 error', function (t) {
   var error = new Error();
 
   var N = 8;
@@ -585,7 +585,7 @@ test('and 8 error', function (t) {
   t.end();
 });
 
-test('then 8 throws', function (t) {
+test('Observable#when then 8 throws', function (t) {
   var error = new Error();
 
   var N = 8;
@@ -608,7 +608,7 @@ test('then 8 throws', function (t) {
   t.end();
 });
 
-test('and 9', function (t) {
+test('Observable#when and 9', function (t) {
   var N = 9;
 
   var scheduler = new TestScheduler();
@@ -630,7 +630,7 @@ test('and 9', function (t) {
   t.end();
 });
 
-test('and 9 error', function (t) {
+test('Observable#when and 9 error', function (t) {
   var error = new Error();
 
   var N = 9;
@@ -659,7 +659,7 @@ test('and 9 error', function (t) {
   t.end();
 });
 
-test('then 9 throws', function (t) {
+test('Observable#when then 9 throws', function (t) {
   var error = new Error();
 
   var N = 9;
@@ -682,7 +682,7 @@ test('then 9 throws', function (t) {
   t.end();
 });
 
-test('when multiple data symmetric', function (t) {
+test('Observable#when when multiple data symmetric', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -713,7 +713,7 @@ test('when multiple data symmetric', function (t) {
   t.end();
 });
 
-test('when multiple data asymmetric', function (t) {
+test('Observable#when when multiple data asymmetric', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -742,7 +742,7 @@ test('when multiple data asymmetric', function (t) {
   t.end();
 });
 
-test('when empty empty', function (t) {
+test('Observable#when when empty empty', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
@@ -764,7 +764,7 @@ test('when empty empty', function (t) {
   t.end();
 });
 
-test('when never never', function (t) {
+test('Observable#when when never never', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = Observable.never();
@@ -780,7 +780,7 @@ test('when never never', function (t) {
   t.end();
 });
 
-test('when throw non-empty', function (t) {
+test('Observable#when when throw non-empty', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -804,7 +804,7 @@ test('when throw non-empty', function (t) {
   t.end();
 });
 
-test('complicated when', function (t) {
+test('Observable#when complicated when', function (t) {
   var scheduler = new TestScheduler();
 
   var xs = scheduler.createHotObservable(
