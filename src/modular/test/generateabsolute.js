@@ -159,3 +159,30 @@ test('Observable.generateAbsolute absolute time dispose', function (t) {
 
   t.end();
 });
+
+test('generateWithAbsoluteTime resultSelection', function(t) {
+
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.startScheduler(function() {
+    return Observable.generateAbsolute(0, function(x) {
+      return x < 3;
+    }, function(x) {
+      return x + 1;
+    }, function(x) {
+      return 2 * x + 1;
+    }, function(x) {
+      return 10 * x;
+    }, scheduler);
+  });
+
+  reactiveAssert(t, results.messages,
+    [onNext(202, 1),
+      onNext(212, 3),
+      onNext(232, 5),
+      onCompleted(232)]
+  );
+
+  t.end();
+
+});
