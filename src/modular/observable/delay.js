@@ -201,7 +201,7 @@ DelaySelectorObseravble.prototype.subscribeCore = function (o) {
 module.exports = function delay () {
   var source = arguments[0], firstArg = arguments[1];
   if (typeof firstArg === 'number' || firstArg instanceof Date) {
-    var dueTime = firstArg, scheduler = arguments[1];
+    var dueTime = firstArg, scheduler = arguments[2];
     isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
     return dueTime instanceof Date ?
       new DelayAbsoluteObservable(source, dueTime, scheduler) :
