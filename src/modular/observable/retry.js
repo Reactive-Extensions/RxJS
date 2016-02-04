@@ -44,17 +44,17 @@ CatchErrorObserver.prototype.next = function (x) { this._state.o.onNext(x); };
 CatchErrorObserver.prototype.error = function (e) { this._state.lastError = e; this._recurse(this._state); };
 CatchErrorObserver.prototype.completed = function () { this._state.o.onCompleted(); };
 
-function IsDisposedDisposable(state) {
-  this._s = state;
-  this.isDisposed = false;
+function createDisposable(state) {
+  return {
+    isDisposed: false,
+    dispose: function () {
+      if (!this.isDisposed) {
+        this.isDisposed = true;
+        state.isDisposed = true;
+      }
+    }
+  };
 }
-
-IsDisposedDisposable.prototype.dispose = function () {
-  if (!this.isDisposed) {
-    this.isDisposed = true;
-    this._s.isDisposed = true;
-  }
-};
 
 function CatchErrorObservable(sources) {
   this.sources = sources;
@@ -88,7 +88,7 @@ CatchErrorObservable.prototype.subscribeCore = function (o) {
   };
 
   var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
-  return new NAryDisposable([subscription, cancelable, new IsDisposedDisposable(state)]);
+  return new NAryDisposable([subscription, cancelable, createDisposable(state)]);
 };
 
 module.exports = function retry(source, retryCount) {
