@@ -16,7 +16,7 @@ if (!global._Rx.currentThreadScheduler) {
 
 var $iterator$ = '@@iterator';
 
-function repeat(value, count) {
+function repeatValue(value, count) {
   count == null && (count = -1);
   return {
     '@@iterator': function () {
@@ -32,18 +32,6 @@ function repeat(value, count) {
   };
 }
 
-function CatchErrorObserver(state, recurse) {
-  this._state = state;
-  this._recurse = recurse;
-  AbstractObserver.call(this);
-}
-
-inherits(CatchErrorObserver, AbstractObserver);
-
-CatchErrorObserver.prototype.next = function (x) { this._state.o.onNext(x); };
-CatchErrorObserver.prototype.error = function (e) { this._state.lastError = e; this._recurse(this._state); };
-CatchErrorObserver.prototype.completed = function () { this._state.o.onCompleted(); };
-
 function createDisposable(state) {
   return {
     isDisposed: false,
@@ -56,40 +44,52 @@ function createDisposable(state) {
   };
 }
 
-function CatchErrorObservable(sources) {
+function ConcatObserver(state, recurse) {
+  this._state = state;
+  this._recurse = recurse;
+  AbstractObserver.call(this);
+}
+
+inherits(ConcatObserver, AbstractObserver);
+
+ConcatObserver.prototype.next = function (x) { this._state.o.onNext(x); };
+ConcatObserver.prototype.error = function (e) { this._state.o.onError(e); };
+ConcatObserver.prototype.completed = function () { this._recurse(this._state); };
+
+function ConcatObservable(sources) {
   this.sources = sources;
   ObservableBase.call(this);
 }
 
-inherits(CatchErrorObservable, ObservableBase);
+inherits(ConcatObservable, ObservableBase);
 
 function scheduleMethod(state, recurse) {
   if (state.isDisposed) { return; }
   var currentItem = state.e.next();
-  if (currentItem.done) { return state.lastError !== null ? state.o.onError(state.lastError) : state.o.onCompleted(); }
+  if (currentItem.done) { return state.o.onCompleted(); }
 
+  // Check if promise
   var currentValue = currentItem.value;
   isPromise(currentValue) && (currentValue = fromPromise(currentValue));
 
   var d = new SingleAssignmentDisposable();
   state.subscription.setDisposable(d);
-  d.setDisposable(currentValue.subscribe(new CatchErrorObserver(state, recurse)));
+  d.setDisposable(currentValue.subscribe(new ConcatObserver(state, recurse)));
 }
 
-CatchErrorObservable.prototype.subscribeCore = function (o) {
+ConcatObservable.prototype.subscribeCore = function (o) {
   var subscription = new SerialDisposable();
   var state = {
     isDisposed: false,
-    e: this.sources[$iterator$](),
+    o: o,
     subscription: subscription,
-    lastError: null,
-    o: o
+    e: this.sources[$iterator$]()
   };
 
   var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
   return new NAryDisposable([subscription, cancelable, createDisposable(state)]);
 };
 
-module.exports = function retry(source, retryCount) {
-  return new CatchErrorObservable(repeat(source, retryCount));
+module.exports = function repeat(source, repeatCount) {
+  return new ConcatObservable(repeatValue(source, repeatCount));
 };
