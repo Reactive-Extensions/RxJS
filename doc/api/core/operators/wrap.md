@@ -14,7 +14,7 @@ Wrap the given generator `fn` into a function that returns an Observable.
 var Rx = require('rx');
 
 var fn = Rx.Observable.wrap(function* (val) {
-  return yield Observable.just(val);
+  return yield Rx.Observable.just(val);
 });
 
 fn(42).subscribe(
