@@ -1,16 +1,16 @@
 ### `Rx.Observable.prototype.retryWhen(notifier)`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/retrywhen.js "View in source")
 
-Repeats the source observable sequence on error when the notifier emits a next value. If the source observable errors and the notifier completes, it will complete the source sequence
+Repeats the source observable sequence on error when the notifier emits a next value. If the source observable errors and the notifier completes, it will complete the source sequence.
 
 #### Arguments
 1. `notificationHandler` *(`Function`)*: A handler that is passed an observable sequence of errors raised by the source observable and returns
-and observable that either continues, completes or errors. This behavior is then applied to the source observable.
+an observable that either continues, completes or errors. This behavior is then applied to the source observable.
 
 #### Returns
 *(`Observable`)*: An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully or is notified to error or complete.
 
-#### Example: delayed retry
+#### Example: Delayed retry
 ```js
 var source = Rx.Observable.interval(1000)
     .map(function(n) {
@@ -117,7 +117,7 @@ var subscription = source.subscribe(
 // => Completed
 ```
 
-An incrememntal back-off strategy for handling errors:
+#### Example: An incremental back-off strategy for handling errors
 ```js
 Rx.Observable.create(function (o) {
     console.log("subscribing");
