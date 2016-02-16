@@ -15,7 +15,7 @@ Merges the specified observable sequences or Promises into one observable sequen
 /* Without a result selector */
 var range = Rx.Observable.range(0, 5);
 
-var source = Observable.zip(
+var source = Rx.Observable.zip(
   range,
   range.skip(1),
   range.skip(2)
@@ -40,7 +40,7 @@ var subscription = source.subscribe(
 /* With a result selector */
 var range = Rx.Observable.range(0, 5);
 
-var source = Observable.zip(
+var source = Rx.Observable.zip(
   range,
   range.skip(1),
   range.skip(2),
@@ -68,7 +68,7 @@ var subscription = source.subscribe(
 /* Using promises and Observables */
 var range = Rx.Observable.range(0, 5);
 
-var source = Observable.zip(
+var source = Rx.Observable.zip(
   Promise.resolve(0),
   Promise.resolve(1),
   Rx.Observable.return(2),
