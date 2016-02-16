@@ -35,7 +35,17 @@ function NotImplementedError(message) {
 NotImplementedError.prototype = Object.create(Error.prototype);
 NotImplementedError.prototype.name = 'NotImplementedError';
 
+function CompositeError (errors) {
+  this.innerErrors = errors;
+  this.message = 'This contains multiple errors. Check the innerErrors';
+  Error.call(this);
+}
+
+CompositeError.prototype = Object.create(Error.prototype);
+CompositeError.prototype.name = 'CompositeError';
+
 module.exports = {
+  CompositeError: CompositeError,
   EmptyError: EmptyError,
   ObjectDisposedError: ObjectDisposedError,
   ArgumentOutOfRangeError: ArgumentOutOfRangeError,

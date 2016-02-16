@@ -76,6 +76,7 @@ NuGet Packages:
 - [`publishValue`](../../api/core/operators/publishvalue.md)
 - [`refCount`](../../api/core/operators/refcount.md)
 - [`repeat`](../../api/core/operators/repeat.md)
+- [`repeatWhen`](../../api/core/operators/repeatwhen.md)
 - [`replay`](../../api/core/operators/replay.md)
 - [`retry`](../../api/core/operators/retry.md)
 - [`retryWhen`](../../api/core/operators/retrywhen.md)

@@ -41,18 +41,18 @@ function createDisposable(state) {
   };
 }
 
-function CatchErrorWhenObservable(source, notifier) {
+function RepeatWhenObservable(source, notifier) {
   this.source = source;
   this._notifier = notifier;
   ObservableBase.call(this);
 }
 
-inherits(CatchErrorWhenObservable, ObservableBase);
+inherits(RepeatWhenObservable, ObservableBase);
 
-CatchErrorWhenObservable.prototype.subscribeCore = function (o) {
-  var exceptions = new Subject(),
+RepeatWhenObservable.prototype.subscribeCore = function (o) {
+  var completions = new Subject(),
     notifier = new Subject(),
-    handled = this._notifier(exceptions),
+    handled = this._notifier(completions),
     notificationDisposable = handled.subscribe(notifier);
 
   var e = this.source[$iterator$]();
@@ -82,22 +82,22 @@ CatchErrorWhenObservable.prototype.subscribeCore = function (o) {
     subscription.setDisposable(new BinaryDisposable(inner, outer));
     outer.setDisposable(currentValue.subscribe(
       function(x) { o.onNext(x); },
-      function (exn) {
+      function (exn) { o.onError(exn); },
+      function() {
         inner.setDisposable(notifier.subscribe(recurse, function(ex) {
           o.onError(ex);
         }, function() {
           o.onCompleted();
         }));
 
-        exceptions.onNext(exn);
+        completions.onNext(null);
         outer.dispose();
-      },
-      function() { o.onCompleted(); }));
+      }));
   });
 
   return new NAryDisposable([notificationDisposable, subscription, cancelable, createDisposable(state)]);
 };
 
-module.exports = function retryWhen (source, notifier) {
-  return new CatchErrorWhenObservable(repeat(source), notifier);
+module.exports = function repeatWhen (source, notifier) {
+  return new RepeatWhenObservable(repeat(source), notifier);
 };

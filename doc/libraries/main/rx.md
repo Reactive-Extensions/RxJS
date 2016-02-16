@@ -70,6 +70,7 @@ NuGet Packages:
 - [`observeOn`](../../api/core/operators/observeon.md)
 - [`onErrorResumeNext`](../../api/core/operators/onerrorresumenext.md)
 - [`repeat`](../../api/core/operators/repeatproto.md)
+- [`repeatWhen`](../../api/core/operators/repeatwhen.md)
 - [`retry`](../../api/core/operators/retry.md)
 - [`retryWhen`](../../api/core/operators/retrywhen.md)
 - [`scan`](../../api/core/operators/scan.md)

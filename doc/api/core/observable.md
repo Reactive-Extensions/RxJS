@@ -4,8 +4,6 @@ The Observable object represents a push based collection.
 
 The Observer and Observable interfaces provide a generalized mechanism for push-based notification, also known as the observer design pattern. The Observable object represents the object that sends notifications (the provider); the Observer object represents the class that receives them (the observer).
 
-<!-- div -->
-
 ## `Observable Methods`
 - [`amb`](operators/amb.md)
 - [`case`](operators/case.md)
@@ -138,6 +136,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`refCount`](operators/refcount.md)
 - [`reduce`](operators/reduce.md)
 - [`repeat`](operators/repeatproto.md)
+- [`repeatWhen`](operators/repeatwhen.md)
 - [`replay`](operators/replay.md)
 - [`retry`](operators/retry.md)
 - [`retryWhen`](operators/retrywhen.md)

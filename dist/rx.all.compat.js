@@ -2617,59 +2617,6 @@ var FlatMapObservable = Rx.FlatMapObservable = (function(__super__) {
     return new CatchErrorObservable(this);
   };
 
-  Enumerable.prototype.catchErrorWhen = function (notificationHandler) {
-    var sources = this;
-    return new AnonymousObservable(function (o) {
-      var exceptions = new Subject(),
-        notifier = new Subject(),
-        handled = notificationHandler(exceptions),
-        notificationDisposable = handled.subscribe(notifier);
-
-      var e = sources[$iterator$]();
-
-      var state = { isDisposed: false },
-        lastError,
-        subscription = new SerialDisposable();
-      var cancelable = currentThreadScheduler.scheduleRecursive(null, function (_, self) {
-        if (state.isDisposed) { return; }
-        var currentItem = tryCatch(e.next).call(e);
-        if (currentItem === errorObj) { return o.onError(currentItem.e); }
-
-        if (currentItem.done) {
-          if (lastError) {
-            o.onError(lastError);
-          } else {
-            o.onCompleted();
-          }
-          return;
-        }
-
-        // Check if promise
-        var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
-
-        var outer = new SingleAssignmentDisposable();
-        var inner = new SingleAssignmentDisposable();
-        subscription.setDisposable(new BinaryDisposable(inner, outer));
-        outer.setDisposable(currentValue.subscribe(
-          function(x) { o.onNext(x); },
-          function (exn) {
-            inner.setDisposable(notifier.subscribe(self, function(ex) {
-              o.onError(ex);
-            }, function() {
-              o.onCompleted();
-            }));
-
-            exceptions.onNext(exn);
-            outer.dispose();
-          },
-          function() { o.onCompleted(); }));
-      });
-
-      return new NAryDisposable([notificationDisposable, subscription, cancelable, new IsDisposedDisposable(state)]);
-    });
-  };
-
   var RepeatEnumerable = (function (__super__) {
     inherits(RepeatEnumerable, __super__);
     function RepeatEnumerable(v, c) {
@@ -5124,19 +5071,184 @@ observableProto.zipIterable = function () {
     return enumerableRepeat(this, retryCount).catchError();
   };
 
-  /**
-   *  Repeats the source observable sequence upon error each time the notifier emits or until it successfully terminates. 
-   *  if the notifier completes, the observable sequence completes.
-   *
-   * @example
-   *  var timer = Observable.timer(500);
-   *  var source = observable.retryWhen(timer);
-   * @param {Observable} [notifier] An observable that triggers the retries or completes the observable with onNext or onCompleted respectively.
-   * @returns {Observable} An observable sequence producing the elements of the given sequence repeatedly until it terminates successfully.
-   */
+  function repeat(value) {
+    return {
+      '@@iterator': function () {
+        return {
+          next: function () {
+            return { done: false, value: value };
+          }
+        };
+      }
+    };
+  }
+
+  var RetryWhenObservable = (function(__super__) {
+    function createDisposable(state) {
+      return {
+        isDisposed: false,
+        dispose: function () {
+          if (!this.isDisposed) {
+            this.isDisposed = true;
+            state.isDisposed = true;
+          }
+        }
+      };
+    }
+
+    function RetryWhenObservable(source, notifier) {
+      this.source = source;
+      this._notifier = notifier;
+      __super__.call(this);
+    }
+
+    inherits(RetryWhenObservable, __super__);
+
+    RetryWhenObservable.prototype.subscribeCore = function (o) {
+      var exceptions = new Subject(),
+        notifier = new Subject(),
+        handled = this._notifier(exceptions),
+        notificationDisposable = handled.subscribe(notifier);
+
+      var e = this.source['@@iterator']();
+
+      var state = { isDisposed: false },
+        lastError,
+        subscription = new SerialDisposable();
+      var cancelable = currentThreadScheduler.scheduleRecursive(null, function (_, recurse) {
+        if (state.isDisposed) { return; }
+        var currentItem = e.next();
+
+        if (currentItem.done) {
+          if (lastError) {
+            o.onError(lastError);
+          } else {
+            o.onCompleted();
+          }
+          return;
+        }
+
+        // Check if promise
+        var currentValue = currentItem.value;
+        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
+        var outer = new SingleAssignmentDisposable();
+        var inner = new SingleAssignmentDisposable();
+        subscription.setDisposable(new BinaryDisposable(inner, outer));
+        outer.setDisposable(currentValue.subscribe(
+          function(x) { o.onNext(x); },
+          function (exn) {
+            inner.setDisposable(notifier.subscribe(recurse, function(ex) {
+              o.onError(ex);
+            }, function() {
+              o.onCompleted();
+            }));
+
+            exceptions.onNext(exn);
+            outer.dispose();
+          },
+          function() { o.onCompleted(); }));
+      });
+
+      return new NAryDisposable([notificationDisposable, subscription, cancelable, createDisposable(state)]);
+    };
+
+    return RetryWhenObservable;
+  }(ObservableBase));
+
   observableProto.retryWhen = function (notifier) {
-    return enumerableRepeat(this).catchErrorWhen(notifier);
+    return new RetryWhenObservable(repeat(this), notifier);
   };
+
+  function repeat(value) {
+    return {
+      '@@iterator': function () {
+        return {
+          next: function () {
+            return { done: false, value: value };
+          }
+        };
+      }
+    };
+  }
+
+  var RepeatWhenObservable = (function(__super__) {
+    function createDisposable(state) {
+      return {
+        isDisposed: false,
+        dispose: function () {
+          if (!this.isDisposed) {
+            this.isDisposed = true;
+            state.isDisposed = true;
+          }
+        }
+      };
+    }
+
+    function RepeatWhenObservable(source, notifier) {
+      this.source = source;
+      this._notifier = notifier;
+      __super__.call(this);
+    }
+
+    inherits(RepeatWhenObservable, __super__);
+
+    RepeatWhenObservable.prototype.subscribeCore = function (o) {
+      var completions = new Subject(),
+        notifier = new Subject(),
+        handled = this._notifier(completions),
+        notificationDisposable = handled.subscribe(notifier);
+
+      var e = this.source['@@iterator']();
+
+      var state = { isDisposed: false },
+        lastError,
+        subscription = new SerialDisposable();
+      var cancelable = currentThreadScheduler.scheduleRecursive(null, function (_, recurse) {
+        if (state.isDisposed) { return; }
+        var currentItem = e.next();
+
+        if (currentItem.done) {
+          if (lastError) {
+            o.onError(lastError);
+          } else {
+            o.onCompleted();
+          }
+          return;
+        }
+
+        // Check if promise
+        var currentValue = currentItem.value;
+        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
+
+        var outer = new SingleAssignmentDisposable();
+        var inner = new SingleAssignmentDisposable();
+        subscription.setDisposable(new BinaryDisposable(inner, outer));
+        outer.setDisposable(currentValue.subscribe(
+          function(x) { o.onNext(x); },
+          function (exn) { o.onError(exn); },
+          function() {
+            inner.setDisposable(notifier.subscribe(recurse, function(ex) {
+              o.onError(ex);
+            }, function() {
+              o.onCompleted();
+            }));
+
+            completions.onNext(null);
+            outer.dispose();
+          }));
+      });
+
+      return new NAryDisposable([notificationDisposable, subscription, cancelable, createDisposable(state)]);
+    };
+
+    return RepeatWhenObservable;
+  }(ObservableBase));
+
+  observableProto.repeatWhen = function (notifier) {
+    return new RepeatWhenObservable(repeat(this), notifier);
+  };
+
   var ScanObservable = (function(__super__) {
     inherits(ScanObservable, __super__);
     function ScanObservable(source, accumulator, hasSeed, seed) {
@@ -9869,7 +9981,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       }
 
       return new BinaryDisposable(subscription, delays);
-    }, this);
+    }, source);
   }
 
   /**

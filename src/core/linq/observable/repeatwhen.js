@@ -10,7 +10,7 @@
     };
   }
 
-  var RetryWhenObservable = (function(__super__) {
+  var RepeatWhenObservable = (function(__super__) {
     function createDisposable(state) {
       return {
         isDisposed: false,
@@ -23,18 +23,18 @@
       };
     }
 
-    function RetryWhenObservable(source, notifier) {
+    function RepeatWhenObservable(source, notifier) {
       this.source = source;
       this._notifier = notifier;
       __super__.call(this);
     }
 
-    inherits(RetryWhenObservable, __super__);
+    inherits(RepeatWhenObservable, __super__);
 
-    RetryWhenObservable.prototype.subscribeCore = function (o) {
-      var exceptions = new Subject(),
+    RepeatWhenObservable.prototype.subscribeCore = function (o) {
+      var completions = new Subject(),
         notifier = new Subject(),
-        handled = this._notifier(exceptions),
+        handled = this._notifier(completions),
         notificationDisposable = handled.subscribe(notifier);
 
       var e = this.source['@@iterator']();
@@ -64,25 +64,25 @@
         subscription.setDisposable(new BinaryDisposable(inner, outer));
         outer.setDisposable(currentValue.subscribe(
           function(x) { o.onNext(x); },
-          function (exn) {
+          function (exn) { o.onError(exn); },
+          function() {
             inner.setDisposable(notifier.subscribe(recurse, function(ex) {
               o.onError(ex);
             }, function() {
               o.onCompleted();
             }));
 
-            exceptions.onNext(exn);
+            completions.onNext(null);
             outer.dispose();
-          },
-          function() { o.onCompleted(); }));
+          }));
       });
 
       return new NAryDisposable([notificationDisposable, subscription, cancelable, createDisposable(state)]);
     };
 
-    return RetryWhenObservable;
+    return RepeatWhenObservable;
   }(ObservableBase));
 
-  observableProto.retryWhen = function (notifier) {
-    return new RetryWhenObservable(repeat(this), notifier);
+  observableProto.repeatWhen = function (notifier) {
+    return new RepeatWhenObservable(repeat(this), notifier);
   };

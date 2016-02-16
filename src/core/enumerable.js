@@ -121,59 +121,6 @@
     return new CatchErrorObservable(this);
   };
 
-  Enumerable.prototype.catchErrorWhen = function (notificationHandler) {
-    var sources = this;
-    return new AnonymousObservable(function (o) {
-      var exceptions = new Subject(),
-        notifier = new Subject(),
-        handled = notificationHandler(exceptions),
-        notificationDisposable = handled.subscribe(notifier);
-
-      var e = sources[$iterator$]();
-
-      var state = { isDisposed: false },
-        lastError,
-        subscription = new SerialDisposable();
-      var cancelable = currentThreadScheduler.scheduleRecursive(null, function (_, self) {
-        if (state.isDisposed) { return; }
-        var currentItem = tryCatch(e.next).call(e);
-        if (currentItem === errorObj) { return o.onError(currentItem.e); }
-
-        if (currentItem.done) {
-          if (lastError) {
-            o.onError(lastError);
-          } else {
-            o.onCompleted();
-          }
-          return;
-        }
-
-        // Check if promise
-        var currentValue = currentItem.value;
-        isPromise(currentValue) && (currentValue = observableFromPromise(currentValue));
-
-        var outer = new SingleAssignmentDisposable();
-        var inner = new SingleAssignmentDisposable();
-        subscription.setDisposable(new BinaryDisposable(inner, outer));
-        outer.setDisposable(currentValue.subscribe(
-          function(x) { o.onNext(x); },
-          function (exn) {
-            inner.setDisposable(notifier.subscribe(self, function(ex) {
-              o.onError(ex);
-            }, function() {
-              o.onCompleted();
-            }));
-
-            exceptions.onNext(exn);
-            outer.dispose();
-          },
-          function() { o.onCompleted(); }));
-      });
-
-      return new NAryDisposable([notificationDisposable, subscription, cancelable, new IsDisposedDisposable(state)]);
-    });
-  };
-
   var RepeatEnumerable = (function (__super__) {
     inherits(RepeatEnumerable, __super__);
     function RepeatEnumerable(v, c) {
