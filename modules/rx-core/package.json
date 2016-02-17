@@ -2,7 +2,7 @@
   "name": "rx-core",
   "title": "Reactive Extensions for JavaScript (RxJS) Core",
   "description": "Core library for composing asynchronous and event-based operations in JavaScript",
-  "version": "4.0.7",
+  "version": "4.0.8",
   "homepage": "https://github.com/Reactive-Extensions/RxJS",
   "author": {
     "name": "Cloud Programmability Team",

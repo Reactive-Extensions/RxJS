@@ -1,9 +1,11 @@
 {
-  "name": "rx.modular",
+  "name": "@rx/rx",
   "version": "4.0.0",
   "description": "RxJS in modular form",
   "main": "index.js",
   "scripts": {
+    "build:all:umd": "webpack index.js dist/rx.all.js --config webpack.config.js",
+    "build:all:umd:min": "webpack index.js dist/rx.all.min.js  --config webpack.config.production.js",
     "build:lite:umd": "webpack rx.lite.js dist/rx.lite.js --config webpack.config.js",
     "build:lite:umd:min": "webpack rx.lite.js dist/rx.lite.min.js  --config webpack.config.production.js",
     "test": "tape test/**/*.js | tap-spec"
