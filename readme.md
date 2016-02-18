@@ -22,7 +22,7 @@
 
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
-The project is actively developed by [Microsoft Open Technologies, Inc.](https://msopentech.com/), in collaboration with a community of open source developers.
+The project is actively developed by [Microsoft](https://microsoft.com/), in collaboration with a community of open source developers.
 
 ## The Need to go Reactive ##
 
@@ -196,11 +196,9 @@ Please check out:
 ## Resources
 
 - Contact us
-    - [Tech Blog](http://blogs.msdn.com/b/rxteam/)
     - [Twitter @ReactiveX](https://twitter.com/ReactiveX)
-    - [Twitter @OpenAtMicrosoft](https://twitter.com/OpenAtMicrosoft)
+    - [Gitter.im](https://gitter.im/Reactive-Extensions/RxJS)
     - [StackOverflow rxjs](http://stackoverflow.com/questions/tagged/rxjs)
-    - [Slack](https://reactivex.slack.com/)
 
 - Tutorials
     - [The introduction to Reactive Programming you've been missing](https://gist.github.com/staltz/868e7e9bc2a7b8c1f754)
@@ -239,14 +237,6 @@ Please check out:
 ## Getting Started
 
 There are a number of ways to get started with RxJS. The files are available on [cdnjs](http://cdnjs.com/libraries/rxjs/) and [jsDelivr](http://www.jsdelivr.com/#!rxjs).
-
-### Custom Builds
-
-You can use the [`rx-cli`](https://www.npmjs.com/package/rx-cli) to perform custom builds to create the RxJS you want:
-
-```bash
-$ rx --lite --compat --methods select,selectmany,takeuntil,fromevent
-```
 
 ### Download the Source
 
