@@ -1,11 +1,13 @@
 {
   "name": "@rx/rx",
-  "version": "4.0.0",
-  "description": "RxJS in modular form",
+  "version": "4.0.8",
+  "description": "The Reactive Extensions for JavaScript",
   "main": "index.js",
   "scripts": {
     "build:all:umd": "webpack index.js dist/rx.all.js --config webpack.config.js",
     "build:all:umd:min": "webpack index.js dist/rx.all.min.js  --config webpack.config.production.js",
+    "build:main:umd": "webpack rx.js dist/rx.js --config webpack.config.js",
+    "build:main:umd:min": "webpack rx.js dist/rx.min.js  --config webpack.config.production.js",
     "build:lite:umd": "webpack rx.lite.js dist/rx.lite.js --config webpack.config.js",
     "build:lite:umd:min": "webpack rx.lite.js dist/rx.lite.min.js  --config webpack.config.production.js",
     "test": "tape test/**/*.js | tap-spec"

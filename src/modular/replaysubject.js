@@ -10,7 +10,7 @@ var inherits = require('inherits');
 
 global._Rx || (global._Rx = {});
 if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
+  require('./scheduler/currentthreadscheduler');
 }
 
 var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;

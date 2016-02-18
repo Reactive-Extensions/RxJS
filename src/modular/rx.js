@@ -10,6 +10,8 @@ var Observable = require('./observable');
 
 Observable.addToObject({
   amb: require('./observable/amb'),
+  bindCallback: require('./observable/bindcallback'),
+  bindNodeCallback: require('./observable/bindnodecallback'),
   catch: require('./observable/catch'),
   concat: require('./observable/concat'),
   create: require('./observable/create'),
@@ -17,10 +19,8 @@ Observable.addToObject({
   empty: require('./observable/empty'),
   from: require('./observable/from'),
   fromArray: require('./observable/fromarray'),
-  fromCallback: require('./observable/fromcallback'),
   fromEvent: require('./observable/fromevent'),
   fromEventPattern: require('./observable/fromeventpattern'),
-  fromNodeCallback: require('./observable/fromnodecallback'),
   fromPromise: require('./observable/frompromise'),
   generate: require('./observable/generate'),
   just: require('./observable/just'),
@@ -32,7 +32,7 @@ Observable.addToObject({
   onErrorResumeNext: require('./observable/onerrorresumenext'),
   range: require('./observable/range'),
   throw: require('./observable/throw'),
-  using: require('./observable/using')
+  zip: require('./observable/zip')
 });
 
 Observable.addToPrototype({
@@ -44,7 +44,7 @@ Observable.addToPrototype({
   distinctUntilChanged: require('./observable/distinctuntilchanged'),
   filter: require('./observable/filter'),
   finally: require('./observable/finally'),
-  flatMap: require('./observable/flatMap'),
+  flatMap: require('./observable/flatmap'),
   flatMapLatest: require('./observable/flatmaplatest'),
   map: require('./observable/map'),
   merge: require('./observable/merge'),
@@ -54,7 +54,7 @@ Observable.addToPrototype({
   skip: require('./observable/skip'),
   skipUntil: require('./observable/skipuntil'),
   switch: require('./observable/switch'),
-  take: require('./obserable/take'),
+  take: require('./observable/take'),
   takeUntil: require('./observable/takeuntil'),
   tap: require('./observable/tap'),
   toArray: require('./observable/toarray'),

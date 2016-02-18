@@ -9,6 +9,7 @@ Observer.addToObject({
 var Observable = require('./observable');
 
 Observable.addToObject({
+  amb: require('./observable/amb'),
   bindCallback: require('./observable/bindcallback'),
   bindNodeCallback: require('./observable/bindnodecallback'),
   case: require('./observable/case'),
@@ -48,6 +49,7 @@ Observable.addToObject({
 });
 
 Observable.addToPrototype({
+  amb: require('./observable/amb'),
   and: require('./observable/and'),
   asObservable: require('./observable/asobservable'),
   average: require('./observable/average'),
@@ -74,7 +76,7 @@ Observable.addToPrototype({
   find: require('./observable/find'),
   findIndex: require('./observable/findindex'),
   first: require('./observable/first'),
-  flatMap: require('./observable/flatMap'),
+  flatMap: require('./observable/flatmap'),
   flatMapLatest: require('./observable/flatmaplatest'),
   forkJoin: require('./observable/forkjoin'),
   groupJoin: require('./observable/groupjoin'),
