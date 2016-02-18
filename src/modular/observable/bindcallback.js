@@ -1,9 +1,9 @@
 'use strict';
 
 var AsyncSubject = require('../asyncsubject');
+var asObservable  = require('./asobservable');
 var isFunction = require('../helpers/isfunction');
-var tryCatchUtils = require('../internal/trycatchutils');
-var tryCatch = tryCatchUtils.tryCatch;
+var tryCatch = require('../internal/trycatchutils').tryCatch;
 
 function createCbHandler(o, ctx, selector) {
   return function handler () {
@@ -30,9 +30,10 @@ function createCbObservable(fn, ctx, selector, args) {
   var o = new AsyncSubject();
 
   args.push(createCbHandler(o, ctx, selector));
-  fn.apply(ctx, args);
+  var res = tryCatch(fn).apply(ctx, args);
+  if (res === global._Rx.errorObj) { o.onError(res.e); }
 
-  return o.asObservable();
+  return asObservable(o);
 }
 
 /**
@@ -43,7 +44,7 @@ function createCbObservable(fn, ctx, selector, args) {
  * @param {Function} [selector] A selector which takes the arguments from the callback to produce a single item to yield on next.
  * @returns {Function} A function, when executed with the required parameters minus the callback, produces an Observable sequence with a single value of the arguments to the callback as an array.
  */
-module.exports = function fromCallback (fn, ctx, selector) {
+module.exports = function bindCallback (fn, ctx, selector) {
   return function () {
     typeof ctx === 'undefined' && (ctx = this);
 
