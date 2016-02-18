@@ -1,5 +1,5 @@
 {
-  "name": "@rx/rx",
+  "name": "@rxjs/rx",
   "version": "4.0.8",
   "description": "The Reactive Extensions for JavaScript",
   "main": "index.js",
