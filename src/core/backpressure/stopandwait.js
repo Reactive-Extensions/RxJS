@@ -6,7 +6,7 @@
     }
 
     function scheduleMethod(s, self) {
-      self.source.request(1);
+      return self.source.request(1);
     }
 
     StopAndWaitObservable.prototype._subscribe = function (o) {
@@ -38,7 +38,7 @@
       };
 
       function innerScheduleMethod(s, self) {
-        self.observable.source.request(1);
+        return self.observable.source.request(1);
       }
 
       StopAndWaitObserver.prototype.next = function (value) {
@@ -46,7 +46,7 @@
         this.scheduleDisposable = defaultScheduler.schedule(this, innerScheduleMethod);
       };
 
-      StopAndWaitObservable.dispose = function () {
+      StopAndWaitObserver.dispose = function () {
         this.observer = null;
         if (this.cancel) {
           this.cancel.dispose();

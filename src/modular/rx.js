@@ -32,6 +32,7 @@ Observable.addToObject({
   onErrorResumeNext: require('./observable/onerrorresumenext'),
   range: require('./observable/range'),
   throw: require('./observable/throw'),
+  using: require('./observable/using'),
   zip: require('./observable/zip')
 });
 

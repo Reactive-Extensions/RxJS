@@ -7,7 +7,7 @@
     }
 
     function scheduleMethod(s, self) {
-      self.source.request(self.windowSize);
+      return self.source.request(self.windowSize);
     }
 
     WindowedObservable.prototype._subscribe = function (o) {
@@ -40,7 +40,7 @@
       };
 
       function innerScheduleMethod(s, self) {
-        self.observable.source.request(self.observable.windowSize);
+        return self.observable.source.request(self.observable.windowSize);
       }
 
       WindowedObserver.prototype.next = function (value) {

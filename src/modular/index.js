@@ -45,6 +45,7 @@ Observable.addToObject({
   timer: require('./observable/timer'),
   toAsync: require('./observable/toasync'),
   when: require('./observable/when'),
+  using: require('./observable/using'),
   zip: require('./observable/zip')
 });
 

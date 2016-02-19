@@ -26,7 +26,9 @@ Observable.addToObject({
   never: require('./observable/never'),
   of: require('./observable/of'),
   range: require('./observable/range'),
-  throw: require('./observable/throw')
+  throw: require('./observable/throw'),
+  using: require('./observable/using'),
+  zip: require('./observable/zip')
 });
 
 Observable.addToPrototype({
