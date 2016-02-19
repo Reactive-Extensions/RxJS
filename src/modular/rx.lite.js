@@ -38,6 +38,7 @@ Observable.addToPrototype({
   concatAll: require('./observable/concatall'),
   debounce: require('./observable/debounce'),
   distinctUntilChanged: require('./observable/distinctuntilchanged'),
+  do: require('./observable/tap'),
   filter: require('./observable/filter'),
   finally: require('./observable/finally'),
   flatMap: require('./observable/flatmap'),
@@ -60,6 +61,8 @@ Observable.addToPrototype({
   take: require('./observable/take'),
   takeUntil: require('./observable/takeuntil'),
   tap: require('./observable/tap'),
+  toArray: require('./observable/toarray'),
+  toPromise: require('./observable/topromise'),
   zip: require('./observable/zip')
 });
 

@@ -1,6 +1,6 @@
 {
   "name": "@rxjs/rx",
-  "version": "4.0.10",
+  "version": "4.0.11",
   "description": "The Reactive Extensions for JavaScript",
   "main": "index.js",
   "scripts": {

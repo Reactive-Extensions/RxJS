@@ -82,39 +82,44 @@ return /******/ (function(modules) { // webpackBootstrap
 	  never: __webpack_require__(56),
 	  of: __webpack_require__(57),
 	  range: __webpack_require__(58),
-	  throw: __webpack_require__(59)
+	  throw: __webpack_require__(59),
+	  using: __webpack_require__(60),
+	  zip: __webpack_require__(61)
 	});
 
 	Observable.addToPrototype({
 	  catch: __webpack_require__(29),
-	  combineLatest: __webpack_require__(60),
+	  combineLatest: __webpack_require__(63),
 	  concat: __webpack_require__(38),
-	  concatAll: __webpack_require__(62),
-	  debounce: __webpack_require__(64),
-	  distinctUntilChanged: __webpack_require__(65),
-	  filter: __webpack_require__(67),
-	  finally: __webpack_require__(68),
-	  flatMap: __webpack_require__(69),
-	  flatMapLatest: __webpack_require__(73),
-	  map: __webpack_require__(75),
+	  concatAll: __webpack_require__(64),
+	  debounce: __webpack_require__(66),
+	  distinctUntilChanged: __webpack_require__(67),
+	  do: __webpack_require__(69),
+	  filter: __webpack_require__(70),
+	  finally: __webpack_require__(71),
+	  flatMap: __webpack_require__(72),
+	  flatMapLatest: __webpack_require__(76),
+	  map: __webpack_require__(78),
 	  merge: __webpack_require__(54),
 	  mergeAll: __webpack_require__(55),
 	  multicast: __webpack_require__(50),
-	  pluck: __webpack_require__(76),
+	  pluck: __webpack_require__(79),
 	  publish: __webpack_require__(48),
-	  publishLast: __webpack_require__(77),
-	  publishValue: __webpack_require__(78),
-	  scan: __webpack_require__(80),
-	  share: __webpack_require__(81),
-	  shareReplay: __webpack_require__(82),
-	  shareValue: __webpack_require__(86),
-	  skip: __webpack_require__(87),
-	  skipUntil: __webpack_require__(88),
-	  switch: __webpack_require__(74),
-	  take: __webpack_require__(89),
-	  takeUntil: __webpack_require__(90),
-	  tap: __webpack_require__(91),
-	  zip: __webpack_require__(92)
+	  publishLast: __webpack_require__(80),
+	  publishValue: __webpack_require__(81),
+	  scan: __webpack_require__(83),
+	  share: __webpack_require__(84),
+	  shareReplay: __webpack_require__(85),
+	  shareValue: __webpack_require__(89),
+	  skip: __webpack_require__(90),
+	  skipUntil: __webpack_require__(91),
+	  switch: __webpack_require__(77),
+	  take: __webpack_require__(92),
+	  takeUntil: __webpack_require__(93),
+	  tap: __webpack_require__(69),
+	  toArray: __webpack_require__(94),
+	  toPromise: __webpack_require__(95),
+	  zip: __webpack_require__(61)
 	});
 
 	var Rx = {
@@ -131,8 +136,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  Observable: Observable,
 
 	  AsyncSubject: __webpack_require__(11),
-	  BehaviorSubject: __webpack_require__(79),
-	  ReplaySubject: __webpack_require__(84),
+	  BehaviorSubject: __webpack_require__(82),
+	  ReplaySubject: __webpack_require__(87),
 	  Subject: __webpack_require__(49)
 	};
 
@@ -3563,12 +3568,196 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
 	var ObservableBase = __webpack_require__(30);
+	var throwError = __webpack_require__(59);
+	var BinaryDisposable = __webpack_require__(36);
+	var Disposable = __webpack_require__(12);
+	var tryCatch = __webpack_require__(20).tryCatch;
+	var inherits = __webpack_require__(6);
+
+	function UsingObservable(resFn, obsFn) {
+	  this._resFn = resFn;
+	  this._obsFn = obsFn;
+	  ObservableBase.call(this);
+	}
+
+	inherits(UsingObservable, ObservableBase);
+
+	UsingObservable.prototype.subscribeCore = function (o) {
+	  var disposable = Disposable.empty;
+	  var resource = tryCatch(this._resFn)();
+	  if (resource === global._Rx.errorObj) {
+	    return new BinaryDisposable(throwError(resource.e).subscribe(o), disposable);
+	  }
+	  resource && (disposable = resource);
+	  var source = tryCatch(this._obsFn)(resource);
+	  if (source === global._Rx.errorObj) {
+	    return new BinaryDisposable(throwError(source.e).subscribe(o), disposable);
+	  }
+	  return new BinaryDisposable(source.subscribe(o), disposable);
+	};
+
+	/**
+	 * Constructs an observable sequence that depends on a resource object, whose lifetime is tied to the resulting observable sequence's lifetime.
+	 * @param {Function} resourceFactory Factory function to obtain a resource object.
+	 * @param {Function} observableFactory Factory function to obtain an observable sequence that depends on the obtained resource.
+	 * @returns {Observable} An observable sequence whose lifetime controls the lifetime of the dependent resource object.
+	 */
+	module.exports = function using(resourceFactory, observableFactory) {
+	  return new UsingObservable(resourceFactory, observableFactory);
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	var ObservableBase = __webpack_require__(30);
 	var AbstractObserver = __webpack_require__(5);
 	var SingleAssignmentDisposable = __webpack_require__(19);
 	var NAryDisposable = __webpack_require__(31);
 	var fromPromise = __webpack_require__(33);
 	var isPromise = __webpack_require__(37);
-	var identity = __webpack_require__(61);
+	var identity = __webpack_require__(62);
+	var isFunction = __webpack_require__(9);
+	var inherits = __webpack_require__(6);
+	var tryCatch = __webpack_require__(20).tryCatch;
+
+	function falseFactory() {
+	  return false;
+	}
+	function emptyArrayFactory() {
+	  return [];
+	}
+	function initializeArray(n, fn) {
+	  var results = new Array(n);
+	  for (var i = 0; i < n; i++) {
+	    results[i] = fn(i);
+	  }
+	  return results;
+	}
+	function argumentsToArray() {
+	  var len = arguments.length,
+	      args = new Array(len);
+	  for (var i = 0; i < len; i++) {
+	    args[i] = arguments[i];
+	  }
+	  return args;
+	}
+
+	function ZipObserver(o, i, p, q, d) {
+	  this._o = o;
+	  this._i = i;
+	  this._p = p;
+	  this._q = q;
+	  this._d = d;
+	  AbstractObserver.call(this);
+	}
+
+	inherits(ZipObserver, AbstractObserver);
+
+	function notEmpty(x) {
+	  return x.length > 0;
+	}
+	function shiftEach(x) {
+	  return x.shift();
+	}
+	function notTheSame(i) {
+	  return function (x, j) {
+	    return j !== i;
+	  };
+	}
+
+	ZipObserver.prototype.next = function (x) {
+	  this._q[this._i].push(x);
+	  if (this._q.every(notEmpty)) {
+	    var queuedValues = this._q.map(shiftEach);
+	    var res = tryCatch(this._p._cb).apply(null, queuedValues);
+	    if (res === global._Rx.errorObj) {
+	      return this._o.onError(res.e);
+	    }
+	    this._o.onNext(res);
+	  } else if (this._d.filter(notTheSame(this._i)).every(identity)) {
+	    this._o.onCompleted();
+	  }
+	};
+
+	ZipObserver.prototype.error = function (e) {
+	  this._o.onError(e);
+	};
+	ZipObserver.prototype.completed = function () {
+	  this._d[this._i] = true;
+	  this._d.every(identity) && this._o.onCompleted();
+	};
+
+	function ZipObservable(s, cb) {
+	  this._s = s;
+	  this._cb = cb;
+	  ObservableBase.call(this);
+	}
+
+	inherits(ZipObservable, ObservableBase);
+
+	ZipObservable.prototype.subscribeCore = function (observer) {
+	  var n = this._s.length,
+	      subscriptions = new Array(n),
+	      done = initializeArray(n, falseFactory),
+	      q = initializeArray(n, emptyArrayFactory);
+
+	  for (var i = 0; i < n; i++) {
+	    var source = this._s[i],
+	        sad = new SingleAssignmentDisposable();
+	    subscriptions[i] = sad;
+	    isPromise(source) && (source = fromPromise(source));
+	    sad.setDisposable(source.subscribe(new ZipObserver(observer, i, this, q, done)));
+	  }
+
+	  return new NAryDisposable(subscriptions);
+	};
+
+	/**
+	* Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
+	* The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
+	* @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
+	*/
+	module.exports = function zip() {
+	  if (arguments.length === 0) {
+	    throw new Error('invalid arguments');
+	  }
+	  var len = arguments.length,
+	      args = new Array(len);
+	  for (var i = 0; i < len; i++) {
+	    args[i] = arguments[i];
+	  }
+	  var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
+	  return new ZipObservable(args, resultSelector);
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 62 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	module.exports = function identity(x) {
+	  return x;
+	};
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	var ObservableBase = __webpack_require__(30);
+	var AbstractObserver = __webpack_require__(5);
+	var SingleAssignmentDisposable = __webpack_require__(19);
+	var NAryDisposable = __webpack_require__(31);
+	var fromPromise = __webpack_require__(33);
+	var isPromise = __webpack_require__(37);
+	var identity = __webpack_require__(62);
 	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
 	var tryCatch = __webpack_require__(20).tryCatch;
@@ -3680,29 +3869,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 61 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	module.exports = function identity(x) {
-	  return x;
-	};
-
-/***/ },
-/* 62 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var mergeConcat = __webpack_require__(63);
+	var mergeConcat = __webpack_require__(65);
 
 	module.exports = function concatAll(sources) {
 	  return mergeConcat(sources, 1);
 	};
 
 /***/ },
-/* 63 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3798,7 +3977,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 64 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -3960,7 +4139,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 65 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -3968,7 +4147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ObservableBase = __webpack_require__(30);
 	var AbstractObserver = __webpack_require__(5);
 	var isFunction = __webpack_require__(9);
-	var isEqual = __webpack_require__(66);
+	var isEqual = __webpack_require__(68);
 	var inherits = __webpack_require__(6);
 	var tryCatch = __webpack_require__(20).tryCatch;
 
@@ -4037,7 +4216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 66 */
+/* 68 */
 /***/ function(module, exports) {
 
 	var argsTag = '[object Arguments]',
@@ -4323,7 +4502,81 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 67 */
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+
+	var ObservableBase = __webpack_require__(30);
+	var AbstractObserver = __webpack_require__(5);
+	var create = __webpack_require__(2);
+	var isFunction = __webpack_require__(9);
+	var noop = __webpack_require__(3);
+	var inherits = __webpack_require__(6);
+	var tryCatch = __webpack_require__(20).tryCatch;
+
+	function TapObserver(o, p) {
+	  this._o = o;
+	  this._t = !p._oN || isFunction(p._oN) ? create(p._oN || noop, p._oE || noop, p._oC || noop) : p._oN;
+	  this.isStopped = false;
+	  AbstractObserver.call(this);
+	}
+
+	inherits(TapObserver, AbstractObserver);
+
+	TapObserver.prototype.next = function (x) {
+	  var res = tryCatch(this._t.onNext).call(this._t, x);
+	  if (res === global._Rx.errorObj) {
+	    this._o.onError(res.e);
+	  }
+	  this._o.onNext(x);
+	};
+
+	TapObserver.prototype.error = function (e) {
+	  var res = tryCatch(this._t.onError).call(this._t, e);
+	  if (res === global._Rx.errorObj) {
+	    return this._o.onError(res.e);
+	  }
+	  this._o.onError(e);
+	};
+
+	TapObserver.prototype.completed = function () {
+	  var res = tryCatch(this._t.onCompleted).call(this._t);
+	  if (res === global._Rx.errorObj) {
+	    return this._o.onError(res.e);
+	  }
+	  this._o.onCompleted();
+	};
+
+	function TapObservable(source, observerOrOnNext, onError, onCompleted) {
+	  this.source = source;
+	  this._oN = observerOrOnNext;
+	  this._oE = onError;
+	  this._oC = onCompleted;
+	  ObservableBase.call(this);
+	}
+
+	inherits(TapObservable, ObservableBase);
+
+	TapObservable.prototype.subscribeCore = function (o) {
+	  return this.source.subscribe(new TapObserver(o, this));
+	};
+
+	/**
+	*  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
+	*  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
+	* @param {Function | Observer} observerOrOnNext Action to invoke for each element in the observable sequence or an o.
+	* @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+	* @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
+	* @returns {Observable} The source sequence with the side-effecting behavior applied.
+	*/
+	module.exports = function tap(source, observerOrOnNext, onError, onCompleted) {
+	  return new TapObservable(source, observerOrOnNext, onError, onCompleted);
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -4393,7 +4646,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 68 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -4448,12 +4701,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 69 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var FlatMapObservable = __webpack_require__(70);
+	var FlatMapObservable = __webpack_require__(73);
 	var mergeAll = __webpack_require__(55);
 
 	module.exports = function flatMap(source, selector, resultSelector, thisArg) {
@@ -4462,7 +4715,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 70 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -4472,8 +4725,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	var observableFrom = __webpack_require__(42);
 	var fromPromise = __webpack_require__(33);
 	var isPromise = __webpack_require__(37);
-	var isArrayLike = __webpack_require__(71);
-	var isIterable = __webpack_require__(72);
+	var isArrayLike = __webpack_require__(74);
+	var isIterable = __webpack_require__(75);
 	var bindCallback = __webpack_require__(44);
 	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
@@ -4534,7 +4787,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 71 */
+/* 74 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -4544,7 +4797,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 72 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4556,20 +4809,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 73 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var FlatMapObservable = __webpack_require__(70);
-	var switchLatest = __webpack_require__(74);
+	var FlatMapObservable = __webpack_require__(73);
+	var switchLatest = __webpack_require__(77);
 
 	module.exports = function flatMapLatest(source, selector, resultSelector, thisArg) {
 	  return switchLatest(new FlatMapObservable(source, selector, resultSelector, thisArg));
 	};
 
 /***/ },
-/* 74 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4652,7 +4905,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 75 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -4720,12 +4973,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 76 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(75);
+	var map = __webpack_require__(78);
 
 	function plucker(args, len) {
 	  return function mapper(x) {
@@ -4762,7 +5015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 77 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4778,13 +5031,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 78 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var multicast = __webpack_require__(50);
-	var BehaviorSubject = __webpack_require__(79);
+	var BehaviorSubject = __webpack_require__(82);
 
 	function createBehaviorSubject(initialValue) {
 	  return function fn() {
@@ -4804,7 +5057,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 79 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4932,7 +5185,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = BehaviorSubject;
 
 /***/ },
-/* 80 */
+/* 83 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -5015,7 +5268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 81 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5027,25 +5280,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 82 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var replay = __webpack_require__(83);
+	var replay = __webpack_require__(86);
 
 	module.exports = function shareReplay(source, bufferSize, windowSize, scheduler) {
 	  return replay(source, null, bufferSize, windowSize, scheduler).refCount();
 	};
 
 /***/ },
-/* 83 */
+/* 86 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var multicast = __webpack_require__(50);
-	var ReplaySubject = __webpack_require__(84);
+	var ReplaySubject = __webpack_require__(87);
 	var isFunction = __webpack_require__(9);
 
 	module.exports = function replay(source, selector, bufferSize, windowSize, scheduler) {
@@ -5055,7 +5308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 84 */
+/* 87 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -5063,7 +5316,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Disposable = __webpack_require__(12);
 	var Observable = __webpack_require__(8);
 	var Observer = __webpack_require__(1);
-	var ScheduledObserver = __webpack_require__(85);
+	var ScheduledObserver = __webpack_require__(88);
 	var addProperties = __webpack_require__(14);
 	var cloneArray = __webpack_require__(15);
 	var inherits = __webpack_require__(6);
@@ -5215,7 +5468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 85 */
+/* 88 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -5302,19 +5555,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 86 */
+/* 89 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var publishValue = __webpack_require__(78);
+	var publishValue = __webpack_require__(81);
 
 	module.exports = function shareValue(source, initialValue) {
 	  return publishValue(source, initialValue).refCount();
 	};
 
 /***/ },
-/* 87 */
+/* 90 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5371,7 +5624,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 88 */
+/* 91 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5452,7 +5705,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 89 */
+/* 92 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5515,7 +5768,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 90 */
+/* 93 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5565,204 +5818,69 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 91 */
+/* 94 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var ObservableBase = __webpack_require__(30);
 	var AbstractObserver = __webpack_require__(5);
-	var create = __webpack_require__(2);
-	var isFunction = __webpack_require__(9);
-	var noop = __webpack_require__(3);
+	var ObservableBase = __webpack_require__(30);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(20).tryCatch;
 
-	function TapObserver(o, p) {
-	  this._o = o;
-	  this._t = !p._oN || isFunction(p._oN) ? create(p._oN || noop, p._oE || noop, p._oC || noop) : p._oN;
-	  this.isStopped = false;
+	function ToArrayObserver(o) {
+	  this.o = o;
+	  this.a = [];
 	  AbstractObserver.call(this);
 	}
 
-	inherits(TapObserver, AbstractObserver);
+	inherits(ToArrayObserver, AbstractObserver);
 
-	TapObserver.prototype.next = function (x) {
-	  var res = tryCatch(this._t.onNext).call(this._t, x);
-	  if (res === global._Rx.errorObj) {
-	    this._o.onError(res.e);
-	  }
-	  this._o.onNext(x);
+	ToArrayObserver.prototype.next = function (x) {
+	  this.a.push(x);
+	};
+	ToArrayObserver.prototype.error = function (e) {
+	  this.o.onError(e);
+	};
+	ToArrayObserver.prototype.completed = function () {
+	  this.o.onNext(this.a);this.o.onCompleted();
 	};
 
-	TapObserver.prototype.error = function (e) {
-	  var res = tryCatch(this._t.onError).call(this._t, e);
-	  if (res === global._Rx.errorObj) {
-	    return this._o.onError(res.e);
-	  }
-	  this._o.onError(e);
-	};
-
-	TapObserver.prototype.completed = function () {
-	  var res = tryCatch(this._t.onCompleted).call(this._t);
-	  if (res === global._Rx.errorObj) {
-	    return this._o.onError(res.e);
-	  }
-	  this._o.onCompleted();
-	};
-
-	function TapObservable(source, observerOrOnNext, onError, onCompleted) {
+	function ToArrayObservable(source) {
 	  this.source = source;
-	  this._oN = observerOrOnNext;
-	  this._oE = onError;
-	  this._oC = onCompleted;
 	  ObservableBase.call(this);
 	}
 
-	inherits(TapObservable, ObservableBase);
+	inherits(ToArrayObservable, ObservableBase);
 
-	TapObservable.prototype.subscribeCore = function (o) {
-	  return this.source.subscribe(new TapObserver(o, this));
+	ToArrayObservable.prototype.subscribeCore = function (o) {
+	  return this.source.subscribe(new ToArrayObserver(o));
 	};
 
 	/**
-	*  Invokes an action for each element in the observable sequence and invokes an action upon graceful or exceptional termination of the observable sequence.
-	*  This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
-	* @param {Function | Observer} observerOrOnNext Action to invoke for each element in the observable sequence or an o.
-	* @param {Function} [onError]  Action to invoke upon exceptional termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-	* @param {Function} [onCompleted]  Action to invoke upon graceful termination of the observable sequence. Used if only the observerOrOnNext parameter is also a function.
-	* @returns {Observable} The source sequence with the side-effecting behavior applied.
+	* Creates an array from an observable sequence.
+	* @returns {Observable} An observable sequence containing a single element with a list containing all the elements of the source sequence.
 	*/
-	module.exports = function tap(source, observerOrOnNext, onError, onCompleted) {
-	  return new TapObservable(source, observerOrOnNext, onError, onCompleted);
+	module.exports = function toArray(o) {
+	  return new ToArrayObservable(o);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 92 */
-/***/ function(module, exports, __webpack_require__) {
+/* 95 */
+/***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
-	var ObservableBase = __webpack_require__(30);
-	var AbstractObserver = __webpack_require__(5);
-	var SingleAssignmentDisposable = __webpack_require__(19);
-	var NAryDisposable = __webpack_require__(31);
-	var fromPromise = __webpack_require__(33);
-	var isPromise = __webpack_require__(37);
-	var identity = __webpack_require__(61);
-	var isFunction = __webpack_require__(9);
-	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(20).tryCatch;
-
-	function falseFactory() {
-	  return false;
-	}
-	function emptyArrayFactory() {
-	  return [];
-	}
-	function initializeArray(n, fn) {
-	  var results = new Array(n);
-	  for (var i = 0; i < n; i++) {
-	    results[i] = fn(i);
-	  }
-	  return results;
-	}
-	function argumentsToArray() {
-	  var len = arguments.length,
-	      args = new Array(len);
-	  for (var i = 0; i < len; i++) {
-	    args[i] = arguments[i];
-	  }
-	  return args;
-	}
-
-	function ZipObserver(o, i, p, q, d) {
-	  this._o = o;
-	  this._i = i;
-	  this._p = p;
-	  this._q = q;
-	  this._d = d;
-	  AbstractObserver.call(this);
-	}
-
-	inherits(ZipObserver, AbstractObserver);
-
-	function notEmpty(x) {
-	  return x.length > 0;
-	}
-	function shiftEach(x) {
-	  return x.shift();
-	}
-	function notTheSame(i) {
-	  return function (x, j) {
-	    return j !== i;
-	  };
-	}
-
-	ZipObserver.prototype.next = function (x) {
-	  this._q[this._i].push(x);
-	  if (this._q.every(notEmpty)) {
-	    var queuedValues = this._q.map(shiftEach);
-	    var res = tryCatch(this._p._cb).apply(null, queuedValues);
-	    if (res === global._Rx.errorObj) {
-	      return this._o.onError(res.e);
-	    }
-	    this._o.onNext(res);
-	  } else if (this._d.filter(notTheSame(this._i)).every(identity)) {
-	    this._o.onCompleted();
-	  }
-	};
-
-	ZipObserver.prototype.error = function (e) {
-	  this._o.onError(e);
-	};
-	ZipObserver.prototype.completed = function () {
-	  this._d[this._i] = true;
-	  this._d.every(identity) && this._o.onCompleted();
-	};
-
-	function ZipObservable(s, cb) {
-	  this._s = s;
-	  this._cb = cb;
-	  ObservableBase.call(this);
-	}
-
-	inherits(ZipObservable, ObservableBase);
-
-	ZipObservable.prototype.subscribeCore = function (observer) {
-	  var n = this._s.length,
-	      subscriptions = new Array(n),
-	      done = initializeArray(n, falseFactory),
-	      q = initializeArray(n, emptyArrayFactory);
-
-	  for (var i = 0; i < n; i++) {
-	    var source = this._s[i],
-	        sad = new SingleAssignmentDisposable();
-	    subscriptions[i] = sad;
-	    isPromise(source) && (source = fromPromise(source));
-	    sad.setDisposable(source.subscribe(new ZipObserver(observer, i, this, q, done)));
-	  }
-
-	  return new NAryDisposable(subscriptions);
-	};
-
-	/**
-	* Merges the specified observable sequences into one observable sequence by using the selector function whenever all of the observable sequences or an array have produced an element at a corresponding index.
-	* The last element in the arguments must be a function to invoke for each series of elements at corresponding indexes in the args.
-	* @returns {Observable} An observable sequence containing the result of combining elements of the args using the specified result selector function.
-	*/
-	module.exports = function zip() {
-	  if (arguments.length === 0) {
-	    throw new Error('invalid arguments');
-	  }
-	  var len = arguments.length,
-	      args = new Array(len);
-	  for (var i = 0; i < len; i++) {
-	    args[i] = arguments[i];
-	  }
-	  var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
-	  return new ZipObservable(args, resultSelector);
+	module.exports = function toPromise(source, promiseCtor) {
+	  promiseCtor || (promiseCtor = global.Promise);
+	  return new promiseCtor(function (resolve, reject) {
+	    // No cancellation can be done
+	    var value;
+	    source.subscribe(function (v) {
+	      value = v;
+	    }, reject, function () {
+	      resolve(value);
+	    });
+	  });
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
