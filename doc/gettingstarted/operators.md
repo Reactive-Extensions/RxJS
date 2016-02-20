@@ -9,11 +9,11 @@ RxJS offers a full set of operators that cover most of the possible operations o
 For example, let's see how we might implement the [_.where](http://lodash.com/docs#where) method from [Lo-Dash](http://lodash.com/) or [Underscore](http://underscorejs.org/), which takes a set of attributes and does a deep comparison for equality.  We might try implementing this from scratch using the `Rx.Observable.createWithDisposable` method such as the following code.
 
 ```js
-Rx.Observable.prototype.whereProperties = function (properties) {
+Rx.Observable.prototype.filterByProperties = function (properties) {
 	var source = this,
 		comparer = Rx.internals.isEqual;
 
-	return Rx.Observable.filterByProperties(function (observer) {
+	return Rx.Observable.createWithDisposable(function (observer) {
 		// Our disposable is the subscription from the parent
 		return source.subscribe(
 			function (data) {
