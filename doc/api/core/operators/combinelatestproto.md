@@ -1,7 +1,7 @@
 ### `Rx.Observable.prototype.combineLatest(...args, [resultSelector])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/combinelatestproto.js "View in source")
 
-Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences produces an element.  This can be in the form of an argument list of observables or an array.  If the result selector is omitted, a list with the elements will be yielded.
+Merges the specified observable sequences into one observable sequence by using the selector function whenever any of the observable sequences produces an element (so long as each of the source observable sequences has emitted at least one element).  This can be in the form of an argument list of observables or an array.  If the result selector is omitted, a list with the elements will be yielded.
 
 #### Arguments
 1. `args` *(arguments | Array)*: An array or arguments of Observable sequences.
