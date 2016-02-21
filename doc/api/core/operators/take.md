@@ -5,7 +5,7 @@ Returns a specified number of contiguous elements from the start of an observabl
 
 #### Arguments
 1. `count` *(`Number`)*: The number of elements to return.
-2. `[schduler]` *(`Scheduler`)*: Scheduler used to produce an onCompleted message in case `count` is set to 0.
+2. `[scheduler]` *(`Scheduler`)*: Scheduler used to produce an onCompleted message in case `count` is set to 0.
 
 #### Returns
 *(`Observable`)*: An observable sequence that contains the elements before and including the specified index in the input sequence.
