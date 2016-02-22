@@ -28,17 +28,6 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
-var subscription = source.subscribe(
-    function (x) {
-        console.log('Next: ' + x);
-    },
-    function (err) {
-        console.log('Error: ' + err);
-    },
-    function () {
-        console.log('Completed');
-    });
-
 // => Next: 1
 // => Next: 2
 // => Next: 3
