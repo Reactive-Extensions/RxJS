@@ -15,5 +15,5 @@
       scheduler = immediateScheduler;
     }
     for(var args = [], i = start, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-    return enumerableOf([observableFromArray(args, scheduler), this]).concat();
+    return observableConcat.apply(null, [observableFromArray(args, scheduler), this]);
   };
