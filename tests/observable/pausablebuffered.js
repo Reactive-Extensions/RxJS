@@ -461,4 +461,98 @@
     QUnit.deepEqual(results, [1]);
   });
 
+  test('paused with default controller and multiple subscriptions', function () {
+    var paused, subscription, subscription2;
+
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.createObserver();
+    var results2 = scheduler.createObserver();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(230, 3),
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
+
+    scheduler.scheduleAbsolute(null, 200, function () {
+      paused = xs.pausableBuffered();
+      subscription = paused.subscribe(results);
+      paused.resume();
+    });
+
+    scheduler.scheduleAbsolute(null, 240, function () {
+      subscription2 = paused.subscribe(results2);
+    });
+
+    scheduler.scheduleAbsolute(null, 1000, function () {
+      subscription.dispose();
+      subscription2.dispose();
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(230, 3),
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
+
+    results2.messages.assertEqual(
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
+  });
+
+  test('pausableBuffered is unaffected by currentThread scheduler', function () {
+    var subscription;
+
+    var scheduler = new TestScheduler();
+
+    var controller = new Subject();
+
+    var results = scheduler.createObserver();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(210, 2),
+      onNext(230, 3),
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
+
+    scheduler.scheduleAbsolute(null, 200, function () {
+      Rx.Scheduler.currentThread.schedule(null, function () {
+        subscription = xs.pausableBuffered(controller).subscribe(results);
+        controller.onNext(true);
+      });
+    });
+
+    scheduler.scheduleAbsolute(null, 1000, function () {
+      subscription.dispose();
+    });
+
+    scheduler.start();
+
+    results.messages.assertEqual(
+      onNext(210, 2),
+      onNext(230, 3),
+      onNext(301, 4),
+      onNext(350, 5),
+      onNext(399, 6),
+      onCompleted(500)
+    );
+  });
+
 }());

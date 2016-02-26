@@ -127,4 +127,29 @@
     );
   });
 
+  test('startWith is unaffected by currentThread scheduler', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createHotObservable(
+      onNext(150, 1),
+      onNext(220, 2),
+      onCompleted(250)
+    );
+
+    var results;
+
+    Rx.Scheduler.currentThread.schedule(null, function () {
+      results = scheduler.startScheduler(function () {
+        return xs.startWith(scheduler, 1);
+      });
+    });
+
+    results.messages.assertEqual(
+      onNext(201, 1),
+      onNext(220, 2),
+      onCompleted(250)
+    );
+
+  });
+
 }());
