@@ -5,6 +5,7 @@ var BinaryDisposable = require('../binarydisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var Scheduler = require('../scheduler');
 var isFunction = require('../helpers/isfunction');
+var noop = require('../helpers/noop');
 var tryCatchUtils = require('../internal/trycatchutils');
 var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
 var inherits = require('inherits');
@@ -166,6 +167,16 @@ DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
       id = global.setTimeout(scheduleAction(disposable, action, this, state), dueTime);
 
   return new BinaryDisposable(disposable, new ClearDisposable(global.clearTimeout, id));
+};
+
+function scheduleLongRunning(state, action, disposable) {
+  return function () { action(state, disposable); };
+}
+
+DefaultScheduler.prototype.scheduleLongRunning = function (state, action) {
+  var disposable = Disposable.create(noop);
+  scheduleMethod(scheduleLongRunning(state, action, disposable));
+  return disposable;
 };
 
 global._Rx || (global._Rx = {});
