@@ -2,6 +2,13 @@
 ### `Rx.Observable.prototype.selectMany(selector, [resultSelector])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectmany.js "View in source")
 
+
+Aliases:
+`Rx.Observable.prototype.flatMap`
+and
+`Rx.Observable.prototype.selectMany`
+are equivalent.
+
 One of the following:
 
 Projects each element of an observable sequence to an observable sequence and merges the resulting observable sequences or Promises or array/iterable into one observable sequence.
