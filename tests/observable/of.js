@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   /* jshint undef: true, unused: true */
-  /* globals QUnit, test, Rx, equal */
+  /* globals QUnit, test, Rx, equal, expect */
 
   QUnit.module('of');
 
@@ -24,6 +24,15 @@
     Rx.Observable.of().subscribe(results.push.bind(results));
 
     equal(results.length, 0);
+  });
+
+  test('of is immediate', function () {
+    expect(1);
+    Rx.Scheduler.currentThread.schedule(null, function () {
+      var result;
+      Observable.of(1).subscribe(function (x) { result = x; });
+      equal(result, 1);
+    });
   });
 
   test('ofWithScheduler', function () {
