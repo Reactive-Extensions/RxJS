@@ -14,7 +14,7 @@
 
     source.subscribe(
       function (x) {
-        !dest.write(String(x)) && source.pause();
+        !dest.write(x) && source.pause();
       },
       function (err) {
         dest.emit('error', err);
