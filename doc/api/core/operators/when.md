@@ -1,7 +1,7 @@
 ### `Rx.Observable.when(...args)`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/when.js "View in source")
 
-A series of plans (specified as an Array of as a series of arguments) created by use of the Then operator on patterns.
+A series of plans (specified as an Array or as a series of arguments) created by use of the Then operator on patterns.
 
 ### Arguments
 1. `args` *(arguments|Array)*: A series of plans (specified as an Array of as a series of arguments) created by use of the then operator on patterns.
