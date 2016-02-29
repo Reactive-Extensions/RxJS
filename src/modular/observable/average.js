@@ -5,7 +5,8 @@ var AbstractObserver = require('../observer/abstractobserver');
 var EmptyError = require('../internal/errors').EmptyError;
 var isFunction = require('../helpers/isfunction');
 var bindCallback = require('../internal/bindcallback');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 
@@ -23,7 +24,7 @@ inherits(AverageObserver, AbstractObserver);
 AverageObserver.prototype.next = function (x) {
   if(this._fn) {
     var r = tryCatch(this._fn)(x, this._c++, this._s);
-    if (r === global._Rx.errorObj) { return this._o.onError(r.e); }
+    if (r === errorObj) { return this._o.onError(r.e); }
     this._t += r;
   } else {
     this._c++;

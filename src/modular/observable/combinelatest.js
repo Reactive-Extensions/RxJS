@@ -9,7 +9,8 @@ var isPromise = require('../helpers/ispromise');
 var identity = require('../helpers/identity');
 var isFunction = require('../helpers/isfunction');
 var inherits = require('inherits');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 function falseFactory() { return false; }
 function initializeArray (n, fn) {
@@ -46,7 +47,7 @@ CombineLatestObserver.prototype.next = function (x) {
   this._state.hasValue[this._i] = true;
   if (this._state.hasValueAll || (this._state.hasValueAll = this._state.hasValue.every(identity))) {
     var res = tryCatch(this._cb).apply(null, this._state.values);
-    if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
+    if (res === errorObj) { return this._o.onError(res.e); }
     this._o.onNext(res);
   } else if (this._state.isDone.filter(notTheSame(this._i)).every(identity)) {
     this._o.onCompleted();

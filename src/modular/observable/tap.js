@@ -6,7 +6,8 @@ var create = require('../observer/create');
 var isFunction = require('../helpers/isfunction');
 var noop = require('../helpers/noop');
 var inherits = require('inherits');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 function TapObserver(o, p) {
   this._o = o;
@@ -21,19 +22,19 @@ inherits(TapObserver, AbstractObserver);
 
 TapObserver.prototype.next = function(x) {
   var res = tryCatch(this._t.onNext).call(this._t, x);
-  if (res === global._Rx.errorObj) { this._o.onError(res.e); }
+  if (res === errorObj) { this._o.onError(res.e); }
   this._o.onNext(x);
 };
 
 TapObserver.prototype.error = function(e) {
   var res = tryCatch(this._t.onError).call(this._t, e);
-  if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
+  if (res === errorObj) { return this._o.onError(res.e); }
   this._o.onError(e);
 };
 
 TapObserver.prototype.completed = function() {
   var res = tryCatch(this._t.onCompleted).call(this._t);
-  if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
+  if (res === errorObj) { return this._o.onError(res.e); }
   this._o.onCompleted();
 };
 

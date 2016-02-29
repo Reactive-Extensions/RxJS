@@ -5,7 +5,8 @@ var AbstractObserver = require('../observer/abstractobserver');
 var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var bindCallback = require('../internal/bindcallback');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var inherits = require('inherits');
@@ -23,7 +24,7 @@ CatchObserver.prototype.next = function (x) { this._o.onNext(x); };
 CatchObserver.prototype.completed = function () { return this._o.onCompleted(); };
 CatchObserver.prototype.error = function (e) {
   var result = tryCatch(this._fn)(e);
-  if (result === global._Rx.errorObj) { return this._o.onError(result.e); }
+  if (result === errorObj) { return this._o.onError(result.e); }
   isPromise(result) && (result = fromPromise(result));
 
   var d = new SingleAssignmentDisposable();

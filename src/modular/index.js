@@ -63,6 +63,7 @@ Observable.addToPrototype({
   combineLatest: require('./observable/combinelatest'),
   concat: require('./observable/concat'),
   concatAll: require('./observable/concatall'),
+  controlled: require('./observable/controlled'),
   count: require('./observable/count'),
   debounce: require('./observable/debounce'),
   defaultIfEmpty: require('./observable/defaultifempty'),

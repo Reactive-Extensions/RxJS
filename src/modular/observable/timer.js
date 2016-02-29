@@ -6,11 +6,6 @@ var interval = require('./interval');
 var Scheduler = require('../scheduler');
 var inherits = require('inherits');
 
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
-
 function TimerObservable(dt, s) {
   this._dt = dt;
   this._s = s;
@@ -74,7 +69,7 @@ function timerRelativeAndPeriod(dt, period, scheduler) {
  */
 module.exports = function timer (dueTime, periodOrScheduler, scheduler) {
   var period;
-  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   if (periodOrScheduler != null && typeof periodOrScheduler === 'number') {
     period = periodOrScheduler;
   } else if (Scheduler.isScheduler(periodOrScheduler)) {

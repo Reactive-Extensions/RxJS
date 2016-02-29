@@ -3,13 +3,8 @@
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var BinaryDisposable = require('../binarydisposable');
-var isScheduler = require('../scheduler').isScheduler;
+var Scheduler = require('../scheduler');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function SkipWithTimeObserver(o, p) {
   this._o = o;
@@ -45,6 +40,6 @@ SkipWithTimeObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function skipWithTime (source, duration, scheduler) {
-  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   return new SkipWithTimeObservable(source, duration, scheduler);
 };

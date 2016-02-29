@@ -2,7 +2,8 @@
 
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function ExtremaByObserver(o, k, c) {
@@ -19,14 +20,14 @@ inherits(ExtremaByObserver, AbstractObserver);
 
 ExtremaByObserver.prototype.next = function (x) {
   var key = tryCatch(this._k)(x);
-  if (key === global._Rx.errorObj) { return this._o.onError(key.e); }
+  if (key === errorObj) { return this._o.onError(key.e); }
   var comparison = 0;
   if (!this._hv) {
     this._hv = true;
     this._v = key;
   } else {
     comparison = tryCatch(this._c)(key, this._v);
-    if (comparison === global._Rx.errorObj) { return this._o.onError(comparison.e); }
+    if (comparison === errorObj) { return this._o.onError(comparison.e); }
   }
   if (comparison > 0) {
     this._v = key;

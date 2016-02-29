@@ -1,7 +1,8 @@
 'use strict';
 
 var ObservableBase = require('./observablebase');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var Scheduler = require('../scheduler');
 var inherits = require('inherits');
 
@@ -24,15 +25,15 @@ function scheduleRecursive(state, recurse) {
     state.first = false;
   } else {
     state.newState = tryCatch(state.self._itrFn)(state.newState);
-    if (state.newState === global._Rx.errorObj) { return state.o.onError(state.newState.e); }
+    if (state.newState === errorObj) { return state.o.onError(state.newState.e); }
   }
   state.hasResult = tryCatch(state.self._cndFn)(state.newState);
-  if (state.hasResult === global._Rx.errorObj) { return state.o.onError(state.hasResult.e); }
+  if (state.hasResult === errorObj) { return state.o.onError(state.hasResult.e); }
   if (state.hasResult) {
     state.result = tryCatch(state.self._resFn)(state.newState);
-    if (state.result === global._Rx.errorObj) { return state.o.onError(state.result.e); }
+    if (state.result === errorObj) { return state.o.onError(state.result.e); }
     var time = tryCatch(state.self._timeFn)(state.newState);
-    if (time === global._Rx.errorObj) { return state.o.onError(time.e); }
+    if (time === errorObj) { return state.o.onError(time.e); }
     recurse(state, time);
   } else {
     state.o.onCompleted();

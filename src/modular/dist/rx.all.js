@@ -66,28 +66,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Observable.addToObject({
 	  amb: __webpack_require__(10),
-	  bindCallback: __webpack_require__(29),
-	  bindNodeCallback: __webpack_require__(36),
-	  case: __webpack_require__(37),
+	  bindCallback: __webpack_require__(30),
+	  bindNodeCallback: __webpack_require__(37),
+	  case: __webpack_require__(38),
 	  catch: __webpack_require__(42),
 	  combineLatest: __webpack_require__(45),
 	  concat: __webpack_require__(47),
 	  create: __webpack_require__(48),
-	  defer: __webpack_require__(38),
+	  defer: __webpack_require__(39),
 	  empty: __webpack_require__(41),
 	  forkJoin: __webpack_require__(49),
 	  from: __webpack_require__(50),
 	  fromArray: __webpack_require__(53),
 	  fromEvent: __webpack_require__(54),
 	  fromEventPattern: __webpack_require__(55),
-	  fromPromise: __webpack_require__(24),
+	  fromPromise: __webpack_require__(27),
 	  generate: __webpack_require__(60),
 	  generateAbsolute: __webpack_require__(61),
 	  generateRelative: __webpack_require__(62),
 	  interval: __webpack_require__(63),
 	  just: __webpack_require__(64),
 	  merge: __webpack_require__(65),
-	  never: __webpack_require__(28),
+	  never: __webpack_require__(29),
 	  of: __webpack_require__(67),
 	  ofScheduled: __webpack_require__(68),
 	  onErrorResumeNext: __webpack_require__(69),
@@ -97,7 +97,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  sequenceEqual: __webpack_require__(74),
 	  start: __webpack_require__(76),
 	  startAsync: __webpack_require__(78),
-	  throw: __webpack_require__(39),
+	  throw: __webpack_require__(40),
 	  timer: __webpack_require__(79),
 	  toAsync: __webpack_require__(77),
 	  when: __webpack_require__(80),
@@ -108,7 +108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Observable.addToPrototype({
 	  amb: __webpack_require__(10),
 	  and: __webpack_require__(137),
-	  asObservable: __webpack_require__(34),
+	  asObservable: __webpack_require__(35),
 	  average: __webpack_require__(144),
 	  buffer: __webpack_require__(145),
 	  bufferCount: __webpack_require__(155),
@@ -119,121 +119,122 @@ return /******/ (function(modules) { // webpackBootstrap
 	  combineLatest: __webpack_require__(45),
 	  concat: __webpack_require__(47),
 	  concatAll: __webpack_require__(163),
-	  count: __webpack_require__(165),
-	  debounce: __webpack_require__(166),
-	  defaultIfEmpty: __webpack_require__(167),
-	  delay: __webpack_require__(168),
-	  delaySubscription: __webpack_require__(170),
-	  dematerialize: __webpack_require__(171),
-	  distinct: __webpack_require__(172),
-	  distinctUntilChanged: __webpack_require__(173),
-	  do: __webpack_require__(174),
-	  every: __webpack_require__(175),
+	  controlled: __webpack_require__(165),
+	  count: __webpack_require__(168),
+	  debounce: __webpack_require__(169),
+	  defaultIfEmpty: __webpack_require__(170),
+	  delay: __webpack_require__(171),
+	  delaySubscription: __webpack_require__(173),
+	  dematerialize: __webpack_require__(174),
+	  distinct: __webpack_require__(175),
+	  distinctUntilChanged: __webpack_require__(176),
+	  do: __webpack_require__(177),
+	  every: __webpack_require__(178),
 	  filter: __webpack_require__(156),
-	  finally: __webpack_require__(176),
-	  find: __webpack_require__(177),
-	  findIndex: __webpack_require__(179),
-	  first: __webpack_require__(180),
+	  finally: __webpack_require__(179),
+	  find: __webpack_require__(180),
+	  findIndex: __webpack_require__(182),
+	  first: __webpack_require__(183),
 	  flatMap: __webpack_require__(146),
-	  flatMapLatest: __webpack_require__(181),
+	  flatMapLatest: __webpack_require__(184),
 	  forkJoin: __webpack_require__(49),
 	  groupJoin: __webpack_require__(152),
-	  ignoreElements: __webpack_require__(183),
-	  includes: __webpack_require__(184),
-	  indexOf: __webpack_require__(185),
-	  isEmpty: __webpack_require__(186),
-	  join: __webpack_require__(187),
-	  last: __webpack_require__(188),
-	  lastIndexOf: __webpack_require__(189),
-	  map: __webpack_require__(190),
+	  ignoreElements: __webpack_require__(186),
+	  includes: __webpack_require__(187),
+	  indexOf: __webpack_require__(188),
+	  isEmpty: __webpack_require__(189),
+	  join: __webpack_require__(190),
+	  last: __webpack_require__(191),
+	  lastIndexOf: __webpack_require__(192),
+	  map: __webpack_require__(193),
 	  materialize: __webpack_require__(142),
-	  max: __webpack_require__(191),
-	  maxBy: __webpack_require__(192),
+	  max: __webpack_require__(194),
+	  maxBy: __webpack_require__(195),
 	  merge: __webpack_require__(65),
 	  mergeAll: __webpack_require__(66),
 	  mergeConcat: __webpack_require__(164),
-	  min: __webpack_require__(195),
-	  minBy: __webpack_require__(196),
+	  min: __webpack_require__(198),
+	  minBy: __webpack_require__(199),
 	  multicast: __webpack_require__(58),
-	  observeOn: __webpack_require__(197),
+	  observeOn: __webpack_require__(200),
 	  onErrorResumeNext: __webpack_require__(69),
-	  pairwise: __webpack_require__(200),
-	  partition: __webpack_require__(201),
-	  pluck: __webpack_require__(202),
+	  pairwise: __webpack_require__(203),
+	  partition: __webpack_require__(204),
+	  pluck: __webpack_require__(205),
 	  publish: __webpack_require__(56),
-	  publishLast: __webpack_require__(203),
-	  publishValue: __webpack_require__(204),
-	  reduce: __webpack_require__(206),
+	  publishLast: __webpack_require__(206),
+	  publishValue: __webpack_require__(207),
+	  reduce: __webpack_require__(209),
 	  repeat: __webpack_require__(73),
-	  repeatWhen: __webpack_require__(207),
-	  replay: __webpack_require__(208),
-	  retry: __webpack_require__(210),
-	  retryWhen: __webpack_require__(211),
-	  sample: __webpack_require__(212),
-	  scan: __webpack_require__(213),
+	  repeatWhen: __webpack_require__(210),
+	  replay: __webpack_require__(211),
+	  retry: __webpack_require__(213),
+	  retryWhen: __webpack_require__(214),
+	  sample: __webpack_require__(215),
+	  scan: __webpack_require__(216),
 	  sequenceEqual: __webpack_require__(74),
-	  share: __webpack_require__(214),
-	  shareReplay: __webpack_require__(215),
-	  shareValue: __webpack_require__(216),
-	  skip: __webpack_require__(217),
-	  skipLast: __webpack_require__(218),
-	  skipLastTime: __webpack_require__(219),
-	  skipUntil: __webpack_require__(220),
-	  skipUntilTime: __webpack_require__(221),
-	  skipWhile: __webpack_require__(222),
-	  slice: __webpack_require__(223),
-	  subscribeOn: __webpack_require__(224),
-	  some: __webpack_require__(226),
-	  sum: __webpack_require__(227),
-	  switch: __webpack_require__(182),
-	  switchFirst: __webpack_require__(228),
+	  share: __webpack_require__(217),
+	  shareReplay: __webpack_require__(218),
+	  shareValue: __webpack_require__(219),
+	  skip: __webpack_require__(220),
+	  skipLast: __webpack_require__(221),
+	  skipLastTime: __webpack_require__(222),
+	  skipUntil: __webpack_require__(223),
+	  skipUntilTime: __webpack_require__(224),
+	  skipWhile: __webpack_require__(225),
+	  slice: __webpack_require__(226),
+	  subscribeOn: __webpack_require__(227),
+	  some: __webpack_require__(229),
+	  sum: __webpack_require__(230),
+	  switch: __webpack_require__(185),
+	  switchFirst: __webpack_require__(231),
 	  take: __webpack_require__(154),
-	  takeLastBuffer: __webpack_require__(229),
-	  takeLastBufferTime: __webpack_require__(230),
-	  lastLastTime: __webpack_require__(231),
-	  takeUntil: __webpack_require__(232),
-	  takeUntilTime: __webpack_require__(233),
-	  takeWhile: __webpack_require__(234),
-	  tap: __webpack_require__(174),
-	  thenDo: __webpack_require__(235),
-	  throttle: __webpack_require__(236),
-	  timeInterval: __webpack_require__(237),
-	  timestamp: __webpack_require__(169),
-	  toArray: __webpack_require__(238),
-	  toMap: __webpack_require__(239),
-	  toPromise: __webpack_require__(240),
-	  toSet: __webpack_require__(241),
-	  transduce: __webpack_require__(242),
+	  takeLastBuffer: __webpack_require__(232),
+	  takeLastBufferTime: __webpack_require__(233),
+	  lastLastTime: __webpack_require__(234),
+	  takeUntil: __webpack_require__(235),
+	  takeUntilTime: __webpack_require__(236),
+	  takeWhile: __webpack_require__(237),
+	  tap: __webpack_require__(177),
+	  thenDo: __webpack_require__(238),
+	  throttle: __webpack_require__(239),
+	  timeInterval: __webpack_require__(240),
+	  timestamp: __webpack_require__(172),
+	  toArray: __webpack_require__(241),
+	  toMap: __webpack_require__(242),
+	  toPromise: __webpack_require__(243),
+	  toSet: __webpack_require__(244),
+	  transduce: __webpack_require__(245),
 	  window: __webpack_require__(150),
 	  windowCount: __webpack_require__(157),
 	  windowTime: __webpack_require__(159),
 	  windowTimeOrCount: __webpack_require__(161),
-	  withLatestFrom: __webpack_require__(243),
+	  withLatestFrom: __webpack_require__(246),
 	  zip: __webpack_require__(136),
-	  zipIterable: __webpack_require__(244)
+	  zipIterable: __webpack_require__(247)
 	});
 
 	var Subject = __webpack_require__(57);
 	Subject.addToObject({
-	  create: __webpack_require__(245)
+	  create: __webpack_require__(248)
 	});
 
 	var Rx = {
-	  BinaryDisposable: __webpack_require__(23),
-	  CompositeDisposable: __webpack_require__(18),
-	  Disposable: __webpack_require__(12),
+	  BinaryDisposable: __webpack_require__(24),
+	  CompositeDisposable: __webpack_require__(14),
+	  Disposable: __webpack_require__(13),
 	  NAryDisposable: __webpack_require__(43),
 	  SerialDisposable: __webpack_require__(44),
-	  SingleAssignmentDisposable: __webpack_require__(14),
+	  SingleAssignmentDisposable: __webpack_require__(17),
 
-	  Scheduler: __webpack_require__(17),
+	  Scheduler: __webpack_require__(12),
 
 	  Observer: Observer,
 	  Observable: Observable,
 
-	  AsyncSubject: __webpack_require__(30),
-	  BehaviorSubject: __webpack_require__(205),
-	  ReplaySubject: __webpack_require__(209),
+	  AsyncSubject: __webpack_require__(31),
+	  BehaviorSubject: __webpack_require__(208),
+	  ReplaySubject: __webpack_require__(212),
 	  Subject: Subject
 	};
 
@@ -613,11 +614,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
-	var never = __webpack_require__(28);
+	var BinaryDisposable = __webpack_require__(24);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
+	var never = __webpack_require__(29);
 	var inherits = __webpack_require__(6);
 
 	var LEFT_CHOICE = 'L';
@@ -723,22 +724,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var inherits = __webpack_require__(6);
 	var isFunction = __webpack_require__(9);
 	var errors = __webpack_require__(7);
 	var Observable = __webpack_require__(8);
-	var Disposable = __webpack_require__(12);
-	var AutoDetachObserver = __webpack_require__(13);
-	var tryCatchUtils = __webpack_require__(15);
+	var Scheduler = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
+	var AutoDetachObserver = __webpack_require__(26);
+	var tryCatchUtils = __webpack_require__(20);
 	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj,
 	    thrower = tryCatchUtils.thrower;
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	function fixSubscriber(subscriber) {
 	  return subscriber && isFunction(subscriber.dispose) ? subscriber : isFunction(subscriber) ? Disposable.create(subscriber) : Disposable.empty;
@@ -748,7 +746,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var ado = state[0],
 	      self = state[1];
 	  var sub = tryCatch(self.subscribeCore).call(self, ado);
-	  if (sub === global._Rx.errorObj && !ado.fail(sub.e)) {
+	  if (sub === errorObj && !ado.fail(sub.e)) {
 	    thrower(sub.e);
 	  }
 	  ado.setDisposable(fixSubscriber(sub));
@@ -764,8 +762,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var ado = new AutoDetachObserver(o),
 	      state = [ado, this];
 
-	  if (global._Rx.currentThreadScheduler.scheduleRequired()) {
-	    global._Rx.currentThreadScheduler.schedule(state, setDisposable);
+	  if (Scheduler.queue.scheduleRequired()) {
+	    Scheduler.queue.schedule(state, setDisposable);
 	  } else {
 	    setDisposable(null, state);
 	  }
@@ -777,266 +775,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = ObservableBase;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	var noop = __webpack_require__(3);
-	var isFunction = __webpack_require__(9);
-	var ObjectDisposedError = __webpack_require__(7).ObjectDisposedError;
-
-	/**
-	 * Provides a set of static methods for creating Disposables.
-	 * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
-	 */
-	function Disposable(action) {
-	  this.isDisposed = false;
-	  this.action = action || noop;
-	}
-
-	/** Performs the task of cleaning up resources. */
-	Disposable.prototype.dispose = function () {
-	  if (!this.isDisposed) {
-	    this.action();
-	    this.isDisposed = true;
-	  }
-	};
-
-	/**
-	 * Creates a disposable object that invokes the specified action when disposed.
-	 * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
-	 * @return {Disposable} The disposable object that runs the given action upon disposal.
-	 */
-	Disposable.create = function (action) {
-	  return new Disposable(action);
-	};
-
-	/**
-	 * Gets the disposable that does nothing when disposed.
-	 */
-	Disposable.empty = { dispose: noop };
-
-	/**
-	 * Validates whether the given object is a disposable
-	 * @param {Object} Object to test whether it has a dispose method
-	 * @returns {Boolean} true if a disposable object, else false.
-	 */
-	Disposable.isDisposable = function (d) {
-	  return d && isFunction(d.dispose);
-	};
-
-	Disposable.checkDisposed = function (disposable) {
-	  if (disposable.isDisposed) {
-	    throw new ObjectDisposedError();
-	  }
-	};
-
-	Disposable._fixup = function (result) {
-	  return Disposable.isDisposable(result) ? result : Disposable.empty;
-	};
-
-	module.exports = Disposable;
-
-/***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var AbstractObserver = __webpack_require__(5);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var inherits = __webpack_require__(6);
-	var tryCatchUtils = __webpack_require__(15);
-	var tryCatch = tryCatchUtils.tryCatch,
-	    thrower = tryCatchUtils.thrower;
-
-	function AutoDetachObserver(observer) {
-	  AbstractObserver.call(this);
-	  this.observer = observer;
-	  this.m = new SingleAssignmentDisposable();
-	}
-
-	inherits(AutoDetachObserver, AbstractObserver);
-
-	AutoDetachObserver.prototype.next = function (value) {
-	  var result = tryCatch(this.observer.onNext).call(this.observer, value);
-	  if (result === global._Rx.errorObj) {
-	    this.dispose();
-	    thrower(result.e);
-	  }
-	};
-
-	AutoDetachObserver.prototype.error = function (err) {
-	  var result = tryCatch(this.observer.onError).call(this.observer, err);
-	  this.dispose();
-	  result === global._Rx.errorObj && thrower(result.e);
-	};
-
-	AutoDetachObserver.prototype.completed = function () {
-	  var result = tryCatch(this.observer.onCompleted).call(this.observer);
-	  this.dispose();
-	  result === global._Rx.errorObj && thrower(result.e);
-	};
-
-	AutoDetachObserver.prototype.setDisposable = function (value) {
-	  this.m.setDisposable(value);
-	};
-	AutoDetachObserver.prototype.getDisposable = function () {
-	  return this.m.getDisposable();
-	};
-
-	AutoDetachObserver.prototype.dispose = function () {
-	  AbstractObserver.prototype.dispose.call(this);
-	  this.m.dispose();
-	};
-
-	module.exports = AutoDetachObserver;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
-
-	'use strict';
-
-	function SingleAssignmentDisposable() {
-	  this.isDisposed = false;
-	  this._current = null;
-	}
-
-	SingleAssignmentDisposable.prototype.getDisposable = function () {
-	  return this._current;
-	};
-
-	SingleAssignmentDisposable.prototype.setDisposable = function (value) {
-	  if (this._current) {
-	    throw new Error('Disposable has already been assigned');
-	  }
-	  var shouldDispose = this.isDisposed;
-	  !shouldDispose && (this._current = value);
-	  shouldDispose && value && value.dispose();
-	};
-
-	SingleAssignmentDisposable.prototype.dispose = function () {
-	  if (!this.isDisposed) {
-	    this.isDisposed = true;
-	    var old = this._current;
-	    this._current = null;
-	    old && old.dispose();
-	  }
-	};
-
-	module.exports = SingleAssignmentDisposable;
-
-/***/ },
-/* 15 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var isFunction = __webpack_require__(9);
-
-	global._Rx || (global._Rx = {});
-	var errorObj = global._Rx.errorObj = { e: {} };
-
-	function tryCatcherGen(tryCatchTarget) {
-	  return function tryCatcher() {
-	    try {
-	      return tryCatchTarget.apply(this, arguments);
-	    } catch (e) {
-	      errorObj.e = e;
-	      return errorObj;
-	    }
-	  };
-	}
-
-	function tryCatch(fn) {
-	  if (!isFunction(fn)) {
-	    throw new TypeError('fn must be a function');
-	  }
-	  return tryCatcherGen(fn);
-	}
-
-	function thrower(e) {
-	  throw e;
-	}
-
-	module.exports = {
-	  tryCatch: tryCatch,
-	  thrower: thrower
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 16 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var Scheduler = __webpack_require__(17);
-	var ScheduledItem = __webpack_require__(20);
-	var PriorityQueue = __webpack_require__(22);
-	var tryCatchUtils = __webpack_require__(15);
-	var tryCatch = tryCatchUtils.tryCatch,
-	    thrower = tryCatchUtils.thrower;
-	var inherits = __webpack_require__(6);
-
-	function CurrentThreadScheduler() {
-	  Scheduler.call(this);
-	}
-
-	CurrentThreadScheduler.queue = null;
-
-	inherits(CurrentThreadScheduler, Scheduler);
-
-	function runTrampoline() {
-	  while (CurrentThreadScheduler.queue.length > 0) {
-	    var item = CurrentThreadScheduler.queue.dequeue();
-	    !item.isCancelled() && item.invoke();
-	  }
-	}
-
-	CurrentThreadScheduler.prototype.schedule = function (state, action) {
-	  var si = new ScheduledItem(this, state, action, this.now());
-
-	  if (!CurrentThreadScheduler.queue) {
-	    CurrentThreadScheduler.queue = new PriorityQueue(4);
-	    CurrentThreadScheduler.queue.enqueue(si);
-
-	    var result = tryCatch(runTrampoline)();
-	    CurrentThreadScheduler.queue = null;
-	    if (result === global._Rx.errorObj) {
-	      thrower(result.e);
-	    }
-	  } else {
-	    CurrentThreadScheduler.queue.enqueue(si);
-	  }
-	  return si.disposable;
-	};
-
-	CurrentThreadScheduler.prototype.scheduleRequired = function () {
-	  return !CurrentThreadScheduler.queue;
-	};
-
-	global._Rx || (global._Rx = {});
-	global._Rx.currentThreadScheduler = new CurrentThreadScheduler();
-
-	Scheduler.currentThread = global._Rx.currentThreadScheduler;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 17 */
-/***/ function(module, exports, __webpack_require__) {
-
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
 	var errors = __webpack_require__(7);
-	var Disposable = __webpack_require__(12);
-	var CompositeDisposable = __webpack_require__(18);
+	var Disposable = __webpack_require__(13);
+	var CompositeDisposable = __webpack_require__(14);
 
 	function Scheduler() {}
 
@@ -1188,16 +936,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return this.scheduleFuture([state, action], dueTime, invokeRecDate);
 	};
 
-	/**
-	 * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.
-	 * @param {Function} handler Handler that's run if an exception is caught. The exception will be rethrown if the handler returns false.
-	 * @returns {Scheduler} Wrapper around the original scheduler, enforcing exception handling.
-	 */
-	Scheduler.prototype.catchError = Scheduler.prototype['catch'] = function (handler) {
-	  var CatchScheduler = __webpack_require__(19);
-	  return new CatchScheduler(this, handler);
-	};
-
 	var defaultNow = function () {
 	  return !!Date.now ? Date.now : function () {
 	    return +new Date();
@@ -1221,10 +959,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = Scheduler;
+
+	var CurrentThreadScheduler = __webpack_require__(15);
+	var ImmediateScheduler = __webpack_require__(21);
+	var DefaultScheduler = __webpack_require__(22);
+	var CatchScheduler = __webpack_require__(25);
+
+	Scheduler.queue = Scheduler.currentThread = new CurrentThreadScheduler();
+	Scheduler.async = Scheduler['default'] = new DefaultScheduler();
+	Scheduler.immediate = new ImmediateScheduler();
+
+	/**
+	 * Returns a scheduler that wraps the original scheduler, adding exception handling for scheduled actions.
+	 * @param {Function} handler Handler that's run if an exception is caught. The exception will be rethrown if the handler returns false.
+	 * @returns {Scheduler} Wrapper around the original scheduler, enforcing exception handling.
+	 */
+	Scheduler.prototype['catch'] = function (handler) {
+	  return new CatchScheduler(this, handler);
+	};
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 18 */
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var noop = __webpack_require__(3);
+	var isFunction = __webpack_require__(9);
+	var ObjectDisposedError = __webpack_require__(7).ObjectDisposedError;
+
+	/**
+	 * Provides a set of static methods for creating Disposables.
+	 * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
+	 */
+	function Disposable(action) {
+	  this.isDisposed = false;
+	  this.action = action || noop;
+	}
+
+	/** Performs the task of cleaning up resources. */
+	Disposable.prototype.dispose = function () {
+	  if (!this.isDisposed) {
+	    this.action();
+	    this.isDisposed = true;
+	  }
+	};
+
+	/**
+	 * Creates a disposable object that invokes the specified action when disposed.
+	 * @param {Function} dispose Action to run during the first call to dispose. The action is guaranteed to be run at most once.
+	 * @return {Disposable} The disposable object that runs the given action upon disposal.
+	 */
+	Disposable.create = function (action) {
+	  return new Disposable(action);
+	};
+
+	/**
+	 * Gets the disposable that does nothing when disposed.
+	 */
+	Disposable.empty = { dispose: noop };
+
+	/**
+	 * Validates whether the given object is a disposable
+	 * @param {Object} Object to test whether it has a dispose method
+	 * @returns {Boolean} true if a disposable object, else false.
+	 */
+	Disposable.isDisposable = function (d) {
+	  return d && isFunction(d.dispose);
+	};
+
+	Disposable.checkDisposed = function (disposable) {
+	  if (disposable.isDisposed) {
+	    throw new ObjectDisposedError();
+	  }
+	};
+
+	Disposable._fixup = function (result) {
+	  return Disposable.isDisposable(result) ? result : Disposable.empty;
+	};
+
+	module.exports = Disposable;
+
+/***/ },
+/* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1308,106 +1126,68 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = CompositeDisposable;
 
 /***/ },
-/* 19 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var Scheduler = __webpack_require__(17);
-	var Disposable = __webpack_require__(12);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var inherits = __webpack_require__(6);
-	var tryCatchUtils = __webpack_require__(15);
-	var tryCatch = tryCatchUtils.tryCatch,
-	    thrower = tryCatchUtils.thrower;
-
-	function CatchScheduler(scheduler, handler) {
-	  this._scheduler = scheduler;
-	  this._handler = handler;
-	  this._recursiveOriginal = null;
-	  this._recursiveWrapper = null;
-	  Scheduler.call(this);
-	}
-
-	inherits(CatchScheduler, Scheduler);
-
-	CatchScheduler.prototype.schedule = function (state, action) {
-	  return this._scheduler.schedule(state, this._wrap(action));
-	};
-
-	CatchScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
-	  return this._scheduler.schedule(state, dueTime, this._wrap(action));
-	};
-
-	CatchScheduler.prototype.now = function () {
-	  return this._scheduler.now();
-	};
-
-	CatchScheduler.prototype._clone = function (scheduler) {
-	  return new CatchScheduler(scheduler, this._handler);
-	};
-
-	CatchScheduler.prototype._wrap = function (action) {
-	  var parent = this;
-	  return function (self, state) {
-	    var res = tryCatch(action)(parent._getRecursiveWrapper(self), state);
-	    if (res === global._Rx.errorObj) {
-	      if (!parent._handler(res.e)) {
-	        thrower(res.e);
-	      }
-	      return Disposable.empty;
-	    }
-	    return Disposable._fixup(res);
-	  };
-	};
-
-	CatchScheduler.prototype._getRecursiveWrapper = function (scheduler) {
-	  if (this._recursiveOriginal !== scheduler) {
-	    this._recursiveOriginal = scheduler;
-	    var wrapper = this._clone(scheduler);
-	    wrapper._recursiveOriginal = scheduler;
-	    wrapper._recursiveWrapper = wrapper;
-	    this._recursiveWrapper = wrapper;
-	  }
-	  return this._recursiveWrapper;
-	};
-
-	CatchScheduler.prototype.schedulePeriodic = function (state, period, action) {
-	  var self = this,
-	      failed = false,
-	      d = new SingleAssignmentDisposable();
-
-	  d.setDisposable(this._scheduler.schedulePeriodic(state, period, function (state1) {
-	    if (failed) {
-	      return null;
-	    }
-	    var res = tryCatch(action)(state1);
-	    if (res === global._Rx.errorObj) {
-	      failed = true;
-	      if (!self._handler(res.e)) {
-	        thrower(res.e);
-	      }
-	      d.dispose();
-	      return null;
-	    }
-	    return res;
-	  }));
-
-	  return d;
-	};
-
-	module.exports = CatchScheduler;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 20 */
+/* 15 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Disposable = __webpack_require__(12);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var cmp = __webpack_require__(21);
+	var Scheduler = __webpack_require__(12);
+	var ScheduledItem = __webpack_require__(16);
+	var PriorityQueue = __webpack_require__(19);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj,
+	    thrower = tryCatchUtils.thrower;
+	var inherits = __webpack_require__(6);
+
+	function CurrentThreadScheduler() {
+	  Scheduler.call(this);
+	}
+
+	CurrentThreadScheduler.queue = null;
+
+	inherits(CurrentThreadScheduler, Scheduler);
+
+	function runTrampoline() {
+	  while (CurrentThreadScheduler.queue.length > 0) {
+	    var item = CurrentThreadScheduler.queue.dequeue();
+	    !item.isCancelled() && item.invoke();
+	  }
+	}
+
+	CurrentThreadScheduler.prototype.schedule = function (state, action) {
+	  var si = new ScheduledItem(this, state, action, this.now());
+
+	  if (!CurrentThreadScheduler.queue) {
+	    CurrentThreadScheduler.queue = new PriorityQueue(4);
+	    CurrentThreadScheduler.queue.enqueue(si);
+
+	    var result = tryCatch(runTrampoline)();
+	    CurrentThreadScheduler.queue = null;
+	    if (result === errorObj) {
+	      thrower(result.e);
+	    }
+	  } else {
+	    CurrentThreadScheduler.queue.enqueue(si);
+	  }
+	  return si.disposable;
+	};
+
+	CurrentThreadScheduler.prototype.scheduleRequired = function () {
+	  return !CurrentThreadScheduler.queue;
+	};
+
+	module.exports = CurrentThreadScheduler;
+
+/***/ },
+/* 16 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Disposable = __webpack_require__(13);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var cmp = __webpack_require__(18);
 
 	function ScheduledItem(scheduler, state, action, dueTime, comparer) {
 	  this.scheduler = scheduler;
@@ -1437,7 +1217,42 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ScheduledItem;
 
 /***/ },
-/* 21 */
+/* 17 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	function SingleAssignmentDisposable() {
+	  this.isDisposed = false;
+	  this._current = null;
+	}
+
+	SingleAssignmentDisposable.prototype.getDisposable = function () {
+	  return this._current;
+	};
+
+	SingleAssignmentDisposable.prototype.setDisposable = function (value) {
+	  if (this._current) {
+	    throw new Error('Disposable has already been assigned');
+	  }
+	  var shouldDispose = this.isDisposed;
+	  !shouldDispose && (this._current = value);
+	  shouldDispose && value && value.dispose();
+	};
+
+	SingleAssignmentDisposable.prototype.dispose = function () {
+	  if (!this.isDisposed) {
+	    this.isDisposed = true;
+	    var old = this._current;
+	    this._current = null;
+	    old && old.dispose();
+	  }
+	};
+
+	module.exports = SingleAssignmentDisposable;
+
+/***/ },
+/* 18 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1453,7 +1268,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 22 */
+/* 19 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -1553,104 +1368,73 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PriorityQueue;
 
 /***/ },
-/* 23 */
-/***/ function(module, exports) {
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	function BinaryDisposable(first, second) {
-	  this._first = first;
-	  this._second = second;
-	  this.isDisposed = false;
+	var isFunction = __webpack_require__(9);
+	var errorObj = module.exports.errorObj = { e: {} };
+
+	function tryCatcherGen(tryCatchTarget) {
+	  return function tryCatcher() {
+	    try {
+	      return tryCatchTarget.apply(this, arguments);
+	    } catch (e) {
+	      errorObj.e = e;
+	      return errorObj;
+	    }
+	  };
 	}
 
-	BinaryDisposable.prototype.dispose = function () {
-	  if (!this.isDisposed) {
-	    this.isDisposed = true;
-	    var old1 = this._first;
-	    this._first = null;
-	    old1 && old1.dispose();
-	    var old2 = this._second;
-	    this._second = null;
-	    old2 && old2.dispose();
+	module.exports.tryCatch = function tryCatch(fn) {
+	  if (!isFunction(fn)) {
+	    throw new TypeError('fn must be a function');
 	  }
+	  return tryCatcherGen(fn);
 	};
 
-	module.exports = BinaryDisposable;
+	module.exports.thrower = function thrower(e) {
+	  throw e;
+	};
 
 /***/ },
-/* 24 */
+/* 21 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var ObservableBase = __webpack_require__(11);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var Scheduler = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var inherits = __webpack_require__(6);
 
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
+	function ImmediateScheduler() {
+	  Scheduler.call(this);
 	}
 
-	function FromPromiseObservable(p, s) {
-	  this._p = p;
-	  this._s = s;
-	  ObservableBase.call(this);
-	}
+	inherits(ImmediateScheduler, Scheduler);
 
-	inherits(FromPromiseObservable, ObservableBase);
-
-	function scheduleNext(s, state) {
-	  var o = state[0],
-	      data = state[1];
-	  o.onNext(data);
-	  o.onCompleted();
-	}
-
-	function scheduleError(s, state) {
-	  var o = state[0],
-	      err = state[1];
-	  o.onError(err);
-	}
-
-	FromPromiseObservable.prototype.subscribeCore = function (o) {
-	  var sad = new SingleAssignmentDisposable(),
-	      self = this;
-
-	  this._p.then(function (data) {
-	    sad.setDisposable(self._s.schedule([o, data], scheduleNext));
-	  }, function (err) {
-	    sad.setDisposable(self._s.schedule([o, err], scheduleError));
-	  });
-
-	  return sad;
+	ImmediateScheduler.prototype.schedule = function (state, action) {
+	  return Disposable._fixup(action(this, state));
 	};
 
-	/**
-	* Converts a Promise to an Observable sequence
-	* @param {Promise} An ES6 Compliant promise.
-	* @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
-	*/
-	module.exports = function fromPromise(promise, scheduler) {
-	  scheduler || (scheduler = global._Rx.defaultScheduler);
-	  return new FromPromiseObservable(promise, scheduler);
-	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+	module.exports = ImmediateScheduler;
 
 /***/ },
-/* 25 */
+/* 22 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global, process) {'use strict';
 
-	var Disposable = __webpack_require__(12);
-	var BinaryDisposable = __webpack_require__(23);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var Scheduler = __webpack_require__(17);
+	var Disposable = __webpack_require__(13);
+	var BinaryDisposable = __webpack_require__(24);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var Scheduler = __webpack_require__(12);
 	var isFunction = __webpack_require__(9);
-	var tryCatchUtils = __webpack_require__(15);
+	var noop = __webpack_require__(3);
+	var tryCatchUtils = __webpack_require__(20);
 	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj,
 	    thrower = tryCatchUtils.thrower;
 	var inherits = __webpack_require__(6);
 
@@ -1678,7 +1462,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var result = tryCatch(task)();
 	        clearMethod(handle);
 	        currentlyRunning = false;
-	        if (result === global._Rx.errorObj) {
+	        if (result === errorObj) {
 	          thrower(result.e);
 	        }
 	      }
@@ -1831,14 +1615,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new BinaryDisposable(disposable, new ClearDisposable(global.clearTimeout, id));
 	};
 
-	global._Rx || (global._Rx = {});
-	global._Rx.defaultScheduler = new DefaultScheduler();
+	function scheduleLongRunning(state, action, disposable) {
+	  return function () {
+	    action(state, disposable);
+	  };
+	}
 
-	Scheduler.default = global._Rx.defaultScheduler;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(26)))
+	DefaultScheduler.prototype.scheduleLongRunning = function (state, action) {
+	  var disposable = Disposable.create(noop);
+	  scheduleMethod(scheduleLongRunning(state, action, disposable));
+	  return disposable;
+	};
+
+	module.exports = DefaultScheduler;
+	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(23)))
 
 /***/ },
-/* 26 */
+/* 23 */
 /***/ function(module, exports) {
 
 	// shim for using process in browser
@@ -1935,7 +1728,236 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
+/* 24 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	function BinaryDisposable(first, second) {
+	  this._first = first;
+	  this._second = second;
+	  this.isDisposed = false;
+	}
+
+	BinaryDisposable.prototype.dispose = function () {
+	  if (!this.isDisposed) {
+	    this.isDisposed = true;
+	    var old1 = this._first;
+	    this._first = null;
+	    old1 && old1.dispose();
+	    var old2 = this._second;
+	    this._second = null;
+	    old2 && old2.dispose();
+	  }
+	};
+
+	module.exports = BinaryDisposable;
+
+/***/ },
+/* 25 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Scheduler = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var inherits = __webpack_require__(6);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj,
+	    thrower = tryCatchUtils.thrower;
+
+	function CatchScheduler(scheduler, handler) {
+	  this._scheduler = scheduler;
+	  this._handler = handler;
+	  this._recursiveOriginal = null;
+	  this._recursiveWrapper = null;
+	  Scheduler.call(this);
+	}
+
+	inherits(CatchScheduler, Scheduler);
+
+	CatchScheduler.prototype.schedule = function (state, action) {
+	  return this._scheduler.schedule(state, this._wrap(action));
+	};
+
+	CatchScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
+	  return this._scheduler.schedule(state, dueTime, this._wrap(action));
+	};
+
+	CatchScheduler.prototype.now = function () {
+	  return this._scheduler.now();
+	};
+
+	CatchScheduler.prototype._clone = function (scheduler) {
+	  return new CatchScheduler(scheduler, this._handler);
+	};
+
+	CatchScheduler.prototype._wrap = function (action) {
+	  var parent = this;
+	  return function (self, state) {
+	    var res = tryCatch(action)(parent._getRecursiveWrapper(self), state);
+	    if (res === errorObj) {
+	      if (!parent._handler(res.e)) {
+	        thrower(res.e);
+	      }
+	      return Disposable.empty;
+	    }
+	    return Disposable._fixup(res);
+	  };
+	};
+
+	CatchScheduler.prototype._getRecursiveWrapper = function (scheduler) {
+	  if (this._recursiveOriginal !== scheduler) {
+	    this._recursiveOriginal = scheduler;
+	    var wrapper = this._clone(scheduler);
+	    wrapper._recursiveOriginal = scheduler;
+	    wrapper._recursiveWrapper = wrapper;
+	    this._recursiveWrapper = wrapper;
+	  }
+	  return this._recursiveWrapper;
+	};
+
+	CatchScheduler.prototype.schedulePeriodic = function (state, period, action) {
+	  var self = this,
+	      failed = false,
+	      d = new SingleAssignmentDisposable();
+
+	  d.setDisposable(this._scheduler.schedulePeriodic(state, period, function (state1) {
+	    if (failed) {
+	      return null;
+	    }
+	    var res = tryCatch(action)(state1);
+	    if (res === errorObj) {
+	      failed = true;
+	      if (!self._handler(res.e)) {
+	        thrower(res.e);
+	      }
+	      d.dispose();
+	      return null;
+	    }
+	    return res;
+	  }));
+
+	  return d;
+	};
+
+	module.exports = CatchScheduler;
+
+/***/ },
+/* 26 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var AbstractObserver = __webpack_require__(5);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var inherits = __webpack_require__(6);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj,
+	    thrower = tryCatchUtils.thrower;
+
+	function AutoDetachObserver(observer) {
+	  AbstractObserver.call(this);
+	  this.observer = observer;
+	  this.m = new SingleAssignmentDisposable();
+	}
+
+	inherits(AutoDetachObserver, AbstractObserver);
+
+	AutoDetachObserver.prototype.next = function (value) {
+	  var result = tryCatch(this.observer.onNext).call(this.observer, value);
+	  if (result === errorObj) {
+	    this.dispose();
+	    thrower(result.e);
+	  }
+	};
+
+	AutoDetachObserver.prototype.error = function (err) {
+	  var result = tryCatch(this.observer.onError).call(this.observer, err);
+	  this.dispose();
+	  result === errorObj && thrower(result.e);
+	};
+
+	AutoDetachObserver.prototype.completed = function () {
+	  var result = tryCatch(this.observer.onCompleted).call(this.observer);
+	  this.dispose();
+	  result === errorObj && thrower(result.e);
+	};
+
+	AutoDetachObserver.prototype.setDisposable = function (value) {
+	  this.m.setDisposable(value);
+	};
+	AutoDetachObserver.prototype.getDisposable = function () {
+	  return this.m.getDisposable();
+	};
+
+	AutoDetachObserver.prototype.dispose = function () {
+	  AbstractObserver.prototype.dispose.call(this);
+	  this.m.dispose();
+	};
+
+	module.exports = AutoDetachObserver;
+
+/***/ },
 /* 27 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var ObservableBase = __webpack_require__(11);
+	var Scheduler = __webpack_require__(12);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var inherits = __webpack_require__(6);
+
+	function FromPromiseObservable(p, s) {
+	  this._p = p;
+	  this._s = s;
+	  ObservableBase.call(this);
+	}
+
+	inherits(FromPromiseObservable, ObservableBase);
+
+	function scheduleNext(s, state) {
+	  var o = state[0],
+	      data = state[1];
+	  o.onNext(data);
+	  o.onCompleted();
+	}
+
+	function scheduleError(s, state) {
+	  var o = state[0],
+	      err = state[1];
+	  o.onError(err);
+	}
+
+	FromPromiseObservable.prototype.subscribeCore = function (o) {
+	  var sad = new SingleAssignmentDisposable(),
+	      self = this;
+
+	  this._p.then(function (data) {
+	    sad.setDisposable(self._s.schedule([o, data], scheduleNext));
+	  }, function (err) {
+	    sad.setDisposable(self._s.schedule([o, err], scheduleError));
+	  });
+
+	  return sad;
+	};
+
+	/**
+	* Converts a Promise to an Observable sequence
+	* @param {Promise} An ES6 Compliant promise.
+	* @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
+	*/
+	module.exports = function fromPromise(promise, scheduler) {
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
+	  return new FromPromiseObservable(promise, scheduler);
+	};
+
+/***/ },
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -1947,13 +1969,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 28 */
+/* 29 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Disposable = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var inherits = __webpack_require__(6);
 
 	function NeverObservable() {
@@ -1977,15 +1999,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 29 */
+/* 30 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var AsyncSubject = __webpack_require__(30);
-	var asObservable = __webpack_require__(34);
+	var AsyncSubject = __webpack_require__(31);
+	var asObservable = __webpack_require__(35);
 	var isFunction = __webpack_require__(9);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function createCbHandler(o, ctx, selector) {
 	  return function handler() {
@@ -1997,7 +2021,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (isFunction(selector)) {
 	      results = tryCatch(selector).apply(ctx, results);
-	      if (results === global._Rx.errorObj) {
+	      if (results === errorObj) {
 	        return o.onError(results.e);
 	      }
 	      o.onNext(results);
@@ -2018,7 +2042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  args.push(createCbHandler(o, ctx, selector));
 	  var res = tryCatch(fn).apply(ctx, args);
-	  if (res === global._Rx.errorObj) {
+	  if (res === errorObj) {
 	    o.onError(res.e);
 	  }
 
@@ -2045,20 +2069,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return createCbObservable(fn, ctx, selector, args);
 	  };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 30 */
+/* 31 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var Disposable = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var Observable = __webpack_require__(8);
 	var Observer = __webpack_require__(1);
-	var InnerSubscription = __webpack_require__(31);
-	var addProperties = __webpack_require__(32);
-	var cloneArray = __webpack_require__(33);
+	var InnerSubscription = __webpack_require__(32);
+	var addProperties = __webpack_require__(33);
+	var cloneArray = __webpack_require__(34);
 	var inherits = __webpack_require__(6);
 
 	/**
@@ -2174,7 +2197,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = AsyncSubject;
 
 /***/ },
-/* 31 */
+/* 32 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2195,7 +2218,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = InnerSubscription;
 
 /***/ },
-/* 32 */
+/* 33 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2214,7 +2237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 33 */
+/* 34 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -2229,12 +2252,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var AnonymousObservable = __webpack_require__(35);
+	var AnonymousObservable = __webpack_require__(36);
 
 	function createAsObservable(source) {
 	  return function subscribe(o) {
@@ -2251,24 +2274,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var inherits = __webpack_require__(6);
 	var isFunction = __webpack_require__(9);
 	var Observable = __webpack_require__(8);
-	var Disposable = __webpack_require__(12);
-	var AutoDetachObserver = __webpack_require__(13);
-	var tryCatchUtils = __webpack_require__(15);
+	var Disposable = __webpack_require__(13);
+	var AutoDetachObserver = __webpack_require__(26);
+	var Scheduler = __webpack_require__(12);
+	var tryCatchUtils = __webpack_require__(20);
 	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj,
 	    thrower = tryCatchUtils.thrower;
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	// Fix subscriber to check for undefined or function returned to decorate as Disposable
 	function fixSubscriber(subscriber) {
@@ -2279,7 +2299,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var ado = state[0],
 	      self = state[1];
 	  var sub = tryCatch(self.__subscribe).call(self, ado);
-	  if (sub === global._Rx.errorObj && !ado.fail(sub.e)) {
+	  if (sub === errorObj && !ado.fail(sub.e)) {
 	    thrower(sub.e);
 	  }
 	  ado.setDisposable(fixSubscriber(sub));
@@ -2297,8 +2317,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var ado = new AutoDetachObserver(o),
 	      state = [ado, this];
 
-	  if (global._Rx.currentThreadScheduler.scheduleRequired()) {
-	    global._Rx.currentThreadScheduler.schedule(state, setDisposable);
+	  if (Scheduler.queue.scheduleRequired()) {
+	    Scheduler.queue.schedule(state, setDisposable);
 	  } else {
 	    setDisposable(null, state);
 	  }
@@ -2306,18 +2326,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = AnonymousObservable;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var AsyncSubject = __webpack_require__(30);
-	var asObservable = __webpack_require__(34);
+	var AsyncSubject = __webpack_require__(31);
+	var asObservable = __webpack_require__(35);
 	var isFunction = __webpack_require__(9);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function createNodeHandler(o, ctx, selector) {
 	  return function handler() {
@@ -2334,7 +2355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (isFunction(selector)) {
 	      results = tryCatch(selector).apply(ctx, results);
-	      if (results === global._Rx.errorObj) {
+	      if (results === errorObj) {
 	        return o.onError(results.e);
 	      }
 	      o.onNext(results);
@@ -2355,7 +2376,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  args.push(createNodeHandler(o, ctx, selector));
 	  var res = tryCatch(fn).apply(ctx, args);
-	  if (res === global._Rx.errorObj) {
+	  if (res === errorObj) {
 	    o.onError(res.e);
 	  }
 
@@ -2380,19 +2401,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return createNodeObservable(fn, ctx, selector, args);
 	  };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var defer = __webpack_require__(38);
+	var defer = __webpack_require__(39);
 	var empty = __webpack_require__(41);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
+	var isScheduler = __webpack_require__(12).isScheduler;
 
 	function createCase(selector, sources, defaultSourceOrScheduler) {
 	  return function () {
@@ -2421,16 +2441,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var fromPromise = __webpack_require__(24);
-	var throwError = __webpack_require__(39);
-	var isPromise = __webpack_require__(27);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var fromPromise = __webpack_require__(27);
+	var throwError = __webpack_require__(40);
+	var isPromise = __webpack_require__(28);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function Defer(factory) {
@@ -2442,7 +2464,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Defer.prototype.subscribeCore = function (o) {
 	  var result = tryCatch(this._f)();
-	  if (result === global._Rx.errorObj) {
+	  if (result === errorObj) {
 	    return throwError(result.e).subscribe(o);
 	  }
 	  isPromise(result) && (result = fromPromise(result));
@@ -2460,23 +2482,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function observableDefer(observableFactory) {
 	  return new Defer(observableFactory);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Disposable = __webpack_require__(12);
-	var Scheduler = __webpack_require__(17);
+	var Disposable = __webpack_require__(13);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.immediateScheduler) {
-	  __webpack_require__(40);
-	}
 
 	function scheduleItem(s, state) {
 	  var e = state[0],
@@ -2495,56 +2511,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	ThrowObservable.prototype.subscribeCore = function (o) {
 	  var state = [this._error, o];
-	  return this._scheduler === global._Rx.immediateScheduler ? scheduleItem(null, state) : this._scheduler.schedule(state, scheduleItem);
+	  return this._scheduler === Scheduler.immediate ? scheduleItem(null, state) : this._scheduler.schedule(state, scheduleItem);
 	};
 
 	module.exports = function throwError(error, scheduler) {
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.immediateScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.immediate);
 	  return new ThrowObservable(error, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
-
-/***/ },
-/* 40 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
-
-	var Scheduler = __webpack_require__(17);
-	var Disposable = __webpack_require__(12);
-	var inherits = __webpack_require__(6);
-
-	function ImmediateScheduler() {
-	  Scheduler.call(this);
-	}
-
-	inherits(ImmediateScheduler, Scheduler);
-
-	ImmediateScheduler.prototype.schedule = function (state, action) {
-	  return Disposable._fixup(action(this, state));
-	};
-
-	global._Rx || (global._Rx = {});
-	global._Rx.immediateScheduler = new ImmediateScheduler();
-
-	Scheduler.immediate = global._Rx.immediateScheduler;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Disposable = __webpack_require__(12);
-	var Scheduler = __webpack_require__(17);
+	var Disposable = __webpack_require__(13);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.immediateScheduler) {
-	  __webpack_require__(40);
-	}
 
 	function scheduleItem(s, state) {
 	  state.onCompleted();
@@ -2559,10 +2543,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	inherits(EmptyObservable, ObservableBase);
 
 	EmptyObservable.prototype.subscribeCore = function (o) {
-	  return this.scheduler === global._Rx.immediateScheduler ? scheduleItem(null, o) : this._scheduler.schedule(o, scheduleItem);
+	  return this.scheduler === Scheduler.immediate ? scheduleItem(null, o) : this._scheduler.schedule(o, scheduleItem);
 	};
 
-	var EMPTY_OBSERVABLE = new EmptyObservable(global._Rx.immediateScheduler);
+	var EMPTY_OBSERVABLE = new EmptyObservable(Scheduler.immediate);
 
 	/**
 	 *  Returns an empty observable sequence, using the specified scheduler to send out the single OnCompleted message.
@@ -2574,30 +2558,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Observable} An observable sequence with no elements.
 	 */
 	module.exports = function empty(scheduler) {
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.immediateScheduler);
-	  return scheduler === global._Rx.immediateScheduler ? EMPTY_OBSERVABLE : new EmptyObservable(scheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.immediate);
+	  return scheduler === Scheduler.immediate ? EMPTY_OBSERVABLE : new EmptyObservable(scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
+	var Scheduler = __webpack_require__(12);
 	var NAryDisposable = __webpack_require__(43);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	function CatchObserver(state, recurse) {
 	  this._state = state;
@@ -2663,7 +2642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    o: o
 	  };
 
-	  var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
+	  var cancelable = Scheduler.queue.scheduleRecursive(state, scheduleMethod);
 	  return new NAryDisposable([subscription, cancelable, new IsDisposedDisposable(state)]);
 	};
 
@@ -2675,7 +2654,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return new CatchObservable(args);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 43 */
@@ -2741,18 +2719,20 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var NAryDisposable = __webpack_require__(43);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var identity = __webpack_require__(46);
 	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function falseFactory() {
 	  return false;
@@ -2794,7 +2774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  this._state.hasValue[this._i] = true;
 	  if (this._state.hasValueAll || (this._state.hasValueAll = this._state.hasValue.every(identity))) {
 	    var res = tryCatch(this._cb).apply(null, this._state.values);
-	    if (res === global._Rx.errorObj) {
+	    if (res === errorObj) {
 	      return this._o.onError(res.e);
 	    }
 	    this._o.onNext(res);
@@ -2858,7 +2838,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
 	  return new CombineLatestObservable(args, resultSelector);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 46 */
@@ -2874,22 +2853,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var Disposable = __webpack_require__(12);
+	var Scheduler = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var NAryDisposable = __webpack_require__(43);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.immediateScheduler) {
-	  __webpack_require__(40);
-	}
 
 	function ConcatObserver(s, fn) {
 	  this._s = s;
@@ -2944,7 +2919,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    sources: this._sources
 	  };
 
-	  var cancelable = global._Rx.immediateScheduler.scheduleRecursive(state, scheduleRecursive);
+	  var cancelable = Scheduler.immediate.scheduleRecursive(state, scheduleRecursive);
 	  return new NAryDisposable([subscription, disposable, cancelable]);
 	};
 
@@ -2961,7 +2936,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return new ConcatObservable(args);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 48 */
@@ -2969,7 +2943,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var AnonymousObservable = __webpack_require__(35);
+	var AnonymousObservable = __webpack_require__(36);
 
 	/**
 	 *  Creates an observable sequence from a specified subscribe method implementation.
@@ -2984,16 +2958,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var CompositeDisposable = __webpack_require__(18);
-	var Disposable = __webpack_require__(12);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var CompositeDisposable = __webpack_require__(14);
+	var Disposable = __webpack_require__(13);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var isFunction = __webpack_require__(9);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function argumentsToArray() {
@@ -3043,7 +3019,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._s.finished = true;
 
 	    var res = tryCatch(this._cb).apply(null, this._s.results);
-	    if (res === global._Rx.errorObj) {
+	    if (res === errorObj) {
 	      return this._o.onError(res.e);
 	    }
 
@@ -3093,7 +3069,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
 	  return new ForkJoinObservable(args, resultSelector);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 50 */
@@ -3102,125 +3077,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Scheduler = __webpack_require__(17);
+	var Scheduler = __webpack_require__(12);
 	var isFunction = __webpack_require__(9);
 	var $iterator$ = __webpack_require__(51);
 	var bindCallback = __webpack_require__(52);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	var doneEnumerator = { done: true, value: undefined };
-
-	function FromObservable(iterable, fn, scheduler) {
-	  this._iterable = iterable;
-	  this._fn = fn;
-	  this._scheduler = scheduler;
-	  ObservableBase.call(this);
-	}
-
-	inherits(FromObservable, ObservableBase);
-
-	function createScheduleMethod(o, it, fn) {
-	  return function loopRecursive(i, recurse) {
-	    var next = tryCatch(it.next).call(it);
-	    if (next === global._Rx.errorObj) {
-	      return o.onError(next.e);
-	    }
-	    if (next.done) {
-	      return o.onCompleted();
-	    }
-
-	    var result = next.value;
-
-	    if (isFunction(fn)) {
-	      result = tryCatch(fn)(result, i);
-	      if (result === global._Rx.errorObj) {
-	        return o.onError(result.e);
-	      }
-	    }
-
-	    o.onNext(result);
-	    recurse(i + 1);
-	  };
-	}
-
-	FromObservable.prototype.subscribeCore = function (o) {
-	  var list = Object(this._iterable),
-	      it = getIterable(list);
-
-	  return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
-	};
-
 	var maxSafeInteger = Math.pow(2, 53) - 1;
-
-	function StringIterable(s) {
-	  this._s = s;
-	}
-
-	StringIterable.prototype[$iterator$] = function () {
-	  return new StringIterator(this._s);
-	};
-
-	function StringIterator(s) {
-	  this._s = s;
-	  this._l = s.length;
-	  this._i = 0;
-	}
-
-	StringIterator.prototype[$iterator$] = function () {
-	  return this;
-	};
-
-	StringIterator.prototype.next = function () {
-	  return this._i < this._l ? { done: false, value: this._s.charAt(this._i++) } : doneEnumerator;
-	};
-
-	function ArrayIterable(a) {
-	  this._a = a;
-	}
-
-	ArrayIterable.prototype[$iterator$] = function () {
-	  return new ArrayIterator(this._a);
-	};
-
-	function ArrayIterator(a) {
-	  this._a = a;
-	  this._l = toLength(a);
-	  this._i = 0;
-	}
-
-	ArrayIterator.prototype[$iterator$] = function () {
-	  return this;
-	};
-
-	ArrayIterator.prototype.next = function () {
-	  return this._i < this._l ? { done: false, value: this._a[this._i++] } : doneEnumerator;
-	};
 
 	function numberIsFinite(value) {
 	  return typeof value === 'number' && global.isFinite(value);
-	}
-
-	function getIterable(o) {
-	  var i = o[$iterator$],
-	      it;
-	  if (!i && typeof o === 'string') {
-	    it = new StringIterable(o);
-	    return it[$iterator$]();
-	  }
-	  if (!i && o.length !== undefined) {
-	    it = new ArrayIterable(o);
-	    return it[$iterator$]();
-	  }
-	  if (!i) {
-	    throw new TypeError('Object is not iterable');
-	  }
-	  return o[$iterator$]();
 	}
 
 	function sign(value) {
@@ -3252,6 +3122,107 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return len;
 	}
 
+	function StringIterator(s) {
+	  this._s = s;
+	  this._l = s.length;
+	  this._i = 0;
+	}
+
+	StringIterator.prototype[$iterator$] = function () {
+	  return this;
+	};
+
+	StringIterator.prototype.next = function () {
+	  return this._i < this._l ? { done: false, value: this._s.charAt(this._i++) } : doneEnumerator;
+	};
+
+	function StringIterable(s) {
+	  this._s = s;
+	}
+
+	StringIterable.prototype[$iterator$] = function () {
+	  return new StringIterator(this._s);
+	};
+
+	function ArrayIterator(a) {
+	  this._a = a;
+	  this._l = toLength(a);
+	  this._i = 0;
+	}
+
+	ArrayIterator.prototype[$iterator$] = function () {
+	  return this;
+	};
+
+	ArrayIterator.prototype.next = function () {
+	  return this._i < this._l ? { done: false, value: this._a[this._i++] } : doneEnumerator;
+	};
+
+	function ArrayIterable(a) {
+	  this._a = a;
+	}
+
+	ArrayIterable.prototype[$iterator$] = function () {
+	  return new ArrayIterator(this._a);
+	};
+
+	function getIterable(o) {
+	  var i = o[$iterator$],
+	      it;
+	  if (!i && typeof o === 'string') {
+	    it = new StringIterable(o);
+	    return it[$iterator$]();
+	  }
+	  if (!i && o.length !== undefined) {
+	    it = new ArrayIterable(o);
+	    return it[$iterator$]();
+	  }
+	  if (!i) {
+	    throw new TypeError('Object is not iterable');
+	  }
+	  return o[$iterator$]();
+	}
+
+	function FromObservable(iterable, fn, scheduler) {
+	  this._iterable = iterable;
+	  this._fn = fn;
+	  this._scheduler = scheduler;
+	  ObservableBase.call(this);
+	}
+
+	inherits(FromObservable, ObservableBase);
+
+	function createScheduleMethod(o, it, fn) {
+	  return function loopRecursive(i, recurse) {
+	    var next = tryCatch(it.next).call(it);
+	    if (next === errorObj) {
+	      return o.onError(next.e);
+	    }
+	    if (next.done) {
+	      return o.onCompleted();
+	    }
+
+	    var result = next.value;
+
+	    if (isFunction(fn)) {
+	      result = tryCatch(fn)(result, i);
+	      if (result === errorObj) {
+	        return o.onError(result.e);
+	      }
+	    }
+
+	    o.onNext(result);
+	    recurse(i + 1);
+	  };
+	}
+
+	FromObservable.prototype.subscribeCore = function (o) {
+	  var list = Object(this._iterable),
+	      it = getIterable(list);
+
+	  return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
+	};
+
 	/**
 	* This method creates a new Observable sequence from an array-like or iterable object.
 	* @param {Any} arrayLike An array-like or iterable object to convert to an Observable sequence.
@@ -3271,7 +3242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (mapFn) {
 	    mapper = bindCallback(mapFn, thisArg, 2);
 	  }
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
 	  return new FromObservable(iterable, mapper, scheduler);
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
@@ -3331,16 +3302,11 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Scheduler = __webpack_require__(17);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	function scheduleMethod(o, args) {
 	  return function loopRecursive(i, recurse) {
@@ -3366,10 +3332,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function fromArray(array, scheduler) {
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
 	  return new FromArrayObservable(array, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 54 */
@@ -3380,9 +3345,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ObservableBase = __webpack_require__(11);
 	var fromEventPattern = __webpack_require__(55);
 	var publish = __webpack_require__(56);
-	var CompositeDisposable = __webpack_require__(18);
+	var CompositeDisposable = __webpack_require__(14);
 	var isFunction = __webpack_require__(9);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function isNodeList(el) {
@@ -3429,9 +3396,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * Configuration option to determine whether to use native events only
 	 */
-	global._Rx || (global._Rx = {});
-	global._Rx.config || (global._Rx.config = {});
-	global._Rx.config.useNativeEvents = false;
+	global.Rx || (global.Rx = {});
+	global.Rx.config || (global.Rx.config = {});
+	global.Rx.config.useNativeEvents = false;
 
 	function EventObservable(el, name, fn) {
 	  this._el = el;
@@ -3447,7 +3414,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var results = arguments[0];
 	    if (isFunction(fn)) {
 	      results = tryCatch(fn).apply(null, arguments);
-	      if (results === global._Rx.errorObj) {
+	      if (results === errorObj) {
 	        return o.onError(results.e);
 	      }
 	    }
@@ -3477,7 +3444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  // Use only if non-native events are allowed
-	  if (!global._Rx.config.useNativeEvents) {
+	  if (!global.Rx.config.useNativeEvents) {
 	    // Handles jq, Angular.js, Zepto, Marionette, Ember.js
 	    if (typeof element.on === 'function' && typeof element.off === 'function') {
 	      return fromEventPattern(function (h) {
@@ -3496,12 +3463,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var publish = __webpack_require__(56);
 	var isFunction = __webpack_require__(9);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function EventPatternDisposable(del, fn, ret) {
@@ -3532,7 +3501,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var results = arguments[0];
 	    if (isFunction(fn)) {
 	      results = tryCatch(fn).apply(null, arguments);
-	      if (results === global._Rx.errorObj) {
+	      if (results === errorObj) {
 	        return o.onError(results.e);
 	      }
 	    }
@@ -3556,7 +3525,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function fromEventPattern(addHandler, removeHandler, selector) {
 	  return publish(new EventPatternObservable(addHandler, removeHandler, selector)).refCount();
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 56 */
@@ -3586,12 +3554,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var Disposable = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var Observable = __webpack_require__(8);
 	var Observer = __webpack_require__(1);
-	var InnerSubscription = __webpack_require__(31);
-	var addProperties = __webpack_require__(32);
-	var cloneArray = __webpack_require__(33);
+	var InnerSubscription = __webpack_require__(32);
+	var addProperties = __webpack_require__(33);
+	var cloneArray = __webpack_require__(34);
 	var inherits = __webpack_require__(6);
 
 	/**
@@ -3708,7 +3676,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ObservableBase = __webpack_require__(11);
 	var ConnectableObservable = __webpack_require__(59);
-	var BinaryDisposable = __webpack_require__(23);
+	var BinaryDisposable = __webpack_require__(24);
 	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
 
@@ -3750,7 +3718,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var Observable = __webpack_require__(8);
 	var ObservableBase = __webpack_require__(11);
-	var asObservable = __webpack_require__(34);
+	var asObservable = __webpack_require__(35);
 	var inherits = __webpack_require__(6);
 
 	function RefCountDisposable(p, s) {
@@ -3827,17 +3795,14 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var tryCatch = __webpack_require__(15).tryCatch;
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	function GenerateObservable(state, cndFn, itrFn, resFn, s) {
 	  this._initialState = state;
@@ -3855,17 +3820,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    state.first = false;
 	  } else {
 	    state.newState = tryCatch(state.self._itrFn)(state.newState);
-	    if (state.newState === global._Rx.errorObj) {
+	    if (state.newState === errorObj) {
 	      return state.o.onError(state.newState.e);
 	    }
 	  }
 	  var hasResult = tryCatch(state.self._cndFn)(state.newState);
-	  if (hasResult === global._Rx.errorObj) {
+	  if (hasResult === errorObj) {
 	    return state.o.onError(hasResult.e);
 	  }
 	  if (hasResult) {
 	    var result = tryCatch(state.self._resFn)(state.newState);
-	    if (result === global._Rx.errorObj) {
+	    if (result === errorObj) {
 	      return state.o.onError(result.e);
 	    }
 	    state.o.onNext(result);
@@ -3886,26 +3851,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function generate(initialState, condition, iterate, resultSelector, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
 	  return new GenerateObservable(initialState, condition, iterate, resultSelector, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var tryCatch = __webpack_require__(15).tryCatch;
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function GenerateAbsoluteObservable(state, cndFn, itrFn, resFn, timeFn, s) {
 	  this._state = state;
@@ -3926,21 +3887,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    state.first = false;
 	  } else {
 	    state.newState = tryCatch(state.self._itrFn)(state.newState);
-	    if (state.newState === global._Rx.errorObj) {
+	    if (state.newState === errorObj) {
 	      return state.o.onError(state.newState.e);
 	    }
 	  }
 	  state.hasResult = tryCatch(state.self._cndFn)(state.newState);
-	  if (state.hasResult === global._Rx.errorObj) {
+	  if (state.hasResult === errorObj) {
 	    return state.o.onError(state.hasResult.e);
 	  }
 	  if (state.hasResult) {
 	    state.result = tryCatch(state.self._resFn)(state.newState);
-	    if (state.result === global._Rx.errorObj) {
+	    if (state.result === errorObj) {
 	      return state.o.onError(state.result.e);
 	    }
 	    var time = tryCatch(state.self._timeFn)(state.newState);
-	    if (time === global._Rx.errorObj) {
+	    if (time === errorObj) {
 	      return state.o.onError(time.e);
 	    }
 	    recurse(state, time);
@@ -3961,26 +3922,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function generateAbsolute(initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new GenerateAbsoluteObservable(initialState, condition, iterate, resultSelector, timeSelector, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var tryCatch = __webpack_require__(15).tryCatch;
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function GenerateRelativeObservable(state, cndFn, itrFn, resFn, timeFn, s) {
 	  this._state = state;
@@ -4001,21 +3958,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	    state.first = false;
 	  } else {
 	    state.newState = tryCatch(state.self._itrFn)(state.newState);
-	    if (state.newState === global._Rx.errorObj) {
+	    if (state.newState === errorObj) {
 	      return state.o.onError(state.newState.e);
 	    }
 	  }
 	  state.hasResult = tryCatch(state.self._cndFn)(state.newState);
-	  if (state.hasResult === global._Rx.errorObj) {
+	  if (state.hasResult === errorObj) {
 	    return state.o.onError(state.hasResult.e);
 	  }
 	  if (state.hasResult) {
 	    state.result = tryCatch(state.self._resFn)(state.newState);
-	    if (state.result === global._Rx.errorObj) {
+	    if (state.result === errorObj) {
 	      return state.o.onError(state.result.e);
 	    }
 	    var time = tryCatch(state.self._timeFn)(state.newState);
-	    if (time === global._Rx.errorObj) {
+	    if (time === errorObj) {
 	      return state.o.onError(time.e);
 	    }
 	    recurse(state, time);
@@ -4036,25 +3993,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function generateRelative(initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new GenerateRelativeObservable(initialState, condition, iterate, resultSelector, timeSelector, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Scheduler = __webpack_require__(17);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function IntervalObservable(period, scheduler) {
 	  this._period = period;
@@ -4082,26 +4033,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @returns {Observable} An observable sequence that produces a value after each period.
 	*/
 	module.exports = function interval(period, scheduler) {
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new IntervalObservable(period, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Disposable = __webpack_require__(12);
-	var Scheduler = __webpack_require__(17);
+	var Disposable = __webpack_require__(13);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.immediateScheduler) {
-	  __webpack_require__(40);
-	}
 
 	function scheduleItem(s, state) {
 	  var value = state[0],
@@ -4121,29 +4066,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	JustObservable.prototype.subscribeCore = function (o) {
 	  var state = [this._value, o];
-	  return this._scheduler === global._Rx.immediateScheduler ? scheduleItem(null, state) : this._scheduler.schedule(state, scheduleItem);
+	  return this._scheduler === Scheduler.immediate ? scheduleItem(null, state) : this._scheduler.schedule(state, scheduleItem);
 	};
 
 	module.exports = function just(value, scheduler) {
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.immediateScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.immediate);
 	  return new JustObservable(value, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var fromArray = __webpack_require__(53);
 	var mergeAll = __webpack_require__(66);
-	var isScheduler = __webpack_require__(17).isScheduler;
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.immediateScheduler) {
-	  __webpack_require__(40);
-	}
+	var Scheduler = __webpack_require__(12);
 
 	module.exports = function merge() {
 	  var scheduler,
@@ -4151,24 +4090,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	      i,
 	      len = arguments.length;
 	  if (!arguments[0]) {
-	    scheduler = global._Rx.immediateScheduler;
+	    scheduler = Scheduler.immediate;
 	    for (i = 1; i < len; i++) {
 	      sources.push(arguments[i]);
 	    }
-	  } else if (isScheduler(arguments[0])) {
+	  } else if (Scheduler.isScheduler(arguments[0])) {
 	    scheduler = arguments[0];
 	    for (i = 1; i < len; i++) {
 	      sources.push(arguments[i]);
 	    }
 	  } else {
-	    scheduler = global._Rx.immediateScheduler;
+	    scheduler = Scheduler.immediate;
 	    for (i = 0; i < len; i++) {
 	      sources.push(arguments[i]);
 	    }
 	  }
 	  return mergeAll(fromArray(sources, scheduler));
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 66 */
@@ -4178,10 +4116,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var AbstractObserver = __webpack_require__(5);
 	var ObservableBase = __webpack_require__(11);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
-	var CompositeDisposable = __webpack_require__(18);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
+	var CompositeDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var inherits = __webpack_require__(6);
 
 	function InnerObserver(parent, sad) {
@@ -4292,21 +4230,17 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
+	var Scheduler = __webpack_require__(12);
+	var BinaryDisposable = __webpack_require__(24);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.immediateScheduler) {
-	  __webpack_require__(40);
-	}
 
 	function OnErrorResumeNextObserver(state, recurse) {
 	  this._state = state;
@@ -4353,7 +4287,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    o: o,
 	    sources: this.sources
 	  },
-	      cancellable = global._Rx.immediateScheduler.scheduleRecursive(state, scheduleMethod);
+	      cancellable = Scheduler.immediate.scheduleRecursive(state, scheduleMethod);
 	  return new BinaryDisposable(subscription, cancellable);
 	};
 
@@ -4369,16 +4303,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return new OnErrorResumeNextObservable(sources);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Scheduler = __webpack_require__(17);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
 
 	function scheduleMethod(o, obj, keys) {
@@ -4407,25 +4340,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function pairs(obj, scheduler) {
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
 	  return new PairsObservable(obj, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var Scheduler = __webpack_require__(17);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	function RangeObservable(start, count, scheduler) {
 	  this.start = start;
@@ -4459,51 +4386,40 @@ return /******/ (function(modules) { // webpackBootstrap
 	* @returns {Observable} An observable sequence that contains a range of sequential integral numbers.
 	*/
 	module.exports = function range(start, count, scheduler) {
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
 	  return new RangeObservable(start, count, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var just = __webpack_require__(64);
 	var repeat = __webpack_require__(73);
-	var isScheduler = __webpack_require__(17).isScheduler;
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
+	var Scheduler = __webpack_require__(12);
 
 	module.exports = function repeatValue(value, repeatCount, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
 	  return repeat(just(value, scheduler), repeatCount);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var AbstractObserver = __webpack_require__(5);
+	var Scheduler = __webpack_require__(12);
 	var NAryDisposable = __webpack_require__(43);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	var $iterator$ = '@@iterator';
 
@@ -4591,14 +4507,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    e: this.sources[$iterator$]()
 	  };
 
-	  var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
+	  var cancelable = Scheduler.queue.scheduleRecursive(state, scheduleMethod);
 	  return new NAryDisposable([subscription, cancelable, createDisposable(state)]);
 	};
 
 	module.exports = function repeat(source, repeatCount) {
 	  return new ConcatObservable(repeatValue(source, repeatCount));
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 74 */
@@ -4608,12 +4523,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ObservableBase = __webpack_require__(11);
 	var fromArray = __webpack_require__(50);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
+	var BinaryDisposable = __webpack_require__(24);
 	var isEqual = __webpack_require__(75);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	var $iterator$ = typeof global.Symbol === 'function' && global.Symbol.iterator || '_es6shim_iterator_';
@@ -4641,7 +4558,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (this._s.qr.length > 0) {
 	    var v = this._s.qr.shift();
 	    var equal = tryCatch(this._s.cmp)(v, x);
-	    if (equal === global._Rx.errorObj) {
+	    if (equal === errorObj) {
 	      return this._s.o.onError(equal.e);
 	    }
 	    if (!equal) {
@@ -4684,7 +4601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (this._s.ql.length > 0) {
 	    var v = this._s.ql.shift();
 	    var equal = tryCatch(this._s.cmp)(v, x);
-	    if (equal === global._Rx.errorObj) {
+	    if (equal === errorObj) {
 	      return this._s.o.onError(equal.e);
 	    }
 	    if (!equal) {
@@ -5052,21 +4969,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var AsyncSubject = __webpack_require__(30);
-	var asObservable = __webpack_require__(34);
-	var isScheduler = __webpack_require__(17).isScheduler;
-	var tryCatch = __webpack_require__(15).tryCatch;
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
+	var AsyncSubject = __webpack_require__(31);
+	var asObservable = __webpack_require__(35);
+	var Scheduler = __webpack_require__(12);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function scheduleMethod(s, state) {
 	  var result = tryCatch(state.func).apply(state.context, state.args);
-	  if (result === global._Rx.errorObj) {
+	  if (result === errorObj) {
 	    return state.subject.onError(result.e);
 	  }
 	  state.subject.onNext(result);
@@ -5074,7 +4988,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}
 
 	module.exports = function toAsync(func, context, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return function asyncFn() {
 	    var subject = new AsyncSubject(),
 	        len = arguments.length,
@@ -5093,43 +5007,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return asObservable(subject);
 	  };
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var fromPromise = __webpack_require__(24);
-	var throwError = __webpack_require__(39);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var fromPromise = __webpack_require__(27);
+	var throwError = __webpack_require__(40);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	module.exports = function startAsync(functionAsync) {
 	  var promise = tryCatch(functionAsync)();
-	  if (promise === global._Rx.errorObj) {
+	  if (promise === errorObj) {
 	    return throwError(promise.e);
 	  }
 	  return fromPromise(promise);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var defer = __webpack_require__(38);
+	var defer = __webpack_require__(39);
 	var interval = __webpack_require__(63);
-	var Scheduler = __webpack_require__(17);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function TimerObservable(dt, s) {
 	  this._dt = dt;
@@ -5196,7 +5105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	module.exports = function timer(dueTime, periodOrScheduler, scheduler) {
 	  var period;
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  if (periodOrScheduler != null && typeof periodOrScheduler === 'number') {
 	    period = periodOrScheduler;
 	  } else if (Scheduler.isScheduler(periodOrScheduler)) {
@@ -5210,7 +5119,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return timerRelativeAndPeriod(dueTime, period, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 80 */
@@ -5220,8 +5128,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var throwError = __webpack_require__(39);
-	var CompositeDisposable = __webpack_require__(18);
+	var throwError = __webpack_require__(40);
+	var CompositeDisposable = __webpack_require__(14);
 	var inherits = __webpack_require__(6);
 
 	__webpack_require__(81);
@@ -6832,13 +6740,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 135 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var throwError = __webpack_require__(39);
-	var BinaryDisposable = __webpack_require__(23);
-	var Disposable = __webpack_require__(12);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var throwError = __webpack_require__(40);
+	var BinaryDisposable = __webpack_require__(24);
+	var Disposable = __webpack_require__(13);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function UsingObservable(resFn, obsFn) {
@@ -6852,12 +6762,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	UsingObservable.prototype.subscribeCore = function (o) {
 	  var disposable = Disposable.empty;
 	  var resource = tryCatch(this._resFn)();
-	  if (resource === global._Rx.errorObj) {
+	  if (resource === errorObj) {
 	    return new BinaryDisposable(throwError(resource.e).subscribe(o), disposable);
 	  }
 	  resource && (disposable = resource);
 	  var source = tryCatch(this._obsFn)(resource);
-	  if (source === global._Rx.errorObj) {
+	  if (source === errorObj) {
 	    return new BinaryDisposable(throwError(source.e).subscribe(o), disposable);
 	  }
 	  return new BinaryDisposable(source.subscribe(o), disposable);
@@ -6872,24 +6782,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function using(resourceFactory, observableFactory) {
 	  return new UsingObservable(resourceFactory, observableFactory);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 136 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var NAryDisposable = __webpack_require__(43);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var identity = __webpack_require__(46);
 	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function falseFactory() {
 	  return false;
@@ -6941,7 +6852,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (this._q.every(notEmpty)) {
 	    var queuedValues = this._q.map(shiftEach);
 	    var res = tryCatch(this._p._cb).apply(null, queuedValues);
-	    if (res === global._Rx.errorObj) {
+	    if (res === errorObj) {
 	      return this._o.onError(res.e);
 	    }
 	    this._o.onNext(res);
@@ -7000,7 +6911,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
 	  return new ZipObservable(args, resultSelector);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 137 */
@@ -7054,11 +6964,13 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 139 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ActivePlan = __webpack_require__(140);
 	var JoinObserver = __webpack_require__(141);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function planCreateObserver(externalSubscriptions, observable, onError) {
 	  var entry = externalSubscriptions.get(observable);
@@ -7083,7 +6995,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function handleOnNext(self, observer) {
 	  return function onNext() {
 	    var result = tryCatch(self._selector).apply(self, arguments);
-	    if (result === global._Rx.errorObj) {
+	    if (result === errorObj) {
 	      return observer.onError(result.e);
 	    }
 	    observer.onNext(result);
@@ -7109,7 +7021,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = Plan;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 140 */
@@ -7176,7 +7087,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	var AbstractObserver = __webpack_require__(5);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var materialize = __webpack_require__(142);
 	var noop = __webpack_require__(3);
 	var inherits = __webpack_require__(6);
@@ -7283,17 +7194,12 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 143 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var AnonymousObservable = __webpack_require__(35);
-	var Scheduler = __webpack_require__(17);
+	var AnonymousObservable = __webpack_require__(36);
+	var Scheduler = __webpack_require__(12);
 	var errors = __webpack_require__(7);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.immediateScheduler) {
-	  __webpack_require__(40);
-	}
 
 	function Notification() {}
 
@@ -7325,7 +7231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	Notification.prototype.toObservable = function (scheduler) {
 	  var self = this;
-	  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.immediateScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.immediate);
 	  return new AnonymousObservable(function (o) {
 	    return scheduler.schedule(self, function (_, notification) {
 	      notification._acceptObserver(o);
@@ -7417,20 +7323,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = Notification;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 144 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var EmptyError = __webpack_require__(7).EmptyError;
 	var isFunction = __webpack_require__(9);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function AverageObserver(o, fn, s) {
@@ -7447,7 +7354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	AverageObserver.prototype.next = function (x) {
 	  if (this._fn) {
 	    var r = tryCatch(this._fn)(x, this._c++, this._s);
-	    if (r === global._Rx.errorObj) {
+	    if (r === errorObj) {
 	      return this._o.onError(r.e);
 	    }
 	    this._t += r;
@@ -7490,7 +7397,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  isFunction(keySelector) && (fn = bindCallback(keySelector, thisArg, 3));
 	  return new AverageObservable(source, fn);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 145 */
@@ -7527,20 +7433,21 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 147 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var AbstractObserver = __webpack_require__(5);
 	var ObservableBase = __webpack_require__(11);
 	var observableFrom = __webpack_require__(50);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var isArrayLike = __webpack_require__(148);
 	var isIterable = __webpack_require__(149);
 	var bindCallback = __webpack_require__(52);
 	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
-	var tryCatchUtils = __webpack_require__(15);
-	var tryCatch = tryCatchUtils.tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function FlatMapObserver(o, selector, resultSelector, source) {
 	  this.i = 0;
@@ -7562,7 +7469,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	FlatMapObserver.prototype.next = function (x) {
 	  var i = this.i++;
 	  var result = tryCatch(this._fn)(x, i, this.source);
-	  if (result === global._Rx.errorObj) {
+	  if (result === errorObj) {
 	    return this._o.onError(result.e);
 	  }
 
@@ -7593,7 +7500,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = FlatMapObservable;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 148 */
@@ -7621,23 +7527,25 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 150 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var CompositeDisposable = __webpack_require__(18);
+	var CompositeDisposable = __webpack_require__(14);
 	var RefCountDisposable = __webpack_require__(151);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var AnonymousObservable = __webpack_require__(35);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var AnonymousObservable = __webpack_require__(36);
 	var Subject = __webpack_require__(57);
 	var empty = __webpack_require__(41);
-	var fromPromise = __webpack_require__(24);
+	var fromPromise = __webpack_require__(27);
 	var groupJoin = __webpack_require__(152);
 	var take = __webpack_require__(154);
 	var addRef = __webpack_require__(153);
-	var isPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var isFunction = __webpack_require__(9);
 	var noop = __webpack_require__(3);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function returnWindow(x, win) {
 	  return win;
@@ -7702,7 +7610,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    function createWindowClose() {
 	      var windowClose = tryCatch(windowClosingSelector)();
-	      if (windowClose === global._Rx.errorObj) {
+	      if (windowClose === errorObj) {
 	        return o.onError(windowClose.e);
 	      }
 	      isPromise(windowClose) && (windowClose = fromPromise(windowClose));
@@ -7738,7 +7646,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return isFunction(windowOpeningsOrClosingSelector) ? observableWindowWithClosingSelector(source, windowOpeningsOrClosingSelector) : observableWindowWithOpenings(source, windowOpeningsOrClosingSelector, windowClosingSelector);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 151 */
@@ -7746,7 +7653,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var Disposable = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 
 	function InnerDisposable(disposable) {
 	  this.disposable = disposable;
@@ -7804,14 +7711,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
-	var AnonymousObservable = __webpack_require__(35); // TODO: Get rid of
-	var CompositeDisposable = __webpack_require__(18);
+	var AnonymousObservable = __webpack_require__(36); // TODO: Get rid of
+	var CompositeDisposable = __webpack_require__(14);
 	var RefCountDisposable = __webpack_require__(151);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var Subject = __webpack_require__(57);
 	var addRef = __webpack_require__(153);
 	var noop = __webpack_require__(3);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	__webpack_require__(81);
 
@@ -7835,7 +7744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      leftMap.set(id, s);
 
 	      var result = tryCatch(resultSelector)(value, addRef(s, r));
-	      if (result === global._Rx.errorObj) {
+	      if (result === errorObj) {
 	        leftMap.forEach(handleError(result.e));
 	        return o.onError(result.e);
 	      }
@@ -7849,7 +7758,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      group.add(md);
 
 	      var duration = tryCatch(leftDurationSelector)(value);
-	      if (duration === global._Rx.errorObj) {
+	      if (duration === errorObj) {
 	        leftMap.forEach(handleError(duration.e));
 	        return o.onError(duration.e);
 	      }
@@ -7876,7 +7785,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      group.add(md);
 
 	      var duration = tryCatch(rightDurationSelector)(value);
-	      if (duration === global._Rx.errorObj) {
+	      if (duration === errorObj) {
 	        leftMap.forEach(handleError(duration.e));
 	        return o.onError(duration.e);
 	      }
@@ -7909,7 +7818,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var BinaryDisposable = __webpack_require__(23);
+	var BinaryDisposable = __webpack_require__(24);
 	var inherits = __webpack_require__(6);
 
 	function AddRefObservable(xs, r) {
@@ -8017,13 +7926,15 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 156 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function FilterObserver(o, predicate, source) {
 	  this._o = o;
@@ -8037,7 +7948,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	FilterObserver.prototype.next = function (x) {
 	  var shouldYield = tryCatch(this._fn)(x, this._i++, this.source);
-	  if (shouldYield === global._Rx.errorObj) {
+	  if (shouldYield === errorObj) {
 	    return this._o.onError(shouldYield.e);
 	  }
 	  shouldYield && this._o.onNext(x);
@@ -8081,7 +7992,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function filter(source, predicate, thisArg) {
 	  return source instanceof FilterObservable ? source.internalFilter(predicate, thisArg) : new FilterObservable(source, predicate, thisArg);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 157 */
@@ -8092,7 +8002,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var Subject = __webpack_require__(57);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var RefCountDisposable = __webpack_require__(151);
 	var ArgumentOutOfRangeError = __webpack_require__(7).ArgumentOutOfRangeError;
 	var addRef = __webpack_require__(153);
@@ -8200,23 +8110,18 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 159 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var Subject = __webpack_require__(57);
-	var CompositeDisposable = __webpack_require__(18);
+	var CompositeDisposable = __webpack_require__(14);
 	var RefCountDisposable = __webpack_require__(151);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var addRef = __webpack_require__(153);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-		__webpack_require__(25);
-	}
 
 	function WindowTimeObserver(state) {
 		this._state = state;
@@ -8308,16 +8213,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function (source, timeSpan, timeShiftOrScheduler, scheduler) {
 		var timeShift;
 		timeShiftOrScheduler == null && (timeShift = timeSpan);
-		isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+		Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 		if (typeof timeShiftOrScheduler === 'number') {
 			timeShift = timeShiftOrScheduler;
-		} else if (isScheduler(timeShiftOrScheduler)) {
+		} else if (Scheduler.isScheduler(timeShiftOrScheduler)) {
 			timeShift = timeSpan;
 			scheduler = timeShiftOrScheduler;
 		}
 		return new WindowTimeObservable(source, timeSpan, timeShift, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 160 */
@@ -8340,24 +8244,19 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 161 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var AnonymousObservable = __webpack_require__(35);
+	var AnonymousObservable = __webpack_require__(36);
 	var Subject = __webpack_require__(57);
-	var CompositeDisposable = __webpack_require__(18);
+	var CompositeDisposable = __webpack_require__(14);
 	var RefCountDisposable = __webpack_require__(151);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var addRef = __webpack_require__(153);
-	var isScheduler = __webpack_require__(17).isScheduler;
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
+	var Scheduler = __webpack_require__(12);
 
 	module.exports = function windowTimeOrCount(source, timeSpan, count, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new AnonymousObservable(function (observer) {
 	    var timerD = new SerialDisposable(),
 	        groupDisposable = new CompositeDisposable(timerD),
@@ -8408,22 +8307,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return refCountDisposable;
 	  }, source);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 162 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var inherits = __webpack_require__(6);
 
 	function CatchObserver(o, s, fn) {
@@ -8443,7 +8343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 	CatchObserver.prototype.error = function (e) {
 	  var result = tryCatch(this._fn)(e);
-	  if (result === global._Rx.errorObj) {
+	  if (result === errorObj) {
 	    return this._o.onError(result.e);
 	  }
 	  isPromise(result) && (result = fromPromise(result));
@@ -8478,7 +8378,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var fn = bindCallback(handler, thisArg, 1);
 	  return new CatchObservable(source, fn);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
 /* 163 */
@@ -8500,10 +8399,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var CompositeDisposable = __webpack_require__(18);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var CompositeDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var inherits = __webpack_require__(6);
 
 	function InnerObserver(parent, sad) {
@@ -8592,12 +8491,311 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 165 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
+
+	var Observable = __webpack_require__(8);
+	var StopAndWaitObservable = __webpack_require__(166);
+	var WindowedObservable = __webpack_require__(167);
+	var multicast = __webpack_require__(58);
+	var Notification = __webpack_require__(143);
+	var Observer = __webpack_require__(1);
+	var Subject = __webpack_require__(57);
+	var Scheduler = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
+	var Scheduler = __webpack_require__(12);
+	var addProperties = __webpack_require__(33);
+	var inherits = __webpack_require__(6);
+
+	function ControlledSubject(enableQueue, scheduler) {
+	  enableQueue == null && (enableQueue = true);
+	  this.subject = new Subject();
+	  this.enableQueue = enableQueue;
+	  this.queue = enableQueue ? [] : null;
+	  this.requestedCount = 0;
+	  this.requestedDisposable = null;
+	  this.error = null;
+	  this.hasFailed = false;
+	  this.hasCompleted = false;
+	  this.scheduler = scheduler || Scheduler.queue;
+	  Observable.call(this);
+	}
+
+	inherits(ControlledSubject, Observable);
+
+	addProperties(ControlledSubject.prototype, Observer, {
+	  _subscribe: function (o) {
+	    return this.subject.subscribe(o);
+	  },
+	  onCompleted: function () {
+	    this.hasCompleted = true;
+	    if (!this.enableQueue || this.queue.length === 0) {
+	      this.subject.onCompleted();
+	      this.disposeCurrentRequest();
+	    } else {
+	      this.queue.push(Notification.createOnCompleted());
+	    }
+	  },
+	  onError: function (error) {
+	    this.hasFailed = true;
+	    this.error = error;
+	    if (!this.enableQueue || this.queue.length === 0) {
+	      this.subject.onError(error);
+	      this.disposeCurrentRequest();
+	    } else {
+	      this.queue.push(Notification.createOnError(error));
+	    }
+	  },
+	  onNext: function (value) {
+	    if (this.requestedCount <= 0) {
+	      this.enableQueue && this.queue.push(Notification.createOnNext(value));
+	    } else {
+	      this.requestedCount-- === 0 && this.disposeCurrentRequest();
+	      this.subject.onNext(value);
+	    }
+	  },
+	  _processRequest: function (numberOfItems) {
+	    if (this.enableQueue) {
+	      while (this.queue.length > 0 && (numberOfItems > 0 || this.queue[0].kind !== 'N')) {
+	        var first = this.queue.shift();
+	        first.accept(this.subject);
+	        if (first.kind === 'N') {
+	          numberOfItems--;
+	        } else {
+	          this.disposeCurrentRequest();
+	          this.queue = [];
+	        }
+	      }
+	    }
+
+	    return numberOfItems;
+	  },
+	  request: function (number) {
+	    this.disposeCurrentRequest();
+	    var self = this;
+
+	    this.requestedDisposable = this.scheduler.schedule(number, function (s, i) {
+	      var remaining = self._processRequest(i);
+	      var stopped = self.hasCompleted || self.hasFailed;
+	      if (!stopped && remaining > 0) {
+	        self.requestedCount = remaining;
+
+	        return Disposable.create(function () {
+	          self.requestedCount = 0;
+	        });
+	        // Scheduled item is still in progress. Return a new
+	        // disposable to allow the request to be interrupted
+	        // via dispose.
+	      }
+	    });
+
+	    return this.requestedDisposable;
+	  },
+	  disposeCurrentRequest: function () {
+	    if (this.requestedDisposable) {
+	      this.requestedDisposable.dispose();
+	      this.requestedDisposable = null;
+	    }
+	  }
+	});
+
+	function ControlledObservable(source, enableQueue, scheduler) {
+	  this.subject = new ControlledSubject(enableQueue, scheduler);
+	  this.source = multicast(source, this.subject).refCount();
+	  Observable.call(this);
+	}
+
+	inherits(ControlledObservable, Observable);
+
+	ControlledObservable.prototype._subscribe = function (o) {
+	  return this.source.subscribe(o);
+	};
+
+	ControlledObservable.prototype.request = function (numberOfItems) {
+	  return this.subject.request(numberOfItems == null ? -1 : numberOfItems);
+	};
+
+	ControlledObservable.prototype.stopAndWait = function (scheduler) {
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
+	  return new StopAndWaitObservable(this, scheduler);
+	};
+
+	ControlledObservable.prototype.windowed = function (windowSize, scheduler) {
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
+	  return new WindowedObservable(this, windowSize, scheduler);
+	};
+
+	module.exports = function controlled(source, enableQueue, scheduler) {
+
+	  if (enableQueue && Scheduler.isScheduler(enableQueue)) {
+	    scheduler = enableQueue;
+	    enableQueue = true;
+	  }
+
+	  if (enableQueue == null) {
+	    enableQueue = true;
+	  }
+	  return new ControlledObservable(source, enableQueue, scheduler);
+	};
+
+/***/ },
+/* 166 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Observable = __webpack_require__(8);
+	var AbstractObserver = __webpack_require__(5);
+	var BinaryDisposable = __webpack_require__(24);
+	var inherits = __webpack_require__(6);
+
+	function StopAndWaitObserver(observer, observable, scheduler, cancel) {
+	  this.observer = observer;
+	  this.observable = observable;
+	  this.scheduler = scheduler;
+	  this.cancel = cancel;
+	  this.scheduleDisposable = null;
+	  AbstractObserver.call(this);
+	}
+
+	StopAndWaitObserver.prototype.completed = function () {
+	  this.observer.onCompleted();
+	  this.dispose();
+	};
+
+	StopAndWaitObserver.prototype.error = function (error) {
+	  this.observer.onError(error);
+	  this.dispose();
+	};
+
+	function innerScheduleMethod(s, self) {
+	  return self.observable.source.request(1);
+	}
+
+	StopAndWaitObserver.prototype.next = function (value) {
+	  this.observer.onNext(value);
+	  this.scheduleDisposable = this.scheduler.schedule(this, innerScheduleMethod);
+	};
+
+	StopAndWaitObserver.dispose = function () {
+	  this.observer = null;
+	  if (this.cancel) {
+	    this.cancel.dispose();
+	    this.cancel = null;
+	  }
+	  if (this.scheduleDisposable) {
+	    this.scheduleDisposable.dispose();
+	    this.scheduleDisposable = null;
+	  }
+	  AbstractObserver.prototype.dispose.call(this);
+	};
+
+	function StopAndWaitObservable(source, scheduler) {
+	  this.source = source;
+	  this.scheduler = scheduler;
+	  Observable.call(this);
+	}
+
+	inherits(StopAndWaitObservable, Observable);
+
+	function scheduleMethod(s, self) {
+	  return self.source.request(1);
+	}
+
+	StopAndWaitObservable.prototype._subscribe = function (o) {
+	  this.subscription = this.source.subscribe(new StopAndWaitObserver(o, this, this.scheduler, this.subscription));
+	  return new BinaryDisposable(this.subscription, this.scheduler.schedule(this, scheduleMethod));
+	};
+
+	module.exports = StopAndWaitObservable;
+
+/***/ },
+/* 167 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Observable = __webpack_require__(8);
+	var AbstractObserver = __webpack_require__(5);
+	var BinaryDisposable = __webpack_require__(24);
+	var inherits = __webpack_require__(6);
+
+	function WindowedObserver(observer, observable, scheduler, cancel) {
+	  this.observer = observer;
+	  this.observable = observable;
+	  this.scheduler = scheduler;
+	  this.cancel = cancel;
+	  this.received = 0;
+	  this.scheduleDisposable = null;
+	  AbstractObserver.call(this);
+	}
+
+	inherits(WindowedObserver, AbstractObserver);
+
+	WindowedObserver.prototype.completed = function () {
+	  this.observer.onCompleted();
+	  this.dispose();
+	};
+
+	WindowedObserver.prototype.error = function (error) {
+	  this.observer.onError(error);
+	  this.dispose();
+	};
+
+	function innerScheduleMethod(s, self) {
+	  return self.observable.source.request(self.observable.windowSize);
+	}
+
+	WindowedObserver.prototype.next = function (value) {
+	  this.observer.onNext(value);
+	  this.received = ++this.received % this.observable.windowSize;
+	  this.received === 0 && (this.scheduleDisposable = this.scheduler.schedule(this, innerScheduleMethod));
+	};
+
+	WindowedObserver.prototype.dispose = function () {
+	  this.observer = null;
+	  if (this.cancel) {
+	    this.cancel.dispose();
+	    this.cancel = null;
+	  }
+	  if (this.scheduleDisposable) {
+	    this.scheduleDisposable.dispose();
+	    this.scheduleDisposable = null;
+	  }
+	  AbstractObserver.prototype.dispose.call(this);
+	};
+
+	function WindowedObservable(source, windowSize, scheduler) {
+	  this.source = source;
+	  this.windowSize = windowSize;
+	  this.scheduler = scheduler;
+	  Observable.call(this);
+	}
+
+	inherits(WindowedObservable, Observable);
+
+	function scheduleMethod(s, self) {
+	  return self.source.request(self.windowSize);
+	}
+
+	WindowedObservable.prototype._subscribe = function (o) {
+	  this.subscription = this.source.subscribe(new WindowedObserver(o, this, this.scheduler, this.subscription));
+	  return new BinaryDisposable(this.subscription, this.scheduler.schedule(this, scheduleMethod));
+	};
+
+	module.exports = WindowedObservable;
+
+/***/ },
+/* 168 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function CountObserver(o, fn, s) {
@@ -8614,7 +8812,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	CountObserver.prototype.next = function (x) {
 	  if (this._fn) {
 	    var result = tryCatch(this._fn)(x, this._i++, this._s);
-	    if (result === global._Rx.errorObj) {
+	    if (result === errorObj) {
 	      return this._o.onError(result.e);
 	    }
 	    Boolean(result) && this._c++;
@@ -8646,30 +8844,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var fn = bindCallback(predicate, thisArg, 3);
 	  return new CountObservable(source, fn);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 166 */
+/* 169 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
+	var Scheduler = __webpack_require__(12);
+	var BinaryDisposable = __webpack_require__(24);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var isFunction = __webpack_require__(9);
-	var isScheduler = __webpack_require__(17).isScheduler;
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function DebounceObserver(o, dt, scheduler, cancelable) {
 	  this._o = o;
@@ -8712,7 +8906,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	function DebounceObservable(source, dt, s) {
-	  isScheduler(s) || (s = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(s) || (s = Scheduler.async);
 	  this.source = source;
 	  this._dt = dt;
 	  this._s = s;
@@ -8735,7 +8929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	DebounceSelectorObserver.prototype.next = function (x) {
 	  var throttle = tryCatch(this._s.fn)(x);
-	  if (throttle === global._Rx.errorObj) {
+	  if (throttle === errorObj) {
 	    return this._s.o.onError(throttle.e);
 	  }
 
@@ -8808,10 +9002,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    throw new Error('Invalid arguments');
 	  }
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 167 */
+/* 170 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8863,29 +9056,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 168 */
+/* 171 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var materialize = __webpack_require__(142);
-	var timestamp = __webpack_require__(169);
+	var timestamp = __webpack_require__(172);
 	var isObservable = __webpack_require__(8).isObservable;
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
-	var CompositeDisposable = __webpack_require__(18);
+	var BinaryDisposable = __webpack_require__(24);
+	var CompositeDisposable = __webpack_require__(14);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var isFunction = __webpack_require__(9);
-	var isScheduler = __webpack_require__(17).isScheduler;
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var Scheduler = __webpack_require__(12);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function scheduleRelative(state, recurse) {
 	  if (state.error) {
@@ -9023,7 +9213,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function start() {
 	    subscription.setDisposable(source.subscribe(function (x) {
 	      var delay = tryCatch(selector)(x);
-	      if (delay === global._Rx.errorObj) {
+	      if (delay === errorObj) {
 	        return o.onError(delay.e);
 	      }
 	      var d = new SingleAssignmentDisposable();
@@ -9077,7 +9267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (typeof firstArg === 'number' || firstArg instanceof Date) {
 	    var dueTime = firstArg,
 	        scheduler = arguments[2];
-	    isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	    Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	    return dueTime instanceof Date ? new DelayAbsoluteObservable(source, dueTime, scheduler) : new DelayRelativeObservable(source, dueTime, scheduler);
 	  } else if (isObservable(firstArg) || isFunction(firstArg)) {
 	    return new DelaySelectorObseravble(source, firstArg, arguments[2]);
@@ -9085,23 +9275,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	    throw new Error('Invalid arguments');
 	  }
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 169 */
+/* 172 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function TimestampObserver(o, s) {
 	  this._o = o;
@@ -9134,26 +9318,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function timestamp(source, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new TimestampObservable(source, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 170 */
+/* 173 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var SerialDisposable = __webpack_require__(44);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function DelaySubscription(source, dt, s) {
 	  this.source = source;
@@ -9184,13 +9362,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Observable} Time-shifted sequence.
 	 */
 	module.exports = function delaySubscription(source, dueTime, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new DelaySubscription(source, dueTime, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 171 */
+/* 174 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9236,15 +9413,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 172 */
+/* 175 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var isFunction = __webpack_require__(9);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var isEqual = __webpack_require__(75);
 	var inherits = __webpack_require__(6);
 
@@ -9281,7 +9460,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var key = x;
 	  if (isFunction(this._keyFn)) {
 	    key = tryCatch(this._keyFn)(x);
-	    if (key === global._Rx.errorObj) {
+	    if (key === errorObj) {
 	      return this._o.onError(key.e);
 	    }
 	  }
@@ -9312,20 +9491,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	  comparer || (comparer = isEqual);
 	  return new DistinctObservable(source, keySelector, comparer);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 173 */
+/* 176 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var isFunction = __webpack_require__(9);
 	var isEqual = __webpack_require__(75);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function DistinctUntilChangedObserver(o, fn, cmp) {
 	  this._o = o;
@@ -9343,13 +9523,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	      comparerEquals;
 	  if (isFunction(this._fn)) {
 	    key = tryCatch(this._fn)(x);
-	    if (key === global._Rx.errorObj) {
+	    if (key === errorObj) {
 	      return this._o.onError(key.e);
 	    }
 	  }
 	  if (this._hk) {
 	    comparerEquals = tryCatch(this._cmp)(this._k, key);
-	    if (comparerEquals === global._Rx.errorObj) {
+	    if (comparerEquals === errorObj) {
 	      return this._o.onError(comparerEquals.e);
 	    }
 	  }
@@ -9389,13 +9569,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  comparer || (comparer = isEqual);
 	  return new DistinctUntilChangedObservable(source, keyFn, comparer);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 174 */
+/* 177 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
@@ -9403,7 +9582,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	var isFunction = __webpack_require__(9);
 	var noop = __webpack_require__(3);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function TapObserver(o, p) {
 	  this._o = o;
@@ -9416,7 +9597,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	TapObserver.prototype.next = function (x) {
 	  var res = tryCatch(this._t.onNext).call(this._t, x);
-	  if (res === global._Rx.errorObj) {
+	  if (res === errorObj) {
 	    this._o.onError(res.e);
 	  }
 	  this._o.onNext(x);
@@ -9424,7 +9605,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	TapObserver.prototype.error = function (e) {
 	  var res = tryCatch(this._t.onError).call(this._t, e);
-	  if (res === global._Rx.errorObj) {
+	  if (res === errorObj) {
 	    return this._o.onError(res.e);
 	  }
 	  this._o.onError(e);
@@ -9432,7 +9613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	TapObserver.prototype.completed = function () {
 	  var res = tryCatch(this._t.onCompleted).call(this._t);
-	  if (res === global._Rx.errorObj) {
+	  if (res === errorObj) {
 	    return this._o.onError(res.e);
 	  }
 	  this._o.onCompleted();
@@ -9463,18 +9644,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function tap(source, observerOrOnNext, onError, onCompleted) {
 	  return new TapObservable(source, observerOrOnNext, onError, onCompleted);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 175 */
+/* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function EveryObserver(o, fn, s) {
@@ -9489,7 +9671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	EveryObserver.prototype.next = function (x) {
 	  var result = tryCatch(this._fn)(x, this._i++, this._s);
-	  if (result === global._Rx.errorObj) {
+	  if (result === errorObj) {
 	    return this._o.onError(result.e);
 	  }
 	  if (!Boolean(result)) {
@@ -9521,19 +9703,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var fn = bindCallback(predicate, thisArg, 3);
 	  return new EveryObservable(source, fn);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 176 */
+/* 179 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var inherits = __webpack_require__(6);
 	var bindCallback = __webpack_require__(52);
-	var tryCatchUtils = __webpack_require__(15);
+	var tryCatchUtils = __webpack_require__(20);
 	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj,
 	    thrower = tryCatchUtils.thrower;
 
 	function FinallyDisposable(s, fn) {
@@ -9546,7 +9728,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (!this.isDisposed) {
 	    var res = tryCatch(this._s.dispose).call(this._s);
 	    this._fn();
-	    res === global._Rx.errorObj && thrower(res.e);
+	    res === errorObj && thrower(res.e);
 	  }
 	};
 
@@ -9560,7 +9742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	FinallyObservable.prototype.subscribeCore = function (o) {
 	  var d = tryCatch(this.source.subscribe).call(this.source, o);
-	  if (d === global._Rx.errorObj) {
+	  if (d === errorObj) {
 	    this._fn();
 	    thrower(d.e);
 	  }
@@ -9576,30 +9758,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function finally_(source, action, thisArg) {
 	  return new FinallyObservable(source, action, thisArg);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 177 */
+/* 180 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var FindValueObservable = __webpack_require__(178);
+	var FindValueObservable = __webpack_require__(181);
 
 	module.exports = function find(source, predicate, thisArg) {
 	  return new FindValueObservable(source, predicate, thisArg, false);
 	};
 
 /***/ },
-/* 178 */
+/* 181 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function FindValueObserver(observer, source, callback, yieldIndex) {
@@ -9615,7 +9798,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	FindValueObserver.prototype.next = function (x) {
 	  var shouldRun = tryCatch(this._cb)(x, this._i, this._s);
-	  if (shouldRun === global._Rx.errorObj) {
+	  if (shouldRun === errorObj) {
 	    return this._o.onError(shouldRun.e);
 	  }
 	  if (shouldRun) {
@@ -9649,32 +9832,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = FindValueObservable;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 179 */
+/* 182 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var FindValueObservable = __webpack_require__(178);
+	var FindValueObservable = __webpack_require__(181);
 
 	module.exports = function findIndex(source, predicate, thisArg) {
 	  return new FindValueObservable(source, predicate, thisArg, true);
 	};
 
 /***/ },
-/* 180 */
+/* 183 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var EmptyError = __webpack_require__(7).EmptyError;
 	var bindCallback = __webpack_require__(52);
 	var isFunction = __webpack_require__(9);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function FirstObserver(o, obj, s) {
@@ -9690,7 +9874,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	FirstObserver.prototype.next = function (x) {
 	  if (this._obj.predicate) {
 	    var res = tryCatch(this._obj.predicate)(x, this._i++, this._s);
-	    if (res === global._Rx.errorObj) {
+	    if (res === errorObj) {
 	      return this._o.onError(res.e);
 	    }
 	    if (Boolean(res)) {
@@ -9744,34 +9928,33 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return new FirstObservable(source, obj);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 181 */
+/* 184 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var FlatMapObservable = __webpack_require__(147);
-	var switchLatest = __webpack_require__(182);
+	var switchLatest = __webpack_require__(185);
 
 	module.exports = function flatMapLatest(source, selector, resultSelector, thisArg) {
 	  return switchLatest(new FlatMapObservable(source, selector, resultSelector, thisArg));
 	};
 
 /***/ },
-/* 182 */
+/* 185 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
+	var BinaryDisposable = __webpack_require__(24);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var inherits = __webpack_require__(6);
 
 	function InnerObserver(p, id) {
@@ -9843,7 +10026,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 183 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -9888,14 +10071,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 184 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var Disposable = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var inherits = __webpack_require__(6);
 
 	function IncludesObserver(o, elem, n) {
@@ -9952,14 +10135,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 185 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var Disposable = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var inherits = __webpack_require__(6);
 
 	function IndexOfObserver(o, e, n) {
@@ -10012,7 +10195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 186 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10056,17 +10239,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 187 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
-	var AnonymousObservable = __webpack_require__(35); // TODO: Get rid of
+	var AnonymousObservable = __webpack_require__(36); // TODO: Get rid of
 	var take = __webpack_require__(154);
-	var CompositeDisposable = __webpack_require__(18);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var CompositeDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var noop = __webpack_require__(3);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	__webpack_require__(81);
 
@@ -10091,7 +10276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      group.add(md);
 
 	      var duration = tryCatch(leftDurationSelector)(value);
-	      if (duration === global._Rx.errorObj) {
+	      if (duration === errorObj) {
 	        return o.onError(duration.e);
 	      }
 
@@ -10102,7 +10287,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      rightMap.forEach(function (v) {
 	        var result = tryCatch(resultSelector)(value, v);
-	        if (result === global._Rx.errorObj) {
+	        if (result === errorObj) {
 	          return o.onError(result.e);
 	        }
 	        o.onNext(result);
@@ -10120,7 +10305,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      group.add(md);
 
 	      var duration = tryCatch(rightDurationSelector)(value);
-	      if (duration === global._Rx.errorObj) {
+	      if (duration === errorObj) {
 	        return o.onError(duration.e);
 	      }
 
@@ -10131,7 +10316,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	      leftMap.forEach(function (v) {
 	        var result = tryCatch(resultSelector)(v, value);
-	        if (result === global._Rx.errorObj) {
+	        if (result === errorObj) {
 	          return o.onError(result.e);
 	        }
 	        o.onNext(result);
@@ -10146,17 +10331,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 188 */
+/* 191 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var EmptyError = __webpack_require__(7).EmptyError;
 	var bindCallback = __webpack_require__(52);
 	var isFunction = __webpack_require__(9);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function LastObserver(o, obj, s) {
@@ -10175,7 +10362,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var shouldYield = false;
 	  if (this._obj.predicate) {
 	    var res = tryCatch(this._obj.predicate)(x, this._i++, this._s);
-	    if (res === global._Rx.errorObj) {
+	    if (res === errorObj) {
 	      return this._o.onError(res.e);
 	    }
 	    Boolean(res) && (shouldYield = true);
@@ -10232,17 +10419,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return new LastObservable(source, obj);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 189 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var Disposable = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var inherits = __webpack_require__(6);
 
 	function LastIndexOfObserver(o, e, n) {
@@ -10302,17 +10488,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 190 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
 	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function MapObserver(o, selector, source) {
 	  this._o = o;
@@ -10326,7 +10514,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	MapObserver.prototype.next = function (x) {
 	  var result = tryCatch(this._fn)(x, this._i++, this._s);
-	  if (result === global._Rx.errorObj) {
+	  if (result === errorObj) {
 	    return this._o.onError(result.e);
 	  }
 	  this._o.onNext(result);
@@ -10367,16 +10555,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	  return source instanceof MapObservable ? source.internalMap(thisFn, thisArg) : new MapObservable(source, thisFn, thisArg);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 191 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var maxBy = __webpack_require__(192);
-	var firstOnly = __webpack_require__(194);
+	var maxBy = __webpack_require__(195);
+	var firstOnly = __webpack_require__(197);
 	var identity = __webpack_require__(46);
 
 	module.exports = function max(source, comparer) {
@@ -10384,12 +10571,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 192 */
+/* 195 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ExtremaByObservable = __webpack_require__(193);
+	var ExtremaByObservable = __webpack_require__(196);
 
 	function defaultComparer(x, y) {
 	  return x > y ? 1 : y > x ? -1 : 0;
@@ -10401,14 +10588,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 193 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function ExtremaByObserver(o, k, c) {
@@ -10425,7 +10614,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	ExtremaByObserver.prototype.next = function (x) {
 	  var key = tryCatch(this._k)(x);
-	  if (key === global._Rx.errorObj) {
+	  if (key === errorObj) {
 	    return this._o.onError(key.e);
 	  }
 	  var comparison = 0;
@@ -10434,7 +10623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._v = key;
 	  } else {
 	    comparison = tryCatch(this._c)(key, this._v);
-	    if (comparison === global._Rx.errorObj) {
+	    if (comparison === errorObj) {
 	      return this._o.onError(comparison.e);
 	    }
 	  }
@@ -10470,10 +10659,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = ExtremaByObservable;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 194 */
+/* 197 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10488,13 +10676,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 195 */
+/* 198 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var minBy = __webpack_require__(196);
-	var firstOnly = __webpack_require__(194);
+	var minBy = __webpack_require__(199);
+	var firstOnly = __webpack_require__(197);
 	var identity = __webpack_require__(46);
 
 	module.exports = function min(source, comparer) {
@@ -10502,12 +10690,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 196 */
+/* 199 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ExtremaByObservable = __webpack_require__(193);
+	var ExtremaByObservable = __webpack_require__(196);
 
 	function defaultComparer(x, y) {
 	  return x > y ? 1 : y > x ? -1 : 0;
@@ -10525,13 +10713,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 197 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var ObserveOnObserver = __webpack_require__(198);
+	var ObserveOnObserver = __webpack_require__(201);
 	var inherits = __webpack_require__(6);
 
 	function ObserveOnObservable(source, s) {
@@ -10551,12 +10739,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 198 */
+/* 201 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var ScheduledObserver = __webpack_require__(199);
+	var ScheduledObserver = __webpack_require__(202);
 	var inherits = __webpack_require__(6);
 
 	function ObserveOnObserver(scheduler, observer, cancel) {
@@ -10590,16 +10778,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ObserveOnObserver;
 
 /***/ },
-/* 199 */
+/* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var AbstractObserver = __webpack_require__(5);
 	var SerialDisposable = __webpack_require__(44);
 	var inherits = __webpack_require__(6);
-	var tryCatchUtils = __webpack_require__(15);
+	var tryCatchUtils = __webpack_require__(20);
 	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj,
 	    thrower = tryCatchUtils.thrower;
 
 	function ScheduledObserver(scheduler, observer) {
@@ -10651,7 +10840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return;
 	  }
 	  var res = tryCatch(work)();
-	  if (res === global._Rx.errorObj) {
+	  if (res === errorObj) {
 	    state.queue = [];
 	    state.hasFaulted = true;
 	    return thrower(res.e);
@@ -10674,10 +10863,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = ScheduledObserver;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 200 */
+/* 203 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10726,7 +10914,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 201 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10742,12 +10930,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 202 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var map = __webpack_require__(190);
+	var map = __webpack_require__(193);
 
 	function plucker(args, len) {
 	  return function mapper(x) {
@@ -10784,12 +10972,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 203 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var AsyncSubject = __webpack_require__(30);
+	var AsyncSubject = __webpack_require__(31);
 	var multicast = __webpack_require__(58);
 	var isFunction = __webpack_require__(9);
 
@@ -10800,13 +10988,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 204 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var multicast = __webpack_require__(58);
-	var BehaviorSubject = __webpack_require__(205);
+	var BehaviorSubject = __webpack_require__(208);
 
 	function createBehaviorSubject(initialValue) {
 	  return function fn() {
@@ -10826,18 +11014,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 205 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var Observable = __webpack_require__(8);
 	var Observer = __webpack_require__(1);
-	var Disposable = __webpack_require__(12);
-	var InnerSubscription = __webpack_require__(31);
-	var addProperties = __webpack_require__(32);
-	var cloneArray = __webpack_require__(33);
-	var thrower = __webpack_require__(15).thrower;
+	var Disposable = __webpack_require__(13);
+	var InnerSubscription = __webpack_require__(32);
+	var addProperties = __webpack_require__(33);
+	var cloneArray = __webpack_require__(34);
+	var thrower = __webpack_require__(20).thrower;
 	var inherits = __webpack_require__(6);
 
 	/**
@@ -10954,15 +11142,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = BehaviorSubject;
 
 /***/ },
-/* 206 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var EmptyError = __webpack_require__(7).EmptyError;
 
 	function ReduceObserver(o, parent) {
@@ -10988,7 +11178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._a = this._hs ? tryCatch(this._fn)(this._s, x, this._i, this._p) : x;
 	    this._ha = true;
 	  }
-	  if (this._a === global._Rx.errorObj) {
+	  if (this._a === errorObj) {
 	    return this._o.onError(this._a.e);
 	  }
 	  this._i++;
@@ -11037,28 +11227,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return new ReduceObservable(source, accumulator, hasSeed, seed);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 207 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var Subject = __webpack_require__(57);
-	var BinaryDisposable = __webpack_require__(23);
+	var Scheduler = __webpack_require__(12);
+	var BinaryDisposable = __webpack_require__(24);
 	var NAryDisposable = __webpack_require__(43);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	var $iterator$ = '@@iterator';
 
@@ -11105,7 +11290,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var state = { isDisposed: false },
 	      lastError,
 	      subscription = new SerialDisposable();
-	  var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(null, function (_, recurse) {
+	  var cancelable = Scheduler.queue.scheduleRecursive(null, function (_, recurse) {
 	    if (state.isDisposed) {
 	      return;
 	    }
@@ -11149,16 +11334,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function repeatWhen(source, notifier) {
 	  return new RepeatWhenObservable(repeat(source), notifier);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 208 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var multicast = __webpack_require__(58);
-	var ReplaySubject = __webpack_require__(209);
+	var ReplaySubject = __webpack_require__(212);
 	var isFunction = __webpack_require__(9);
 
 	module.exports = function replay(source, selector, bufferSize, windowSize, scheduler) {
@@ -11168,23 +11352,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 209 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
-	var Disposable = __webpack_require__(12);
+	var Disposable = __webpack_require__(13);
 	var Observable = __webpack_require__(8);
 	var Observer = __webpack_require__(1);
-	var ScheduledObserver = __webpack_require__(199);
-	var addProperties = __webpack_require__(32);
-	var cloneArray = __webpack_require__(33);
+	var ScheduledObserver = __webpack_require__(202);
+	var Scheduler = __webpack_require__(12);
+	var addProperties = __webpack_require__(33);
+	var cloneArray = __webpack_require__(34);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	var MAX_SAFE_INTEGER = Math.pow(2, 53) - 1;
 
@@ -11207,7 +11387,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function ReplaySubject(bufferSize, windowSize, scheduler) {
 	  this.bufferSize = bufferSize == null ? MAX_SAFE_INTEGER : bufferSize;
 	  this.windowSize = windowSize == null ? MAX_SAFE_INTEGER : windowSize;
-	  this.scheduler = scheduler || global._Rx.currentThreadScheduler;
+	  this.scheduler = scheduler || Scheduler.queue;
 	  this.q = [];
 	  this.observers = [];
 	  this.isStopped = false;
@@ -11325,27 +11505,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	});
 
 	module.exports = ReplaySubject;
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 210 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var AbstractObserver = __webpack_require__(5);
+	var Scheduler = __webpack_require__(12);
 	var NAryDisposable = __webpack_require__(43);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	var $iterator$ = '@@iterator';
 
@@ -11433,35 +11608,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	    o: o
 	  };
 
-	  var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
+	  var cancelable = Scheduler.queue.scheduleRecursive(state, scheduleMethod);
 	  return new NAryDisposable([subscription, cancelable, createDisposable(state)]);
 	};
 
 	module.exports = function retry(source, retryCount) {
 	  return new CatchErrorObservable(repeat(source, retryCount));
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 211 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var Subject = __webpack_require__(57);
-	var BinaryDisposable = __webpack_require__(23);
+	var Scheduler = __webpack_require__(12);
+	var BinaryDisposable = __webpack_require__(24);
 	var NAryDisposable = __webpack_require__(43);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.currentThreadScheduler) {
-	  __webpack_require__(16);
-	}
 
 	var $iterator$ = '@@iterator';
 
@@ -11508,7 +11678,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var state = { isDisposed: false },
 	      lastError,
 	      subscription = new SerialDisposable();
-	  var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(null, function (_, recurse) {
+	  var cancelable = Scheduler.queue.scheduleRecursive(null, function (_, recurse) {
 	    if (state.isDisposed) {
 	      return;
 	    }
@@ -11552,26 +11722,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function retryWhen(source, notifier) {
 	  return new CatchErrorWhenObservable(repeat(source), notifier);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 212 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var interval = __webpack_require__(63);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var BinaryDisposable = __webpack_require__(24);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function SamplerObserver(s) {
 	  this._s = s;
@@ -11639,21 +11803,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function sample(source, intervalOrSampler, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return typeof intervalOrSampler === 'number' ? new SampleObservable(source, interval(intervalOrSampler, scheduler)) : new SampleObservable(source, intervalOrSampler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 213 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function ScanObserver(o, parent) {
 	  this._o = o;
@@ -11678,7 +11843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    this._a = this._hs ? tryCatch(this._fn)(this._s, x, this._i, this._p) : x;
 	    this._ha = true;
 	  }
-	  if (this._a === global._Rx.errorObj) {
+	  if (this._a === errorObj) {
 	    return this._o.onError(this._a.e);
 	  }
 	  this._o.onNext(this._a);
@@ -11725,10 +11890,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	  return new ScanObservable(source, accumulator, hasSeed, seed);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 214 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11740,31 +11904,31 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 215 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var replay = __webpack_require__(208);
+	var replay = __webpack_require__(211);
 
 	module.exports = function shareReplay(source, bufferSize, windowSize, scheduler) {
 	  return replay(source, null, bufferSize, windowSize, scheduler).refCount();
 	};
 
 /***/ },
-/* 216 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var publishValue = __webpack_require__(204);
+	var publishValue = __webpack_require__(207);
 
 	module.exports = function shareValue(source, initialValue) {
 	  return publishValue(source, initialValue).refCount();
 	};
 
 /***/ },
-/* 217 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11821,7 +11985,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 218 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11869,20 +12033,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 219 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function SkipLastWithTimeObserver(o, p) {
 	  this._o = o;
@@ -11926,23 +12085,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function skipLastWithTime(source, duration, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new SkipLastWithTimeObservable(source, duration, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 220 */
+/* 223 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var BinaryDisposable = __webpack_require__(24);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var inherits = __webpack_require__(6);
 
 	function SkipUntilSourceObserver(o, p) {
@@ -12013,21 +12171,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 221 */
+/* 224 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var BinaryDisposable = __webpack_require__(24);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function SkipUntilWithTimeObserver(o, p) {
 	  this._o = o;
@@ -12066,21 +12219,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function skipUntilWithTime(source, startTime, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new SkipUntilWithTimeObservable(source, startTime, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 222 */
+/* 225 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function SkipWhileObserver(o, p) {
@@ -12096,7 +12250,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	SkipWhileObserver.prototype.next = function (x) {
 	  if (!this._r) {
 	    var res = tryCatch(this._p._fn)(x, this._i++, this._p);
-	    if (res === global._Rx.errorObj) {
+	    if (res === errorObj) {
 	      return this._o.onError(res.e);
 	    }
 	    this._r = !res;
@@ -12126,10 +12280,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var fn = bindCallback(predicate, thisArg, 3);
 	  return new SkipWhileObservable(source, fn);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 223 */
+/* 226 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12191,15 +12344,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 224 */
+/* 227 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var ScheduledDisposable = __webpack_require__(225);
+	var ScheduledDisposable = __webpack_require__(228);
 	var SerialDisposable = __webpack_require__(44);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var inherits = __webpack_require__(6);
 
 	function SubscribeOnObservable(source, s) {
@@ -12230,7 +12383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 225 */
+/* 228 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -12255,15 +12408,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ScheduledDisposable;
 
 /***/ },
-/* 226 */
+/* 229 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function SomeObserver(o, fn, s) {
@@ -12278,7 +12433,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	SomeObserver.prototype.next = function (x) {
 	  var result = tryCatch(this._fn)(x, this._i++, this._s);
-	  if (result === global._Rx.errorObj) {
+	  if (result === errorObj) {
 	    return this._o.onError(result.e);
 	  }
 	  if (Boolean(result)) {
@@ -12310,18 +12465,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var fn = bindCallback(predicate, thisArg, 3);
 	  return new SomeObservable(source, fn);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 227 */
+/* 230 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function SumObserver(o, fn, s) {
@@ -12338,7 +12494,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	SumObserver.prototype.next = function (x) {
 	  if (this._fn) {
 	    var result = tryCatch(this._fn)(x, this._i++, this._s);
-	    if (result === global._Rx.errorObj) {
+	    if (result === errorObj) {
 	      return this._o.onError(result.e);
 	    }
 	    this._c += result;
@@ -12370,20 +12526,19 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var fn = bindCallback(keySelector, thisArg, 3);
 	  return new SumObservable(source, fn);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 228 */
+/* 231 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var CompositeDisposable = __webpack_require__(18);
-	var SingleAssignmentDisposable = __webpack_require__(14);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var CompositeDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var inherits = __webpack_require__(6);
 
 	function InnerObserver(state, inner) {
@@ -12464,7 +12619,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 229 */
+/* 232 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12514,20 +12669,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 230 */
+/* 233 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function TakeLastBufferWithTimeObserver(o, d, s) {
 	  this._o = o;
@@ -12576,26 +12726,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function takeLastBufferWithTime(source, duration, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new TakeLastBufferWithTimeObservable(source, duration, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 231 */
+/* 234 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function TakeLastWithTimeObserver(o, d, s) {
 	  this._o = o;
@@ -12642,22 +12786,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function takeLastWithTime(source, duration, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new TakeLastWithTimeObservable(source, duration, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 232 */
+/* 235 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var BinaryDisposable = __webpack_require__(23);
-	var isPromise = __webpack_require__(27);
-	var fromPromise = __webpack_require__(24);
+	var BinaryDisposable = __webpack_require__(24);
+	var isPromise = __webpack_require__(28);
+	var fromPromise = __webpack_require__(27);
 	var noop = __webpack_require__(3);
 	var inherits = __webpack_require__(6);
 
@@ -12698,20 +12841,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 233 */
+/* 236 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
-	var BinaryDisposable = __webpack_require__(23);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var BinaryDisposable = __webpack_require__(24);
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function TakeUntilWithTimeObservable(source, end, scheduler) {
 	  this.source = source;
@@ -12731,21 +12869,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function takeUntilWithTime(source, endTime, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new TakeUntilWithTimeObservable(source, endTime, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 234 */
+/* 237 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
 	var bindCallback = __webpack_require__(52);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function TakeWhileObserver(o, p) {
@@ -12761,7 +12900,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	TakeWhileObserver.prototype.next = function (x) {
 	  if (this._r) {
 	    this._r = tryCatch(this._p._fn)(x, this._i++, this._p);
-	    if (this._r === global._Rx.errorObj) {
+	    if (this._r === errorObj) {
 	      return this._o.onError(this._r.e);
 	    }
 	  }
@@ -12794,10 +12933,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var fn = bindCallback(predicate, thisArg, 3);
 	  return new TakeWhileObservable(source, fn);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 235 */
+/* 238 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12809,20 +12947,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 236 */
+/* 239 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function ThrottleObserver(s) {
 	  this._s = s;
@@ -12864,30 +12997,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function throttle(source, windowDuration, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  var duration = +windowDuration || 0;
 	  if (duration <= 0) {
 	    throw new RangeError('windowDuration cannot be less or equal zero.');
 	  }
 	  return new ThrottleObservable(source, duration, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 237 */
+/* 240 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var isScheduler = __webpack_require__(17).isScheduler;
+	var Scheduler = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
-
-	global._Rx || (global._Rx = {});
-	if (!global._Rx.defaultScheduler) {
-	  __webpack_require__(25);
-	}
 
 	function TimeIntervalObserver(o, s) {
 	  this._o = o;
@@ -12924,13 +13051,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = function timeInterval(source, scheduler) {
-	  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	  return new TimeIntervalObservable(source, scheduler);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 238 */
+/* 241 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12977,14 +13103,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 239 */
+/* 242 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function ToMapObserver(o, k, e) {
@@ -12999,13 +13127,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	ToMapObserver.prototype.next = function (x) {
 	  var key = tryCatch(this._k)(x);
-	  if (key === global._Rx.errorObj) {
+	  if (key === errorObj) {
 	    return this._o.onError(key.e);
 	  }
 	  var elem = x;
 	  if (this._e) {
 	    elem = tryCatch(this._e)(x);
-	    if (elem === global._Rx.errorObj) {
+	    if (elem === errorObj) {
 	      return this._o.onError(elem.e);
 	    }
 	  }
@@ -13044,7 +13172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 240 */
+/* 243 */
 /***/ function(module, exports) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -13064,7 +13192,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 241 */
+/* 244 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
@@ -13112,14 +13240,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 242 */
+/* 245 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 	var inherits = __webpack_require__(6);
 
 	function TransduceObserver(o, xform) {
@@ -13132,7 +13262,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	TransduceObserver.prototype.next = function (x) {
 	  var res = tryCatch(this._xform['@@transducer/step']).call(this._xform, this._o, x);
-	  if (res === global._Rx.errorObj) {
+	  if (res === errorObj) {
 	    this._o.onError(res.e);
 	  }
 	};
@@ -13175,25 +13305,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function transduce(source, transducer) {
 	  return new TransduceObservable(source, transducer);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 243 */
+/* 246 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var AbstractObserver = __webpack_require__(5);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var NAryDisposable = __webpack_require__(43);
-	var fromPromise = __webpack_require__(24);
-	var isPromise = __webpack_require__(27);
+	var fromPromise = __webpack_require__(27);
+	var isPromise = __webpack_require__(28);
 	var identity = __webpack_require__(46);
 	var noop = __webpack_require__(3);
 	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function falseFactory() {
 	  return false;
@@ -13249,7 +13380,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return;
 	  }
 	  var res = tryCatch(this._cb).apply(null, allValues);
-	  if (res === global._Rx.errorObj) {
+	  if (res === errorObj) {
 	    return this._o.onError(res.e);
 	  }
 	  this._o.onNext(res);
@@ -13310,25 +13441,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  return new WithLatestFromObservable(args[0], args.slice(1), resultSelector);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 244 */
+/* 247 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* WEBPACK VAR INJECTION */(function(global) {'use strict';
+	'use strict';
 
 	var ObservableBase = __webpack_require__(11);
 	var observableFrom = __webpack_require__(50);
 	var AbstractObserver = __webpack_require__(5);
-	var SingleAssignmentDisposable = __webpack_require__(14);
+	var SingleAssignmentDisposable = __webpack_require__(17);
 	var NAryDisposable = __webpack_require__(43);
 	var identity = __webpack_require__(46);
 	var isFunction = __webpack_require__(9);
 	var isArrayLike = __webpack_require__(148);
 	var isIterable = __webpack_require__(149);
 	var inherits = __webpack_require__(6);
-	var tryCatch = __webpack_require__(15).tryCatch;
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
 
 	function falseFactory() {
 	  return false;
@@ -13377,7 +13509,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (this._s.q.every(notEmpty)) {
 	    var queuedValues = this._s.q.map(shiftEach),
 	        res = tryCatch(this._s.cb).apply(null, queuedValues);
-	    if (res === global._Rx.errorObj) {
+	    if (res === errorObj) {
 	      return this._s.o.onError(res.e);
 	    }
 	    this._s.o.onNext(res);
@@ -13442,17 +13574,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var resultSelector = isFunction(args[len - 1]) ? args.pop() : argumentsToArray;
 	  return new ZipIterableObservable(args, resultSelector);
 	};
-	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 245 */
+/* 248 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var Observable = __webpack_require__(8);
 	var Observer = __webpack_require__(1);
-	var addProperties = __webpack_require__(32);
+	var addProperties = __webpack_require__(33);
 	var inherits = __webpack_require__(6);
 
 	function AnonymousSubject(observer, observable) {

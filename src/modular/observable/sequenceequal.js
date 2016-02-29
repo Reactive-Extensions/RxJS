@@ -7,7 +7,8 @@ var isPromise = require('../helpers/ispromise');
 var AbstractObserver = require('../observer/abstractobserver');
 var BinaryDisposable = require('../binarydisposable');
 var isEqual = require('../internal/isequal');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 var $iterator$ = (typeof global.Symbol === 'function' && global.Symbol.iterator) ||
@@ -36,7 +37,7 @@ FirstObserver.prototype.next = function (x) {
   if (this._s.qr.length > 0) {
     var v = this._s.qr.shift();
     var equal = tryCatch(this._s.cmp)(v, x);
-    if (equal === global._Rx.errorObj) { return this._s.o.onError(equal.e); }
+    if (equal === errorObj) { return this._s.o.onError(equal.e); }
     if (!equal) {
       this._s.o.onNext(false);
       this._s.o.onCompleted();
@@ -75,7 +76,7 @@ SecondObserver.prototype.next = function (x) {
   if (this._s.ql.length > 0) {
     var v = this._s.ql.shift();
     var equal = tryCatch(this._s.cmp)(v, x);
-    if (equal === global._Rx.errorObj) { return this._s.o.onError(equal.e); }
+    if (equal === errorObj) { return this._s.o.onError(equal.e); }
     if (!equal) {
       this._s.o.onNext(false);
       this._s.o.onCompleted();

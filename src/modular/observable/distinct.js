@@ -3,7 +3,8 @@
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var isFunction = require('../helpers/isfunction');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var isEqual = require('../internal/isequal');
 var inherits = require('inherits');
 
@@ -38,7 +39,7 @@ DistinctObserver.prototype.next = function (x) {
   var key = x;
   if (isFunction(this._keyFn)) {
     key = tryCatch(this._keyFn)(x);
-    if (key === global._Rx.errorObj) { return this._o.onError(key.e); }
+    if (key === errorObj) { return this._o.onError(key.e); }
   }
   this._h.push(key) && this._o.onNext(x);
 };

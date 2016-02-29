@@ -14,7 +14,8 @@ var addRef = require('../internal/addref');
 var isPromise = require('../helpers/ispromise');
 var isFunction = require('../helpers/isfunction');
 var noop = require('../helpers/noop');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 function returnWindow(x, win) { return win; }
 
@@ -77,7 +78,7 @@ function observableWindowWithClosingSelector(source, windowClosingSelector) {
 
     function createWindowClose () {
       var windowClose = tryCatch(windowClosingSelector)();
-      if (windowClose === global._Rx.errorObj) {
+      if (windowClose === errorObj) {
         return o.onError(windowClose.e);
       }
       isPromise(windowClose) && (windowClose = fromPromise(windowClose));

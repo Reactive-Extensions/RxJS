@@ -7,7 +7,8 @@ var Disposable = require('../disposable');
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var isFunction = require('../helpers/isfunction');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function argumentsToArray() {
@@ -52,7 +53,7 @@ ForkJoinObserver.prototype.completed = function () {
     this._s.finished = true;
 
     var res = tryCatch(this._cb).apply(null, this._s.results);
-    if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
+    if (res === errorObj) { return this._o.onError(res.e); }
 
     this._o.onNext(res);
     this._o.onCompleted();

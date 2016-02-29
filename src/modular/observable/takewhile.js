@@ -3,7 +3,8 @@
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var bindCallback = require('../internal/bindcallback');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function TakeWhileObserver(o, p) {
@@ -19,7 +20,7 @@ inherits(TakeWhileObserver, AbstractObserver);
 TakeWhileObserver.prototype.next = function (x) {
   if (this._r) {
     this._r = tryCatch(this._p._fn)(x, this._i++, this._p);
-    if (this._r === global._Rx.errorObj) { return this._o.onError(this._r.e); }
+    if (this._r === errorObj) { return this._o.onError(this._r.e); }
   }
   if (this._r) {
     this._o.onNext(x);

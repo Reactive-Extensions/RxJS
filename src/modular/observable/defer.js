@@ -4,7 +4,8 @@ var ObservableBase = require('./observablebase');
 var fromPromise = require('./frompromise');
 var throwError = require('./throw');
 var isPromise = require('../helpers/ispromise');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function Defer(factory) {
@@ -16,7 +17,7 @@ inherits(Defer, ObservableBase);
 
 Defer.prototype.subscribeCore = function (o) {
   var result = tryCatch(this._f)();
-  if (result === global._Rx.errorObj) { return throwError(result.e).subscribe(o);}
+  if (result === errorObj) { return throwError(result.e).subscribe(o);}
   isPromise(result) && (result = fromPromise(result));
   return result.subscribe(o);
 };

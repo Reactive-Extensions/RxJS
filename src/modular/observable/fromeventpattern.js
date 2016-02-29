@@ -3,7 +3,8 @@
 var ObservableBase = require('./observablebase');
 var publish = require('./publish');
 var isFunction = require('../helpers/isfunction');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function EventPatternDisposable(del, fn, ret) {
@@ -34,7 +35,7 @@ function createHandler(o, fn) {
     var results = arguments[0];
     if (isFunction(fn)) {
       results = tryCatch(fn).apply(null, arguments);
-      if (results === global._Rx.errorObj) { return o.onError(results.e); }
+      if (results === errorObj) { return o.onError(results.e); }
     }
     o.onNext(results);
   };

@@ -2,13 +2,8 @@
 
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
-var isScheduler = require('../scheduler').isScheduler;
+var Scheduler = require('../scheduler');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function ThrottleObserver(s) {
   this._s = s;
@@ -46,7 +41,7 @@ ThrottleObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function throttle(source, windowDuration, scheduler) {
-  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   var duration = +windowDuration || 0;
   if (duration <= 0) { throw new RangeError('windowDuration cannot be less or equal zero.'); }
   return new ThrottleObservable(source, duration, scheduler);

@@ -5,7 +5,8 @@ var fromEventPattern = require('./fromeventpattern');
 var publish = require('./publish');
 var CompositeDisposable = require('../compositedisposable');
 var isFunction = require('../helpers/isfunction');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function isNodeList(el) {
@@ -52,9 +53,9 @@ function createEventListener (el, eventName, handler) {
 /**
  * Configuration option to determine whether to use native events only
  */
-global._Rx || (global._Rx = {});
-global._Rx.config || (global._Rx.config = {});
-global._Rx.config.useNativeEvents = false;
+global.Rx || (global.Rx = {});
+global.Rx.config || (global.Rx.config = {});
+global.Rx.config.useNativeEvents = false;
 
 function EventObservable(el, name, fn) {
   this._el = el;
@@ -70,7 +71,7 @@ function createHandler(o, fn) {
     var results = arguments[0];
     if (isFunction(fn)) {
       results = tryCatch(fn).apply(null, arguments);
-      if (results === global._Rx.errorObj) { return o.onError(results.e); }
+      if (results === errorObj) { return o.onError(results.e); }
     }
     o.onNext(results);
   };
@@ -100,7 +101,7 @@ module.exports = function fromEvent(element, eventName, selector) {
   }
 
   // Use only if non-native events are allowed
-  if (!global._Rx.config.useNativeEvents) {
+  if (!global.Rx.config.useNativeEvents) {
     // Handles jq, Angular.js, Zepto, Marionette, Ember.js
     if (typeof element.on === 'function' && typeof element.off === 'function') {
       return fromEventPattern(

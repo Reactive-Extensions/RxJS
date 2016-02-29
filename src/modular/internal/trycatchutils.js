@@ -1,9 +1,7 @@
 'use strict';
 
 var isFunction = require('../helpers/isfunction');
-
-global._Rx || (global._Rx = {});
-var errorObj = global._Rx.errorObj = {e: {}};
+var errorObj = module.exports.errorObj = {e: {}};
 
 function tryCatcherGen(tryCatchTarget) {
   return function tryCatcher() {
@@ -16,16 +14,11 @@ function tryCatcherGen(tryCatchTarget) {
   };
 }
 
-function tryCatch(fn) {
+module.exports.tryCatch = function tryCatch(fn) {
   if (!isFunction(fn)) { throw new TypeError('fn must be a function'); }
   return tryCatcherGen(fn);
-}
+};
 
-function thrower(e) {
+module.exports.thrower = function thrower(e) {
   throw e;
-}
-
-module.exports = {
-  tryCatch: tryCatch,
-  thrower: thrower
 };

@@ -6,106 +6,14 @@ var isFunction = require('../helpers/isfunction');
 var $iterator$ = require('../helpers/iterator');
 var bindCallback = require('../internal/bindcallback');
 var inherits = require('inherits');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 var doneEnumerator = { done: true, value: undefined };
-
-function FromObservable(iterable, fn, scheduler) {
-  this._iterable = iterable;
-  this._fn = fn;
-  this._scheduler = scheduler;
-  ObservableBase.call(this);
-}
-
-inherits(FromObservable, ObservableBase);
-
-function createScheduleMethod(o, it, fn) {
-  return function loopRecursive(i, recurse) {
-    var next = tryCatch(it.next).call(it);
-    if (next === global._Rx.errorObj) { return o.onError(next.e); }
-    if (next.done) { return o.onCompleted(); }
-
-    var result = next.value;
-
-    if (isFunction(fn)) {
-      result = tryCatch(fn)(result, i);
-      if (result === global._Rx.errorObj) { return o.onError(result.e); }
-    }
-
-    o.onNext(result);
-    recurse(i + 1);
-  };
-}
-
-FromObservable.prototype.subscribeCore = function (o) {
-  var list = Object(this._iterable),
-      it = getIterable(list);
-
-  return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
-};
-
 var maxSafeInteger = Math.pow(2, 53) - 1;
-
-function StringIterable(s) {
-  this._s = s;
-}
-
-StringIterable.prototype[$iterator$] = function () {
-  return new StringIterator(this._s);
-};
-
-function StringIterator(s) {
-  this._s = s;
-  this._l = s.length;
-  this._i = 0;
-}
-
-StringIterator.prototype[$iterator$] = function () {
-  return this;
-};
-
-StringIterator.prototype.next = function () {
-  return this._i < this._l ? { done: false, value: this._s.charAt(this._i++) } : doneEnumerator;
-};
-
-function ArrayIterable(a) {
-  this._a = a;
-}
-
-ArrayIterable.prototype[$iterator$] = function () {
-  return new ArrayIterator(this._a);
-};
-
-function ArrayIterator(a) {
-  this._a = a;
-  this._l = toLength(a);
-  this._i = 0;
-}
-
-ArrayIterator.prototype[$iterator$] = function () {
-  return this;
-};
-
-ArrayIterator.prototype.next = function () {
-  return this._i < this._l ? { done: false, value: this._a[this._i++] } : doneEnumerator;
-};
 
 function numberIsFinite(value) {
   return typeof value === 'number' && global.isFinite(value);
-}
-
-function getIterable(o) {
-  var i = o[$iterator$], it;
-  if (!i && typeof o === 'string') {
-    it = new StringIterable(o);
-    return it[$iterator$]();
-  }
-  if (!i && o.length !== undefined) {
-    it = new ArrayIterable(o);
-    return it[$iterator$]();
-  }
-  if (!i) { throw new TypeError('Object is not iterable'); }
-  return o[$iterator$]();
 }
 
 function sign(value) {
@@ -124,6 +32,98 @@ function toLength(o) {
   if (len > maxSafeInteger) { return maxSafeInteger; }
   return len;
 }
+
+function StringIterator(s) {
+  this._s = s;
+  this._l = s.length;
+  this._i = 0;
+}
+
+StringIterator.prototype[$iterator$] = function () {
+  return this;
+};
+
+StringIterator.prototype.next = function () {
+  return this._i < this._l ? { done: false, value: this._s.charAt(this._i++) } : doneEnumerator;
+};
+
+function StringIterable(s) {
+  this._s = s;
+}
+
+StringIterable.prototype[$iterator$] = function () {
+  return new StringIterator(this._s);
+};
+
+function ArrayIterator(a) {
+  this._a = a;
+  this._l = toLength(a);
+  this._i = 0;
+}
+
+ArrayIterator.prototype[$iterator$] = function () {
+  return this;
+};
+
+ArrayIterator.prototype.next = function () {
+  return this._i < this._l ? { done: false, value: this._a[this._i++] } : doneEnumerator;
+};
+
+function ArrayIterable(a) {
+  this._a = a;
+}
+
+ArrayIterable.prototype[$iterator$] = function () {
+  return new ArrayIterator(this._a);
+};
+
+function getIterable(o) {
+  var i = o[$iterator$], it;
+  if (!i && typeof o === 'string') {
+    it = new StringIterable(o);
+    return it[$iterator$]();
+  }
+  if (!i && o.length !== undefined) {
+    it = new ArrayIterable(o);
+    return it[$iterator$]();
+  }
+  if (!i) { throw new TypeError('Object is not iterable'); }
+  return o[$iterator$]();
+}
+
+function FromObservable(iterable, fn, scheduler) {
+  this._iterable = iterable;
+  this._fn = fn;
+  this._scheduler = scheduler;
+  ObservableBase.call(this);
+}
+
+inherits(FromObservable, ObservableBase);
+
+function createScheduleMethod(o, it, fn) {
+  return function loopRecursive(i, recurse) {
+    var next = tryCatch(it.next).call(it);
+    if (next === errorObj) { return o.onError(next.e); }
+    if (next.done) { return o.onCompleted(); }
+
+    var result = next.value;
+
+    if (isFunction(fn)) {
+      result = tryCatch(fn)(result, i);
+      if (result === errorObj) { return o.onError(result.e); }
+    }
+
+    o.onNext(result);
+    recurse(i + 1);
+  };
+}
+
+FromObservable.prototype.subscribeCore = function (o) {
+  var list = Object(this._iterable),
+      it = getIterable(list);
+
+  return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
+};
 
 /**
 * This method creates a new Observable sequence from an array-like or iterable object.

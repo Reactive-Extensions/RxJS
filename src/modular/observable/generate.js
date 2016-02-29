@@ -2,8 +2,8 @@
 
 var ObservableBase = require('./observablebase');
 var Scheduler = require('../scheduler');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
-var isScheduler = require('../scheduler').isScheduler;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function GenerateObservable(state, cndFn, itrFn, resFn, s) {
@@ -22,13 +22,13 @@ function scheduleRecursive(state, recurse) {
     state.first = false;
   } else {
     state.newState = tryCatch(state.self._itrFn)(state.newState);
-    if (state.newState === global._Rx.errorObj) { return state.o.onError(state.newState.e); }
+    if (state.newState === errorObj) { return state.o.onError(state.newState.e); }
   }
   var hasResult = tryCatch(state.self._cndFn)(state.newState);
-  if (hasResult === global._Rx.errorObj) { return state.o.onError(hasResult.e); }
+  if (hasResult === errorObj) { return state.o.onError(hasResult.e); }
   if (hasResult) {
     var result = tryCatch(state.self._resFn)(state.newState);
-    if (result === global._Rx.errorObj) { return state.o.onError(result.e); }
+    if (result === errorObj) { return state.o.onError(result.e); }
     state.o.onNext(result);
     recurse(state);
   } else {
@@ -47,6 +47,6 @@ GenerateObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function generate (initialState, condition, iterate, resultSelector, scheduler) {
-  isScheduler(scheduler) || (scheduler = Scheduler.queue);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
   return new GenerateObservable(initialState, condition, iterate, resultSelector, scheduler);
 };

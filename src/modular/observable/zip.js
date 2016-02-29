@@ -9,7 +9,8 @@ var isPromise = require('../helpers/ispromise');
 var identity = require('../helpers/identity');
 var isFunction = require('../helpers/isfunction');
 var inherits = require('inherits');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 function falseFactory() { return false; }
 function emptyArrayFactory() { return []; }
@@ -46,7 +47,7 @@ ZipObserver.prototype.next = function (x) {
   if (this._q.every(notEmpty)) {
     var queuedValues = this._q.map(shiftEach);
     var res = tryCatch(this._p._cb).apply(null, queuedValues);
-    if (res === global._Rx.errorObj) { return this._o.onError(res.e); }
+    if (res === errorObj) { return this._o.onError(res.e); }
     this._o.onNext(res);
   } else if (this._d.filter(notTheSame(this._i)).every(identity)) {
     this._o.onCompleted();

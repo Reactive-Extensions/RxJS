@@ -7,7 +7,8 @@ var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var Subject = require('../subject');
 var addRef = require('../internal/addref');
 var noop = require('../helpers/noop');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 require('es6-map/implement');
 
@@ -26,7 +27,7 @@ module.exports = function groupJoin(left, right, leftDurationSelector, rightDura
         leftMap.set(id, s);
 
         var result = tryCatch(resultSelector)(value, addRef(s, r));
-        if (result === global._Rx.errorObj) {
+        if (result === errorObj) {
           leftMap.forEach(handleError(result.e));
           return o.onError(result.e);
         }
@@ -38,7 +39,7 @@ module.exports = function groupJoin(left, right, leftDurationSelector, rightDura
         group.add(md);
 
         var duration = tryCatch(leftDurationSelector)(value);
-        if (duration === global._Rx.errorObj) {
+        if (duration === errorObj) {
           leftMap.forEach(handleError(duration.e));
           return o.onError(duration.e);
         }
@@ -70,7 +71,7 @@ module.exports = function groupJoin(left, right, leftDurationSelector, rightDura
         group.add(md);
 
         var duration = tryCatch(rightDurationSelector)(value);
-        if (duration === global._Rx.errorObj) {
+        if (duration === errorObj) {
           leftMap.forEach(handleError(duration.e));
           return o.onError(duration.e);
         }

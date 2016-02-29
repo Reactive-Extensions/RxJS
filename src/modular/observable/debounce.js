@@ -9,7 +9,8 @@ var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var isFunction = require('../helpers/isfunction');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function DebounceObserver(o, dt, scheduler, cancelable) {
@@ -77,7 +78,7 @@ inherits(DebounceSelectorObserver, AbstractObserver);
 
 DebounceSelectorObserver.prototype.next = function (x) {
   var throttle = tryCatch(this._s.fn)(x);
-  if (throttle === global._Rx.errorObj) { return this._s.o.onError(throttle.e); }
+  if (throttle === errorObj) { return this._s.o.onError(throttle.e); }
 
   isPromise(throttle) && (throttle = fromPromise(throttle));
 

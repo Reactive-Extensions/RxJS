@@ -2,7 +2,8 @@
 
 var ActivePlan = require('./activeplan');
 var JoinObserver = require('./joinobserver');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 function planCreateObserver(externalSubscriptions, observable, onError) {
   var entry = externalSubscriptions.get(observable);
@@ -23,7 +24,7 @@ function handleOnError(o) { return function (e) { o.onError(e); }; }
 function handleOnNext(self, observer) {
   return function onNext () {
     var result = tryCatch(self._selector).apply(self, arguments);
-    if (result === global._Rx.errorObj) { return observer.onError(result.e); }
+    if (result === errorObj) { return observer.onError(result.e); }
     observer.onNext(result);
   };
 }

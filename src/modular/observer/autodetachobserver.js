@@ -4,7 +4,7 @@ var AbstractObserver = require('./abstractobserver');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var inherits = require('inherits');
 var tryCatchUtils = require('../internal/trycatchutils');
-var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj, thrower = tryCatchUtils.thrower;
 
 function AutoDetachObserver(observer) {
   AbstractObserver.call(this);
@@ -16,7 +16,7 @@ inherits(AutoDetachObserver, AbstractObserver);
 
 AutoDetachObserver.prototype.next = function (value) {
   var result = tryCatch(this.observer.onNext).call(this.observer, value);
-  if (result === global._Rx.errorObj) {
+  if (result === errorObj) {
     this.dispose();
     thrower(result.e);
   }
@@ -25,13 +25,13 @@ AutoDetachObserver.prototype.next = function (value) {
 AutoDetachObserver.prototype.error = function (err) {
   var result = tryCatch(this.observer.onError).call(this.observer, err);
   this.dispose();
-  result === global._Rx.errorObj && thrower(result.e);
+  result === errorObj && thrower(result.e);
 };
 
 AutoDetachObserver.prototype.completed = function () {
   var result = tryCatch(this.observer.onCompleted).call(this.observer);
   this.dispose();
-  result === global._Rx.errorObj && thrower(result.e);
+  result === errorObj && thrower(result.e);
 };
 
 AutoDetachObserver.prototype.setDisposable = function (value) { this.m.setDisposable(value); };

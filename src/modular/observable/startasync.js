@@ -2,10 +2,11 @@
 
 var fromPromise = require('./frompromise');
 var throwError = require('./throw');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 module.exports = function startAsync(functionAsync) {
   var promise = tryCatch(functionAsync)();
-  if (promise === global._Rx.errorObj) { return throwError(promise.e); }
+  if (promise === errorObj) { return throwError(promise.e); }
   return fromPromise(promise);
 };

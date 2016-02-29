@@ -9,7 +9,8 @@ var Subject = require('../subject');
 var AbstractObserver = require('../observer/abstractobserver');
 var BinaryDisposable = require('../binarydisposable');
 var identity = require('../helpers/identity');
-var tryCatch = require('../trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function next(state, x, i) {
@@ -18,7 +19,7 @@ function next(state, x, i) {
   if (state.hasValueAll || (state.hasValueAll = state.hasValue.every(identity))) {
     if (state.err) { return state.o.onError(state.err); }
     var res = tryCatch(state.fn).apply(null, state.values);
-    if (res === global._Rx.errorObj) { return state.o.onError(res.e); }
+    if (res === errorObj) { return state.o.onError(res.e); }
     state.o.onNext(res);
   }
   state.isDone && state.values[1] && state.o.onCompleted();

@@ -3,7 +3,8 @@
 var AsyncSubject = require('../asyncsubject');
 var asObservable  = require('./asobservable');
 var isFunction = require('../helpers/isfunction');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 
 function createCbHandler(o, ctx, selector) {
   return function handler () {
@@ -12,7 +13,7 @@ function createCbHandler(o, ctx, selector) {
 
     if (isFunction(selector)) {
       results = tryCatch(selector).apply(ctx, results);
-      if (results === global._Rx.errorObj) { return o.onError(results.e); }
+      if (results === errorObj) { return o.onError(results.e); }
       o.onNext(results);
     } else {
       if (results.length <= 1) {
@@ -31,7 +32,7 @@ function createCbObservable(fn, ctx, selector, args) {
 
   args.push(createCbHandler(o, ctx, selector));
   var res = tryCatch(fn).apply(ctx, args);
-  if (res === global._Rx.errorObj) { o.onError(res.e); }
+  if (res === errorObj) { o.onError(res.e); }
 
   return asObservable(o);
 }

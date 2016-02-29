@@ -166,8 +166,8 @@ var ImmediateScheduler = require('./scheduler/immediatescheduler');
 var DefaultScheduler = require('./scheduler/defaultscheduler');
 var CatchScheduler = require('./scheduler/catchscheduler');
 
-Scheduler.queue = new CurrentThreadScheduler();
-Scheduler.async = new DefaultScheduler();
+Scheduler.queue = Scheduler.currentThread = new CurrentThreadScheduler();
+Scheduler.async = Scheduler['default'] = new DefaultScheduler();
 Scheduler.immediate = new ImmediateScheduler();
 
 /**

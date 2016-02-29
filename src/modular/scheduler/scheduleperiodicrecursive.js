@@ -2,13 +2,13 @@
 
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var tryCatchUtils = require('../internal/trycatchutils');
-var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj, thrower = tryCatchUtils.thrower;
 
 function createTick(self) {
   return function tick(command, recurse) {
     recurse(0, self._period);
     var state = tryCatch(self._action)(self._state);
-    if (state === global._Rx.errorObj) {
+    if (state === errorObj) {
       self._cancel.dispose();
       thrower(state.e);
     }

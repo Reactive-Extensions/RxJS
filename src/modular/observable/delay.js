@@ -11,7 +11,8 @@ var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var isFunction = require('../helpers/isfunction');
 var Scheduler = require('../scheduler');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var inherits = require('inherits');
 
 function scheduleRelative (state, recurse) {
@@ -146,7 +147,7 @@ DelaySelectorObseravble.prototype.subscribeCore = function (o) {
     subscription.setDisposable(source.subscribe(
       function (x) {
         var delay = tryCatch(selector)(x);
-        if (delay === global._Rx.errorObj) { return o.onError(delay.e); }
+        if (delay === errorObj) { return o.onError(delay.e); }
         var d = new SingleAssignmentDisposable();
         delays.add(d);
         d.setDisposable(delay.subscribe(

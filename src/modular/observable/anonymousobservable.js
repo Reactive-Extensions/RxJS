@@ -7,7 +7,7 @@ var Disposable = require('../disposable');
 var AutoDetachObserver = require('../observer/autodetachobserver');
 var Scheduler = require('../scheduler');
 var tryCatchUtils = require('../internal/trycatchutils');
-var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj, thrower = tryCatchUtils.thrower;
 
 // Fix subscriber to check for undefined or function returned to decorate as Disposable
 function fixSubscriber(subscriber) {
@@ -18,7 +18,7 @@ function fixSubscriber(subscriber) {
 function setDisposable(s, state) {
   var ado = state[0], self = state[1];
   var sub = tryCatch(self.__subscribe).call(self, ado);
-  if (sub === global._Rx.errorObj && !ado.fail(sub.e)) { thrower(sub.e); }
+  if (sub === errorObj && !ado.fail(sub.e)) { thrower(sub.e); }
   ado.setDisposable(fixSubscriber(sub));
 }
 

@@ -3,7 +3,8 @@
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
 var inherits = require('inherits');
-var tryCatch = require('../internal/trycatchutils').tryCatch;
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
 var EmptyError = require('../internal/errors').EmptyError;
 
 function ReduceObserver(o, parent) {
@@ -29,7 +30,7 @@ ReduceObserver.prototype.next = function (x) {
     this._a = this._hs ? tryCatch(this._fn)(this._s, x, this._i, this._p) : x;
     this._ha = true;
   }
-  if (this._a === global._Rx.errorObj) { return this._o.onError(this._a.e); }
+  if (this._a === errorObj) { return this._o.onError(this._a.e); }
   this._i++;
 };
 

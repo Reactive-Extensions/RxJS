@@ -4,7 +4,7 @@ var ObservableBase = require('./observablebase');
 var inherits = require('inherits');
 var bindCallback = require('../internal/bindcallback');
 var tryCatchUtils = require('../internal/trycatchutils');
-var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj, thrower = tryCatchUtils.thrower;
 
 function FinallyDisposable(s, fn) {
   this.isDisposed = false;
@@ -16,7 +16,7 @@ FinallyDisposable.prototype.dispose = function () {
   if (!this.isDisposed) {
     var res = tryCatch(this._s.dispose).call(this._s);
     this._fn();
-    res === global._Rx.errorObj && thrower(res.e);
+    res === errorObj && thrower(res.e);
   }
 };
 
@@ -30,7 +30,7 @@ inherits(FinallyObservable, ObservableBase);
 
 FinallyObservable.prototype.subscribeCore = function (o) {
   var d = tryCatch(this.source.subscribe).call(this.source, o);
-  if (d === global._Rx.errorObj) {
+  if (d === errorObj) {
     this._fn();
     thrower(d.e);
   }

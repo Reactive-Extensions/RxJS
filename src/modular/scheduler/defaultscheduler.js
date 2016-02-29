@@ -7,7 +7,7 @@ var Scheduler = require('../scheduler');
 var isFunction = require('../helpers/isfunction');
 var noop = require('../helpers/noop');
 var tryCatchUtils = require('../internal/trycatchutils');
-var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj, thrower = tryCatchUtils.thrower;
 var inherits = require('inherits');
 
 var scheduleMethod, clearMethod;
@@ -30,7 +30,7 @@ var scheduleMethod, clearMethod;
         var result = tryCatch(task)();
         clearMethod(handle);
         currentlyRunning = false;
-        if (result === global._Rx.errorObj) { thrower(result.e); }
+        if (result === errorObj) { thrower(result.e); }
       }
     }
   }

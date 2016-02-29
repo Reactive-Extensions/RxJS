@@ -8,7 +8,7 @@ var Scheduler = require('../scheduler');
 var Disposable = require('../disposable');
 var AutoDetachObserver = require('../observer/autodetachobserver');
 var tryCatchUtils = require('../internal/trycatchutils');
-var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj, thrower = tryCatchUtils.thrower;
 
 function fixSubscriber(subscriber) {
   return subscriber && isFunction(subscriber.dispose) ? subscriber :
@@ -18,7 +18,7 @@ function fixSubscriber(subscriber) {
 function setDisposable(s, state) {
   var ado = state[0], self = state[1];
   var sub = tryCatch(self.subscribeCore).call(self, ado);
-  if (sub === global._Rx.errorObj && !ado.fail(sub.e)) { thrower(sub.e); }
+  if (sub === errorObj && !ado.fail(sub.e)) { thrower(sub.e); }
   ado.setDisposable(fixSubscriber(sub));
 }
 
