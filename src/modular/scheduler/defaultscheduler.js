@@ -179,7 +179,4 @@ DefaultScheduler.prototype.scheduleLongRunning = function (state, action) {
   return disposable;
 };
 
-global._Rx || (global._Rx = {});
-global._Rx.defaultScheduler = new DefaultScheduler();
-
-Scheduler.default = global._Rx.defaultScheduler;
+module.exports = DefaultScheduler;

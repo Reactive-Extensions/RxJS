@@ -5,11 +5,6 @@ var Scheduler = require('./scheduler');
 var errors = require('./internal/errors');
 var inherits = require('inherits');
 
-global._Rx || (global._Rx = {});
-if (!global._Rx.immediateScheduler) {
-  require('./scheduler/immediatescheduler');
-}
-
 function Notification() { }
 
 Notification.prototype._accept = function (onNext, onError, onCompleted) {
@@ -42,7 +37,7 @@ Notification.prototype.accept = function (observerOrOnNext, onError, onCompleted
  */
 Notification.prototype.toObservable = function (scheduler) {
   var self = this;
-  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.immediateScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.immediate);
   return new AnonymousObservable(function (o) {
     return scheduler.schedule(self, function (_, notification) {
       notification._acceptObserver(o);

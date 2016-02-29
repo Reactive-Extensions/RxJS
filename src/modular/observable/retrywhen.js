@@ -4,16 +4,12 @@ var ObservableBase = require('./observablebase');
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var Subject = require('../subject');
+var Scheduler = require('../scheduler');
 var BinaryDisposable = require('../binarydisposable');
 var NAryDisposable = require('../narydisposable');
 var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
 
 var $iterator$ = '@@iterator';
 
@@ -60,7 +56,7 @@ CatchErrorWhenObservable.prototype.subscribeCore = function (o) {
   var state = { isDisposed: false },
     lastError,
     subscription = new SerialDisposable();
-  var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(null, function (_, recurse) {
+  var cancelable = Scheduler.queue.scheduleRecursive(null, function (_, recurse) {
     if (state.isDisposed) { return; }
     var currentItem = e.next();
 

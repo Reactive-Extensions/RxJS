@@ -2,6 +2,7 @@
 
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
+var Scheduler = require('../scheduler');
 var Disposable = require('../disposable');
 var NAryDisposable = require('../narydisposable');
 var SerialDisposable = require('../serialdisposable');
@@ -9,11 +10,6 @@ var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.immediateScheduler) {
-  require('../scheduler/immediatescheduler');
-}
 
 function ConcatObserver(s, fn) {
   this._s = s;
@@ -58,7 +54,7 @@ ConcatObservable.prototype.subscribeCore = function(o) {
     sources: this._sources
   };
 
-  var cancelable = global._Rx.immediateScheduler.scheduleRecursive(state, scheduleRecursive);
+  var cancelable = Scheduler.immediate.scheduleRecursive(state, scheduleRecursive);
   return new NAryDisposable([subscription, disposable, cancelable]);
 };
 

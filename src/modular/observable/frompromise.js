@@ -1,13 +1,9 @@
 'use strict';
 
 var ObservableBase = require('./observablebase');
+var Scheduler = require('../scheduler');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function FromPromiseObservable(p, s) {
   this._p = p;
@@ -47,6 +43,6 @@ FromPromiseObservable.prototype.subscribeCore = function(o) {
 * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
 */
 module.exports = function fromPromise(promise, scheduler) {
-  scheduler || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   return new FromPromiseObservable(promise, scheduler);
 };

@@ -2,20 +2,15 @@
 
 var ObservableBase = require('./observablebase');
 var AbstractObserver = require('../observer/abstractobserver');
+var Scheduler = require('../scheduler');
 var BinaryDisposable = require('../binarydisposable');
 var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var isFunction = require('../helpers/isfunction');
-var isScheduler = require('../scheduler').isScheduler;
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function DebounceObserver(o, dt, scheduler, cancelable) {
   this._o = o;
@@ -57,7 +52,7 @@ DebounceObserver.prototype.completed = function () {
 };
 
 function DebounceObservable(source, dt, s) {
-  isScheduler(s) || (s = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(s) || (s = Scheduler.async);
   this.source = source;
   this._dt = dt;
   this._s = s;

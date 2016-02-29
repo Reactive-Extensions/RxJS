@@ -83,7 +83,7 @@
     }
 
     function scheduleMethod(s, self) {
-      self.source.request(1);
+      return self.source.request(1);
     }
 
     StopAndWaitObservable.prototype._subscribe = function (o) {
@@ -115,7 +115,7 @@
       };
 
       function innerScheduleMethod(s, self) {
-        self.observable.source.request(1);
+        return self.observable.source.request(1);
       }
 
       StopAndWaitObserver.prototype.next = function (value) {
@@ -123,7 +123,7 @@
         this.scheduleDisposable = defaultScheduler.schedule(this, innerScheduleMethod);
       };
 
-      StopAndWaitObservable.dispose = function () {
+      StopAndWaitObserver.dispose = function () {
         this.observer = null;
         if (this.cancel) {
           this.cancel.dispose();
@@ -160,7 +160,7 @@
     }
 
     function scheduleMethod(s, self) {
-      self.source.request(self.windowSize);
+      return self.source.request(self.windowSize);
     }
 
     WindowedObservable.prototype._subscribe = function (o) {
@@ -193,7 +193,7 @@
       };
 
       function innerScheduleMethod(s, self) {
-        self.observable.source.request(self.observable.windowSize);
+        return self.observable.source.request(self.observable.windowSize);
       }
 
       WindowedObserver.prototype.next = function (value) {
@@ -246,7 +246,7 @@
 
     source.subscribe(
       function (x) {
-        !dest.write(String(x)) && source.pause();
+        !dest.write(x) && source.pause();
       },
       function (err) {
         dest.emit('error', err);

@@ -1,15 +1,9 @@
 'use strict';
-/* jshint undef: true, unused: true */
 
 var Scheduler = require('../scheduler');
 var Disposable = require('../disposable');
 var inherits = require('inherits');
 var test = require('tape');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.immediateScheduler) {
-  require('../scheduler/immediatescheduler');
-}
 
 function MyScheduler(now) {
   if (now !== undefined) { this.now = function () { return now; }; }
@@ -123,7 +117,7 @@ test('scheduler schedule with time recursive', function (t) {
 });
 
 test('catch builtin swallow shallow', function (t) {
-  var swallow = global._Rx.immediateScheduler.catchError(function () { return true; });
+  var swallow = Scheduler.immediate['catch'](function () { return true; });
 
   swallow.schedule(null, function () { throw new Error('Should be swallowed'); });
 
@@ -132,7 +126,7 @@ test('catch builtin swallow shallow', function (t) {
 });
 
 test('catch builtin swallow recursive', function (t) {
-  var swallow = global._Rx.immediateScheduler.catchError(function () { return true; });
+  var swallow = Scheduler.immediate['catch'](function () { return true; });
 
   swallow.schedule(42, function (self) {
     return self.schedule(null, function () { new Error('Should be swallowed'); });
@@ -159,7 +153,7 @@ MyErrorScheduler.prototype.schedule = function (state, action) {
 };
 
 MyErrorScheduler.prototype.schedulePeriodic = function (state, period, action) {
-  global._Rx.immediateScheduler.schedule(this, function (_, self) {
+  Scheduler.immediate.schedule(this, function (_, self) {
     try {
       var s = state;
       for(var i = 0; true; i++) {
@@ -178,14 +172,14 @@ test('catch custom unhandled', function (t) {
   var scheduler = new MyErrorScheduler(function (ex) { err = ex; });
 
   scheduler
-    .catchError(function () { return true; })
+    ['catch'](function () { return true; })
     .schedule(null, function () { throw new Error('Should be caught'); });
 
   t.ok(!err);
 
   var ex1 = 'error';
   scheduler
-    .catchError(function () { return ex1 instanceof Error; })
+    ['catch'](function () { return ex1 instanceof Error; })
     .schedule(null, function () { throw ex1; });
 
   t.equal(err, ex1);
@@ -197,7 +191,7 @@ test('catch custom periodic caught', function (t) {
 
   var scheduler = new MyErrorScheduler(function (ex) { err = ex; });
 
-  var catcher = scheduler.catchError(function () { return true; });
+  var catcher = scheduler['catch'](function () { return true; });
 
   catcher.schedulePeriodic(42, 0, function () {
     throw new Error('Should be caught');
@@ -214,7 +208,7 @@ test('catch custom periodic uncaught', function (t) {
 
   var scheduler = new MyErrorScheduler(function (e) { err = e; });
 
-  var catcher = scheduler.catchError(function (e) { return e instanceof String; });
+  var catcher = scheduler['catch'](function (e) { return e instanceof String; });
 
   catcher.schedulePeriodic(42, 0, function () { throw ex; });
 

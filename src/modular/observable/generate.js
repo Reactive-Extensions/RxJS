@@ -1,14 +1,10 @@
 'use strict';
 
 var ObservableBase = require('./observablebase');
+var Scheduler = require('../scheduler');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 var isScheduler = require('../scheduler').isScheduler;
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
 
 function GenerateObservable(state, cndFn, itrFn, resFn, s) {
   this._initialState = state;
@@ -51,6 +47,6 @@ GenerateObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function generate (initialState, condition, iterate, resultSelector, scheduler) {
-  isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+  isScheduler(scheduler) || (scheduler = Scheduler.queue);
   return new GenerateObservable(initialState, condition, iterate, resultSelector, scheduler);
 };

@@ -1,6 +1,7 @@
 'use strict';
 
 var test = require('tape');
+var Scheduler = require('../scheduler');
 var Observable = require('../observable');
 var TestScheduler = require('../testing/testscheduler');
 var reactiveAssert = require('../testing/reactiveassert');
@@ -12,11 +13,6 @@ var onNext = ReactiveTest.onNext,
 Observable.addToPrototype({
   startWith: require('../observable/startwith')
 });
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
 
 test('Observable#startWith normal', function (t) {
   var scheduler = new TestScheduler();
@@ -159,7 +155,7 @@ test('Observable#startWith is unaffected by currentThread scheduler', function (
 
   var results;
 
-  global._Rx.currentThreadScheduler.schedule(null, function () {
+  Scheduler.queue.schedule(null, function () {
     results = scheduler.startScheduler(function () {
       return xs.startWith(scheduler, 1);
     });

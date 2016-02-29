@@ -8,13 +8,8 @@ var RefCountDisposable = require('../refcountdisposable');
 var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var addRef = require('../internal/addref');
-var isScheduler = require('../scheduler').isScheduler;
+var Scheduler = require('../scheduler');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-	require('../scheduler/defaultscheduler');
-}
 
 function WindowTimeObserver(state) {
   this._state = state;
@@ -101,10 +96,10 @@ WindowTimeObservable.prototype.subscribeCore = function (o) {
 module.exports = function (source, timeSpan, timeShiftOrScheduler, scheduler) {
 	var timeShift;
 	timeShiftOrScheduler == null && (timeShift = timeSpan);
-	isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+	Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
 	if (typeof timeShiftOrScheduler === 'number') {
 		timeShift = timeShiftOrScheduler;
-	} else if (isScheduler(timeShiftOrScheduler)) {
+	} else if (Scheduler.isScheduler(timeShiftOrScheduler)) {
 		timeShift = timeSpan;
 		scheduler = timeShiftOrScheduler;
 	}

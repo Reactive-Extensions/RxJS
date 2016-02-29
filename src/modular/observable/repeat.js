@@ -4,15 +4,11 @@ var ObservableBase = require('./observablebase');
 var fromPromise = require('./frompromise');
 var isPromise = require('../helpers/ispromise');
 var AbstractObserver = require('../observer/abstractobserver');
+var Scheduler = require('../scheduler');
 var NAryDisposable = require('../narydisposable');
 var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
 
 var $iterator$ = '@@iterator';
 
@@ -86,7 +82,7 @@ ConcatObservable.prototype.subscribeCore = function (o) {
     e: this.sources[$iterator$]()
   };
 
-  var cancelable = global._Rx.currentThreadScheduler.scheduleRecursive(state, scheduleMethod);
+  var cancelable = Scheduler.queue.scheduleRecursive(state, scheduleMethod);
   return new NAryDisposable([subscription, cancelable, createDisposable(state)]);
 };
 

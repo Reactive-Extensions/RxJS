@@ -5,13 +5,8 @@ var interval = require('./interval');
 var AbstractObserver = require('../observer/abstractobserver');
 var BinaryDisposable = require('../binarydisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
-var isScheduler = require('../scheduler').isScheduler;
+var Scheduler = require('../scheduler');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function SamplerObserver(s) {
   this._s = s;
@@ -74,7 +69,7 @@ SampleObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function sample(source, intervalOrSampler, scheduler) {
-  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   return typeof intervalOrSampler === 'number' ?
     new SampleObservable(source, interval(intervalOrSampler, scheduler)) :
     new SampleObservable(source, intervalOrSampler);

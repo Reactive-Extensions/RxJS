@@ -1350,6 +1350,16 @@ var isEqual = Rx.internals.isEqual = function (value, other) {
       return new BinaryDisposable(disposable, new LocalClearDisposable(id));
     };
 
+    function scheduleLongRunning(state, action, disposable) {
+      return function () { action(state, disposable); };
+    }
+
+    DefaultScheduler.prototype.scheduleLongRunning = function (state, action) {
+      var disposable = disposableCreate(noop);
+      scheduleMethod(scheduleLongRunning(state, action, disposable));
+      return disposable;
+    };
+
     return DefaultScheduler;
   }(Scheduler));
 
@@ -5041,7 +5051,7 @@ observableProto.zipIterable = function () {
       scheduler = immediateScheduler;
     }
     for(var args = [], i = start, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-    return enumerableOf([observableFromArray(args, scheduler), this]).concat();
+    return observableConcat.apply(null, [observableFromArray(args, scheduler), this]);
   };
 
   var TakeLastObserver = (function (__super__) {

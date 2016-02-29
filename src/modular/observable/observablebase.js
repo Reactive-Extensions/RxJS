@@ -4,15 +4,11 @@ var inherits = require('inherits');
 var isFunction = require('../helpers/isfunction');
 var errors = require('../internal/errors');
 var Observable  = require('../observable');
+var Scheduler = require('../scheduler');
 var Disposable = require('../disposable');
 var AutoDetachObserver = require('../observer/autodetachobserver');
 var tryCatchUtils = require('../internal/trycatchutils');
 var tryCatch = tryCatchUtils.tryCatch, thrower = tryCatchUtils.thrower;
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
 
 function fixSubscriber(subscriber) {
   return subscriber && isFunction(subscriber.dispose) ? subscriber :
@@ -35,8 +31,8 @@ inherits(ObservableBase, Observable);
 ObservableBase.prototype._subscribe = function (o) {
   var ado = new AutoDetachObserver(o), state = [ado, this];
 
-  if (global._Rx.currentThreadScheduler.scheduleRequired()) {
-    global._Rx.currentThreadScheduler.schedule(state, setDisposable);
+  if (Scheduler.queue.scheduleRequired()) {
+    Scheduler.queue.schedule(state, setDisposable);
   } else {
     setDisposable(null, state);
   }

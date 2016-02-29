@@ -2,13 +2,8 @@
 
 var ObservableBase = require('./observablebase');
 var BinaryDisposable = require('../binarydisposable');
-var isScheduler = require('../scheduler').isScheduler;
+var Scheduler = require('../scheduler');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function TakeUntilWithTimeObservable(source, end, scheduler) {
   this.source = source;
@@ -30,6 +25,6 @@ TakeUntilWithTimeObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function takeUntilWithTime (source, endTime, scheduler) {
-  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   return new TakeUntilWithTimeObservable(source, endTime, scheduler);
 };

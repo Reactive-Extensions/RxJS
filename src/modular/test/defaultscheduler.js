@@ -2,38 +2,34 @@
 /* jshint undef: true, unused: true */
 
 var test = require('tape');
+var Scheduler = require('../scheduler');
 
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
-
-test('default now', function (t) {
-  var res = global._Rx.defaultScheduler.now() - +new Date();
+test('Scheduler.async now', function (t) {
+  var res = Scheduler.async.now() - +new Date();
 
   t.ok(res < 1000, 'Should be near zero');
 
   t.end();
 });
 
-test('default schedule action', function (t) {
-  global._Rx.defaultScheduler.schedule(true, function (s, state) {
+test('Scheduler.async schedule action', function (t) {
+  Scheduler.async.schedule(true, function (s, state) {
     t.ok(state, 'should schedule action');
     t.end();
   });
 });
 
-test('default schedule relative', function (t) {
-  global._Rx.defaultScheduler.scheduleFuture(+new Date(), 200, function (s, startTime) {
+test('Scheduler.async schedule relative', function (t) {
+  Scheduler.async.scheduleFuture(+new Date(), 200, function (s, startTime) {
     var endTime = +new Date();
     t.ok(endTime - startTime > 180, endTime - startTime);
     t.end();
   });
 });
 
-test('default schedule action cancel', function (t) {
+test('Scheduler.async schedule action cancel', function (t) {
   var set = false;
-  var d = global._Rx.defaultScheduler.scheduleFuture(null, 200, function () { set = true; });
+  var d = Scheduler.async.scheduleFuture(null, 200, function () { set = true; });
 
   d.dispose();
 

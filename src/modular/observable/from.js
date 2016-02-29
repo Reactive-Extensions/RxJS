@@ -8,11 +8,6 @@ var bindCallback = require('../internal/bindcallback');
 var inherits = require('inherits');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
-
 var doneEnumerator = { done: true, value: undefined };
 
 function FromObservable(iterable, fn, scheduler) {
@@ -143,6 +138,6 @@ module.exports = function (iterable, mapFn, thisArg, scheduler) {
 
   var mapper;
   if (mapFn) { mapper = bindCallback(mapFn, thisArg, 2); }
-  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
   return new FromObservable(iterable, mapper, scheduler);
 };

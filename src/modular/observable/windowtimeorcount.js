@@ -7,15 +7,10 @@ var RefCountDisposable = require('../refcountdisposable');
 var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var addRef = require('../internal/addref');
-var isScheduler = require('../scheduler').isScheduler;
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
+var Scheduler = require('../scheduler');
 
 module.exports = function windowTimeOrCount (source, timeSpan, count, scheduler) {
-  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   return new AnonymousObservable(function (observer) {
     var timerD = new SerialDisposable(),
         groupDisposable = new CompositeDisposable(timerD),

@@ -2,14 +2,9 @@
 
 var just = require('./just');
 var repeat = require('./repeat');
-var isScheduler = require('../scheduler').isScheduler;
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
+var Scheduler = require('../scheduler');
 
 module.exports = function repeatValue(value, repeatCount, scheduler) {
-  isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
   return repeat(just(value, scheduler), repeatCount);
 };

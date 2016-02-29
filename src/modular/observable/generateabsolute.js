@@ -2,13 +2,8 @@
 
 var ObservableBase = require('./observablebase');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
-var isScheduler = require('../scheduler').isScheduler;
+var Scheduler = require('../scheduler');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function GenerateAbsoluteObservable(state, cndFn, itrFn, resFn, timeFn, s) {
   this._state = state;
@@ -57,6 +52,6 @@ GenerateAbsoluteObservable.prototype.subscribeCore = function (o) {
 
 
 module.exports = function generateAbsolute (initialState, condition, iterate, resultSelector, timeSelector, scheduler) {
-  isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   return new GenerateAbsoluteObservable(initialState, condition, iterate, resultSelector, timeSelector, scheduler);
 };

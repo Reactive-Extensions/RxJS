@@ -4,11 +4,6 @@ var ObservableBase = require('./observablebase');
 var Scheduler = require('../scheduler');
 var inherits = require('inherits');
 
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
-
 function scheduleMethod(o, args) {
   return function loopRecursive (i, recurse) {
     if (i < args.length) {
@@ -33,6 +28,6 @@ FromArrayObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function fromArray(array, scheduler) {
-  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
   return new FromArrayObservable(array, scheduler);
 };

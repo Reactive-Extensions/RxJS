@@ -40,7 +40,4 @@ CurrentThreadScheduler.prototype.schedule = function (state, action) {
 
 CurrentThreadScheduler.prototype.scheduleRequired = function () { return !CurrentThreadScheduler.queue; };
 
-global._Rx || (global._Rx = {});
-global._Rx.currentThreadScheduler = new CurrentThreadScheduler();
-
-Scheduler.currentThread = global._Rx.currentThreadScheduler;
+module.exports = CurrentThreadScheduler;

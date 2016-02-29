@@ -7,19 +7,11 @@ var multicast = require('./multicast');
 var Notification = require('../notification');
 var Observer = require('../observer');
 var Subject = require('../subject');
+var Scheduler = require('../scheduler');
 var Disposable = require('../disposable');
 var Scheduler = require('../scheduler');
 var addProperties = require('../internal/addproperties');
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.currentThreadScheduler) {
-  require('../scheduler/currentthreadscheduler');
-}
-
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function ControlledSubject(enableQueue, scheduler) {
   enableQueue == null && (enableQueue = true);
@@ -31,7 +23,7 @@ function ControlledSubject(enableQueue, scheduler) {
   this.error = null;
   this.hasFailed = false;
   this.hasCompleted = false;
-  this.scheduler = scheduler || global._Rx.currentThreadScheduler;
+  this.scheduler = scheduler || Scheduler.queue;
   Observable.call(this);
 }
 
@@ -131,12 +123,12 @@ ControlledObservable.prototype.request = function (numberOfItems) {
 };
 
 ControlledObservable.prototype.stopAndWait = function (scheduler) {
-  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   return new StopAndWaitObservable(this, scheduler);
 };
 
 ControlledObservable.prototype.windowed = function (windowSize, scheduler) {
-  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
   return new WindowedObservable(this, windowSize, scheduler);
 };
 

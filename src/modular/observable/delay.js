@@ -10,14 +10,9 @@ var CompositeDisposable = require('../compositedisposable');
 var SerialDisposable = require('../serialdisposable');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
 var isFunction = require('../helpers/isfunction');
-var isScheduler = require('../scheduler').isScheduler;
+var Scheduler = require('../scheduler');
 var tryCatch = require('../internal/trycatchutils').tryCatch;
 var inherits = require('inherits');
-
-global._Rx || (global._Rx = {});
-if (!global._Rx.defaultScheduler) {
-  require('../scheduler/defaultscheduler');
-}
 
 function scheduleRelative (state, recurse) {
   if (state.error) { return; }
@@ -202,7 +197,7 @@ module.exports = function delay () {
   var source = arguments[0], firstArg = arguments[1];
   if (typeof firstArg === 'number' || firstArg instanceof Date) {
     var dueTime = firstArg, scheduler = arguments[2];
-    isScheduler(scheduler) || (scheduler = global._Rx.defaultScheduler);
+    Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.async);
     return dueTime instanceof Date ?
       new DelayAbsoluteObservable(source, dueTime, scheduler) :
       new DelayRelativeObservable(source, dueTime, scheduler);

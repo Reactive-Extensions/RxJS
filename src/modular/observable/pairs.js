@@ -30,6 +30,6 @@ PairsObservable.prototype.subscribeCore = function (o) {
 };
 
 module.exports = function pairs(obj, scheduler) {
-  Scheduler.isScheduler(scheduler) || (scheduler = global._Rx.currentThreadScheduler);
+  Scheduler.isScheduler(scheduler) || (scheduler = Scheduler.queue);
   return new PairsObservable(obj, scheduler);
 };

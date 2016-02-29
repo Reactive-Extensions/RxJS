@@ -1675,6 +1675,16 @@ var isEqual = Rx.internals.isEqual = function (value, other) {
       return new BinaryDisposable(disposable, new LocalClearDisposable(id));
     };
 
+    function scheduleLongRunning(state, action, disposable) {
+      return function () { action(state, disposable); };
+    }
+
+    DefaultScheduler.prototype.scheduleLongRunning = function (state, action) {
+      var disposable = disposableCreate(noop);
+      scheduleMethod(scheduleLongRunning(state, action, disposable));
+      return disposable;
+    };
+
     return DefaultScheduler;
   }(Scheduler));
 
@@ -4762,7 +4772,7 @@ observableProto.zipIterable = function () {
       scheduler = immediateScheduler;
     }
     for(var args = [], i = start, len = arguments.length; i < len; i++) { args.push(arguments[i]); }
-    return enumerableOf([observableFromArray(args, scheduler), this]).concat();
+    return observableConcat.apply(null, [observableFromArray(args, scheduler), this]);
   };
 
   var TakeLastObserver = (function (__super__) {
@@ -6394,6 +6404,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     function PausableObservable(source, pauser) {
       this.source = source;
       this.controller = new Subject();
+      this.paused = true;
 
       if (pauser && pauser.subscribe) {
         this.pauser = this.controller.merge(pauser);
@@ -6409,7 +6420,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
         subscription = conn.subscribe(o),
         connection = disposableEmpty;
 
-      var pausable = this.pauser.distinctUntilChanged().subscribe(function (b) {
+      var pausable = this.pauser.startWith(!this.paused).distinctUntilChanged().subscribe(function (b) {
         if (b) {
           connection = conn.connect();
         } else {
@@ -6422,10 +6433,12 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     };
 
     PausableObservable.prototype.pause = function () {
+      this.paused = true;
       this.controller.onNext(false);
     };
 
     PausableObservable.prototype.resume = function () {
+      this.paused = false;
       this.controller.onNext(true);
     };
 
@@ -6499,6 +6512,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     function PausableBufferedObservable(source, pauser) {
       this.source = source;
       this.controller = new Subject();
+      this.paused = true;
 
       if (pauser && pauser.subscribe) {
         this.pauser = this.controller.merge(pauser);
@@ -6517,7 +6531,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       var subscription =
         combineLatestSource(
           this.source,
-          this.pauser.startWith(false).distinctUntilChanged(),
+          this.pauser.startWith(!this.paused).distinctUntilChanged(),
           function (data, shouldFire) {
             return { data: data, shouldFire: shouldFire };
           })
@@ -6550,10 +6564,12 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     };
 
     PausableBufferedObservable.prototype.pause = function () {
+      this.paused = true;
       this.controller.onNext(false);
     };
 
     PausableBufferedObservable.prototype.resume = function () {
+      this.paused = false;
       this.controller.onNext(true);
     };
 
@@ -6727,7 +6743,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
 
     source.subscribe(
       function (x) {
-        !dest.write(String(x)) && source.pause();
+        !dest.write(x) && source.pause();
       },
       function (err) {
         dest.emit('error', err);
