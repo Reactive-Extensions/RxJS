@@ -1,7 +1,6 @@
 'use strict';
 
 var test = require('tape');
-var MockDisposable = require('../testing/mockdisposable');
 var Observable = require('../observable');
 var TestScheduler = require('../testing/testscheduler');
 var reactiveAssert = require('../testing/reactiveassert');
@@ -70,7 +69,7 @@ test('Observable.using complete', function (t) {
   var results = scheduler.startScheduler(function () {
     return Observable.using(function () {
       disposeInvoked++;
-      disposable = new MockDisposable(scheduler);
+      disposable = scheduler.createDisposable();
       return disposable;
     }, function (d) {
       _d = d;
@@ -114,7 +113,7 @@ test('Observable.using error', function (t) {
   var results = scheduler.startScheduler(function () {
     return Observable.using(function () {
       disposeInvoked++;
-      disposable = new MockDisposable(scheduler);
+      disposable = scheduler.createDisposable();
       return disposable;
     }, function (d) {
       _d = d;
@@ -157,7 +156,7 @@ test('Observable.using dispose', function (t) {
   var results = scheduler.startScheduler(function () {
     return Observable.using(function () {
       disposeInvoked++;
-      disposable = new MockDisposable(scheduler);
+      disposable = scheduler.createDisposable();
       return disposable;
     }, function (d) {
       _d = d;
@@ -229,7 +228,7 @@ test('Observable.using throw resource usage', function (t) {
   var results = scheduler.startScheduler(function () {
     return Observable.using(function () {
       disposeInvoked++;
-      disposable = new MockDisposable(scheduler);
+      disposable = scheduler.createDisposable();
       return disposable;
     }, function () {
       createInvoked++;

@@ -131,6 +131,7 @@ PausableBufferedObserver.prototype.completed = function () {
 function PausableBufferedObservable(source, pauser) {
   this.source = source;
   this.controller = new Subject();
+  this.paused = true;
 
   if (pauser && pauser.subscribe) {
     this.pauser = merge(this.controller, pauser);
@@ -151,17 +152,19 @@ PausableBufferedObservable.prototype._subscribe = function (o) {
 
   return combineLatestSource(
       this.source,
-      distinctUntilChanged(startWith(this.pauser, false)),
+      distinctUntilChanged(startWith(this.pauser, !this.paused)),
       selectorFn)
     .subscribe(new PausableBufferedObserver(o));
 };
 
 PausableBufferedObservable.prototype.pause = function () {
   this.controller.onNext(false);
+  this.paused = true;
 };
 
 PausableBufferedObservable.prototype.resume = function () {
   this.controller.onNext(true);
+  this.paused = false;
 };
 
 module.exports = function pausableBuffered (source, pauser) {

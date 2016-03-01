@@ -10,23 +10,23 @@ var onNext = ReactiveTest.onNext,
   onCompleted = ReactiveTest.onCompleted;
 
 Observable.addToObject({
-  amb: require('../observable/amb'),
+  race: require('../observable/race'),
   never: require('../observable/never')
 });
 
 Observable.addToPrototype({
-  amb: require('../observable/amb'),
+  race: require('../observable/race'),
   tap: require('../observable/tap')
 });
 
-test('Observable.amb never 2', function (t) {
+test('Observable.race never 2', function (t) {
   var scheduler = new TestScheduler();
 
   var l = Observable.never();
   var r = Observable.never();
 
   var results = scheduler.startScheduler(function () {
-    return l.amb(r);
+    return l.race(r);
   });
 
   reactiveAssert(t, results.messages, []);
@@ -34,7 +34,7 @@ test('Observable.amb never 2', function (t) {
   t.end();
 });
 
-test('Observable.amb never 3', function (t) {
+test('Observable.race never 3', function (t) {
   var scheduler = new TestScheduler();
 
   var n1 = Observable.never();
@@ -42,7 +42,7 @@ test('Observable.amb never 3', function (t) {
   var n3 = Observable.never();
 
   var results = scheduler.startScheduler(function () {
-    return Observable.amb(n1, n2, n3);
+    return Observable.race(n1, n2, n3);
   });
 
   reactiveAssert(t, results.messages, []);
@@ -50,7 +50,7 @@ test('Observable.amb never 3', function (t) {
   t.end();
 });
 
-test('Observable.amb never empty', function (t) {
+test('Observable.race never empty', function (t) {
   var scheduler = new TestScheduler();
 
   var n = Observable.never();
@@ -60,7 +60,7 @@ test('Observable.amb never empty', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return n.amb(e);
+    return n.race(e);
   });
 
   reactiveAssert(t, results.messages, [
@@ -70,7 +70,7 @@ test('Observable.amb never empty', function (t) {
   t.end();
 });
 
-test('Observable.amb empty never', function (t) {
+test('Observable.race empty never', function (t) {
   var scheduler = new TestScheduler();
 
   var n = Observable.never();
@@ -79,7 +79,7 @@ test('Observable.amb empty never', function (t) {
     onCompleted(225));
 
   var results = scheduler.startScheduler(function () {
-    return e.amb(n);
+    return e.race(n);
   });
 
   reactiveAssert(t, results.messages, [
@@ -89,7 +89,7 @@ test('Observable.amb empty never', function (t) {
   t.end();
 });
 
-test('Observable.amb regular should dispose loser', function (t) {
+test('Observable.race regular should dispose loser', function (t) {
   var scheduler = new TestScheduler();
 
   var sourceNotDisposed = false;
@@ -106,7 +106,7 @@ test('Observable.amb regular should dispose loser', function (t) {
     onCompleted(250)).tap(function () { return sourceNotDisposed = true; });
 
   var results = scheduler.startScheduler(function () {
-    return o1.amb(o2);
+    return o1.race(o2);
   });
 
   reactiveAssert(t, results.messages, [
@@ -119,7 +119,7 @@ test('Observable.amb regular should dispose loser', function (t) {
   t.end();
 });
 
-test('Observable.amb WinnerThrows', function (t) {
+test('Observable.race WinnerThrows', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -138,7 +138,7 @@ test('Observable.amb WinnerThrows', function (t) {
     onCompleted(250)).tap(function () { return sourceNotDisposed = true; });
 
   var results = scheduler.startScheduler(function () {
-    return o1.amb(o2);
+    return o1.race(o2);
   });
 
   reactiveAssert(t, results.messages, [
@@ -151,7 +151,7 @@ test('Observable.amb WinnerThrows', function (t) {
   t.end();
 });
 
-test('Observable.amb loser throws', function (t) {
+test('Observable.race loser throws', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -170,7 +170,7 @@ test('Observable.amb loser throws', function (t) {
   );
 
   var results = scheduler.startScheduler(function () {
-    return o1.amb(o2);
+    return o1.race(o2);
   });
 
   reactiveAssert(t, results.messages, [
@@ -182,7 +182,7 @@ test('Observable.amb loser throws', function (t) {
   t.end();
 });
 
-test('Observable.amb throws before election', function (t) {
+test('Observable.race throws before election', function (t) {
   var error = new Error();
 
   var scheduler = new TestScheduler();
@@ -200,7 +200,7 @@ test('Observable.amb throws before election', function (t) {
     onCompleted(250)).tap(function () { return sourceNotDisposed = true; });
 
   var results = scheduler.startScheduler(function () {
-    return o1.amb(o2);
+    return o1.race(o2);
   });
 
   reactiveAssert(t, results.messages, [

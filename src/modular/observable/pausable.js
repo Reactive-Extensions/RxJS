@@ -4,6 +4,7 @@ var Observable = require('../observable');
 var distinctUntilChanged = require('./distinctuntilchanged');
 var merge = require('./merge');
 var publish = require('./publish');
+var startWith = require('./startwith');
 var Subject = require('../subject');
 var Disposable = require('../disposable');
 var NAryDisposable = require('../narydisposable');
@@ -29,7 +30,7 @@ PausableObservable.prototype._subscribe = function (o) {
     subscription = conn.subscribe(o),
     connection = Disposable.empty;
 
-  var pausable = distinctUntilChanged(this.pauser).subscribe(function (b) {
+  var pausable = startWith(distinctUntilChanged(this.pauser), !this.paused).subscribe(function (b) {
     if (b) {
       connection = conn.connect();
     } else {

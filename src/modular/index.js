@@ -9,7 +9,7 @@ Observer.addToObject({
 var Observable = require('./observable');
 
 Observable.addToObject({
-  amb: require('./observable/amb'),
+  race: require('./observable/race'),
   bindCallback: require('./observable/bindcallback'),
   bindNodeCallback: require('./observable/bindnodecallback'),
   case: require('./observable/case'),
@@ -50,7 +50,7 @@ Observable.addToObject({
 });
 
 Observable.addToPrototype({
-  amb: require('./observable/amb'),
+  race: require('./observable/race'),
   and: require('./observable/and'),
   asObservable: require('./observable/asobservable'),
   average: require('./observable/average'),
@@ -104,6 +104,8 @@ Observable.addToPrototype({
   onErrorResumeNext: require('./observable/onerrorresumenext'),
   pairwise: require('./observable/pairwise'),
   partition: require('./observable/partition'),
+  pausable: require('./observable/pausable'),
+  pausableBuffered: require('./observable/pausablebuffered'),
   pluck: require('./observable/pluck'),
   publish: require('./observable/publish'),
   publishLast: require('./observable/publishlast'),
@@ -164,6 +166,7 @@ Subject.addToObject({
 });
 
 var Rx = {
+  // Disposables
   BinaryDisposable: require('./binarydisposable'),
   CompositeDisposable: require('./compositedisposable'),
   Disposable: require('./disposable'),
@@ -171,15 +174,24 @@ var Rx = {
   SerialDisposable: require('./serialdisposable'),
   SingleAssignmentDisposable: require('./singleassignmentdisposable'),
 
+  // Schedulers
   Scheduler: require('./scheduler'),
+  VirtualTimeScheduler: require('./scheduler/virtualtimescheduler'),
+  HistoricalScheduler: require('./scheduler/historicalscheduler'),
 
+  // Core
   Observer: Observer,
   Observable: Observable,
 
+  // Subjects
   AsyncSubject: require('./asyncsubject'),
   BehaviorSubject: require('./behaviorsubject'),
   ReplaySubject: require('./replaysubject'),
-  Subject: Subject
+  Subject: Subject,
+
+  // Testing
+  reactiveTest: require('./testing/reactivetest'),
+  TestScheduler: require('./testing/testscheduler')
 };
 
 module.exports = Rx;
