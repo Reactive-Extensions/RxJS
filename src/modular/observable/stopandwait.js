@@ -5,7 +5,7 @@ var AbstractObserver = require('../observer/abstractobserver');
 var BinaryDisposable = require('../binarydisposable');
 var inherits = require('inherits');
 
-function StopAndWaitObserver (observer, observable, scheduler, cancel) {
+function StopAndWaitObserver(observer, observable, scheduler, cancel) {
   this.observer = observer;
   this.observable = observable;
   this.scheduler = scheduler;
@@ -13,6 +13,8 @@ function StopAndWaitObserver (observer, observable, scheduler, cancel) {
   this.scheduleDisposable = null;
   AbstractObserver.call(this);
 }
+
+inherits(StopAndWaitObserver, AbstractObserver);
 
 StopAndWaitObserver.prototype.completed = function () {
   this.observer.onCompleted();
@@ -33,7 +35,7 @@ StopAndWaitObserver.prototype.next = function (value) {
   this.scheduleDisposable = this.scheduler.schedule(this, innerScheduleMethod);
 };
 
-StopAndWaitObserver.dispose = function () {
+StopAndWaitObserver.prototype.dispose = function () {
   this.observer = null;
   if (this.cancel) {
     this.cancel.dispose();
@@ -46,7 +48,7 @@ StopAndWaitObserver.dispose = function () {
   AbstractObserver.prototype.dispose.call(this);
 };
 
-function StopAndWaitObservable (source, scheduler) {
+function StopAndWaitObservable(source, scheduler) {
   this.source = source;
   this.scheduler = scheduler;
   Observable.call(this);
