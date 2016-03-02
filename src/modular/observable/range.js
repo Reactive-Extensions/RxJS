@@ -13,6 +13,19 @@ function RangeObservable(start, count, scheduler) {
 
 inherits(RangeObservable, ObservableBase);
 
+function loopLongRunning(start, count, o) {
+  return function loop (i, cancel) {
+    while (!cancel.isDisposed && i < count) {
+      o.onNext(start + i);
+      i++;
+    }
+
+    if (!cancel.isDisposed) {
+      o.onCompleted();
+    }
+  };
+}
+
 function loopRecursive(start, count, o) {
   return function loop (i, recurse) {
     if (i < count) {
@@ -25,6 +38,13 @@ function loopRecursive(start, count, o) {
 }
 
 RangeObservable.prototype.subscribeCore = function (o) {
+  if (this.scheduler.scheduleLongRunning) {
+    return this.scheduler.scheduleLongRunning(
+      0,
+      loopLongRunning(this.start, this.rangeCount, o)
+    );
+  }
+
   return this.scheduler.scheduleRecursive(
     0,
     loopRecursive(this.start, this.rangeCount, o)

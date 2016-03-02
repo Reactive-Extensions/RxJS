@@ -135,6 +135,7 @@ Observable.addToPrototype({
   switch: require('./observable/switch'),
   switchFirst: require('./observable/switchfirst'),
   take: require('./observable/take'),
+  takeLast: require('./observable/takelast'),
   takeLastBuffer: require('./observable/takelastbuffer'),
   takeLastBufferTime: require('./observable/takelastbufferwithtime'),
   lastLastTime: require('./observable/takelastwithtime'),

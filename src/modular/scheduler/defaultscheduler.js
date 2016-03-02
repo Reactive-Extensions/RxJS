@@ -175,8 +175,8 @@ function scheduleLongRunning(state, action, disposable) {
 
 DefaultScheduler.prototype.scheduleLongRunning = function (state, action) {
   var disposable = Disposable.create(noop);
-  scheduleMethod(scheduleLongRunning(state, action, disposable));
-  return disposable;
+  var id = scheduleMethod(scheduleLongRunning(state, action, disposable));
+  return new BinaryDisposable(disposable, new ClearDisposable(clearMethod, id));
 };
 
 module.exports = DefaultScheduler;
