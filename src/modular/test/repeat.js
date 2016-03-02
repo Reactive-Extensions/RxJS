@@ -29,7 +29,7 @@ test('Observable#repeat value count zero', function (t) {
   });
 
   reactiveAssert(t, results.messages, [
-    onCompleted(200)
+    onCompleted(201)
   ]);
 
   t.end();
@@ -44,7 +44,7 @@ test('Observable#repeat value count one', function (t) {
 
   reactiveAssert(t, results.messages, [
     onNext(201, 42),
-    onCompleted(201)
+    onCompleted(202)
   ]);
 
   t.end();
@@ -68,7 +68,7 @@ test('Observable#repeat value count ten', function (t) {
     onNext(208, 42),
     onNext(209, 42),
     onNext(210, 42),
-    onCompleted(210)
+    onCompleted(211)
   ]);
 
   t.end();
@@ -121,7 +121,8 @@ test('Observable#repeat Observable basic', function (t) {
     onNext(100, 1),
     onNext(150, 2),
     onNext(200, 3),
-    onCompleted(250));
+    onCompleted(250)
+  );
 
   var results = scheduler.startScheduler(function () {
     return xs.repeat();

@@ -38,25 +38,9 @@ function loopRecursive(state, recurse) {
   }
 }
 
-function loopLongRunning(state, cancel) {
-  var o = state[0], q = state[1], n = q.length;
-  while(!cancel.isDisposed) {
-    if (n === 0) {
-      o.onCompleted();
-    } else {
-      o.onNext(q.shift());
-    }
-    n--;
-  }
-}
-
 TakeLastObserver.prototype.completed = function () {
   this._ss.dispose();
-  if (this._s.scheduleLongRunning) {
-    this._ls.setDisposable(this._s.scheduleLongRunning([this._o, this._q], loopLongRunning));
-  } else {
-    this._ls.setDisposable(this._s.scheduleRecursive([this._o, this._q], loopRecursive));
-  }
+  this._ls.setDisposable(this._s.scheduleRecursive([this._o, this._q], loopRecursive));
 };
 
 function TakeLastObservable(source, count, scheduler) {

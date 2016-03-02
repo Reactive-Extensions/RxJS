@@ -1,24 +1,8 @@
-var RxOld = require('../old/rx.lite');
-var RxNew = require('../../../dist/rx.lite');
+var RxOld = require('../../../dist/rx.lite');
+var RxNew = require('../../../src/modular/.');
 var Benchmark = require('benchmark');
 
 var suite = new Benchmark.Suite;
-
-// Backfill range to get rid of differences
-RxOld.range = function (start, count) {
-  var scheduler = RxNew.Scheduler.currentThread;
-  return new RxNew.AnonymousObservable(function (observer) {
-    return scheduler.scheduleRecursive(0, function (i, self) {
-      if (i < count) {
-        observer.onNext(start + i);
-        self(i + 1);
-      } else {
-        observer.onCompleted();
-      }
-    });
-  });
-};
-RxNew.range = RxOld.range;
 
 // add tests
 suite.add('old', function() {

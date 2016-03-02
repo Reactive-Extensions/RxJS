@@ -169,14 +169,4 @@ DefaultScheduler.prototype._scheduleFuture = function (state, dueTime, action) {
   return new BinaryDisposable(disposable, new ClearDisposable(global.clearTimeout, id));
 };
 
-function scheduleLongRunning(state, action, disposable) {
-  return function () { action(state, disposable); };
-}
-
-DefaultScheduler.prototype.scheduleLongRunning = function (state, action) {
-  var disposable = Disposable.create(noop);
-  var id = scheduleMethod(scheduleLongRunning(state, action, disposable));
-  return new BinaryDisposable(disposable, new ClearDisposable(clearMethod, id));
-};
-
 module.exports = DefaultScheduler;

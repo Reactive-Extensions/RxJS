@@ -1,5 +1,5 @@
 var RxOld = require('../old/rx.lite');
-var RxNew = require('../../../dist/rx.lite');
+var RxNew = require('../../../src/modular/.');
 var Benchmark = require('benchmark');
 
 var suite = new Benchmark.Suite;

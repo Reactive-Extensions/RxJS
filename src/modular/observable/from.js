@@ -100,7 +100,7 @@ function FromObservable(iterable, fn, scheduler) {
 
 inherits(FromObservable, ObservableBase);
 
-function createScheduleMethod(o, it, fn) {
+function scheduleRecursive(o, it, fn) {
   return function loopRecursive(i, recurse) {
     var next = tryCatch(it.next).call(it);
     if (next === errorObj) { return o.onError(next.e); }
@@ -122,7 +122,7 @@ FromObservable.prototype.subscribeCore = function (o) {
   var list = Object(this._iterable),
       it = getIterable(list);
 
-  return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
+  return this._scheduler.scheduleRecursive(0, scheduleRecursive(o, it, this._fn));
 };
 
 /**
