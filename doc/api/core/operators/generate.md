@@ -1,7 +1,7 @@
 ### `Rx.Observable.generate(initialState, condition, iterate, resultSelector, [scheduler])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/generate.js "View in source")
 
-Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
+Generates an observable sequence in a manner similar to a for loop, using an optional scheduler to enumerate the values.
 
 #### Arguments
 1. `initialState` *(`Any`)*: Initial state.
