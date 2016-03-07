@@ -1,7 +1,7 @@
 (function () {
   'use strict';
   /* jshint undef: true, unused: true */
-  /* globals QUnit, test, Rx */
+  /* globals QUnit, test, Rx, equal */
 
   QUnit.module('multicast');
 
@@ -476,6 +476,54 @@
 
     xs.subscriptions.assertEqual(
       subscribe(200, 390));
+  });
+
+  // adapted from issue Reactive-Extensions/RxJS#1112
+  test("multicast should not reconnect when stopped", function () {
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.createObserver();
+
+    var calls = 0;
+
+    function request(v) {
+      calls++;
+      return v * 2;
+    }
+
+    var xs = scheduler.createColdObservable(
+      onNext(1, 1),
+      onNext(2, 2),
+      onNext(3, 3),
+      onCompleted(4));
+
+    var c, s;
+
+    scheduler.scheduleAbsolute(null, 300, function () {
+      c = new Rx.AnonymousObservable(function (o) {
+        return xs.subscribe(
+          function (x) { o.onNext(request(x)); },
+          function (e) { o.onError(e); },
+          function () { o.onCompleted(); });
+      }).multicast(new Subject());
+      c.subscribe(results);
+      s = c.connect();
+    });
+
+    scheduler.scheduleAbsolute(null, 400, function () {
+      s.dispose();
+      c.connect();
+    });
+
+    scheduler.start();
+
+    equal(calls, 3);
+
+    results.messages.assertEqual(
+      onNext(301, 2),
+      onNext(302, 4),
+      onNext(303, 6),
+      onCompleted(304));
   });
 
 }());
