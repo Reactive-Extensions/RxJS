@@ -5452,9 +5452,17 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     }
 
     FromPromiseObservable.prototype.subscribeCore = function(o) {
-      var sad = new SingleAssignmentDisposable(), self = this;
+      var sad = new SingleAssignmentDisposable(), self = this, p = this._p;
 
-      this._p
+      if (isFunction(p)) {
+        p = tryCatch(p)();
+        if (p === errorObj) {
+          o.onError(p.e);
+          return sad;
+        }
+      }
+
+      p
         .then(function (data) {
           sad.setDisposable(self._s.schedule([o, data], scheduleNext));
         }, function (err) {

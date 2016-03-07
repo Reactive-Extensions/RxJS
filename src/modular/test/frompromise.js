@@ -1,5 +1,4 @@
-'use strict'
-/* jshint undef: true, unused: true */
+'use strict';
 
 var test = require('tape');
 var Observable = require('../observable');
@@ -15,6 +14,57 @@ require('lie/polyfill');
 
 Observable.addToObject({
   fromPromise: require('../observable/frompromise')
+});
+
+test('Observable.fromPromise factory success mock', function (t) {
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createResolvedPromise(201, 1);
+
+  var results = scheduler.startScheduler(function () {
+    return Observable.fromPromise(function () { return xs; }, scheduler);
+  });
+
+  reactiveAssert(t, results.messages, [
+    onNext(202, 1),
+    onCompleted(202)
+  ]);
+
+  t.end();
+});
+
+test('Observable.fromPromise factory failure mock', function (t) {
+  var error = new Error();
+
+  var scheduler = new TestScheduler();
+
+  var xs = scheduler.createRejectedPromise(201, error);
+
+  var results = scheduler.startScheduler(function () {
+    return Observable.fromPromise(function () { return xs; }, scheduler);
+  });
+
+  reactiveAssert(t, results.messages, [
+    onError(202, error)
+  ]);
+
+  t.end();
+});
+
+test('Observable.fromPromise factory throw', function (t) {
+  var error = new Error();
+
+  var scheduler = new TestScheduler();
+
+  var results = scheduler.startScheduler(function () {
+    return Observable.fromPromise(function () { throw error; }, scheduler);
+  });
+
+  reactiveAssert(t, results.messages, [
+    onError(200, error)
+  ]);
+
+  t.end();
 });
 
 test('Observable.fromPromise success mock', function (t) {

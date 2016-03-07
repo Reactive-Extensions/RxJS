@@ -3,6 +3,9 @@
 var ObservableBase = require('./observablebase');
 var Scheduler = require('../scheduler');
 var SingleAssignmentDisposable = require('../singleassignmentdisposable');
+var tryCatchUtils = require('../internal/trycatchutils');
+var tryCatch = tryCatchUtils.tryCatch, errorObj = tryCatchUtils.errorObj;
+var isFunction = require('../helpers/isfunction');
 var inherits = require('inherits');
 
 function FromPromiseObservable(p, s) {
@@ -25,9 +28,17 @@ function scheduleError(s, state) {
 }
 
 FromPromiseObservable.prototype.subscribeCore = function(o) {
-  var sad = new SingleAssignmentDisposable(), self = this;
+  var sad = new SingleAssignmentDisposable(), self = this, p = self._p;
 
-  this._p
+  if (isFunction(p)) {
+    p = tryCatch(p)();
+    if (p === errorObj) {
+      o.onError(p.e);
+      return sad;
+    }
+  }
+
+  p
     .then(function (data) {
       sad.setDisposable(self._s.schedule([o, data], scheduleNext));
     }, function (err) {
@@ -39,7 +50,7 @@ FromPromiseObservable.prototype.subscribeCore = function(o) {
 
 /**
 * Converts a Promise to an Observable sequence
-* @param {Promise} An ES6 Compliant promise.
+* @param {Promise|Function} An ES6 Compliant promise or a function that returns one
 * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
 */
 module.exports = function fromPromise(promise, scheduler) {

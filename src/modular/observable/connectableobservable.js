@@ -3,6 +3,7 @@
 var Observable = require('../observable');
 var ObservableBase = require('./observablebase');
 var asObservable = require('./asobservable');
+var Disposable = require('../disposable');
 var inherits = require('inherits');
 
 function RefCountDisposable(p, s) {
@@ -59,6 +60,8 @@ ConnectDisposable.prototype.dispose = function () {
 
 ConnectableObservable.prototype.connect = function () {
   if (!this._connection) {
+    if (this._subject.isStopped) { return Disposable.empty; }
+
     var subscription = this._source.subscribe(this._subject);
     this._connection = new ConnectDisposable(this, subscription);
   }

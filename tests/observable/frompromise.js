@@ -10,6 +10,51 @@
       onError = Rx.ReactiveTest.onError,
       onCompleted = Rx.ReactiveTest.onCompleted;
 
+  test('FromPromise Success Factory Mock', function () {
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createResolvedPromise(201, 1);
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.fromPromise(function () { return xs; }, scheduler);
+    });
+
+    results.messages.assertEqual(
+      onNext(202, 1),
+      onCompleted(202)
+    );
+  });
+
+  test('fromPromise Failure Mock', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var xs = scheduler.createRejectedPromise(201, error);
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.fromPromise(function () { return xs; }, scheduler);
+    });
+
+    results.messages.assertEqual(
+      onError(202, error)
+    );
+  });
+
+  test('fromPromise Failure Factory throw', function () {
+    var error = new Error();
+
+    var scheduler = new TestScheduler();
+
+    var results = scheduler.startScheduler(function () {
+      return Observable.fromPromise(function () { throw error; }, scheduler);
+    });
+
+    results.messages.assertEqual(
+      onError(200, error)
+    );
+  });
+
   test('FromPromise Success Mock', function () {
     var scheduler = new TestScheduler();
 
