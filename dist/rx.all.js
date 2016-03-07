@@ -4434,7 +4434,7 @@ observableProto.zipIterable = function () {
    * @param {Number} [skip] Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
    * @returns {Observable} An observable sequence of buffers.
    */
-  observableProto.bufferWithCount = function (count, skip) {
+  observableProto.bufferWithCount = observableProto.bufferCount = function (count, skip) {
     typeof skip !== 'number' && (skip = count);
     return this.windowWithCount(count, skip)
       .flatMap(toArray)
@@ -5199,7 +5199,7 @@ observableProto.zipIterable = function () {
    * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
    * @returns {Observable} An observable sequence of windows.
    */
-  observableProto.windowWithCount = function (count, skip) {
+  observableProto.windowWithCount = observableProto.windowCount = function (count, skip) {
     var source = this;
     +count || (count = 0);
     Math.abs(count) === Infinity && (count = 0);
@@ -5653,7 +5653,7 @@ observableProto.zipIterable = function () {
     return this.map(plucker(args, len));
   };
 
-observableProto.flatMap = observableProto.selectMany = function(selector, resultSelector, thisArg) {
+observableProto.flatMap = observableProto.selectMany = observableProto.mergeMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).mergeAll();
 };
 
@@ -5709,9 +5709,10 @@ observableProto.flatMap = observableProto.selectMany = function(selector, result
     }, source).mergeAll();
   };
 
-Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisArg) {
+observableProto.flatMapLatest = observableProto.switchMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).switchLatest();
 };
+
   var SkipObservable = (function(__super__) {
     inherits(SkipObservable, __super__);
     function SkipObservable(source, count) {
@@ -9903,7 +9904,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @param {Scheduler} [scheduler]  Scheduler to run windowing timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of windows.
    */
-  observableProto.windowWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
+  observableProto.windowWithTime = observableProto.windowTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
     var source = this, timeShift;
     timeShiftOrScheduler == null && (timeShift = timeSpan);
     isScheduler(scheduler) || (scheduler = defaultScheduler);
@@ -9983,7 +9984,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @param {Scheduler} [scheduler]  Scheduler to run windowing timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of windows.
    */
-  observableProto.windowWithTimeOrCount = function (timeSpan, count, scheduler) {
+  observableProto.windowWithTimeOrCount = observableProto.windowTimeOrCount = function (timeSpan, count, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (observer) {
@@ -10046,7 +10047,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @param {Scheduler} [scheduler]  Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of buffers.
    */
-  observableProto.bufferWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
+  observableProto.bufferWithTime = observableProto.bufferTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
     return this.windowWithTime(timeSpan, timeShiftOrScheduler, scheduler).flatMap(toArray);
   };
 
@@ -10059,7 +10060,7 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * @param {Scheduler} [scheduler]  Scheduler to run bufferin timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of buffers.
    */
-  observableProto.bufferWithTimeOrCount = function (timeSpan, count, scheduler) {
+  observableProto.bufferWithTimeOrCount = observableProto.bufferTimeOrCount = function (timeSpan, count, scheduler) {
     return this.windowWithTimeOrCount(timeSpan, count, scheduler).flatMap(toArray);
   };
 
@@ -11048,13 +11049,14 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
     return new SwitchFirstObservable(this);
   };
 
-observableProto.flatMapFirst = observableProto.selectManyFirst = function(selector, resultSelector, thisArg) {
+observableProto.flatMapFirst = observableProto.exhaustMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).switchFirst();
 };
 
-Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, resultSelector, thisArg) {
+observableProto.flatMapWithMaxConcurrent = observableProto.flatMapMaxConcurrent = function(limit, selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).merge(limit);
 };
+
   /** Provides a set of extension methods for virtual time scheduling. */
   var VirtualTimeScheduler = Rx.VirtualTimeScheduler = (function (__super__) {
     inherits(VirtualTimeScheduler, __super__);

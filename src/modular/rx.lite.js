@@ -51,6 +51,7 @@ Observable.addToPrototype({
   publish: require('./observable/publish'),
   publishLast: require('./observable/publishlast'),
   publishValue: require('./observable/publishvalue'),
+  replay: require('./observable/replay'),
   scan: require('./observable/scan'),
   share: require('./observable/share'),
   shareReplay: require('./observable/sharereplay'),
@@ -66,7 +67,26 @@ Observable.addToPrototype({
   zip: require('./observable/zip')
 });
 
+// RxJS V4 aliases
+Observable.prototype.selectMany = Observable.prototype.flatMap;
+Observable.prototype.select = Observable.prototype.map;
+Observable.prototype.where = Observable.prototype.filter;
+
+// RxJS V5 aliases
+Observable.prototype.mergeMap = Observable.prototype.flatMap;
+Observable.prototype.switchMap = Observable.prototype.flatMapLatest;
+Observable.prototype.publishReplay = Observable.prototype.replay;
+Observable.fromCallback = Observable.bindCallback;
+Observable.fromNodeCallback = Observable.bindNodeCallback;
+
+var Subject = require('./subject');
+Subject.addToObject({
+  create: require('./subject/create')
+});
+
+
 var Rx = {
+  // Disposables
   BinaryDisposable: require('./binarydisposable'),
   CompositeDisposable: require('./compositedisposable'),
   Disposable: require('./disposable'),
@@ -74,15 +94,18 @@ var Rx = {
   SerialDisposable: require('./serialdisposable'),
   SingleAssignmentDisposable: require('./singleassignmentdisposable'),
 
+  // Scheduler
   Scheduler: require('./scheduler'),
 
+  // Core
   Observer: Observer,
   Observable: Observable,
 
+  // Subjects
   AsyncSubject: require('./asyncsubject'),
   BehaviorSubject: require('./behaviorsubject'),
   ReplaySubject: require('./replaysubject'),
-  Subject: require('./subject')
+  Subject: Subject
 };
 
 module.exports = Rx;

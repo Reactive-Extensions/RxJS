@@ -7,7 +7,7 @@
    * @param {Number} [skip] Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
    * @returns {Observable} An observable sequence of buffers.
    */
-  observableProto.bufferWithCount = function (count, skip) {
+  observableProto.bufferWithCount = observableProto.bufferCount = function (count, skip) {
     typeof skip !== 'number' && (skip = count);
     return this.windowWithCount(count, skip)
       .flatMap(toArray)

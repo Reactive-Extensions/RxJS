@@ -80,7 +80,9 @@ Observable.addToPrototype({
   findIndex: require('./observable/findindex'),
   first: require('./observable/first'),
   flatMap: require('./observable/flatmap'),
+  flatMapFirst: require('./observable/flatmapfirst'),
   flatMapLatest: require('./observable/flatmaplatest'),
+  flatMapMaxConcurrent: require('./observable/flatmapmaxconcurrent'),
   forkJoin: require('./observable/forkjoin'),
   groupJoin: require('./observable/groupjoin'),
   ignoreElements: require('./observable/ignoreelements'),
@@ -160,6 +162,22 @@ Observable.addToPrototype({
   zip: require('./observable/zip'),
   zipIterable: require('./observable/zipiterable'),
 });
+
+// RxJS V4 aliases
+Observable.prototype.amb = Observable.prototype.race;
+Observable.amb = Observable.race;
+Observable.prototype.selectMany = Observable.prototype.flatMap;
+Observable.prototype.select = Observable.prototype.map;
+Observable.prototype.where = Observable.prototype.filter;
+
+// RxJS V5 aliases
+Observable.prototype.mergeMap = Observable.prototype.flatMap;
+Observable.prototype.switchMap = Observable.prototype.flatMapLatest;
+Observable.prototype.exhaustMap = Observable.prototype.flatMapFirst;
+Observable.prototype.exhaust = Observable.prototype.switchFirst;
+Observable.prototype.publishReplay = Observable.prototype.replay;
+Observable.fromCallback = Observable.bindCallback;
+Observable.fromNodeCallback = Observable.bindNodeCallback;
 
 var Subject = require('./subject');
 Subject.addToObject({

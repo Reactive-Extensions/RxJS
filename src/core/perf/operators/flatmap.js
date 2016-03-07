@@ -1,3 +1,3 @@
-observableProto.flatMap = observableProto.selectMany = function(selector, resultSelector, thisArg) {
+observableProto.flatMap = observableProto.selectMany = observableProto.mergeMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).mergeAll();
 };

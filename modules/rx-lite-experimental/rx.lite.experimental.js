@@ -578,12 +578,13 @@
     return new SwitchFirstObservable(this);
   };
 
-observableProto.flatMapFirst = observableProto.selectManyFirst = function(selector, resultSelector, thisArg) {
+observableProto.flatMapFirst = observableProto.exhaustMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).switchFirst();
 };
 
-Rx.Observable.prototype.flatMapWithMaxConcurrent = function(limit, selector, resultSelector, thisArg) {
+observableProto.flatMapWithMaxConcurrent = observableProto.flatMapMaxConcurrent = function(limit, selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).merge(limit);
 };
+
   return Rx;
 }));

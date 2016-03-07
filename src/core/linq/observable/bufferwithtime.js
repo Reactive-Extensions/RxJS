@@ -7,6 +7,6 @@
    * @param {Scheduler} [scheduler]  Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of buffers.
    */
-  observableProto.bufferWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
+  observableProto.bufferWithTime = observableProto.bufferTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
     return this.windowWithTime(timeSpan, timeShiftOrScheduler, scheduler).flatMap(toArray);
   };

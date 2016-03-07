@@ -4560,13 +4560,14 @@ observableProto.flatMapConcat = observableProto.concatMap = function(selector, r
     return this.map(plucker(args, len));
   };
 
-observableProto.flatMap = observableProto.selectMany = function(selector, resultSelector, thisArg) {
+observableProto.flatMap = observableProto.selectMany = observableProto.mergeMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).mergeAll();
 };
 
-Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisArg) {
+observableProto.flatMapLatest = observableProto.switchMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).switchLatest();
 };
+
   var SkipObservable = (function(__super__) {
     inherits(SkipObservable, __super__);
     function SkipObservable(source, count) {

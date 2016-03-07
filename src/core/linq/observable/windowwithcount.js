@@ -4,7 +4,7 @@
    * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
    * @returns {Observable} An observable sequence of windows.
    */
-  observableProto.windowWithCount = function (count, skip) {
+  observableProto.windowWithCount = observableProto.windowCount = function (count, skip) {
     var source = this;
     +count || (count = 0);
     Math.abs(count) === Infinity && (count = 0);

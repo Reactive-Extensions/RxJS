@@ -107,9 +107,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  publish: __webpack_require__(48),
 	  publishLast: __webpack_require__(80),
 	  publishValue: __webpack_require__(81),
-	  scan: __webpack_require__(83),
-	  share: __webpack_require__(84),
-	  shareReplay: __webpack_require__(85),
+	  replay: __webpack_require__(83),
+	  scan: __webpack_require__(86),
+	  share: __webpack_require__(87),
+	  shareReplay: __webpack_require__(88),
 	  shareValue: __webpack_require__(89),
 	  skip: __webpack_require__(90),
 	  skipUntil: __webpack_require__(91),
@@ -122,7 +123,25 @@ return /******/ (function(modules) { // webpackBootstrap
 	  zip: __webpack_require__(61)
 	});
 
+	// RxJS V4 aliases
+	Observable.prototype.selectMany = Observable.prototype.flatMap;
+	Observable.prototype.select = Observable.prototype.map;
+	Observable.prototype.where = Observable.prototype.filter;
+
+	// RxJS V5 aliases
+	Observable.prototype.mergeMap = Observable.prototype.flatMap;
+	Observable.prototype.switchMap = Observable.prototype.flatMapLatest;
+	Observable.prototype.publishReplay = Observable.prototype.replay;
+	Observable.fromCallback = Observable.bindCallback;
+	Observable.fromNodeCallback = Observable.bindNodeCallback;
+
+	var Subject = __webpack_require__(49);
+	Subject.addToObject({
+	  create: __webpack_require__(96)
+	});
+
 	var Rx = {
+	  // Disposables
 	  BinaryDisposable: __webpack_require__(30),
 	  CompositeDisposable: __webpack_require__(22),
 	  Disposable: __webpack_require__(12),
@@ -130,15 +149,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	  SerialDisposable: __webpack_require__(36),
 	  SingleAssignmentDisposable: __webpack_require__(19),
 
+	  // Scheduler
 	  Scheduler: __webpack_require__(21),
 
+	  // Core
 	  Observer: Observer,
 	  Observable: Observable,
 
+	  // Subjects
 	  AsyncSubject: __webpack_require__(11),
 	  BehaviorSubject: __webpack_require__(82),
-	  ReplaySubject: __webpack_require__(87),
-	  Subject: __webpack_require__(49)
+	  ReplaySubject: __webpack_require__(84),
+	  Subject: Subject
 	};
 
 	module.exports = Rx;
@@ -1212,7 +1234,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var CatchScheduler = __webpack_require__(31);
 
 	Scheduler.queue = Scheduler.currentThread = new CurrentThreadScheduler();
-	Scheduler.async = Scheduler['default'] = new DefaultScheduler();
+	Scheduler.async = Scheduler['default'] = Scheduler.timeout = new DefaultScheduler();
 	Scheduler.immediate = new ImmediateScheduler();
 
 	/**
@@ -1733,18 +1755,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return new BinaryDisposable(disposable, new ClearDisposable(global.clearTimeout, id));
 	};
 
-	function scheduleLongRunning(state, action, disposable) {
-	  return function () {
-	    action(state, disposable);
-	  };
-	}
-
-	DefaultScheduler.prototype.scheduleLongRunning = function (state, action) {
-	  var disposable = Disposable.create(noop);
-	  scheduleMethod(scheduleLongRunning(state, action, disposable));
-	  return disposable;
-	};
-
 	module.exports = DefaultScheduler;
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }()), __webpack_require__(29)))
 
@@ -2256,6 +2266,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var ObservableBase = __webpack_require__(34);
 	var Scheduler = __webpack_require__(21);
 	var SingleAssignmentDisposable = __webpack_require__(19);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
+	var isFunction = __webpack_require__(9);
 	var inherits = __webpack_require__(6);
 
 	function FromPromiseObservable(p, s) {
@@ -2281,9 +2295,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	FromPromiseObservable.prototype.subscribeCore = function (o) {
 	  var sad = new SingleAssignmentDisposable(),
-	      self = this;
+	      self = this,
+	      p = self._p;
 
-	  this._p.then(function (data) {
+	  if (isFunction(p)) {
+	    p = tryCatch(p)();
+	    if (p === errorObj) {
+	      o.onError(p.e);
+	      return sad;
+	    }
+	  }
+
+	  p.then(function (data) {
 	    sad.setDisposable(self._s.schedule([o, data], scheduleNext));
 	  }, function (err) {
 	    sad.setDisposable(self._s.schedule([o, err], scheduleError));
@@ -2294,7 +2317,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/**
 	* Converts a Promise to an Observable sequence
-	* @param {Promise} An ES6 Compliant promise.
+	* @param {Promise|Function} An ES6 Compliant promise or a function that returns one
 	* @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
 	*/
 	module.exports = function fromPromise(promise, scheduler) {
@@ -2584,7 +2607,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	inherits(FromObservable, ObservableBase);
 
-	function createScheduleMethod(o, it, fn) {
+	function scheduleRecursive(o, it, fn) {
 	  return function loopRecursive(i, recurse) {
 	    var next = tryCatch(it.next).call(it);
 	    if (next === errorObj) {
@@ -2612,7 +2635,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var list = Object(this._iterable),
 	      it = getIterable(list);
 
-	  return this._scheduler.scheduleRecursive(0, createScheduleMethod(o, it, this._fn));
+	  return this._scheduler.scheduleRecursive(0, scheduleRecursive(o, it, this._fn));
 	};
 
 	/**
@@ -2700,15 +2723,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Scheduler = __webpack_require__(21);
 	var inherits = __webpack_require__(6);
 
-	function scheduleMethod(o, args) {
-	  return function loopRecursive(i, recurse) {
-	    if (i < args.length) {
-	      o.onNext(args[i]);
-	      recurse(i + 1);
-	    } else {
-	      o.onCompleted();
-	    }
-	  };
+	function scheduleRecursive(state, recurse) {
+	  if (state.i < state.len) {
+	    state.o.onNext(state.args[state.i++]);
+	    recurse(state);
+	  } else {
+	    state.o.onCompleted();
+	  }
 	}
 
 	function FromArrayObservable(args, scheduler) {
@@ -2720,7 +2741,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	inherits(FromArrayObservable, ObservableBase);
 
 	FromArrayObservable.prototype.subscribeCore = function (o) {
-	  return this._scheduler.scheduleRecursive(0, scheduleMethod(o, this._args));
+	  var state = {
+	    i: 0,
+	    args: this._args,
+	    len: this._args.length,
+	    o: o
+	  };
+	  return this._scheduler.scheduleRecursive(state, scheduleRecursive);
 	};
 
 	module.exports = function fromArray(array, scheduler) {
@@ -3111,6 +3138,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Observable = __webpack_require__(8);
 	var ObservableBase = __webpack_require__(34);
 	var asObservable = __webpack_require__(16);
+	var Disposable = __webpack_require__(12);
 	var inherits = __webpack_require__(6);
 
 	function RefCountDisposable(p, s) {
@@ -3167,6 +3195,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	ConnectableObservable.prototype.connect = function () {
 	  if (!this._connection) {
+	    if (this._subject.isStopped) {
+	      return Disposable.empty;
+	    }
+
 	    var subscription = this._source.subscribe(this._subject);
 	    this._connection = new ConnectDisposable(this, subscription);
 	  }
@@ -5133,116 +5165,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var ObservableBase = __webpack_require__(34);
-	var AbstractObserver = __webpack_require__(5);
-	var inherits = __webpack_require__(6);
-	var tryCatchUtils = __webpack_require__(20);
-	var tryCatch = tryCatchUtils.tryCatch,
-	    errorObj = tryCatchUtils.errorObj;
-
-	function ScanObserver(o, parent) {
-	  this._o = o;
-	  this._p = parent;
-	  this._fn = parent.accumulator;
-	  this._hs = parent.hasSeed;
-	  this._s = parent.seed;
-	  this._ha = false;
-	  this._a = null;
-	  this._hv = false;
-	  this._i = 0;
-	  AbstractObserver.call(this);
-	}
-
-	inherits(ScanObserver, AbstractObserver);
-
-	ScanObserver.prototype.next = function (x) {
-	  !this._hv && (this._hv = true);
-	  if (this._ha) {
-	    this._a = tryCatch(this._fn)(this._a, x, this._i, this._p);
-	  } else {
-	    this._a = this._hs ? tryCatch(this._fn)(this._s, x, this._i, this._p) : x;
-	    this._ha = true;
-	  }
-	  if (this._a === errorObj) {
-	    return this._o.onError(this._a.e);
-	  }
-	  this._o.onNext(this._a);
-	  this._i++;
-	};
-
-	ScanObserver.prototype.error = function (e) {
-	  this._o.onError(e);
-	};
-	ScanObserver.prototype.completed = function () {
-	  !this._hv && this._hs && this._o.onNext(this._s);
-	  this._o.onCompleted();
-	};
-
-	function ScanObservable(source, accumulator, hasSeed, seed) {
-	  this.source = source;
-	  this.accumulator = accumulator;
-	  this.hasSeed = hasSeed;
-	  this.seed = seed;
-	  ObservableBase.call(this);
-	}
-
-	inherits(ScanObservable, ObservableBase);
-
-	ScanObservable.prototype.subscribeCore = function (o) {
-	  return this.source.subscribe(new ScanObserver(o, this));
-	};
-
-	/**
-	*  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
-	*  For aggregation behavior with no intermediate results, see Observable.aggregate.
-	* @param {Mixed} [seed] The initial accumulator value.
-	* @param {Function} accumulator An accumulator function to be invoked on each element.
-	* @returns {Observable} An observable sequence containing the accumulated values.
-	*/
-	module.exports = function scan() {
-	  var source = arguments[0],
-	      hasSeed = false,
-	      seed,
-	      accumulator = arguments[1];
-	  if (arguments.length === 3) {
-	    hasSeed = true;
-	    seed = arguments[2];
-	  }
-	  return new ScanObservable(source, accumulator, hasSeed, seed);
-	};
-
-/***/ },
-/* 84 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var publish = __webpack_require__(48);
-
-	module.exports = function share(source) {
-	  return publish(source).refCount();
-	};
-
-/***/ },
-/* 85 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var replay = __webpack_require__(86);
-
-	module.exports = function shareReplay(source, bufferSize, windowSize, scheduler) {
-	  return replay(source, null, bufferSize, windowSize, scheduler).refCount();
-	};
-
-/***/ },
-/* 86 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	var multicast = __webpack_require__(50);
-	var ReplaySubject = __webpack_require__(87);
+	var ReplaySubject = __webpack_require__(84);
 	var isFunction = __webpack_require__(9);
 
 	module.exports = function replay(source, selector, bufferSize, windowSize, scheduler) {
@@ -5252,7 +5176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 87 */
+/* 84 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5260,7 +5184,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Disposable = __webpack_require__(12);
 	var Observable = __webpack_require__(8);
 	var Observer = __webpack_require__(1);
-	var ScheduledObserver = __webpack_require__(88);
+	var ScheduledObserver = __webpack_require__(85);
 	var Scheduler = __webpack_require__(21);
 	var addProperties = __webpack_require__(14);
 	var cloneArray = __webpack_require__(15);
@@ -5407,7 +5331,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ReplaySubject;
 
 /***/ },
-/* 88 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5492,6 +5416,114 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = ScheduledObserver;
+
+/***/ },
+/* 86 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var ObservableBase = __webpack_require__(34);
+	var AbstractObserver = __webpack_require__(5);
+	var inherits = __webpack_require__(6);
+	var tryCatchUtils = __webpack_require__(20);
+	var tryCatch = tryCatchUtils.tryCatch,
+	    errorObj = tryCatchUtils.errorObj;
+
+	function ScanObserver(o, parent) {
+	  this._o = o;
+	  this._p = parent;
+	  this._fn = parent.accumulator;
+	  this._hs = parent.hasSeed;
+	  this._s = parent.seed;
+	  this._ha = false;
+	  this._a = null;
+	  this._hv = false;
+	  this._i = 0;
+	  AbstractObserver.call(this);
+	}
+
+	inherits(ScanObserver, AbstractObserver);
+
+	ScanObserver.prototype.next = function (x) {
+	  !this._hv && (this._hv = true);
+	  if (this._ha) {
+	    this._a = tryCatch(this._fn)(this._a, x, this._i, this._p);
+	  } else {
+	    this._a = this._hs ? tryCatch(this._fn)(this._s, x, this._i, this._p) : x;
+	    this._ha = true;
+	  }
+	  if (this._a === errorObj) {
+	    return this._o.onError(this._a.e);
+	  }
+	  this._o.onNext(this._a);
+	  this._i++;
+	};
+
+	ScanObserver.prototype.error = function (e) {
+	  this._o.onError(e);
+	};
+	ScanObserver.prototype.completed = function () {
+	  !this._hv && this._hs && this._o.onNext(this._s);
+	  this._o.onCompleted();
+	};
+
+	function ScanObservable(source, accumulator, hasSeed, seed) {
+	  this.source = source;
+	  this.accumulator = accumulator;
+	  this.hasSeed = hasSeed;
+	  this.seed = seed;
+	  ObservableBase.call(this);
+	}
+
+	inherits(ScanObservable, ObservableBase);
+
+	ScanObservable.prototype.subscribeCore = function (o) {
+	  return this.source.subscribe(new ScanObserver(o, this));
+	};
+
+	/**
+	*  Applies an accumulator function over an observable sequence and returns each intermediate result. The optional seed value is used as the initial accumulator value.
+	*  For aggregation behavior with no intermediate results, see Observable.aggregate.
+	* @param {Mixed} [seed] The initial accumulator value.
+	* @param {Function} accumulator An accumulator function to be invoked on each element.
+	* @returns {Observable} An observable sequence containing the accumulated values.
+	*/
+	module.exports = function scan() {
+	  var source = arguments[0],
+	      hasSeed = false,
+	      seed,
+	      accumulator = arguments[1];
+	  if (arguments.length === 3) {
+	    hasSeed = true;
+	    seed = arguments[2];
+	  }
+	  return new ScanObservable(source, accumulator, hasSeed, seed);
+	};
+
+/***/ },
+/* 87 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var publish = __webpack_require__(48);
+
+	module.exports = function share(source) {
+	  return publish(source).refCount();
+	};
+
+/***/ },
+/* 88 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var replay = __webpack_require__(83);
+
+	module.exports = function shareReplay(source, bufferSize, windowSize, scheduler) {
+	  return replay(source, null, bufferSize, windowSize, scheduler).refCount();
+	};
 
 /***/ },
 /* 89 */
@@ -5822,6 +5854,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	};
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
+
+/***/ },
+/* 96 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var Observable = __webpack_require__(8);
+	var Observer = __webpack_require__(1);
+	var addProperties = __webpack_require__(14);
+	var inherits = __webpack_require__(6);
+
+	function AnonymousSubject(observer, observable) {
+	  this.observer = observer;
+	  this.observable = observable;
+	  Observable.call(this);
+	}
+
+	inherits(AnonymousSubject, Observable);
+
+	addProperties(AnonymousSubject.prototype, Observer.prototype, {
+	  _subscribe: function (o) {
+	    return this.observable.subscribe(o);
+	  },
+	  onCompleted: function () {
+	    this.observer.onCompleted();
+	  },
+	  onError: function (error) {
+	    this.observer.onError(error);
+	  },
+	  onNext: function (value) {
+	    this.observer.onNext(value);
+	  }
+	});
+
+	/**
+	 * Creates a subject from the specified observer and observable.
+	 * @param {Observer} observer The observer used to send messages to the subject.
+	 * @param {Observable} observable The observable used to subscribe to messages sent from the subject.
+	 * @returns {Subject} Subject implemented using the given observer and observable.
+	 */
+	module.exports = function create(observer, observable) {
+	  return new AnonymousSubject(observer, observable);
+	};
 
 /***/ }
 /******/ ])

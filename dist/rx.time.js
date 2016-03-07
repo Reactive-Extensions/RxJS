@@ -450,7 +450,7 @@
    * @param {Scheduler} [scheduler]  Scheduler to run windowing timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of windows.
    */
-  observableProto.windowWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
+  observableProto.windowWithTime = observableProto.windowTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
     var source = this, timeShift;
     timeShiftOrScheduler == null && (timeShift = timeSpan);
     isScheduler(scheduler) || (scheduler = defaultScheduler);
@@ -530,7 +530,7 @@
    * @param {Scheduler} [scheduler]  Scheduler to run windowing timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of windows.
    */
-  observableProto.windowWithTimeOrCount = function (timeSpan, count, scheduler) {
+  observableProto.windowWithTimeOrCount = observableProto.windowTimeOrCount = function (timeSpan, count, scheduler) {
     var source = this;
     isScheduler(scheduler) || (scheduler = defaultScheduler);
     return new AnonymousObservable(function (observer) {
@@ -593,7 +593,7 @@
    * @param {Scheduler} [scheduler]  Scheduler to run buffer timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of buffers.
    */
-  observableProto.bufferWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
+  observableProto.bufferWithTime = observableProto.bufferTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
     return this.windowWithTime(timeSpan, timeShiftOrScheduler, scheduler).flatMap(toArray);
   };
 
@@ -606,7 +606,7 @@
    * @param {Scheduler} [scheduler]  Scheduler to run bufferin timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of buffers.
    */
-  observableProto.bufferWithTimeOrCount = function (timeSpan, count, scheduler) {
+  observableProto.bufferWithTimeOrCount = observableProto.bufferTimeOrCount = function (timeSpan, count, scheduler) {
     return this.windowWithTimeOrCount(timeSpan, count, scheduler).flatMap(toArray);
   };
 

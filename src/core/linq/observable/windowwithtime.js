@@ -5,7 +5,7 @@
    * @param {Scheduler} [scheduler]  Scheduler to run windowing timers on. If not specified, the timeout scheduler is used.
    * @returns {Observable} An observable sequence of windows.
    */
-  observableProto.windowWithTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
+  observableProto.windowWithTime = observableProto.windowTime = function (timeSpan, timeShiftOrScheduler, scheduler) {
     var source = this, timeShift;
     timeShiftOrScheduler == null && (timeShift = timeSpan);
     isScheduler(scheduler) || (scheduler = defaultScheduler);

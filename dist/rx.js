@@ -4388,7 +4388,7 @@ observableProto.zipIterable = function () {
    * @param {Number} [skip] Number of elements to skip between creation of consecutive buffers. If not provided, defaults to the count.
    * @returns {Observable} An observable sequence of buffers.
    */
-  observableProto.bufferWithCount = function (count, skip) {
+  observableProto.bufferWithCount = observableProto.bufferCount = function (count, skip) {
     typeof skip !== 'number' && (skip = count);
     return this.windowWithCount(count, skip)
       .flatMap(toArray)
@@ -5153,7 +5153,7 @@ observableProto.zipIterable = function () {
    * @param {Number} [skip] Number of elements to skip between creation of consecutive windows. If not specified, defaults to the count.
    * @returns {Observable} An observable sequence of windows.
    */
-  observableProto.windowWithCount = function (count, skip) {
+  observableProto.windowWithCount = observableProto.windowCount = function (count, skip) {
     var source = this;
     +count || (count = 0);
     Math.abs(count) === Infinity && (count = 0);
@@ -5514,13 +5514,14 @@ observableProto.flatMapConcat = observableProto.concatMap = function(selector, r
     }, source).mergeAll();
   };
 
-observableProto.flatMap = observableProto.selectMany = function(selector, resultSelector, thisArg) {
+observableProto.flatMap = observableProto.selectMany = observableProto.mergeMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).mergeAll();
 };
 
-Rx.Observable.prototype.flatMapLatest = function(selector, resultSelector, thisArg) {
+observableProto.flatMapLatest = observableProto.switchMap = function(selector, resultSelector, thisArg) {
     return new FlatMapObservable(this, selector, resultSelector, thisArg).switchLatest();
 };
+
   var SkipObservable = (function(__super__) {
     inherits(SkipObservable, __super__);
     function SkipObservable(source, count) {
