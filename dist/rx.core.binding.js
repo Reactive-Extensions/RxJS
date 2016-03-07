@@ -839,6 +839,9 @@
 
     ConnectableObservable.prototype.connect = function () {
       if (!this._connection) {
+        if (this._subject.isStopped) {
+          return disposableEmpty;
+        }
         var subscription = this._source.subscribe(this._subject);
         this._connection = new ConnectDisposable(this, subscription);
       }
