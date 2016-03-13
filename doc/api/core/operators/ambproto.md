@@ -55,4 +55,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/ambproto.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/ambproto.js)
+- [/tests/observable/amb.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/amb.js)
