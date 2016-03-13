@@ -2,7 +2,7 @@
 ### `Rx.Observable.prototype.map(selector, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/select.js "View in source")
 
-Projects each element of an observable sequence into a new form by incorporating the element's index.  This is an alias for the `select` method.
+Projects each element of an observable sequence into a new form by incorporating the element's index. There is an alias for this method called `map`.
 
 #### Arguments
 1. `selector` *(`Function` | `Object`)*:  Transform function to apply to each source element or an element to yield.  If selector is a function, it is called with the following information:
