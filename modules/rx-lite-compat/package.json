@@ -34,5 +34,5 @@
     "Rx",
     "RxJS"
   ],
-  "main": "rx.lite.js"
+  "main": "rx.lite.compat.js"
 }
