@@ -70,7 +70,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/do.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js)
+- [`/src/core/perf/operators/tap.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/tap.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
