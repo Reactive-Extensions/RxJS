@@ -45,7 +45,7 @@ var subscription = source.subscribe(
 // => Next: 2
 // => Completed
 
-/* Using an relatove time to delay by a second */
+/* Using an relative time to delay by a second */
 var source = Rx.Observable.range(0, 3)
   .delay(1000);
 
