@@ -7,7 +7,7 @@ Invokes an action upon graceful termination of the observable sequence.
 This method can be used for debugging, logging, etc. of query behavior by intercepting the message stream to run arbitrary actions for messages on the pipeline.
 
 #### Arguments
-1. `oncompleted` *(`Function`)*: Function to invoke upon graceful termination of the observable sequence. 
+1. `oncompleted` *(`Function`)*: Function to invoke upon graceful termination of the observable sequence.
 2. [`thisArg`] *(Any)*: Object to use as this when executing callback.
 
 #### Returns
@@ -66,7 +66,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/do.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js)
+- [`/src/core/perf/operators/tap.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/tap.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
