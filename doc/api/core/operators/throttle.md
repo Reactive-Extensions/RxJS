@@ -41,7 +41,6 @@ var subscription = source.subscribe(
   });
 
 // => Next: 0
-// => Next: 2
 // => Next: 3
 // => Completed
 ```
