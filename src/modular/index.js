@@ -68,7 +68,7 @@ Observable.addToPrototype({
   debounce: require('./observable/debounce'),
   defaultIfEmpty: require('./observable/defaultifempty'),
   delay: require('./observable/delay'),
-  delaySubscription: require('./observable/delaySubscription'),
+  delaySubscription: require('./observable/delaysubscription'),
   dematerialize: require('./observable/dematerialize'),
   distinct: require('./observable/distinct'),
   distinctUntilChanged: require('./observable/distinctuntilchanged'),
