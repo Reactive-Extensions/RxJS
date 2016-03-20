@@ -85,6 +85,7 @@ function createObserver(tag) {
 // => Next: SourceA1
 // => Next: SourceB1
 // => Completed
+// => Completed
 ```
 
 ### Location
