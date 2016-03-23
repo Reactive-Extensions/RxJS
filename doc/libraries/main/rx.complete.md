@@ -153,7 +153,7 @@ NuGet Packages:
 - [`sample`](../../api/core/operators/sample.md)
 - [`scan`](../../api/core/operators/scan.md)
 - [`select`](../../api/core/operators/select.md)
-- [`selectConcat`](../../api/core/operators/selectconcat.md)
+- [`selectConcat`](../../api/core/operators/concatmap.md)
 - [`selectMany`](../../api/core/operators/selectmany.md)
 - [`selectManyObserver`](../../api/core/operators/selectmanyobserver.md)
 - [`sequenceEqual`](../../api/core/operators/sequenceequal.md)
