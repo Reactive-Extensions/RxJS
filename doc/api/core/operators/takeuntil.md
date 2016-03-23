@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.takeUntil(other)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/modular/observable/takeuntil.js "View in source")
 
 Returns the values from the source observable sequence until the other observable sequence or Promise produces a value.
 
@@ -36,7 +36,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/takeuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takeuntil.js)
+- [`/src/core/linq/observable/takeuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/modular/observable/takeuntil.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
