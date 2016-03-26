@@ -618,7 +618,7 @@ async.parallel({
 
 #### RxJS version ####
 
-We can achieve the same functionality of `async.series` with an array by calling `Rx.Observable.forkJoin` with our array of observable sequences.  This returns the last value from each sequence in "parallel".
+We can achieve the same functionality of `async.parallel` with an array by calling `Rx.Observable.forkJoin` with our array of observable sequences.  This returns the last value from each sequence in "parallel".
 
 ```js
 var Rx = require('rx');
