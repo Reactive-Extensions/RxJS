@@ -225,6 +225,7 @@ Please check out:
     - [Percussion](https://github.com/grisendo/Percussion)
 
 - Books
+    - [RxJS in Action](https://www.manning.com/books/rxjs-in-action) 
     - [RxJS](http://xgrommx.github.io/rx-book/)
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)
