@@ -2,7 +2,7 @@
 
 When it comes to streaming data, streams can be overly chatty in which the consumer cannot keep up with the producer.  To that end, we need mechanisms to control the source so that the consumer does not get overwhelmed.  These mechanisms can come in either the form of lossy or loss-less operations, each of which depends on the requirements.  For example, if you miss a few mouse movements, it may not be a problem, however, if you miss a few bank transactions, that could be a definite problem.  This section covers which techniques you can use to handle backpressure in either lossy or loss-less ways.
 
-For example, imagine using the `zip` operator to zip together two infinite Observables, one of which emits items twice as frequently as the other. A naive implementation of the zip operator would have to maintain an ever-expanding buffer of items emitted by the faster Observable to eventually combine with items emitted by the slower one. This could cause RxJS to seize an unwieldy amount of system resources.
+For example, imagine using the [`zip`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/zip.md) operator to zip together two infinite Observables, one of which emits items twice as frequently as the other. A naive implementation of the zip operator would have to maintain an ever-expanding buffer of items emitted by the faster Observable to eventually combine with items emitted by the slower one. This could cause RxJS to seize an unwieldy amount of system resources.
 
 ## Hot and Cold Observables and Multicast ##
 
@@ -10,7 +10,7 @@ A cold Observable emits a particular sequence of items, but can begin emitting t
 
 A hot Observable begins generating items to emit immediately when it is created. Subscribers typically begin observing the sequence of items emitted by a hot Observable from somewhere in the middle of the sequence, beginning with the first item emitted by the Observable subsequent to the establishment of the subscription. Such an Observable emits items at its own pace, and it is up to its observers to keep up. Examples of items emitted by a hot Observable might include mouse & keyboard events, system events, or stock prices.
 
-When a cold Observable is multi-cast (when it is converted into a `ConnectableObservable` and its `connect` method is called), it effectively becomes hot and for the purposes of backpressure and flow-control it should be treated as a hot Observable.
+When a cold Observable is multi-cast (when it is converted into a `ConnectableObservable` and its [`connect`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/connect.md) method is called), it effectively becomes hot and for the purposes of backpressure and flow-control it should be treated as a hot Observable.
 
 Cold Observables are ideal subjects for the reactive pull model of backpressure described below. Hot observables are typically not designed to cope well with a reactive pull model, and are better candidates for some of the other flow control strategies discussed on this page, such as the use of the `pausableBuffered` or `pausable` operators, throttling, buffers, or windows.
 
