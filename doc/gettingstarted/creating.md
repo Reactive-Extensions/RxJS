@@ -169,7 +169,7 @@ You can also convert array-like objects such as objects with a length property a
 var arrayLike = { length: 5 };
 
 // Converts an array to an observable sequence
-var source = Rx.Observable.from(arrayLike, function (v, k) { return k; });
+var source = Rx.Observable.from(arrayLike, function (v, k) { return k + 1; });
 
 // Prints out each item
 var subscription = source.subscribe(
