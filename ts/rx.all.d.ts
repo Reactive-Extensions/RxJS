@@ -720,8 +720,6 @@ declare module Rx {
         * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
         */
  		    fromPromise<T>(promise: Promise<T>): Observable<T>;
-
-        prototype: any;
     }
 
     export interface Observable<T> {
@@ -4172,6 +4170,10 @@ declare module Rx {
             resultSelector: (state: TState) => TResult,
             timeSelector: (state: TState) => number,
             scheduler?: IScheduler): Observable<TResult>;
+    }
+
+    export interface ObservableStatic {
+        prototype: any;
     }
 
     export interface Observable<T> {
