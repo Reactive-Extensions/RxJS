@@ -719,7 +719,9 @@ declare module Rx {
         * @param {Promise} An ES6 Compliant promise.
         * @returns {Observable} An Observable sequence which wraps the existing promise success and failure.
         */
- 		fromPromise<T>(promise: Promise<T>): Observable<T>;
+ 		    fromPromise<T>(promise: Promise<T>): Observable<T>;
+
+        prototype: any;
     }
 
     export interface Observable<T> {
