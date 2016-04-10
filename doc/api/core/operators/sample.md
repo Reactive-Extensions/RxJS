@@ -29,8 +29,8 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
-// => Next: 3
-// => Next: 8
+// => Next: 4
+// => Next: 9
 // => Completed
 
 /* With a sampler */
@@ -49,8 +49,8 @@ var subscription = source.subscribe(
         console.log('Completed');
     });
 
-// => Next: 3
-// => Next: 8
+// => Next: 4
+// => Next: 9
 // => Completed
 ```
 
