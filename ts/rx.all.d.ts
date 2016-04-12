@@ -220,6 +220,7 @@ declare module Rx {
     }
 
     export var Observable: ObservableStatic;
+    export var ConnectableObservable: ObservableStatic;
 
     export module internals {
         export var inherits: (child: any, parent: any) => void;
