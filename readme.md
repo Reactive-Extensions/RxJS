@@ -213,7 +213,7 @@ Please check out:
 
 - Reference Material
     - [Rx Marbles](http://rxmarbles.com/)
-    - [RxJS GitBook](http://xgrommx.github.io/rx-book//)
+    - [RxJS GitBook](http://xgrommx.github.io/rx-book/)
     - [Intro to Rx](http://introtorx.com/)
     - [101 Rx Samples Wiki](http://rxwiki.wikidot.com/101samples)
     - [RxJS Design Guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines)
