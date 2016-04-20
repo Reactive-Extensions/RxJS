@@ -19,32 +19,33 @@ function isNodeList(el) {
   }
 }
 
-function ListenDisposable(e, n, fn) {
+function ListenDisposable(e, n, fn, o) {
   this._e = e;
   this._n = n;
   this._fn = fn;
-  this._e.addEventListener(this._n, this._fn, false);
+  this._opts = o || false;
+  this._e.addEventListener(this._n, this._fn, this._opts);
   this.isDisposed = false;
 }
 
 ListenDisposable.prototype.dispose = function () {
   if (!this.isDisposed) {
-    this._e.removeEventListener(this._n, this._fn, false);
+    this._e.removeEventListener(this._n, this._fn, this._opts);
     this.isDisposed = true;
   }
 };
 
-function createEventListener (el, eventName, handler) {
+function createEventListener (el, eventName, handler, optionOrCapture) {
   var disposables = new CompositeDisposable();
 
   // Asume NodeList or HTMLCollection
   var elemToString = Object.prototype.toString.call(el);
   if (isNodeList(el) || elemToString === '[object HTMLCollection]') {
     for (var i = 0, len = el.length; i < len; i++) {
-      disposables.add(createEventListener(el.item(i), eventName, handler));
+      disposables.add(createEventListener(el.item(i), eventName, handler, optionOrCapture));
     }
   } else if (el) {
-    disposables.add(new ListenDisposable(el, eventName, handler));
+    disposables.add(new ListenDisposable(el, eventName, handler, optionOrCapture));
   }
 
   return disposables;
@@ -57,10 +58,11 @@ global.Rx || (global.Rx = {});
 global.Rx.config || (global.Rx.config = {});
 global.Rx.config.useNativeEvents = false;
 
-function EventObservable(el, name, fn) {
+function EventObservable(el, name, fn, opts) {
   this._el = el;
   this._n = name;
   this._fn = fn;
+  this._opts = opts;
   ObservableBase.call(this);
 }
 
@@ -81,7 +83,8 @@ EventObservable.prototype.subscribeCore = function (o) {
   return createEventListener(
     this._el,
     this._n,
-    createHandler(o, this._fn));
+    createHandler(o, this._fn),
+    this._opts);
 };
 
 /**
@@ -89,9 +92,10 @@ EventObservable.prototype.subscribeCore = function (o) {
  * @param {Object} element The DOMElement or NodeList to attach a listener.
  * @param {String} eventName The event name to attach the observable sequence.
  * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
+ * @param {Object} options An object of EventListenerOptions 
  * @returns {Observable} An observable sequence of events from the specified element and the specified event.
  */
-module.exports = function fromEvent(element, eventName, selector) {
+module.exports = function fromEvent(element, eventName, selector, options) {
   // Node.js specific
   if (element.addListener) {
     return fromEventPattern(
@@ -111,5 +115,7 @@ module.exports = function fromEvent(element, eventName, selector) {
     }
   }
 
-  return publish(new EventObservable(element, eventName, selector)).refCount();
+  return publish(
+    new EventObservable(element, eventName, selector, options)
+  ).refCount();
 };
