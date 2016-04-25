@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.finally(action)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/finally.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/finally.js "View in source")
 
 Invokes a specified action after the source observable sequence terminates gracefully or exceptionally.  There is an alias called `finallyAction` for browsers <IE9
 
@@ -33,7 +33,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/finally.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/finally.js)
+- [`/src/core/perf/operators/finally.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/finally.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

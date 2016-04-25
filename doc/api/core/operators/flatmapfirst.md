@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.flatMapFirst(selector, [thisArg])`
 ### `Rx.Observable.prototype.selectSwitchFirst(selector, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/flatmapfirst.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/flatmapfirst.js "View in source")
 
 Transform the items emitted by an Observable into Observables, and mirror those items emitted by the most-recently transformed Observable.
 

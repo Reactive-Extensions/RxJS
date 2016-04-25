@@ -1,5 +1,5 @@
 ### `Rx.Observable.fromCallback(func, [context], [selector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/fromcallback.js "View in source")
 
 Converts a callback function to an observable sequence.
 
@@ -40,7 +40,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/fromcallback.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromcallback.js)
+- [`/src/core/perf/operators/fromcallback.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/fromcallback.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.flatMapWithMaxConcurrent(maxConcurrent, selector, [resultSelector], [thisArg])`
 ### `Rx.Observable.prototype.selectWithMaxConcurrent(maxConcurrent, selector, [resultSelector], [thisArg])`
-[&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/flatmapwithmaxconcurrent.js "View in source")
+[&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/flatmapwithmaxconcurrent.js "View in source")
 
 This is an alias for the `selectWithMaxConcurrent` method.  This can be one of the following:
 
