@@ -1,5 +1,5 @@
 ### ** DEPRECATED - Use [Rx.Observable.from](./from.md) instead** `Rx.Observable.fromArray(array, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/fromarray.js "View in source")
 
 Converts an array to an observable sequence, using an optional scheduler to enumerate the array.
 
@@ -36,7 +36,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/fromarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromarray.js)
+- [`/src/core/perf/operators/fromarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/fromarray.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
