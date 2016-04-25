@@ -1,5 +1,5 @@
 ### `Rx.Observable.from(iterable, [mapFn], [thisArg], [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/from.js 'View in source')
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/from.js 'View in source')
 
 This method creates a new Observable sequence from an array-like or iterable object.
 
@@ -124,7 +124,7 @@ Rx.Observable.from({length: 5}, function(v, k) { return k; }).subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/from.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/from.js)
+- [`/src/core/linq/observable/from.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/from.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
