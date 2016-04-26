@@ -21,12 +21,12 @@ function FakeDOMStandardElement(nodeName) {
   this.removeEventListenerCalled = false;
 }
 
-FakeDOMStandardElement.prototype.addEventListener = function (eventName, handler, useCapture) {
+FakeDOMStandardElement.prototype.addEventListener = function (eventName, handler, optionsOrCapture) {
   this.listeners[eventName] = handler;
   this.addEventListenerCalled = true;
 };
 
-FakeDOMStandardElement.prototype.removeEventListener = function (eventName, handler, useCapture) {
+FakeDOMStandardElement.prototype.removeEventListener = function (eventName, handler, optionsOrCapture) {
   delete this.listeners[eventName];
   this.removeEventListenerCalled = true;
 };
