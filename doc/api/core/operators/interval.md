@@ -8,7 +8,7 @@ Returns an observable sequence that produces a value after each period.
 2. `[scheduler]` *(Scheduler=Rx.Scheduler.timeout)*: Scheduler to run the timer on. If not specified, Rx.Scheduler.timeout is used.
 
 #### Returns
-*(`Observable`)*: An observable sequence that produces a value after each period.
+*(`Observable`)*: An observable sequence that produces a value after each period. Each value produced will default to a `Number` denoting its order in the timeline. (e.g. `0, 1, 2...`)
 
 #### Example
 ```js
