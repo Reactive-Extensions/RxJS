@@ -93,5 +93,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/fromevent-compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent-compat.js)
 - [`/tests/observable/fromevent.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent.js)

@@ -52,4 +52,4 @@ NuGet Packages:
 - [`RxJS-Async`](http://www.nuget.org/packages/RxJS-Async)
 
 Unit Tests:
-- [``/tests/observable/spawn.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/spawn.js)
+- [`/tests/observable/spawn.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/spawn.js)

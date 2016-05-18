@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.select(selector, [thisArg])`
 ### `Rx.Observable.prototype.map(selector, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/select.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/map.js "View in source")
 
 Projects each element of an observable sequence into a new form by incorporating the element's index. There is an alias for this method called `map`.
 
@@ -46,7 +46,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/select.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/select.js)
+- [`/src/core/perf/operators/map.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/map.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

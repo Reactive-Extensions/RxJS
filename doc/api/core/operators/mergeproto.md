@@ -95,6 +95,6 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/mergeproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/mergeproto.js)
+- [`/tests/observable/mergeconcat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/mergeconcat.js)
 
 * * *

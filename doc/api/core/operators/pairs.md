@@ -1,5 +1,5 @@
 ### `Rx.Observable.pairs(obj, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/pairs.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/pairs.js "View in source")
 
 Convert an object into an observable sequence of [key, value] pairs using an optional `Scheduler` to enumerate the object.
 
@@ -69,7 +69,7 @@ let subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/pairs.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/pairs.js)
+- [`/src/core/perf/operators/pairs.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/pairs.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

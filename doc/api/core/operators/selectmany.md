@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.flatMap(selector, [resultSelector])`
 ### `Rx.Observable.prototype.selectMany(selector, [resultSelector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectmany.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/flatmap.js "View in source")
 
 
 Aliases:
@@ -138,7 +138,7 @@ Rx.Observable.of(2, 3, 5).selectMany(
 ### Location
 
 File:
-- [`/src/core/linq/observable/selectmany.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/selectmany.js)
+- [`/src/core/perf/operators/flatmap.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/flatmap.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

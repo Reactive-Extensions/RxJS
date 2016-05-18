@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.concatMap(selector, [resultSelector], [thisArg])`
 ### `Rx.Observable.prototype.selectConcat(selector, [resultSelector], [thisArg])`
-[&#x24C8;]((https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmap.js "View in source")
 
 This is an alias for the `selectConcat` method.  This can be one of the following:
 
