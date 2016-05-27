@@ -13,7 +13,7 @@ Wrap the given generator `fn` into a function that returns an Observable.
 ```js
 var Rx = require('rx');
 
-var fn = Rx.Observable.wrap(function* (val) {
+var fn = Rx.Observable.wrap(function (val) {
   return yield Rx.Observable.just(val);
 });
 
