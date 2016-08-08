@@ -20,6 +20,8 @@
 
 # The Reactive Extensions for JavaScript (RxJS) <sup>4.0</sup>... #
 
+Note: RxJS v5 beta is being developed at https://github.com/ReactiveX/rxjs.
+
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
 The project is actively developed by [Microsoft](https://microsoft.com/), in collaboration with a community of open source developers.
