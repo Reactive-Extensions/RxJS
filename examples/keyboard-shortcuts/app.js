@@ -6,26 +6,26 @@ requirejs.config({
 });
 
 // Load the main app module to start the app
-requirejs(['jquery', 'shortcuts'], function($, shortcuts) {
+requirejs(['jquery', 'keyboard-shortcuts'], function($, kbShortcuts) {
 
 	var shortuctSequences = Rx.Observable
 		.fromEvent(document.querySelector("button"), 'click')
 		.map( click => document.querySelector("input").value )
-    .startWith('Ctrl+Alt+D', 'Ctrl+Shift+S', 'Trash')
-    .map( text => {
-      return {
-        id: text.replace(/\+/g,'_'),
-        text: text
-      }
-    });
+	    .startWith('Ctrl+Alt+D', 'Ctrl+Shift+S', 'Trash')
+	    .map( text => {
+	      return {
+	        id: text.replace(/\+/g,'_'),
+	        text: text
+	      }
+	    });
 
-  var validShortcuts = shortuctSequences.filter( seq => shortcuts.validate(seq.text) );
+  var validShortcuts = shortuctSequences.filter( seq => kbShortcuts.validate(seq.text) );
 
-  var invalidShortcuts = shortuctSequences.filter( seq => !shortcuts.validate(seq.text) );
+  var invalidShortcuts = shortuctSequences.filter( seq => !kbShortcuts.validate(seq.text) );
 
   var shortCutPrompts = validShortcuts
     .flatMap( obj => {
-      return shortcuts.create(obj.text)
+      return kbShortcuts.create(obj.text)
         .scan((acc, x, seed) => acc + 1, 0)
         .map( count => {
           return {
@@ -36,6 +36,9 @@ requirejs(['jquery', 'shortcuts'], function($, shortcuts) {
       }
     );
 
+
+  // Subscriptions for Side Effects
+ 
   validShortcuts.subscribe(
     seq => {
       var tmpl = '<li id="' + seq.id + '"><span>' + seq.text + ': </span><span>0</span></li>';
@@ -53,6 +56,6 @@ requirejs(['jquery', 'shortcuts'], function($, shortcuts) {
 
   shortCutPrompts.subscribe(
     obj => $('ul > li#' + obj.id + ' > span').eq(1).text(obj.count)
-	);
+  );
 
 });
