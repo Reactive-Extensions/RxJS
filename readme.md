@@ -63,7 +63,7 @@ const subscription = source
   .map(quote => quote.price)
   .subscribe(
     price => console.log(`Prices higher than $30: ${price}`),
-    err => console.log(`Something went wrong: ${err.message}`);
+    err => console.log(`Something went wrong: ${err.message}`)
   );
 
 /* When we're done */
@@ -173,7 +173,7 @@ suggestions.subscribe(
       .empty()
       .append($.map(data[1], value =>  $('<li>').text(value)))
   },
-  error=> {
+  error => {
     $results
       .empty()
       .append($('<li>'))
