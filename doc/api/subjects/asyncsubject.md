@@ -64,7 +64,7 @@ var subject = new Rx.AsyncSubject();
 subject.onNext(42);
 subject.onCompleted();
 
-var subscription = source.subscribe(
+var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
