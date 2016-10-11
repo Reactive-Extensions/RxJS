@@ -60,6 +60,16 @@ declare module Rx {
         getNext(): internals.ScheduledItem<TAbsolute>;
     }
 
+    export var VirtualTimeScheduler: {
+        /**
+         * Creates a new historical scheduler with the specified initial clock value.
+         * @constructor
+         * @param {Any} initialClock Initial value for the clock.
+         * @param {Function} comparer Comparer to determine causality of events based on absolute time.
+         */
+        new <TAbsolute, TRelative>(initialClock: TAbsolute, comparer: _Comparer<TAbsolute, TRelative>): VirtualTimeScheduler<TAbsolute, TRelative>;
+    };
+
     export interface HistoricalScheduler extends VirtualTimeScheduler<number, number> {
     }
 
