@@ -63,7 +63,7 @@ const subscription = source
   .map(quote => quote.price)
   .subscribe(
     price => console.log(`Prices higher than $30: ${price}`),
-    err => console.log(`Something went wrong: ${err.message}`);
+    err => console.log(`Something went wrong: ${err.message}`)
   );
 
 /* When we're done */
