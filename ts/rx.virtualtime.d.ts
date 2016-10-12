@@ -1,6 +1,7 @@
 declare module Rx {
 
     export interface VirtualTimeScheduler<TAbsolute, TRelative> extends IScheduler {
+        clock: TAbsolute;
         /**
          * Adds a relative time value to an absolute time value.
          * @param {Number} absolute Absolute virtual time value.
@@ -58,6 +59,19 @@ declare module Rx {
          * @returns {ScheduledItem} The next scheduled item.
          */
         getNext(): internals.ScheduledItem<TAbsolute>;
+
+        /**
+         * Schedules an action to be executed at dueTime.
+         * @param {Mixed} state State passed to the action to be executed.
+         * @param {Any} dueTime Absolute time at which to execute the action.
+         * @param {Function} action Action to be executed.
+         * @returns {Disposable} The disposable object used to cancel the scheduled action (best effort).
+         */
+        scheduleAbsolute(
+            state: any,
+            dueTime: TAbsolute,
+            action: (scheduler: VirtualTimeScheduler, state: any) => any
+        ): SingleAssignmentDisposable;
     }
 
     export var VirtualTimeScheduler: {
