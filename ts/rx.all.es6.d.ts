@@ -4858,7 +4858,7 @@ declare module Rx {
         scheduleAbsolute(
             state: any,
             dueTime: TAbsolute,
-            action: (scheduler: VirtualTimeScheduler, state: any) => any
+            action: (scheduler: VirtualTimeScheduler<TAbsolute, TRelative>, state: any) => any
         ): SingleAssignmentDisposable;
     }
 
