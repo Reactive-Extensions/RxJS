@@ -173,7 +173,7 @@ suggestions.subscribe(
       .empty()
       .append($.map(data[1], value =>  $('<li>').text(value)))
   },
-  error=> {
+  error => {
     $results
       .empty()
       .append($('<li>'))
