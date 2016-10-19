@@ -16,7 +16,7 @@ var promiseFn = function () { return Promise.resolve(42); };
 
 var source = Rx.Observable.fromPromise(promiseFn);
 
-var subscription1 = source1.subscribe(
+var subscription = source.subscribe(
   function (x) {
     console.log('Next: %s', x);
   },
