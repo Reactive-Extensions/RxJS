@@ -8,6 +8,7 @@ module Rx {
         * @returns {Observable} Returns a new Observable sequence of property values.
         */
         pluck<TResult>(prop: string): Observable<TResult>;
+        pluck<TResult>(...props: string[]): Observable<TResult>;
     }
 }
 
