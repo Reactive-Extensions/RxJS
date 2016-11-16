@@ -14,10 +14,10 @@ Returns an Observable that emits the same values as the source Observable with t
 var source = Rx.Observable.just(42)
   .repeatWhen(function(notifications) {
     return notifications.scan(
-      function (acc, x) { return acc + x; }, 0)
+      function (acc, x, i) { return acc + i; }, 0)
     .delay(200)
     .takeWhile(function (count) {
-      return count < 2;
+      return count < 1;
     });
   });
 
