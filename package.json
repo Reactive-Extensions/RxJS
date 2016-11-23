@@ -45,6 +45,7 @@
     "RxJS"
   ],
   "main": "index.js",
+  "typings": "./ts/rx.all.d.ts",
   "scripts": {
     "test": "grunt"
   }
