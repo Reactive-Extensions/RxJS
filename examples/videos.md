@@ -21,3 +21,4 @@ Below are videos either of tutorials or of presentations about RxJS
 
 - [.NET Rocks #907](http://dotnetrocks.com/default.aspx?showNum=907)
 - [JavaScript Jabber #83](http://javascriptjabber.com/083-jsj-frp-and-rxjs-with-matthew-podwysocki/)
+- [Software Engineering Daily](http://softwareengineeringdaily.com/2016/10/25/reactive-javascript-with-ben-lesh/)
