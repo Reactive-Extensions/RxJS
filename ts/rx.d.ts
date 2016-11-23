@@ -2233,7 +2233,7 @@ declare module Rx {
         * @param {Function} [comparer]  Used to compare items in the collection.
         * @returns {Observable} An observable sequence only containing the distinct elements, based on a computed key value, from the source sequence.
         */
-        distinct<TKey>(keySelector?: (value: T) => TKey, keySerializer?: (key: TKey) => string): Observable<T>;
+        distinct<TKey>(keySelector?: (value: T) => TKey, comparer?: _Comparer<TKey, boolean>): Observable<T>;
     }
 
     export interface Observable<T> {
