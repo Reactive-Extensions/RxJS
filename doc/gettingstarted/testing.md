@@ -1,6 +1,6 @@
 # Testing your Rx application #
 
-Let's face it, testing asynchronous code is a pain.  In JavaScript, with so many asynchronous things to coordinate, testing is too hard for anyone to wrap their minds around.  Luckily the Reactive Extensions for JavaScript makes this easy.
+Let's face it, testing asynchronous code is a pain.  In JavaScript, with so many asynchronous things to coordinate, testing can be tricky. We think you'll find the Reactive Extensions for JavaScript makes it easier.
 
 If you have an observable sequence that publishes values over an extended period of time, testing it in real time can be a stretch. The RxJS library provides the [`TestScheduler`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/testing/testscheduler.md) type to assist testing this kind of time-dependent code without actually waiting for time to pass. The `TestScheduler` inherits [`VirtualScheduler`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/schedulers/virtualtimescheduler.md) and allows you to create, publish and subscribe to sequences in emulated time. For example, you can compact a publication which takes 5 days to complete into a 2 minute run, while maintaining the correct scale. You can also take a sequence which actually has happened in the past (e.g., a sequence of stock ticks for a previous year) and compute or subscribe to it as if it is pushing out new values in real time.
 
