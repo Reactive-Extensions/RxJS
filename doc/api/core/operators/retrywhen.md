@@ -79,6 +79,8 @@ var subscription = source.subscribe(
 // => Next: 1
 // => Next: 0
 // => Next: 1
+// => Next: 0
+// => Next: 1
 // => Error: 'ex'
 ```
 
