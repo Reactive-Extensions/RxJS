@@ -10,7 +10,7 @@
       items = arguments[0];
     } else {
       var len = arguments.length;
-      items = new Array(items);
+      items = new Array(len);
       for(var i = 0; i < len; i++) { items[i] = arguments[i]; }
     }
     for (var i = 0, len = items.length; i < len; i++) {
