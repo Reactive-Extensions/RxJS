@@ -32,7 +32,7 @@ For coding, we have strict standards that must be adhere to when working on RxJS
 
 ## Coding Standard
 
-For RxJS, we follow the [Google JavaScript Style Guide](http://google-styleguide.googlecode.com/svn/trunk/javascriptguide.xml) and adhere to it strictly in areas such as documentation using JSDoc.  The only exception to extending native prototypes is to polyfill behavior which may not exist in all browsers yet, for example, many of the [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) are implemented in compatibility builds.  We also strictly follow [our design guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines) as well.
+For RxJS, we follow the [Google JavaScript Style Guide](http://google.github.io/styleguide/jsguide.html) and adhere to it strictly in areas such as documentation using JSDoc.  The only exception to extending native prototypes is to polyfill behavior which may not exist in all browsers yet, for example, many of the [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) are implemented in compatibility builds.  We also strictly follow [our design guidelines](https://github.com/Reactive-Extensions/RxJS/tree/master/doc/designguidelines) as well.
 
 ### Supporting Multiple Platforms
 
