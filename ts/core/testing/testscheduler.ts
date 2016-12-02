@@ -42,28 +42,12 @@ module Rx {
          * Starts the test scheduler and uses the specified virtual times to invoke the factory function, subscribe to the resulting sequence, and dispose the subscription.
          *
          * @param create Factory method to create an observable sequence.
-         * @param created Virtual time at which to invoke the factory to create an observable sequence.
-         * @param subscribed Virtual time at which to subscribe to the created observable sequence.
-         * @param disposed Virtual time at which to dispose the subscription.
+         * @param settings.created Virtual time at which to invoke the factory to create an observable sequence.
+         * @param settings.subscribed Virtual time at which to subscribe to the created observable sequence.
+         * @param settings.disposed Virtual time at which to dispose the subscription.
          * @return Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.
          */
-        startWithTiming<T>(create: () => Observable<T>, createdAt: number, subscribedAt: number, disposedAt: number): MockObserver<T>;
-        /**
-         * Starts the test scheduler and uses the specified virtual time to dispose the subscription to the sequence obtained through the factory function.
-         * Default virtual times are used for factory invocation and sequence subscription.
-         *
-         * @param create Factory method to create an observable sequence.
-         * @param disposed Virtual time at which to dispose the subscription.
-         * @return Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.
-         */
-        startWithDispose<T>(create: () => Observable<T>, disposedAt: number): MockObserver<T>;
-        /**
-         * Starts the test scheduler and uses default virtual times to invoke the factory function, to subscribe to the resulting sequence, and to dispose the subscription.
-         *
-         * @param create Factory method to create an observable sequence.
-         * @return Observer with timestamped recordings of notification messages that were received during the virtual time window when the subscription to the source sequence was active.
-         */
-        startWithCreate<T>(create: () => Observable<T>): MockObserver<T>;
+        startScheduler<T>(create: () => Observable<T>, settings?: {created?: number, subscribed?: number, disposed?: number}): MockObserver<T>;
     }
 
     export var TestScheduler: {
@@ -81,7 +65,13 @@ module Rx {
     var p : Rx.Promise<boolean> = ts.createResolvedPromise<boolean>(100, false);
     var p : Rx.Promise<boolean> = ts.createRejectedPromise<boolean>(100, false);
 
-    var ob = ts.startWithTiming<boolean>(() => Rx.Observable.create<boolean>(<any>null), 100, 200, 300);
-    var ob = ts.startWithDispose<boolean>(() => Rx.Observable.create<boolean>(<any>null), 300);
-    var ob = ts.startWithCreate<boolean>(() => Rx.Observable.create<boolean>(<any>null));
+    var ob = ts.startScheduler<boolean>(() => Rx.Observable.create<boolean>(<any>null), {
+        created: 100,
+        subscribed: 200,
+        disposed: 300
+    });
+    var ob = ts.startScheduler<boolean>(() => Rx.Observable.create<boolean>(<any>null), {
+        disposed: 300
+    });
+    var ob = ts.startScheduler<boolean>(() => Rx.Observable.create<boolean>(<any>null));
 });
