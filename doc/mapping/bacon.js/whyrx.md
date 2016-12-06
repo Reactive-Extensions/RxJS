@@ -53,7 +53,7 @@ One of the most important parts of when choosing a library is how well it works 
 RxJS, on the other hand is more flexible about binding to the libraries you use.  For example, if you use [jQuery](http://jquery.com) or [Zepto.js](http://zeptojs.com), `Rx.Observable.fromEvent` will work perfectly for you. In addition, we also support the other libraries out of the box:
 - [AngularJS](http://angularjs.org)
 - [Backbone.js](http://backbonejs.org)
-- [Ember.js](http://emberjs.org)
+- [Ember.js](http://emberjs.com)
 
 You can also override this behavior in `fromEvent` so that you use native DOM or Node.js events via the `EventEmitter` directly by setting the `Rx.config.useNativeEvents` flag to true, so that it's never in doubt which event system you are using.  When using native DOM events, you can attach a listener to one item, or you can attach listeners to a NodeList's children, we figure that out for you without you having to change your code, whereas Bacon.js does not.
 
