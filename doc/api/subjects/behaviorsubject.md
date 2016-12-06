@@ -64,7 +64,7 @@ var subject = new Rx.BehaviorSubject(56);
 
 subject.onCompleted();
 
-var subscription = source.subscribe(
+var subscription = subject.subscribe(
     function (x) {
         console.log('Next: ' + x);
     },
