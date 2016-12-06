@@ -7623,15 +7623,16 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
    * Creates an observable sequence by adding an event listener to the matching DOMElement or each item in the NodeList.
    * @param {Object} element The DOMElement or NodeList to attach a listener.
    * @param {String} eventName The event name to attach the observable sequence.
+   * @param {Object} eventListenerOptions An object describing EventListenerOptions
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
    * @returns {Observable} An observable sequence of events from the specified element and the specified event.
    */
-  Observable.fromEvent = function (element, eventName, selector) {
+  Observable.fromEvent = function (element, eventName, selector, eventListenerOptions) {
     // Node.js specific
     if (element.addListener) {
       return fromEventPattern(
-        function (h) { element.addListener(eventName, h); },
-        function (h) { element.removeListener(eventName, h); },
+        function (h) { element.addListener(eventName, h, eventListenerOptions); },
+        function (h) { element.removeListener(eventName, h, eventListenerOptions); },
         selector);
     }
 
@@ -7640,8 +7641,8 @@ Observable.fromNodeCallback = function (fn, ctx, selector) {
       // Handles jq, Angular.js, Zepto, Marionette, Ember.js
       if (typeof element.on === 'function' && typeof element.off === 'function') {
         return fromEventPattern(
-          function (h) { element.on(eventName, h); },
-          function (h) { element.off(eventName, h); },
+          function (h) { element.on(eventName, h, eventListenerOptions); },
+          function (h) { element.off(eventName, h, eventListenerOptions); },
           selector);
       }
     }

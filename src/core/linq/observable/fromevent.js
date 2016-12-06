@@ -81,7 +81,7 @@
    * @param {Function} [selector] A selector which takes the arguments from the event handler to produce a single item to yield on next.
    * @returns {Observable} An observable sequence of events from the specified element and the specified event.
    */
-  Observable.fromEvent = function (element, eventName, eventListenerOptions, selector) {
+  Observable.fromEvent = function (element, eventName, selector, eventListenerOptions) {
     // Node.js specific
     if (element.addListener) {
       return fromEventPattern(

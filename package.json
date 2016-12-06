@@ -32,7 +32,6 @@
     "grunt-contrib-concat": "*",
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",
-    "grunt-saucelabs": "*",
     "grunt-jscs": "*",
     "load-grunt-tasks": "*"
   },
