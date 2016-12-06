@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.doOnCompleted(onCompleted, [thisArg])`
 ### `Rx.Observable.prototype.tapOnCompleted(onCompleted, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/tap.js "View in source")
 
 Invokes an action upon graceful termination of the observable sequence.
 

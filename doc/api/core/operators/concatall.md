@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.concatAll()` ###
 ### `Rx.Observable.prototype.concatObservable()` **DEPRECATED** ###
-[&#x24C8;](/src/core/linq/observable/concatobservable.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatall.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatall.js "View in source")
 
 Concatenates a sequence of observable sequences or promises into a single observable sequence.
 
@@ -58,4 +58,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [/tests/observable/concatall.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatall.js)
+- [/tests/observable/concat.js](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concat.js)

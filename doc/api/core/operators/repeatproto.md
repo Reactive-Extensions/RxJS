@@ -59,4 +59,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/repeatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/repeatproto.js)
+- [`/tests/observable/repeat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/repeat.js)

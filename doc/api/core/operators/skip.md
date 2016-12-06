@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.skip(count)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skip.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/skip.js "View in source")
 
 Bypasses a specified number of elements in an observable sequence and then returns the remaining elements.
 
@@ -33,7 +33,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/skip.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skip.js)
+- [`/src/core/perf/operators/skip.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/skip.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

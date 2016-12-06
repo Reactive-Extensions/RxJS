@@ -1,5 +1,5 @@
 ### `Observable.prototype.singleInstance()`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/singleinstance.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/singleinstance.js "View in source")
 
 Returns a "cold" observable that becomes "hot" upon first subscription, and goes "cold" again when all subscriptions to it are disposed.
 
@@ -68,7 +68,7 @@ function createObserver(tag) {
 ### Location
 
 File:
-- [`/src/core/linq/observable/singleinstance.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/singleinstance.js)
+- [`/src/core/linq/observable/singleinstance.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/singleinstance.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.toArray()`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toarray.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/toarray.js "View in source")
 
 Creates a list from an observable sequence.
 
@@ -30,7 +30,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/toarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/toarray.js)
+- [`/src/core/perf/operators/toarray.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/toarray.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

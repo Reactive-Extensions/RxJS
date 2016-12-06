@@ -1,6 +1,6 @@
 ### `Rx.Observable.return(value, [scheduler])` ###
 ### `Rx.Observable.just(value, [scheduler])` ###
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/just.js "View in source")
 
 Returns an observable sequence that contains a single element, using the specified scheduler to send out observer messages.
 
@@ -35,7 +35,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/return.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/return.js)
+- [`/src/core/perf/operators/just.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/just.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

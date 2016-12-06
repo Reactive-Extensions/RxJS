@@ -1,7 +1,7 @@
 ### `Rx.Observable.throw(exception, [scheduler])`
 ### `Rx.Observable.throwError(exception, [scheduler])`
 ### `Rx.Observable.throwException(exception, [scheduler])` ** DEPRECATED **
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throw.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/throw.js "View in source")
 
 Returns an observable sequence that terminates with an exception, using the specified scheduler to send out the single onError message.
 
@@ -34,7 +34,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/linq/observable/throw.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/throw.js)
+- [/src/core/perf/operators/throw.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/throw.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

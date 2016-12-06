@@ -56,4 +56,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/catchproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/catchproto.js)
+- [`/tests/observable/catch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/catch.js)

@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.skipUntil(other)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/skipuntil.js "View in source")
 
 Returns the values from the source observable sequence only after the other observable sequence produces a value.
 
@@ -34,7 +34,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/skipuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/skipuntil.js)
+- [`/src/core/perf/operators/skipuntil.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/skipuntil.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
