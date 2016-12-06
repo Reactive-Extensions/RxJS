@@ -51,7 +51,7 @@ var subscription = source.subscribe(
 // => onCompleted
 ```
 
-This is just scatching the surface of what Promises and RxJS can do together so that we have first class single values and first class multiple values working together.
+This is just scratching the surface of what Promises and RxJS can do together so that we have first class single values and first class multiple values working together.
 
 ## Converting Promises to Observable Sequences ##
 
