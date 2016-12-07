@@ -6,7 +6,7 @@ This class inherits both from the `Rx.Observable` and `Rx.Observer` classes.
 
 ## Usage ##
 
-The follow example shows the basic usage of an Rx.Subject.
+The following example shows the basic usage of an Rx.Subject.
 
 ```js
 var subject = new Rx.Subject();
