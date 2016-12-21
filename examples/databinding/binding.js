@@ -254,8 +254,8 @@
       return disposable;
     },
     visible: function (target, context, options) {
-      return tko.utils.applyBindings(obsOrValue, function (x) {
-        target.css(x ? '' : 'none');
+      return tko.utils.applyBindings(options, function (x) {
+        target.css('display', x ? '' : 'none');
       });
     }
   };
