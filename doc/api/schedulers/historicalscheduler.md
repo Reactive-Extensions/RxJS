@@ -67,7 +67,7 @@ File:
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
 - [`rx.all.compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.compat.js)
-- [`rx.virutaltime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.virutaltime.js)
+- [`rx.virtualtime.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.virtualtime.js)
 
 NPM Packages:
 - [`rx`](https://www.npmjs.org/package/rx)
