@@ -168,13 +168,8 @@ Use this page to find the instance operator implemented by the [`Observable`](ht
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/every.md">all/every</a></td>
     </tr>
     <tr>
-        <td rowspan="2" colspan="2">I want to delay messages by a specific amount of time</td>
-        <td></td>
+        <td rowspan="1" colspan="3">I want to delay messages by a specific amount of time or based on custom logic</td>
         <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/delay.md">delay</a></td>
-    </tr>
-    <tr>
-        <td>based on custom logic</td>
-        <td><a href="https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/operators/delaywithselector.md">delayWithSelector</a></td>
     </tr>
     <tr>
         <td rowspan="11">I want to group the values</td>
