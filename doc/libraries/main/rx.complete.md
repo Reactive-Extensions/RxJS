@@ -179,7 +179,7 @@ NuGet Packages:
 - [`takeLastBufferWithTime`](../../api/core/operators/takelastbufferwithtime.md)
 - [`takeLastWithTime`](../../api/core/operators/takelastwithtime.md)
 - [`takeUntil`](../../api/core/operators/takeuntil.md)
-- [`takeUntilWithTime`](../../api/core/operators/takeuntilwithtimee.md)
+- [`takeUntilWithTime`](../../api/core/operators/takeuntilwithtime.md)
 - [`takeWhile`](../../api/core/operators/takewhile.md)
 - [`tap`](../../api/core/operators/do.md)
 - [`tapOnNext`](../../api/core/operators/doonnext.md)
