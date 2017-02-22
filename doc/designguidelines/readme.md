@@ -155,7 +155,7 @@ Reading the whole file into memory, encrypting it and writing out the whole file
 
 Instead, we rely on the fact that RxJS can produce many messages.
 
-We read the file asynchronously in blocks of 64K. This produces an observable sequence of byte arrays. We then encrypt each block separately (for this sample we assume the encryption operation can work on separate parts of the file). Once the block is encrypted, it is immediately sent further down the pipeline to be saved to the other file.  The `writeAsync` operation is an asynchronous operation that can process multiple messages.
+We read the file asynchronously in blocks of 64K. This produces an observable sequence of byte arrays. We then encrypt each block separately (for this sample we assume the encryption operation can work on separate parts of the file). Once the block is encrypted, it is immediately sent further down the pipeline to be saved to the other file.  The `appendAsync` operation is an asynchronous operation that can process multiple messages.
 
 #### When to ignore this guideline ####
 

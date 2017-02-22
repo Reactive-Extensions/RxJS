@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.filter(predicate, [thisArg])`
 ### `Rx.Observable.prototype.where(predicate, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/where.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/filter.js "View in source")
 
 Filters the elements of an observable sequence based on a predicate.
 
@@ -41,7 +41,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/where.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/where.js)
+- [`/src/core/perf/operators/filter.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/filter.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

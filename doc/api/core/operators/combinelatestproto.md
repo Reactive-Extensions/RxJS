@@ -94,4 +94,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/combinelatestproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/combinelatestproto.js)
+- [`/tests/observable/combinelatest.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/combinelatest.js)

@@ -41,6 +41,7 @@ var subscription = source.subscribe(
   });
 
 // => Next: 0
+// => Next: 2
 // => Next: 3
 // => Completed
 ```
@@ -70,4 +71,4 @@ NuGet Packages:
 - [`RxJS-Time`](http://www.nuget.org/packages/RxJS-Time/)
 
 Unit Tests:
-- [`/tests/observable/throttle.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/throttlefirst.js)
+- [`/tests/observable/throttle.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/throttle.js)

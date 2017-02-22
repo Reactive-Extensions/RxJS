@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.doOnNext(onNext, [thisArg])`
 ### `Rx.Observable.prototype.tapOnNext(onNext, [thisArg])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/do.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/tap.js "View in source")
 
 Invokes an action for each element of the observable sequence.
 

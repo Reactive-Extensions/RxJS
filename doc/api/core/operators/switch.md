@@ -1,6 +1,6 @@
 ### `Rx.Observable.prototype.switch()`
 ### `Rx.Observable.prototype.switchLatest()` *DEPRECATED*
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switchlatest.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/switch.js "View in source")
 
 Transforms an observable sequence of observable sequences into an observable sequence producing values only from the most recent observable sequence.  There is an alias for this method called `switchLatest` for browsers <IE9.
 
@@ -35,7 +35,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/switch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switch.js)
+- [`/src/core/perf/operators/switch.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/switch.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

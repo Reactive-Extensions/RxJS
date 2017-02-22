@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.switchFirst()` ##
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/exclusive.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switchfirst.js "View in source")
 
 Receives an `Observable` of `Observables` and propagates the first `Observable` exclusively until it completes before it begins subscribes to the next `Observable`.  Observables that come before the current Observable completes will be dropped and will not propagate.
 
@@ -46,7 +46,7 @@ source.exclusive().subscribe(
 #### Location
 
 File:
-- [`/src/core/linq/observable/exclusive.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/exclusive.js)
+- [`/src/core/linq/observable/switchfirst.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/switchfirst.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)
@@ -66,4 +66,4 @@ NuGet Packages:
 - [`RxJS-Experimental`](http://www.nuget.org/packages/RxJS-Experimental/)
 
 Unit Tests:
-- [`/tests/observable/exclusive.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/exclusive.js)
+- None

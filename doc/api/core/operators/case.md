@@ -5,7 +5,7 @@ Uses selector to determine which source in sources to use.  There is an alias 's
 
 ### Arguments
 1. `selector` *(`Function`)*: The function which extracts the value for to test in a case statement.
-2. `sources` *(`Object`)*: A object which has keys which correspond to the case statement labels.
+2. `sources` *(`Object`)*: An object which has keys which correspond to the case statement labels.
 3. `[elseSource|scheduler]` *(`Observable` | `Scheduler`)*: The observable sequence that will be run if the sources are not matched. If this is not provided, it defaults to `Rx.Observabe.empty` with the specified scheduler.
 
 #### Returns

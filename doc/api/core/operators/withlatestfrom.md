@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.withLatestFrom(...args, [resultSelector])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/withlatestfrom.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/withlatestfrom.js "View in source")
 
 Merges the specified observable sequences into one observable sequence by using the selector function only when the source observable sequence (the instance) produces an element. The other observables can be in the form of an argument list of observables or an array. If the result selector is omitted, a list with the elements will be yielded.
 
@@ -45,7 +45,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/withlatestfrom.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/withlatestfrom.js)
+- [`/src/core/perf/operators/withlatestfrom.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/withlatestfrom.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

@@ -1,5 +1,5 @@
 ### `Rx.Observable.range(start, count, [scheduler])`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/range.js "View in source")
 
 Generates an observable sequence of integral numbers within a specified range, using the specified scheduler to send out observer messages.
 
@@ -35,7 +35,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/linq/observable/range.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/range.js)
+- [/src/core/perf/operators/range.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/range.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

@@ -73,4 +73,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/concatproto.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concatproto.js)
+- [`/tests/observable/concat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/concat.js)

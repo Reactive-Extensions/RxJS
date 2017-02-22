@@ -1,4 +1,4 @@
-### `Rx.Observable.fromEvent(element, eventName, [selector])`
+### `Rx.Observable.fromEvent(element, eventName, [selector], [options])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/fromevent.js "View in source")
 
 Creates an observable sequence by adding an event listener to the matching DOMElement, jQuery element, Zepto Element, Angular element, Ember.js element or EventEmitter.
@@ -93,5 +93,4 @@ NuGet Packages:
 - [`RxJS-Lite`](http://www.nuget.org/packages/RxJS-Lite/)
 
 Unit Tests:
-- [`/tests/observable/fromevent-compat.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent-compat.js)
 - [`/tests/observable/fromevent.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/tests/observable/fromevent.js)

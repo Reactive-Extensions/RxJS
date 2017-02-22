@@ -1,5 +1,5 @@
 ### `Rx.Observable.never()`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/never.js "View in source")
 
 Returns a non-terminating observable sequence, which can be used to denote an infinite duration (e.g. when using reactive joins).
 
@@ -26,7 +26,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [/src/core/linq/observable/never.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/never.js)
+- [/src/core/perf/operators/never.js](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/never.js)
 
 Dist:
 - [`rx.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.js)

@@ -1,5 +1,5 @@
 ### `Rx.Observable.fromPromise(promise)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/frompromise.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/frompromise.js "View in source")
 
 Converts a Promises/A+ spec compliant Promise and/or ES2015 compliant Promise or a factory function which returns said Promise to an Observable sequence.
 
@@ -16,7 +16,7 @@ var promiseFn = function () { return Promise.resolve(42); };
 
 var source = Rx.Observable.fromPromise(promiseFn);
 
-var subscription1 = source1.subscribe(
+var subscription = source.subscribe(
   function (x) {
     console.log('Next: %s', x);
   },

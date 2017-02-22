@@ -1,5 +1,5 @@
 ### `Rx.Observable.ofWithScheduler([scheduler], ...args)`
-[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/of.js "View in source")
+[&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/of.js "View in source")
 
 Converts arguments to an observable sequence, using an optional scheduler to enumerate the arguments.
 
@@ -34,7 +34,7 @@ var subscription = source.subscribe(
 ### Location
 
 File:
-- [`/src/core/linq/observable/of.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/of.js)
+- [`/src/core/perf/operators/of.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/of.js)
 
 Dist:
 - [`rx.all.js`](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.all.js)

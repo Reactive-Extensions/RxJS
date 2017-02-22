@@ -1,7 +1,7 @@
 ### `Rx.HistoricalScheduler` class
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/concurrency/historicalscheduler.js "View in source")
 
-Provides a virtual time scheduler that uses a `Date` for absolute time and time spans for relative time.  This inherits from the `Rx.VirtualTimeScheduler` class.
+Provides a virtual time scheduler that uses an optional `Date` for absolute time and time spans for relative time.  This inherits from the `Rx.VirtualTimeScheduler` class.
 
 ## Usage ##
 

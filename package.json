@@ -32,7 +32,6 @@
     "grunt-contrib-concat": "*",
     "grunt-contrib-qunit": "*",
     "grunt-contrib-watch": "*",
-    "grunt-saucelabs": "*",
     "grunt-jscs": "*",
     "load-grunt-tasks": "*"
   },
@@ -45,6 +44,7 @@
     "RxJS"
   ],
   "main": "index.js",
+  "typings": "./ts/rx.all.d.ts",
   "scripts": {
     "test": "grunt"
   }

@@ -31,7 +31,7 @@ NuGet Dependencies:
 - [`while`](../../api/core/operators/while.md)
 
 ### `Observable Instance Methods`
-- [`doWhile`](/api/core/operators/dowhile.md)
+- [`doWhile`](../../api/core/operators/dowhile.md)
 - [`expand`](../../api/core/operators/expand.md)
 - [`extend`](../../api/core/operators/manyselect.md)
 - [`flatMapFirst`](../../api/core/operators/flatmapfirst.md)
