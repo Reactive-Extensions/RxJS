@@ -250,7 +250,7 @@ cd ./rxjs
 
 ### Installing with [NPM](https://www.npmjs.com/)
 
-```bash`
+```bash
 $ npm install rx
 $ npm install -g rx
 ```
