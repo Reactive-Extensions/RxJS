@@ -1,5 +1,5 @@
 ### `Rx.Observable.prototype.delay(dueTime, [scheduler])`
-### `Rx.Observable.prototype.delay([subscriptionDelay], delayDurationSelector`
+### `Rx.Observable.prototype.delay([subscriptionDelay], delayDurationSelector)`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/delay.js "View in source")
 
 Time shifts the observable sequence by dueTime. The relative time intervals between the values are preserved.
