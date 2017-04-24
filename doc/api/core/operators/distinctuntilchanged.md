@@ -66,7 +66,7 @@ var subscription = source.subscribe(
     });
 
 // => Next: { value: 42 }
-// => Next: { value: 42 }
+// => Next: { value: 24 }
 // => Completed
 ```
 
