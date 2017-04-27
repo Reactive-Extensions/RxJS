@@ -114,7 +114,7 @@ This set of libraries include:
 
 One question you may ask yourself is why RxJS?  What about Promises?  Promises are good for solving asynchronous operations such as querying a service with an XMLHttpRequest, where the expected behavior is one value and then completion.  Reactive Extensions for JavaScript unify both the world of Promises, callbacks as well as evented data such as DOM Input, Web Workers, and Web Sockets. Unifying these concepts enables rich composition.
 
-To give you an idea about rich composition, we can create an autocompletion service which takes user input from a text input and then throttles queries a service (to avoid flooding the service with calls for every key stroke).
+To give you an idea about rich composition, we can create an autocompletion service which takes user input from a text input and then throttles queries to a service (to avoid flooding the service with calls for every key stroke).
 
 First, we'll reference the JavaScript files, including jQuery, although RxJS has no dependencies on jQuery...
 ```html
