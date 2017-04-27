@@ -41,7 +41,7 @@ subject.onCompleted();
 
 ## `BehaviorSubject Instance Methods` ##
 - [`dispose`](#rxbehaviorsubjectprototypedispose)
-- [`getValue`] (#rxbehaviorsubjectprototypegetvalue)
+- [`getValue`](#rxbehaviorsubjectprototypegetvalue)
 - [`hasObservers`](#rxbehaviorsubjectprototypehasobservers)
 
 ## Inherited Classes ##
