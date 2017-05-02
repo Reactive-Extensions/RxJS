@@ -14,7 +14,7 @@
       subscribe = Rx.ReactiveTest.subscribe;
 
   test('zip n-ary symmetric', function () {
-    var scheduler = new TestScheduler();
+    var scheduler = new TestScheduler(); 
 
     var e0 = scheduler.createHotObservable(
       onNext(150, 1),
@@ -41,19 +41,19 @@
     res.messages.assertEqual(
       onNext(230, [1, 2, 3]),
       onNext(260, [4, 5, 6]),
-      onCompleted(420)
+      onCompleted(400)
     );
 
     e0.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
 
     e1.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
 
     e2.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
   });
 
@@ -85,19 +85,19 @@
     res.messages.assertEqual(
       onNext(230, [1, 2, 3]),
       onNext(260, [4, 5, 6]),
-      onCompleted(420)
+      onCompleted(400)
     );
 
     e0.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
 
     e1.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
 
     e2.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
   });
 
@@ -129,19 +129,19 @@
     res.messages.assertEqual(
       onNext(230, [1, 2, 3]),
       onNext(260, [4, 5, 6]),
-      onCompleted(420)
+      onCompleted(400)
     );
 
     e0.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
 
     e1.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
 
     e2.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
   });
 
@@ -173,19 +173,19 @@
     res.messages.assertEqual(
       onNext(230, [1, 2, 3]),
       onNext(260, [4, 5, 6]),
-      onCompleted(420)
+      onCompleted(400)
     );
 
     e0.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
 
     e1.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
 
     e2.subscriptions.assertEqual(
-      subscribe(200, 420)
+      subscribe(200, 400)
     );
   });
 
@@ -215,7 +215,9 @@
       return o1.zip(o2, add);
     });
 
-    results.messages.assertEqual();
+    results.messages.assertEqual(
+      onCompleted(210)
+    );
   });
 
   test('zip empty empty', function () {
@@ -257,7 +259,7 @@
     });
 
     results.messages.assertEqual(
-      onCompleted(215)
+      onCompleted(210)
     );
   });
 
@@ -279,7 +281,7 @@
     });
 
     results.messages.assertEqual(
-      onCompleted(215)
+      onCompleted(210)
     );
   });
 
@@ -337,7 +339,7 @@
 
     results.messages.assertEqual(
       onNext(220, 2 + 3),
-      onCompleted(240)
+      onCompleted(230)
     );
   });
 
@@ -667,15 +669,15 @@
 
     res.messages.assertEqual(
       onNext(215, 6),
-      onCompleted(225)
+      onCompleted(220)
     );
 
     o.subscriptions.assertEqual(
-      subscribe(200, 225)
+      subscribe(200, 220)
     );
 
     e.subscriptions.assertEqual(
-      subscribe(200, 225)
+      subscribe(200, 220)
     );
   });
 

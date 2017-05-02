@@ -1,6 +1,5 @@
   function falseFactory() { return false; }
   function emptyArrayFactory() { return []; }
-
   var ZipObservable = (function(__super__) {
     inherits(ZipObservable, __super__);
     function ZipObservable(sources, resultSelector) {
@@ -41,10 +40,18 @@
 
     function notEmpty(x) { return x.length > 0; }
     function shiftEach(x) { return x.shift(); }
+    function emptyAndDone(qd) { return qd[0].length == 0 && qd[1] === true; }
+    
     function notTheSame(i) {
       return function (x, j) {
         return j !== i;
       };
+    }
+    function zip(arrays) {
+      return arrays[0].map(function(_,i) {
+          return arrays.map(function(array) { return array[i]; })
+        }
+      );
     }
 
     ZipObserver.prototype.next = function (x) {
@@ -54,8 +61,11 @@
         var res = tryCatch(this._p._cb).apply(null, queuedValues);
         if (res === errorObj) { return this._o.onError(res.e); }
         this._o.onNext(res);
-      } else if (this._d.filter(notTheSame(this._i)).every(identity)) {
-        this._o.onCompleted();
+        
+        // Any done and empty => zip completed.
+        if (zip([this._q, this._d]).some(emptyAndDone)) {
+          this._o.onCompleted();
+        }
       }
     };
 
@@ -64,8 +74,10 @@
     };
 
     ZipObserver.prototype.completed = function () {
-      this._d[this._i] = true;
-      this._d.every(identity) && this._o.onCompleted();
+      this._d[this._i] = true; // Done...
+      if (this._q[this._i].length == 0) { //  ...and empty => zip completed.
+        this._o.onCompleted();
+      }
     };
 
     return ZipObserver;
