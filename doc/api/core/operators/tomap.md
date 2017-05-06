@@ -19,7 +19,7 @@ var source = Rx.Observable.timer(0, 1000)
 var subscription = source.subscribe(
     function (x) {
         var arr = [];
-        x.forEach(function (value, key) { arr.push(value, key); })
+        x.forEach(function (value, key) { arr.push(key, value); })
         console.log('Next: ' + arr);
     },
     function (err) {
