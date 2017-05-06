@@ -22,7 +22,6 @@ var subscription = subject.subscribe(
     function () {
         console.log('Completed');
     });
-
 // => Next: 42
 
 subject.onNext(56);
@@ -60,9 +59,9 @@ Initializes a new instance of the `Rx.BehaviorSubject` class which creates a sub
 
 #### Example
 ```js
-var subject = new Rx.BehaviorSubject(56);
+var subject = new Rx.BehaviorSubject(4);
 
-subject.onCompleted();
+subject.onNext(56);
 
 var subscription = subject.subscribe(
     function (x) {
@@ -74,7 +73,6 @@ var subscription = subject.subscribe(
     function () {
         console.log('Completed');
     });
-
 // => Next: 56
 
 subject.onNext(42);
@@ -103,7 +101,7 @@ var subject = new Rx.BehaviorSubject();
 
 var subscription = subject.subscribe(
     function (x) {
-        console.log('Next: ' + x.toString());
+        console.log('Next: ' + x);
     },
     function (err) {
         console.log('Error: ' + err);
@@ -111,6 +109,7 @@ var subscription = subject.subscribe(
     function () {
         console.log('Completed');
     });
+// => Next: undefined
 
 subject.onNext(42);
 // => Next: 42
@@ -125,7 +124,6 @@ try {
 } catch (e) {
 	console.log(e.message);
 }
-
 // => Object has been disposed
 ```
 
@@ -198,12 +196,11 @@ Indicates whether the subject has observers subscribed to it.
 var subject = new Rx.BehaviorSubject();
 
 console.log(subject.hasObservers());
-
 // => false
 
 var subscription = subject.subscribe(
     function (x) {
-        console.log('Next: ' + x.toString());
+        console.log('Next: ' + x);
     },
     function (err) {
         console.log('Error: ' + err);
@@ -211,9 +208,9 @@ var subscription = subject.subscribe(
     function () {
         console.log('Completed');
     });
+// => Next: undefined
 
 console.log(subject.hasObservers());
-
 // => true
 ```
 
