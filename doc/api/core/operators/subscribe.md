@@ -44,6 +44,7 @@ var subscription = source.subscribe(observer);
 // => Next: 0
 // => Next: 1
 // => Next: 2
+// => Completed
 
 /* Using functions */
 var source = Rx.Observable.range(0, 3)
@@ -62,6 +63,7 @@ var subscription = source.subscribe(
 // => Next: 0
 // => Next: 1
 // => Next: 2
+// => Completed
 ```
 
 ### Location
