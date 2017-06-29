@@ -4,8 +4,8 @@
     var dragTarget = document.getElementById('dragTarget');
 
     // Get the three major events
-    var mouseup   = Rx.Observable.fromEvent(dragTarget, 'mouseup');
-    var mousemove = Rx.Observable.fromEvent(document,   'mousemove');
+    var mouseup   = Rx.Observable.fromEvent(document, 'mouseup');
+    var mousemove = Rx.Observable.fromEvent(document, 'mousemove');
     var mousedown = Rx.Observable.fromEvent(dragTarget, 'mousedown');
 
     var mousedrag = mousedown.flatMap(function (md) {
