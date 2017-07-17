@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS Main Module #
 
 The Reactive Extensions for JavaScript's main functionality is in the main RxJS file which has many core components including the Schedulers, Disposables, Observable and Observer.

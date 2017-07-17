@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Exploring The Major Concepts in RxJS #
 
 This topic describes the major Reactive Extensions for JavaScript (Rx) objects used to represent observable sequences and subscribe to them.

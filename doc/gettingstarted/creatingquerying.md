@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Creating and Querying Observable Sequences #
 
 This section describes how you can create and subscribe to an observable sequence, convert an existing JavaScript event and query it.

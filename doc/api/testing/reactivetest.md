@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.ReactiveTest` class #
 
 This class contains test utility methods such as create notifications for testing purposes.

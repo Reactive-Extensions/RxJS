@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # How do I create a custom event emitter? #
 
 Publish/Subscribe is a common pattern within JavaScript applications.  The idea is that you have a publisher that emits events and you have consumers which register their interest in a given event.  Typically you may see something like the following where you listen for a 'data' event and then the event emitter publishes data to it.

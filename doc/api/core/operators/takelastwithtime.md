@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### `Rx.Observable.prototype.takeLastWithTime(duration, [timeScheduler], [loopScheduler])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/takelastwithtime.js "View in source")
 

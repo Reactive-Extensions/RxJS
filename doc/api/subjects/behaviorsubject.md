@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.BehaviorSubject` class #
 
 Represents a value that changes over time.  Observers can subscribe to the subject to receive the last (or initial) value and all subsequent notifications. If you are looking for BehaviorSubject without initial value see [`Rx.ReplaySubject`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/replaysubject.md).

@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS Testing Module #
 
 The Reactive Extensions for JavaScript has a built-in mechanism for testing all operators which allows for mocking absolute and relative time with ease.

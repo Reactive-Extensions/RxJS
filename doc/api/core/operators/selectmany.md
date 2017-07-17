@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### `Rx.Observable.prototype.flatMap(selector, [resultSelector])`
 ### `Rx.Observable.prototype.selectMany(selector, [resultSelector])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/flatmap.js "View in source")

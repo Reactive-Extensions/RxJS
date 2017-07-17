@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.Recorded` class #
 
 Record of a value including the virtual time it was produced on.

@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### `Rx.Observable.prototype.debounce(dueTime, [scheduler])` ###
 ### `Rx.Observable.prototype.debounce(durationSelector)` ###
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/debounce.js "View in source")

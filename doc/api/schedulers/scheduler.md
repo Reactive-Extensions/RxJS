@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.Scheduler` class #
 
 Provides a set of static methods to access commonly used schedulers and a base class for all schedulers.

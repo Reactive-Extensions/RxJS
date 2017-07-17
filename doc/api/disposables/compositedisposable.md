@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.CompositeDisposable` class #
 
 Represents a group of disposable resources that are disposed together.

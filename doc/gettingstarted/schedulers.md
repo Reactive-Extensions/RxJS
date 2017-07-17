@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Using Schedulers #
 
 A scheduler controls when a subscription starts and when notifications are published. It consists of three components. It is first a data structure. When you schedule for tasks to be completed, they are put into the scheduler for queueing based on priority or other criteria. It also offers an execution context which denotes where the task is executed (e.g. immediately, in the current thread, or in another callback mechanism such as `setTimeout` or `process.nextTick`). Lastly, it has a clock which provides a notion of time for itself (by accessing the `now` method of a scheduler). Tasks being scheduled on a particular scheduler will adhere to the time denoted by that clock only.

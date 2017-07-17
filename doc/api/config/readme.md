@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Reactive Extensions Configuration #
 
 Configuration information for the Reactive Extensions for JavaScript

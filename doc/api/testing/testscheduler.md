@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.TestScheduler` class #
 
 Virtual time scheduler used for testing applications and libraries built using Reactive Extensions.  This inherits from the `Rx.VirtualTimeScheduler` class.

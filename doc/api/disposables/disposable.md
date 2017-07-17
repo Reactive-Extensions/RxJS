@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.Disposable` class #
 
 Provides a set of static methods for creating Disposables, which defines a method to release allocated resources.

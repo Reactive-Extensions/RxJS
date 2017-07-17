@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.Subscription` class #
 
 Records information about subscriptions to and unsubscriptions from observable sequences.

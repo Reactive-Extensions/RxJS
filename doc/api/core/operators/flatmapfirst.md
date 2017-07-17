@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### `Rx.Observable.prototype.flatMapFirst(selector, [thisArg])`
 ### `Rx.Observable.prototype.selectSwitchFirst(selector, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/flatmapfirst.js "View in source")

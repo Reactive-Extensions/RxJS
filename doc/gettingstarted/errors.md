@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Error Handling in the Reactive Extensions #
 
 One of the most difficult tasks in asynchronous programming is dealing with errors.  Unlike interactive style programming, we cannot simply use the try/catch/finally approach that we use when dealing with blocking code.

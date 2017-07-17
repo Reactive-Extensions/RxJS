@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Bridging to Promises #
 
 Promises are a defacto standard within JavaScript community and is part of the ECMAScript Standard.  A promise represents the eventual result of an asynchronous operation. The primary way of interacting with a promise is through its then method, which registers callbacks to receive either a promise’s eventual value or the reason why the promise cannot be fulfilled.  You can create them very easily where the constructor has two functions, `resolve` and `reject` which resolves the value or rejects it for a given reason.  RxJS is fully committed to standards and has native support for Promises for any number of methods where they can be used interchangeably with Observable sequences.  

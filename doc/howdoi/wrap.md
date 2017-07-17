@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Wrap an Existing API with RxJS
 
 One question that often comes up is how can I wrap an existing API into an Observable sequence?  The answer is fairly simple and not a lot of lines of code to make that happen.

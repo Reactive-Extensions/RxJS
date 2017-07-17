@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # What are the Reactive Extensions for JavaScript (RxJS)? #
 
 The Reactive Extensions for JavaScript (RxJS) is a library for composing asynchronous and event-based programs using observable sequences and [LINQ-style query operators](http://en.wikipedia.org/wiki/LINQ). Using RxJS, developers *__represent__* asynchronous data streams with [Observables](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md), *__query__* asynchronous data streams using [LINQ operators](http://msdn.microsoft.com/en-us/library/hh242983.aspx), and *__parameterize__* the concurrency in the asynchronous data streams using [Schedulers](http://msdn.microsoft.com/en-us/library/hh242963.aspx). Simply put, Rx = Observables + LINQ + Schedulers.

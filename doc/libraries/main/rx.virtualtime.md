@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS Virtual Time Module #
 
 The Reactive Extensions for JavaScript supports a notion of virtual time, which allows you to mock time easily, or even run through historical data through the `HistoricalScheduler`.

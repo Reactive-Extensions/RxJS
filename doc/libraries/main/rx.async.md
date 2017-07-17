@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS Async Module #
 
 The Reactive Extensions for JavaScript provides support for bridging to events, promises, callbacks, Node.js-style callbacks and more.  This module includes all of that functionality.  In addition, this also supports taking ordinary functions and turning them into asynchronous functions via Observable sequences.

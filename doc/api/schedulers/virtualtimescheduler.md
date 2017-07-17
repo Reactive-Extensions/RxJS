@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.VirtualTimeScheduler` class #
 
 Base class for providing scheduling in virtual time.  This inherits from the `Rx.Scheduler` class.
