@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS for Highland.js Users #
 
 [Highland.js](http://highlandjs.org/) is a general purpose utility belt for handling both synchronous and asynchronous code.  It is built upon node.js with EventEmitters and Streams with a focus on composition.

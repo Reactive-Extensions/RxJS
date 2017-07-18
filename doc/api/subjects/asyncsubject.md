@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.AsyncSubject` class #
 
 Represents the result of an asynchronous operation.  The last value before the OnCompleted notification, or the error received through OnError, is sent to all subscribed observers.

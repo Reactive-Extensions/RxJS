@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### ** DEPRECATED - Use [Rx.Observable.from](./from.md) instead** `Rx.Observable.fromArray(array, [scheduler])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/perf/operators/fromarray.js "View in source")
 

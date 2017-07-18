@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Bridging to Callbacks #
 
 Besides events, other asynchronous data sources exist in the web and server-side world. One of them is the simple callback pattern which is frequently used in Node.js. In this design pattern, the arguments are passed to the function, and then a callback is usually the last parameter, which when executed, passes control to the inner scope with the data.  Node.js has a standard way of doing callbacks in which the callback is called with the `Error` object first if there is an error, else null, and then the additional parameters from the callback.

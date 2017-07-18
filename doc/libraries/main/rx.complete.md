@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS Complete Module #
 
 The Reactive Extensions for JavaScript's complete functionality is in the complete RxJS file which has many core components including the Schedulers, Disposables, Observable and Observer, but omits any testing capabilities.

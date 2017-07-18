@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Using Subjects #
 
 The [`Subject`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/subjects/subject.md) class inherits both [`Observable`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observable.md) and [`Observer`](https://github.com/Reactive-Extensions/RxJS/blob/master/doc/api/core/observer.md), in the sense that it is both an observer and an observable. You can use a subject to subscribe all the observers, and then subscribe the subject to a backend data source. In this way, the subject can act as a proxy for a group of subscribers and a source. You can use subjects to implement a custom observable with caching, buffering and time shifting. In addition, you can use subjects to broadcast data to multiple subscribers.

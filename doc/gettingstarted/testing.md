@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Testing your Rx application #
 
 Let's face it, testing asynchronous code is a pain.  In JavaScript, with so many asynchronous things to coordinate, testing can be tricky. We think you'll find the Reactive Extensions for JavaScript makes it easier.

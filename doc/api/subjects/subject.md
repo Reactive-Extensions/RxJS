@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.Subject` class #
 
 Represents an object that is both an observable sequence as well as an observer. Each notification is broadcasted to all subscribed observers.

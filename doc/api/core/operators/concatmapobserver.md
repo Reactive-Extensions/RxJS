@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### `Rx.Observable.prototype.concatMapObserver(onNext, onError, onCompleted, [thisArg])`
 ### `Rx.Observable.prototype.selectConcatObserver(onNext, onError, onCompleted, [thisArg])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/concatmapobserver.js "View in source")

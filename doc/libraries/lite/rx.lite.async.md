@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS Lite Async Module #
 
 The Reactive Extensions for JavaScript provides support for using generators with RxJS, as well as starting async methods or turning functions into async functions. This module is designed to work with the `rx-lite` NPM module for both the standards-compliant version as well as compat for older browsers.

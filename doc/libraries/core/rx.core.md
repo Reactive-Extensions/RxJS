@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS Core Module #
 
 The Reactive Extensions for JavaScript's core functionality for conforming to the RxJS contract can be found here.  This module contains only the bare essentials including Disposables, Schedulers, Observer and Observable.  This is made available with the `rx.core.js` file.  The primary use case for this file is for those who want to implement a minimal implementation of RxJS for their own usage.

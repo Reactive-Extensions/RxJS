@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # How do I work with jQuery and RxJS #
 
 The [jQuery](http://jquery.com) project and RxJS play very well together as libraries.  In fact, we supply bindings directly for RxJS to jQuery should you want to wrap animations, events, Ajax calls and more using Observables in [RxJS-jQuery](https://github.com/Reactive-Extensions/RxJS-jQuery).  The bindings library provides many handy features for bridging the world to Observables.  If you're interested in that library, go ahead and use it.

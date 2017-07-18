@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Generators and Observable Sequences #
 
 One of the more exciting features of ES6 is a new function type called generators.  They have been in Firefox for years, although they have now been finally standardized in ES6, and will be shipping in a browser or runtime near you. How generators differ from normal functions is that a normal function such as the following will run to completion, regardless of whether it is asynchronous or not.

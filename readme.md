@@ -6,6 +6,8 @@
 [![NuGet](https://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
 [![Join the chat at https://gitter.im/Reactive-Extensions/RxJS](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Reactive-Extensions/RxJS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
+# NOTE: The latest version of RxJS can be found [here](https://github.com/reactivex/rxjs)
+
 **[The Need to go Reactive](#the-need-to-go-reactive)** |
 **[About the Reactive Extensions](#about-the-reactive-extensions)** |
 **[Batteries Included](#batteries-included)** |
@@ -19,8 +21,6 @@
 **[License](#license)**
 
 # The Reactive Extensions for JavaScript (RxJS) <sup>4.0</sup>... #
-
-Note: RxJS v5 beta is being developed at https://github.com/ReactiveX/rxjs.
 
 *...is a set of libraries to compose asynchronous and event-based programs using observable collections and [Array#extras](http://blogs.msdn.com/b/ie/archive/2010/12/13/ecmascript-5-part-2-array-extras.aspx) style composition in JavaScript*
 
@@ -227,7 +227,7 @@ Please check out:
     - [Percussion](https://github.com/grisendo/Percussion)
 
 - Books
-    - [RxJS in Action](https://www.manning.com/books/rxjs-in-action) 
+    - [RxJS in Action](https://www.manning.com/books/rxjs-in-action)
     - [RxJS](http://xgrommx.github.io/rx-book/)
     - [Intro to Rx](http://www.amazon.com/Introduction-to-Rx-ebook/dp/B008GM3YPM/)
     - [Programming Reactive Extensions and LINQ](http://www.amazon.com/Programming-Reactive-Extensions-Jesse-Liberty/dp/1430237473/)

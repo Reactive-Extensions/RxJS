@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Backpressure #
 
 When it comes to streaming data, streams can be overly chatty in which the consumer cannot keep up with the producer.  To that end, we need mechanisms to control the source so that the consumer does not get overwhelmed.  These mechanisms can come in either the form of lossy or loss-less operations, each of which depends on the requirements.  For example, if you miss a few mouse movements, it may not be a problem, however, if you miss a few bank transactions, that could be a definite problem.  This section covers which techniques you can use to handle backpressure in either lossy or loss-less ways.

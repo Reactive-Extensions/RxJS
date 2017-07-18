@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS Backpressure Module #
 
 The Reactive Extensions for JavaScript provides support backpressure for situations when the observable sequences emits too many messages for the observer to consume.  This is in addition to other mechanisms already in place such as `buffer`, `throttle`, `sample` among other operators which allow you to get messages every so often, or in batches.  This module allows you to pause and resume a hot observable with `pausable` and to pause and resume with buffered data with `pausableBuffered`.  In addition, we also support the ability to get a requested number of items from the queue through the `controlled` operator.

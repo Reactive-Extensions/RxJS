@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # `Rx.RefCountDisposable` class #
 
 Represents a disposable resource that only disposes its underlying disposable resource when all `getDisposable` dependent disposable objects have been disposed.

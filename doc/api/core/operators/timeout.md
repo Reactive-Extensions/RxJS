@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### `Rx.Observable.prototype.timeout(dueTime, [other], [scheduler])`
 ### `Rx.Observable.prototype.timeout([firstTimeout], timeoutDurationSelector, [other])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/timeout.js "View in source")

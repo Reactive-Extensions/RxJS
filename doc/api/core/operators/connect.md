@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### <a id="connectableobservableprototypeconnect"></a>`ConnectableObservable.prototype.connect()`
 <a href="#connectableobservableprototypeconnect">#</a> [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/dist/rx.binding.js#L504 "View in source")
 

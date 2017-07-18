@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 ### `Rx.Observable.throw(exception, [scheduler])`
 ### `Rx.Observable.throwError(exception, [scheduler])`
 ### `Rx.Observable.throwException(exception, [scheduler])` ** DEPRECATED **

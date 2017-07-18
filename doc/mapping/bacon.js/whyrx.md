@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # RxJS for Bacon.js Users #
 
 [Bacon.js](https://github.com/baconjs/bacon.js) is a popular Reactive Programming library which was inspired by RxJS, ReactiveBanana among other libraries.  

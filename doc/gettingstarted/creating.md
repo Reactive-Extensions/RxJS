@@ -1,3 +1,4 @@
+# This is RxJS v 4. [Find the latest version here](https://github.com/reactivex/rxjs)
 # Creating and Subscribing to Simple Observable Sequences #
 
 You do not need to implement the `Observable` class manually to create an observable sequence. Similarly, you do not need to implement `Observer` either to subscribe to a sequence. By installing the Reactive Extension libraries, you can take advantage of the `Observable` type which provides many operators for you to create a simple sequence with zero, one or more elements. In addition, RxJS provides an overloaded `subscribe` method which allows you to pass in `onNext`, `onError` and `onCompleted` function handlers.
