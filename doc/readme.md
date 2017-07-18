@@ -46,7 +46,7 @@ To put it more concretely, if you know how to program against Arrays using the A
 
 There are a number of ways of getting started with RxJS including:
 - [Getting Started With RxJS](#getting-started-with-rxjs)
-- [RxJS Guidelines](#rxjs-guidlines)
+- [RxJS Guidelines](#rxjs-guidelines)
 - [Getting to Know RxJS Libraries](#getting-to-know-rxjs-libraries)
 - [How Do I?](#how-do-i)
 - [Mapping RxJS from Different Libraries](#mapping-rxjs-from-different-libraries)
@@ -62,8 +62,8 @@ Getting started with the Reactive Extensions for JavaScript is easy.  Let's star
    1. [Creating and Subscribing to Simple Observable Sequences](gettingstarted/creating.md)
    2. [Bridging to Events](gettingstarted/events.md)
    3. [Bridging to Callbacks](gettingstarted/callbacks.md)
-   4. [Bridging to Promises](gettingstarted/promises.md)  
-   5. [Generators and Observable Sequences](gettingstarted/generators.md)  
+   4. [Bridging to Promises](gettingstarted/promises.md)
+   5. [Generators and Observable Sequences](gettingstarted/generators.md)
    6. [Querying Observable Sequences](gettingstarted/querying.md)
    7. [Error Handling With Observable Sequences](gettingstarted/errors.md)
    8. [Transducers with Observable Sequences](gettingstarted/transducers.md)
