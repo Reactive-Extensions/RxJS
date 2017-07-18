@@ -250,7 +250,7 @@ cd ./rxjs
 
 ### Installing with [NPM](https://www.npmjs.com/)
 
-```bash`
+```bash
 $ npm install rx
 $ npm install -g rx
 ```
@@ -268,13 +268,17 @@ $ bower install rxjs
 ```
 
 ### Installing with [Jam](http://jamjs.org/)
+
 ```bash
 $ jam install rx
 ```
+
 ### Installing All of RxJS via [NuGet](http://www.nuget.org/)
+
 ```bash
 $ Install-Package RxJS-All
 ```
+
 ### Install individual packages via [NuGet](http://www.nuget.org/):
 
     Install-Package RxJS-All
