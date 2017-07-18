@@ -2,7 +2,7 @@
 ### `Rx.Observable.prototype.sequenceEqual(second, [comparer])`
 [&#x24C8;](https://github.com/Reactive-Extensions/RxJS/blob/master/src/core/linq/observable/sequenceequal.js "View in source")
 
-Determins whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
+Determines whether two sequences are equal by comparing the elements pairwise using a specified equality comparer.
 
 #### Arguments
 1. `second` *(`Observable` | `Promise` | `Array`)*:  Second observable sequence, Promise or array to compare.
