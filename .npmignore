@@ -17,3 +17,4 @@ src/
 CHANGELOG.*
 Gruntfile.js
 travis.sh
+ts
