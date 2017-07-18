@@ -27,7 +27,7 @@ var source = Rx.Observable.generateWithRelativeTime(
   });
 
 
-source.exclusive().subscribe(
+source.switchFirst().subscribe(
    function (x) {
     console.log("Next %d", x);
    }, function(e) {
