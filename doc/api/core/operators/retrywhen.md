@@ -5,7 +5,7 @@
 Repeats the source observable sequence on error when the notifier emits a next value. If the source observable errors and the notifier completes, it will complete the source sequence.
 
 #### Arguments
-1. `notificationHandler` *(`Function`)*: A handler that is passed an observable sequence of errors raised by the source observable and returns
+1. `notifier` *(`Function`)*: A handler that is passed an observable sequence of errors raised by the source observable and returns
 an observable that either continues, completes or errors. This behavior is then applied to the source observable.
 
 #### Returns
