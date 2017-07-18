@@ -250,12 +250,12 @@ cd ./rxjs
 
 ### Installing with [NPM](https://www.npmjs.com/)
 
-```bash`
+```bash
 $ npm install rx
 $ npm install -g rx
 ```
 
-### Using with Node.js and Ringo.js
+### Using with [Node.js](https://nodejs.org) and [Ringo.js](https://ringojs.org)
 
 ```js
 var Rx = require('rx');
