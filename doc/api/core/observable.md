@@ -114,6 +114,7 @@ The Observer and Observable interfaces provide a generalized mechanism for push-
 - [`let`](operators/let.md)
 - [`manySelect`](operators/manyselect.md)
 - [`map`](operators/select.md)
+- [`materialize`](operators/materialize.md)
 - [`max`](operators/max.md)
 - [`maxBy`](operators/maxby.md)
 - [`merge`](operators/mergeproto.md)
