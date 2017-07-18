@@ -44,7 +44,7 @@ RxJS is committed to using the latest JavaScript standards as they start to arri
 
 We welcome custom operators to RxJS if they make sense in the core RxJS, as opposed to belonging in user land.  There are a number of rules that must be adhered to when implementing a custom operator including:
 - Prefer composition over implementing a totally new operator from scratch
-- If the operator introduces any notion of concurrency, then a scheduler must introduced.  Usage of concurrency primitives such as `setTimeout`, `setInterval`, etc are forbidden.  This is to ensure easy testability.  
+- If the operator introduces any notion of concurrency, then a scheduler must be introduced.  Usage of concurrency primitives such as `setTimeout`, `setInterval`, etc are forbidden.  This is to ensure easy testability.  
   - The scheduler must be optional with the appropriate default picked
     - `Rx.Scheduler.immediate` for any immediate blocking operations
     - `Rx.Scheduler.currentThread` for any immediate blocking operators that require re-entrant behavior such as recursive scheduling.
