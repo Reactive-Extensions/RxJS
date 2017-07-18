@@ -229,7 +229,7 @@
           if (e.ctrlKey) {
             try {
               e.keyCode = 0;
-            } catch (e) { }
+            } catch (error) { }
           }
           e.defaultPrevented = true;
           e.returnValue = false;
