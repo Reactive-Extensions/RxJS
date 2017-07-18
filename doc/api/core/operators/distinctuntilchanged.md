@@ -51,7 +51,7 @@ var subscription = source.subscribe(
 // => Next: { value: 24 }
 // => Completed
 
-/* With comparer */
+/* With custom comparer, which returns false when values ARE equal */
 var source = Rx.Observable.of({value: 42}, {value: 42}, {value: 24}, {value: 24})
   .distinctUntilChanged(function (x) { return x.value; }, function (a,b) { return a !== b; });
 
