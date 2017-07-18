@@ -23,15 +23,15 @@ var subscription = subject.subscribe(
         console.log('Completed');
     });
 
-subject.onNext(42);
+subject.next(42);
 
 // => Next: 42
 
-subject.onNext(56);
+subject.next(56);
 
 // => Next: 56
 
-subject.onCompleted();
+subject.complete();
 
 // => Completed
 ```
@@ -76,10 +76,10 @@ var subscription = subject.subscribe(
         console.log('Completed');
     });
 
-subject.onNext(42);
+subject.next(42);
 // => Next: 42
 
-subject.onCompleted();
+subject.complete();
 // => Completed
 ```
 
@@ -127,11 +127,11 @@ var observer = Rx.Observer.create(
 var observable = Rx.Observable.create(function (obs) {
 
     worker.onmessage = function (data) {
-        obs.onNext(data);
+        obs.next(data);
     };
 
     worker.onerror = function (err) {
-        obs.onError(err);
+        obs.error(err);
     };
 
     return function () {
@@ -152,7 +152,7 @@ var subscription = subject.subscribe(
         console.log('Completed');
     });
 
-subject.onNext(42);
+subject.next(42);
 // => Next: 42
 
 ```
@@ -185,16 +185,16 @@ var subscription = subject.subscribe(
         console.log('Completed');
     });
 
-subject.onNext(42);
+subject.next(42);
 // => Next: 42
 
-subject.onCompleted();
+subject.complete();
 // => Completed
 
 subject.dispose();
 
 try {
-	subject.onNext(56);
+	subject.next(56);
 } catch (e) {
 	console.log(e.message);
 }
