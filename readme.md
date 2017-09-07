@@ -72,7 +72,7 @@ subscription.dispose();
 
 The only difference is that we can handle the errors inline with our subscription.  And when we're no longer interested in receiving the data as it comes streaming in, we call `dispose` on our subscription.  Note the use of `subscribe` instead of `forEach`.  We could also use `forEach` which is an alias for `subscribe` but we highly suggest you use `subscribe`.
 
-## Batteries Included ##
+## Libraries Included ##
 
 Sure, there are a lot of libraries to get started with RxJS. Confused on where to get started?  Start out with the complete set of operators with [`rx.all.js`](doc/libraries/main/rx.complete.md), then you can reduce it to the number of operators that you really need, and perhaps stick with something as small as [`rx.lite.js`](doc/libraries/lite/rx.lite.md).  If you're an implementor of RxJS, then you can start out with [`rx.core.js`](doc/libraries/core/rx.core.md).
 
