@@ -52,10 +52,9 @@ var interval = Rx.Observable.interval(1000);
 
 var source = interval
     .take(2)
-    .do(
-        function (x) {
-            console.log('Side effect');
-        });
+    .do(function (x) {
+        console.log('Side effect');
+    });
 
 var published = source.share();
 
