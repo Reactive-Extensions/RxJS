@@ -2,6 +2,7 @@
 [![GitHub version](https://img.shields.io/github/tag/reactive-extensions/rxjs.svg)](https://github.com/Reactive-Extensions/RxJS)
 [![NPM version](https://img.shields.io/npm/v/rx.svg)](https://www.npmjs.com/package/rx)
 [![Downloads](https://img.shields.io/npm/dm/rx.svg)](https://www.npmjs.com/package/rx)
+[![jsDelivr Hits](https://data.jsdelivr.com/v1/package/npm/rx/badge?style=rounded)](https://www.jsdelivr.com/package/npm/rx)
 [![Bower](https://img.shields.io/bower/v/rxjs.svg)](http://bower.io/search/?q=rxjs)
 [![NuGet](https://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
 [![Join the chat at https://gitter.im/Reactive-Extensions/RxJS](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Reactive-Extensions/RxJS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
