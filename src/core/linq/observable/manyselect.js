@@ -14,7 +14,7 @@
         .map(function (x) {
           var curr = new ChainObservable(x);
 
-          chain && chain.onNext(x);
+          chain && chain.onNext(curr);
           chain = curr;
 
           return curr;
