@@ -15,12 +15,11 @@
 
   ActivePlan.prototype.match = function () {
     var i, len, hasValues = true;
-    for (i = 0, len = this.joinObserverArray.length; i < len; i++) {
-      if (this.joinObserverArray[i].queue.length === 0) {
-        hasValues = false;
-        break;
-      }
-    }
+    
+    hasValues = this.joinedObserverArray.find(function(v) {
+      return v.queue.length === 0;
+    }) === undefined;
+    
     if (hasValues) {
       var firstValues = [],
           isCompleted = false;
