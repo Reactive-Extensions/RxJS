@@ -2362,8 +2362,8 @@ declare module Rx {
         * @param {Arguments} arguments The nested properties to pluck.
         * @returns {Observable} Returns a new Observable sequence of property values.
         */
-        pluck<TResult>(prop: string): Observable<TResult>;
-        pluck<TResult>(...props: string[]): Observable<TResult>;
+        pluck<TResult, K extends keyof TResult>(prop: K): Observable<TResult[K]>;
+        pluck<TResult, K extends keyof TResult>(...props: K[]): Observable<TResult[K]>;
     }
 
 
