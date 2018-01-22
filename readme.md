@@ -6,7 +6,7 @@
 [![NuGet](https://img.shields.io/nuget/v/RxJS-All.svg)](http://www.nuget.org/packages/RxJS-All/)
 [![Join the chat at https://gitter.im/Reactive-Extensions/RxJS](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/Reactive-Extensions/RxJS?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
-# NOTE: The latest version of RxJS can be found [here](https://github.com/reactivex/rxjs)
+# NOTE: This repo is for v4, the latest version of RxJS (v5+) moved and can be found [here](https://github.com/reactivex/rxjs)
 
 **[The Need to go Reactive](#the-need-to-go-reactive)** |
 **[About the Reactive Extensions](#about-the-reactive-extensions)** |
