@@ -120,7 +120,7 @@ DelayAbsoluteObservable.prototype.subscribe = function (o) {
   return obs.subscribe(o);
 };
 
-function DelaySelectorObseravble(source, subscriptionDelay, delayDurationSelector) {
+function DelaySelectorObservable(source, subscriptionDelay, delayDurationSelector) {
   this.source = source;
   this._selector = null;
   this._subDelay = null;
@@ -133,9 +133,9 @@ function DelaySelectorObseravble(source, subscriptionDelay, delayDurationSelecto
   ObservableBase.call(this);
 }
 
-inherits(DelaySelectorObseravble, ObservableBase);
+inherits(DelaySelectorObservable, ObservableBase);
 
-DelaySelectorObseravble.prototype.subscribeCore = function (o) {
+DelaySelectorObservable.prototype.subscribeCore = function (o) {
   var delays = new CompositeDisposable(),
       atEnd = false,
       subscription = new SerialDisposable(),
@@ -203,7 +203,7 @@ module.exports = function delay () {
       new DelayAbsoluteObservable(source, dueTime, scheduler) :
       new DelayRelativeObservable(source, dueTime, scheduler);
   } else if (isObservable(firstArg) || isFunction(firstArg)) {
-    return new DelaySelectorObseravble(source, firstArg, arguments[2]);
+    return new DelaySelectorObservable(source, firstArg, arguments[2]);
   } else {
     throw new Error('Invalid arguments');
   }
